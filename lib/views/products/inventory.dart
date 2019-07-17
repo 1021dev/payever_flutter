@@ -155,7 +155,9 @@ class _ProductInventoryRowState extends State<ProductInventoryRow> {
                           child: TextFormField(
                             style: TextStyle(fontSize: Measurements.height * 0.02),
                             initialValue: widget.parts.editMode?widget.parts.product.sku:"",
-                            inputFormatters: [WhitelistingTextInputFormatter(RegExp("[a-z A-Z 0-9]"))],
+                            inputFormatters: [
+                              WhitelistingTextInputFormatter(RegExp("[a-z A-Z 0-9 _]")),
+                              ],
                             onSaved: (sku) {
                               print("sku");
                               widget.parts.product.sku = sku;

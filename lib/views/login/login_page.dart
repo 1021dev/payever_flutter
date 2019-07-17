@@ -62,20 +62,26 @@ class _LoginState extends State<Login> implements LoginScreenContract,AuthStateL
     SharedPreferences.getInstance().then((p){
       _prefs = p;
       String fingerPrint;
-        if(Platform.isAndroid){
+      if(Platform.isAndroid){
           deviceInfo.androidInfo.then((info){
-          fingerPrint = "Android(${info.version.release}) ${info.fingerprint} ${info.brand}  ${info.display}  ${info.androidId} ";
-          print("__ FINGERPRINT $fingerPrint");
-          p.setString(GlobalUtils.FINGERPRINT, fingerPrint);
+          fingerPrint = "Android (${info.version.release}) ${info.fingerprint} ${info.model}";
         });
       }else if(Platform.isIOS){
-          deviceInfo.iosInfo.then((info){
-          fingerPrint = "IOS(${info.systemVersion}) ${info.identifierForVendor} ${info.localizedModel} ${info.identifierForVendor}  ";
-          print("__ FINGERPRINT $fingerPrint");
-          p.setString(GlobalUtils.FINGERPRINT, fingerPrint);
+        deviceInfo.iosInfo.then((info){
+          fingerPrint = "IOS (${info.systemVersion}) ${info.identifierForVendor} ${info.model}";
         });
+      }else if(Platform.isFuchsia){
+        fingerPrint = "Fuchsia";
+      }else if(Platform.isWindows){
+        fingerPrint = "Fuchsia";  
+      }else if(Platform.isMacOS){
+        fingerPrint = "Fuchsia";
+      }else if(Platform.isLinux){
+        fingerPrint = "Fuchsia";
       }
+      p.setString(GlobalUtils.FINGERPRINT, fingerPrint);
     });
+    
     
     tp = VideoPlayerController.asset(
        'videos/tablet_portrait.mp4')
@@ -132,7 +138,6 @@ class _LoginState extends State<Login> implements LoginScreenContract,AuthStateL
     }else{
       setState(() => _isLoading = false);
     }
-    
   }
 
   void _showSnackBar(String text) {

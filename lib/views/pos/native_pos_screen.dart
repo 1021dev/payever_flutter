@@ -127,7 +127,6 @@ class _NativePosScreenState extends State<NativePosScreen> {
     RestDatasource api = RestDatasource();
     widget.parts.business = widget.business;
     if(widget.terminal == null){
-
     List<Terminal> _terminals = List();
     List<ChannelSet> _chSets = List();
     api.getTerminal(widget.business.id, GlobalUtils.ActiveToken.accesstoken,context).then((terminals){

@@ -56,9 +56,6 @@ class _DashboardMidScreenState extends State<DashboardMidScreen> {
   }
   @override
   Widget build(BuildContext context) {
-
-    Locale myLocale = Localizations.localeOf(context);
-    print(myLocale.languageCode);
     bool _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
     Measurements.height = (_isPortrait ? MediaQuery.of(context).size.height : MediaQuery.of(context).size.width);
     Measurements.width  = (_isPortrait ? MediaQuery.of(context).size.width : MediaQuery.of(context).size.height);
@@ -107,7 +104,6 @@ class _DashboardMidScreenState extends State<DashboardMidScreen> {
       api.getEnv().then((dynamic result){
       Env.map(result);                                                                                                                            //<720 30 days
       if(DateTime.now().difference(DateTime.fromMillisecondsSinceEpoch(Measurements.parseJwt(p.getString(GlobalUtils.REFRESHTOKEN))["exp"] * 1000)).inHours < 0 ){
-        //print(DateTime.now().difference(DateTime.parse(p.getString(GlobalUtils.LAST_OPEN))).inHours);
         api.refreshToken(p.getString(GlobalUtils.REFRESHTOKEN),p.getString(GlobalUtils.FINGERPRINT),context).then((token){
           fetchData(token: token,renew:false);
         }).catchError((onError){
@@ -158,7 +154,7 @@ class _DashboardMidScreenState extends State<DashboardMidScreen> {
             });
             if (parts.businesses != null) {
               parts.businesses.forEach((b) {
-                if (b.id == prefs.getString(GlobalUtils.BUSINESS)) {
+                if (b.id == prefs.getString(GlobalUtils.BUSINESS)){
                   activeBusiness = b;
                 }
               });

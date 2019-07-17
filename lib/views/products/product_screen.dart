@@ -157,7 +157,6 @@ class _ProductScreenState extends State<ProductScreen> {
         builder: (BuildContext context, Orientation orientation) {
         widget._parts.isPortrait = orientation == Orientation.portrait;
         widget._parts.isTablet = widget._parts.isPortrait? MediaQuery.of(context).size.width > 600:MediaQuery.of(context).size.height > 600;
-          
           return Stack(
             children: <Widget>[
               Positioned(
@@ -209,7 +208,6 @@ class _ProductScreenState extends State<ProductScreen> {
                                 icon: Container(child:SvgPicture.asset("images/searchicon.svg",height: Measurements.height * 0.0175,color:Colors.white,))
                               ),
                               onFieldSubmitted: (doc){
-                                
                                 widget._parts.products.clear();
                                 widget._parts.searchDocument = doc; 
                                 widget._parts.page = 1;
@@ -240,8 +238,8 @@ class ProductsBody extends StatefulWidget {
   _ProductsBodyState createState() => _ProductsBodyState();
 }
 class _ProductsBodyState extends State<ProductsBody> {
+
   ScrollController controller;
-  
   @override
   void initState() {
     super.initState();
@@ -259,79 +257,40 @@ class _ProductsBodyState extends State<ProductsBody> {
     }
   }
   
+  Future _refresh(){
+    widget._parts.page = 1;
+    widget._parts.loadMore.value = true;
+    return Future.microtask((){
+      return widget._parts.loadMore.value;
+      });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: !widget._parts.isTablet? 
-        ListView.builder(
-        physics: BouncingScrollPhysics(),
-        controller: controller,
-        shrinkWrap: true,
-        itemCount: widget._parts.products.length,
-        itemBuilder: (BuildContext context, int index) {
-          return ProductItem(currentProduct: widget._parts.products[index], parts: widget._parts);
-        },)
-        :GridView.builder(
+      child: RefreshIndicator(
+        onRefresh: _refresh,
+        child: !widget._parts.isTablet? 
+          ListView.builder(
+          physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
           controller: controller,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            mainAxisSpacing: Measurements.height *0.02,
-            crossAxisCount: widget._parts.isPortrait?3:4,childAspectRatio:0.7
-          ),
           shrinkWrap: true,
-          itemCount:widget._parts.products.length,
+          itemCount: widget._parts.products.length,
           itemBuilder: (BuildContext context, int index) {
             return ProductItem(currentProduct: widget._parts.products[index], parts: widget._parts);
-          },
-      ),
-    );
-  }
-}
-class TestList extends StatefulWidget {
-  @override
-  _TestListState createState() => _TestListState();
-}
-
-class _TestListState extends State<TestList> {
-  @override
-  Widget build(BuildContext context) {
-    return CustomScrollView(
-      //controller: controller,
-      shrinkWrap: true,
-      slivers: <Widget>[
-        CupertinoSliverRefreshControl(
-          onRefresh: ()=>Future.delayed(Duration(milliseconds: 1)).then((_){print("testing");}),
-        ),
-        SliverList(
-          delegate: SliverChildBuilderDelegate(
-            (BuildContext context, int index) {
-              //return ProductItem(currentProduct: widget._parts.products[index], parts: widget._parts);
+          },)
+          :GridView.builder(
+            controller: controller,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              mainAxisSpacing: Measurements.height * 0.02,
+              crossAxisCount: widget._parts.isPortrait?3:4,childAspectRatio:0.7
+            ),
+            shrinkWrap: true,
+            itemCount:widget._parts.products.length,
+            itemBuilder: (BuildContext context, int index) {
+              return ProductItem(currentProduct: widget._parts.products[index], parts: widget._parts);
             },
-            //childCount: widget._parts.products.length,
-          ),
-        )
-      ],
-    );
-  }
-}
-
-class Test extends StatefulWidget {
-  @override
-  _TestState createState() => _TestState();
-}
-
-class _TestState extends State<Test> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child:CustomScrollView(
-        slivers: <Widget>[
-          SliverList(
-            delegate: null,),
-          CupertinoSliverRefreshControl(
-            onRefresh: (){Future.delayed(Duration(milliseconds: 1)).then((_){print("testing");});},
-          ),
-        ], 
-        shrinkWrap: true,
+        ),
       ),
     );
   }
@@ -342,7 +301,7 @@ class ProductLoader extends StatefulWidget {
   Business business;
   String initialDocument;
   int page;
-  int limit = 36;
+  int limit = 3;
   ProductLoader({this.parts,this.business,@required this.isSearching,this.page}){
     initialDocument = ''' 
               query Product {
@@ -444,6 +403,7 @@ class _ProductLoaderState extends State<ProductLoader> {
                 child: const CircularProgressIndicator(),
               );
             }
+            if(widget.parts.page==1)widget.parts.products.clear();
             widget.parts.pageCount = result.data["getProducts"]["info"]["pagination"]["page_count"];
             result.data["getProducts"]["products"].forEach((prod){
               var tempProduct = ProductsModel.toMap(prod);
@@ -510,7 +470,6 @@ class _ProductItemState extends State<ProductItem> {
       });
       
     });
-
     String category;
     if(widget.currentProduct.categories.isNotEmpty)
       category = widget.currentProduct.categories[0].title??"";
@@ -526,7 +485,6 @@ class _ProductItemState extends State<ProductItem> {
               InkWell(
                 child: Container(
                   width: Measurements.width *(widget.parts.isTablet? (widget.parts.isPortrait? 0.3:0.3): 0.9),
-                  
                   decoration: BoxDecoration(borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(12),
                     topRight: Radius.circular(12),
