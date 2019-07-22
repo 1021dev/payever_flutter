@@ -27,6 +27,7 @@ import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:payever/views/login/login_page.dart';
 import 'package:payever/views/products/inventory.dart';
 import 'package:payever/views/products/product_type.dart';
+import 'package:payever/views/settings/employees/expandable_component.dart';
 import 'package:uuid/uuid.dart';
 
 ValueNotifier<GraphQLClient> clientFor({
@@ -36,16 +37,11 @@ ValueNotifier<GraphQLClient> clientFor({
   Link link = HttpLink(uri: uri) as Link;
   if (subscriptionUri != null) {
     WebSocketLink websocketLink = WebSocketLink(
-      headers: {
-        HttpHeaders.AUTHORIZATION:
-            "Bearer ${GlobalUtils.ActiveToken.accessToken}",
-        HttpHeaders.CONTENT_TYPE: "application/json"
-      },
-      url: uri,
-      config: SocketClientConfig(
-        autoReconnect: true, 
-        inactivityTimeout: Duration(seconds: 10),
-      ),
+        config: SocketClientConfig(
+          autoReconnect: true,
+          inactivityTimeout: Duration(seconds: 30),
+        ),
+        url: uri
     );
     final AuthLink authLink = AuthLink(
       getToken: () => 'Bearer ${GlobalUtils.ActiveToken.accessToken}',
@@ -201,6 +197,7 @@ class _NewProductScreenState extends State<NewProductScreen> {
         ShippingRow(parts: widget._parts, openedRow: widget._parts.openedRow);
     visibilityRow =
         VisibilityRow(parts: widget._parts, openedRow: widget._parts.openedRow);
+//    taxRow = TaxRow();
     taxRow = TaxRow(parts: widget._parts, openedRow: widget._parts.openedRow);
     variantRow =
         VariantRow(parts: widget._parts, openedRow: widget._parts.openedRow);
@@ -973,17 +970,18 @@ class _MainRowState extends State<MainRow> {
     );
   }
 }
+
 // Inventory
 class InventoryRow extends StatefulWidget {
   ValueNotifier openedRow;
   NewProductScreenParts parts;
   num inv = 0;
-  
+
   bool isOpen = false;
   bool trackInv = false;
 
   bool get isInventoryRowOK {
-    return parts.product.variants.length>0? 
+    return parts.product.variants.length>0?
      true:
      !parts.skuError;
   }
@@ -2850,6 +2848,21 @@ class _ShippingRowState extends State<ShippingRow> {
     ]);
   }
 }
+
+
+//class TaxRow extends StatelessWidget {
+//
+//  @override
+//  Widget build(BuildContext context) {
+//    return ExpandableListView(
+//      iconData: Icons.shopping_basket,
+//      title: "TaxRow",
+//      isExpanded: true,
+//      widgetList: Center(child: Text("Tax Row"),),
+//    );
+//  }
+//
+//}
 
 class TaxRow extends StatefulWidget {
   ValueNotifier openedRow;

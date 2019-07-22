@@ -628,6 +628,7 @@ class GlobalUtils{
   static const String ENV_INVENTORY                   = "inventory";
   static const String ENV_SHOPS                       = "shops";
   static const String ENV_WRAPPER                     = "checkoutWrapper";
+  static const String ENV_EMPLOYEES                   = "employees";
 
   // dashboard_
   static const String  CURRENT_WALLPAPER              = "currentWallpaper";

@@ -123,7 +123,7 @@ class _POSCardState extends State<POSCard> {
         Measurements.height = (widget._parts._isPortrait ? MediaQuery.of(context).size.height : MediaQuery.of(context).size.width);
         Measurements.width  = (widget._parts._isPortrait ? MediaQuery.of(context).size.width : MediaQuery.of(context).size.height);
         widget._parts._isTablet = Measurements.width < 600 ? false : true; 
-        return DashboardCard(widget._appName, widget._imageProvider, MainPOSCard(widget._parts),POSSecondCard(widget._parts), widget._posNavigation,!widget._parts._noTerminals);
+        return DashboardCard(widget._appName, widget._imageProvider, MainPOSCard(widget._parts),POSSecondCard(widget._parts), widget._posNavigation,!widget._parts._noTerminals, false);
       },
     );
   }

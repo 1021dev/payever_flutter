@@ -88,6 +88,11 @@ class RestDatasource {
   static String CHECKOUT_V3         = Env.CheckoutPhp + "/api/rest/v3/checkout/flow/";
 
 
+  static String EMPLOYEES      = Env.Employees;
+//  static String EMPLOYEES_LIST  = EMPLOYEES + "/api/employees/";
+  static String EMPLOYEES_LIST  = AUTH_BASE_URL + "/api/employees/";
+  static String EMPLOYEE_GROUPS  = AUTH_BASE_URL + "/api/employee-groups/";
+
   static String STORAGEURL         = Env.Media +"/api/storage";
 
 
@@ -219,6 +224,30 @@ class RestDatasource {
     print("TAG - getTransactionDetail()");
     var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token",HttpHeaders.userAgentHeader :GlobalUtils.fingerprint };
     return _netUtil.get(TRANSACTIONWID_URL + idBusiness + TRANSACTIONWID_DETAILS + idTrans,headers: headers ).then((dynamic result){
+      return result;
+    });
+  }
+
+  Future<dynamic> getEmployeesList(String id,String token,BuildContext context) {
+    print("TAG - getEmployeesList()");
+
+    var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token",HttpHeaders.userAgentHeader :GlobalUtils.fingerprint };
+
+    print("URL: ${EMPLOYEES_LIST + id}");
+
+    return _netUtil.get(EMPLOYEES_LIST + id,headers: headers ).then((dynamic result){
+//    return _netUtil.get("http://users.test.devpayever.com/api/employees/2382ffce-5620-4f13-885d-3c069f9dd9b4",headers: headers ).then((dynamic result){
+      return result;
+    });
+  }
+
+  Future<dynamic> getEmployeeGroupsList(String businessId, String userId,String token,BuildContext context) {
+    print("TAG - getEmployeeGroupsList()");
+
+    var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token",HttpHeaders.userAgentHeader :GlobalUtils.fingerprint };
+
+    print("URL: ${EMPLOYEE_GROUPS + businessId+'/'+userId}");
+    return _netUtil.get(EMPLOYEE_GROUPS + businessId+'/'+userId,headers: headers ).then((dynamic result){
       return result;
     });
   }

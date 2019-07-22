@@ -119,7 +119,7 @@ class _ProductsCardState extends State<ProductsCard> {
     widget.parts._cardSize = Measurements.height * (widget.parts._isTablet?0.03:0.055);
     return OrientationBuilder(
       builder: (BuildContext context, Orientation orientation) {
-        return DashboardCard(widget._appName, widget._imageProvider, MainProductCard(widget.parts), SecondProductCard(widget.parts),ProdNavigation(widget.parts),!widget.parts._noProd);
+        return DashboardCard(widget._appName, widget._imageProvider, MainProductCard(widget.parts), SecondProductCard(widget.parts),ProdNavigation(widget.parts),!widget.parts._noProd, false);
     },);
 
 

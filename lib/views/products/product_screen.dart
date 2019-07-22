@@ -31,14 +31,13 @@ ValueNotifier<GraphQLClient> clientFor({
   Link link = HttpLink(uri: uri) as Link;
   if (subscriptionUri != null) {
     WebSocketLink websocketLink = WebSocketLink(
-      headers: { HttpHeaders.AUTHORIZATION: "Bearer ${GlobalUtils.ActiveToken.accessToken}" ,
-      HttpHeaders.CONTENT_TYPE: "application/json"},
-      url: uri,
-      config: SocketClientConfig(
-        autoReconnect: true,
-        inactivityTimeout: Duration(seconds: 30),
-      ),
+        config: SocketClientConfig(
+          autoReconnect: true,
+          inactivityTimeout: Duration(seconds: 30),
+        ),
+        url: uri
     );
+
     final AuthLink authLink = AuthLink(
     getToken: () => 'Bearer ${GlobalUtils.ActiveToken.accessToken}',
   );
@@ -46,7 +45,7 @@ ValueNotifier<GraphQLClient> clientFor({
   }
   return ValueNotifier<GraphQLClient>(
     GraphQLClient(
-      cache: InMemoryCache(customStorageDirectory: null),
+      cache: InMemoryCache(),
       link: link,
     ),
   );

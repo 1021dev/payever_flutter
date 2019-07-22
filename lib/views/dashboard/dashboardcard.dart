@@ -22,10 +22,10 @@ class DashboardCard extends StatefulWidget {
   dynamic handler;
   bool _active;
   num pad;
-  
+  bool isSingleActionButton;
 
-  DashboardCard(this._appName,this._imageProvider,this.mainCard,this.secondCard,this.handler,this._active){
-  }
+
+  DashboardCard(this._appName,this._imageProvider,this.mainCard,this.secondCard,this.handler,this._active, this.isSingleActionButton);
 
   @override
   _DashboardCardState createState() => _DashboardCardState(_appName,_imageProvider,mainCard,secondCard);
@@ -42,8 +42,7 @@ class _DashboardCardState extends State<DashboardCard> {
   
   ImageProvider _imageProvider;
   
-  _DashboardCardState(this._appName,this._imageProvider,this.mainCard,this.secondCard){
-  }
+  _DashboardCardState(this._appName,this._imageProvider,this.mainCard,this.secondCard);
 
 
   _launchURL(String url) async {
@@ -102,67 +101,12 @@ class _DashboardCardState extends State<DashboardCard> {
                                                 BackdropFilter(
                                                   filter: ImageFilter.blur(sigmaX: 25,sigmaY: 25),
                                                 ),
-                                                widget._active? InkWell(
-                                                  radius: _isTablet ? Measurements.height * 0.02: Measurements.width * 0.07,
-                                                  child: Container(
-                                                    padding: EdgeInsets.symmetric(horizontal: Measurements.width *0.02),
-                                                    //width: widget._active ?50:120,
-                                                    decoration: BoxDecoration(
-                                                      shape: BoxShape.rectangle,
-                                                      color: Colors.grey.withOpacity(0.3),
-                                                      borderRadius:BorderRadius.circular(15) ,
-                                                    ),
-                                                    height: _isTablet ? Measurements.height * 0.02: Measurements.width * 0.07,
-                                                    child: Center(
-                                                      child: _isloading.value ? 
-                                                        Container(
-                                                          constraints: BoxConstraints(
-                                                            maxWidth:   _isTablet ? Measurements.height * 0.01 : Measurements.width * 0.04,
-                                                            maxHeight:  _isTablet ? Measurements.height * 0.01 : Measurements.width * 0.04,
-                                                           ) ,
-                                                          child:CircularProgressIndicator(strokeWidth: 2,)
-                                                        ) :
-                                                        Container(
-                                                          alignment:Alignment.center,
-                                                          child:Text(Language.getConnectStrings("actions.open"))
-                                                        ),
-                                                    )
-                                                    ),
-                                                onTap: (){
-                                                  setState(() {
-                                                    _isloading.value = true;
-                                                    widget.handler.loadScreen(context,_isloading);
-                                                  });
-                                                  },
-                                                ):Container(child:InkWell(
-                                                  child: Container(
-                                                    height: _isTablet ? Measurements.height * 0.02: Measurements.width * 0.07,
-                                                    child:Container(
-                                                      width: 100,
-                                                      decoration: BoxDecoration(
-                                                        shape: BoxShape.rectangle,
-                                                        color: Colors.grey.withOpacity(0.3),
-                                                        borderRadius:BorderRadius.circular(15) ,
-                                                      ),
-                                                      child:Row(
-                                                        mainAxisSize: MainAxisSize.max,
-                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                        children: <Widget>[
-                                                          SvgPicture.asset("images/launchicon.svg",height: Measurements.width * (_isTablet?0.015:0.03),color: Colors.white.withOpacity(0.7),),
-                                                          Padding(padding: EdgeInsets.only(left: Measurements.width * 0.008),),
-                                                          Text("Learn more",style: prefix0.TextStyle(color: Colors.white.withOpacity(0.7)),),
-                                                        ],
-                                                      )
-                                                    )
-                                                  ),
-                                                onTap: (){
-                                                  setState(() {
-                                                    widget._active?
-                                                    widget.handler.loadScreen(context,_isloading):
-                                                    _launchURL(widget.handler.learnMore());
-                                                  });
-                                                  },
-                                                )),
+
+                                              widget.isSingleActionButton
+                                                  ? singleActionButtonWidget(
+                                                      context, _isTablet)
+                                                  : actionButtonsWidget(
+                                                      context, _isTablet, widget._active),
                                               ],),
                                           ),
                                         ),
@@ -170,7 +114,8 @@ class _DashboardCardState extends State<DashboardCard> {
                                         widget._active ? InkWell(
                                           radius: _isTablet ? Measurements.height * 0.02: Measurements.width * 0.07,
                                           splashColor: Colors.transparent,
-                                          child: Container(height: _isTablet ? Measurements.height * 0.02: Measurements.width * 0.06,padding:EdgeInsets.symmetric(vertical: _isTablet?3:4) ,child: Text(_open?Language.getWidgetStrings("widgets.actions.less"):Language.getWidgetStrings("widgets.actions.more"))),onTap: (){setState(() =>_open=!_open);},):Container(),
+                                          child: widget.isSingleActionButton
+                                              ? Container() :  Container(height: _isTablet ? Measurements.height * 0.02: Measurements.width * 0.06,padding:EdgeInsets.symmetric(vertical: _isTablet?3:4) ,child: Text(_open?Language.getWidgetStrings("widgets.actions.less"):Language.getWidgetStrings("widgets.actions.more"))),onTap: (){setState(() =>_open=!_open);},):Container(),
                                        ],
                                     ),
                                   ],
@@ -227,6 +172,140 @@ class _DashboardCardState extends State<DashboardCard> {
           
         });
       }
+
+  Widget singleActionButtonWidget(BuildContext context, bool _isTablet) {
+
+    return InkWell(
+      radius:
+      _isTablet ? Measurements.height * 0.02 : Measurements.width * 0.07,
+      child: Container(
+          padding: EdgeInsets.symmetric(horizontal: Measurements.width * 0.02),
+          //width: widget._active ?50:120,
+          decoration: BoxDecoration(
+            shape: BoxShape.rectangle,
+            color: Colors.grey.withOpacity(0.3),
+            borderRadius: BorderRadius.circular(15),
+          ),
+          height: _isTablet
+              ? Measurements.height * 0.02
+              : Measurements.width * 0.07,
+          child: Center(
+            child: _isloading.value
+                ? Container(
+                constraints: BoxConstraints(
+                  maxWidth: _isTablet
+                      ? Measurements.height * 0.01
+                      : Measurements.width * 0.04,
+                  maxHeight: _isTablet
+                      ? Measurements.height * 0.01
+                      : Measurements.width * 0.04,
+                ),
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                ))
+                : Container(
+              alignment: Alignment.center,
+                   child:Text(Language.getConnectStrings("actions.open"))
+            ),
+          )),
+      onTap: () {
+        setState(() {
+          _isloading.value = true;
+          widget.handler.loadScreen(context, _isloading);
+        });
+      },
+    );
+
+  }
+
+  Widget actionButtonsWidget(BuildContext context, bool _isTablet, bool isActive) {
+    return isActive
+        ? InkWell(
+      radius: _isTablet
+          ? Measurements.height * 0.02
+          : Measurements.width * 0.07,
+      child: Container(
+          padding:
+          EdgeInsets.symmetric(horizontal: Measurements.width * 0.02),
+          //width: widget._active ?50:120,
+          decoration: BoxDecoration(
+            shape: BoxShape.rectangle,
+            color: Colors.grey.withOpacity(0.3),
+            borderRadius: BorderRadius.circular(15),
+          ),
+          height: _isTablet
+              ? Measurements.height * 0.02
+              : Measurements.width * 0.07,
+          child: Center(
+            child: _isloading.value
+                ? Container(
+                constraints: BoxConstraints(
+                  maxWidth: _isTablet
+                      ? Measurements.height * 0.01
+                      : Measurements.width * 0.04,
+                  maxHeight: _isTablet
+                      ? Measurements.height * 0.01
+                      : Measurements.width * 0.04,
+                ),
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                ))
+                : Container(
+              alignment: Alignment.center,
+//              child:Text(Language.getConnectStrings("actions.open"))
+              child:Text("Hello")
+            ),
+          )),
+      onTap: () {
+        setState(() {
+          _isloading.value = true;
+          widget.handler.loadScreen(context, _isloading);
+        });
+      },
+    )
+        : Container(
+        child: InkWell(
+          child: Container(
+              height: _isTablet
+                  ? Measurements.height * 0.02
+                  : Measurements.width * 0.07,
+              child: Container(
+                  width: 100,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    color: Colors.grey.withOpacity(0.3),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      SvgPicture.asset(
+                        "images/launchicon.svg",
+                        height:
+                        Measurements.width * (_isTablet ? 0.015 : 0.03),
+                        color: Colors.white.withOpacity(0.7),
+                      ),
+                      Padding(
+                        padding:
+                        EdgeInsets.only(left: Measurements.width * 0.008),
+                      ),
+                      Text(
+                        "Learn more",
+                        style: prefix0.TextStyle(
+                            color: Colors.white.withOpacity(0.7)),
+                      ),
+                    ],
+                  ))),
+          onTap: () {
+            setState(() {
+              isActive
+                  ? widget.handler.loadScreen(context, _isloading)
+                  : _launchURL(widget.handler.learnMore());
+            });
+          },
+        ));
+  }
 }
 
 abstract class CardContract{
