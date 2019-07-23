@@ -166,14 +166,12 @@ class Product{
 
 // add items to complete the flow object
 class Cart {
-
   Cart();
   dynamic cart;
-  
   List<CartItem> items = List();
-
   num total =0;
   String id;
+
   Cart.toMap(dynamic obj){
     cart = obj;
     print(cart);
@@ -230,6 +228,7 @@ class CartItem {
   num    vat;
   String sku;
   String uuid;
+  bool inStock = true;
 
   CartItem({this.id,this.sku,this.price,this.uuid,this.quantity,this.identifier,this.image,this.name,this.vat});
   

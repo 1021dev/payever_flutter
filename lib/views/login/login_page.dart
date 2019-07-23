@@ -73,11 +73,11 @@ class _LoginState extends State<Login> implements LoginScreenContract,AuthStateL
       }else if(Platform.isFuchsia){
         fingerPrint = "Fuchsia";
       }else if(Platform.isWindows){
-        fingerPrint = "Fuchsia";  
+        fingerPrint = "Windows";  
       }else if(Platform.isMacOS){
-        fingerPrint = "Fuchsia";
+        fingerPrint = "Macos";
       }else if(Platform.isLinux){
-        fingerPrint = "Fuchsia";
+        fingerPrint = "Linux";
       }
       p.setString(GlobalUtils.FINGERPRINT, fingerPrint);
     });

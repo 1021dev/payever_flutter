@@ -260,9 +260,13 @@ class _ProductsBodyState extends State<ProductsBody> {
   Future _refresh(){
     widget._parts.page = 1;
     widget._parts.loadMore.value = true;
-    return Future.microtask((){
-      return widget._parts.loadMore.value;
+    return RestDatasource().getInventory(widget._parts.business.id, GlobalUtils.ActiveToken.accesstoken).then((inventories){
+      widget._parts.inventories.clear();
+      inventories.forEach((inv){
+        widget._parts.inventories.add(InventoryModel.toMap(inv));
       });
+      setState(() {});
+    });
   }
 
   @override
@@ -301,7 +305,7 @@ class ProductLoader extends StatefulWidget {
   Business business;
   String initialDocument;
   int page;
-  int limit = 3;
+  int limit = 36;
   ProductLoader({this.parts,this.business,@required this.isSearching,this.page}){
     initialDocument = ''' 
               query Product {

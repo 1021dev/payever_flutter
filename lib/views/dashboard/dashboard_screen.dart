@@ -52,7 +52,12 @@ class _DashboardMidScreenState extends State<DashboardMidScreen> {
   @override
   void initState() {
     super.initState();
+    SharedPreferences.getInstance().then((p){
 
+      Language.LANGUAGE = widget.prefs.getString(GlobalUtils.LANGUAGE);
+      Language(context);
+
+    });
   }
   @override
   Widget build(BuildContext context) {
@@ -125,12 +130,12 @@ class _DashboardMidScreenState extends State<DashboardMidScreen> {
         if(e.toString().contains("SocketException"))Future.delayed(Duration(milliseconds: 1500)).then((_)=>loadData());
       });
     });
+    print("Language Loaded");
   }
 
   void fetchData({dynamic token,bool renew}){
     List<AppWidget> wids = new List();
     Business activeBusiness;
-    bool translations = false;
     var _token = !renew ? Token.map(token) : token;
       GlobalUtils.ActiveToken = _token;
       SharedPreferences.getInstance().then((prefs){
@@ -140,8 +145,10 @@ class _DashboardMidScreenState extends State<DashboardMidScreen> {
         prefs.setString(GlobalUtils.LAST_OPEN, DateTime.now().toString());
         RestDatasource().getUser(GlobalUtils.ActiveToken.accessToken, context).then((user){
           User tempUser = User.map(user);
-          Language.LANGUAGE = tempUser.language;
-          Language(context);
+          if(tempUser.language != prefs.getString(GlobalUtils.LANGUAGE)){
+            Language.LANGUAGE = tempUser.language;
+            Language(context);
+          }
           Measurements.loadImages(context);
         });
         RestDatasource().getWidgets(prefs.getString(GlobalUtils.BUSINESS),GlobalUtils.ActiveToken.accessToken,context).then(( obj){
@@ -509,7 +516,6 @@ class _DashboardScreenState extends State<DashboardScreen> with TickerProviderSt
             children :<Widget>[
               !_isSearching? _dashboard:SearchCard(_searchText,widget._business.id),
               _apps,
-              //Text(""),
               _menu,
             ],
           )
@@ -533,7 +539,6 @@ class _DashboardScreenState extends State<DashboardScreen> with TickerProviderSt
 
   @override
   void onLoadStateChanged(LoadState state) {
-
     setState(()=>
       _isLoading = false
     );
@@ -541,7 +546,6 @@ class _DashboardScreenState extends State<DashboardScreen> with TickerProviderSt
 }
 
 class Dashboard extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -568,7 +572,6 @@ class _AppsState extends State<Apps> {
             child: GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 4,
-
               ),
               itemCount: CardParts._isBusiness? 3:0,
               itemBuilder: (BuildContext context, int index) {
