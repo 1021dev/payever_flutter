@@ -9,6 +9,7 @@ import 'package:payever/network/rest_ds.dart';
 import 'package:payever/utils/env.dart';
 import 'package:payever/utils/translations.dart';
 import 'package:payever/utils/utils.dart';
+import 'package:payever/views/customelements/color_picker.dart';
 import 'package:payever/views/pos/native_pos_screen.dart';
 
 class DetailScreen extends StatefulWidget {
@@ -30,7 +31,6 @@ class _DetailScreenState extends State<DetailScreen> {
         ),
         centerTitle: true,
         title: Text("Product details",style: TextStyle(color: Colors.black),),
-        
         backgroundColor: Colors.white,
       ),
       backgroundColor: Colors.white,
@@ -50,33 +50,34 @@ class DetailedProduct extends StatefulWidget {
   DetailedProduct({@required this.currentProduct,@required this.parts}){
     imagesBase = currentProduct.images;
   }
+
   @override
   _DetailedProductState createState() => _DetailedProductState();
 }
 
 class _DetailedProductState extends State<DetailedProduct> {
   List<String> imagesVariants = List();
-  
   @override
   void initState() {
     super.initState();
     widget.currentVariant.addListener(listener);
-    List<Map<String,String>> skuStock = List();
-    if(widget.currentProduct.variants.isNotEmpty){
-    widget.currentProduct.variants.forEach((current){
-      RestDatasource().getInvetory(widget.parts.business.id, GlobalUtils.ActiveToken.accessToken, current.sku, context).then((inv){
-        widget.productStock.addAll({"${current.sku}" : "${InventoryModel.toMap(inv).stock.toString()}"});
-        if(current.sku == widget.currentProduct.variants.last.sku){
-          widget.stockCount.value = true;
-        }
-      });
-    });
-    }else{
-      RestDatasource().getInvetory(widget.parts.business.id, GlobalUtils.ActiveToken.accessToken, widget.currentProduct.sku, context).then((inv){
-        widget.productStock.addAll({"${InventoryModel.toMap(inv).sku}" : "${InventoryModel.toMap(inv).stock.toString()}"});        
-        widget.stockCount.value = true;
-      });
-    }
+
+    // List<Map<String,String>> skuStock = List();
+    // if(widget.currentProduct.variants.isNotEmpty){
+    // widget.currentProduct.variants.forEach((current){
+    //   RestDatasource().getInvetory(widget.parts.business.id, GlobalUtils.ActiveToken.accessToken, current.sku, context).then((inv){
+    //     widget.productStock.addAll({"${current.sku}" : "${InventoryModel.toMap(inv).stock.toString()}"});
+    //     if(current.sku == widget.currentProduct.variants.last.sku){
+    //       widget.stockCount.value = true;
+    //     }
+    //   });
+    // });
+    // }else{
+    //   RestDatasource().getInvetory(widget.parts.business.id, GlobalUtils.ActiveToken.accessToken, widget.currentProduct.sku, context).then((inv){
+    //     widget.productStock.addAll({"${InventoryModel.toMap(inv).sku}" : "${InventoryModel.toMap(inv).stock.toString()}"});        
+    //     widget.stockCount.value = true;
+    //   });
+    // }
 
   }
   listener(){
@@ -101,6 +102,7 @@ class _DetailedProductState extends State<DetailedProduct> {
 }
 
 class DetailImage extends StatefulWidget{
+
   ProductsModel currentProduct;
   ValueNotifier<int> currentVariant;
   PosScreenParts parts;
@@ -110,6 +112,7 @@ class DetailImage extends StatefulWidget{
   DetailImage({@required this.currentVariant,@required this.parts,@required this.images,@required this.index,});
   @override
   _DetailImageState createState() => _DetailImageState();
+
 }
 
 class _DetailImageState extends State<DetailImage> {
@@ -120,7 +123,9 @@ class _DetailImageState extends State<DetailImage> {
   }
 
   listener(){
+
     setState(() {});
+
   }
 
   @override
@@ -261,6 +266,8 @@ class _DetailDetailsState extends State<DetailDetails> {
       var index= 0;
       widget.products = List();
       widget.currentProduct.variants.forEach((f){
+        var temp = widget.parts.productStock[f.sku];
+        if(((temp.contains("null")? 0:int.parse(temp??"0")) > 0)){
         PopupMenuItem<String> variant = PopupMenuItem(
           value: "$index", 
           child: Container(
@@ -268,21 +275,27 @@ class _DetailDetailsState extends State<DetailDetails> {
             child: ListTile(
               dense: true,
               title:  Container(
-                width: Measurements.width ,
+                width: Measurements.width,
                 child: Text(f.title,style: widget.textStyle,overflow: TextOverflow.ellipsis,),
               ),
             ),
           ),
         );
         widget.products.add(variant);
+        }
         index++;
       });
+      if(widget.currentVariant.value == 0)
+      widget.currentVariant.value = int.parse(widget.products.first.value);
+
     }else{
       widget.price = widget.currentProduct.price;
       widget.salePrice = widget.currentProduct.salePrice;
       widget.onSale = !widget.currentProduct.hidden;
       widget.description = widget.currentProduct.description;
     }
+    String _stc = widget.parts.productStock[widget.haveVariants?widget.currentProduct.variants[widget.currentVariant.value].sku:widget.currentProduct.sku];
+    int stc  = _stc == null ? 0:_stc.contains("null")? 0:int.parse(_stc??"0");
     return Container(
       width:  Measurements.height * 0.4,
       child: Column(
@@ -308,7 +321,7 @@ class _DetailDetailsState extends State<DetailDetails> {
           ),
           //Stock
           Container(
-            child: StockText(count: widget.stockCount.value,sku: widget.haveVariants?widget.currentProduct.variants[widget.currentVariant.value].sku:widget.currentProduct.sku,productStock: widget.productStock,),
+            child: StockText(parts: widget.parts,stc: stc,productStock: widget.productStock,),
           ),
           //images
           DetailImage(currentVariant: widget.currentVariant,parts: widget.parts,images: imagesVariants,index: (widget.haveVariants && (widget.currentProduct.variants[widget.currentVariant.value].images.isNotEmpty))?widget.imagesBase.length:0,),
@@ -337,7 +350,7 @@ class _DetailDetailsState extends State<DetailDetails> {
                     dense: true,
                     trailing: Icon(Icons.keyboard_arrow_down),
                     title:  Container(
-                      width: Measurements.width ,
+                      width: Measurements.width,
                       child: Text(widget.currentProduct.variants[widget.currentVariant.value].title,style: widget.textStyle,overflow: TextOverflow.ellipsis,),
                     ),
                   ),
@@ -355,41 +368,47 @@ class _DetailDetailsState extends State<DetailDetails> {
               child:Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
-                  color: Colors.black,
+                  color: stc ==0?Colors.grey:Colors.black,
                 ),
                 child:Center(child: Text("Add to cart",style: TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.bold),)),
               ),
               onTap: (){
-                if(widget.haveVariants){
-                  var image = widget.currentProduct.variants[widget.currentVariant.value].images.isNotEmpty?widget.currentProduct.variants[widget.currentVariant.value].images[0]:widget.currentProduct.images.isNotEmpty?widget.currentProduct.images[0]:null;
-                  widget.parts.add2cart(id:widget.currentProduct.variants[widget.currentVariant.value].id,image:image,uuid: widget.currentProduct.variants[widget.currentVariant.value].id,name: widget.currentProduct.variants[widget.currentVariant.value].title,price:widget.onSale?widget.currentProduct.variants[widget.currentVariant.value].salePrice:widget.currentProduct.variants[widget.currentVariant.value].price,qty: 1,sku:widget.currentProduct.variants[widget.currentVariant.value].sku);
-                }else{
-                  var image = widget.currentProduct.images.isNotEmpty?widget.currentProduct.images[0]:null;
-                  widget.parts.add2cart(id:widget.currentProduct.uuid,image:image,uuid: widget.currentProduct.uuid,name: widget.currentProduct.title,price:widget.onSale?widget.currentProduct.salePrice:widget.currentProduct.price,qty: 1,sku:widget.currentProduct.sku);
+                if(stc != 0){
+                  if(widget.haveVariants){
+                    var image = widget.currentProduct.variants[widget.currentVariant.value].images.isNotEmpty?widget.currentProduct.variants[widget.currentVariant.value].images[0]:widget.currentProduct.images.isNotEmpty?widget.currentProduct.images[0]:null;
+                    widget.parts.add2cart(id:widget.currentProduct.variants[widget.currentVariant.value].id,image:image,uuid: widget.currentProduct.variants[widget.currentVariant.value].id,name: widget.currentProduct.variants[widget.currentVariant.value].title,price:widget.onSale?widget.currentProduct.variants[widget.currentVariant.value].salePrice:widget.currentProduct.variants[widget.currentVariant.value].price,qty: 1,sku:widget.currentProduct.variants[widget.currentVariant.value].sku);
+                  }else{
+                    var image = widget.currentProduct.images.isNotEmpty?widget.currentProduct.images[0]:null;
+                    widget.parts.add2cart(id:widget.currentProduct.uuid,image:image,uuid: widget.currentProduct.uuid,name: widget.currentProduct.title,price:widget.onSale?widget.currentProduct.salePrice:widget.currentProduct.price,qty: 1,sku:widget.currentProduct.sku);
+                  }
+                  Navigator.pop(context);
                 }
-                Navigator.pop(context);
               },
             ),
           ),
-          
             Container(
               padding: EdgeInsets.only(bottom: Measurements.height * 0.04,top: Measurements.height * 0.02),
               child: Text("${widget.description}",style: TextStyle(color: Colors.black,fontSize: 13),
             )
           ),
+          ColorButtomGrid(colors: <Color>[Colors.red,Colors.blue,Colors.green,Colors.deepOrange,Colors.red,Colors.blue,Colors.green,Colors.deepOrange,Colors.red,Colors.blue,Colors.green,Colors.deepOrange], controller: controller, size: Measurements.height * 0.03,),
+          //ColorButtomContainer(displayColor: Colors.red, size: Measurements.height * 0.03,),
           widget.parts.isTablet? Padding(padding: EdgeInsets.only(bottom: Measurements.height * 0.02),):Container(),
         ],
       ),
     );
   }
+  ColorButtomController controller = ColorButtomController();
 }
 class StockText extends StatefulWidget {
+
   String value = "";
+  PosScreenParts parts;
   Color color  = Colors.white;
-  bool count;
   var productStock;
+  int stc;
   String sku;
-  StockText({this.count,this.sku,@required this.productStock});
+  StockText({this.parts,this.sku,@required this.productStock,this.stc});
   @override
   _StockTextState createState() => _StockTextState();
 }
@@ -398,11 +417,8 @@ class _StockTextState extends State<StockText> {
   
   @override
   Widget build(BuildContext context) {
-    if(widget.count){
-      int stc  = int.parse(widget.productStock[widget.sku]??"0");
-      widget.value = (stc > 0 )? Language.getProductListStrings("filters.quantity.inStock"):Language.getProductListStrings("filters.quantity.outStock");
-      widget.color = (stc > 6 )? Colors.green: stc > 0?Colors.orangeAccent:Colors.red;
-    }
+    widget.value = (widget.stc > 0 )? Language.getProductListStrings("filters.quantity.inStock"):Language.getProductListStrings("filters.quantity.outStock");
+    widget.color = (widget.stc > 6 )? Colors.green: widget.stc > 0?Colors.orangeAccent:Colors.red;
     return Text(widget.value ,style: TextStyle(color: widget.color)); 
   }
 }

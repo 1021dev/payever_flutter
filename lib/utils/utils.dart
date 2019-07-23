@@ -570,6 +570,7 @@ class GlobalUtils{
     static const String DB_INVMODEL_SKU                 = "sku";
     static const String DB_INVMODEL_UPDATEAT            = "updatedAt";
     static const String DB_INVMODEL_STOCK               = "stock";
+    static const String DB_INVMODEL_RESERVED            = "reserved";
     static const String DB_INVMODEL_V                   = "__v";
     static const String DB_INVMODEL_ID                  = "_id";
     

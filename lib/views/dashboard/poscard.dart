@@ -72,6 +72,7 @@ class _POSCardState extends State<POSCard> {
           });
         }).then((_){
           widget._parts.terminals.forEach((terminal){
+            print(terminal.name);
             widget._parts._chSets.forEach((chset){
               if(terminal.channelSet == chset.id){
                 api.getcheckoutIntegration(widget._business.id ,chset.checkout, GlobalUtils.ActiveToken.accesstoken,context).then((paymentMethods){
@@ -89,7 +90,7 @@ class _POSCardState extends State<POSCard> {
                     );
                     api.getPopularWeek(widget._business.id ,chset.id, GlobalUtils.ActiveToken.accesstoken,context).then((products){
                       products.forEach((product){
-                        terminal.bestSales.add(Product.toMap(product));
+                        terminal.bestSales.add(Product.toMap(product));                        
                       });
                     }).then((_){
                       widget._parts._secondCardLoading.value = false;
@@ -102,9 +103,10 @@ class _POSCardState extends State<POSCard> {
                     }
                     widget._parts.index.value = widget._parts._terminals.indexWhere((term)=>term.active);
                     
-                    if((terminal.id == widget._parts.terminals.last.id)&& (widget._parts._chSets.last.id == chset.id)) widget._parts._mainCardLoading.value = false;
-                    
-                    print("${widget._parts._terminals[widget._parts.index.value].paymentMethods.length}  ${widget._parts._terminals[widget._parts.index.value].name}");
+                    if((terminal.id == widget._parts.terminals.last.id) && (widget._parts._chSets.last.id == chset.id)){
+                      widget._parts._mainCardLoading.value = false;
+                      print("finish");
+                    }
                     CardParts.currentTerminal = widget._parts._terminals[widget._parts.index.value];
                 });
               }
@@ -260,8 +262,11 @@ class _MainPOSCardState extends State<MainPOSCard> {
                 ),
                 onTap: (){
                   setState((){
-                   if(widget._parts._terminals.length > 1 ) {widget._parts.index.value = widget._parts.index.value == (widget._parts._terminals.length - 1)? widget._parts.index.value = 0:widget._parts.index.value +1;}
-                    //print(widget._parts.index.value);
+                   if(widget._parts._terminals.length > 1 ) {
+                     widget._parts.index.value = widget._parts.index.value == (widget._parts._terminals.length - 1)?
+                      widget._parts.index.value = 0:widget._parts.index.value +1;
+                     }
+                    
                   });
                 },
               ),
@@ -434,7 +439,6 @@ class POSSecondCard extends StatefulWidget {
 }
 
 class _POSSecondCardState extends State<POSSecondCard> {
-
   @override
   void initState() {
     super.initState();
