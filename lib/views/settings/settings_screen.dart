@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:payever/views/customelements/custom_future_builder.dart';
 import 'package:provider/provider.dart';
 
 import 'package:payever/views/customelements/custom_app_bar.dart';
@@ -25,7 +26,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
 //    print("myGlobalStateModel: $myGlobalStateModel");
 //    print("myGlobalStateModel.currentWallpaper: ${myGlobalStateModel.currentWallpaper}");
 
-
     _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
     Measurements.height = (_isPortrait
         ? MediaQuery.of(context).size.height
@@ -36,7 +36,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
 //      print("GlobalUtils.ActiveToken.accesstoken: ${GlobalUtils.ActiveToken.accesstoken}");
 //      print("widget.currentBusiness.id: ${globalStateModel.currentBusiness.id}");
-
 
     return Consumer(
       builder: (BuildContext context, GlobalStateModel globalStateModel,
@@ -85,6 +84,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: <Widget>[
+//                                    CustomFutureBuilder(
+//                                      future: _myFuture(),
+//                                      errorMessage: "Error loading future!",
+//                                      onDataLoaded: (results) {
+//                                        return Text(results);
+//                                      },
+//                                    ),
                                     Text(
                                       "Business Name:",
                                       style: TextStyle(
@@ -110,4 +116,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
     );
   }
+
+  Future<void> _myFuture() async {
+     await Future.delayed(Duration(seconds: 3), () => print("my future1..."));
+     var data1 = "1";
+     await Future.delayed(Duration(seconds: 3), () => print("my future2..."));
+     var data2 = await Future.delayed(Duration(seconds: 3), () => _myFuture2());
+     await Future.delayed(Duration(seconds: 1), () => print("my future3..."));
+     var data3 = "3";
+
+     return "Hello data: ${data1 + data2 + data3}";
+  }
+
+  Future<String> _myFuture2() async {
+     await Future.delayed(Duration(seconds: 3), () => print("my future data2..."));
+    return "MyfutureData2";
+  }
+
 }
