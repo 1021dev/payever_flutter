@@ -21,7 +21,8 @@ class Env{
   static String Inventory;
   static String Shops;
   static String Wrapper;
-  
+  static String Employees;
+
   Env.map(dynamic obj) {
 
     Env.Users         = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_USER];
@@ -41,6 +42,7 @@ class Env{
     Env.Shops         = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_SHOPS];
     Env.Builder       = obj[GlobalUtils.ENV_FRONTEND][GlobalUtils.ENV_BUILDER_CLIENT];
     Env.Wrapper       = obj[GlobalUtils.ENV_FRONTEND][GlobalUtils.ENV_WRAPPER];
+    Env.Employees     = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_EMPLOYEES];
 
   }
 

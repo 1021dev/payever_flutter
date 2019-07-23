@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart' as prefix0;
 import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/models/business.dart';
@@ -86,7 +85,7 @@ class _TransactionCardState extends State<TransactionCard> {
 
   @override
   Widget build(BuildContext context) {
-    return DashboardCard(_appName, _imageProvider, MainTransactionCard(_isBusiness), TrasactionSecCard(),TransactionNavigation(),true);
+    return DashboardCard(_appName, _imageProvider, MainTransactionCard(_isBusiness), TrasactionSecCard(),TransactionNavigation(),true, false);
   }
 
 }
