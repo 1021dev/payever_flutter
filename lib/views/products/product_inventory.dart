@@ -20,9 +20,6 @@ class InventoryManagement{
         temp.amount = inv.amount;
       }
     });
-
-    print("sku ${currentInv.sku}  invamount ${currentInv.amount} tempamount ${temp.amount}");
-
     currentInv.amount = currentInv.amount??temp.amount??0;
     _inventories.add(currentInv);
     inventories..clear()..addAll(_inventories);
@@ -41,8 +38,6 @@ class InventoryManagement{
 
   saveInventories(String businessID,BuildContext context){
     inventories.forEach((inventory){
-      print("num dif = ${inventory.newAmount} - ${inventory.amount}");
-
       num dif = (inventory.newAmount??0) - (inventory.amount??0);
       print(dif);
       RestDatasource().checkSKU(businessID, GlobalUtils.ActiveToken.accessToken, inventory.sku,).then((onValue){
@@ -117,8 +112,8 @@ class _ProductInventoryRowState extends State<ProductInventoryRow> {
         var _inv = InventoryModel.toMap(inv);
         widget.parts.invManager.inventories.add(Inventory(barcode: _inv.barcode,sku: _inv.sku,tracking: _inv.isTrackable,amount: _inv.stock));
         setState(() {
-          widget.parts.prodTrackInv   = _inv.isTrackable;
-          widget.parts.prodStock      = _inv.stock;
+          widget.parts.prodTrackInv   = _inv.isTrackable??false;
+          widget.parts.prodStock      = _inv.stock??0;
         });
       });
   }
@@ -155,7 +150,9 @@ class _ProductInventoryRowState extends State<ProductInventoryRow> {
                           child: TextFormField(
                             style: TextStyle(fontSize: Measurements.height * 0.02),
                             initialValue: widget.parts.editMode?widget.parts.product.sku:"",
-                            inputFormatters: [WhitelistingTextInputFormatter(RegExp("[a-z A-Z 0-9]"))],
+                            inputFormatters: [
+                              WhitelistingTextInputFormatter(RegExp("[a-z A-Z 0-9 _]")),
+                              ],
                             onSaved: (sku) {
                               print("sku");
                               widget.parts.product.sku = sku;

@@ -17,6 +17,7 @@ import 'package:payever/utils/env.dart';
 import 'package:payever/utils/translations.dart';
 import 'package:payever/utils/utils.dart';
 import 'package:payever/views/pos/detailedProduct.dart';
+import 'package:payever/views/pos/pos_cart.dart';
 import 'package:payever/views/pos/pos_order_section.dart';
 import 'package:payever/views/pos/send2dev.dart';
 import 'package:payever/views/pos/webviewsection.dart';
@@ -53,6 +54,8 @@ class PosScreenParts{
   Cart shoppingCart;
   List<ProductsModel> productList = List();
   
+  Map<String,String> productStock = Map();
+
   bool smsenabled = false;
   String shoppingCartID = "";
   String url;
@@ -122,10 +125,17 @@ class _NativePosScreenState extends State<NativePosScreen> {
     widget.parts= PosScreenParts();
     RestDatasource api = RestDatasource();
     widget.parts.business = widget.business;
+    RestDatasource().getInventory(widget.parts.business.id, GlobalUtils.ActiveToken.accessToken).then((inventories){
+      inventories.forEach((inv){
+        InventoryModel _currentInv =InventoryModel.toMap(inv);
+        widget.parts.productStock.addAll({"${_currentInv.sku}" : "${_currentInv.stock.toString()}"});
+      });
+      setState(() {});
+    });
     if(widget.terminal == null){
-
     List<Terminal> _terminals = List();
     List<ChannelSet> _chSets = List();
+    
     api.getTerminal(widget.business.id, GlobalUtils.ActiveToken.accesstoken,context).then((terminals){
       terminals.forEach((terminal){
         _terminals.add(Terminal.toMap(terminal));
@@ -201,47 +211,12 @@ class _NativePosScreenState extends State<NativePosScreen> {
               ],
             ),
             onPressed: (){
-              Navigator.push(context, PageTransition(child:CartScreen(parts:widget.parts,empty: false,),type:PageTransitionType.fade,duration: Duration(milliseconds: 10)));
+              Navigator.push(context, PageTransition(child:POSCart(parts:widget.parts,),type:PageTransitionType.fade,duration: Duration(milliseconds: 10)));
             },
           ),
         ],
       ),
       body: !widget.parts.dataFetched.value?Loader(widget.parts):PosBody(parts: widget.parts,),
-    );
-  }
-}
-
-class CartScreen extends StatefulWidget {
-  PosScreenParts parts;
-  bool empty;
-  CartScreen({this.parts,this.empty});
-  @override
-  _CartScreenState createState() => _CartScreenState();
-}
-
-class _CartScreenState extends State<CartScreen> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.close,color: Colors.black,),
-          onPressed: (){
-            // if(widget.parts.shoppingCartID.isNotEmpty)
-            //   RestDatasource().getStorage(GlobalUtils.ActiveToken.accessToken, widget.parts.shoppingCartID).then((obj){
-            //     print(obj);
-            //     updateCart(obj);
-            //   });
-            Navigator.pop(context);
-          },
-        ),
-        centerTitle: true,
-        title: SvgPicture.asset("images/payeverlogoandname.svg",color: Colors.black,),
-        backgroundColor: Colors.white,
-      ),
-      body: CartBody(parts: widget.parts,),
-      
     );
   }
 }
@@ -275,8 +250,22 @@ class _PosBodyState extends State<PosBody> {
 
   @override
   Widget build(BuildContext context) {
+    int index;
+    List<Widget> prodList = List();
+    widget.parts.productList.forEach((prod){
+      var temp = widget.parts.productStock[prod.sku]??"0";
+      var _variants = prod.variants;
+      bool oneVariant = true;
+      if(_variants.isNotEmpty){
+        var _varEmpty = widget.parts.productStock[_variants[0].sku]??"0";
+        oneVariant = ((_varEmpty.contains("null")? 0:int.parse(_varEmpty??"0")) > 0);
+      }
+      if(!(!((temp.contains("null")? 0:int.parse(temp??"0")) > 0) && prod.variants.isEmpty) && !((prod.variants.length == 1) && !oneVariant))
+        prodList.add( ProductItem(currentProduct: prod, parts: widget.parts) );
+    });
+
     return Container(
-      padding: EdgeInsets.symmetric(horizontal:Measurements.width* 0.05),
+      padding: EdgeInsets.symmetric(horizontal:Measurements.width * (widget.parts.isTablet? 0.03:0.05)),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -323,22 +312,20 @@ class _PosBodyState extends State<PosBody> {
               ListView.builder(
                 controller:controller,
                 shrinkWrap: true,
-                itemCount: widget.parts.productList.length,
+                itemCount: prodList.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return Container(
-                    padding: EdgeInsets.symmetric(vertical: Measurements.height * 0.01),
-                    child: ProductItem(currentProduct: widget.parts.productList[index], parts: widget.parts)
-                    );
+                  return prodList[index];
                 },
-            ):GridView.builder(
+            ):
+            GridView.builder(
                 controller:controller,
                 shrinkWrap: true,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: widget.parts.isPortrait?3:4,childAspectRatio:0.65
                 ),
-                itemCount:widget.parts.productList.length,
+                itemCount:prodList.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return ProductItem(currentProduct: widget.parts.productList[index], parts: widget.parts);
+                  return prodList[index];
                 },
               ),
             ),
@@ -364,61 +351,65 @@ class _ProductItemState extends State<ProductItem> {
       elevation: 0,
       color:Colors.white,
       child: InkWell(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Stack(
-              alignment: Alignment.center,
-              children: <Widget>[
-                Container(
-                  height: Measurements.width *(widget.parts.isTablet? (widget.parts.isPortrait? 0.3:0.3): 0.8),
-                  width:  Measurements.width *(widget.parts.isTablet? (widget.parts.isPortrait? 0.3:0.3): 0.8),
-                  decoration: BoxDecoration(
-                    color: widget.currentProduct.images.isEmpty ? Colors.black.withOpacity(0.35):Colors.white,
-                    borderRadius: BorderRadius.circular(widget.currentProduct.images.isEmpty ?0:12),
-                  ),),
-                  widget.currentProduct.images.isEmpty ?
-                  Center(
-                    child: SvgPicture.asset("images/noimage.svg",color: Colors.white.withOpacity(0.7),height: Measurements.width *(widget.parts.isTablet?0.1:0.2),),
-                  ):
+        child: Container(
+          width:  Measurements.width *(widget.parts.isTablet? (widget.parts.isPortrait? 0.3:0.3): 0.8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Stack(
+                alignment: Alignment.center,
+                children: <Widget>[
                   Container(
-                    height: Measurements.width *(widget.parts.isTablet? 0.3: 0.8),
-                    width:  Measurements.width *(widget.parts.isTablet? 0.3: 0.8),
-                      child:CachedNetworkImage(
-                      imageUrl: Env.Storage +"/products/"+ widget.currentProduct.images[0],
-                      placeholder: (context, url) =>  Container(),
-                      errorWidget: (context, url, error) => new Icon(Icons.error),
-                      fit: BoxFit.contain,
+                    height: Measurements.width *(widget.parts.isTablet? (widget.parts.isPortrait? 0.3:0.3): 0.8),
+                    width:  Measurements.width *(widget.parts.isTablet? (widget.parts.isPortrait? 0.3:0.3): 0.8),
+                    decoration: BoxDecoration(
+                      color: widget.currentProduct.images.isEmpty ? Colors.black.withOpacity(0.35):Colors.white,
+                      borderRadius: BorderRadius.circular(widget.currentProduct.images.isEmpty ?0:12),
+                      ),
                     ),
+                    widget.currentProduct.images.isEmpty ?
+                    Center(
+                      child: SvgPicture.asset("images/noimage.svg",color: Colors.white.withOpacity(0.7),height: Measurements.width *(widget.parts.isTablet?0.1:0.2),),
+                    ):
+                    Container(
+                      height: Measurements.width *(widget.parts.isTablet? 0.3: 0.8),
+                      width:  Measurements.width *(widget.parts.isTablet? 0.3: 0.8),
+                        child:CachedNetworkImage(
+                        imageUrl: Env.Storage +"/products/"+ widget.currentProduct.images[0],
+                        placeholder: (context, url) =>  Container(),
+                        errorWidget: (context, url, error) => new Icon(Icons.error),
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                ],
+              ),
+              !widget.currentProduct.hidden?Container(
+                alignment: Alignment.bottomCenter,
+                height: Measurements.height * 0.03,
+                child:Text("Sale",style: TextStyle(fontSize: 15,color: widget.parts.saleColor,fontWeight: FontWeight.w300),),
+              ):
+              Container(height: Measurements.height * 0.03,),
+              Container(
+                height: Measurements.height * 0.03,
+                width:  Measurements.width *(widget.parts.isTablet? 0.4: 0.8),
+                alignment: Alignment.center,
+                child: Text("${widget.currentProduct.title}",style: TextStyle(fontSize: 15,color: widget.parts.titleColor,fontWeight: FontWeight.bold),)
+              ),
+              Container(
+                height: Measurements.height * 0.03,
+                alignment: Alignment.center,
+                child: Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text("${widget.parts.f.format(widget.currentProduct.price)}${Measurements.currency(widget.parts.business.currency)}",style: TextStyle(fontSize: 15,color: widget.parts.titleColor,fontWeight: FontWeight.w400,decoration: !widget.currentProduct.hidden?TextDecoration.lineThrough:TextDecoration.none),),
+                       !widget.currentProduct.hidden?Text("  ${widget.parts.f.format(widget.currentProduct.salePrice)}${Measurements.currency(widget.parts.business.currency)}",style: TextStyle(fontSize: 15,color: widget.parts.saleColor,fontWeight: FontWeight.w400),):Container(),
+                    ],
                   ),
-              ],
-            ),
-            !widget.currentProduct.hidden?Container(
-              alignment: Alignment.bottomCenter,
-              height: Measurements.height * 0.03,
-              child:Text("Sale",style: TextStyle(fontSize: 15,color: widget.parts.saleColor,fontWeight: FontWeight.w300),),
-            ):
-            Container(height: Measurements.height * 0.03,),
-            Container(
-              height: Measurements.height * 0.03,
-              width:  Measurements.width *(widget.parts.isTablet? 0.4: 0.8),
-              alignment: Alignment.center,
-              child: Text("${widget.currentProduct.title}",style: TextStyle(fontSize: 15,color: widget.parts.titleColor,fontWeight: FontWeight.bold),)
-            ),
-            Container(
-              height: Measurements.height * 0.03,
-              alignment: Alignment.center,
-              child: Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text("${widget.parts.f.format(widget.currentProduct.price)}${Measurements.currency(widget.parts.business.currency)}",style: TextStyle(fontSize: 15,color: widget.parts.titleColor,fontWeight: FontWeight.w400,decoration: !widget.currentProduct.hidden?TextDecoration.lineThrough:TextDecoration.none),),
-                     !widget.currentProduct.hidden?Text("  ${widget.parts.f.format(widget.currentProduct.salePrice)}${Measurements.currency(widget.parts.business.currency)}",style: TextStyle(fontSize: 15,color: widget.parts.saleColor,fontWeight: FontWeight.w400),):Container(),
-                  ],
-                ),
-              )
-            ),
-          ],
+                )
+              ),
+            ],
+          ),
         ),
         onTap: (){
           Navigator.push(context, PageTransition(child:DetailScreen(parts:widget.parts,currentProduct: widget.currentProduct,),type:PageTransitionType.fade,duration: Duration(milliseconds: 10)));
@@ -428,103 +419,6 @@ class _ProductItemState extends State<ProductItem> {
   }
 }
 
-
-class CartBody extends StatefulWidget {
-  Color textColor = Colors.black.withOpacity(0.7);
-  PosScreenParts parts;
-  CartBody({@required this.parts});
-  final List<DropdownMenuItem<int>> qtys = List();
-
-  @override
-  _CartBodyState createState() => _CartBodyState();
-}
-
-class _CartBodyState extends State<CartBody> {
-  @override
-  void initState() {
-    super.initState();
-    widget.parts.openSection.addListener(listener);
-    for(int i=1;i<100;i++){
-        final number = new DropdownMenuItem(
-        value: i,
-        child: Text("$i"),
-      );
-      widget.qtys.add(number);
-    }
-  }
-  listener(){
-    setState(() {});
-  }
-  @override
-  Widget build(BuildContext context) {
-      return Container(
-        // child: ListView.builder(
-        //   //itemCount: widget.parts.currentCheckout.sections.length,
-        //   itemCount: 2,
-        //   itemBuilder: (BuildContext context, int index) {
-        //     print(widget.parts.currentCheckout.sections[index].code);
-        //     if(widget.parts.currentCheckout.sections[index].code == "order"){
-        //       return SectionWidget(index: index,currentSection: sectionPicker(widget.parts.currentCheckout.sections[index].code,index),title: widget.parts.currentCheckout.sections[index].code.replaceAll("_", " ").toUpperCase(), parts: widget.parts,);
-        //     }else{
-        //       return Container();
-        //     }
-        //   },
-        // ),
-        child: SectionWidget(index: 0,currentSection: OrderSection(parts: widget.parts,index: 0,),title: "order".toUpperCase(), parts: widget.parts,),
-      );
-  }
-  Widget sectionPicker(String title,int index){
-    switch(title){
-      case "order":
-        return OrderSection(parts: widget.parts,index: 0,);
-      break;
-      default:
-        return Text("");
-    }
-  }
-}
-
-class SectionWidget extends StatefulWidget {
-
-  PosScreenParts parts;
-  Widget currentSection;
-  String title;
-  int index;
-
-  SectionWidget({@required this.parts,@required this.index,@required this.currentSection,@required this.title});
-  @override
-  _SectionWidgetState createState() => _SectionWidgetState();
-}
-
-class _SectionWidgetState extends State<SectionWidget> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: Measurements.width* 0.05),
-      child: Column(
-        children: <Widget>[
-          InkWell(
-            onTap: (){
-              if(widget.parts.openSection.value > widget.index)
-                widget.parts.openSection.value = widget.index;
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Container(height: Measurements.height * 0.05,alignment: Alignment.center,child: Text(widget.title,style: TextStyle(color: Colors.black,fontWeight: FontWeight.w500),)),//line under black no white
-                Icon(widget.parts.openSection.value == widget.index ? Icons.keyboard_arrow_up:Icons.keyboard_arrow_down,color: widget.parts.openSection.value < widget.index?Colors.white:Colors.white,)
-              ],
-            ),
-          ),
-          Container(
-            child: widget.parts.openSection.value == widget.index? AnimatedContainer(child: widget.currentSection, duration: Duration(milliseconds: 100),):Container(),
-          ),
-          //Divider(color:Colors.black.withOpacity(0.7)),
-        ],
-      ),
-    );
-  }
-}
 
 class Loader extends StatefulWidget {
   PosScreenParts parts;
@@ -544,7 +438,6 @@ class _LoaderState extends State<Loader> {
 
   @override
   Widget build(BuildContext context) {
-    print(" getProductsByChannelSet(businessId: ${widget.parts.business.id}, channelSetId: ${widget.parts.currentTerminal.channelSet},search: ${widget.parts.search},existInChannelSet: true, paginationLimit: ${widget.limit}, pageNumber: ${widget.parts.page}) ");
     return widget.parts.currentTerminal == null? 
     Center(child: const CircularProgressIndicator(backgroundColor: Colors.black,),):
     GraphQLProvider(
@@ -602,16 +495,14 @@ class _LoaderState extends State<Loader> {
             print(result.data["getProductsByChannelSet"]["products"].length);
             result.data["getProductsByChannelSet"]["products"].forEach((prod){
               var tempProduct = ProductsModel.toMap(prod);
-              print(tempProduct.title);
+              print("TITLE ${tempProduct.title}");
               if((widget.parts.productList.indexWhere((test) => test.sku == tempProduct.sku)<0))
                 widget.parts.productList.add(tempProduct);
             });
-            print(widget.parts.productList.length);
             if(widget.parts.productList.isNotEmpty){
               Future.delayed(Duration(microseconds: 1)).then((_){
                 widget.parts.dataFetched.value = true;
                 widget.parts.loadMore.value = false;
-                //widget.parts.searching.value = false;
               });
             }
             return Container();

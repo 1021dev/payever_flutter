@@ -46,6 +46,7 @@ class Products{
       }
     }
   }
+
   String get business => _business;
   String get id => _id;
   String get lastSale => _lastSale;
@@ -55,9 +56,6 @@ class Products{
   String get uuid => _uuid;
   num    get _v => __v;
   String get id__ => __id;
-
-  
-                      
 
 }
 
@@ -157,6 +155,7 @@ class Variants {
 }
 
 class Shipping {
+  
   Shipping();
   bool free;
   bool general;
@@ -185,6 +184,7 @@ class Info {
     
   }
 }
+
 class InventoryModel{
 
   String _barcode;
@@ -194,11 +194,13 @@ class InventoryModel{
   bool   _isTrackable;
   String _sku;
   num    _stock; 
+  num    _reserved; 
   String _updatedAt; 
   num    __v; 
   String __id;
 
   InventoryModel.toMap(dynamic obj){
+
     _barcode                = obj[GlobalUtils.DB_INVMODEL_BARCODE];
     _business               = obj[GlobalUtils.DB_INVMODEL_BUSINESS];
     _createdAt              = obj[GlobalUtils.DB_INVMODEL_CREATEDAT];
@@ -206,9 +208,11 @@ class InventoryModel{
     _isTrackable            = obj[GlobalUtils.DB_INVMODEL_ISTRACKABLE];
     _sku                    = obj[GlobalUtils.DB_INVMODEL_SKU];
     _stock                  = obj[GlobalUtils.DB_INVMODEL_STOCK];
+    _reserved               = obj[GlobalUtils.DB_INVMODEL_RESERVED];
     _updatedAt              = obj[GlobalUtils.DB_INVMODEL_UPDATEAT];
     __v                     = obj[GlobalUtils.DB_INVMODEL_V];
     __id                    = obj[GlobalUtils.DB_INVMODEL_ID];
+
   }
   
   String get barcode => _barcode;
@@ -218,8 +222,44 @@ class InventoryModel{
   bool   get isTrackable => _isTrackable;
   String get sku => _sku;
   num    get stock => _stock;
+  num    get reserved => _reserved;
   String get updatedAt => _updatedAt; 
   num    get _v => __v;
   String get _id => __id;
 
+}
+
+class VariantsRef{
+  VariantsRef();
+  
+  String id;
+  List<String> images= List();
+  String title;
+  String description;
+  bool hidden;
+  num price;
+  num salePrice;
+  String sku;
+  String barcode;
+  List<VariantType> type = List();
+
+  VariantsRef.toMap(dynamic obj){
+    id          = obj[GlobalUtils.DB_PRODMODEL_VAR_ID];
+    title       = obj[GlobalUtils.DB_PRODMODEL_VAR_TITLE];
+    description = obj[GlobalUtils.DB_PRODMODEL_VAR_DESCRIPTION];
+    hidden      = obj[GlobalUtils.DB_PRODMODEL_VAR_HIDDEN];
+    price       = obj[GlobalUtils.DB_PRODMODEL_VAR_PRICE];
+    salePrice   = obj[GlobalUtils.DB_PRODMODEL_VAR_SALEPRICE];
+    sku         = obj[GlobalUtils.DB_PRODMODEL_VAR_SKU];
+    barcode     = obj[GlobalUtils.DB_PRODMODEL_VAR_BARCODE];
+    obj[GlobalUtils.DB_PRODMODEL_VAR_IMAGES].forEach((img){
+      images.add(img);
+    });
+  }
+
+}
+
+class VariantType{
+  String type;
+  String value;
 }

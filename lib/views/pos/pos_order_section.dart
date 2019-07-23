@@ -4,17 +4,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/models/pos.dart';
+import 'package:payever/models/products.dart';
 import 'package:payever/network/rest_ds.dart';
 import 'package:payever/utils/env.dart';
 import 'package:payever/utils/translations.dart';
 import 'package:payever/utils/utils.dart';
 import 'package:payever/views/pos/native_pos_screen.dart';
 import 'package:payever/views/pos/webviewsection.dart';
+// import 'package:payever/views/customelements/custom_dropdown.dart' as custom;
 
 
 class OrderSection extends StatefulWidget {
-  Color textColor  = Colors.black.withOpacity(0.7);
+  Color textColor     = Colors.black.withOpacity(0.7);
+  Color textColorOUT  = Colors.orangeAccent;
   PosScreenParts parts;
+  ValueNotifier<bool> checkStock = ValueNotifier(false);
   int index;
   final List<DropdownMenuItem<int>> qtys = List();
   OrderSection({@required this.parts,this.index});
@@ -27,14 +31,17 @@ class _OrderSectionState extends State<OrderSection> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    
+    widget.checkStock.addListener(listener);
+  }
+  listener(){
+    setState((){});
   }
   
   @override
   Widget build(BuildContext context) {
     widget.qtys.clear();
     for(int i=1;i<100;i++){
-        final number = new DropdownMenuItem(
+        final number = DropdownMenuItem(
         value: i,
         child: Text("$i"),
       );
@@ -95,7 +102,7 @@ class _OrderSectionState extends State<OrderSection> {
                       child: SvgPicture.asset("images/noimage.svg",color: Colors.grey.withOpacity(0.7),height: Measurements.height * 0.05,),
                     ),
                   ),
-                  Expanded(child: AutoSizeText(widget.parts.shoppingCart.items[index].name,style: TextStyle(color: widget.textColor),)),
+                  Expanded(child: AutoSizeText(widget.parts.shoppingCart.items[index].name,style: TextStyle(color: widget.parts.shoppingCart.items[index].inStock?widget.textColor:widget.textColorOUT),)),
                   Row(
                     children: <Widget>[
                       Container(
@@ -103,15 +110,18 @@ class _OrderSectionState extends State<OrderSection> {
                         child:Theme(
                           data: ThemeData.light(),
                           child: Container(
-                            child: DropdownButton(
-                              value: widget.parts.shoppingCart.items[index].quantity,
-                              items: widget.qtys,
-                              onChanged: (value) {
-                                setState((){
-                                  print(value);
-                                  widget.parts.updateQty(index:index,quantity: value);
-                                });
-                              },)
+                            child: ButtonTheme(
+                              alignedDropdown: true,
+                              child: DropdownButton(
+                                value: widget.parts.shoppingCart.items[index].quantity,
+                                items: widget.qtys,
+                                onChanged: (value) {
+                                  setState((){
+                                    print(value);
+                                    widget.parts.updateQty(index:index,quantity: value);
+                                  });
+                                },),
+                            )
                             ),
                         ),),
                       Container(alignment: Alignment.center,width: Measurements.width * 0.2,child: AutoSizeText("${Measurements.currency(widget.parts.business.currency)}${widget.parts.f.format(widget.parts.shoppingCart.items[index].price)}",maxLines: 1,style: TextStyle(color: widget.textColor),)),
@@ -177,13 +187,17 @@ class _OrderSectionState extends State<OrderSection> {
                 borderRadius: BorderRadius.circular(8)
               ),
               child: Center(
-                child: Text(Language.getCartStrings("checkout_cart_edit.form.label.product"),style: TextStyle(fontSize: 15,color: Colors.white,fontWeight: FontWeight.bold)),
+                child: widget.checkStock.value?CircularProgressIndicator():Text(Language.getCartStrings("checkout_cart_edit.form.label.product"),style: TextStyle(fontSize: 15,color: Colors.white,fontWeight: FontWeight.bold)),
               )
             ),
             onTap:(){
-              widget.parts.shoppingCart.items.isEmpty?
-              print("block")
-              :nextStep();
+              if(widget.parts.shoppingCart.items.isEmpty){
+                print("block");
+              }else{
+                if(!widget.checkStock.value){
+                  nextStep();
+                }
+              }
             },
           ),
         ),
@@ -193,12 +207,33 @@ class _OrderSectionState extends State<OrderSection> {
 
   nextStep() {
     print("next Step ");
-    //widget.parts.openSection.notifyListeners();
-    //widget.parts.openSection.value = widget.index +1;
-      RestDatasource().postStorageSimple(GlobalUtils.ActiveToken.accessToken, Cart.items2MapSimple(widget.parts.shoppingCart.items),null,true,true,"widget.phone.replaceAll(" ","")",DateTime.now().subtract(Duration(hours: 2)).add(Duration(minutes: 1)).toIso8601String(),widget.parts.currentTerminal.channelSet,widget.parts.smsenabled).then((obj){
-        //widget.checkUrl = widget.parts.url = Env.Wrapper + "/pay/restore-flow-from-code/" + obj["id"]+"?noHeaderOnLoading=true";
-        widget.parts.shoppingCartID = obj["id"];    
-        Navigator.push(context,PageTransition(child:WebViewPayments(parts: widget.parts,url: widget.parts.url = Env.Wrapper + "/pay/restore-flow-from-code/" + obj["id"]+"?noHeaderOnLoading=true",),type:PageTransitionType.fade) );            
-      });             
+    widget.checkStock.value = true;
+    bool ok2Checkout = true;
+    widget.parts.shoppingCart.items.forEach((item){
+      RestDatasource().getInvetory(widget.parts.business.id, GlobalUtils.ActiveToken.accessToken, item.sku, context).then((inv){
+        InventoryModel currentInv  = InventoryModel.toMap(inv);
+        bool isOut = (currentInv.stock - (currentInv.reserved??0)) > item.quantity;
+        if(!isOut){
+          ok2Checkout  = false;
+          item.inStock = false;
+        }else{
+          item.inStock = true;
+        }
+        if(item.sku == widget.parts.shoppingCart.items.last.sku){
+          if(ok2Checkout){
+            RestDatasource().postStorageSimple(GlobalUtils.ActiveToken.accessToken, Cart.items2MapSimple(widget.parts.shoppingCart.items),null,true,true,"widget.phone.replaceAll(" ","")",DateTime.now().subtract(Duration(hours: 2)).add(Duration(minutes: 1)).toIso8601String(),widget.parts.currentTerminal.channelSet,widget.parts.smsenabled).then((obj){
+              widget.parts.shoppingCartID = obj["id"];    
+              Navigator.push(context,PageTransition(child:WebViewPayments(parts: widget.parts,url: widget.parts.url = Env.Wrapper + "/pay/restore-flow-from-code/" + obj["id"]+"?noHeaderOnLoading=true",),type:PageTransitionType.fade) );            
+            });
+          }else{
+            Scaffold.of(context).showSnackBar(SnackBar(
+              content: Text(Language.getProductListStrings("filters.quantity.outStock")),
+            ));
+          }
+          widget.checkStock.value = false;
+        }
+      });
+    });
+               
   }
 }

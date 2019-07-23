@@ -57,6 +57,10 @@ class _DashboardMidScreenState extends State<DashboardMidScreen> {
   @override
   void initState() {
     super.initState();
+    SharedPreferences.getInstance().then((p){
+
+      Language.LANGUAGE = widget.prefs.getString(GlobalUtils.LANGUAGE);
+      Language(context);
 
     SharedPreferences.getInstance().then((p) {
       Language.LANGUAGE = widget.prefs.getString(GlobalUtils.LANGUAGE);
@@ -64,6 +68,7 @@ class _DashboardMidScreenState extends State<DashboardMidScreen> {
     });
 
     _loadUserData();
+  });
   }
 
   void _loadUserData() async {

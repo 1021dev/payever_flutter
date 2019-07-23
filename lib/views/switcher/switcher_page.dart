@@ -1,3 +1,5 @@
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/models/appwidgets.dart';
 import 'package:payever/models/business.dart';
@@ -10,6 +12,7 @@ import 'package:payever/utils/translations.dart';
 import 'package:payever/utils/utils.dart';
 import 'package:payever/views/dashboard/dashboard_screen.dart';
 import 'package:payever/views/switcher/loader.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -22,16 +25,12 @@ const double _paddingText = 16.0;
 bool _isTablet = false;
 bool _isPortrait = true;
 
-final scaffoldKey = new GlobalKey<ScaffoldState>();
-final formKey = new GlobalKey<FormState>();
 SwitchParts parts = new SwitchParts();
 
 String IMAGE_BASE      = Env.Storage + '/images/';
-
 String WALLPAPER_BASE  = Env.Storage + '/wallpapers/'; 
 
 class SwitcherScreen extends StatefulWidget {
-  
   SwitcherScreen(){
     
   }
@@ -39,6 +38,7 @@ class SwitcherScreen extends StatefulWidget {
   @override
   _SwitcherScreenState createState() => _SwitcherScreenState();
 }
+
 
 class _SwitcherScreenState extends State<SwitcherScreen>
     implements LoadStateListener, AuthStateListener {
@@ -48,7 +48,6 @@ class _SwitcherScreenState extends State<SwitcherScreen>
   bool _loadBusiness = false;
   bool _businessActiveImage = false;
   bool _isLoad = false;
-
   _SwitcherScreenState() {
     print("Switcher");
     var auth = AuthStateProvider();
@@ -56,6 +55,7 @@ class _SwitcherScreenState extends State<SwitcherScreen>
     var load = LoadStateProvider();
     load.subscribe(this);
   }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -72,8 +72,30 @@ class _SwitcherScreenState extends State<SwitcherScreen>
         ? MediaQuery.of(context).size.width
         : MediaQuery.of(context).size.height);
     _isTablet = Measurements.width < 600 ? false : true;
-
     return Scaffold(
+      //test
+
+      // body: FutureBuilder(
+      //   future: getBusiness(),
+      //   builder: (BuildContext context, AsyncSnapshot snapshot) {
+
+      //     switch (snapshot.connectionState) {
+      //       case ConnectionState.none:
+      //     return CircularProgressIndicator();
+      //       case ConnectionState.active:
+      //       case ConnectionState.waiting:
+      //     return Text('Awaiting result...');
+      //       case ConnectionState.done:
+      //       if (snapshot.hasError)
+      //         return Text('Error: ${snapshot.error}');
+      //       return Text('Result: ${snapshot.data}');
+      //     }
+      //   },
+      // )
+
+
+      //
+
       body: AnimatedOpacity(
         child: Stack(
           children: <Widget>[
@@ -100,11 +122,10 @@ class _SwitcherScreenState extends State<SwitcherScreen>
         duration: Duration(milliseconds: 500), 
         opacity: 1.0,
       ),
+
+    //
     );
   }
-
-
-
   @override
   void onLoadStateChanged(LoadState state) {
     // TODO: implement onLoadStateChanged
@@ -115,124 +136,94 @@ class _SwitcherScreenState extends State<SwitcherScreen>
   void onAuthStateChanged(AuthState state) {
     // TODO: implement onAuthStateChanged
   }
+
+  Future getBusiness(){
+    SharedPreferences.getInstance().then((prefs){
+        String token = prefs.getString(GlobalUtils.TOKEN);
+        if (token.length > 0) {
+        return RestDatasource().getUser(token,context).then((dynamic result) {
+          parts._logUser = User.map(result);
+          prefs.setString(GlobalUtils.LANGUAGE, parts._logUser.language);
+          Language.LANGUAGE = parts._logUser.language;
+          Language(context);
+          Measurements.loadImages(context);
+          return RestDatasource().getBusinesses(token,context).then((dynamic result) {
+
+            result.forEach((item) {
+              parts.businesses.add(Business.map(item));
+            });
+            return true;
+          }).catchError((e){
+            
+          });
+        }).catchError((e) {
+          print('handle error on getMenuProfileData $e');
+          
+        });
+      }else{
+        return false;
+      }
+      });
+  }
+
 }
 
-class Business_Wid extends StatefulWidget {
-  Business _business;
-  ImageProvider _image;
-  bool _haveImg;
-
-  Future<NetworkImage> getImage(String url) async {
-    return NetworkImage(url);
-  }
-
-  Business_Wid(this._business) {
-    _business.logo != null
-        ? getImage(IMAGE_BASE + _business.logo).then((NetworkImage res) {
-            _image = res;
-          })
-        : null;
-    this._haveImg = false;
-  }
+class GridItems extends StatefulWidget {
+  Business business;
+  bool haveImage;
+  bool _isLoading= false;
+  String imageURL;
+  GridItems({this.business}){
+    haveImage = (this.business.logo == null);
+  } 
   @override
-  _Business_WidState createState() =>
-      _Business_WidState(this._business, this._haveImg, this._image);
+  _GridItemsState createState() => _GridItemsState();
 }
+class _GridItemsState extends State<GridItems> {
 
-class _Business_WidState extends State<Business_Wid> {
-  Business _business;
-  ImageProvider _image;
-  bool _haveImg;
-
-  _Business_WidState(this._business, this._haveImg, this._image);
-  double itemsHeight = (Measurements.height * 0.08) + 30;
-  bool _isLoading = false;
+  double itemsHeight = (Measurements.height * 0.08);
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: itemsHeight,
-        child: Column(children: <Widget>[
-          InkWell(
-            child: Stack(
+      width:itemsHeight,
+      child: InkWell(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Stack(
               alignment: Alignment.center,
               children: <Widget>[
-                CustomCircleAvatar(
-                    _business.logo != null ? _business.logo : "business",_business.name),
-                _isLoading? Stack(
+                Container(
                   alignment: Alignment.center,
-                  children: <Widget>[
-                    Container(
-                      height: Measurements.height * 0.08,
-                      width: Measurements.height  * 0.08,
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.black.withOpacity(0.2)),
-                    ),
-                    Container(
-                        child: CircularProgressIndicator(),
-                        )
-                  ],
-                ):Container(),
+                  padding: EdgeInsets.symmetric(vertical: Measurements.height * 0.01),
+                  child: CustomCircleAvatar(widget.business.logo != null ? widget.business.logo : "business",widget.business.name)
+                ),
+                widget._isLoading?Center(child: CircularProgressIndicator()):Container(),
               ],
             ),
-            onTap: () {
-              print("onIconSelect - business ${this._business.name}");
-              setState(() => _isLoading=true
+            Container(alignment: Alignment.center,child: Text(widget.business.name,textAlign: TextAlign.center,))
+          ],
+        ),
+        onTap: (){
+          setState(() {
+            widget._isLoading = true;
+          });
+          parts.fetchWallpaper(widget.business.id,context).then((img){
+            parts.getWidgets(widget.business.id,context).then((onValue){
+            Navigator.pushReplacement(
+              context,
+              PageTransition(
+                child:DashboardScreen(GlobalUtils.ActiveToken,img,widget.business,parts._wids,null),
+                type: PageTransitionType.fade)
               );
-
-              parts.fetchWallpaper(this._business.id,context).then((img){
-
-                 parts.getWidgets(this._business.id,context).then((onValue){
-
-                  Navigator.pushReplacement(
-                    context,
-                    PageTransition(
-                      child:DashboardScreen(
-                        GlobalUtils.ActiveToken,
-                        img,
-                        this._business,
-                        parts._wids,
-                        null),
-                      type: PageTransitionType.fade)
-                    );
-                  });
-              });
-            },
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-                top: (Measurements.height *
-                        (_isTablet
-                            ? _heightFactorTablet
-                            : _heightFactorPhone)) /
-                    5),
-          ),
-          InkWell(
-            child: Text(
-              _business.name,
-              textAlign: TextAlign.center,
-            ),
-            onTap: () {
-              setState(() => print(""));
-            },
-          )
-        ]));
+            });
+          });
+        },
+      ),
+    );
   }
 }
 
-class LoaderManager extends StatefulWidget {
-  @override
-  _LoaderManagerState createState() => _LoaderManagerState();
-}
-
-class _LoaderManagerState extends State<LoaderManager> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        //child: _isLoad ? _a : Wait(),
-        );
-  }
-}
 
 class Wait extends StatefulWidget {
   @override
@@ -241,14 +232,12 @@ class Wait extends StatefulWidget {
 
 class _WaitState extends State<Wait> implements LoadStateListener {
   _WaitState() {
-
     RestDatasource api = new RestDatasource();
     Future<NetworkImage> getImage(String url) async {
       return NetworkImage(url);
     }
       SharedPreferences.getInstance().then((prefs){
         String token = prefs.getString(GlobalUtils.TOKEN);
-        // String rftoken = prefs.getString(GlobalUtils.REFRESHTOKEN);//REFRESH
         if (token.length > 0) {
         api.getUser(token,context).then((dynamic result) {
           parts._logUser = User.map(result);
@@ -260,17 +249,17 @@ class _WaitState extends State<Wait> implements LoadStateListener {
             result.forEach((item) {
               parts.businesses.add(Business.map(item));
             });
+
             if (parts.businesses != null) {
               parts.businesses.forEach((b) {
                 if (b.active) {
                   parts._active = b;
                 }
-                parts._busWids.add(Business_Wid(b));
+                parts._busWids.add(GridItems(business:b));
               });
             }
 
             parts.grid = new CustomGrid();
-            GlobalUtils.IS_LOADED = true;
             var authStateProvider = LoadStateProvider();
             authStateProvider.notify(LoadState.LOADED).then((bool r) {
               var authStateProvider = LoadStateProvider();
@@ -289,21 +278,7 @@ class _WaitState extends State<Wait> implements LoadStateListener {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-       /* Center(
-          child: Container(
-            height: Measurements.height * 0.05,
-            width: Measurements.height * 0.05,
-            child: CircularProgressIndicator(),
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.only(
-              top: (Measurements.height *
-                      (_isTablet ? _heightFactorTablet : _heightFactorPhone)) /
-                  1.5),
-        ),*/
         Center(
-          //child: Text("Please wait"),
           child: Text(""),
         )
       ],
@@ -335,7 +310,6 @@ class _SwitcherState extends State<Switcher> {
   void goPersonalDash(){
     String wallpaperid;
     RestDatasource api = RestDatasource();
-    
       api.getWallpaperPersonal(GlobalUtils.ActiveToken.accesstoken,context).then((dynamic obj){
         wallpaperid= obj[GlobalUtils.CURRENT_WALLPAPER];
 
@@ -376,74 +350,71 @@ class _SwitcherState extends State<Switcher> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Container(
-                  child: Column(
+                  Container(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  Text("Personal"),
-                  Padding(
-                    padding: EdgeInsets.only(
-                        top: (Measurements.height *
-                                (_isTablet
-                                    ? _heightFactorTablet
-                                    : _heightFactorPhone)) /
-                            3),
-                  ),
-                  InkWell(
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: <Widget>[
-                        CustomCircleAvatar(parts._logUser.logo != null
-                            ? parts._logUser.logo
-                            : "user",parts._logUser.firstName),
-                        _loadPersonal
-                            ? Stack(
-                                alignment: Alignment.center,
-                                children: <Widget>[
-                                  Container(
-                                    height: Measurements.height * 0.08,
-                                    width: Measurements.height * 0.08,
-                                    decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Colors.black.withOpacity(0.2)),
-                                  ),
-                                  Container(
-                                    child: CircularProgressIndicator(),
-                                  )
-                                ],
-                              )
-                            : Container(),
-                      ],
+                    Text("Personal"),
+                    Padding(
+                      padding: EdgeInsets.only(
+                          top: (Measurements.height *
+                                  (_isTablet
+                                      ? _heightFactorTablet
+                                      : _heightFactorPhone)) /
+                              3),
                     ),
-                    onTap: () {
-                      print("onIconSelect - personal");
-                      setState(() => _loadPersonal = true);
-                      //goPersonalDash();
-                      goPersonalDashDummy();
-                    },
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                        top: (Measurements.height *
-                                (_isTablet
-                                    ? _heightFactorTablet
-                                    : _heightFactorPhone)) /
-                            3),
-                  ),
-                  InkWell(
-                    // child: Chip(
-                    //   backgroundColor: Color(0),
-                    //   label: Text(parts._logUser.firstName),
-                    // ),
-                    child:Container(alignment: Alignment.center ,child: Text(parts._logUser.firstName),),
-                    onTap: () {
-                      print("onTextSelect - personal");
-                      setState(() => _loadPersonal = true);
-                      //goPersonalDash();
-                      goPersonalDashDummy();
-                    },
-                  ),
+                    InkWell(
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: <Widget>[
+                          CustomCircleAvatar(parts._logUser.logo != null
+                              ? parts._logUser.logo
+                              : "user",parts._logUser.firstName),
+                          _loadPersonal
+                              ? Stack(
+                                  alignment: Alignment.center,
+                                  children: <Widget>[
+                                    Container(
+                                      height: Measurements.height * 0.08,
+                                      width: Measurements.height * 0.08,
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.black.withOpacity(0.2)),
+                                    ),
+                                    Container(
+                                      child: CircularProgressIndicator(),
+                                    )
+                                  ],
+                                )
+                              : Container(),
+                        ],
+                      ),
+                      onTap: () {
+                        print("onIconSelect - personal");
+                        setState(() => _loadPersonal = true);
+                        goPersonalDashDummy();
+                      },
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                          top: (Measurements.height *
+                                  (_isTablet
+                                      ? _heightFactorTablet
+                                      : _heightFactorPhone)) /
+                              3),
+                    ),
+                    InkWell(
+                      child:Container(height:48,alignment: Alignment.center ,child: Text(parts._logUser.firstName),),
+                      onTap: () {
+                        print("onTextSelect - personal");
+                        setState(() => _loadPersonal = true);
+                        goPersonalDashDummy();
+                      },
+                    ),
                 ],
-              )),
+              ),
+                  ),
               parts.businesses != null
                   ? Container(
                       padding: EdgeInsets.only(
@@ -490,7 +461,6 @@ class _SwitcherState extends State<Switcher> {
                               ],
                             ),
                             onTap: () {
-
                               print("onIconSelect - business");
                               setState(() => _loadBusiness = true);
 
@@ -566,10 +536,12 @@ class _SwitcherState extends State<Switcher> {
                   : Container(),
             ],
           ),
+          
         ),
         !_moreSelected
-            ? Row()
+            ? Container()
             : Column(
+              mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Container(
                     padding: EdgeInsets.only(
@@ -580,7 +552,8 @@ class _SwitcherState extends State<Switcher> {
                             ? Measurements.height * 0.04
                             : Measurements.height * 0.02),
                     child: Center(child: Text("Business")),
-                  ), parts.grid,
+                  ),
+                  parts.grid,
                 ],
               ),
       ],
@@ -595,9 +568,8 @@ class SwitchParts {
   List<Business> businesses = new List();
   Business _active;
   Widget grid;
-  List<Business_Wid> _busWids = new List();
-  List<AppWidget> _wids = new List();
-  
+  List<GridItems> _busWids = new List();
+  List<AppWidget> _wids       = new List();
   Future<String> fetchWallpaper(String id,BuildContext context) async{
     String wallpaperid;
     SharedPreferences prefs;
@@ -613,25 +585,16 @@ class SwitchParts {
     }).catchError((onError){
       print("ERROR ---- $onError");
     });
-
-    
-   
     return   WALLPAPER_BASE + wallpaperid;
-
-    
   }
 
   Future<AppWidget> getWidgets(String id,BuildContext context) async {
-
     RestDatasource api = new RestDatasource();
-
     await api.getWidgets(id,GlobalUtils.ActiveToken.accesstoken,context).then((dynamic obj){
-
       parts._wids = List();
       obj.forEach((item) {
         parts._wids.add(AppWidget.map(item));
       });
-
     }).catchError((onError){
       print("ERROR ---- $onError");
     });
@@ -645,8 +608,6 @@ class  CustomCircleAvatar extends StatelessWidget {
   bool _haveImage;
   String name;
   String displayName;
-
-  
   String initials(){
     if(name.contains(" ")){
       displayName = name.substring(0,1);
@@ -658,7 +619,6 @@ class  CustomCircleAvatar extends StatelessWidget {
   }
 
   CustomCircleAvatar(this.url,this.name) {
-
     switch (url) {
       case "user":
         this._haveImage = false;
@@ -670,7 +630,7 @@ class  CustomCircleAvatar extends StatelessWidget {
         break;
       default:
         this._haveImage = true;
-        this.image = NetworkImage(IMAGE_BASE + url);
+        this.image = CachedNetworkImageProvider(IMAGE_BASE + url);
         break;
     }
 
@@ -700,33 +660,22 @@ class CustomGrid extends StatefulWidget {
 class _CustomGridState extends State<CustomGrid> {
   @override
   Widget build(BuildContext context) {
-    print(Measurements.height);
-    return OrientationBuilder(
-      builder: (BuildContext context, Orientation orientation) {
-        return Container(
-          height: _isPortrait? Measurements.height * 0.58: _isTablet? Measurements.height * 0.4: Measurements.height * 0.2,
-          child: GridView.builder(
-            shrinkWrap: true,
-            physics: AlwaysScrollableScrollPhysics(),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                childAspectRatio: 0.9,
-                crossAxisCount: _isPortrait
-                    ? ((Measurements.width - (Measurements.width * 0.3)) /
-                            ((Measurements.height * 0.08) +
-                                (Measurements.width * 0.05)))
-                        .truncate()
-                    : ((Measurements.height - (Measurements.height * 0.3)) /
-                            ((Measurements.width * 0.08) +
-                                (Measurements.height * 0.05)))
-                        .truncate()),
-            itemCount: parts.businesses.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Business_Wid(parts.businesses[index]);
-            },
-          ),
-        )
-        ;
-      },
+
+    List<GridItems> business = List();
+    parts.businesses.forEach((f){
+      business.add(GridItems(business: f,));
+    });
+    
+    return Container(
+      child: Wrap(  
+        spacing: Measurements.width * 0.075,
+        runSpacing: Measurements.width * 0.01,
+        alignment: WrapAlignment.center,
+        direction: Axis.horizontal,
+        children: business,
+      ),
     );
   }
 }
+
+//___
