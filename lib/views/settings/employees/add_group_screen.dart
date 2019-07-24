@@ -59,6 +59,7 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
                     onTap: () {
                       Navigator.pop(context);
                     },
+
                   ),
                   body: Container(
                     padding: EdgeInsets.only(
