@@ -4,7 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:payever/models/appwidgets.dart';
 import 'package:payever/models/business.dart';
-import 'package:payever/models/global_state_model.dart';
+import 'package:payever/view_models/global_state_model.dart';
 import 'package:payever/models/pos.dart';
 import 'package:payever/models/token.dart';
 import 'package:payever/models/user.dart';
@@ -157,6 +157,9 @@ class _DashboardMidScreenState extends State<DashboardMidScreen> {
               .then((wall) {
             String wallpaper = wall[GlobalUtils.CURRENT_WALLPAPER];
             prefs.setString(GlobalUtils.WALLPAPER, WALLPAPER_BASE + wallpaper);
+
+
+
 
             Navigator.pushReplacement(
                 _formKey.currentContext,
@@ -503,13 +506,13 @@ class _DashboardScreenState extends State<DashboardScreen>
     _navigationViews[_currentIndex].controller.value = 1.0;
 
     SchedulerBinding.instance
-        .addPostFrameCallback((_) => _updateWallPaperAndBusiness());
+        .addPostFrameCallback((_) => _updateWallPaperBusinessAndAppsWidgets());
   }
 
-  void _updateWallPaperAndBusiness() {
+  void _updateWallPaperBusinessAndAppsWidgets() {
 
-    globalStateModel.updateWallpaperAndBusiness(
-        widget._wallpaper, widget._business);
+    globalStateModel.updateWallpaperBusinessAndAppsWidgets(
+        widget._wallpaper, widget._business, widget._appWids);
 
   }
 

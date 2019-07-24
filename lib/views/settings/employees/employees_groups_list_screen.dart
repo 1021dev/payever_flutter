@@ -1,21 +1,22 @@
 import 'dart:ui';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:payever/models/employees.dart';
-import 'package:payever/models/global_state_model.dart';
-import 'package:payever/network/rest_ds.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:payever/utils/translations.dart';
+import 'package:payever/models/acl.dart';
+import 'package:payever/models/business_employees_groups.dart';
+import 'package:payever/models/employees.dart';
 
+import 'package:payever/view_models/global_state_model.dart';
+import 'package:payever/network/rest_ds.dart';
+import 'package:payever/utils/translations.dart';
 import 'package:payever/utils/utils.dart';
 import 'package:payever/models/business.dart';
-import 'package:payever/views/customelements/custom_app_bar.dart';
+import 'package:payever/views/customelements/custom_future_builder.dart';
 import 'package:payever/views/login/login_page.dart';
-import 'package:payever/views/products/new_product.dart';
 import 'package:provider/provider.dart';
-import 'employee_details_screen.dart';
+import 'employees_groups_details_screen.dart';
 
 bool _isPortrait;
 bool _isTablet;
@@ -33,29 +34,27 @@ class _EmployeesGroupsListScreenState extends State<EmployeesGroupsListScreen> {
     super.initState();
   }
 
-  Future<List<Employees>> fetchEmployeesList(
+  Future<List<BusinessEmployeesGroups>> fetchEmployeesGroupsList(
       String search, bool init, GlobalStateModel globalStateModel) async {
-    List<Employees> employeesList = List<Employees>();
+    List<BusinessEmployeesGroups> employeesGroupsList = List<BusinessEmployeesGroups>();
 
     RestDatasource api = RestDatasource();
 
-    var employees = await api
-        .getEmployeesList(globalStateModel.currentBusiness.id,
-            GlobalUtils.ActiveToken.accessToken, context)
-        .then((employeesData) {
-      print("Employees data loaded: $employeesData");
+    var businessEmployeesGroups = await api
+        .getBusinessEmployeesGroupsList(globalStateModel.currentBusiness.id,
+        GlobalUtils.ActiveToken.accessToken, context)
+        .then((businessEmployeesGroupsData) {
+      print("businessEmployeesGroupsData data loaded: $businessEmployeesGroupsData");
 
-//      employeesList = employeesData;
+      for (var group in businessEmployeesGroupsData) {
+        print("group: $group");
 
-      for (var employee in employeesData) {
-        print("employee: $employee");
-
-        employeesList.add(Employees.fromMap(employee));
+        employeesGroupsList.add(BusinessEmployeesGroups.fromMap(group));
       }
 
-      return employeesList;
+      return employeesGroupsList;
     }).catchError((onError) {
-      print("Error loading employees: $onError");
+      print("Error loading employees groups: $onError");
 
       if (onError.toString().contains("401")) {
         GlobalUtils.clearCredentials();
@@ -66,70 +65,13 @@ class _EmployeesGroupsListScreenState extends State<EmployeesGroupsListScreen> {
       }
     });
 
-    if (employees != null) {
-//      employeesList.add(Employees.fromMap({
-//        "roles": [],
-//        "_id": "33b54f23-2e24-4d9b-8950-b0241448dea4",
-//        "isVerified": false,
-//        "first_name": "Artur",
-//        "last_name": "Schlaht",
-//        "email": "arst@qwfp.com",
-//        "createdAt": "2019-07-12T13:26:12.168Z",
-//        "updatedAt": "2019-07-17T14:32:48.507Z",
-//        "__v": 0,
-//        "position": "Cashier",
-//      }));
-//      return employeesList;
-      print("employees: $employees");
-      return employees;
+    if (businessEmployeesGroups != null) {
+      print("businessEmployeesGroups: $businessEmployeesGroups");
+      return businessEmployeesGroups;
     } else {
-      print("employeesList: $employeesList");
-      employeesList.add(Employees.fromMap({
-        "roles": [
-          {
-            "permissions": [],
-            "_id": "559b8da4-273f-4f75-b3ba-6a1d0b7e0df2",
-            "type": {
-              "_id": "2f875fab-6bfc-46d0-b2e5-c1d4c0765db1",
-              "name": "user"
-            }
-          },
-          {
-            "permissions": [
-              {
-                "_id": "50080a92-2636-48af-81d4-4c3c93c24756",
-                "businessId": "d884e63e-7671-4bdc-8693-2e0085aec199",
-                "acls": [
-                  {
-                    "microservice": "commerceos",
-                    "create": true,
-                    "read": true,
-                    "update": true,
-                    "delete": true
-                  }
-                ],
-                "__v": 0
-              }
-            ],
-            "_id": "785f021d-0e26-4b41-9155-81fba5404f3e",
-            "type": {
-              "_id": "90b26c23-763a-4bea-a833-338375b94fe4",
-              "name": "merchant"
-            },
-            "__v": 0
-          }
-        ],
-        "_id": "33b54f23-2e24-4d9b-8950-b0241448dea4",
-        "isVerified": false,
-        "first_name": "Artur",
-        "last_name": "Schlaht",
-        "email": "arst@qwfp.com",
-        "createdAt": "2019-07-12T13:26:12.168Z",
-        "updatedAt": "2019-07-17T14:32:48.507Z",
-        "__v": 0,
-        "position": "Cashier",
-      }));
-      return employeesList;
+      print("employeesGroupsList: $employeesGroupsList");
+//      employeesGroupsList.add());
+      return employeesGroupsList;
     }
   }
 
@@ -144,149 +86,385 @@ class _EmployeesGroupsListScreenState extends State<EmployeesGroupsListScreen> {
     Measurements.width = (_isPortrait
         ? MediaQuery.of(context).size.width
         : MediaQuery.of(context).size.height);
+
+    List<BusinessEmployeesGroups> businessEmployeesGroups = List<BusinessEmployeesGroups>();
+
+    List<Employees> employeesList = List<Employees>();
+    List<Acl> aclsList = List<Acl>();
+
+    employeesList.add(Employees.fromMap({
+      "roles": [
+        {
+          "permissions": [],
+//          "_id": "559b8da4-273f-4f75-b3ba-6a1d0b7e0df2",
+//          "type": {
+//            "_id": "2f875fab-6bfc-46d0-b2e5-c1d4c0765db1",
+//            "name": "user"
+//          },
+         "type:": "merchant",
+        },
+//        {
+//          "permissions": [
+//            {
+//              "_id": "50080a92-2636-48af-81d4-4c3c93c24756",
+//              "businessId": "d884e63e-7671-4bdc-8693-2e0085aec199",
+//              "acls": [
+//                {
+//                  "microservice": "commerceos",
+//                  "create": true,
+//                  "read": true,
+//                  "update": true,
+//                  "delete": true
+//                }
+//              ],
+//              "__v": 0
+//            }
+//          ],
+//          "_id": "785f021d-0e26-4b41-9155-81fba5404f3e",
+//          "type": {
+//            "_id": "90b26c23-763a-4bea-a833-338375b94fe4",
+//            "name": "merchant"
+//          },
+//          "__v": 0
+//        }
+      ],
+      "_id": "33b54f23-2e24-4d9b-8950-b0241448dea4",
+      "isVerified": false,
+      "first_name": "Artur",
+      "last_name": "Schlaht",
+      "email": "arst@qwfp.com",
+      "createdAt": "2019-07-12T13:26:12.168Z",
+      "updatedAt": "2019-07-17T14:32:48.507Z",
+      "__v": 0,
+      "position": "Cashier",
+    }));
+    employeesList.add(Employees.fromMap({
+      "roles": [
+        {
+          "permissions": [],
+//          "_id": "559b8da4-273f-4f75-b3ba-6a1d0b7e0df2",
+//          "type": {
+//            "_id": "2f875fab-6bfc-46d0-b2e5-c1d4c0765db1",
+//            "name": "user"
+//          },
+          "type:": "merchant",
+        },
+//        {
+//          "permissions": [
+//            {
+//              "_id": "50080a92-2636-48af-81d4-4c3c93c24756",
+//              "businessId": "d884e63e-7671-4bdc-8693-2e0085aec199",
+//              "acls": [
+//                {
+//                  "microservice": "commerceos",
+//                  "create": true,
+//                  "read": true,
+//                  "update": true,
+//                  "delete": true
+//                }
+//              ],
+//              "__v": 0
+//            }
+//          ],
+//          "_id": "785f021d-0e26-4b41-9155-81fba5404f3e",
+//          "type": {
+//            "_id": "90b26c23-763a-4bea-a833-338375b94fe4",
+//            "name": "merchant"
+//          },
+//          "__v": 0
+//        }
+      ],
+      "_id": "33b54f23-2e24-4d9b-8950-b0241448dea4",
+      "isVerified": false,
+      "first_name": "Artur",
+      "last_name": "Schlaht",
+      "email": "arst@qwfp.com",
+      "createdAt": "2019-07-12T13:26:12.168Z",
+      "updatedAt": "2019-07-17T14:32:48.507Z",
+      "__v": 0,
+      "position": "Cashier",
+    }));
+    employeesList.add(Employees.fromMap({
+      "roles": [
+        {
+          "permissions": [],
+//          "_id": "559b8da4-273f-4f75-b3ba-6a1d0b7e0df2",
+//          "type": {
+//            "_id": "2f875fab-6bfc-46d0-b2e5-c1d4c0765db1",
+//            "name": "user"
+//          },
+          "type:": "merchant",
+        },
+//        {
+//          "permissions": [
+//            {
+//              "_id": "50080a92-2636-48af-81d4-4c3c93c24756",
+//              "businessId": "d884e63e-7671-4bdc-8693-2e0085aec199",
+//              "acls": [
+//                {
+//                  "microservice": "commerceos",
+//                  "create": true,
+//                  "read": true,
+//                  "update": true,
+//                  "delete": true
+//                }
+//              ],
+//              "__v": 0
+//            }
+//          ],
+//          "_id": "785f021d-0e26-4b41-9155-81fba5404f3e",
+//          "type": {
+//            "_id": "90b26c23-763a-4bea-a833-338375b94fe4",
+//            "name": "merchant"
+//          },
+//          "__v": 0
+//        }
+      ],
+      "_id": "33b54f23-2e24-4d9b-8950-b0241448dea4",
+      "isVerified": false,
+      "first_name": "Artur",
+      "last_name": "Schlaht",
+      "email": "arst@qwfp.com",
+      "createdAt": "2019-07-12T13:26:12.168Z",
+      "updatedAt": "2019-07-17T14:32:48.507Z",
+      "__v": 0,
+      "position": "Cashier",
+    }));
+    employeesList.add(Employees.fromMap({
+      "roles": [
+        {
+          "permissions": [],
+//          "_id": "559b8da4-273f-4f75-b3ba-6a1d0b7e0df2",
+//          "type": {
+//            "_id": "2f875fab-6bfc-46d0-b2e5-c1d4c0765db1",
+//            "name": "user"
+//          },
+          "type:": "merchant",
+        },
+//        {
+//          "permissions": [
+//            {
+//              "_id": "50080a92-2636-48af-81d4-4c3c93c24756",
+//              "businessId": "d884e63e-7671-4bdc-8693-2e0085aec199",
+//              "acls": [
+//                {
+//                  "microservice": "commerceos",
+//                  "create": true,
+//                  "read": true,
+//                  "update": true,
+//                  "delete": true
+//                }
+//              ],
+//              "__v": 0
+//            }
+//          ],
+//          "_id": "785f021d-0e26-4b41-9155-81fba5404f3e",
+//          "type": {
+//            "_id": "90b26c23-763a-4bea-a833-338375b94fe4",
+//            "name": "merchant"
+//          },
+//          "__v": 0
+//        }
+      ],
+      "_id": "33b54f23-2e24-4d9b-8950-b0241448dea4",
+      "isVerified": false,
+      "first_name": "Artur",
+      "last_name": "Schlaht",
+      "email": "arst@qwfp.com",
+      "createdAt": "2019-07-12T13:26:12.168Z",
+      "updatedAt": "2019-07-17T14:32:48.507Z",
+      "__v": 0,
+      "position": "Cashier",
+    }));
+
+
+    aclsList.add(Acl.fromMap({
+      "microservice": "commerceos1",
+      "create": true,
+      "read": true,
+      "update": true,
+      "delete": true
+    }));
+    aclsList.add(Acl.fromMap({
+      "microservice": "commerceos2",
+      "create": true,
+      "read": true,
+      "update": true,
+      "delete": true
+    }));
+    aclsList.add(Acl.fromMap({
+      "microservice": "commerceos3",
+      "create": true,
+      "read": true,
+      "update": true,
+      "delete": true
+    }));
+    aclsList.add(Acl.fromMap({
+      "microservice": "commerceos4",
+      "create": true,
+      "read": true,
+      "update": true,
+      "delete": true
+    }));
+
+    businessEmployeesGroups.add(BusinessEmployeesGroups(name: "lala", businessId: "2323", employees: employeesList, acls: aclsList));
+    businessEmployeesGroups.add(BusinessEmployeesGroups(name: "lala2", businessId: "23234", employees: employeesList, acls: aclsList));
+
     return Container(
         child: Column(
-      children: <Widget>[
-        FutureBuilder<List<Employees>>(
-          future: fetchEmployeesList("", true, globalStateModel),
-          builder:
-              (BuildContext context, AsyncSnapshot<List<Employees>> snapshot) {
-            if (snapshot.hasError) {
-              return Expanded(
-                child: Center(
-                  child: Text("Error loading employees"),
-                ),
-              );
-            }
-
-            if (snapshot.hasData) {
-              print("snapshot.data: ${snapshot.data}");
-
-              if (snapshot.data.length == 0) {
-                return Expanded(
-                  child: Center(
-                    child: Text("No employees yet"),
-                  ),
-                );
-              } else {
-                return Expanded(
-                  child: Column(
-                    children: <Widget>[
+          children: <Widget>[
+            SizedBox(height: 10),
+            CustomFutureBuilder<List<BusinessEmployeesGroups>>(
+              future: fetchEmployeesGroupsList("", true, globalStateModel),
+              errorMessage: "Error loading employees groups",
+              onDataLoaded: (results) {
+                if (results.length == 0) {
+//                  return Text("No groups yet");
+                  return Expanded(
+                    child: Column(
+                      children: <Widget>[
 //                      Text("Employees Data"),
-                      SizedBox(height: 15),
-                      Container(
-                        padding: EdgeInsets.only(
-                            bottom: Measurements.height * 0.01,
-                            left:
-                                Measurements.width * (_isTablet ? 0.01 : 0.05),
-                            right:
-                                Measurements.width * (_isTablet ? 0.01 : 0.05)),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
+                        SizedBox(height: 15),
+                        Container(
                           padding: EdgeInsets.only(
-                              left: Measurements.width *
-                                  (_isTablet ? 0.01 : 0.025)),
-                          child: TextFormField(
-                            decoration: InputDecoration(
-                                hintText: "Search",
-                                border: InputBorder.none,
-                                icon: Container(
-                                    child: SvgPicture.asset(
-                                  "images/searchicon.svg",
-                                  height: Measurements.height * 0.0175,
-                                  color: Colors.white,
-                                ))),
-                            onFieldSubmitted: (search) {},
+                              bottom: Measurements.height * 0.01,
+                              left: Measurements.width * (_isTablet ? 0.01 : 0.05),
+                              right:
+                              Measurements.width * (_isTablet ? 0.01 : 0.05)),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.black.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            padding: EdgeInsets.only(
+                                left: Measurements.width *
+                                    (_isTablet ? 0.01 : 0.025)),
+                            child: TextFormField(
+                              decoration: InputDecoration(
+                                  hintText: "Search",
+                                  border: InputBorder.none,
+                                  icon: Container(
+                                      child: SvgPicture.asset(
+                                        "images/searchicon.svg",
+                                        height: Measurements.height * 0.0175,
+                                        color: Colors.white,
+                                      ))),
+                              onFieldSubmitted: (search) {},
+                            ),
                           ),
                         ),
-                      ),
-                      Row(
-                        children: <Widget>[
-                          FlatButton(
-                            child: Row(
-                              children: <Widget>[
-                                Icon(Icons.filter_list),
-                                Text("Filter"),
-                              ],
+                        Row(
+                          children: <Widget>[
+                            FlatButton(
+                              child: Row(
+                                children: <Widget>[
+                                  Icon(Icons.filter_list),
+                                  Text("Filter"),
+                                ],
+                              ),
+                              onPressed: () {},
                             ),
-                            onPressed: () {},
+                            SizedBox(width: 10),
+                            Text(
+                              "${businessEmployeesGroups.length} Members",
+                              style: TextStyle(color: Colors.white),
+                            )
+                          ],
+                        ),
+                        SizedBox(width: 20),
+                        CustomList(
+                            globalStateModel.currentBusiness,
+                            "",
+                            businessEmployeesGroups,
+                            EmployeesGroupsScreenData(
+                                results, globalStateModel.currentWallpaper),
+                            ValueNotifier(false),
+                            0),
+                      ],
+                    ),
+                  );
+                } else {
+                  return Expanded(
+                    child: Column(
+                      children: <Widget>[
+//                      Text("Employees Data"),
+                        SizedBox(height: 15),
+                        Container(
+                          padding: EdgeInsets.only(
+                              bottom: Measurements.height * 0.01,
+                              left: Measurements.width * (_isTablet ? 0.01 : 0.05),
+                              right:
+                              Measurements.width * (_isTablet ? 0.01 : 0.05)),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.black.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            padding: EdgeInsets.only(
+                                left: Measurements.width *
+                                    (_isTablet ? 0.01 : 0.025)),
+                            child: TextFormField(
+                              decoration: InputDecoration(
+                                  hintText: "Search",
+                                  border: InputBorder.none,
+                                  icon: Container(
+                                      child: SvgPicture.asset(
+                                        "images/searchicon.svg",
+                                        height: Measurements.height * 0.0175,
+                                        color: Colors.white,
+                                      ))),
+                              onFieldSubmitted: (search) {},
+                            ),
                           ),
-//                          SizedBox(width: 10),
-//                          InkWell(
-//                            radius: _isTablet
-//                                ? Measurements.height * 0.02
-//                                : Measurements.width * 0.07,
-//                            child: Container(
-//                                padding: EdgeInsets.symmetric(
-//                                    horizontal: Measurements.width * 0.02),
-//                                //width: widget._active ?50:120,
-//                                decoration: BoxDecoration(
-//                                  shape: BoxShape.rectangle,
-//                                  color: Colors.grey.withOpacity(0.5),
-//                                  borderRadius: BorderRadius.circular(15),
-//                                ),
-//                                height: _isTablet
-//                                    ? Measurements.height * 0.02
-//                                    : Measurements.width * 0.07,
-//                                child: Center(
-//                                  child: Container(
-//                                      alignment: Alignment.center,
-//                                      child: Text("Add employee")),
-//                                )),
-//                            onTap: () {
-////                              setState(() {});
-//                            },
-//                          ),
-                          SizedBox(width: 10),
-                          Text(
-                            "${snapshot.data.length} Members",
-                            style: TextStyle(color: Colors.white),
-                          )
-                        ],
-                      ),
-                      SizedBox(width: 20),
-                      CustomList(
-                          globalStateModel.currentBusiness,
-                          "",
-                          snapshot.data,
-                          EmployeesScreenData(snapshot.data,
-                              globalStateModel.currentWallpaper)),
-                    ],
-                  ),
-                );
-              }
-            }
-
-            return Expanded(
-                child: Center(
-              child: CircularProgressIndicator(),
-            ));
-          },
-        ),
-      ],
-    ));
+                        ),
+                        Row(
+                          children: <Widget>[
+                            FlatButton(
+                              child: Row(
+                                children: <Widget>[
+                                  Icon(Icons.filter_list),
+                                  Text("Filter"),
+                                ],
+                              ),
+                              onPressed: () {},
+                            ),
+                            SizedBox(width: 10),
+                            Text(
+                              "${results.length} Members",
+                              style: TextStyle(color: Colors.white),
+                            )
+                          ],
+                        ),
+                        SizedBox(width: 20),
+                        CustomList(
+                            globalStateModel.currentBusiness,
+                            "",
+                            results,
+                            EmployeesGroupsScreenData(
+                                results, globalStateModel.currentWallpaper),
+                            ValueNotifier(false),
+                            0),
+                      ],
+                    ),
+                  );
+                }
+              },
+            ),
+          ],
+        ));
   }
 }
 
-class EmployeesScreenData {
+class EmployeesGroupsScreenData {
   Business _business;
   String _wallpaper;
-  List<Employees> _employees = List<Employees>();
+  List<BusinessEmployeesGroups> _employeesGroups = List<BusinessEmployeesGroups>();
 
-  EmployeesScreenData(dynamic obj, String wallpaper) {
-//    _business = _currentBusiness;
-//    _business = globalStateModel;
-//    for (var employee in obj) {
-//      _employees.add(Employees.fromMap(employee));
-//    }
-
-    _employees = obj;
+  EmployeesGroupsScreenData(dynamic obj, String wallpaper) {
+    _employeesGroups = obj;
   }
 
-  List<Employees> get employees => _employees;
+  List<BusinessEmployeesGroups> get employeesGroups => _employeesGroups;
 
   Business get business => _business;
 
@@ -294,17 +472,17 @@ class EmployeesScreenData {
 }
 
 class CustomList extends StatefulWidget {
-  List<Employees> employeesData = List<Employees>();
-  Business currentBusiness;
-  EmployeesScreenData data;
+  final List<BusinessEmployeesGroups> employeesData;
+  final Business currentBusiness;
+  final EmployeesGroupsScreenData data;
 
-  CustomList(this.currentBusiness, this.search, this.employeesData, this.data);
+  final ValueNotifier isLoading;
+  final String search;
+  final int page = 1;
+  final int pageCount;
 
-  ValueNotifier isLoading = ValueNotifier(false);
-
-  String search;
-  int page = 1;
-  int pageCount;
+  CustomList(this.currentBusiness, this.search, this.employeesData, this.data,
+      this.isLoading, this.pageCount);
 
   @override
   _CustomListState createState() => _CustomListState();
@@ -316,36 +494,7 @@ class _CustomListState extends State<CustomList> {
   @override
   void initState() {
     super.initState();
-//    widget.pageCount = (widget.data.employees.paginationData.total/50).ceil();
-//    widget.pageCount = 50;
-//    controller = ScrollController()..addListener(_scrollListener);
   }
-
-//  void _scrollListener() {
-//    if (controller.position.extentAfter < 500) {
-//      if (widget.page < widget.pageCount && !widget.isLoading.value) {
-//        setState(() {
-//          widget.isLoading.value = true;
-//        });
-//        widget.page++;
-////        RestDatasource()
-////            .getTransactionList(
-////                widget.currentBusiness.id,
-////                GlobalUtils.ActiveToken.accessToken,
-////                "?orderBy=created_at&direction=desc&limit=50&query=${widget.search}&page=${widget.page}&currency=${widget.currentBusiness.currency}",
-////                context)
-////            .then((transaction) {
-//////          List<EmployeeData> temp = Employees.toMap(transaction).employeesData;
-//////          if(temp.isNotEmpty){
-//////            setState((){
-//////              widget.isLoading.value = false;
-//////              widget.employeesData.addAll(temp);
-//////            });
-//////          }
-////        });
-//      }
-//    }
-//  }
 
   @override
   Widget build(BuildContext context) {
@@ -357,17 +506,14 @@ class _CustomListState extends State<CustomList> {
           itemCount: widget.employeesData.length + 1,
           itemBuilder: (BuildContext context, int index) {
             if (index == 0)
-//              return _isTablet
-//                  ? TabletTableRow(null, true, null)
-//                  : PhoneTableRow(null, true, null);
-              return PhoneTableRow(null, true, null);
+              return _isTablet
+                  ? TabletTableRow(null, true, null)
+                  : PhoneTableRow(null, true, null);
             index = index - 1;
-//            return _isTablet
-//                ? TabletTableRow(
-//                    widget.employeesData[index], false, widget.data)
-//                : PhoneTableRow(
-//                    widget.employeesData[index], false, widget.data);
-            return PhoneTableRow(
+            return _isTablet
+                ? TabletTableRow(
+                widget.employeesData[index], false, widget.data)
+                : PhoneTableRow(
                 widget.employeesData[index], false, widget.data);
           },
         ),
@@ -377,13 +523,12 @@ class _CustomListState extends State<CustomList> {
 }
 
 class PhoneTableRow extends StatelessWidget {
-  Employees _currentEmployee;
-  EmployeesScreenData data;
-  bool _isHeader;
+  final BusinessEmployeesGroups _currentEmployeesGroup;
+  final EmployeesGroupsScreenData data;
+  final bool _isHeader;
 
-  PhoneTableRow(this._currentEmployee, this._isHeader, this.data);
+  PhoneTableRow(this._currentEmployeesGroup, this._isHeader, this.data);
 
-//  var f = new NumberFormat("###,###.00", "en_US");
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -398,70 +543,62 @@ class PhoneTableRow extends StatelessWidget {
             Container(
               color: !_isHeader
                   ? Colors.transparent
-                  : Colors.black.withOpacity(0.7),
+                  : Colors.black.withOpacity(0.5),
 //              width: !_isHeader ? Measurements.width * (_isPortrait ? 0.9 : 0.99) : Measurements.width * (_isPortrait ? 0.9 : 0.99),
-              child: FittedBox(
-                child: Row(
-                  children: <Widget>[
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      child: !_isHeader
-                          ? Container(
-                          height: Measurements.height *
-                              (_isPortrait ? 0.050 : 0.075),
-                          child: Checkbox(
-                            activeColor: Color(0XFF0084ff),
-                            value: true,
-                            onChanged: (bool value) {
-
-                          },),
-                      ) : Container(width: Measurements.width * 0.03,height: 0),
-                    ),
-                    Container(
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    flex: 3,
+                    child: Container(
                       alignment: Alignment.centerLeft,
 //                    width: Measurements.width * 0.2,
                       child: !_isHeader
-                          ? Text(_currentEmployee.firstName +
-                              " " +
-                              _currentEmployee.lastName)
+                          ? AutoSizeText(" " + _currentEmployeesGroup.name,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          softWrap: false)
                           : Container(
-                              height: Measurements.height *
-                                  (_isPortrait ? 0.050 : 0.075),
-                              child: Text(
-                                Language.getTransactionStrings("Employee name"),
-                                style: TextStyle(fontSize: 14),
-                              )),
+                          alignment: Alignment.centerLeft,
+                          height: Measurements.height *
+                              (_isPortrait ? 0.050 : 0.075),
+                          child: AutoSizeText(" " +
+                              Language.getTransactionStrings(
+                                  "Group name"),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              softWrap: false,
+                              style: TextStyle(fontSize: 14))),
                     ),
-                    Container(
+                  ),
+                  Expanded(
+                    flex: 3,
+                    child: Container(
                       alignment: Alignment.centerLeft,
-                      width: Measurements.width * (_isPortrait ? 0.20 : 0.25),
+//                    width: Measurements.width * 0.2,
                       child: !_isHeader
-                          ? Text(_currentEmployee.position)
+                          ? AutoSizeText(data._employeesGroups.length.toString(),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          softWrap: false)
                           : Container(
-                              height: Measurements.height *
-                                  (_isPortrait ? 0.050 : 0.075),
-                              child: Text(
-                                Language.getTransactionStrings("Position"),
-                                style: TextStyle(fontSize: 14),
-                              )),
+                          alignment: Alignment.centerLeft,
+                          height: Measurements.height *
+                              (_isPortrait ? 0.050 : 0.075),
+                          child: AutoSizeText(
+                              Language.getTransactionStrings(
+                                  "Quantity"),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              softWrap: false,
+                              style: TextStyle(fontSize: 14))),
                     ),
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      width: Measurements.width * (_isPortrait ? 0.23 : 0.25),
-                      child: !_isHeader
-                          ? Text(_currentEmployee.email)
-                          : Container(
-                              height: Measurements.height *
-                                  (_isPortrait ? 0.050 : 0.075),
-                              child: Text(
-                                Language.getTransactionStrings("Mail"),
-                                style: TextStyle(fontSize: 14),
-                              )),
-                    ),
-                    Container(
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Container(
                       alignment: Alignment.centerLeft,
                       child: !_isHeader
-                          ?                           InkWell(
+                          ? InkWell(
                         radius: _isTablet
                             ? Measurements.height * 0.02
                             : Measurements.width * 0.07,
@@ -480,15 +617,25 @@ class PhoneTableRow extends StatelessWidget {
                             child: Center(
                               child: Container(
                                   alignment: Alignment.center,
-                                  child: Text("Edit")),
+                                  child: Text(
+                                    "Edit",
+                                    style: TextStyle(fontSize: 11),
+                                  )),
                             )),
                         onTap: () {
-//                              setState(() {});
+                          Navigator.push(
+                              context,
+                              PageTransition(
+                                child: EmployeesGroupsDetailsScreen(
+                                    _currentEmployeesGroup),
+                                type: PageTransitionType.fade,
+                              ));
                         },
-                      ) : Container(width: 0,height: 0),
+                      )
+                          : Container(width: 0, height: 0),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
             Divider()
@@ -504,142 +651,133 @@ class PhoneTableRow extends StatelessWidget {
 //                type: PageTransitionType.fade,
 //              ));
 
+//            Navigator.pushNamed(context, '/employeeDetails', arguments: _currentEmployee);
+
           Navigator.push(
               context,
               PageTransition(
-                child: EmployeeDetailsScreen(_currentEmployee),
+                child: EmployeesGroupsDetailsScreen(_currentEmployeesGroup),
                 type: PageTransitionType.fade,
               ));
 
-//            Navigator.pushNamed(context, '/employeeDetails', arguments: _currentEmployee);
-
         }
-
-//        if(!_isHeader){
-//          RestDatasource api  = RestDatasource();
-//          showDialog(context: context,
-//              barrierDismissible: false,
-//              builder:(BuildContext context) {
-//                api.getTransactionDetail(data.business.id, GlobalUtils.ActiveToken.accesstoken,_currentTransaction.uuid,context).then((obj){
-//                  var td = TransactionDetails.toMap(obj);
-//                  Navigator.pop(context);
-//                  Navigator.push(context, PageTransition(child:TransactionDetailsScreen(td,data.wallpaper),type:PageTransitionType.fade));
-//                }).catchError((onError){
-//                  if(onError.toString().contains("401")){
-//                    GlobalUtils.clearCredentials();
-//                    Navigator.pushReplacement(context,PageTransition(child:LoginScreen() ,type: PageTransitionType.fade));
-//                  }else{
-//                    Navigator.pop(context);
-//                    print(onError);
-//                  }
-//                });
-//                return Container(
-//                  child: Dialog(
-//                    backgroundColor: Colors.transparent,
-//                    child: Center(
-//                      child: Container(
-//                          child: CircularProgressIndicator()),),
-//                  ),
-//                );
-//              });
-//        }
       },
     );
   }
-
-//channels
 }
 
 class TabletTableRow extends StatelessWidget {
-  Employees _currentEmployee;
-  EmployeesScreenData data;
-  bool _isHeader;
+  final BusinessEmployeesGroups _currentEmployeesGroup;
+  final EmployeesGroupsScreenData data;
+  final bool _isHeader;
 
-  TabletTableRow(this._currentEmployee, this._isHeader, this.data);
+  TabletTableRow(this._currentEmployeesGroup, this._isHeader, this.data);
 
-//  var f = new NumberFormat("###,##0.00", "en_US");
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return InkWell(
+      child: Container(
+        alignment: Alignment.topCenter,
+        width: Measurements.width,
+        padding: EdgeInsets.symmetric(horizontal: Measurements.width * 0.05),
+        height: Measurements.height * (!_isHeader ? 0.10 : 0.07),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            Container(
+              color: !_isHeader
+                  ? Colors.transparent
+                  : Colors.black.withOpacity(0.5),
+//              width: !_isHeader ? Measurements.width * (_isPortrait ? 0.9 : 0.99) : Measurements.width * (_isPortrait ? 0.9 : 0.99),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      alignment: Alignment.centerLeft,
+                      child: !_isHeader
+                          ? Container(
+                        height: Measurements.height *
+                            (_isPortrait ? 0.050 : 0.075),
+                        child: Checkbox(
+                          activeColor: Color(0XFF0084ff),
+                          value: false,
+                          onChanged: (bool value) {},
+                        ),
+                      )
+                          : Container(
+                          width: Measurements.width * 0.03, height: 0),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      alignment: Alignment.centerLeft,
+                      child: !_isHeader
+                          ? InkWell(
+                        radius: _isTablet
+                            ? Measurements.height * 0.02
+                            : Measurements.width * 0.07,
+                        child: Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: Measurements.width * 0.02),
+                            //width: widget._active ?50:120,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.rectangle,
+                              color: Colors.grey.withOpacity(0.5),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            height: _isTablet
+                                ? Measurements.height * 0.02
+                                : Measurements.width * 0.07,
+                            child: Center(
+                              child: Container(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    "Edit",
+                                    style: TextStyle(fontSize: 11),
+                                  )),
+                            )),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              PageTransition(
+                                child: EmployeesGroupsDetailsScreen(
+                                    _currentEmployeesGroup),
+                                type: PageTransitionType.fade,
+                              ));
+                        },
+                      )
+                          : Container(width: 0, height: 0),
+                    ),
+                  ),
 
-//    DateTime time;
-//    if(_currentTransaction!= null)time = DateTime.parse(_currentTransaction.createdAt);
-//    return InkWell(
-//      child: Container(
-//        width: Measurements.width,
-//        height: Measurements.height * (!_isHeader? 0.05:0.04),
-//        padding: EdgeInsets.symmetric(horizontal: Measurements.width * 0.02),
-//        child: Column(
-//          mainAxisAlignment: MainAxisAlignment.spaceAround,
-//          children: <Widget>[
-//            Row(
-//              children: <Widget>[
-//                Container(
-//                  alignment: Alignment.centerLeft,
-//                  width:  Measurements.width * (_isPortrait ?0.07:0.08),
-//                  child: !_isHeader? TransactionScreenParts.channelIcon(_currentTransaction.channel) : Container(child:AutoSizeText(Language.getTransactionStrings("form.filter.labels.channel"),style: TextStyle(fontSize:12),)),
-//                ),
-//                Container(
-//                  alignment: Alignment.centerLeft,
-//                  width: Measurements.width * (_isPortrait ?0.06:0.08),
-//                  child: !_isHeader? TransactionScreenParts.paymentType(_currentTransaction.type): Container(child:AutoSizeText(Language.getTransactionStrings("form.filter.labels.type"),style: TextStyle(fontSize:12))) ,
-//                ),
-//                Container(
-//                  width: Measurements.width * (_isPortrait ?0.27:0.28),
-//                  child: !_isHeader? AutoSizeText("#${_currentTransaction.id}"): AutoSizeText(Language.getTransactionStrings("form.filter.labels.original_id"),maxLines: 1,textAlign: TextAlign.left,style: TextStyle(fontSize:12)),
-//                ),
-//                Container(
-//                  width: Measurements.width * (_isPortrait ?0.18:0.20),
-//                  child: !_isHeader? AutoSizeText(_currentTransaction.customerName):AutoSizeText(Language.getTransactionStrings("form.filter.labels.customer_name"),maxLines: 1,style: TextStyle(fontSize:12)),
-//                ),
-//                Container(
-//                  width: Measurements.width * (_isPortrait ?0.11:0.13),
-//                  child: !_isHeader? AutoSizeText("${Measurements.currency(_currentTransaction.currency)}${f.format(_currentTransaction.total)}"):AutoSizeText(Language.getTransactionStrings("form.filter.labels.total"),maxLines: 1,style: TextStyle(fontSize:12)),
-//                ),
-//                Container(
-//                  width: Measurements.width * (_isPortrait ?0.17:0.25),
-//                  child: !_isHeader? AutoSizeText("${DateFormat.d("en_US").add_MMMM().add_y().format(time)} ${DateFormat.Hm("en_US").format(time.add(Duration(hours: 2)))}"):Text(Language.getTransactionStrings("form.filter.labels.created_at"),style: TextStyle(fontSize:12)),
-//                ),
-//                Container(
-//                  width: Measurements.width * 0.10,
-//                  child: !_isHeader? Measurements.statusWidget(_currentTransaction.status):Text(Language.getTransactionStrings("form.filter.labels.status"),style: TextStyle(fontSize:12)),
-//                ),
-//              ],
-//            ),
-//            Divider()
-//          ],
-//        ),
-//      ),
-//      onTap: (){
-//        if(!_isHeader){
-//          RestDatasource api  = RestDatasource();
-//          showDialog(
-//              context: context,
-//              barrierDismissible: false,
-//              builder:(BuildContext context) {
-//                api.getTransactionDetail(data.business.id, GlobalUtils.ActiveToken.accesstoken,_currentTransaction.uuid,context).then((obj){
-//                  var td = TransactionDetails.toMap(obj);
-//                  Navigator.pop(context);
-//                  Navigator.push(context, PageTransition(child:TransactionDetailsScreen(td,data.wallpaper),type:PageTransitionType.fade));
-//                }).catchError((onError){
-//                  Navigator.pop(context);
-//                  print(onError);
-//                });
-//                return BackdropFilter(
-//                  filter:ImageFilter.blur(sigmaX: 5,sigmaY: 5),
-//                  child: Container(
-//                    child: Dialog(
-//                      backgroundColor: Colors.transparent,
-//                      child: Center(
-//                        child: Container(
-//                            child: CircularProgressIndicator()),),
-//                    ),
-//                  ),
-//                );
-//              });
-//        }
-//      },
-//
-//    );
+                ],
+              ),
+            ),
+            Divider()
+          ],
+        ),
+      ),
+      onTap: () {
+        if (!_isHeader) {
+//          Navigator.push(
+//              context,
+//              PageTransition(
+//                child: EmployeeDetailsScreen(_currentWallpaper, _currentBusiness, _currentEmployee),
+//                type: PageTransitionType.fade,
+//              ));
+
+//            Navigator.pushNamed(context, '/employeeDetails', arguments: _currentEmployee);
+
+          Navigator.push(
+              context,
+              PageTransition(
+                child: EmployeesGroupsDetailsScreen(_currentEmployeesGroup),
+                type: PageTransitionType.fade,
+              ));
+        }
+      },
+    );
   }
 }

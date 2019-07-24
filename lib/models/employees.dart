@@ -1,3 +1,5 @@
+import 'acl.dart';
+
 class Employees {
   final List<UserRoles> roles;
 
@@ -59,10 +61,11 @@ enum Positions { Cashier, Sales, Marketing, Staff, Admin, Others }
 
 class UserRoles {
   final List<UserPermissions> permission;
-  final String id;
-  final RoleType type;
+//  final String id;
+//  final RoleType type;
+  final String type;
 
-  UserRoles({this.permission, this.id, this.type});
+  UserRoles({this.permission, this.type});
 
   factory UserRoles.fromMap(role) {
     print("role: $role");
@@ -76,8 +79,9 @@ class UserRoles {
 
     return UserRoles(
       permission: permissionsDataList,
-      id: role['_id'],
-      type: RoleType.fromMap(role['type']),
+//      id: role['_id'],
+//      type: RoleType.fromMap(role['type']),
+      type: role['type'],
     );
   }
 }
@@ -96,31 +100,11 @@ class UserPermissions {
     List<Acl> aclsDataList = aclsData.map((data) => Acl.fromMap(data)).toList();
 
     return UserPermissions(
-      id: permissions['_id'],
+      id: permissions['_id'] ?? "",
       businessId: permissions['businessId'],
       acls: aclsDataList,
       hasAcls: permissions['hasAcls'] ?? true,
-      v: permissions['__v'],
-    );
-  }
-}
-
-class Acl {
-  final String microService;
-  final bool create;
-  final bool read;
-  final bool update;
-  final bool delete;
-
-  Acl({this.microService, this.create, this.read, this.update, this.delete});
-
-  factory Acl.fromMap(acl) {
-    return Acl(
-      microService: acl['microservice'],
-      create: acl['create'],
-      read: acl['read'],
-      update: acl['update'],
-      delete: acl['delete'],
+      v: permissions['__v'] ?? 0,
     );
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:payever/models/global_state_model.dart';
+import 'package:payever/view_models/global_state_model.dart';
 import 'package:payever/utils/utils.dart';
 import 'package:payever/views/dashboard/dashboard_screen.dart';
 import 'package:payever/views/login/login_page.dart';

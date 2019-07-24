@@ -252,6 +252,17 @@ class RestDatasource {
     });
   }
 
+  Future<dynamic> getBusinessEmployeesGroupsList(String businessId,String token,BuildContext context) {
+    print("TAG - getBusinessEmployeesGroupsList()");
+
+    var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token",HttpHeaders.userAgentHeader :GlobalUtils.fingerprint };
+
+    print("URL: ${EMPLOYEE_GROUPS + businessId}");
+    return _netUtil.get(EMPLOYEE_GROUPS + businessId,headers: headers ).then((dynamic result){
+      return result;
+    });
+  }
+
   Future<dynamic> getTerminal(String idBusiness,String token,BuildContext context) {
     print("TAG - geTerminal()");
     var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token" ,HttpHeaders.userAgentHeader :GlobalUtils.fingerprint };

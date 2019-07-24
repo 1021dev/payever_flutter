@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class CustomFutureBuilder extends StatelessWidget {
+class CustomFutureBuilder<T> extends StatelessWidget {
   final Future future;
   final String errorMessage;
-  final Function(dynamic results) onDataLoaded;
+  final Function(T results) onDataLoaded;
 
   const CustomFutureBuilder(
       {Key key,
@@ -14,9 +14,9 @@ class CustomFutureBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<dynamic>(
+    return FutureBuilder<T>(
         future: future,
-        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<T> snapshot) {
           if (snapshot.hasData) {
             return onDataLoaded(snapshot.data);
           }
