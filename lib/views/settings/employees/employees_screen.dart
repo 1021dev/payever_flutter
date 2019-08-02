@@ -3,13 +3,15 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:payever/network/rest_ds.dart';
+import 'package:payever/view_models/employees_state_model.dart';
 import 'package:payever/view_models/global_state_model.dart';
 
 import 'package:payever/utils/utils.dart';
 import 'package:payever/views/customelements/custom_app_bar.dart';
 import 'package:payever/views/settings/employees/add_employee_screen.dart';
-import 'package:payever/views/settings/employees/employees_groups_list_screen.dart';
-import 'package:payever/views/settings/employees/employees_list_screen.dart';
+import 'package:payever/views/settings/employees/employees_groups_list_tab_screen.dart';
+import 'package:payever/views/settings/employees/employees_list_tab_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'add_group_screen.dart';
@@ -27,10 +29,19 @@ class _EmployeesScreenState extends State<EmployeesScreen>
   TabController tabController;
   GlobalStateModel globalStateModel;
 
+  int _currentIndex = 0;
+
   @override
   void initState() {
     super.initState();
     tabController = TabController(vsync: this, length: 2);
+    tabController.addListener(_handleTabSelection);
+  }
+
+  _handleTabSelection() {
+    setState(() {
+      _currentIndex = tabController.index;
+    });
   }
 
   @override
@@ -56,7 +67,7 @@ class _EmployeesScreenState extends State<EmployeesScreen>
                 top: 0.0,
                 child: CachedNetworkImage(
                   imageUrl: globalStateModel.currentWallpaper ??
-                      "https://payevertest.azureedge.net/images/commerseos-background-blurred.jpg",
+                      globalStateModel.defaultCustomWallpaper,
                   placeholder: (context, url) => Container(),
                   errorWidget: (context, url, error) => Icon(Icons.error),
                   fit: BoxFit.cover,
@@ -76,17 +87,42 @@ class _EmployeesScreenState extends State<EmployeesScreen>
                             icon: Icon(Icons.add),
                             onPressed: () {
                               if (tabController.index == 0) {
+//                                Navigator.push(
+//                                    context,
+//                                    PageTransition(
+//                                      child: AddEmployeeScreen(),
+//                                      type: PageTransitionType.fade,
+//                                    ));
+
                                 Navigator.push(
                                     context,
                                     PageTransition(
-                                      child: AddEmployeeScreen(),
+                                      child: ProxyProvider<RestDatasource, EmployeesStateModel>(
+                                        builder: (context, api, employeesState) =>
+                                            EmployeesStateModel(globalStateModel, api),
+                                        child: AddEmployeeScreen(),
+                                      ),
                                       type: PageTransitionType.fade,
                                     ));
+
+
+
                               } else {
+//                                Navigator.push(
+//                                    context,
+//                                    PageTransition(
+//                                      child: AddGroupScreen(),
+//                                      type: PageTransitionType.fade,
+//                                    ));
+
                                 Navigator.push(
                                     context,
                                     PageTransition(
-                                      child: AddGroupScreen(),
+                                      child: ProxyProvider<RestDatasource, EmployeesStateModel>(
+                                        builder: (context, api, employeesState) =>
+                                            EmployeesStateModel(globalStateModel, api),
+                                        child: AddGroupScreen(),
+                                      ),
                                       type: PageTransitionType.fade,
                                     ));
                               }
@@ -95,43 +131,44 @@ class _EmployeesScreenState extends State<EmployeesScreen>
                         ],
                       ),
                       body: ListView(
-                        physics: NeverScrollableScrollPhysics(),
+//                        physics: NeverScrollableScrollPhysics(),
                         children: <Widget>[
                           Center(
                             child: Container(
                               decoration: BoxDecoration(
-//                              color: Colors.white.withOpacity(0.1),
-                                  color: Colors.white.withOpacity(0.3),
+//                                color: Colors.white.withOpacity(0.3),
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(20))),
                               width: Measurements.width * 0.8,
                               child: TabBar(
                                 controller: tabController,
                                 indicatorColor: Colors.transparent,
-                                indicator: BubbleTabIndicator(
-                                  indicatorHeight: 45,
-//                              indicatorColor: Colors.white.withOpacity(0.3),
-                                  indicatorColor: Colors.white.withOpacity(0.1),
-                                  tabBarIndicatorSize: TabBarIndicatorSize.tab,
-                                ),
+//                                indicator: BubbleTabIndicator(
+//                                  indicatorHeight: 45,
+////                              indicatorColor: Colors.white.withOpacity(0.3),
+//                                  indicatorColor: Colors.white.withOpacity(0.1),
+//                                  tabBarIndicatorSize: TabBarIndicatorSize.tab,
+//                                ),
+//                                indicator: ShapeDecoration(
+//                                  color: Colors.blue,
+//                                  shape: BeveledRectangleBorder(
+//                                      side: BorderSide(color: Colors.blue),
+//                                      borderRadius: BorderRadius.circular(0)),
+//                                ),
+
                                 labelColor: Colors.white,
+                                labelPadding: EdgeInsets.all(2),
                                 unselectedLabelColor: Colors.white,
                                 isScrollable: false,
                                 tabs: <Widget>[
                                   Container(
-//                                color: tabController.index == 0
-//                                            ? Colors.red
-//                                            : Colors.yellow,
                                     child: Tab(
                                       child: Container(
                                         height: 40,
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 10),
                                         decoration: BoxDecoration(
-//                                        color: Colors.green,
-//                                        color: tabController.index == 0
-//                                            ? Colors.red
-//                                            : Colors.yellow,
+                                        color: _currentIndex == 0
+                                            ? Colors.white.withOpacity(0.3)
+                                            : Colors.white.withOpacity(0.1),
                                             borderRadius: BorderRadius.only(
                                                 topLeft: Radius.circular(20),
                                                 bottomLeft:
@@ -146,16 +183,13 @@ class _EmployeesScreenState extends State<EmployeesScreen>
                                     ),
                                   ),
                                   Container(
-//                                color: Colors.green,
                                     child: Tab(
                                       child: Container(
                                         height: 40,
-//                                padding: EdgeInsets.symmetric(horizontal: 10),
                                         decoration: BoxDecoration(
-//                                      color: Colors.green,
-//                                        color: tabController.index == 1
-//                                            ? Colors.red
-//                                            : Colors.yellow,
+                                        color: _currentIndex == 1
+                                            ? Colors.white.withOpacity(0.3)
+                                            : Colors.white.withOpacity(0.1),
                                             borderRadius: BorderRadius.only(
                                                 topRight: Radius.circular(20),
                                                 bottomRight:
@@ -179,8 +213,8 @@ class _EmployeesScreenState extends State<EmployeesScreen>
                               physics: NeverScrollableScrollPhysics(),
                               controller: tabController,
                               children: <Widget>[
-                                EmployeesListScreen(),
-                                EmployeesGroupsListScreen()
+                                EmployeesListTabScreen(),
+                                EmployeesGroupsListTabScreen()
                               ],
                             ),
                           ),

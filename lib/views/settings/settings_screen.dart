@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 import 'package:payever/views/customelements/custom_app_bar.dart';
 import 'package:payever/view_models/global_state_model.dart';
 import 'package:payever/utils/utils.dart';
-
 import 'settings_drawer.dart';
 
 bool _isPortrait;
@@ -20,11 +19,6 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
-//    GlobalStateModel myGlobalStateModel = Provider.of<GlobalStateModel>(context);
-
-//    print("GlobalUtils.ActiveToken.accesstoken: ${GlobalUtils.ActiveToken.accesstoken}");
-//    print("widget.currentBusiness.id: ${globalStateModel.currentBusiness.id}");
-
     _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
     Measurements.height = (_isPortrait
         ? MediaQuery.of(context).size.height
@@ -46,7 +40,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   top: 0.0,
                   child: CachedNetworkImage(
                     imageUrl: globalStateModel.currentWallpaper ??
-                        "https://payevertest.azureedge.net/images/commerseos-background-blurred.jpg",
+                        globalStateModel.defaultCustomWallpaper,
                     placeholder: (context, url) => Container(),
                     errorWidget: (context, url, error) => Icon(Icons.error),
                     fit: BoxFit.cover,
@@ -67,7 +61,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           child: Padding(
                             padding: EdgeInsets.all(10),
                             child: SizedBox(
-                              width: double.infinity,
+                              width: Measurements.width,
                               child: Card(
                                   elevation: 1,
                                   color: Colors.grey.withOpacity(0.2),
@@ -82,13 +76,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,
                                       children: <Widget>[
-//                                    CustomFutureBuilder(
-//                                      future: _myFuture(),
-//                                      errorMessage: "Error loading future!",
-//                                      onDataLoaded: (results) {
-//                                        return Text(results);
-//                                      },
-//                                    ),
                                         Text(
                                           "Business Name:",
                                           style: TextStyle(
@@ -119,21 +106,4 @@ class _SettingsScreenState extends State<SettingsScreen> {
       },
     );
   }
-
-//  Future<void> _myFuture() async {
-//     await Future.delayed(Duration(seconds: 3), () => print("my future1..."));
-//     var data1 = "1";
-//     await Future.delayed(Duration(seconds: 3), () => print("my future2..."));
-//     var data2 = await Future.delayed(Duration(seconds: 3), () => _myFuture2());
-//     await Future.delayed(Duration(seconds: 1), () => print("my future3..."));
-//     var data3 = "3";
-//
-//     return "Hello data: ${data1 + data2 + data3}";
-//  }
-//
-//  Future<String> _myFuture2() async {
-//     await Future.delayed(Duration(seconds: 3), () => print("my future data2..."));
-//    return "MyfutureData2";
-//  }
-
 }

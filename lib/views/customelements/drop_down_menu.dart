@@ -62,14 +62,13 @@ class _DropDownMenuState extends State<DropDownMenu> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Center(
-          child: Card(
+      child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),
         color: Colors.white.withOpacity(0.1),
         child: Padding(
-          padding: EdgeInsets.only(top: 5, right: 10, bottom: 5, left: 10),
+          padding: EdgeInsets.only(top: 1, right: 1, bottom: 1, left: 10),
           child: Theme(
             data: Theme.of(context).copyWith(
               canvasColor: Colors.white.withOpacity(0.1),
@@ -78,8 +77,23 @@ class _DropDownMenuState extends State<DropDownMenu> {
               child: ButtonTheme(
                 alignedDropdown: true,
                 child: DropdownButton(
-//                style: TextStyle(fontSize: 20, color: Colors.white),
+                  style: TextStyle(fontSize: 18, color: Colors.white),
                   hint: Text(_placeHolderText),
+//                    isDense: true,
+//                    hint: Container(
+//                      child: Column(
+//                        mainAxisSize: MainAxisSize.min,
+//                        crossAxisAlignment: CrossAxisAlignment.start,
+//                        children: <Widget>[
+//                          Text(
+//                            _placeHolderText,
+//                            style: TextStyle(fontSize: 13),
+//                          ),
+//                          Text("Choose " + _placeHolderText),
+//                        ],
+//                      ),
+//                    ),
+                  elevation: 1,
                   value: _currentOption,
                   items: _dropDownMenuItems,
                   onChanged: (value) {
@@ -92,12 +106,54 @@ class _DropDownMenuState extends State<DropDownMenu> {
                   },
 //                disabledHint: Text("You can't select anything."),
                 ),
+//                child: InputDecorator(
+//                  expands: true,
+//                  textAlign: TextAlign.left,
+//                  decoration: InputDecoration(
+//                    border: InputBorder.none,
+//                    labelText: _currentOption == null
+//                        ? _currentOption
+//                        : _placeHolderText,
+//                    hintText: _placeHolderText,
+////                    errorText: _placeHolderText,
+//                  ),
+//                  isEmpty: _currentOption == null,
+//                  child: DropdownButton(
+//                    style: TextStyle(fontSize: 15, color: Colors.white),
+//                    hint: Text(_placeHolderText),
+////                    isDense: true,
+////                    hint: Container(
+////                      child: Column(
+////                        mainAxisSize: MainAxisSize.min,
+////                        crossAxisAlignment: CrossAxisAlignment.start,
+////                        children: <Widget>[
+////                          Text(
+////                            _placeHolderText,
+////                            style: TextStyle(fontSize: 13),
+////                          ),
+////                          Text("Choose " + _placeHolderText),
+////                        ],
+////                      ),
+////                    ),
+//                    elevation: 1,
+//                    value: _currentOption,
+//                    items: _dropDownMenuItems,
+//                    onChanged: (value) {
+//                      setState(() {
+//                        _currentOption = value;
+//                        print(value);
+//                        var index = _options.indexOf(value);
+//                        onChangeSelection(value, index);
+//                      });
+//                    },
+////                disabledHint: Text("You can't select anything."),
+//                  ),
+//                ),
               ),
             ),
           ),
         ),
-      )),
+      ),
     );
   }
-
 }

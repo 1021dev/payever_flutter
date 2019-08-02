@@ -151,15 +151,13 @@ class _DashboardMidScreenState extends State<DashboardMidScreen> {
               }
             });
           }
+
           RestDatasource()
               .getWallpaper(activeBusiness.id,
                   GlobalUtils.ActiveToken.accessToken, context)
               .then((wall) {
             String wallpaper = wall[GlobalUtils.CURRENT_WALLPAPER];
             prefs.setString(GlobalUtils.WALLPAPER, WALLPAPER_BASE + wallpaper);
-
-
-
 
             Navigator.pushReplacement(
                 _formKey.currentContext,

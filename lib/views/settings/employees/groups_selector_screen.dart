@@ -59,7 +59,7 @@ class _GroupsSelectorScreenState extends State<GroupsSelectorScreen> {
               top: 0.0,
               child: CachedNetworkImage(
                 imageUrl: globalStateModel.currentWallpaper ??
-                    "https://payevertest.azureedge.net/images/commerseos-background-blurred.jpg",
+                    globalStateModel.defaultCustomWallpaper,
                 placeholder: (context, url) => Container(),
                 errorWidget: (context, url, error) => Icon(Icons.error),
                 fit: BoxFit.cover,

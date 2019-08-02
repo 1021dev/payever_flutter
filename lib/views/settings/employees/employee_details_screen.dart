@@ -1,39 +1,32 @@
 import 'dart:ui';
 
-import 'package:auto_size_text/auto_size_text.dart';
+import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:payever/views/settings/employees/employees_apps_access_component.dart';
+import 'package:provider/provider.dart';
 
-import 'package:payever/models/business.dart';
-import 'package:payever/models/employees.dart';
-import 'package:payever/view_models/global_state_model.dart';
+import 'package:payever/models/business_apps.dart';
+import 'package:payever/models/business_employees_groups.dart';
 import 'package:payever/network/rest_ds.dart';
+import 'package:payever/utils/env.dart';
 import 'package:payever/utils/translations.dart';
+import 'package:payever/views/customelements/custom_alert_dialog.dart';
+import 'package:payever/views/customelements/custom_future_builder.dart';
+import 'package:payever/views/login/login_page.dart';
+import 'package:payever/models/employees.dart';
+import 'package:payever/view_models/employees_state_model.dart';
+import 'package:payever/view_models/global_state_model.dart';
 import 'package:payever/utils/utils.dart';
 import 'package:payever/views/customelements/custom_app_bar.dart';
 import 'package:payever/views/customelements/drop_down_menu.dart';
-import 'package:payever/views/login/login_page.dart';
 import 'package:payever/views/settings/employees/expandable_component.dart';
-import 'package:provider/provider.dart';
-import 'package:payever/views/customelements/custom_dropdown.dart' as custom;
 
 bool _isPortrait;
 bool _isTablet;
-String _currentWallpaper;
-Business _currentBusiness;
 
 class EmployeeDetailsScreen extends StatefulWidget {
-//  final String wallpaper;
-//  final Business currentBusiness;
-//  final Employees employee;
-//
-//  EmployeeDetailsScreen(this.wallpaper, this.currentBusiness, this.employee) {
-//    _currentWallpaper = wallpaper;
-//    _currentBusiness = currentBusiness;
-//  }
-
   final Employees employee;
 
   EmployeeDetailsScreen(this.employee);
@@ -43,118 +36,64 @@ class EmployeeDetailsScreen extends StatefulWidget {
 }
 
 class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
-//  EmployeeInfoRow employeeInfoRow;
-//  AppsAccessRow appsAccessRow;
+  var openedRow = ValueNotifier(0);
 
-  var openedEmployeeInfoRow = ValueNotifier(0);
-  var openedAppsAccessRow = ValueNotifier(0);
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
   }
 
-  Future<List<dynamic>> fetchEmployeeGroups(
+  Future<List<dynamic>> fetchAppsAccessOptions(
       GlobalStateModel globalStateModel, String userId) async {
-    List<dynamic> employeeGroupsList = List<dynamic>();
+    List<dynamic> appsAccessOptionsList = List<dynamic>();
 
-    RestDatasource api = RestDatasource();
+    return appsAccessOptionsList;
+  }
 
-    var employeeGroups = await api
-        .getEmployeeGroupsList(globalStateModel.currentBusiness.id, userId,
-            GlobalUtils.ActiveToken.accessToken, context)
-        .then((employeeGroupsData) {
-      print("Employees groups data loaded: $employeeGroupsData");
+  Future<List<BusinessApps>> getBusinessApps(
+      EmployeesStateModel employeesStateModel) async {
+    List<BusinessApps> businessApps = List<BusinessApps>();
+    var apps = await employeesStateModel.getAppsBusinessInfo();
 
-      for (var employeeGroup in employeeGroupsData) {
-        print("employeeGroup: $employeeGroup");
-
-        employeeGroupsList.add(Employees.fromMap(employeeGroup));
+    for (var app in apps) {
+      var appData = BusinessApps.fromMap(app);
+      if (appData.dashboardInfo.title != null) {
+//        if (appData.allowedAcls.create != null) {
+//          appData.allowedAcls.create = false;
+//        }
+//        if (appData.allowedAcls.read != null) {
+//          appData.allowedAcls.read = false;
+//        }
+//        if (appData.allowedAcls.update != null) {
+//          appData.allowedAcls.update = false;
+//        }
+//        if (appData.allowedAcls.delete != null) {
+//          appData.allowedAcls.delete = false;
+//        }
+        businessApps.add(appData);
       }
-
-      return employeeGroupsList;
-    }).catchError((onError) {
-      print("Error loading employee groups: $onError");
-
-      if (onError.toString().contains("401")) {
-        GlobalUtils.clearCredentials();
-        Navigator.pushReplacement(
-            context,
-            PageTransition(
-                child: LoginScreen(), type: PageTransitionType.fade));
-      }
-    });
-
-    if (employeeGroups != null) {
-//      employeesList.add(Employees.fromMap({
-//        "roles": [],
-//        "_id": "33b54f23-2e24-4d9b-8950-b0241448dea4",
-//        "isVerified": false,
-//        "first_name": "Artur",
-//        "last_name": "Schlaht",
-//        "email": "arst@qwfp.com",
-//        "createdAt": "2019-07-12T13:26:12.168Z",
-//        "updatedAt": "2019-07-17T14:32:48.507Z",
-//        "__v": 0,
-//        "position": "Cashier",
-//      }));
-//      return employeesList;
-      print("employeeGroups: $employeeGroups");
-      return employeeGroups;
-    } else {
-      print("employeeGroupsList: $employeeGroupsList");
-      employeeGroupsList.add(Employees.fromMap({
-        "roles": [
-          {
-            "permissions": [],
-            "_id": "559b8da4-273f-4f75-b3ba-6a1d0b7e0df2",
-            "type": {
-              "_id": "2f875fab-6bfc-46d0-b2e5-c1d4c0765db1",
-              "name": "user"
-            }
-          },
-          {
-            "permissions": [
-              {
-                "_id": "50080a92-2636-48af-81d4-4c3c93c24756",
-                "businessId": "d884e63e-7671-4bdc-8693-2e0085aec199",
-                "acls": [
-                  {
-                    "microservice": "commerceos",
-                    "create": true,
-                    "read": true,
-                    "update": true,
-                    "delete": true
-                  }
-                ],
-                "__v": 0
-              }
-            ],
-            "_id": "785f021d-0e26-4b41-9155-81fba5404f3e",
-            "type": {
-              "_id": "90b26c23-763a-4bea-a833-338375b94fe4",
-              "name": "merchant"
-            },
-            "__v": 0
-          }
-        ],
-        "_id": "33b54f23-2e24-4d9b-8950-b0241448dea4",
-        "isVerified": false,
-        "first_name": "Artur",
-        "last_name": "Schlaht",
-        "email": "arst@qwfp.com",
-        "createdAt": "2019-07-12T13:26:12.168Z",
-        "updatedAt": "2019-07-17T14:32:48.507Z",
-        "__v": 0,
-        "position": "Cashier",
-      }));
-      return employeeGroupsList;
     }
+
+    employeesStateModel.updateBusinessApps(businessApps);
+
+    print("businessApps: $businessApps");
+
+    return businessApps;
   }
 
   @override
   Widget build(BuildContext context) {
     GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context);
+
+    EmployeesStateModel employeesStateModel =
+        Provider.of<EmployeesStateModel>(context);
+
+    employeesStateModel.changeFirstName(widget.employee.firstName);
+    employeesStateModel.changeLastName(widget.employee.lastName);
+    employeesStateModel.changeEmail(widget.employee.email);
+    employeesStateModel.changePosition(widget.employee.position);
 
     return OrientationBuilder(
         builder: (BuildContext context, Orientation orientation) {
@@ -174,7 +113,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
               top: 0.0,
               child: CachedNetworkImage(
                 imageUrl: globalStateModel.currentWallpaper ??
-                    "https://payevertest.azureedge.net/images/commerseos-background-blurred.jpg",
+                    globalStateModel.defaultCustomWallpaper,
                 placeholder: (context, url) => Container(),
                 errorWidget: (context, url, error) => Icon(Icons.error),
                 fit: BoxFit.cover,
@@ -189,65 +128,172 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                     onTap: () {
                       Navigator.pop(context);
                     },
+                    actions: <Widget>[
+                      StreamBuilder(
+                          stream: employeesStateModel.submitValid,
+                          builder: (context, snapshot) {
+                            return RawMaterialButton(
+                              constraints: BoxConstraints(),
+                              padding: EdgeInsets.all(10),
+                              child: Text(
+                                'Save',
+                                style: TextStyle(
+                                    color: snapshot.hasData
+                                        ? Colors.white
+                                        : Colors.white.withOpacity(0.3),
+                                    fontSize: 18),
+                              ),
+                              onPressed: () {
+                                if (snapshot.hasData) {
+                                  print("Data can be send");
+                                  _updateEmployee(globalStateModel,
+                                      employeesStateModel, context);
+                                } else {
+                                  print("The data can't be send");
+                                }
+                              },
+                            );
+                          }),
+                    ],
                   ),
-                  body: FutureBuilder<Object>(
-                      future: fetchEmployeeGroups(
-                          globalStateModel, widget.employee.id),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasError) {
-                          return Center(
-                            child: Text("Error loading employee details"),
-                          );
-                        }
+                  body: CustomFutureBuilder(
+                    future: fetchAppsAccessOptions(
+                        globalStateModel, widget.employee.id),
+                    errorMessage: "Error loading employee details",
+                    onDataLoaded: (results) {
+                      return SafeArea(
+                        child: ListView(
+                          children: <Widget>[
+                            Form(
+                              key: _formKey,
+                              child: Container(
+//                                  padding: EdgeInsets.symmetric(horizontal: 5),
+                                child: Column(
+                                  children: <Widget>[
+                                    EmployeeInfoRow(
+                                      openedRow: openedRow,
+                                      employee: widget.employee,
+//                                        employeeGroups: snapshot.data,
+                                      employeesStateModel: employeesStateModel,
+                                    ),
+                                    CustomFutureBuilder<List<BusinessApps>>(
+                                      future:
+                                          getBusinessApps(employeesStateModel),
+                                      errorMessage: "Error loading apps.",
+                                      onDataLoaded: (List results) {
+                                        return EmployeesAppsAccessComponent(
+                                          openedRow: openedRow,
+                                          businessAppsData: results,
+                                          isNewEmployeeOrGroup: false,
+                                        );
 
-                        if (snapshot.hasData) {
-                          return ListView(
-                            children: <Widget>[
-                              Form(
-//    key: widget._parts._formKey,
-                                child: Container(
-//                        padding: EdgeInsets.symmetric(horizontal: 5),
-                                  child: Column(
-                                    children: <Widget>[
-//                            Text("Name: lala"),
-//                            Text("Name: ${widget.employee.firstName}"),
-//                                    employeeInfoRow,
-//                                    appsAccessRow
-                                      EmployeeInfoRow(
-                                        openedRow: openedEmployeeInfoRow,
-                                        employee: widget.employee,
-                                        employeeGroups: snapshot.data,
+//                                        return AppsAccessRow(
+//                                          openedRow: openedAppsAccessRow,
+////                                        employee: widget.employee,
+////                                        employeeGroups: snapshot.data,
+//                                          businessAppsData: results,
+//                                        );
+                                      },
+                                    ),
+                                    InkWell(
+                                      child: Container(
+                                        color: Colors.white.withOpacity(0.4),
+                                        width: _isPortrait
+                                            ? Measurements.width * 0.99
+                                            : double.infinity,
+                                        height: Measurements.height *
+                                            (_isTablet ? 0.05 : 0.07),
+                                        child: Center(
+                                            child: Text(
+                                          "Delete Employee",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 19),
+                                        )),
                                       ),
-                                      AppsAccessRow(
-                                        openedRow: openedAppsAccessRow,
-                                        employee: widget.employee,
-                                        employeeGroups: snapshot.data,
-                                      ),
-                                    ],
-                                  ),
+                                      onTap: () {
+                                        _deleteEmployeeConfirmation(
+                                            context, employeesStateModel);
+                                      },
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          );
-                        }
-
-                        return Center(child: CircularProgressIndicator());
-                      }),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
                 ),
               )),
         ],
       );
     });
   }
+
+  void _updateEmployee(GlobalStateModel globalStateModel,
+      EmployeesStateModel employeesStateModel, BuildContext context) async {
+    var data = {
+      "email": employeesStateModel.emailValue,
+      "first_name": employeesStateModel.firstNameValue,
+      "last_name": employeesStateModel.lastNameValue,
+      "position": employeesStateModel.positionValue
+    };
+
+    print("Data: $data");
+
+    for (var app in employeesStateModel.businessApps) {
+      print("app.allowedAcls.create: ${app.allowedAcls.create}" +
+          " " +
+          "app.allowedAcls.read: ${app.allowedAcls.read}" +
+          " " +
+          "app.allowedAcls.update: ${app.allowedAcls.update}" +
+          " " +
+          "app.allowedAcls.delete: ${app.allowedAcls.delete}");
+    }
+
+//    employeesStateModel.clearEmployeeData();
+
+    await employeesStateModel.updateEmployee(data, widget.employee.id);
+    Navigator.of(context).pop();
+  }
+
+  void _deleteEmployeeConfirmation(
+      BuildContext context, EmployeesStateModel employeesStateModel) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return CustomAlertDialog(
+            title: "Delete employee",
+            message: "Are you sure that you want to delete this employee?",
+            onContinuePressed: () {
+              Navigator.of(_formKey.currentContext).pop();
+              return _deleteEmployeeFromBusiness(employeesStateModel);
+            });
+      },
+    );
+  }
+
+  _deleteEmployeeFromBusiness(EmployeesStateModel employeesStateModel) {
+    employeesStateModel.deleteEmployeeFromBusiness(widget.employee.id);
+    Navigator.of(_formKey.currentContext).pop();
+  }
 }
 
 class EmployeeInfoRow extends StatefulWidget {
-  ValueNotifier openedRow;
-  Employees employee;
-  dynamic employeeGroups;
-  bool isOpen = true;
+  final ValueNotifier openedRow;
+  final Employees employee;
 
-  EmployeeInfoRow({this.openedRow, this.employee, this.employeeGroups});
+//  final dynamic employeeGroups;
+  final EmployeesStateModel employeesStateModel;
+
+  EmployeeInfoRow(
+      {this.openedRow,
+      this.employee,
+//      this.employeeGroups,
+      this.employeesStateModel});
 
   @override
   createState() => _EmployeeInfoRowState();
@@ -255,19 +301,28 @@ class EmployeeInfoRow extends StatefulWidget {
 
 class _EmployeeInfoRowState extends State<EmployeeInfoRow>
     with TickerProviderStateMixin {
+  bool isOpen = true;
+
+  bool _isPortrait;
+  bool _isTablet;
+
+  TextEditingController _firstNameController = TextEditingController();
+  TextEditingController _lastNameController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+
+  final GlobalKey<AutoCompleteTextFieldState<BusinessEmployeesGroups>> acKey =
+      GlobalKey();
+
+  List<BusinessEmployeesGroups> employeesGroupsList =
+      List<BusinessEmployeesGroups>();
+  List<String> employeeCurrentGroups = List<String>();
+
   listener() {
     setState(() {
       if (widget.openedRow.value == 0) {
-        widget.isOpen = !widget.isOpen;
-//        if(openedEmployeeInfoRow.value == 1) {
-//          openedAppsAccessRow.value = 0;
-//          openedAppsAccessRow.notifyListeners();
-//        } else {
-//          openedAppsAccessRow.value = 1;
-//          openedAppsAccessRow.notifyListeners();
-//        }
+        isOpen = !isOpen;
       } else {
-        widget.isOpen = false;
+        isOpen = false;
       }
     });
   }
@@ -276,11 +331,85 @@ class _EmployeeInfoRowState extends State<EmployeeInfoRow>
   void initState() {
     super.initState();
     widget.openedRow.addListener(listener);
+    _firstNameController.text = widget.employee.firstName;
+    _lastNameController.text = widget.employee.lastName;
+    _emailController.text = widget.employee.email;
+  }
+
+  @override
+  void dispose() {
+    _firstNameController.dispose();
+    _lastNameController.dispose();
+    _emailController.dispose();
+    super.dispose();
+  }
+
+  Future<List<dynamic>> fetchAppsAccessOptions(
+      GlobalStateModel globalStateModel, String userId) async {
+    List<dynamic> appsAccessOptionsList = List<dynamic>();
+
+    return appsAccessOptionsList;
+  }
+
+  Future<List<BusinessEmployeesGroups>> fetchEmployeesGroupsList(
+      String search, bool init, GlobalStateModel globalStateModel) async {
+    RestDatasource api = RestDatasource();
+
+    employeeCurrentGroups = [];
+    for (var group in widget.employee.groups) {
+      employeeCurrentGroups.add(group.id);
+    }
+
+    var businessEmployeesGroups = await api
+        .getBusinessEmployeesGroupsList(globalStateModel.currentBusiness.id,
+            GlobalUtils.ActiveToken.accessToken, context)
+        .then((businessEmployeesGroupsData) {
+      print(
+          "businessEmployeesGroupsData data loaded: $businessEmployeesGroupsData");
+
+      employeesGroupsList = [];
+      for (var group in businessEmployeesGroupsData) {
+        print("group: $group");
+        var groupData = BusinessEmployeesGroups.fromMap(group);
+        if (!employeeCurrentGroups.contains(groupData.id)) {
+          employeesGroupsList.add(groupData);
+        }
+      }
+
+      return employeesGroupsList;
+    }).catchError((onError) {
+      print("Error loading employees groups: $onError");
+
+      if (onError.toString().contains("401")) {
+        GlobalUtils.clearCredentials();
+        Navigator.pushReplacement(
+            context,
+            PageTransition(
+                child: LoginScreen(), type: PageTransitionType.fade));
+      }
+    });
+
+    return businessEmployeesGroups;
   }
 
   @override
   Widget build(BuildContext context) {
-    print("EmployeeId: ${widget.employee.id}");
+    GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context);
+
+    EmployeesStateModel employeesStateModel =
+        Provider.of<EmployeesStateModel>(context);
+
+    _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
+    Measurements.height = (_isPortrait
+        ? MediaQuery.of(context).size.height
+        : MediaQuery.of(context).size.width);
+    Measurements.width = (_isPortrait
+        ? MediaQuery.of(context).size.width
+        : MediaQuery.of(context).size.height);
+    _isTablet = Measurements.width < 600 ? false : true;
+
+    print("_isPortrait: $_isPortrait");
+    print("_isTablet: $_isTablet");
 
     Widget getEmployeeInfoRow() {
       return Column(
@@ -289,67 +418,160 @@ class _EmployeeInfoRowState extends State<EmployeeInfoRow>
             padding: EdgeInsets.only(top: Measurements.width * 0.020),
           ),
           Container(
-            width: Measurements.width * 0.96,
+            width: _isPortrait
+                ? Measurements.width * 0.96
+                : MediaQuery.of(context).size.width * 0.88,
             child: Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Container(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: Measurements.width * 0.025),
-                  alignment: Alignment.center,
-                  color: Colors.white.withOpacity(0.05),
-                  width: Measurements.width * 0.475,
-                  height: Measurements.height * (_isTablet ? 0.05 : 0.07),
-                  child: TextFormField(
-                    style: TextStyle(fontSize: Measurements.height * 0.02),
-                    initialValue: widget.employee.firstName,
-//                    initialValue: widget.parts.editMode?widget.parts.product.price.toString():"",
-//                    inputFormatters: [WhitelistingTextInputFormatter(RegExp("[0-9.]"))],
-                    decoration: InputDecoration(
-//                      hintText: Language.getProductStrings("price.placeholders.price"),
-                      hintText: "First Name",
-//                      hintStyle: TextStyle(
-//                          color: widget.priceError
-//                              ? Colors.red
-//                              : Colors.white.withOpacity(0.5)),
-                      labelText: "First Name",
-                      labelStyle: TextStyle(
-                        color: Colors.grey,
-                      ),
-                      border: InputBorder.none,
-                    ),
-//                    keyboardType: TextInputType.number,
-                    onSaved: (firstName) {
-//                      widget.parts.product.price = num.parse(price);
-                    },
-//                    validator: (value) {
-//
+                StreamBuilder(
+                    stream: widget.employeesStateModel.firstName,
+                    builder: (context, snapshot) {
+                      return Container(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: Measurements.width * 0.025),
+                        alignment: Alignment.center,
+//                      color: Colors.white.withOpacity(0.05),
+                        width: _isPortrait
+                            ? Measurements.width * 0.475
+//                            : MediaQuery.of(context).size.width * 0.326,
+                            : MediaQuery.of(context).size.width * 0.436,
+//                        height: Measurements.height * (_isTablet ? 0.08 : 0.07),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.05),
+//                            border: Border.all(
+////                                color: snapshot.hasData
+//                                color: snapshot.hasError
+//                                    ? Colors.red
+//                                    : Colors.transparent,
+//                                width: 2)
+                        ),
+                        child: TextField(
+//                          controller: TextEditingController()..text = 'Your initial value',
+                          controller: _firstNameController,
+                          style:
+                              TextStyle(fontSize: Measurements.height * 0.02),
+                          onChanged: widget.employeesStateModel.changeFirstName,
+                          decoration: InputDecoration(
+                            hintText: "First Name",
+                            hintStyle: TextStyle(
+//                              color: snapshot.hasData
+                              color: snapshot.hasError
+                                  ? Colors.red
+                                  : Colors.white.withOpacity(0.5),
+                            ),
+                            labelText: "First Name",
+                            labelStyle: TextStyle(
+                              color:
+                                  snapshot.hasError ? Colors.red : Colors.grey,
+                            ),
+                            border: InputBorder.none,
+                          ),
+                        ),
+                      );
+                    }),
+//                Container(
+//                  padding: EdgeInsets.symmetric(
+//                      horizontal: Measurements.width * 0.025),
+//                  alignment: Alignment.center,
+//                  color: Colors.white.withOpacity(0.05),
+//                  width: Measurements.width * 0.475,
+//                  height: Measurements.height * (_isTablet ? 0.05 : 0.07),
+//                  child: TextFormField(
+//                    style: TextStyle(fontSize: Measurements.height * 0.02),
+//                    initialValue: widget.employee.firstName,
+////                    initialValue: widget.parts.editMode?widget.parts.product.price.toString():"",
+////                    inputFormatters: [WhitelistingTextInputFormatter(RegExp("[0-9.]"))],
+//                    decoration: InputDecoration(
+////                      hintText: Language.getProductStrings("price.placeholders.price"),
+//                      hintText: "First Name",
+////                      hintStyle: TextStyle(
+////                          color: widget.priceError
+////                              ? Colors.red
+////                              : Colors.white.withOpacity(0.5)),
+//                      labelText: "First Name",
+//                      labelStyle: TextStyle(
+//                        color: Colors.grey,
+//                      ),
+//                      border: InputBorder.none,
+//                    ),
+////                    keyboardType: TextInputType.number,
+//                    onSaved: (firstName) {
+////                      widget.parts.product.price = num.parse(price);
 //                    },
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: Measurements.width * 0.025),
-                  alignment: Alignment.center,
-                  color: Colors.white.withOpacity(0.05),
-                  width: Measurements.width * 0.475,
-                  height: Measurements.height * (_isTablet ? 0.05 : 0.07),
-                  child: TextFormField(
-                    style: TextStyle(fontSize: Measurements.height * 0.02),
-                    initialValue: widget.employee.lastName,
-                    decoration: InputDecoration(
-                        hintText: "Last Name",
-                        border: InputBorder.none,
-                        labelText: "Last Name",
-                        labelStyle: TextStyle(
-                          color: Colors.grey,
-                        )),
-                    onSaved: (lastName) {},
-//                    validator: (value) {
-//                    },
-                  ),
-                )
+////                    validator: (value) {
+////
+////                    },
+//                  ),
+//                ),
+                StreamBuilder(
+                    stream: widget.employeesStateModel.lastName,
+                    builder: (context, snapshot) {
+                      return Container(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: Measurements.width * 0.025),
+                        alignment: Alignment.center,
+//                      color: Colors.white.withOpacity(0.05),
+                        width: _isPortrait
+                            ? Measurements.width * 0.475
+//                            : MediaQuery.of(context).size.width * 0.326,
+                            : MediaQuery.of(context).size.width * 0.436,
+//                        height: Measurements.height * (_isTablet ? 0.08 : 0.07),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.05),
+//                            border: Border.all(
+////                                color: snapshot.hasData
+//                                color: snapshot.hasError
+//                                    ? Colors.red
+//                                    : Colors.transparent,
+//                                width: 2)
+                        ),
+                        child: TextField(
+                          controller: _lastNameController,
+                          style:
+                              TextStyle(fontSize: Measurements.height * 0.02),
+                          onChanged: widget.employeesStateModel.changeLastName,
+                          decoration: InputDecoration(
+                              hintText: "Last Name",
+                              hintStyle: TextStyle(
+                                color: snapshot.hasError
+                                    ? Colors.red
+                                    : Colors.white.withOpacity(0.5),
+                              ),
+                              border: InputBorder.none,
+                              labelText: "Last Name",
+                              labelStyle: TextStyle(
+                                color: snapshot.hasError
+                                    ? Colors.red
+                                    : Colors.grey,
+                              )),
+                        ),
+                      );
+                    }),
+
+//                Container(
+//                  padding: EdgeInsets.symmetric(
+//                      horizontal: Measurements.width * 0.025),
+//                  alignment: Alignment.center,
+//                  color: Colors.white.withOpacity(0.05),
+//                  width: Measurements.width * 0.475,
+//                  height: Measurements.height * (_isTablet ? 0.05 : 0.07),
+//                  child: TextFormField(
+//                    style: TextStyle(fontSize: Measurements.height * 0.02),
+//                    initialValue: widget.employee.lastName,
+//                    decoration: InputDecoration(
+//                        hintText: "Last Name",
+//                        border: InputBorder.none,
+//                        labelText: "Last Name",
+//                        labelStyle: TextStyle(
+//                          color: Colors.grey,
+//                        )),
+//                    onSaved: (lastName) {},
+////                    validator: (value) {
+////                    },
+//                  ),
+//                )
               ],
             ),
           ),
@@ -357,52 +579,104 @@ class _EmployeeInfoRowState extends State<EmployeeInfoRow>
             padding: EdgeInsets.only(top: Measurements.width * 0.010),
           ),
           Container(
-            width: Measurements.width * 0.96,
+            width: _isPortrait
+                ? Measurements.width * 0.96
+                : MediaQuery.of(context).size.width * 0.88,
             child: Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Container(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: Measurements.width * 0.025),
-                  alignment: Alignment.center,
-                  color: Colors.white.withOpacity(0.05),
-                  width: Measurements.width * 0.475,
-                  height: Measurements.height * (_isTablet ? 0.05 : 0.07),
-                  child: TextFormField(
-                    style: TextStyle(fontSize: Measurements.height * 0.02),
-                    initialValue: widget.employee.email,
-//                    initialValue: widget.parts.editMode?widget.parts.product.price.toString():"",
-//                    inputFormatters: [WhitelistingTextInputFormatter(RegExp("[0-9.]"))],
-                    decoration: InputDecoration(
-//                      hintText: Language.getProductStrings("price.placeholders.price"),
-                      hintText: "Email",
-//                      hintStyle: TextStyle(
-//                          color: widget.priceError
-//                              ? Colors.red
-//                              : Colors.white.withOpacity(0.5)),
-                      labelText: "Email",
-                      labelStyle: TextStyle(
-                        color: Colors.grey,
-                      ),
-                      border: InputBorder.none,
-                    ),
-//                    keyboardType: TextInputType.number,
-                    onSaved: (email) {
-//                      widget.parts.product.price = num.parse(price);
-                    },
-//                    validator: (value) {
-//
-//                    },
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: Measurements.width * 0.025),
+                StreamBuilder(
+                    stream: widget.employeesStateModel.email,
+                    builder: (context, snapshot) {
+                      return Container(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: Measurements.width * 0.025),
+                        alignment: Alignment.center,
+//                      color: Colors.white.withOpacity(0.05),
+                        width: _isPortrait
+                            ? Measurements.width * 0.475
+//                            : MediaQuery.of(context).size.width * 0.326,
+                            : MediaQuery.of(context).size.width * 0.436,
+//                        height: Measurements.height * (_isTablet ? 0.08 : 0.07),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.05),
+//                            border: Border.all(
+//                                color: snapshot.hasData
+//                                    ? Colors.transparent
+//                                    : Colors.red,
+//                                width: 2)
+                        ),
+                        child: TextField(
+                          controller: _emailController,
+                          style:
+                              TextStyle(fontSize: Measurements.height * 0.02),
+                          onChanged: widget.employeesStateModel.changeEmail,
+                          decoration: InputDecoration(
+                            hintText: "Email",
+                            hintStyle: TextStyle(
+                              color: snapshot.hasError
+                                  ? Colors.red
+                                  : Colors.white.withOpacity(0.5),
+                            ),
+                            labelText: "Email",
+                            labelStyle: TextStyle(
+                              color:
+                                  snapshot.hasError ? Colors.red : Colors.grey,
+                            ),
+                            border: InputBorder.none,
+                          ),
+                          keyboardType: TextInputType.emailAddress,
+                        ),
+                      );
+                    }),
+//                Container(
+//                  padding: EdgeInsets.symmetric(
+//                      horizontal: Measurements.width * 0.025),
 //                  alignment: Alignment.center,
-                  color: Colors.white.withOpacity(0.05),
-                  width: Measurements.width * 0.475,
-                  height: Measurements.height * (_isTablet ? 0.05 : 0.07),
+//                  color: Colors.white.withOpacity(0.05),
+//                  width: Measurements.width * 0.475,
+//                  height: Measurements.height * (_isTablet ? 0.05 : 0.07),
+//                  child: TextFormField(
+//                    style: TextStyle(fontSize: Measurements.height * 0.02),
+//                    initialValue: widget.employee.email,
+////                    initialValue: widget.parts.editMode?widget.parts.product.price.toString():"",
+////                    inputFormatters: [WhitelistingTextInputFormatter(RegExp("[0-9.]"))],
+//                    decoration: InputDecoration(
+////                      hintText: Language.getProductStrings("price.placeholders.price"),
+//                      hintText: "Email",
+////                      hintStyle: TextStyle(
+////                          color: widget.priceError
+////                              ? Colors.red
+////                              : Colors.white.withOpacity(0.5)),
+//                      labelText: "Email",
+//                      labelStyle: TextStyle(
+//                        color: Colors.grey,
+//                      ),
+//                      border: InputBorder.none,
+//                    ),
+////                    keyboardType: TextInputType.number,
+//                    onSaved: (email) {
+////                      widget.parts.product.price = num.parse(price);
+//                    },
+////                    validator: (value) {
+////
+////                    },
+//                  ),
+//                ),
+                StreamBuilder(
+                    stream: widget.employeesStateModel.position,
+                    builder: (context, snapshot) {
+                      return Container(
+//                  padding: EdgeInsets.symmetric(
+//                      horizontal: Measurements.width * 0.025),
+//                  alignment: Alignment.center,
+                        color: Colors.white.withOpacity(0.05),
+                        width: _isPortrait
+                            ? Measurements.width * 0.475
+//                            : MediaQuery.of(context).size.width * 0.326,
+                            : MediaQuery.of(context).size.width * 0.436,
+//                        height: Measurements.height * (_isTablet ? 0.08 : 0.07),
 //                  child: TextFormField(
 //                    style: TextStyle(fontSize: Measurements.height * 0.02),
 //                    initialValue: widget.employee.position[0].positionType,
@@ -418,140 +692,243 @@ class _EmployeeInfoRowState extends State<EmployeeInfoRow>
 ////                    },
 //                  ),
 
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: DropDownMenu(
-                      optionsList: <String>[
-                        "Cashier",
-                        "Sales",
-                        "Marketing",
-                        "Staff",
-                        "Admin",
-                        "Others",
-                      ],
-                      defaultValue: widget.employee.position,
-                      placeHolderText: "Position",
-                      onChangeSelection: (selectedOption, index) {
-                        print("selectedOption: $selectedOption");
-                        print("index: $index");
-                      },
-                    ),
-//                    child: ButtonTheme(
-//                      alignedDropdown: true,
-//                      child: custom.DropdownButton(
-//                        height: 100,
-//                        items: <custom.DropdownMenuItem>[
-//                          custom.DropdownMenuItem(
-//                            child: Text("Sample Tex"),
-//                            value: "any_value",
-//                          ),
-//                          custom.DropdownMenuItem(
-//                            child: Text("Sample Tex2"),
-//                            value: "any_value2",
-//                          ),
-//                          custom.DropdownMenuItem(
-//                            child: Text("Sample Tex3"),
-//                            value: "any_value3",
-//                          ),
-//                          custom.DropdownMenuItem(
-//                            child: Text("Sample Tex4"),
-//                            value: "any_value4",
-//                          ),
-//                          custom.DropdownMenuItem(
-//                            child: Text("Sample Tex5"),
-//                            value: "any_value5",
-//                          ),
-//                          custom.DropdownMenuItem(
-//                            child: Text("Sample Tex6"),
-//                            value: "any_value6",
-//                          ),
-//                        ],
-//                        onChanged: (value) {
-//
-//                        },
-//
-//                      ),
-//                    ),
-
-                  ),
-                )
-              ],
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: Measurements.width * 0.020),
-          ),
-          Container(
-            width: Measurements.width * 0.96,
-            child: Row(
-              children: <Widget>[
-                Text(
-                  "Groups:",
-                  style: TextStyle(color: Colors.grey, fontSize: 14),
-                ),
-                SizedBox(
-                  height: Measurements.height * 0.060,
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-//                    itemCount: widget.employee.position.length,
-                    itemCount: 1,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Padding(
-                        padding: EdgeInsets.all(Measurements.width * 0.025),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.05),
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: <Widget>[
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: Measurements.width * 0.025),
-                                child: Center(
-                                    child: Text(widget.employee.position)),
-                              ),
-                              Padding(
-                                padding:
-                                    EdgeInsets.all(Measurements.width * 0.014),
-                                child: InkWell(
-                                  radius: 20,
-                                  child: Icon(
-                                    IconData(58829,
-                                        fontFamily: 'MaterialIcons'),
-                                    size: 20,
-                                  ),
-                                  onTap: () {},
-                                ),
-                              )
-                            ],
+                              border: Border.all(
+                                  color: snapshot.hasError
+                                      ? Colors.red
+                                      : Colors.transparent,
+                                  width: 1)),
+                          child: DropDownMenu(
+                            optionsList: GlobalUtils.positionsListOptions(),
+                            defaultValue: widget.employee.position,
+                            placeHolderText: "Position",
+                            onChangeSelection: (selectedOption, index) {
+                              print("selectedOption: $selectedOption");
+                              print("index: $index");
+                              widget.employeesStateModel
+                                  .changePosition(selectedOption);
+                            },
                           ),
                         ),
                       );
-                    },
-                  ),
-                )
+                    })
+//                Container(
+////                  padding: EdgeInsets.symmetric(
+////                      horizontal: Measurements.width * 0.025),
+////                  alignment: Alignment.center,
+//                  color: Colors.white.withOpacity(0.05),
+//                  width: Measurements.width * 0.475,
+//                  height: Measurements.height * (_isTablet ? 0.05 : 0.07),
+////                  child: TextFormField(
+////                    style: TextStyle(fontSize: Measurements.height * 0.02),
+////                    initialValue: widget.employee.position[0].positionType,
+////                    decoration: InputDecoration(
+////                        hintText: "Position",
+////                        border: InputBorder.none,
+////                        labelText: "Position",
+////                        labelStyle: TextStyle(
+////                          color: Colors.grey,
+////                        )),
+////                    onSaved: (position) {},
+//////                    validator: (value) {
+//////                    },
+////                  ),
+//
+//                  child: SizedBox(
+//                    width: double.infinity,
+//                    child: DropDownMenu(
+//                      optionsList: <String>[
+//                        "Cashier",
+//                        "Sales",
+//                        "Marketing",
+//                        "Staff",
+//                        "Admin",
+//                        "Others",
+//                      ],
+//                      defaultValue: widget.employee.position,
+//                      placeHolderText: "Position",
+//                      onChangeSelection: (selectedOption, index) {
+//                        print("selectedOption: $selectedOption");
+//                        print("index: $index");
+//                      },
+//                    ),
+//                  ),
+//                )
               ],
             ),
           ),
           Padding(
             padding: EdgeInsets.only(top: Measurements.width * 0.020),
           ),
-          InkWell(
-            child: Container(
-              color: Colors.white.withOpacity(0.1),
-              width: Measurements.width * 0.99,
-              height: Measurements.height * (_isTablet ? 0.05 : 0.07),
-              child: Center(
-                  child: Text(
-                "Delete Employee",
-                style: TextStyle(color: Colors.white, fontSize: 19),
-              )),
-            ),
-            onTap: () {},
+          CustomFutureBuilder<List<BusinessEmployeesGroups>>(
+            future: fetchEmployeesGroupsList("", true, globalStateModel),
+            errorMessage: "",
+            onDataLoaded: (List results) {
+              return Column(
+                children: <Widget>[
+                  Container(
+                    width: _isPortrait
+                        ? Measurements.width * 0.96
+                        : MediaQuery.of(context).size.width * 0.88,
+                    child: Row(
+                      children: <Widget>[
+                        Text(
+                          "Groups:",
+                          style: TextStyle(color: Colors.grey, fontSize: 14),
+                        ),
+                        Expanded(
+                          child: SizedBox(
+                            height: Measurements.height * 0.060,
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              itemCount: widget.employee.groups.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Padding(
+                                  padding: EdgeInsets.all(2),
+                                  child: Chip(
+                                    backgroundColor:
+                                        Colors.white.withOpacity(0.09),
+                                    label: Text(
+                                        widget.employee.groups[index].name),
+                                    deleteIcon: Icon(
+                                      IconData(58829,
+                                          fontFamily: 'MaterialIcons'),
+                                      size: 20,
+                                    ),
+                                    onDeleted: () {
+                                      print("chip pressed");
+                                      setState(() {
+                                        _deleteEmployeeFromGroup(
+                                            employeesStateModel,
+                                            widget.employee.groups[index].id);
+                                        widget.employee.groups.remove(
+                                            widget.employee.groups[index]);
+                                      });
+                                    },
+                                  ),
+                                );
+
+//                                return Padding(
+//                                  padding: EdgeInsets.all(
+//                                      Measurements.width * (_isTablet ? 0.025 : 0.020)),
+//                                  child: Container(
+//                                    decoration: BoxDecoration(
+//                                      color: Colors.white.withOpacity(0.05),
+////                                      color: Colors.grey,
+//                                      borderRadius: BorderRadius.circular(26),
+//                                    ),
+//                                    child: Row(
+////                                      mainAxisAlignment:
+////                                          MainAxisAlignment.spaceEvenly,
+//                                      crossAxisAlignment: CrossAxisAlignment.center,
+//                                      children: <Widget>[
+//                                        Padding(
+//                                          padding: EdgeInsets.symmetric(
+//                                              horizontal:
+//                                                  Measurements.width * 0.025),
+//                                          child: Center(
+//                                              child: Text(widget.employee
+//                                                  .groups[index].name, style: TextStyle(fontSize: 15))),
+//                                        ),
+//                                        Padding(
+//                                          padding: EdgeInsets.all(
+//                                              Measurements.width * 0.011),
+//                                          child: InkWell(
+//                                            radius: 20,
+//                                            child: Icon(
+//                                              IconData(58829,
+//                                                  fontFamily: 'MaterialIcons'),
+//                                              size: 19,
+//                                            ),
+//                                            onTap: () {
+//                                              setState(() {
+//                                                _deleteEmployeeFromGroup(
+//                                                    employeesStateModel,
+//                                                    widget.employee
+//                                                        .groups[index].id);
+//                                                widget.employee.groups.remove(
+//                                                    widget.employee
+//                                                        .groups[index]);
+//                                              });
+//                                            },
+//                                          ),
+//                                        )
+//                                      ],
+//                                    ),
+//                                  ),
+//                                );
+                              },
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.only(left: Measurements.width * 0.025),
+                    decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.05),
+                        borderRadius: BorderRadius.circular(16)),
+                    width: _isPortrait
+                        ? Measurements.width * 0.96
+                        : MediaQuery.of(context).size.width * 0.88,
+//                    height: Measurements.height * (_isTablet ? 0.08 : 0.07),
+                    child: AutoCompleteTextField<BusinessEmployeesGroups>(
+//                      decoration: InputDecoration(
+//                          hintText: "Search groups:", suffixIcon: Icon(Icons.search)),
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                          labelText: "Search groups",
+                          labelStyle: TextStyle(color: Colors.grey),
+                          hintText: "Search groups here"),
+                      itemSubmitted: (item) {
+                        setState(() {
+                          widget.employee.groups.add(EmployeeGroup.fromMap(
+                              {"name": item.name, "_id": item.id}));
+                          _addEmployeeToGroup(employeesStateModel, item);
+                        });
+                      },
+                      key: acKey,
+                      suggestions: employeesGroupsList,
+                      itemBuilder: (context, suggestion) => Padding(
+                          child: ListTile(
+                            title: Text(suggestion.name),
+//                              trailing: Text("Groups: ${suggestion.name}")
+                          ),
+                          padding: EdgeInsets.all(8.0)),
+                      itemSorter: (a, b) => a.name == b.name ? 0 : -1,
+                      itemFilter: (suggestion, input) => suggestion.name
+                          .toLowerCase()
+                          .startsWith(input.toLowerCase()),
+                    ),
+                  ),
+                ],
+              );
+            },
           ),
+          Padding(
+            padding: EdgeInsets.only(top: Measurements.width * 0.020),
+          ),
+//          Padding(
+//            padding: EdgeInsets.only(top: Measurements.width * 0.020),
+//          ),
+//          InkWell(
+//            child: Container(
+//              color: Colors.white.withOpacity(0.1),
+//              width: Measurements.width * 0.99,
+//              height: Measurements.height * (_isTablet ? 0.05 : 0.07),
+//              child: Center(
+//                  child: Text(
+//                "Delete Employee",
+//                style: TextStyle(color: Colors.white, fontSize: 19),
+//              )),
+//            ),
+//            onTap: () {},
+//          ),
           Padding(
             padding: EdgeInsets.only(top: Measurements.width * 0.01),
           ),
@@ -591,7 +968,7 @@ class _EmployeeInfoRowState extends State<EmployeeInfoRow>
                       horizontal: Measurements.width * 0.05),
                 ),
                 IconButton(
-                  icon: Icon(widget.isOpen
+                  icon: Icon(isOpen
                       ? Icons.keyboard_arrow_up
                       : Icons.keyboard_arrow_down),
                   onPressed: () {
@@ -612,7 +989,8 @@ class _EmployeeInfoRowState extends State<EmployeeInfoRow>
 //            height: widget.isOpen ? Measurements.height * 0.62 : 0,
             duration: Duration(milliseconds: 200),
             child: Container(
-              child: widget.isOpen
+              width: _isPortrait ? Measurements.width : double.infinity,
+              child: isOpen
                   ? AnimatedSize(
                       duration: Duration(milliseconds: 500),
                       curve: Curves.easeInOut,
@@ -649,7 +1027,7 @@ class _EmployeeInfoRowState extends State<EmployeeInfoRow>
         //--
         Container(
             color: Colors.white.withOpacity(0.1),
-            child: widget.isOpen
+            child: isOpen
                 ? Divider(
                     color: Colors.white.withOpacity(0),
                   )
@@ -660,15 +1038,29 @@ class _EmployeeInfoRowState extends State<EmployeeInfoRow>
       ],
     );
   }
+
+  Future<void> _addEmployeeToGroup(EmployeesStateModel employeesStateModel,
+      BusinessEmployeesGroups group) async {
+    return employeesStateModel.addEmployeeToGroup(group.id, widget.employee.id);
+  }
+
+  Future<void> _deleteEmployeeFromGroup(
+      EmployeesStateModel employeesStateModel, String groupId) async {
+    return employeesStateModel.deleteEmployeeFromGroup(
+        groupId, widget.employee.id);
+  }
 }
 
 class AppsAccessRow extends StatefulWidget {
-  ValueNotifier openedRow;
-  Employees employee;
-  dynamic employeeGroups;
-  bool isOpen = false;
+  final ValueNotifier openedRow;
+  final List<BusinessApps> businessAppsData;
 
-  AppsAccessRow({this.openedRow, this.employee, this.employeeGroups});
+//  final Employees employee;
+//  final dynamic employeeGroups;
+
+  AppsAccessRow({this.openedRow, this.businessAppsData});
+
+//  AppsAccessRow({this.openedRow, this.employee, this.employeeGroups});
 
   @override
   createState() => _AppsAccessRowState();
@@ -676,14 +1068,21 @@ class AppsAccessRow extends StatefulWidget {
 
 class _AppsAccessRowState extends State<AppsAccessRow>
     with TickerProviderStateMixin {
+  bool isOpen = true;
+
+  bool _isPortrait;
+  bool _isTablet;
+
   var appPermissionsRow = ValueNotifier(0);
+
+  static String uiKit = Env.Commerceos + "/assets/ui-kit/icons-png/";
 
   listener() {
     setState(() {
       if (widget.openedRow.value == 0) {
-        widget.isOpen = !widget.isOpen;
+        isOpen = !isOpen;
       } else {
-        widget.isOpen = false;
+        isOpen = false;
       }
     });
   }
@@ -696,246 +1095,228 @@ class _AppsAccessRowState extends State<AppsAccessRow>
 
   @override
   Widget build(BuildContext context) {
+//    GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context);
+    EmployeesStateModel employeesStateModel =
+        Provider.of<EmployeesStateModel>(context);
+
+    _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
+    Measurements.height = (_isPortrait
+        ? MediaQuery.of(context).size.height
+        : MediaQuery.of(context).size.width);
+    Measurements.width = (_isPortrait
+        ? MediaQuery.of(context).size.width
+        : MediaQuery.of(context).size.height);
+    _isTablet = Measurements.width < 600 ? false : true;
+
+    print("_isPortrait: $_isPortrait");
+    print("_isTablet: $_isTablet");
+
     Widget getAppsAccessRow() {
-//      return Container(child: Text("Hello"),);
+      return ListView.builder(
+        padding: EdgeInsets.all(0.1),
+        shrinkWrap: true,
+        physics: ClampingScrollPhysics(),
+//        itemCount: widget.businessAppsData.length,
+        itemCount: employeesStateModel.businessApps.length,
+        itemBuilder: (BuildContext context, int index) {
+          var appIndex = widget.businessAppsData[index];
+          return ExpandableListView(
+            iconData: NetworkImage(uiKit + appIndex.dashboardInfo.icon),
+            title: Language.getCommerceOSStrings(appIndex.dashboardInfo.title),
+            isExpanded: false,
+            widgetList: Container(
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: Measurements.width * 0.020),
+                child: Column(
+                  children: <Widget>[
+                    appIndex.allowedAcls.create != null
+                        ? Divider()
+                        : Container(width: 0, height: 0),
+                    appIndex.allowedAcls.create != null
+                        ? Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(
+                                "Create",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.normal),
+                              ),
+                              Switch(
+                                activeColor: Color(0XFF0084ff),
+                                value: employeesStateModel
+                                    .businessApps[index].allowedAcls.create,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    employeesStateModel
+                                        .updateBusinessAppPermissionCreate(
+                                            index, value);
+                                    employeesStateModel
+                                        .updateBusinessAppPermissionRead(
+                                            index, value);
+                                    employeesStateModel
+                                        .updateBusinessAppPermissionUpdate(
+                                            index, value);
+                                    employeesStateModel
+                                        .updateBusinessAppPermissionDelete(
+                                            index, value);
+                                  });
+                                },
+                              )
+                            ],
+                          )
+                        : Container(width: 0, height: 0),
+                    appIndex.allowedAcls.read != null
+                        ? Divider()
+                        : Container(width: 0, height: 0),
+                    appIndex.allowedAcls.read != null
+                        ? Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(
+                                "Read",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.normal),
+                              ),
+                              Switch(
+                                activeColor: Color(0XFF0084ff),
+//                                value: appIndex.allowedAcls.read,
+                                value: employeesStateModel
+                                    .businessApps[index].allowedAcls.read,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    employeesStateModel
+                                        .updateBusinessAppPermissionRead(
+                                            index, value);
+                                    if (employeesStateModel.businessApps[index]
+                                            .allowedAcls.create ==
+                                        true) {
+                                      employeesStateModel
+                                          .updateBusinessAppPermissionCreate(
+                                              index, value);
+                                    }
+                                    if (employeesStateModel.businessApps[index]
+                                            .allowedAcls.update ==
+                                        true) {
+                                      employeesStateModel
+                                          .updateBusinessAppPermissionUpdate(
+                                              index, value);
+                                    }
+                                    if (employeesStateModel.businessApps[index]
+                                            .allowedAcls.delete ==
+                                        true) {
+                                      employeesStateModel
+                                          .updateBusinessAppPermissionDelete(
+                                              index, value);
+                                    }
+                                  });
+                                },
+                              )
+                            ],
+                          )
+                        : Container(width: 0, height: 0),
+                    appIndex.allowedAcls.update != null
+                        ? Divider()
+                        : Container(width: 0, height: 0),
+                    appIndex.allowedAcls.update != null
+                        ? Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(
+                                "Update",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.normal),
+                              ),
+                              Switch(
+                                activeColor: Color(0XFF0084ff),
+//                                value: appIndex.allowedAcls.update,
+                                value: employeesStateModel
+                                    .businessApps[index].allowedAcls.update,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    if (employeesStateModel.businessApps[index]
+                                            .allowedAcls.read ==
+                                        false) {
+                                      print("read not selected");
+                                    } else {
+                                      employeesStateModel
+                                          .updateBusinessAppPermissionUpdate(
+                                              index, value);
+                                    }
 
-      return Container(
-        width: Measurements.width - 2,
-//       height: 100,
-        child: ListView.builder(
-          padding: EdgeInsets.all(0.1),
-          shrinkWrap: true,
-          itemCount: widget.employee.roles.length,
-          itemBuilder: (BuildContext context, int index) {
-            if (index == 0) {
-              return Container();
-            } else {
-              return Column(
-                children: <Widget>[
-//                  ExpandableListView(
-//                    iconData: Icons.shopping_basket,
-//                    title: widget
-//                        .employee.roles[index].permission[0].acls[0].microService,
-//                    isExpanded: true,
-//                    widgetList: Center(child: Text("Hello"),),
-//                  ),
-                  ExpandableListView(
-                    iconData: Icons.shopping_basket,
-                    title: widget
-                        .employee.roles[index].permission[0].acls[0].microService,
-                    isExpanded: false,
-                    widgetList: Container(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: Measurements.width * 0.020),
-                        child: Column(
-                          children: <Widget>[
-                            Divider(),
-                            Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Text(
-                                  "Create",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Switch(
-                                  activeColor: Color(0XFF0084ff),
-                                  value: widget.employee.roles[index].permission[0]
-                                      .acls[0].create,
-                                  onChanged: (bool value) {
-                                    setState(() {
-
-                                    });
-                                  },
-                                )
-                              ],
-                            ),
-                            Divider(),
-                            Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Text(
-                                  "Read",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Switch(
-                                  activeColor: Color(0XFF0084ff),
-                                  value: widget.employee.roles[index].permission[0]
-                                      .acls[0].read,
-                                  onChanged: (bool value) {
-                                    setState(() {});
-                                  },
-                                )
-                              ],
-                            ),
-                            Divider(),
-                            Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Text(
-                                  "Update",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Switch(
-                                  activeColor: Color(0XFF0084ff),
-                                  value: widget.employee.roles[index].permission[0]
-                                      .acls[0].update,
-                                  onChanged: (bool value) {
-                                    setState(() {});
-                                  },
-                                )
-                              ],
-                            ),
-                            Divider(),
-                            Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Text(
-                                  "Delete",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Switch(
-                                  activeColor: Color(0XFF0084ff),
-                                  value: widget.employee.roles[index].permission[0]
-                                      .acls[0].delete,
-                                  onChanged: (bool value) {
-                                    setState(() {});
-                                  },
-                                )
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              );
-//              return ExpandableListView(
-//                iconData: Icons.shopping_basket,
-//                title: widget
-//                    .employee.roles[index].permission[0].acls[0].microService,
-//                isExpanded: false,
-//                widgetList: Container(
-//                  child: Padding(
-//                    padding: EdgeInsets.symmetric(
-//                        horizontal: Measurements.width * 0.020),
-//                    child: Column(
-//                      children: <Widget>[
-//                        Divider(),
-//                        Row(
-//                          mainAxisSize: MainAxisSize.max,
-//                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                          children: <Widget>[
-//                            Text(
-//                              "Create",
-//                              style: TextStyle(
-//                                  color: Colors.white,
-//                                  fontSize: 22,
-//                                  fontWeight: FontWeight.bold),
-//                            ),
-//                            Switch(
-//                              activeColor: Color(0XFF0084ff),
-//                              value: widget.employee.roles[index].permission[0]
-//                                  .acls[0].create,
-//                              onChanged: (bool value) {
-//                                setState(() {
-//
-//                                });
-//                              },
-//                            )
-//                          ],
-//                        ),
-//                        Divider(),
-//                        Row(
-//                          mainAxisSize: MainAxisSize.max,
-//                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                          children: <Widget>[
-//                            Text(
-//                              "Read",
-//                              style: TextStyle(
-//                                  color: Colors.white,
-//                                  fontSize: 22,
-//                                  fontWeight: FontWeight.bold),
-//                            ),
-//                            Switch(
-//                              activeColor: Color(0XFF0084ff),
-//                              value: widget.employee.roles[index].permission[0]
-//                                  .acls[0].read,
-//                              onChanged: (bool value) {
-//                                setState(() {});
-//                              },
-//                            )
-//                          ],
-//                        ),
-//                        Divider(),
-//                        Row(
-//                          mainAxisSize: MainAxisSize.max,
-//                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                          children: <Widget>[
-//                            Text(
-//                              "Update",
-//                              style: TextStyle(
-//                                  color: Colors.white,
-//                                  fontSize: 22,
-//                                  fontWeight: FontWeight.bold),
-//                            ),
-//                            Switch(
-//                              activeColor: Color(0XFF0084ff),
-//                              value: widget.employee.roles[index].permission[0]
-//                                  .acls[0].update,
-//                              onChanged: (bool value) {
-//                                setState(() {});
-//                              },
-//                            )
-//                          ],
-//                        ),
-//                        Divider(),
-//                        Row(
-//                          mainAxisSize: MainAxisSize.max,
-//                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                          children: <Widget>[
-//                            Text(
-//                              "Delete",
-//                              style: TextStyle(
-//                                  color: Colors.white,
-//                                  fontSize: 22,
-//                                  fontWeight: FontWeight.bold),
-//                            ),
-//                            Switch(
-//                              activeColor: Color(0XFF0084ff),
-//                              value: widget.employee.roles[index].permission[0]
-//                                  .acls[0].delete,
-//                              onChanged: (bool value) {
-//                                setState(() {});
-//                              },
-//                            )
-//                          ],
-//                        ),
-//                      ],
-//                    ),
-//                  ),
-//                ),
-//              );
-            }
-          },
-        ),
+//                                    if (employeesStateModel.businessApps[index]
+//                                            .allowedAcls.read ==
+//                                        true) {
+//                                      employeesStateModel
+//                                          .updateBusinessAppPermissionRead(
+//                                              index, value);
+//                                    }
+                                  });
+                                },
+                              )
+                            ],
+                          )
+                        : Container(width: 0, height: 0),
+                    appIndex.allowedAcls.delete != null
+                        ? Divider()
+                        : Container(width: 0, height: 0),
+                    appIndex.allowedAcls.delete != null
+                        ? Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(
+                                "Delete",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.normal),
+                              ),
+                              Switch(
+                                activeColor: Color(0XFF0084ff),
+//                                value: appIndex.allowedAcls.delete,
+                                value: employeesStateModel
+                                    .businessApps[index].allowedAcls.delete,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    if (employeesStateModel.businessApps[index]
+                                            .allowedAcls.read ==
+                                        false) {
+                                      print("read not selected");
+                                    } else {
+                                      employeesStateModel
+                                          .updateBusinessAppPermissionDelete(
+                                              index, value);
+                                    }
+//                                    if (employeesStateModel.businessApps[index]
+//                                            .allowedAcls.read ==
+//                                        true) {
+//                                      employeesStateModel
+//                                          .updateBusinessAppPermissionRead(
+//                                              index, value);
+//                                    }
+                                  });
+                                },
+                              )
+                            ],
+                          )
+                        : Container(width: 0, height: 0),
+                    Divider(),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
       );
     }
 
@@ -968,7 +1349,7 @@ class _AppsAccessRowState extends State<AppsAccessRow>
                       horizontal: Measurements.width * 0.05),
                 ),
                 IconButton(
-                  icon: Icon(widget.isOpen
+                  icon: Icon(isOpen
                       ? Icons.keyboard_arrow_up
                       : Icons.keyboard_arrow_down),
                   onPressed: () {
@@ -989,8 +1370,8 @@ class _AppsAccessRowState extends State<AppsAccessRow>
 //            height: widget.isOpen ? Measurements.height * 0.62 : 0,
             duration: Duration(milliseconds: 200),
             child: Container(
-              width: Measurements.width * 0.999,
-              child: widget.isOpen
+              width: _isPortrait ? Measurements.width : double.infinity,
+              child: isOpen
                   ? AnimatedSize(
                       duration: Duration(milliseconds: 500),
                       curve: Curves.easeInOut,
@@ -999,68 +1380,444 @@ class _AppsAccessRowState extends State<AppsAccessRow>
                         padding: EdgeInsets.symmetric(
                             horizontal: Measurements.width * 0.0015),
                         color: Colors.black.withOpacity(0.05),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Column(
-                                  children: <Widget>[
-//                                    Expanded(child: getAppsAccessRow()),
-                                    getAppsAccessRow(),
-                                    Padding(
-                                      padding: EdgeInsets.only(
-                                          top: Measurements.width * 0.020),
-                                    ),
-                                    InkWell(
-                                      child: Container(
-                                        color: Colors.white.withOpacity(0.1),
-                                        width: Measurements.width * 0.99,
-                                        height: Measurements.height *
-                                            (_isTablet ? 0.05 : 0.07),
-                                        child: Center(
-                                            child: Text(
-                                          "Save",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 19),
-                                        )),
-                                      ),
-                                      onTap: () {},
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(
-                                          top: Measurements.width * 0.01),
-                                    ),
-                                  ],
-                                ),
-//                                Container(
-//                                  height: Measurements.height * 0.3,
-//                                  child: getAppsAccessRow(),
+                        child: getAppsAccessRow(),
+//                        child: Column(
+//                          mainAxisAlignment: MainAxisAlignment.center,
+//                          children: <Widget>[
+//                            Row(
+//                              mainAxisSize: MainAxisSize.max,
+//                              mainAxisAlignment: MainAxisAlignment.center,
+//                              children: <Widget>[
+//                                Column(
+//                                  children: <Widget>[
+////                                    Expanded(child: getAppsAccessRow()),
+//                                    getAppsAccessRow(),
+//                                    Padding(
+//                                      padding: EdgeInsets.only(
+//                                          top: Measurements.width * 0.020),
+//                                    ),
+//                                    InkWell(
+//                                      child: Container(
+//                                        color: Colors.white.withOpacity(0.1),
+//                                        width: Measurements.width * 0.99,
+//                                        height: Measurements.height *
+//                                            (_isTablet ? 0.05 : 0.07),
+//                                        child: Center(
+//                                            child: Text(
+//                                          "Save",
+//                                          style: TextStyle(
+//                                              color: Colors.white,
+//                                              fontSize: 19),
+//                                        )),
+//                                      ),
+//                                      onTap: () {},
+//                                    ),
+//                                    Padding(
+//                                      padding: EdgeInsets.only(
+//                                          top: Measurements.width * 0.01),
+//                                    ),
+//                                  ],
 //                                ),
-                              ],
-                            )
-                          ],
-                        ),
+////                                Container(
+////                                  height: Measurements.height * 0.3,
+////                                  child: getAppsAccessRow(),
+////                                ),
+//                              ],
+//                            )
+//                          ],
+//                        ),
                       ),
                     )
                   : Container(width: 0, height: 0),
             )),
-        Container(
-            color: widget.isOpen
-                ? Colors.transparent
-                : Colors.white.withOpacity(0.1),
-            height: Measurements.height * 0.01,
-            child: widget.isOpen
-                ? Divider(
-                    color: Colors.white.withOpacity(0),
-                  )
-                : Divider(
-                    color: Colors.white,
-                  )),
+//        Container(
+//            color: isOpen
+//                ? Colors.transparent
+//                : Colors.white.withOpacity(0.1),
+//            height: Measurements.height * 0.01,
+//            child: isOpen
+//                ? Divider(
+//              color: Colors.white.withOpacity(0),
+//            )
+//                : Divider(
+//              color: Colors.white,
+//            )),
       ],
     );
   }
 }
+
+//class AppsAccessRow extends StatefulWidget {
+//  ValueNotifier openedRow;
+//  Employees employee;
+//  dynamic employeeGroups;
+//  bool isOpen = false;
+//
+//  AppsAccessRow({this.openedRow, this.employee, this.employeeGroups});
+//
+//  @override
+//  createState() => _AppsAccessRowState();
+//}
+//
+//class _AppsAccessRowState extends State<AppsAccessRow>
+//    with TickerProviderStateMixin {
+//  var appPermissionsRow = ValueNotifier(0);
+//
+//  listener() {
+//    setState(() {
+//      if (widget.openedRow.value == 0) {
+//        widget.isOpen = !widget.isOpen;
+//      } else {
+//        widget.isOpen = false;
+//      }
+//    });
+//  }
+//
+//  @override
+//  void initState() {
+//    super.initState();
+//    widget.openedRow.addListener(listener);
+//  }
+//
+//  @override
+//  Widget build(BuildContext context) {
+//    Widget getAppsAccessRow() {
+//      return Container(
+//        width: Measurements.width - 2,
+////       height: 100,
+//        child: ListView.builder(
+//          padding: EdgeInsets.all(0.1),
+//          shrinkWrap: true,
+//          itemCount: widget.employee.roles.length,
+//          itemBuilder: (BuildContext context, int index) {
+//            if (index == 0) {
+//              return Container();
+//            } else {
+//              return Column(
+//                children: <Widget>[
+////                  ExpandableListView(
+////                    iconData: Icons.shopping_basket,
+////                    title: widget
+////                        .employee.roles[index].permission[0].acls[0].microService,
+////                    isExpanded: true,
+////                    widgetList: Center(child: Text("Hello"),),
+////                  ),
+//                  ExpandableListView(
+////                    iconData: Icons.shopping_basket,
+//                    title: widget.employee.roles[index].permission[0].acls[0]
+//                        .microService,
+//                    isExpanded: false,
+//                    widgetList: Container(
+//                      child: Padding(
+//                        padding: EdgeInsets.symmetric(
+//                            horizontal: Measurements.width * 0.020),
+//                        child: Column(
+//                          children: <Widget>[
+//                            Divider(),
+//                            Row(
+//                              mainAxisSize: MainAxisSize.max,
+//                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                              children: <Widget>[
+//                                Text(
+//                                  "Create",
+//                                  style: TextStyle(
+//                                      color: Colors.white,
+//                                      fontSize: 22,
+//                                      fontWeight: FontWeight.bold),
+//                                ),
+//                                Switch(
+//                                  activeColor: Color(0XFF0084ff),
+//                                  value: widget.employee.roles[index]
+//                                      .permission[0].acls[0].create,
+//                                  onChanged: (bool value) {
+//                                    setState(() {});
+//                                  },
+//                                )
+//                              ],
+//                            ),
+//                            Divider(),
+//                            Row(
+//                              mainAxisSize: MainAxisSize.max,
+//                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                              children: <Widget>[
+//                                Text(
+//                                  "Read",
+//                                  style: TextStyle(
+//                                      color: Colors.white,
+//                                      fontSize: 22,
+//                                      fontWeight: FontWeight.bold),
+//                                ),
+//                                Switch(
+//                                  activeColor: Color(0XFF0084ff),
+//                                  value: widget.employee.roles[index]
+//                                      .permission[0].acls[0].read,
+//                                  onChanged: (bool value) {
+//                                    setState(() {});
+//                                  },
+//                                )
+//                              ],
+//                            ),
+//                            Divider(),
+//                            Row(
+//                              mainAxisSize: MainAxisSize.max,
+//                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                              children: <Widget>[
+//                                Text(
+//                                  "Update",
+//                                  style: TextStyle(
+//                                      color: Colors.white,
+//                                      fontSize: 22,
+//                                      fontWeight: FontWeight.bold),
+//                                ),
+//                                Switch(
+//                                  activeColor: Color(0XFF0084ff),
+//                                  value: widget.employee.roles[index]
+//                                      .permission[0].acls[0].update,
+//                                  onChanged: (bool value) {
+//                                    setState(() {});
+//                                  },
+//                                )
+//                              ],
+//                            ),
+//                            Divider(),
+//                            Row(
+//                              mainAxisSize: MainAxisSize.max,
+//                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                              children: <Widget>[
+//                                Text(
+//                                  "Delete",
+//                                  style: TextStyle(
+//                                      color: Colors.white,
+//                                      fontSize: 22,
+//                                      fontWeight: FontWeight.bold),
+//                                ),
+//                                Switch(
+//                                  activeColor: Color(0XFF0084ff),
+//                                  value: widget.employee.roles[index]
+//                                      .permission[0].acls[0].delete,
+//                                  onChanged: (bool value) {
+//                                    setState(() {});
+//                                  },
+//                                )
+//                              ],
+//                            ),
+//                          ],
+//                        ),
+//                      ),
+//                    ),
+//                  ),
+//                ],
+//              );
+////              return ExpandableListView(
+////                iconData: Icons.shopping_basket,
+////                title: widget
+////                    .employee.roles[index].permission[0].acls[0].microService,
+////                isExpanded: false,
+////                widgetList: Container(
+////                  child: Padding(
+////                    padding: EdgeInsets.symmetric(
+////                        horizontal: Measurements.width * 0.020),
+////                    child: Column(
+////                      children: <Widget>[
+////                        Divider(),
+////                        Row(
+////                          mainAxisSize: MainAxisSize.max,
+////                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+////                          children: <Widget>[
+////                            Text(
+////                              "Create",
+////                              style: TextStyle(
+////                                  color: Colors.white,
+////                                  fontSize: 22,
+////                                  fontWeight: FontWeight.bold),
+////                            ),
+////                            Switch(
+////                              activeColor: Color(0XFF0084ff),
+////                              value: widget.employee.roles[index].permission[0]
+////                                  .acls[0].create,
+////                              onChanged: (bool value) {
+////                                setState(() {
+////
+////                                });
+////                              },
+////                            )
+////                          ],
+////                        ),
+////                        Divider(),
+////                        Row(
+////                          mainAxisSize: MainAxisSize.max,
+////                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+////                          children: <Widget>[
+////                            Text(
+////                              "Read",
+////                              style: TextStyle(
+////                                  color: Colors.white,
+////                                  fontSize: 22,
+////                                  fontWeight: FontWeight.bold),
+////                            ),
+////                            Switch(
+////                              activeColor: Color(0XFF0084ff),
+////                              value: widget.employee.roles[index].permission[0]
+////                                  .acls[0].read,
+////                              onChanged: (bool value) {
+////                                setState(() {});
+////                              },
+////                            )
+////                          ],
+////                        ),
+////                        Divider(),
+////                        Row(
+////                          mainAxisSize: MainAxisSize.max,
+////                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+////                          children: <Widget>[
+////                            Text(
+////                              "Update",
+////                              style: TextStyle(
+////                                  color: Colors.white,
+////                                  fontSize: 22,
+////                                  fontWeight: FontWeight.bold),
+////                            ),
+////                            Switch(
+////                              activeColor: Color(0XFF0084ff),
+////                              value: widget.employee.roles[index].permission[0]
+////                                  .acls[0].update,
+////                              onChanged: (bool value) {
+////                                setState(() {});
+////                              },
+////                            )
+////                          ],
+////                        ),
+////                        Divider(),
+////                        Row(
+////                          mainAxisSize: MainAxisSize.max,
+////                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+////                          children: <Widget>[
+////                            Text(
+////                              "Delete",
+////                              style: TextStyle(
+////                                  color: Colors.white,
+////                                  fontSize: 22,
+////                                  fontWeight: FontWeight.bold),
+////                            ),
+////                            Switch(
+////                              activeColor: Color(0XFF0084ff),
+////                              value: widget.employee.roles[index].permission[0]
+////                                  .acls[0].delete,
+////                              onChanged: (bool value) {
+////                                setState(() {});
+////                              },
+////                            )
+////                          ],
+////                        ),
+////                      ],
+////                    ),
+////                  ),
+////                ),
+////              );
+//            }
+//          },
+//        ),
+//      );
+//    }
+//
+//    return Column(
+//      children: <Widget>[
+//        Container(
+//          decoration: BoxDecoration(
+//            color: Colors.white.withOpacity(0.1),
+//          ),
+//          child: InkWell(
+//            child: Row(
+//              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//              children: <Widget>[
+//                Container(
+////                  child: Text(Language.getProductStrings("sections.main")),
+//                  child: Row(
+//                    children: <Widget>[
+//                      Icon(
+//                        Icons.business_center,
+//                        size: 28,
+//                      ),
+//                      SizedBox(width: 10),
+//                      Text(
+//                        "Apps Access",
+//                        style: TextStyle(fontSize: 18),
+//                      ),
+//                    ],
+//                  ),
+//                  padding: EdgeInsets.symmetric(
+//                      horizontal: Measurements.width * 0.05),
+//                ),
+//                IconButton(
+//                  icon: Icon(widget.isOpen
+//                      ? Icons.keyboard_arrow_up
+//                      : Icons.keyboard_arrow_down),
+//                  onPressed: () {
+//                    widget.openedRow.notifyListeners();
+//                    widget.openedRow.value = 0;
+//                  },
+//                ),
+//              ],
+//            ),
+//            onTap: () {
+//              widget.openedRow.notifyListeners();
+//              widget.openedRow.value = 0;
+//            },
+//          ),
+//        ),
+//        AnimatedContainer(
+//            color: Colors.white.withOpacity(0.05),
+////            height: widget.isOpen ? Measurements.height * 0.62 : 0,
+//            duration: Duration(milliseconds: 200),
+//            child: Container(
+//              width: Measurements.width * 0.999,
+//              child: widget.isOpen
+//                  ? AnimatedSize(
+//                      duration: Duration(milliseconds: 500),
+//                      curve: Curves.easeInOut,
+//                      vsync: this,
+//                      child: Container(
+//                        padding: EdgeInsets.symmetric(
+//                            horizontal: Measurements.width * 0.0015),
+//                        color: Colors.black.withOpacity(0.05),
+//                        child: Column(
+//                          mainAxisAlignment: MainAxisAlignment.center,
+//                          children: <Widget>[
+//                            Row(
+//                              mainAxisSize: MainAxisSize.max,
+//                              mainAxisAlignment: MainAxisAlignment.center,
+//                              children: <Widget>[
+//                                Column(
+//                                  children: <Widget>[
+////                                    Expanded(child: getAppsAccessRow()),
+//                                    getAppsAccessRow(),
+//                                  ],
+//                                ),
+////                                Container(
+////                                  height: Measurements.height * 0.3,
+////                                  child: getAppsAccessRow(),
+////                                ),
+//                              ],
+//                            )
+//                          ],
+//                        ),
+//                      ),
+//                    )
+//                  : Container(width: 0, height: 0),
+//            )),
+//        Container(
+//            color: widget.isOpen
+//                ? Colors.transparent
+//                : Colors.white.withOpacity(0.1),
+//            height: widget.isOpen ? 0 : Measurements.height * 0.01,
+//            child: widget.isOpen
+//                ? Divider(
+//                    color: Colors.white.withOpacity(0),
+//                  )
+//                : Divider(
+//                    color: Colors.white,
+//                  )),
+//      ],
+//    );
+//  }
+//}

@@ -1,15 +1,19 @@
 import 'dart:ui';
+import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
+import 'package:payever/models/acl.dart';
+import 'package:payever/models/group_acl.dart';
+import 'package:payever/views/customelements/custom_future_builder.dart';
 import 'package:provider/provider.dart';
 
+import 'package:payever/models/business_apps.dart';
+import 'package:payever/view_models/employees_state_model.dart';
 import 'package:payever/utils/utils.dart';
 import 'package:payever/view_models/global_state_model.dart';
 import 'package:payever/views/customelements/custom_app_bar.dart';
-import 'add_employee_screen.dart';
-import 'employees_groups_component.dart';
+import 'employees_apps_access_component.dart';
 
 bool _isPortrait;
 bool _isTablet;
@@ -20,9 +24,56 @@ class AddGroupScreen extends StatefulWidget {
 }
 
 class _AddGroupScreenState extends State<AddGroupScreen> {
+  TextEditingController _groupNameController = TextEditingController();
+
+  EmployeesStateModel employeesStateModel;
+
+  @override
+  void initState() {
+    super.initState();
+//    _groupNameController.text = employeesStateModel.groupValue;
+  }
+
+  @override
+  void dispose() {
+    _groupNameController.dispose();
+    super.dispose();
+  }
+
+  Future<List<BusinessApps>> getBusinessApps(
+      EmployeesStateModel employeesStateModel) async {
+    List<BusinessApps> businessApps = List<BusinessApps>();
+    var apps = await employeesStateModel.getAppsBusinessInfo();
+    for (var app in apps) {
+      var appData = BusinessApps.fromMap(app);
+      if (appData.dashboardInfo.title != null) {
+        if (appData.allowedAcls.create != null) {
+          appData.allowedAcls.create = false;
+        }
+        if (appData.allowedAcls.read != null) {
+          appData.allowedAcls.read = false;
+        }
+        if (appData.allowedAcls.update != null) {
+          appData.allowedAcls.update = false;
+        }
+        if (appData.allowedAcls.delete != null) {
+          appData.allowedAcls.delete = false;
+        }
+        businessApps.add(appData);
+      }
+    }
+
+    employeesStateModel.updateBusinessApps(businessApps);
+
+    print("businessApps: $businessApps");
+
+    return businessApps;
+  }
+
   @override
   Widget build(BuildContext context) {
     GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context);
+    employeesStateModel = Provider.of<EmployeesStateModel>(context);
 
     return OrientationBuilder(
       builder: (BuildContext context, Orientation orientation) {
@@ -44,7 +95,7 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
                 top: 0.0,
                 child: CachedNetworkImage(
                   imageUrl: globalStateModel.currentWallpaper ??
-                      "https://payevertest.azureedge.net/images/commerseos-background-blurred.jpg",
+                      globalStateModel.defaultCustomWallpaper,
                   placeholder: (context, url) => Container(),
                   errorWidget: (context, url, error) => Icon(Icons.error),
                   fit: BoxFit.cover,
@@ -59,109 +110,127 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
                     onTap: () {
                       Navigator.pop(context);
                     },
-
+                    actions: <Widget>[
+                      StreamBuilder(
+                          stream: employeesStateModel.group,
+                          builder: (context, snapshot) {
+                            return RawMaterialButton(
+                              constraints: BoxConstraints(),
+                              padding: EdgeInsets.all(10),
+                              child: Text(
+                                'Save',
+                                style: TextStyle(
+                                    color: snapshot.hasData
+                                        ? Colors.white
+                                        : Colors.white.withOpacity(0.3),
+                                    fontSize: 18),
+                              ),
+                              onPressed: () {
+                                if (snapshot.hasData) {
+                                  print("data can be send");
+                                  _createNewGroup(globalStateModel,
+                                      employeesStateModel, context);
+                                } else {
+                                  print("The data can't be send");
+                                }
+                              },
+                            );
+                          }),
+                    ],
                   ),
-                  body: Container(
-                    padding: EdgeInsets.only(
-                        top: Measurements.width * 0.01,
+                  body: CustomFutureBuilder<List<BusinessApps>>(
+                    future: getBusinessApps(employeesStateModel),
+                    errorMessage: "Error loading apps access",
+                    onDataLoaded: (List results) {
+                      return SafeArea(
+                        child: Container(
+                          padding: EdgeInsets.only(
+                              top: Measurements.width * 0.01,
 //                      right: Measurements.width * 0.01,
 //                      left: Measurements.width * 0.01,
-                        bottom: Measurements.width * 0.08),
-                    child: Column(
-                      children: <Widget>[
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          height: Measurements.width * 0.18,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: Measurements.width * 0.02),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(10.0),
-                                  topRight: Radius.circular(10.0)),
-                              color: Colors.black.withOpacity(0.5)),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              bottom: Measurements.width * 0.08),
+                          child: ListView(
                             children: <Widget>[
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-//                                  Text(
-//                                    "Group Name",
-//                                    style: TextStyle(
-//                                      color: Colors.white.withOpacity(0.5),
-//                                      fontSize: 16,
-//                                    ),
-//                                  ),
-                                  Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: Measurements.width * 0.025),
-                                    alignment: Alignment.center,
-                                    color: Colors.white.withOpacity(0.05),
-                                    width: Measurements.width * 0.475,
-                                    height: Measurements.height *
-                                        (_isTablet ? 0.05 : 0.07),
-                                    child: TextFormField(
-                                      style: TextStyle(
-                                          fontSize: Measurements.height * 0.02),
-                                      decoration: InputDecoration(
-                                        hintText: "Group Name",
-                                        labelText: "Group Name",
-                                        labelStyle: TextStyle(
-                                          color: Colors.grey,
-                                        ),
-                                        border: InputBorder.none,
-                                      ),
-                                      onSaved: (firstName) {},
-                                      //                    validator: (value) {
-                                      //
-                                      //                    },
+                              Container(
+                                alignment: Alignment.centerLeft,
+                                height: Measurements.width * (_isTablet ? 0.13 : 0.18),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: Measurements.width * 0.02),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(10.0),
+                                        topRight: Radius.circular(10.0)),
+                                    color: Colors.black.withOpacity(0.5)),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        StreamBuilder(
+                                            stream: employeesStateModel.group,
+                                            builder: (context, snapshot) {
+                                              return Container(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal:
+                                                        Measurements.width *
+                                                            0.025),
+                                                alignment: Alignment.center,
+                                                color: Colors.white
+                                                    .withOpacity(0.05),
+                                                width: Measurements.width * 0.475,
+//                                              height: Measurements.height *
+//                                                  (_isTablet ? 0.08 : 0.07),
+                                                child: TextField(
+                                                  controller:
+                                                      _groupNameController,
+                                                  onChanged: employeesStateModel
+                                                      .changeGroup,
+                                                  style: TextStyle(
+                                                      fontSize:
+                                                          Measurements.height *
+                                                              0.02),
+                                                  decoration: InputDecoration(
+                                                    hintText: "Group Name",
+                                                    hintStyle: TextStyle(
+                                                      color: snapshot.hasError
+                                                          ? Colors.red
+                                                          : Colors.white
+                                                              .withOpacity(0.5),
+                                                    ),
+                                                    labelText: "Group Name",
+                                                    labelStyle: TextStyle(
+                                                      color: snapshot.hasError
+                                                          ? Colors.red
+                                                          : Colors.grey,
+                                                    ),
+                                                    border: InputBorder.none,
+                                                  ),
+//                                                onSaved: (firstName) {},
+                                                  //  validator: (value) {
+                                                  //
+                                                  //  },
+                                                ),
+                                              );
+                                            }),
+                                      ],
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
-                              InkWell(
-                                radius: _isTablet
-                                    ? Measurements.height * 0.02
-                                    : Measurements.width * 0.07,
-                                child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: Measurements.width * 0.02),
-                                    //width: widget._active ?50:120,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.rectangle,
-                                      color: Colors.grey.withOpacity(0.5),
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                    height: _isTablet
-                                        ? Measurements.height * 0.02
-                                        : Measurements.width * 0.07,
-                                    child: Center(
-                                      child: Container(
-                                          alignment: Alignment.center,
-                                          child: Text(
-                                            "Add employee",
-                                            style: TextStyle(fontSize: 14),
-                                          )),
-                                    )),
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      PageTransition(
-                                        child: AddEmployeeScreen(),
-                                        type: PageTransitionType.fade,
-                                      ));
-                                },
+                              EmployeesAppsAccessComponent(
+                                openedRow: ValueNotifier(1),
+                                businessAppsData: results,
+                                isNewEmployeeOrGroup: true,
                               ),
                             ],
                           ),
                         ),
-//                        Expanded(
-//                          child: EmployeesGroupComponent(
-//                              widget.businessEmployeesGroups),
-//                        ),
-                      ],
-                    ),
+                      );
+                    },
                   ),
                 ),
               ),
@@ -170,5 +239,50 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
         );
       },
     );
+  }
+
+  void _createNewGroup(GlobalStateModel globalStateModel,
+      EmployeesStateModel employeesStateModel, BuildContext context) async {
+    List<GroupAcl> groupAclList = List<GroupAcl>();
+    for (var app in employeesStateModel.businessApps) {
+      if (app.allowedAcls.create != null && app.allowedAcls.create == true ||
+          app.allowedAcls.read != null && app.allowedAcls.read == true ||
+          app.allowedAcls.update != null && app.allowedAcls.update == true ||
+          app.allowedAcls.delete != null && app.allowedAcls.delete == true) {
+        var aclData = Map();
+        aclData['microservice'] = app.dashboardInfo.title;
+        if (app.allowedAcls.create != null) {
+          aclData['create'] = app.allowedAcls.create;
+        }
+        if (app.allowedAcls.read != null) {
+          aclData['read'] = app.allowedAcls.read;
+        }
+        if (app.allowedAcls.update != null) {
+          aclData['update'] = app.allowedAcls.update;
+        }
+        if (app.allowedAcls.delete != null) {
+          aclData['delete'] = app.allowedAcls.delete;
+        }
+
+        groupAclList.add(GroupAcl(aclData));
+      }
+
+//      print("app.dashboardInfo.title: ${app.dashboardInfo.title}" + " "
+//          + "app.allowedAcls.create: ${app.allowedAcls.create}" + " "
+//          + "app.allowedAcls.read: ${app.allowedAcls.read}" + " "
+//          + "app.allowedAcls.update: ${app.allowedAcls.update}" + " "
+//          + "app.allowedAcls.delete: ${app.allowedAcls.delete}");
+
+    }
+
+//    print("groupAclList: $groupAclList");
+
+    var data = {
+      "name": _groupNameController.text,
+      "acls": groupAclList,
+    };
+
+    await employeesStateModel.createNewGroup(data);
+    Navigator.of(context).pop();
   }
 }

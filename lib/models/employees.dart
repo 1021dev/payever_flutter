@@ -2,8 +2,7 @@ import 'acl.dart';
 
 class Employees {
   final List<UserRoles> roles;
-
-//  final List<EmployeeGroup> groups;
+  final List<EmployeeGroup> groups;
   final String id;
   final bool isVerified;
   final String firstName;
@@ -19,6 +18,7 @@ class Employees {
 
   Employees(
       {this.roles,
+      this.groups,
       this.id,
       this.isVerified,
       this.firstName,
@@ -31,17 +31,29 @@ class Employees {
       this.idAgain});
 
   factory Employees.fromMap(dynamic obj) {
-    var rolesData = obj['roles'] as List;
-    List<UserRoles> rolesDataList =
-        rolesData.map((data) => UserRoles.fromMap(data)).toList();
+
+    List<UserRoles> rolesDataList = List<UserRoles>();
+    if(obj['roles'] != null && obj['roles'] != []) {
+      var rolesData = obj['roles'] as List;
+      rolesDataList = rolesData.map((data) => UserRoles.fromMap(data)).toList();
+    }
+
+    List<EmployeeGroup> employeeGroupDataList = List<EmployeeGroup>();
+    if(obj['groups'] != null && obj['groups'] != []) {
+      var groupsData = obj['groups'] as List;
+      employeeGroupDataList = groupsData.map((data) => EmployeeGroup.fromMap(data)).toList();
+    }
 
     return Employees(
         roles: rolesDataList,
+        groups: employeeGroupDataList,
         firstName: obj['first_name'],
         lastName: obj['last_name'],
         position: obj['position'],
         email: obj['email'],
-        id: obj['_id']);
+        id: obj['_id'],
+    );
+
   }
 }
 
@@ -61,6 +73,7 @@ enum Positions { Cashier, Sales, Marketing, Staff, Admin, Others }
 
 class UserRoles {
   final List<UserPermissions> permission;
+
 //  final String id;
 //  final RoleType type;
   final String type;
@@ -121,7 +134,18 @@ class RoleType {
 }
 
 class EmployeeGroup {
-  String name;
-  String businessId;
-  List<Acl> acls = List<Acl>();
+  final String id;
+  final String name;
+//  String businessId;
+//  List<Acl> acls = List<Acl>();
+
+  EmployeeGroup({this.id, this.name});
+
+  factory EmployeeGroup.fromMap(group) {
+    return EmployeeGroup(
+      id: group['_id'],
+      name: group['name']
+    );
+  }
+
 }

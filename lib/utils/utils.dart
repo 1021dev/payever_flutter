@@ -210,6 +210,7 @@ class GlobalUtils{
   //static String  MAIL= "service@payever.de";//STAGE
 
   static const String COMMERCEOS_URL                  = "https://commerceos.test.devpayever.com";//test
+  static const String COMMERCEOS_URL_BACKEND          = "https://commerceos-backend.test.devpayever.com";//test
   //static const String COMMERCEOS_URL                  = "https://commerceos.staging.devpayever.com";//staging
   //static const String COMMERCEOS_URL                  = "https://commerceos.payever.org";//live
 
@@ -659,6 +660,17 @@ class GlobalUtils{
       p.setString(GlobalUtils.DB_TOKEN_ACC, "");
       p.setString(GlobalUtils.DB_TOKEN_RFS, "");
     });
+  }
+
+  static List<String> positionsListOptions() {
+    List<String> positions = List<String>();
+    positions.add("Cashier");
+    positions.add("Sales");
+    positions.add("Marketing");
+    positions.add("Staff");
+    positions.add("Admin");
+    positions.add("Others");
+    return positions;
   }
 
 }

@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 
 class CustomFutureBuilder<T> extends StatelessWidget {
   final Future future;
+  final Widget loadingWidget;
   final String errorMessage;
   final Function(T results) onDataLoaded;
 
   const CustomFutureBuilder(
       {Key key,
       @required this.future,
+      this.loadingWidget,
       @required this.errorMessage,
       @required this.onDataLoaded})
       : super(key: key);
@@ -24,7 +26,10 @@ class CustomFutureBuilder<T> extends StatelessWidget {
             return Center(child: Text(errorMessage));
           }
 
-          return Center(child: CircularProgressIndicator());
+          return loadingWidget != null ? loadingWidget : Center(child: Padding(
+            padding: EdgeInsets.all(10),
+            child: CircularProgressIndicator(),
+          ));
         });
   }
 }
