@@ -1,0 +1,1320 @@
+import 'dart:ui';
+
+import 'package:autocomplete_textfield/autocomplete_textfield.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:payever/views/settings/employees/employees_apps_access_component.dart';
+import 'package:provider/provider.dart';
+
+import 'package:payever/view_models/employees_state_model.dart';
+import 'package:payever/views/customelements/drop_down_menu.dart';
+import 'package:payever/utils/utils.dart';
+import 'package:payever/view_models/global_state_model.dart';
+import 'package:payever/views/customelements/custom_app_bar.dart';
+import 'package:payever/models/business_apps.dart';
+import 'package:payever/utils/env.dart';
+import 'package:payever/utils/translations.dart';
+import 'package:payever/views/customelements/custom_future_builder.dart';
+import 'package:payever/views/settings/employees/expandable_component.dart';
+import 'package:payever/models/business_employees_groups.dart';
+import 'package:payever/models/employees.dart';
+import 'package:payever/network/rest_ds.dart';
+import 'package:payever/views/login/login_page.dart';
+
+bool _isPortrait;
+bool _isTablet;
+
+class AddEmployeeScreen extends StatefulWidget {
+  @override
+  createState() => _AddEmployeeScreenState();
+}
+
+class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
+
+  var openedRow = ValueNotifier(0);
+
+  final _formKey = GlobalKey<FormState>();
+
+  Future<List<BusinessApps>> getBusinessApps(
+      EmployeesStateModel employeesStateModel) async {
+    List<BusinessApps> businessApps = List<BusinessApps>();
+    var apps = await employeesStateModel.getAppsBusinessInfo();
+    for (var app in apps) {
+      var appData = BusinessApps.fromMap(app);
+      if (appData.dashboardInfo.title != null) {
+        if (appData.allowedAcls.create != null) {
+          appData.allowedAcls.create = false;
+        }
+        if (appData.allowedAcls.read != null) {
+          appData.allowedAcls.read = false;
+        }
+        if (appData.allowedAcls.update != null) {
+          appData.allowedAcls.update = false;
+        }
+        if (appData.allowedAcls.delete != null) {
+          appData.allowedAcls.delete = false;
+        }
+        businessApps.add(appData);
+      }
+    }
+
+    employeesStateModel.updateBusinessApps(businessApps);
+
+    print("businessApps: $businessApps");
+
+    return businessApps;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context);
+    EmployeesStateModel employeesStateModel =
+        Provider.of<EmployeesStateModel>(context);
+    return OrientationBuilder(
+      builder: (BuildContext context, Orientation orientation) {
+        _isPortrait =
+            Orientation.portrait == MediaQuery.of(context).orientation;
+        Measurements.height = (_isPortrait
+            ? MediaQuery.of(context).size.height
+            : MediaQuery.of(context).size.width);
+        Measurements.width = (_isPortrait
+            ? MediaQuery.of(context).size.width
+            : MediaQuery.of(context).size.height);
+        _isTablet = Measurements.width < 600 ? false : true;
+        print("_isTablet: $_isTablet");
+
+        return Stack(
+          children: <Widget>[
+            Positioned(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                top: 0.0,
+                child: CachedNetworkImage(
+                  imageUrl: globalStateModel.currentWallpaper ??
+                      globalStateModel.defaultCustomWallpaper,
+                  placeholder: (context, url) => Container(),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
+                  fit: BoxFit.cover,
+                )),
+            BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 25, sigmaY: 25),
+              child: Container(
+                child: Scaffold(
+                  backgroundColor: Colors.black.withOpacity(0.2),
+                  appBar: CustomAppBar(
+                    title: Text("Add Employee"),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    actions: <Widget>[
+                      StreamBuilder(
+                          stream: employeesStateModel.submitValid,
+                          builder: (context, snapshot) {
+                            return RawMaterialButton(
+                              constraints: BoxConstraints(),
+                              padding: EdgeInsets.all(10),
+                              child: Text(
+                                'Invite',
+                                style: TextStyle(
+                                    color: snapshot.hasData
+                                        ? Colors.white
+                                        : Colors.white.withOpacity(0.3),
+                                    fontSize: 18),
+                              ),
+                              onPressed: () {
+                                if (snapshot.hasData) {
+                                  print("data can be send");
+                                  _createNewEmployee(globalStateModel,
+                                      employeesStateModel, context);
+                                } else {
+                                  print("The data can't be send");
+                                }
+                              },
+                            );
+                          }),
+                    ],
+                  ),
+                  body: SafeArea(
+                    child: ListView(
+                      children: <Widget>[
+                        Form(
+                          key: _formKey,
+                          child: CustomFutureBuilder<List<BusinessApps>>(
+                              future: getBusinessApps(employeesStateModel),
+                              errorMessage: "Error loading data",
+                              onDataLoaded: (List results) {
+                                return Container(
+                                  child: Column(
+                                    children: <Widget>[
+                                      EmployeeInfoRow(
+                                        openedRow: openedRow,
+                                        employeesStateModel:
+                                            employeesStateModel,
+                                      ),
+                                      AppsAccessRow(
+                                        openedRow: openedRow,
+                                        businessAppsData: results,
+                                      ),
+//                                      EmployeesAppsAccessComponent(
+//                                        openedRow: openedRow,
+//                                        businessAppsData: results,
+//                                        isNewEmployeeOrGroup: true,
+//                                      ),
+                                    ],
+                                  ),
+                                );
+                              }),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _createNewEmployee(GlobalStateModel globalStateModel,
+      EmployeesStateModel employeesStateModel, BuildContext context) async {
+    var data = {
+      "email": employeesStateModel.emailValue,
+      "first_name": employeesStateModel.firstNameValue,
+      "last_name": employeesStateModel.lastNameValue,
+      "position": employeesStateModel.positionValue
+    };
+    await employeesStateModel.createNewEmployee(data);
+    Navigator.of(context).pop();
+  }
+}
+
+class EmployeeInfoRow extends StatefulWidget {
+  final ValueNotifier openedRow;
+  final EmployeesStateModel employeesStateModel;
+
+  EmployeeInfoRow({this.openedRow, this.employeesStateModel});
+
+  @override
+  createState() => _EmployeeInfoRowState();
+}
+
+class _EmployeeInfoRowState extends State<EmployeeInfoRow>
+    with TickerProviderStateMixin {
+  bool isOpen = true;
+
+  bool _isPortrait;
+  bool _isTablet;
+
+  TextEditingController _firstNameController = TextEditingController();
+  TextEditingController _lastNameController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+
+  final GlobalKey<AutoCompleteTextFieldState<BusinessEmployeesGroups>> acKey =
+      GlobalKey();
+
+  List<BusinessEmployeesGroups> employeesGroupsList =
+      List<BusinessEmployeesGroups>();
+  List<String> employeeCurrentGroups = List<String>();
+
+  listener() {
+    setState(() {
+      if (widget.openedRow.value == 0) {
+        isOpen = !isOpen;
+      } else {
+        isOpen = false;
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    widget.openedRow.addListener(listener);
+
+    _firstNameController.text = widget.employeesStateModel.firstNameValue;
+    _lastNameController.text = widget.employeesStateModel.lastNameValue;
+    _emailController.text = widget.employeesStateModel.emailValue;
+  }
+
+  @override
+  void dispose() {
+    _firstNameController.dispose();
+    _lastNameController.dispose();
+    _emailController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context);
+
+    EmployeesStateModel employeesStateModel =
+        Provider.of<EmployeesStateModel>(context);
+
+    _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
+    Measurements.height = (_isPortrait
+        ? MediaQuery.of(context).size.height
+        : MediaQuery.of(context).size.width);
+    Measurements.width = (_isPortrait
+        ? MediaQuery.of(context).size.width
+        : MediaQuery.of(context).size.height);
+    _isTablet = Measurements.width < 600 ? false : true;
+
+    print("_isPortrait: $_isPortrait");
+    print("_isTablet: $_isTablet");
+
+    Widget getEmployeeInfoRow() {
+      return Column(
+        children: <Widget>[
+          SizedBox(height: Measurements.height * 0.010),
+          Container(
+//            color: Colors.blueGrey,
+            width: _isPortrait
+                ? Measurements.width * 0.96
+                : MediaQuery.of(context).size.width * 0.88,
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                StreamBuilder(
+                    stream: widget.employeesStateModel.firstName,
+                    builder: (context, snapshot) {
+                      return Container(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: Measurements.width * 0.025),
+                        alignment: Alignment.center,
+//                        width: Measurements.width * 0.475,
+                        width: _isPortrait
+                            ? Measurements.width * 0.475
+//                            : MediaQuery.of(context).size.width * 0.326,
+                            : MediaQuery.of(context).size.width * 0.436,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.05),
+                        ),
+                        child: TextField(
+                          controller: _firstNameController,
+                          style:
+                              TextStyle(fontSize: Measurements.height * 0.02),
+                          onChanged: widget.employeesStateModel.changeFirstName,
+                          decoration: InputDecoration(
+                            hintText: "First Name",
+                            hintStyle: TextStyle(
+                              color: snapshot.hasError
+                                  ? Colors.red
+                                  : Colors.white.withOpacity(0.5),
+                            ),
+                            labelText: "First Name",
+                            labelStyle: TextStyle(
+                              color:
+                                  snapshot.hasError ? Colors.red : Colors.grey,
+                            ),
+                            border: InputBorder.none,
+                          ),
+                        ),
+                      );
+                    }),
+                StreamBuilder(
+                    stream: widget.employeesStateModel.lastName,
+                    builder: (context, snapshot) {
+                      return Container(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: Measurements.width * 0.025),
+                        alignment: Alignment.center,
+                        width: _isPortrait
+                            ? Measurements.width * 0.475
+//                            : MediaQuery.of(context).size.width * 0.326,
+                            : MediaQuery.of(context).size.width * 0.436,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.05),
+                        ),
+                        child: TextField(
+                          controller: _lastNameController,
+                          style:
+                              TextStyle(fontSize: Measurements.height * 0.02),
+                          onChanged: widget.employeesStateModel.changeLastName,
+                          decoration: InputDecoration(
+                              hintText: "Last Name",
+                              hintStyle: TextStyle(
+                                color: snapshot.hasError
+                                    ? Colors.red
+                                    : Colors.white.withOpacity(0.5),
+                              ),
+                              border: InputBorder.none,
+                              labelText: "Last Name",
+                              labelStyle: TextStyle(
+                                color: snapshot.hasError
+                                    ? Colors.red
+                                    : Colors.grey,
+                              )),
+                        ),
+                      );
+                    })
+              ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: Measurements.width * 0.010),
+          ),
+          Container(
+            width: _isPortrait
+                ? Measurements.width * 0.96
+                : MediaQuery.of(context).size.width * 0.88,
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                StreamBuilder(
+                    stream: widget.employeesStateModel.email,
+                    builder: (context, snapshot) {
+                      return Container(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: Measurements.width * 0.025),
+                        alignment: Alignment.center,
+                        width: _isPortrait
+                            ? Measurements.width * 0.475
+                            : MediaQuery.of(context).size.width * 0.436,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.05),
+                        ),
+                        child: TextField(
+                          controller: _emailController,
+                          style:
+                              TextStyle(fontSize: Measurements.height * 0.02),
+                          onChanged: widget.employeesStateModel.changeEmail,
+                          decoration: InputDecoration(
+                            hintText: "Email",
+                            hintStyle: TextStyle(
+                              color: snapshot.hasError
+                                  ? Colors.red
+                                  : Colors.white.withOpacity(0.5),
+                            ),
+                            labelText: "Email",
+                            labelStyle: TextStyle(
+                              color:
+                                  snapshot.hasError ? Colors.red : Colors.grey,
+                            ),
+                            border: InputBorder.none,
+                          ),
+                          keyboardType: TextInputType.emailAddress,
+                        ),
+                      );
+                    }),
+                StreamBuilder(
+                    stream: widget.employeesStateModel.position,
+                    builder: (context, snapshot) {
+                      return Container(
+                        color: Colors.white.withOpacity(0.05),
+                        width: _isPortrait
+                            ? Measurements.width * 0.475
+                            : MediaQuery.of(context).size.width * 0.436,
+                        child: Container(
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                  color: snapshot.hasError
+                                      ? Colors.red
+                                      : Colors.transparent,
+                                  width: 1)),
+                          child: DropDownMenu(
+                            optionsList: GlobalUtils.positionsListOptions(),
+                            defaultValue:
+                                widget.employeesStateModel.positionValue,
+                            placeHolderText: "Position",
+                            onChangeSelection: (selectedOption, index) {
+                              print("selectedOption: $selectedOption");
+                              print("index: $index");
+                              widget.employeesStateModel
+                                  .changePosition(selectedOption);
+                            },
+                          ),
+                        ),
+                      );
+                    })
+              ],
+            ),
+          ),
+//          SizedBox(height: Measurements.height * 0.010),
+          Padding(
+            padding: EdgeInsets.only(top: Measurements.width * 0.020),
+          ),
+          CustomFutureBuilder<List<BusinessEmployeesGroups>>(
+            future: fetchEmployeesGroupsList("", true, globalStateModel),
+            errorMessage: "",
+            onDataLoaded: (List results) {
+              return Column(
+                children: <Widget>[
+                  Container(
+                    width: _isPortrait
+                        ? Measurements.width * 0.96
+                        : MediaQuery.of(context).size.width * 0.88,
+                    child: Row(
+                      children: <Widget>[
+                        Text(
+                          "Groups:",
+                          style: TextStyle(color: Colors.grey, fontSize: 14),
+                        ),
+//                        Expanded(
+//                          child: SizedBox(
+//                            height: Measurements.height * 0.060,
+//                            child: ListView.builder(
+//                              shrinkWrap: true,
+//                              scrollDirection: Axis.horizontal,
+//                              itemCount: widget.employee.groups.length,
+//                              itemBuilder: (BuildContext context, int index) {
+//
+//
+//              return Padding(
+//              padding: EdgeInsets.all(2),
+//              child: Chip(
+//              backgroundColor: Colors.white.withOpacity(0.09),
+//              label: Text(widget.employee
+//                  .groups[index].name),
+//              deleteIcon: Icon(
+//              IconData(58829,
+//              fontFamily: 'MaterialIcons'),
+//              size: 20,
+//              ),
+//              onDeleted: () {
+//              print("chip pressed");
+////                                    setState(() {
+////                                      _deleteEmployeeFromGroup(
+////                                          employeesStateModel,
+////                                          widget.employee
+////                                              .groups[index].id);
+////                                      widget.employee.groups.remove(
+////                                          widget.employee
+////                                              .groups[index]);
+////                                    });
+//              },
+//              ),
+//              );
+//
+//
+//                                return Padding(
+//                                  padding: EdgeInsets.all(
+//                                      Measurements.width * (_isTablet ? 0.025 : 0.020)),
+//                                  child: Container(
+//                                    decoration: BoxDecoration(
+//                                      color: Colors.white.withOpacity(0.05),
+////                                      color: Colors.grey,
+//                                      borderRadius: BorderRadius.circular(26),
+//                                    ),
+//                                    child: Row(
+////                                      mainAxisAlignment:
+////                                          MainAxisAlignment.spaceEvenly,
+//                                      crossAxisAlignment: CrossAxisAlignment.center,
+//                                      children: <Widget>[
+//                                        Padding(
+//                                          padding: EdgeInsets.symmetric(
+//                                              horizontal:
+//                                              Measurements.width * 0.025),
+//                                          child: Center(
+//                                              child: Text(widget.employee
+//                                                  .groups[index].name, style: TextStyle(fontSize: 15))),
+//                                        ),
+//                                        Padding(
+//                                          padding: EdgeInsets.all(
+//                                              Measurements.width * 0.011),
+//                                          child: InkWell(
+//                                            radius: 20,
+//                                            child: Icon(
+//                                              IconData(58829,
+//                                                  fontFamily: 'MaterialIcons'),
+//                                              size: 19,
+//                                            ),
+//                                            onTap: () {
+//                                              setState(() {
+//                                                _deleteEmployeeFromGroup(
+//                                                    employeesStateModel,
+//                                                    widget.employee
+//                                                        .groups[index].id);
+//                                                widget.employee.groups.remove(
+//                                                    widget.employee
+//                                                        .groups[index]);
+//                                              });
+//                                            },
+//                                          ),
+//                                        )
+//                                      ],
+//                                    ),
+//                                  ),
+//                                );
+//                              },
+//                            ),
+//                          ),
+//                        )
+                      ],
+                    ),
+                  ),
+//                  Container(
+//                    alignment: Alignment.center,
+//                    padding: EdgeInsets.only(left: Measurements.width * 0.025),
+//                    decoration: BoxDecoration(
+//                        color: Colors.white.withOpacity(0.05),
+//                        borderRadius: BorderRadius.circular(16)),
+//                    width: Measurements.width * 0.9,
+////                    height: Measurements.height * (_isTablet ? 0.08 : 0.07),
+//                    child: AutoCompleteTextField<BusinessEmployeesGroups>(
+////                      decoration: InputDecoration(
+////                          hintText: "Search groups:", suffixIcon: Icon(Icons.search)),
+//                      decoration: InputDecoration(
+//                          border: InputBorder.none,
+//                          focusedBorder: InputBorder.none,
+//                          labelText: "Search groups",
+//                          labelStyle: TextStyle(color: Colors.grey),
+//                          hintText: "Search groups here"),
+//                      itemSubmitted: (item) {
+//                        setState(() {
+////                          widget.employee.groups.add(EmployeeGroup.fromMap(
+////                              {"name": item.name, "_id": item.id}));
+////                          _addEmployeeToGroup(employeesStateModel, item);
+//                        });
+//                      },
+//                      key: acKey,
+//                      suggestions: employeesGroupsList,
+//                      itemBuilder: (context, suggestion) => Padding(
+//                          child: ListTile(
+//                            title: Text(suggestion.name),
+////                              trailing: Text("Grroups: ${suggestion.name}")
+//                          ),
+//                          padding: EdgeInsets.all(8.0)),
+//                      itemSorter: (a, b) => a.name == b.name ? 0 : -1,
+//                      itemFilter: (suggestion, input) => suggestion.name
+//                          .toLowerCase()
+//                          .startsWith(input.toLowerCase()),
+//                    ),
+//                  ),
+                ],
+              );
+            },
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: Measurements.width * 0.020),
+          ),
+        ],
+      );
+    }
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.1),
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(15), topRight: Radius.circular(15)),
+          ),
+          child: InkWell(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Container(
+//                  child: Text(Language.getProductStrings("sections.employee")),
+                  child: Row(
+                    children: <Widget>[
+                      Icon(
+                        Icons.person,
+                        size: 28,
+                      ),
+                      SizedBox(width: 10),
+                      Text(
+                        "Info",
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ],
+                  ),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: Measurements.width * 0.05),
+                ),
+                IconButton(
+                  icon: Icon(isOpen
+                      ? Icons.keyboard_arrow_up
+                      : Icons.keyboard_arrow_down),
+                  onPressed: () {
+                    widget.openedRow.notifyListeners();
+                    widget.openedRow.value = 0;
+                  },
+                ),
+              ],
+            ),
+            onTap: () {
+              widget.openedRow.notifyListeners();
+              widget.openedRow.value = 0;
+            },
+          ),
+        ),
+        AnimatedContainer(
+            color: Colors.white.withOpacity(0.05),
+            duration: Duration(milliseconds: 200),
+            child: Container(
+              width: _isPortrait ? Measurements.width : double.infinity,
+              child: isOpen
+                  ? AnimatedSize(
+                      duration: Duration(milliseconds: 500),
+                      curve: Curves.easeInOut,
+                      vsync: this,
+                      child: Container(
+                        color: Colors.black.withOpacity(0.3),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                getEmployeeInfoRow(),
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                    )
+                  : Container(width: 0, height: 0),
+            )),
+        Container(
+            color: Colors.white.withOpacity(0.1),
+            child: isOpen
+                ? Divider(
+                    color: Colors.white.withOpacity(0.4),
+                  )
+                : Divider(
+                    color: Colors.white.withOpacity(0.8),
+                  )),
+        //
+      ],
+    );
+  }
+
+  Future<List<BusinessEmployeesGroups>> fetchEmployeesGroupsList(
+      String search, bool init, GlobalStateModel globalStateModel) async {
+    List<BusinessEmployeesGroups> businessEmployeesGroups =
+        List<BusinessEmployeesGroups>();
+    businessEmployeesGroups = [];
+    return businessEmployeesGroups;
+  }
+
+//  Future<List<BusinessEmployeesGroups>> fetchEmployeesGroupsList(
+//      String search, bool init, GlobalStateModel globalStateModel) async {
+//    RestDatasource api = RestDatasource();
+//
+//    employeeCurrentGroups = [];
+//    for (var group in widget.employee.groups) {
+//      employeeCurrentGroups.add(group.id);
+//    }
+//
+//    var businessEmployeesGroups = await api
+//        .getBusinessEmployeesGroupsList(globalStateModel.currentBusiness.id,
+//        GlobalUtils.ActiveToken.accessToken, context)
+//        .then((businessEmployeesGroupsData) {
+//      print(
+//          "businessEmployeesGroupsData data loaded: $businessEmployeesGroupsData");
+//
+//      employeesGroupsList = [];
+//      for (var group in businessEmployeesGroupsData) {
+//        print("group: $group");
+//        var groupData = BusinessEmployeesGroups.fromMap(group);
+//        if (!employeeCurrentGroups.contains(groupData.id)) {
+//          employeesGroupsList.add(groupData);
+//        }
+//      }
+//
+//      return employeesGroupsList;
+//    }).catchError((onError) {
+//      print("Error loading employees groups: $onError");
+//
+//      if (onError.toString().contains("401")) {
+//        GlobalUtils.clearCredentials();
+//        Navigator.pushReplacement(
+//            context,
+//            PageTransition(
+//                child: LoginScreen(), type: PageTransitionType.fade));
+//      }
+//    });
+//
+//    return businessEmployeesGroups;
+//  }
+//
+//  Future<void> _addEmployeeToGroup(EmployeesStateModel employeesStateModel,
+//      BusinessEmployeesGroups group) async {
+//    return employeesStateModel.addEmployeeToGroup(group.id, widget.employee.id);
+//  }
+//
+//  Future<void> _deleteEmployeeFromGroup(
+//      EmployeesStateModel employeesStateModel, String groupId) async {
+//    return employeesStateModel.deleteEmployeeFromGroup(
+//        groupId, widget.employee.id);
+//  }
+
+}
+
+class AppsAccessRow extends StatefulWidget {
+  final ValueNotifier openedRow;
+  final List<BusinessApps> businessAppsData;
+
+//  final Employees employee;
+//  final dynamic employeeGroups;
+
+  AppsAccessRow({this.openedRow, this.businessAppsData});
+
+//  AppsAccessRow({this.openedRow, this.employee, this.employeeGroups});
+
+  @override
+  createState() => _AppsAccessRowState();
+}
+
+class _AppsAccessRowState extends State<AppsAccessRow>
+    with TickerProviderStateMixin {
+  bool isOpen = true;
+
+  bool _isPortrait;
+  bool _isTablet;
+
+  int activeIndex;
+
+  var appPermissionsRow = ValueNotifier(0);
+
+  static String uiKit = Env.Commerceos + "/assets/ui-kit/icons-png/";
+
+  listener() {
+    setState(() {
+      if (widget.openedRow.value == 0) {
+        isOpen = !isOpen;
+      } else {
+        isOpen = false;
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    widget.openedRow.addListener(listener);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+//    GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context);
+    EmployeesStateModel employeesStateModel =
+        Provider.of<EmployeesStateModel>(context);
+
+    _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
+    Measurements.height = (_isPortrait
+        ? MediaQuery.of(context).size.height
+        : MediaQuery.of(context).size.width);
+    Measurements.width = (_isPortrait
+        ? MediaQuery.of(context).size.width
+        : MediaQuery.of(context).size.height);
+    _isTablet = Measurements.width < 600 ? false : true;
+
+    print("_isPortrait: $_isPortrait");
+    print("_isTablet: $_isTablet");
+
+
+    Widget getAppsAccessRow() {
+
+      return ListView.builder(
+        padding: EdgeInsets.all(0.1),
+        shrinkWrap: true,
+        physics: ClampingScrollPhysics(),
+        itemCount: employeesStateModel.businessApps.length,
+        itemBuilder: (BuildContext context, int index) {
+          var appIndex = widget.businessAppsData[index];
+          return ExpansionPanelList(
+            expansionCallback: (int index, bool status) {
+              setState(() {
+                activeIndex = activeIndex == index ? null : index;
+              });
+            },
+            children: [
+              new ExpansionPanel(
+                isExpanded: activeIndex == index,
+                canTapOnHeader: true,
+                headerBuilder: (BuildContext context,
+                    bool isExpanded) =>
+                new Container(
+                    padding:
+                    const EdgeInsets.only(left: 15.0),
+                    alignment: Alignment.centerLeft,
+                    child: new Text(Language.getCommerceOSStrings(appIndex.dashboardInfo.title),
+                    )),
+                body: Container(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: Measurements.width * 0.020),
+                    child: Column(
+                      children: <Widget>[
+                        appIndex.allowedAcls.create != null
+                            ? Divider()
+                            : Container(width: 0, height: 0),
+                        appIndex.allowedAcls.create != null
+                            ? Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text(
+                              "Create",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.normal),
+                            ),
+                            Switch(
+                              activeColor: Color(0XFF0084ff),
+                              value: employeesStateModel
+                                  .businessApps[index].allowedAcls.create,
+                              onChanged: (bool value) {
+                                setState(() {
+                                  employeesStateModel
+                                      .updateBusinessAppPermissionCreate(
+                                      index, value);
+                                  employeesStateModel
+                                      .updateBusinessAppPermissionRead(
+                                      index, value);
+                                  employeesStateModel
+                                      .updateBusinessAppPermissionUpdate(
+                                      index, value);
+                                  employeesStateModel
+                                      .updateBusinessAppPermissionDelete(
+                                      index, value);
+                                });
+                              },
+                            )
+                          ],
+                        )
+                            : Container(width: 0, height: 0),
+                        appIndex.allowedAcls.read != null
+                            ? Divider()
+                            : Container(width: 0, height: 0),
+                        appIndex.allowedAcls.read != null
+                            ? Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text(
+                              "Read",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.normal),
+                            ),
+                            Switch(
+                              activeColor: Color(0XFF0084ff),
+//                                value: appIndex.allowedAcls.read,
+                              value: employeesStateModel
+                                  .businessApps[index].allowedAcls.read,
+                              onChanged: (bool value) {
+                                setState(() {
+                                  employeesStateModel
+                                      .updateBusinessAppPermissionRead(
+                                      index, value);
+                                  if (employeesStateModel.businessApps[index]
+                                      .allowedAcls.create ==
+                                      true) {
+                                    employeesStateModel
+                                        .updateBusinessAppPermissionCreate(
+                                        index, value);
+                                  }
+                                  if (employeesStateModel.businessApps[index]
+                                      .allowedAcls.update ==
+                                      true) {
+                                    employeesStateModel
+                                        .updateBusinessAppPermissionUpdate(
+                                        index, value);
+                                  }
+                                  if (employeesStateModel.businessApps[index]
+                                      .allowedAcls.delete ==
+                                      true) {
+                                    employeesStateModel
+                                        .updateBusinessAppPermissionDelete(
+                                        index, value);
+                                  }
+                                });
+                              },
+                            )
+                          ],
+                        )
+                            : Container(width: 0, height: 0),
+                        appIndex.allowedAcls.update != null
+                            ? Divider()
+                            : Container(width: 0, height: 0),
+                        appIndex.allowedAcls.update != null
+                            ? Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text(
+                              "Update",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.normal),
+                            ),
+                            Switch(
+                              activeColor: Color(0XFF0084ff),
+//                                value: appIndex.allowedAcls.update,
+                              value: employeesStateModel
+                                  .businessApps[index].allowedAcls.update,
+                              onChanged: (bool value) {
+                                setState(() {
+                                  if (employeesStateModel.businessApps[index]
+                                      .allowedAcls.read ==
+                                      false) {
+                                    print("read not selected");
+                                  } else {
+                                    employeesStateModel
+                                        .updateBusinessAppPermissionUpdate(
+                                        index, value);
+                                  }
+                                });
+                              },
+                            )
+                          ],
+                        )
+                            : Container(width: 0, height: 0),
+                        appIndex.allowedAcls.delete != null
+                            ? Divider()
+                            : Container(width: 0, height: 0),
+                        appIndex.allowedAcls.delete != null
+                            ? Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text(
+                              "Delete",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.normal),
+                            ),
+                            Switch(
+                              activeColor: Color(0XFF0084ff),
+//                                value: appIndex.allowedAcls.delete,
+                              value: employeesStateModel
+                                  .businessApps[index].allowedAcls.delete,
+                              onChanged: (bool value) {
+                                setState(() {
+                                  if (employeesStateModel.businessApps[index]
+                                      .allowedAcls.read ==
+                                      false) {
+                                    print("read not selected");
+                                  } else {
+                                    employeesStateModel
+                                        .updateBusinessAppPermissionDelete(
+                                        index, value);
+                                  }
+                                });
+                              },
+                            )
+                          ],
+                        )
+                            : Container(width: 0, height: 0),
+                        Divider(),
+                      ],
+                    ),
+                  ),
+                ),),
+            ],
+          );
+
+      },);
+
+//      return ListView.builder(
+//        padding: EdgeInsets.all(0.1),
+//        shrinkWrap: true,
+//        physics: ClampingScrollPhysics(),
+////        itemCount: widget.businessAppsData.length,
+//        itemCount: employeesStateModel.businessApps.length,
+//        itemBuilder: (BuildContext context, int index) {
+//          var appIndex = widget.businessAppsData[index];
+//
+//
+//
+//          return ExpandableListView(
+//            iconData: NetworkImage(uiKit + appIndex.dashboardInfo.icon),
+//            title: Language.getCommerceOSStrings(appIndex.dashboardInfo.title),
+//            isExpanded: false,
+//            widgetList: Container(
+//              child: Padding(
+//                padding: EdgeInsets.symmetric(
+//                    horizontal: Measurements.width * 0.020),
+//                child: Column(
+//                  children: <Widget>[
+//                    appIndex.allowedAcls.create != null
+//                        ? Divider()
+//                        : Container(width: 0, height: 0),
+//                    appIndex.allowedAcls.create != null
+//                        ? Row(
+//                            mainAxisSize: MainAxisSize.max,
+//                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                            children: <Widget>[
+//                              Text(
+//                                "Create",
+//                                style: TextStyle(
+//                                    color: Colors.white,
+//                                    fontSize: 20,
+//                                    fontWeight: FontWeight.normal),
+//                              ),
+//                              Switch(
+//                                activeColor: Color(0XFF0084ff),
+//                                value: employeesStateModel
+//                                    .businessApps[index].allowedAcls.create,
+//                                onChanged: (bool value) {
+//                                  setState(() {
+//                                    employeesStateModel
+//                                        .updateBusinessAppPermissionCreate(
+//                                            index, value);
+//                                    employeesStateModel
+//                                        .updateBusinessAppPermissionRead(
+//                                            index, value);
+//                                    employeesStateModel
+//                                        .updateBusinessAppPermissionUpdate(
+//                                            index, value);
+//                                    employeesStateModel
+//                                        .updateBusinessAppPermissionDelete(
+//                                            index, value);
+//                                  });
+//                                },
+//                              )
+//                            ],
+//                          )
+//                        : Container(width: 0, height: 0),
+//                    appIndex.allowedAcls.read != null
+//                        ? Divider()
+//                        : Container(width: 0, height: 0),
+//                    appIndex.allowedAcls.read != null
+//                        ? Row(
+//                            mainAxisSize: MainAxisSize.max,
+//                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                            children: <Widget>[
+//                              Text(
+//                                "Read",
+//                                style: TextStyle(
+//                                    color: Colors.white,
+//                                    fontSize: 20,
+//                                    fontWeight: FontWeight.normal),
+//                              ),
+//                              Switch(
+//                                activeColor: Color(0XFF0084ff),
+////                                value: appIndex.allowedAcls.read,
+//                                value: employeesStateModel
+//                                    .businessApps[index].allowedAcls.read,
+//                                onChanged: (bool value) {
+//                                  setState(() {
+//                                    employeesStateModel
+//                                        .updateBusinessAppPermissionRead(
+//                                            index, value);
+//                                    if (employeesStateModel.businessApps[index]
+//                                            .allowedAcls.create ==
+//                                        true) {
+//                                      employeesStateModel
+//                                          .updateBusinessAppPermissionCreate(
+//                                              index, value);
+//                                    }
+//                                    if (employeesStateModel.businessApps[index]
+//                                            .allowedAcls.update ==
+//                                        true) {
+//                                      employeesStateModel
+//                                          .updateBusinessAppPermissionUpdate(
+//                                              index, value);
+//                                    }
+//                                    if (employeesStateModel.businessApps[index]
+//                                            .allowedAcls.delete ==
+//                                        true) {
+//                                      employeesStateModel
+//                                          .updateBusinessAppPermissionDelete(
+//                                              index, value);
+//                                    }
+//                                  });
+//                                },
+//                              )
+//                            ],
+//                          )
+//                        : Container(width: 0, height: 0),
+//                    appIndex.allowedAcls.update != null
+//                        ? Divider()
+//                        : Container(width: 0, height: 0),
+//                    appIndex.allowedAcls.update != null
+//                        ? Row(
+//                            mainAxisSize: MainAxisSize.max,
+//                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                            children: <Widget>[
+//                              Text(
+//                                "Update",
+//                                style: TextStyle(
+//                                    color: Colors.white,
+//                                    fontSize: 20,
+//                                    fontWeight: FontWeight.normal),
+//                              ),
+//                              Switch(
+//                                activeColor: Color(0XFF0084ff),
+////                                value: appIndex.allowedAcls.update,
+//                                value: employeesStateModel
+//                                    .businessApps[index].allowedAcls.update,
+//                                onChanged: (bool value) {
+//                                  setState(() {
+//                                    if (employeesStateModel.businessApps[index]
+//                                            .allowedAcls.read ==
+//                                        false) {
+//                                      print("read not selected");
+//                                    } else {
+//                                      employeesStateModel
+//                                          .updateBusinessAppPermissionUpdate(
+//                                              index, value);
+//                                    }
+//                                  });
+//                                },
+//                              )
+//                            ],
+//                          )
+//                        : Container(width: 0, height: 0),
+//                    appIndex.allowedAcls.delete != null
+//                        ? Divider()
+//                        : Container(width: 0, height: 0),
+//                    appIndex.allowedAcls.delete != null
+//                        ? Row(
+//                            mainAxisSize: MainAxisSize.max,
+//                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                            children: <Widget>[
+//                              Text(
+//                                "Delete",
+//                                style: TextStyle(
+//                                    color: Colors.white,
+//                                    fontSize: 20,
+//                                    fontWeight: FontWeight.normal),
+//                              ),
+//                              Switch(
+//                                activeColor: Color(0XFF0084ff),
+////                                value: appIndex.allowedAcls.delete,
+//                                value: employeesStateModel
+//                                    .businessApps[index].allowedAcls.delete,
+//                                onChanged: (bool value) {
+//                                  setState(() {
+//                                    if (employeesStateModel.businessApps[index]
+//                                            .allowedAcls.read ==
+//                                        false) {
+//                                      print("read not selected");
+//                                    } else {
+//                                      employeesStateModel
+//                                          .updateBusinessAppPermissionDelete(
+//                                              index, value);
+//                                    }
+//                                  });
+//                                },
+//                              )
+//                            ],
+//                          )
+//                        : Container(width: 0, height: 0),
+//                    Divider(),
+//                  ],
+//                ),
+//              ),
+//            ),
+//          );
+//        },
+//      );
+    }
+
+    return Column(
+      children: <Widget>[
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.1),
+          ),
+          child: InkWell(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Container(
+//                  child: Text(Language.getProductStrings("sections.main")),
+                  child: Row(
+                    children: <Widget>[
+                      Icon(
+                        Icons.business_center,
+                        size: 28,
+                      ),
+                      SizedBox(width: 10),
+                      Text(
+                        "Apps Access",
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ],
+                  ),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: Measurements.width * 0.05),
+                ),
+                IconButton(
+                  icon: Icon(isOpen
+                      ? Icons.keyboard_arrow_up
+                      : Icons.keyboard_arrow_down),
+                  onPressed: () {
+                    widget.openedRow.notifyListeners();
+                    widget.openedRow.value = 0;
+                  },
+                ),
+              ],
+            ),
+            onTap: () {
+              widget.openedRow.notifyListeners();
+              widget.openedRow.value = 0;
+            },
+          ),
+        ),
+        AnimatedContainer(
+            color: Colors.white.withOpacity(0.05),
+//            height: widget.isOpen ? Measurements.height * 0.62 : 0,
+            duration: Duration(milliseconds: 200),
+            child: Container(
+//              width: Measurements.width * 0.999,
+              width: _isPortrait ? Measurements.width : double.infinity,
+              child: isOpen
+                  ? AnimatedSize(
+                      duration: Duration(milliseconds: 500),
+                      curve: Curves.easeInOut,
+                      vsync: this,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: Measurements.width * 0.0015),
+                        color: Colors.black.withOpacity(0.05),
+                        child: getAppsAccessRow(),
+                      ),
+                    )
+                  : Container(width: 0, height: 0),
+            )),
+        Container(
+            color: isOpen ? Colors.transparent : Colors.white.withOpacity(0.1),
+            height: 5,
+            child: isOpen
+                ? Divider(
+                    color: Colors.transparent,
+                  )
+                : Divider(
+                    color: Colors.white.withOpacity(0.8),
+                  )),
+      ],
+    );
+  }
+}
+
+
+class CustomAppsAccessRow extends StatefulWidget {
+
+  final List<BusinessApps> businessAppsData;
+
+  CustomAppsAccessRow({Key key, this.businessAppsData}) : super(key: key);
+  
+  @override
+  createState() => _CustomAppsAccessRowState();
+}
+
+class _CustomAppsAccessRowState extends State<CustomAppsAccessRow> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      
+    );
+  }
+}
+

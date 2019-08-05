@@ -51,7 +51,7 @@ dependencies:
   dio: ^2.1.13
   image_picker: ^0.6.0+17
   provider: ^3.0.0+1
-
+  rxdart: ^0.22.1
 
 
 dev_dependencies:

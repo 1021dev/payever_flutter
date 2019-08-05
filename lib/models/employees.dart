@@ -1,7 +1,8 @@
+import 'acl.dart';
+
 class Employees {
   final List<UserRoles> roles;
-
-//  final List<EmployeeGroup> groups;
+  final List<EmployeeGroup> groups;
   final String id;
   final bool isVerified;
   final String firstName;
@@ -17,6 +18,7 @@ class Employees {
 
   Employees(
       {this.roles,
+      this.groups,
       this.id,
       this.isVerified,
       this.firstName,
@@ -29,17 +31,29 @@ class Employees {
       this.idAgain});
 
   factory Employees.fromMap(dynamic obj) {
-    var rolesData = obj['roles'] as List;
-    List<UserRoles> rolesDataList =
-        rolesData.map((data) => UserRoles.fromMap(data)).toList();
+
+    List<UserRoles> rolesDataList = List<UserRoles>();
+    if(obj['roles'] != null && obj['roles'] != []) {
+      var rolesData = obj['roles'] as List;
+      rolesDataList = rolesData.map((data) => UserRoles.fromMap(data)).toList();
+    }
+
+    List<EmployeeGroup> employeeGroupDataList = List<EmployeeGroup>();
+    if(obj['groups'] != null && obj['groups'] != []) {
+      var groupsData = obj['groups'] as List;
+      employeeGroupDataList = groupsData.map((data) => EmployeeGroup.fromMap(data)).toList();
+    }
 
     return Employees(
         roles: rolesDataList,
+        groups: employeeGroupDataList,
         firstName: obj['first_name'],
         lastName: obj['last_name'],
         position: obj['position'],
         email: obj['email'],
-        id: obj['_id']);
+        id: obj['_id'],
+    );
+
   }
 }
 
@@ -59,10 +73,12 @@ enum Positions { Cashier, Sales, Marketing, Staff, Admin, Others }
 
 class UserRoles {
   final List<UserPermissions> permission;
-  final String id;
-  final RoleType type;
 
-  UserRoles({this.permission, this.id, this.type});
+//  final String id;
+//  final RoleType type;
+  final String type;
+
+  UserRoles({this.permission, this.type});
 
   factory UserRoles.fromMap(role) {
     print("role: $role");
@@ -76,8 +92,9 @@ class UserRoles {
 
     return UserRoles(
       permission: permissionsDataList,
-      id: role['_id'],
-      type: RoleType.fromMap(role['type']),
+//      id: role['_id'],
+//      type: RoleType.fromMap(role['type']),
+      type: role['type'],
     );
   }
 }
@@ -96,31 +113,11 @@ class UserPermissions {
     List<Acl> aclsDataList = aclsData.map((data) => Acl.fromMap(data)).toList();
 
     return UserPermissions(
-      id: permissions['_id'],
+      id: permissions['_id'] ?? "",
       businessId: permissions['businessId'],
       acls: aclsDataList,
       hasAcls: permissions['hasAcls'] ?? true,
-      v: permissions['__v'],
-    );
-  }
-}
-
-class Acl {
-  final String microService;
-  final bool create;
-  final bool read;
-  final bool update;
-  final bool delete;
-
-  Acl({this.microService, this.create, this.read, this.update, this.delete});
-
-  factory Acl.fromMap(acl) {
-    return Acl(
-      microService: acl['microservice'],
-      create: acl['create'],
-      read: acl['read'],
-      update: acl['update'],
-      delete: acl['delete'],
+      v: permissions['__v'] ?? 0,
     );
   }
 }
@@ -137,7 +134,18 @@ class RoleType {
 }
 
 class EmployeeGroup {
-  String name;
-  String businessId;
-  List<Acl> acls = List<Acl>();
+  final String id;
+  final String name;
+//  String businessId;
+//  List<Acl> acls = List<Acl>();
+
+  EmployeeGroup({this.id, this.name});
+
+  factory EmployeeGroup.fromMap(group) {
+    return EmployeeGroup(
+      id: group['_id'],
+      name: group['name']
+    );
+  }
+
 }

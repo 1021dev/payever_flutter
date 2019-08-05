@@ -24,6 +24,8 @@ class RestDatasource {
 
   static String USER_URL            = BASE_URL + '/api/user';
   static String BUSINESS_URL        = BASE_URL + '/api/business';
+  static String BUSINESS_APPS        = GlobalUtils.COMMERCEOS_URL_BACKEND + '/api/apps/business/';
+
 
   static String WALLPAPER_URL       = WALLPAPER + '/api/business/';
   static String WALLPAPER_URL_PER   = WALLPAPER + '/api/personal/wallpapers';
@@ -90,7 +92,10 @@ class RestDatasource {
 
   static String EMPLOYEES      = Env.Employees;
 //  static String EMPLOYEES_LIST  = EMPLOYEES + "/api/employees/";
+  static String NEW_EMPLOYEE  = AUTH_BASE_URL + "/api/employees/create/";
+  static String INVITE_EMPLOYEE  = AUTH_BASE_URL + "/api/employees/invite/";
   static String EMPLOYEES_LIST  = AUTH_BASE_URL + "/api/employees/";
+  static String EMPLOYEE_DETAILS  = AUTH_BASE_URL + "/api/employees/";
   static String EMPLOYEE_GROUPS  = AUTH_BASE_URL + "/api/employee-groups/";
 
   static String STORAGEURL         = Env.Media +"/api/storage";
@@ -142,6 +147,7 @@ class RestDatasource {
   Future<dynamic> getWallpaper(String id, String token,BuildContext context) {
     print("TAG - getWallpaper()");
     var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token",HttpHeaders.userAgentHeader :GlobalUtils.fingerprint };
+    print("WALLPAPER_URL + id + WALLPAPER_END: ${WALLPAPER_URL + id + WALLPAPER_END}");
     return _netUtil.get(WALLPAPER_URL + id + WALLPAPER_END,headers: headers ).then((dynamic result){
       return result;
     });
@@ -227,6 +233,60 @@ class RestDatasource {
     });
   }
 
+
+  Future<dynamic> getAppsBusiness(String idBusiness,String token) {
+    print("TAG - getAppsBusiness()");
+    var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token",HttpHeaders.userAgentHeader :GlobalUtils.fingerprint };
+    return _netUtil.get(BUSINESS_APPS + idBusiness,headers: headers ).then((dynamic result){
+      return result;
+    });
+  }
+
+
+  Future<dynamic> addEmployee(Object data, String token, String businessId) {
+    print("TAG - addEmployee()");
+    var body = jsonEncode(data);
+    var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token" ,HttpHeaders.CONTENT_TYPE: "application/json",HttpHeaders.userAgentHeader :GlobalUtils.fingerprint};
+    return _netUtil.post(NEW_EMPLOYEE + businessId, headers: headers, body: body).then((dynamic result) {
+      return result;
+    });
+  }
+
+  Future<dynamic> updateEmployee(Object data, String token, String businessId, String userId) {
+    print("TAG - updateEmployee()");
+//    var body = jsonEncode(data);
+    var body = jsonEncode({"position": "Marketing"});
+    var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token" ,HttpHeaders.CONTENT_TYPE: "application/json",HttpHeaders.userAgentHeader :GlobalUtils.fingerprint};
+    return _netUtil.pacth(EMPLOYEES_LIST + businessId + "/" + userId, headers: headers, body: body).then((dynamic result) {
+      return result;
+    });
+  }
+
+  Future<dynamic> addEmployeeToGroup(String token, String businessId, String groupId, String userId) {
+    print("TAG - addEmployeeToGroup()");
+    var body = jsonEncode({});
+    var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token" ,HttpHeaders.CONTENT_TYPE: "application/json",HttpHeaders.userAgentHeader :GlobalUtils.fingerprint};
+    return _netUtil.post(EMPLOYEE_GROUPS + businessId+"/"+groupId+"/"+userId, headers: headers, body: body).then((dynamic result) {
+      return result;
+    });
+  }
+
+  Future<dynamic> deleteEmployeeFromGroup(String token, String businessId, String groupId, String userId) {
+    print("TAG - deleteEmployeeFromGroup()");
+    var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token",HttpHeaders.userAgentHeader :GlobalUtils.fingerprint };
+    return _netUtil.delete(EMPLOYEE_GROUPS + businessId+"/"+groupId+"/"+userId, headers: headers).then((dynamic result) {
+      return result;
+    });
+  }
+
+  Future<dynamic> deleteEmployeeFromBusiness(String token, String businessId, String userId) {
+    print("TAG - deleteEmployeeFromBusiness()");
+    var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token",HttpHeaders.userAgentHeader :GlobalUtils.fingerprint };
+    return _netUtil.delete(EMPLOYEES_LIST + businessId+"/"+userId, headers: headers).then((dynamic result) {
+      return result;
+    });
+  }
+
   Future<dynamic> getEmployeesList(String id,String token,BuildContext context) {
     print("TAG - getEmployeesList()");
 
@@ -240,6 +300,17 @@ class RestDatasource {
     });
   }
 
+  Future<dynamic> getEmployeeDetails(String businessId, String userId,String token,BuildContext context) {
+    print("TAG - getEmployeeDetails()");
+
+
+    print("URL: ${EMPLOYEE_DETAILS + businessId+'/'+userId}");
+    var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token",HttpHeaders.userAgentHeader :GlobalUtils.fingerprint };
+    return _netUtil.get(EMPLOYEE_DETAILS + businessId+'/'+userId,headers: headers ).then((dynamic result){
+      return result;
+    });
+  }
+
   Future<dynamic> getEmployeeGroupsList(String businessId, String userId,String token,BuildContext context) {
     print("TAG - getEmployeeGroupsList()");
 
@@ -247,6 +318,46 @@ class RestDatasource {
 
     print("URL: ${EMPLOYEE_GROUPS + businessId+'/'+userId}");
     return _netUtil.get(EMPLOYEE_GROUPS + businessId+'/'+userId,headers: headers ).then((dynamic result){
+      return result;
+    });
+  }
+
+  Future<dynamic> getBusinessEmployeesGroupsList(String businessId,String token,BuildContext context) {
+    print("TAG - getBusinessEmployeesGroupsList()");
+
+    var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token",HttpHeaders.userAgentHeader :GlobalUtils.fingerprint };
+
+    print("URL: ${EMPLOYEE_GROUPS + businessId}");
+    return _netUtil.get(EMPLOYEE_GROUPS + businessId,headers: headers ).then((dynamic result){
+      return result;
+    });
+  }
+
+  Future<dynamic> getBusinessEmployeesGroup(String token, String businessId, String groupId) {
+    print("TAG - getBusinessEmployeesGroup()");
+
+    var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token",HttpHeaders.userAgentHeader :GlobalUtils.fingerprint };
+
+    print("URL: ${EMPLOYEE_GROUPS + businessId  + "/" + groupId}");
+    return _netUtil.get(EMPLOYEE_GROUPS + businessId + "/" + groupId,headers: headers ).then((dynamic result){
+      return result;
+    });
+  }
+
+  Future<dynamic> addNewGroup(Object data, String token, String businessId) {
+    print("TAG - addNewGroup()");
+    var body = jsonEncode(data);
+    print("body: $body");
+    var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token" ,HttpHeaders.CONTENT_TYPE: "application/json",HttpHeaders.userAgentHeader :GlobalUtils.fingerprint};
+    return _netUtil.post(EMPLOYEE_GROUPS + businessId, headers: headers, body: body).then((dynamic result) {
+      return result;
+    });
+  }
+
+  Future<dynamic> deleteGroup(String token, String businessId, String groupId) {
+    print("TAG - deleteGroup()");
+    var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token",HttpHeaders.userAgentHeader :GlobalUtils.fingerprint };
+    return _netUtil.delete(EMPLOYEE_GROUPS + businessId+"/"+groupId, headers: headers).then((dynamic result) {
       return result;
     });
   }

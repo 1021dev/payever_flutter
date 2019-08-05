@@ -2,13 +2,19 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:payever/models/global_state_model.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:payever/network/rest_ds.dart';
+import 'package:payever/view_models/employees_state_model.dart';
+import 'package:payever/view_models/global_state_model.dart';
 
 import 'package:payever/utils/utils.dart';
 import 'package:payever/views/customelements/custom_app_bar.dart';
-import 'package:payever/views/settings/employees/employees_groups_list_screen.dart';
-import 'package:payever/views/settings/employees/employees_list_screen.dart';
+import 'package:payever/views/settings/employees/add_employee_screen.dart';
+import 'package:payever/views/settings/employees/employees_groups_list_tab_screen.dart';
+import 'package:payever/views/settings/employees/employees_list_tab_screen.dart';
 import 'package:provider/provider.dart';
+
+import 'add_group_screen.dart';
 
 bool _isPortrait;
 bool _isTablet;
@@ -23,10 +29,19 @@ class _EmployeesScreenState extends State<EmployeesScreen>
   TabController tabController;
   GlobalStateModel globalStateModel;
 
+  int _currentIndex = 0;
+
   @override
   void initState() {
     super.initState();
     tabController = TabController(vsync: this, length: 2);
+    tabController.addListener(_handleTabSelection);
+  }
+
+  _handleTabSelection() {
+    setState(() {
+      _currentIndex = tabController.index;
+    });
   }
 
   @override
@@ -41,130 +56,174 @@ class _EmployeesScreenState extends State<EmployeesScreen>
     Measurements.width = (_isPortrait
         ? MediaQuery.of(context).size.width
         : MediaQuery.of(context).size.height);
-    return Stack(
-      children: <Widget>[
-        Positioned(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            top: 0.0,
-            child: CachedNetworkImage(
-              imageUrl: globalStateModel.currentWallpaper ??
-                  "https://payevertest.azureedge.net/images/commerseos-background-blurred.jpg",
-              placeholder: (context, url) => Container(),
-              errorWidget: (context, url, error) => Icon(Icons.error),
-              fit: BoxFit.cover,
-            )),
-        BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-            child: Container(
-              child: Scaffold(
-                  backgroundColor: Colors.black.withOpacity(0.2),
-                  appBar: CustomAppBar(
-                    title: Text("Employees"),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    actions: <Widget>[
-                      IconButton(icon: Icon(Icons.add),
-                        onPressed: () {
-                          if(tabController.index == 0) {
-                            print("tabController.index0: ${tabController.index}");
-                          } else {
-                            print("tabController.index1: ${tabController.index}");
-                          }
-                      },),
-                    ],
-                  ),
-                  body: ListView(
-                    physics: NeverScrollableScrollPhysics(),
-                    children: <Widget>[
-                      Center(
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.1),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20))),
-                          width: Measurements.width * 0.7,
-                          child: TabBar(
-                            controller: tabController,
-                            indicatorColor: Colors.transparent,
-                            indicator: BubbleTabIndicator(
-                              indicatorHeight: 45,
-                              indicatorColor: Colors.white.withOpacity(0.3),
-                              tabBarIndicatorSize: TabBarIndicatorSize.tab,
-                            ),
-                            labelColor: Colors.white,
-                            unselectedLabelColor: Colors.white,
-                            isScrollable: false,
-                            tabs: <Widget>[
-                              Container(
-//                                color: tabController.index == 0
-//                                            ? Colors.red
-//                                            : Colors.yellow,
-                                child: Tab(
-                                  child: Container(
-                                    height: 40,
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 10),
-                                    decoration: BoxDecoration(
-//                                        color: Colors.green,
-//                                        color: tabController.index == 0
-//                                            ? Colors.red
-//                                            : Colors.yellow,
-                                        borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(20),
-                                            bottomLeft: Radius.circular(20))),
-                                    child: Center(
-                                      child: Text(
-                                        'Employees',
-                                        style: TextStyle(fontSize: 18),
+
+    return OrientationBuilder(
+      builder: (BuildContext context, Orientation orientation) {
+        return Stack(
+          children: <Widget>[
+            Positioned(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                top: 0.0,
+                child: CachedNetworkImage(
+                  imageUrl: globalStateModel.currentWallpaper ??
+                      globalStateModel.defaultCustomWallpaper,
+                  placeholder: (context, url) => Container(),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
+                  fit: BoxFit.cover,
+                )),
+            BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+                child: Container(
+                  child: Scaffold(
+                      backgroundColor: Colors.black.withOpacity(0.2),
+                      appBar: CustomAppBar(
+                        title: Text("Employees"),
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        actions: <Widget>[
+                          IconButton(
+                            icon: Icon(Icons.add),
+                            onPressed: () {
+                              if (tabController.index == 0) {
+//                                Navigator.push(
+//                                    context,
+//                                    PageTransition(
+//                                      child: AddEmployeeScreen(),
+//                                      type: PageTransitionType.fade,
+//                                    ));
+
+                                Navigator.push(
+                                    context,
+                                    PageTransition(
+                                      child: ProxyProvider<RestDatasource, EmployeesStateModel>(
+                                        builder: (context, api, employeesState) =>
+                                            EmployeesStateModel(globalStateModel, api),
+                                        child: AddEmployeeScreen(),
                                       ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Container(
-//                                color: Colors.green,
-                                child: Tab(
-                                  child: Container(
-                                    height: 40,
-//                                padding: EdgeInsets.symmetric(horizontal: 10),
-                                    decoration: BoxDecoration(
-//                                      color: Colors.green,
-//                                        color: tabController.index == 1
-//                                            ? Colors.red
-//                                            : Colors.yellow,
-                                        borderRadius: BorderRadius.only(
-                                            topRight: Radius.circular(20),
-                                            bottomRight: Radius.circular(20))),
-                                    child: Center(
-                                      child: Text(
-                                        'Groups',
-                                        style: TextStyle(fontSize: 18),
+                                      type: PageTransitionType.fade,
+                                    ));
+
+
+
+                              } else {
+//                                Navigator.push(
+//                                    context,
+//                                    PageTransition(
+//                                      child: AddGroupScreen(),
+//                                      type: PageTransitionType.fade,
+//                                    ));
+
+                                Navigator.push(
+                                    context,
+                                    PageTransition(
+                                      child: ProxyProvider<RestDatasource, EmployeesStateModel>(
+                                        builder: (context, api, employeesState) =>
+                                            EmployeesStateModel(globalStateModel, api),
+                                        child: AddGroupScreen(),
                                       ),
-                                    ),
-                                  ),
-                                ),
-                              )
-                            ],
+                                      type: PageTransitionType.fade,
+                                    ));
+                              }
+                            },
                           ),
-                        ),
+                        ],
                       ),
-                      Container(
-                        height: MediaQuery.of(context).size.height - 2,
-                        child: TabBarView(
-                          physics: NeverScrollableScrollPhysics(),
-                          controller: tabController,
-                          children: <Widget>[
-                            EmployeesListScreen(),
-                            EmployeesGroupsListScreen()
-                          ],
-                        ),
-                      ),
-                    ],
-                  )),
-            )),
-      ],
+                      body: ListView(
+//                        physics: NeverScrollableScrollPhysics(),
+                        children: <Widget>[
+                          Center(
+                            child: Container(
+                              decoration: BoxDecoration(
+//                                color: Colors.white.withOpacity(0.3),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20))),
+                              width: Measurements.width * 0.8,
+                              child: TabBar(
+                                controller: tabController,
+                                indicatorColor: Colors.transparent,
+//                                indicator: BubbleTabIndicator(
+//                                  indicatorHeight: 45,
+////                              indicatorColor: Colors.white.withOpacity(0.3),
+//                                  indicatorColor: Colors.white.withOpacity(0.1),
+//                                  tabBarIndicatorSize: TabBarIndicatorSize.tab,
+//                                ),
+//                                indicator: ShapeDecoration(
+//                                  color: Colors.blue,
+//                                  shape: BeveledRectangleBorder(
+//                                      side: BorderSide(color: Colors.blue),
+//                                      borderRadius: BorderRadius.circular(0)),
+//                                ),
+
+                                labelColor: Colors.white,
+                                labelPadding: EdgeInsets.all(2),
+                                unselectedLabelColor: Colors.white,
+                                isScrollable: false,
+                                tabs: <Widget>[
+                                  Container(
+                                    child: Tab(
+                                      child: Container(
+                                        height: 40,
+                                        decoration: BoxDecoration(
+                                        color: _currentIndex == 0
+                                            ? Colors.white.withOpacity(0.3)
+                                            : Colors.white.withOpacity(0.1),
+                                            borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(20),
+                                                bottomLeft:
+                                                    Radius.circular(20))),
+                                        child: Center(
+                                          child: Text(
+                                            'Employees',
+                                            style: TextStyle(fontSize: 17),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    child: Tab(
+                                      child: Container(
+                                        height: 40,
+                                        decoration: BoxDecoration(
+                                        color: _currentIndex == 1
+                                            ? Colors.white.withOpacity(0.3)
+                                            : Colors.white.withOpacity(0.1),
+                                            borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(20),
+                                                bottomRight:
+                                                    Radius.circular(20))),
+                                        child: Center(
+                                          child: Text(
+                                            'Groups',
+                                            style: TextStyle(fontSize: 17),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                          Container(
+                            height: MediaQuery.of(context).size.height - 2,
+                            child: TabBarView(
+                              physics: NeverScrollableScrollPhysics(),
+                              controller: tabController,
+                              children: <Widget>[
+                                EmployeesListTabScreen(),
+                                EmployeesGroupsListTabScreen()
+                              ],
+                            ),
+                          ),
+                        ],
+                      )),
+                )),
+          ],
+        );
+      },
     );
   }
 }
