@@ -75,12 +75,11 @@ class _DashboardMidScreenState extends State<DashboardMidScreen> {
     var dataLoaded = await loadData();
 
     if (dataLoaded != null) {
-      print("dataLoaded: $dataLoaded");
+      //print("dataLoaded: $dataLoaded");
       var data = json.decode(dataLoaded);
       var responseMsg = data['responseMsg'];
 
       print("responseMsg: $responseMsg");
-
       switch (responseMsg) {
         case "refreshToken":
           return _fetchUserData(data['token'], false);
@@ -167,7 +166,7 @@ class _DashboardMidScreenState extends State<DashboardMidScreen> {
                         activeBusiness,
                         wids,
                         null),
-                    type: PageTransitionType.fade));
+                    type: PageTransitionType.fade,duration: Duration(milliseconds: 300)));
           });
         });
       }).catchError((onError) {
@@ -182,7 +181,7 @@ class _DashboardMidScreenState extends State<DashboardMidScreen> {
   @override
   Widget build(BuildContext context) {
     Locale myLocale = Localizations.localeOf(context);
-    print(myLocale.languageCode);
+    print("Language - ${myLocale.languageCode}");
     bool _isPortrait =
         Orientation.portrait == MediaQuery.of(context).orientation;
     Measurements.height = (_isPortrait
@@ -728,7 +727,7 @@ class _DashboardScreenState extends State<DashboardScreen>
 
   void backToSwitch() {
     Navigator.pushReplacement(context,
-        PageTransition(child: SwitcherScreen(), type: PageTransitionType.fade));
+        PageTransition(child: SwitcherScreen(), type: PageTransitionType.fade,duration: Duration(milliseconds: 300)));
   }
 
   @override
@@ -875,7 +874,7 @@ class _AppViewState extends State<AppView> {
         PageTransition(
             child: TrasactionScreen(
                 CardParts.wallpaper, false, CardParts._currentBusiness),
-            type: PageTransitionType.fade));
+            type: PageTransitionType.fade,duration: Duration(milliseconds: 300)));
   }
 
   void loadProducts() {
@@ -887,7 +886,7 @@ class _AppViewState extends State<AppView> {
               wallpaper: CardParts.wallpaper,
               posCall: false,
             ),
-            type: PageTransitionType.fade));
+            type: PageTransitionType.fade,duration: Duration(milliseconds: 50)));
   }
 
   Future<void> loadPOS() {
@@ -900,7 +899,7 @@ class _AppViewState extends State<AppView> {
             child: NativePosScreen(
                 terminal: CardParts.currentTerminal,
                 business: CardParts._currentBusiness),
-            type: PageTransitionType.fade));
+            type: PageTransitionType.fade,duration: Duration(milliseconds: 50)));
   }
 
   void loadSettings() {

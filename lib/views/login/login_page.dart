@@ -7,6 +7,7 @@ import 'package:payever/models/token.dart';
 import 'package:payever/network/rest_ds.dart';
 import 'package:payever/utils/auth.dart';
 import 'package:payever/utils/env.dart';
+import 'package:payever/utils/global_keys.dart';
 import 'package:payever/utils/utils.dart';
 import 'package:payever/views/login/login_page_controller.dart';
 import 'package:payever/views/switcher/switcher_page.dart';
@@ -300,6 +301,7 @@ class _LoginState extends State<Login> implements LoginScreenContract,AuthStateL
                             borderRadius: BorderRadius.only(bottomLeft:Radius.circular(8.0) ,bottomRight: Radius.circular(8.0))
                           ),
                           child: !_isLoading ? InkWell(
+                            key: GlobalKeys.loginButtom,
                             child: Center(
                               child: Text("Login")
                               ),

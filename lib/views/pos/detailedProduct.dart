@@ -259,10 +259,6 @@ class _DetailDetailsState extends State<DetailDetails> {
       imagesVariants = widget.imagesBase;
     }
     if(widget.haveVariants){
-      widget.price = widget.currentProduct.variants[widget.currentVariant.value].price;
-      widget.salePrice = widget.currentProduct.variants[widget.currentVariant.value].salePrice;
-      widget.onSale = !widget.currentProduct.variants[widget.currentVariant.value].hidden;
-      widget.description = widget.currentProduct.variants[widget.currentVariant.value].description;
       var index= 0;
       widget.products = List();
       widget.currentProduct.variants.forEach((f){
@@ -285,8 +281,14 @@ class _DetailDetailsState extends State<DetailDetails> {
         }
         index++;
       });
-      if(widget.currentVariant.value == 0)
-      widget.currentVariant.value = int.parse(widget.products.first.value);
+      if(widget.currentVariant.value == 0){
+        print("${widget.currentVariant.value }  =  ${int.parse(widget.products.first.value)}");
+        widget.currentVariant.value = int.parse(widget.products.first.value);
+      }
+      widget.price = widget.currentProduct.variants[widget.currentVariant.value].price;
+      widget.salePrice = widget.currentProduct.variants[widget.currentVariant.value].salePrice;
+      widget.onSale = !widget.currentProduct.variants[widget.currentVariant.value].hidden;
+      widget.description = widget.currentProduct.variants[widget.currentVariant.value].description;
 
     }else{
       widget.price = widget.currentProduct.price;

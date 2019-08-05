@@ -9,9 +9,7 @@ class Language{
 
   Language(context){
 
-    if(LANGUAGE==null) LANGUAGE = deft;
-
-    print("constructor");
+    if(LANGUAGE == null) LANGUAGE = deft;
     DefaultAssetBundle.of(context).loadString("translations/widget_app/$LANGUAGE.json",cache: false).then((value){
       WIDGET_STRINGS = JsonDecoder().convert(value);
     }).catchError((onError){
@@ -29,6 +27,7 @@ class Language{
     });
     loadRest(context);
   }
+
   Future<void> loadRest(context) async {
     DefaultAssetBundle.of(context).loadString("translations/transaction_app/$LANGUAGE.json",cache: false).then((value){
       TRANSACTION_STRINGS = JsonDecoder().convert(value);
@@ -55,22 +54,25 @@ class Language{
     }).catchError((onError){
       print(onError);
     });
-    DefaultAssetBundle.of(context).loadString("translations/custom/$LANGUAGE.json",cache: false).then((value){
+    return await DefaultAssetBundle.of(context).loadString("translations/custom/$LANGUAGE.json",cache: false).then((value){
       CUSTOM_STRINGS = JsonDecoder().convert(value);
+      print("last language");
     }).catchError((onError){
       print(onError);
     });
+    
+
   }
 
-  static dynamic WIDGET_STRINGS;
-  static dynamic CONNECT_STRINGS;
-  static dynamic PRODUCT_STRINGS;
-  static dynamic PRODUCT_LIST_STRINGS;
-  static dynamic TRANSACTION_STRINGS;
-  static dynamic TRANSACTION_STATUS_STRINGS;
-  static dynamic COMMERCEOS_STRINGS;
-  static dynamic CART_STRINGS;
-  static dynamic CUSTOM_STRINGS;
+  static dynamic WIDGET_STRINGS = Map();
+  static dynamic CONNECT_STRINGS = Map();
+  static dynamic PRODUCT_STRINGS = Map();
+  static dynamic PRODUCT_LIST_STRINGS = Map();
+  static dynamic TRANSACTION_STRINGS = Map();
+  static dynamic TRANSACTION_STATUS_STRINGS = Map();
+  static dynamic COMMERCEOS_STRINGS = Map();
+  static dynamic CART_STRINGS = Map();
+  static dynamic CUSTOM_STRINGS = Map();
 
   static String getWidgetStrings(String tag)            => WIDGET_STRINGS[tag]??tag;
   static String getCommerceOSStrings(String tag)        => COMMERCEOS_STRINGS[tag]??tag;

@@ -245,7 +245,6 @@ class _NewProductScreenState extends State<NewProductScreen> {
         radius: 20,
         child: Icon(IconData(58829, fontFamily: 'MaterialIcons')),
         onTap: () {
-          this.dispose();
           Navigator.pop(context);
         },
       ),
@@ -1457,8 +1456,7 @@ class _VisibilityRowState extends State<VisibilityRow> {
               : 0,
           duration: Duration(milliseconds: 200),
           child: Container(
-            padding:
-                EdgeInsets.symmetric(horizontal: Measurements.width * 0.025),
+            padding: EdgeInsets.symmetric(horizontal: Measurements.width * 0.025),
             color: Colors.black.withOpacity(0.05),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,

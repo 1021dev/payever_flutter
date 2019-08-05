@@ -9,6 +9,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/models/business.dart';
 import 'package:payever/network/rest_ds.dart';
+import 'package:payever/utils/global_keys.dart';
 import 'package:payever/utils/translations.dart';
 import 'package:payever/utils/utils.dart';
 import 'package:flutter_pagewise/flutter_pagewise.dart';
@@ -60,7 +61,6 @@ class _TrasactionScreenState extends State<TrasactionScreen> {
     api.getTransactionList(widget._currentBusiness.id,GlobalUtils.ActiveToken.accessToken,"?orderBy=created_at&direction=desc&limit=50&query=${search}&page=1&currency=${widget._currentBusiness.currency}",context).
       then((obj){
         widget.data = TransactionScreenData(obj,widget.wallpaper);
-        print("OUT____");
         if(init) widget.isLoading.value = false;
         widget.isLoadingSearch.value = false;
       }).catchError((onError){
@@ -68,6 +68,7 @@ class _TrasactionScreenState extends State<TrasactionScreen> {
           GlobalUtils.clearCredentials();
           Navigator.pushReplacement(context,PageTransition(child:LoginScreen() ,type: PageTransitionType.fade));
         }
+        print(onError.toString());
       });  
   }
   num _quantity ;
@@ -201,13 +202,16 @@ class _CustomListState extends State<CustomList> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      key: GlobalKeys.transactionList,
       shrinkWrap: true,
       controller: controller,
       itemCount: widget.collection.length+1,
       itemBuilder: (BuildContext context, int index) {
         if(index == 0) return _isTablet? TabletTableRow(null,true,null): PhoneTableRow(null,true,null);
         index = index - 1;
-        return _isTablet? TabletTableRow(widget.collection[index],false,widget.data): PhoneTableRow(widget.collection[index],false,widget.data);
+        Key itemKey = Key('transaction.list.transaction_$index');
+        print(itemKey.toString());
+        return Container(key:itemKey,child: _isTablet? TabletTableRow(widget.collection[index],false,widget.data): PhoneTableRow(widget.collection[index],false,widget.data));
       },
     );
   }

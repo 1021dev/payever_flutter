@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/material.dart' as prefix0;
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/models/business.dart';
+import 'package:payever/utils/global_keys.dart';
 import 'package:payever/utils/translations.dart';
 import 'package:payever/utils/utils.dart';
 import 'dart:ui';
@@ -219,15 +220,16 @@ class _DashboardCardState extends State<DashboardCard> {
   }
 
   Widget actionButtonsWidget(BuildContext context, bool _isTablet, bool isActive) {
+    print("${widget._appName}.card.open");
     return isActive
         ? InkWell(
+          key: Key("${widget._appName}.card.open"),
       radius: _isTablet
           ? Measurements.height * 0.02
           : Measurements.width * 0.07,
       child: Container(
           padding:
           EdgeInsets.symmetric(horizontal: Measurements.width * 0.02),
-          //width: widget._active ?50:120,
           decoration: BoxDecoration(
             shape: BoxShape.rectangle,
             color: Colors.grey.withOpacity(0.3),
@@ -252,8 +254,8 @@ class _DashboardCardState extends State<DashboardCard> {
                 ))
                 : Container(
               alignment: Alignment.center,
-//              child:Text(Language.getConnectStrings("actions.open"))
-              child:Text("Hello")
+              child:Text(Language.getConnectStrings("actions.open"))
+              
             ),
           )),
       onTap: () {

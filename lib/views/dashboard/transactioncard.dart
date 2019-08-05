@@ -136,7 +136,7 @@ class _MainTransactionCardState extends State<MainTransactionCard> {
           });
             setState(() {
               _dashboardWidgets._isDataLoaded.value = true;
-              _dashboardWidgets._isDataLoaded.notifyListeners();
+              //_dashboardWidgets._isDataLoaded.notifyListeners();
           });
       }).catchError((onError){
         print("Error in Transaction Card$onError");
@@ -273,8 +273,8 @@ class _TrasactionSecCardState extends State<TrasactionSecCard> {
 
   @override
   void initState() {
-    
     super.initState();
+    _dashboardWidgets._isDataLoaded.addListener(listener);
   }
   
   
@@ -291,75 +291,75 @@ class _TrasactionSecCardState extends State<TrasactionSecCard> {
         }
       }
     }
-    _dashboardWidgets._isDataLoaded.addListener(listener);
-        return _dashboardWidgets._isDataLoaded.value ? Container(
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: <Widget>[
-              Column(
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Text(Language.getWidgetStrings("widgets.transactions.1-month").toString().substring(0,1),style: TextStyle(fontSize: _isTablet?20:16)),
-                    Text(Language.getWidgetStrings("widgets.transactions.1-month").toString().substring(1),style: TextStyle(color: Colors.white.withOpacity(0.6),fontSize: _isTablet?20:16)),
-                  ],
-                ),
-                AutoSizeText("${DashboardWidgets.numberFilter(monthlysum[0],false)} ${_dashboardWidgets.currency(_dashboardWidgets._transactionsData.lastMonth.isEmpty ? "EUR":_dashboardWidgets._transactionsData.lastMonth[0].currency)}",style: TextStyle(fontSize: _isTablet?25: 18,fontWeight: FontWeight.w600))
-              ],),
-              Column(
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Text(Language.getWidgetStrings("widgets.transactions.3-months").toString().substring(0,1),style: TextStyle(fontSize: _isTablet?20:16)),
-                    Text(Language.getWidgetStrings("widgets.transactions.3-months").toString().substring(1),style: TextStyle(color: Colors.white.withOpacity(0.6),fontSize: _isTablet?20:16)),
-                  ],
-                ),
-                AutoSizeText("${DashboardWidgets.numberFilter(monthlysum[2],false)} ${_dashboardWidgets.currency(_dashboardWidgets._transactionsData.lastMonth.isEmpty ? "EUR":_dashboardWidgets._transactionsData.lastMonth[0].currency)}",style: TextStyle(fontSize: _isTablet?25: 18,fontWeight: FontWeight.w600))
-              ],),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Text(Language.getWidgetStrings("widgets.transactions.6-months").toString().substring(0,1),style: TextStyle(fontSize: _isTablet?20:16)),
-                    Text(Language.getWidgetStrings("widgets.transactions.6-months").toString().substring(1),style: TextStyle(color:Colors.white.withOpacity(0.6),fontSize: _isTablet?20:16)),
-                  ],
-                ),
-                AutoSizeText("${DashboardWidgets.numberFilter(monthlysum[5],false)} ${_dashboardWidgets.currency(_dashboardWidgets._transactionsData.lastMonth.isEmpty ? "EUR":_dashboardWidgets._transactionsData.lastMonth[0].currency)}",style: TextStyle(fontSize: _isTablet?25: 18,fontWeight: FontWeight.w600))
-              ],),
-              Column(
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Text(Language.getWidgetStrings("widgets.transactions.1-year").toString().substring(0,1),style: TextStyle(fontSize: _isTablet?20:16)),
-                    Text(Language.getWidgetStrings("widgets.transactions.1-year").toString().substring(1),style: TextStyle(color: Colors.white.withOpacity(0.6),fontSize: _isTablet?20:16)),
-                  ],
-                ),
-                AutoSizeText("${DashboardWidgets.numberFilter(monthlysum[10],false)} ${_dashboardWidgets.currency(_dashboardWidgets._transactionsData.lastMonth[0].currency)}",style: TextStyle(fontSize: _isTablet?25: 18,fontWeight: FontWeight.w600))
-              ],),
-            ],
-          ),
-        ):CircularProgressIndicator();
-      }
     
-      void listener() {
-        setState(() {
+    return _dashboardWidgets._isDataLoaded.value ? Container(
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: <Widget>[
+          Column(
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+            Row(
+              children: <Widget>[
+                Text(Language.getWidgetStrings("widgets.transactions.1-month").toString().substring(0,1),style: TextStyle(fontSize: _isTablet?20:16)),
+                Text(Language.getWidgetStrings("widgets.transactions.1-month").toString().substring(1),style: TextStyle(color: Colors.white.withOpacity(0.6),fontSize: _isTablet?20:16)),
+              ],
+            ),
+            AutoSizeText("${DashboardWidgets.numberFilter(monthlysum[0],false)} ${_dashboardWidgets.currency(_dashboardWidgets._transactionsData.lastMonth.isEmpty ? "EUR":_dashboardWidgets._transactionsData.lastMonth[0].currency)}",style: TextStyle(fontSize: _isTablet?25: 18,fontWeight: FontWeight.w600))
+          ],),
+          Column(
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+            Row(
+              children: <Widget>[
+                Text(Language.getWidgetStrings("widgets.transactions.3-months").toString().substring(0,1),style: TextStyle(fontSize: _isTablet?20:16)),
+                Text(Language.getWidgetStrings("widgets.transactions.3-months").toString().substring(1),style: TextStyle(color: Colors.white.withOpacity(0.6),fontSize: _isTablet?20:16)),
+              ],
+            ),
+            AutoSizeText("${DashboardWidgets.numberFilter(monthlysum[2],false)} ${_dashboardWidgets.currency(_dashboardWidgets._transactionsData.lastMonth.isEmpty ? "EUR":_dashboardWidgets._transactionsData.lastMonth[0].currency)}",style: TextStyle(fontSize: _isTablet?25: 18,fontWeight: FontWeight.w600))
+          ],),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+            Row(
+              children: <Widget>[
+                Text(Language.getWidgetStrings("widgets.transactions.6-months").toString().substring(0,1),style: TextStyle(fontSize: _isTablet?20:16)),
+                Text(Language.getWidgetStrings("widgets.transactions.6-months").toString().substring(1),style: TextStyle(color:Colors.white.withOpacity(0.6),fontSize: _isTablet?20:16)),
+              ],
+            ),
+            AutoSizeText("${DashboardWidgets.numberFilter(monthlysum[5],false)} ${_dashboardWidgets.currency(_dashboardWidgets._transactionsData.lastMonth.isEmpty ? "EUR":_dashboardWidgets._transactionsData.lastMonth[0].currency)}",style: TextStyle(fontSize: _isTablet?25: 18,fontWeight: FontWeight.w600))
+          ],),
+          Column(
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+            Row(
+              children: <Widget>[
+                Text(Language.getWidgetStrings("widgets.transactions.1-year").toString().substring(0,1),style: TextStyle(fontSize: _isTablet?20:16)),
+                Text(Language.getWidgetStrings("widgets.transactions.1-year").toString().substring(1),style: TextStyle(color: Colors.white.withOpacity(0.6),fontSize: _isTablet?20:16)),
+              ],
+            ),
+            AutoSizeText("${DashboardWidgets.numberFilter(monthlysum[10],false)} ${_dashboardWidgets.currency(_dashboardWidgets._transactionsData.lastMonth[0].currency)}",style: TextStyle(fontSize: _isTablet?25: 18,fontWeight: FontWeight.w600))
+          ],),
+        ],
+      ),
+    ):CircularProgressIndicator();
+  }
 
-        });
-      }
+  void listener() {
+    setState(() {
+
+    });
+  }
 }
 
 class DashboardWidgets{

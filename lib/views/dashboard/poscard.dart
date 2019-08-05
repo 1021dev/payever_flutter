@@ -72,7 +72,6 @@ class _POSCardState extends State<POSCard> {
           });
         }).then((_){
           widget._parts.terminals.forEach((terminal){
-            print(terminal.name);
             widget._parts._chSets.forEach((chset){
               if(terminal.channelSet == chset.id){
                 api.getcheckoutIntegration(widget._business.id ,chset.checkout, GlobalUtils.ActiveToken.accesstoken,context).then((paymentMethods){
@@ -102,10 +101,11 @@ class _POSCardState extends State<POSCard> {
                       widget._parts._salesCards.add(ProductCard(widget._parts,i));
                     }
                     widget._parts.index.value = widget._parts._terminals.indexWhere((term)=>term.active);
-                    
-                    if((terminal.id == widget._parts.terminals.last.id) && (widget._parts._chSets.last.id == chset.id)){
+                    print("here");
+                    print("(${terminal.id }== ${widget._parts.terminals.last.id}) && (${widget._parts._chSets.last.id} == ${chset.name})");
+                    if((terminal.id == widget._parts.terminals.last.id)){
+                      print("yes");
                       widget._parts._mainCardLoading.value = false;
-                      print("finish");
                     }
                     CardParts.currentTerminal = widget._parts._terminals[widget._parts.index.value];
                 });
@@ -262,11 +262,10 @@ class _MainPOSCardState extends State<MainPOSCard> {
                 ),
                 onTap: (){
                   setState((){
-                   if(widget._parts._terminals.length > 1 ) {
-                     widget._parts.index.value = widget._parts.index.value == (widget._parts._terminals.length - 1)?
-                      widget._parts.index.value = 0:widget._parts.index.value +1;
-                     }
-                    
+                    if(widget._parts._terminals.length > 1 ) {
+                      widget._parts.index.value = widget._parts.index.value == (widget._parts._terminals.length - 1)?
+                        widget._parts.index.value = 0:widget._parts.index.value +1;
+                      }
                   });
                 },
               ),

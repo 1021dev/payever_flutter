@@ -25,8 +25,8 @@ class GlobalStateModel extends ChangeNotifier {
     _currentWallpaper = wallpaper;
     _currentBusiness = business;
 
-    print("_currentWallpaper: $_currentWallpaper");
-    print("_currentBusiness: $_currentBusiness");
+    // print("_currentWallpaper: $_currentWallpaper");
+    // print("_currentBusiness: $_currentBusiness");
 
     notifyListeners();
 

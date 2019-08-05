@@ -16,6 +16,7 @@ import 'package:payever/models/products.dart';
 import 'package:payever/models/shop.dart';
 import 'package:payever/network/rest_ds.dart';
 import 'package:payever/utils/env.dart';
+import 'package:payever/utils/global_keys.dart';
 import 'package:payever/utils/translations.dart';
 import 'package:payever/utils/utils.dart';
 import 'package:payever/views/login/login_page.dart';
@@ -206,6 +207,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                 border: InputBorder.none,
                                 icon: Container(child:SvgPicture.asset("images/searchicon.svg",height: Measurements.height * 0.0175,color:Colors.white,))
                               ),
+                              autovalidate: true,
                               onFieldSubmitted: (doc){
                                 widget._parts.products.clear();
                                 widget._parts.searchDocument = doc; 
@@ -275,12 +277,13 @@ class _ProductsBodyState extends State<ProductsBody> {
         onRefresh: _refresh,
         child: !widget._parts.isTablet? 
           ListView.builder(
+          key: GlobalKeys.productList,
           physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
           controller: controller,
           shrinkWrap: true,
           itemCount: widget._parts.products.length,
           itemBuilder: (BuildContext context, int index) {
-            return ProductItem(currentProduct: widget._parts.products[index], parts: widget._parts);
+            return Container(key:Key("product_$index"),child: ProductItem(currentProduct: widget._parts.products[index], parts: widget._parts));
           },)
           :GridView.builder(
             controller: controller,
@@ -403,7 +406,7 @@ class _ProductLoaderState extends State<ProductLoader> {
             }
             if (result.loading){
               return Center(
-                child: const CircularProgressIndicator(),
+                child: widget.parts.loadMore.value?Container():CircularProgressIndicator(),
               );
             }
             if(widget.parts.page==1)widget.parts.products.clear();
@@ -419,7 +422,7 @@ class _ProductLoaderState extends State<ProductLoader> {
               widget.parts.loadMore.value  = false;
             });
             return Center(
-              child: const CircularProgressIndicator()
+              child: widget.parts.loadMore.value?Container():CircularProgressIndicator(),
             );
           },
         ),

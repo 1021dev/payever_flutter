@@ -195,19 +195,19 @@ class GlobalUtils{
   static String fingerprint           = "";
   
   //URLS
-  //static String  PASS= "P@ssword123";//auto test
-  //static String  PASS= "Test1234!";//staging
-  //static String  PASS= "";//live
-  //static String  PASS= "Payever2019!";//live
-  static String  PASS= "Payever123!";//test
-  //static String  PASS= "12345678";//STAGE
+  //static String  PASS= "P@ssword123";//test 1
+  //static String  PASS= "Test1234!";//staging 1
+  //static String  PASS= "";//live 0
+  //static String  PASS= "Payever2019!";//live 1
+  static String  PASS= "Payever123!";//test 2
+  //static String  PASS= "12345678";//staging 2
 
-  //static String  MAIL= "payever.automation@gmail.com";//auto test
-  //static String  MAIL= "rob@top.com";//staging
-  //static String  MAIL= "";//live
-  //static String  MAIL= "abiantgmbh@payever.de";//live
-  static String  MAIL= "testcases@payever.de";//test
-  //static String  MAIL= "service@payever.de";//STAGE
+  //static String  MAIL= "payever.automation@gmail.com";//test 1
+  //static String  MAIL= "rob@top.com";//staging 1
+  //static String  MAIL= "";//live 0
+  //static String  MAIL= "abiantgmbh@payever.de";//live 1
+  static String  MAIL= "testcases@payever.de";//test 2
+  //static String  MAIL= "service@payever.de";//staging 2
 
   static const String COMMERCEOS_URL                  = "https://commerceos.test.devpayever.com";//test
   //static const String COMMERCEOS_URL                  = "https://commerceos.staging.devpayever.com";//staging

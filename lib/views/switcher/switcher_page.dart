@@ -7,6 +7,7 @@ import 'package:payever/models/user.dart';
 import 'package:payever/network/rest_ds.dart';
 import 'package:payever/utils/auth.dart';
 import 'package:payever/utils/env.dart';
+import 'package:payever/utils/global_keys.dart';
 import 'package:payever/utils/local_storage.dart';
 import 'package:payever/utils/translations.dart';
 import 'package:payever/utils/utils.dart';
@@ -72,59 +73,37 @@ class _SwitcherScreenState extends State<SwitcherScreen>
         ? MediaQuery.of(context).size.width
         : MediaQuery.of(context).size.height);
     _isTablet = Measurements.width < 600 ? false : true;
-    return Scaffold(
-      //test
 
-      // body: FutureBuilder(
-      //   future: getBusiness(),
-      //   builder: (BuildContext context, AsyncSnapshot snapshot) {
-
-      //     switch (snapshot.connectionState) {
-      //       case ConnectionState.none:
-      //     return CircularProgressIndicator();
-      //       case ConnectionState.active:
-      //       case ConnectionState.waiting:
-      //     return Text('Awaiting result...');
-      //       case ConnectionState.done:
-      //       if (snapshot.hasError)
-      //         return Text('Error: ${snapshot.error}');
-      //       return Text('Result: ${snapshot.data}');
-      //     }
-      //   },
-      // )
-
-
-      //
-
-      body: AnimatedOpacity(
-        child: Stack(
-          children: <Widget>[
-            Positioned(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              top: 0.0,
-              child: _isTablet
-                  ? Image.asset(
-                      _isPortrait
-                          ? "images/loginverticaltablet.png"
-                          : "images/loginhorizontaltablet.png",
-                      fit: BoxFit.fill,
-                    )
-                  : Image.asset(
-                      _isPortrait
-                          ? "images/loginverticalphone.png"
-                          : "images/loginhorizontalphone.png",
-                      fit: BoxFit.fill),
+    
+  return Stack(
+        children: <Widget>[
+          Positioned(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            top: 0.0,
+            child: _isTablet
+                ? Image.asset(
+                    _isPortrait
+                        ? "images/loginverticaltablet.png"
+                        : "images/loginhorizontaltablet.png",
+                    fit: BoxFit.fill,
+                  )
+                : Image.asset(
+                    _isPortrait
+                        ? "images/loginverticalphone.png"
+                        : "images/loginhorizontalphone.png",
+                    fit: BoxFit.fill),
+          ),
+          Scaffold(
+            backgroundColor: Colors.transparent,
+            body: AnimatedOpacity(
+              child: _isLoad ? Switcher() : Wait(),
+              duration: Duration(milliseconds: 500), 
+              opacity: 1.0,
             ),
-            _isLoad ? Switcher() : Wait(),
-          ],
-        ),
-        duration: Duration(milliseconds: 500), 
-        opacity: 1.0,
-      ),
-
-    //
-    );
+          )
+        ],
+      );
   }
   @override
   void onLoadStateChanged(LoadState state) {
@@ -148,7 +127,6 @@ class _SwitcherScreenState extends State<SwitcherScreen>
           Language(context);
           Measurements.loadImages(context);
           return RestDatasource().getBusinesses(token,context).then((dynamic result) {
-
             result.forEach((item) {
               parts.businesses.add(Business.map(item));
             });
@@ -249,7 +227,6 @@ class _WaitState extends State<Wait> implements LoadStateListener {
             result.forEach((item) {
               parts.businesses.add(Business.map(item));
             });
-
             if (parts.businesses != null) {
               parts.businesses.forEach((b) {
                 if (b.active) {
@@ -258,7 +235,6 @@ class _WaitState extends State<Wait> implements LoadStateListener {
                 parts._busWids.add(GridItems(business:b));
               });
             }
-
             parts.grid = new CustomGrid();
             var authStateProvider = LoadStateProvider();
             authStateProvider.notify(LoadState.LOADED).then((bool r) {
@@ -491,6 +467,7 @@ class _SwitcherState extends State<Switcher> {
                           ),
                           (parts.businesses != null)
                               ? InkWell(
+                                key:GlobalKeys.allButtom,
                                   child: Chip(
                                     backgroundColor:
                                         Colors.black.withOpacity(0.4),
@@ -540,22 +517,7 @@ class _SwitcherState extends State<Switcher> {
         ),
         !_moreSelected
             ? Container()
-            : Column(
-              mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.only(
-                        bottom: _isPortrait
-                            ? Measurements.height * 0.01
-                            : Measurements.height * 0.02,
-                        top: _isPortrait
-                            ? Measurements.height * 0.04
-                            : Measurements.height * 0.02),
-                    child: Center(child: Text("Business")),
-                  ),
-                  parts.grid,
-                ],
-              ),
+            :Expanded(child:CustomGrid())
       ],
     );
   }
@@ -661,19 +623,24 @@ class _CustomGridState extends State<CustomGrid> {
   @override
   Widget build(BuildContext context) {
 
-    List<GridItems> business = List();
+    List<Widget> business = List();
+    int index = 0;
+    business.add(Row(mainAxisAlignment: MainAxisAlignment.center,children: <Widget>[Container(child: Text("Business"),padding: EdgeInsets.symmetric(vertical: Measurements.height * 0.01),)]));
     parts.businesses.forEach((f){
-      business.add(GridItems(business: f,));
+      business.add(Container(key:Key("${index}.switcher.icon"),child: GridItems(business: f,)));
+      index++;
     });
-    
-    return Container(
-      child: Wrap(  
-        spacing: Measurements.width * 0.075,
-        runSpacing: Measurements.width * 0.01,
-        alignment: WrapAlignment.center,
-        direction: Axis.horizontal,
-        children: business,
-      ),
+    return ListView(
+      shrinkWrap: true,
+      children: <Widget>[
+        Wrap(  
+          spacing: Measurements.width * 0.075,
+          runSpacing: Measurements.width * 0.01,
+          alignment: WrapAlignment.center,
+          direction: Axis.horizontal,
+          children: business,
+        ),
+      ],
     );
   }
 }

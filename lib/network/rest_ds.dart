@@ -205,7 +205,6 @@ class RestDatasource {
 
   Future<dynamic> getTransactionList(String id,String token,String query,BuildContext context) {
     print("TAG - getTransactionList()");
-
     var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token",HttpHeaders.userAgentHeader :GlobalUtils.fingerprint };
     return _netUtil.get(TRANSACTIONWID_URL + id + TRANSACTIONWID_END + query,headers: headers ).then((dynamic result){
       return result;
