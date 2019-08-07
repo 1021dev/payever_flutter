@@ -13,6 +13,8 @@ import 'package:payever/utils/global_keys.dart';
 import 'package:payever/utils/translations.dart';
 import 'package:payever/utils/utils.dart';
 import 'package:flutter_pagewise/flutter_pagewise.dart';
+import 'package:payever/view_models/global_state_model.dart';
+import 'package:payever/views/customelements/wallpaper.dart';
 import 'dart:ui';
 
 
@@ -21,6 +23,7 @@ import 'package:payever/models/transaction.dart';
 import 'package:intl/intl.dart';
 import 'package:payever/views/login/login_page.dart';
 import 'package:payever/views/transactions/transactions_details_screen.dart';
+import 'package:provider/provider.dart';
 
 bool _isPortrait;
 bool _isTablet;
@@ -30,13 +33,15 @@ class TrasactionScreen extends StatefulWidget {
   ValueNotifier<bool> isLoading       = ValueNotifier(true);
   ValueNotifier<bool> isLoadingSearch = ValueNotifier(true);
   TransactionScreenData data;
-  String wallpaper;
+  
   Business _currentBusiness; 
   bool _pos;
   bool initQueryNotEmpty = false;
   ValueNotifier<String> searching = ValueNotifier("");
   String search ="";
-  TrasactionScreen(this.wallpaper,this._pos,this._currentBusiness);
+  bool init = true;
+  String wallpaper;
+  TrasactionScreen();
   @override
   _TrasactionScreenState createState() => _TrasactionScreenState();
 
@@ -49,7 +54,7 @@ class _TrasactionScreenState extends State<TrasactionScreen> {
     super.initState();
     widget.isLoading.addListener(listener);
     widget.isLoadingSearch.addListener(listener);
-    fetchTransactions(init: true,search: "");
+    
     widget.searching.addListener(listener);
   }
   listener(){
@@ -60,7 +65,7 @@ class _TrasactionScreenState extends State<TrasactionScreen> {
     RestDatasource api = RestDatasource();
     api.getTransactionList(widget._currentBusiness.id,GlobalUtils.ActiveToken.accessToken,"?orderBy=created_at&direction=desc&limit=50&query=${search}&page=1&currency=${widget._currentBusiness.currency}",context).
       then((obj){
-        widget.data = TransactionScreenData(obj,widget.wallpaper);
+        widget.data = TransactionScreenData(obj);
         if(init) widget.isLoading.value = false;
         widget.isLoadingSearch.value = false;
       }).catchError((onError){
@@ -76,10 +81,16 @@ class _TrasactionScreenState extends State<TrasactionScreen> {
   num _totalAmount;
   var f = new NumberFormat("###,###,##0.00", "en_US");
   bool noTransactions= false;
-  String _search ="";
+  String _search = "";
   bool isLoading = false;
   @override
   Widget build(BuildContext context) {
+        
+    GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context);
+    widget._currentBusiness = globalStateModel.currentBusiness;
+    widget.wallpaper        = globalStateModel.currentWallpaper;
+    fetchTransactions(init: widget.init,search: "");
+    widget.init = false;
     _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
     Measurements.height = (_isPortrait ? MediaQuery.of(context).size.height : MediaQuery.of(context).size.width);
     Measurements.width  = (_isPortrait ? MediaQuery.of(context).size.width : MediaQuery.of(context).size.height);
@@ -89,70 +100,111 @@ class _TrasactionScreenState extends State<TrasactionScreen> {
         _currency       = widget.data.currency(widget.data.business.currency);
         _totalAmount    = widget.data.transaction.paginationData.amount??0;
       }
-    return Stack(
-      children: <Widget>[
-        Positioned(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          top: 0.0,
-          child: CachedNetworkImage(
-                  imageUrl: widget.wallpaper,
-                  placeholder: (context, url) =>  Container(),
-                  errorWidget: (context, url, error) => new Icon(Icons.error),
-                  fit: BoxFit.cover,
-                ) 
+      return BackgroundBase(true,
+        appBar: AppBar(
+          elevation: 0,
+          title: !noTransactions ?AutoSizeText(Language.getTransactionStrings("total_orders.heading").toString().replaceFirst("{{total_count}}", "${_quantity??0}").replaceFirst("{{total_sum}}", "${_currency??"€"}${f.format(_totalAmount??0)}"),overflow: TextOverflow.fade,maxLines: 1,):Container(),
+          centerTitle: true,
+          backgroundColor: Colors.transparent,
+          leading: InkWell(radius: 20,child: Icon(IconData(58829, fontFamily: 'MaterialIcons')),
+          onTap: (){
+            Navigator.pop(context);
+            },
+          ),
         ),
-        BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 25,sigmaY: 25),
-          child: Container(
-            child: Scaffold(
-              backgroundColor: Colors.black.withOpacity(0.2),
-              appBar: !widget._pos?AppBar(
-                elevation: 0,
-                title: !noTransactions && !widget._pos ?AutoSizeText(Language.getTransactionStrings("total_orders.heading").toString().replaceFirst("{{total_count}}", "${_quantity??0}").replaceFirst("{{total_sum}}", "${_currency??"€"}${f.format(_totalAmount??0)}"),overflow: TextOverflow.fade,maxLines: 1,):Container(),
-                centerTitle: true,
-                backgroundColor: Colors.transparent,
-                leading: 
-                !widget._pos?InkWell(radius: 20,child: Icon(IconData(58829, fontFamily: 'MaterialIcons')),
-                onTap: (){
-                  Navigator.pop(context);
-                  },
-                ):Text(""),
-              ):null,
-              body:
-                Column(
-                  children: <Widget>[
-                    widget.isLoading.value?Container(): Container(
-                          padding: EdgeInsets.only(bottom: Measurements.height * 0.02,left: Measurements.width* (_isTablet?0.01:0.05),right: Measurements.width* (_isTablet?0.01:0.05)),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(12),
-                              ),
-                            padding:EdgeInsets.only(left: Measurements.width* (_isTablet?0.01:0.025)),
-                            child: TextFormField(
-                              decoration: InputDecoration(
-                                hintText: "Search",
-                                border: InputBorder.none,
-                                icon: Container(child:SvgPicture.asset("images/searchicon.svg",height: Measurements.height * 0.0175,color:Colors.white,))
-                              ),
-                              onFieldSubmitted: (search){
-                                widget.search = search;
-                                widget.isLoadingSearch.value = true;
-                                widget.data.transaction.collection.clear();
-                                fetchTransactions(init: false,search: search);
-                              },
-                            ),
-                          ),
-                        ),
-                    widget.isLoadingSearch.value||widget.isLoading.value? Expanded(child:Center(child:CircularProgressIndicator(),)) : Expanded(child:CustomList(widget._currentBusiness,widget.search,widget.data.transaction.collection,widget.data)),
-                  ],
-                )
-            ),
-          )
-        )  
-      ],
-    );
+        body: Column(
+          children: <Widget>[
+            widget.isLoading.value?Container(): Container(
+                  padding: EdgeInsets.only(bottom: Measurements.height * 0.02,left: Measurements.width* (_isTablet?0.01:0.05),right: Measurements.width* (_isTablet?0.01:0.05)),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(12),
+                      ),
+                    padding:EdgeInsets.only(left: Measurements.width* (_isTablet?0.01:0.025)),
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                        hintText: "Search",
+                        border: InputBorder.none,
+                        icon: Container(child:SvgPicture.asset("images/searchicon.svg",height: Measurements.height * 0.0175,color:Colors.white,))
+                      ),
+                      onFieldSubmitted: (search){
+                        widget.search = search;
+                        widget.isLoadingSearch.value = true;
+                        widget.data.transaction.collection.clear();
+                        fetchTransactions(init: false,search: search);
+                      },
+                    ),
+                  ),
+                ),
+            widget.isLoadingSearch.value||widget.isLoading.value? Expanded(child:Center(child:CircularProgressIndicator(),)) : Expanded(child:CustomList(widget._currentBusiness,widget.search,widget.data.transaction.collection,widget.data)),
+          ],
+        )
+      );
+    // return Stack(
+    //   children: <Widget>[
+    //     Positioned(
+    //       height: MediaQuery.of(context).size.height,
+    //       width: MediaQuery.of(context).size.width,
+    //       top: 0.0,
+    //       child: CachedNetworkImage(
+    //         imageUrl: widget.wallpaper,
+    //         placeholder: (context, url) =>  Container(),
+    //         errorWidget: (context, url, error) => new Icon(Icons.error),
+    //         fit: BoxFit.cover,
+    //       ) 
+    //     ),
+    //     BackdropFilter(
+    //       filter: ImageFilter.blur(sigmaX: 25,sigmaY: 25),
+    //       child: Container(
+    //         child: Scaffold(
+    //           backgroundColor: Colors.black.withOpacity(0.2),
+    //           appBar: AppBar(
+    //             elevation: 0,
+    //             title: !noTransactions ?AutoSizeText(Language.getTransactionStrings("total_orders.heading").toString().replaceFirst("{{total_count}}", "${_quantity??0}").replaceFirst("{{total_sum}}", "${_currency??"€"}${f.format(_totalAmount??0)}"),overflow: TextOverflow.fade,maxLines: 1,):Container(),
+    //             centerTitle: true,
+    //             backgroundColor: Colors.transparent,
+    //             leading: 
+    //             InkWell(radius: 20,child: Icon(IconData(58829, fontFamily: 'MaterialIcons')),
+    //             onTap: (){
+    //               Navigator.pop(context);
+    //               },
+    //             ),
+    //           ),
+    //           body:
+    //             Column(
+    //               children: <Widget>[
+    //                 widget.isLoading.value?Container(): Container(
+    //                       padding: EdgeInsets.only(bottom: Measurements.height * 0.02,left: Measurements.width* (_isTablet?0.01:0.05),right: Measurements.width* (_isTablet?0.01:0.05)),
+    //                       child: Container(
+    //                         decoration: BoxDecoration(
+    //                           color: Colors.black.withOpacity(0.2),
+    //                           borderRadius: BorderRadius.circular(12),
+    //                           ),
+    //                         padding:EdgeInsets.only(left: Measurements.width* (_isTablet?0.01:0.025)),
+    //                         child: TextFormField(
+    //                           decoration: InputDecoration(
+    //                             hintText: "Search",
+    //                             border: InputBorder.none,
+    //                             icon: Container(child:SvgPicture.asset("images/searchicon.svg",height: Measurements.height * 0.0175,color:Colors.white,))
+    //                           ),
+    //                           onFieldSubmitted: (search){
+    //                             widget.search = search;
+    //                             widget.isLoadingSearch.value = true;
+    //                             widget.data.transaction.collection.clear();
+    //                             fetchTransactions(init: false,search: search);
+    //                           },
+    //                         ),
+    //                       ),
+    //                     ),
+    //                 widget.isLoadingSearch.value||widget.isLoading.value? Expanded(child:Center(child:CircularProgressIndicator(),)) : Expanded(child:CustomList(widget._currentBusiness,widget.search,widget.data.transaction.collection,widget.data)),
+    //               ],
+    //             )
+    //         ),
+    //       )
+    //     )  
+    //   ],
+    // );
   }
 }
 
@@ -210,7 +262,7 @@ class _CustomListState extends State<CustomList> {
         if(index == 0) return _isTablet? TabletTableRow(null,true,null): PhoneTableRow(null,true,null);
         index = index - 1;
         Key itemKey = Key('transaction.list.transaction_$index');
-        print(itemKey.toString());
+        
         return Container(key:itemKey,child: _isTablet? TabletTableRow(widget.collection[index],false,widget.data): PhoneTableRow(widget.collection[index],false,widget.data));
       },
     );

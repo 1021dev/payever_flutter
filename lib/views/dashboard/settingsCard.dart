@@ -15,18 +15,17 @@ String _currentWallpaper;
 Business _currentBusiness;
 
 class SettingsCard extends StatefulWidget {
+
   final String appName;
   final ImageProvider imageProvider;
-  final Business business;
-  final String wallpaper;
+  
+  // final Business business;
+  // final String wallpaper;
 
 //  final bool isBusiness;
   final String help;
 
-  SettingsCard(this.appName, this.imageProvider, this.business, this.wallpaper,
-      this.help) {
-    _currentWallpaper = wallpaper;
-    _currentBusiness = business;
+  SettingsCard(this.appName, this.imageProvider,this.help) {
   }
 
   @override

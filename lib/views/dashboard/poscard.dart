@@ -18,11 +18,14 @@ import 'package:payever/network/rest_ds.dart';
 import 'package:payever/utils/env.dart';
 import 'package:payever/utils/translations.dart';
 import 'package:payever/utils/utils.dart';
+import 'package:payever/view_models/dashboard_state_model.dart';
+import 'package:payever/view_models/global_state_model.dart';
 import 'package:payever/views/dashboard/dashboard_screen.dart';
 import 'package:payever/views/dashboard/dashboardcard.dart';
 import 'package:payever/views/pos/edit_terminal.dart';
 import 'package:payever/views/pos/native_pos_screen.dart';
 import 'package:payever/views/pos/pos_screen.dart';
+import 'package:provider/provider.dart';
 
 
 
@@ -38,7 +41,9 @@ class POSCard extends StatefulWidget {
   String _help;
   
 
-  POSCard(this._appName,this._imageProvider,this._business,this._wallpaper,this._help){
+  POSCard(this._appName,this._imageProvider,this._help){
+    _parts = POSCardParts(_help,_business);
+    _posNavigation = POSNavigation(_parts);
 
   }
   @override
@@ -46,16 +51,13 @@ class POSCard extends StatefulWidget {
 }
 
 class _POSCardState extends State<POSCard> {
-
-  _POSCardState(){
-    
-  }
+GlobalStateModel globalStateModel;
   @override
   void initState() {
-    widget._parts = POSCardParts(widget._help,widget._business);
-    widget._parts._wallpaper = widget._wallpaper;
-    widget._posNavigation = POSNavigation(widget._parts);
     super.initState();
+  }
+
+  fetchData() async {
     RestDatasource api = RestDatasource();
     api.getTerminal(widget._business.id, GlobalUtils.ActiveToken.accesstoken,context).then((terminals){
       terminals.forEach((terminal){
@@ -101,24 +103,28 @@ class _POSCardState extends State<POSCard> {
                       widget._parts._salesCards.add(ProductCard(widget._parts,i));
                     }
                     widget._parts.index.value = widget._parts._terminals.indexWhere((term)=>term.active);
-                    print("here");
-                    print("(${terminal.id }== ${widget._parts.terminals.last.id}) && (${widget._parts._chSets.last.id} == ${chset.name})");
-                    if((terminal.id == widget._parts.terminals.last.id)){
-                      print("yes");
+                    if((terminal.id == widget._parts.terminals.last.id) && (widget._parts._chSets.last.id == chset.id) ){
                       widget._parts._mainCardLoading.value = false;
                     }
                     CardParts.currentTerminal = widget._parts._terminals[widget._parts.index.value];
+                    DashboardStateModel dashboardStateModel =Provider.of<DashboardStateModel>(context);
+                      dashboardStateModel.setActiveTermianl(widget._parts._terminals[widget._parts.index.value]);
+                    
                 });
               }
             });
           });
-          setState(() {});
+          //setState(() {});
         });
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    globalStateModel = Provider.of<GlobalStateModel>(context);
+    widget._business   = globalStateModel.currentBusiness;
+    widget._parts._wallpaper   = globalStateModel.currentWallpaper;
+    fetchData();
     return OrientationBuilder(
       builder: (BuildContext context, Orientation orientation) {
         widget._parts._isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
@@ -134,7 +140,7 @@ class _POSCardState extends State<POSCard> {
 class POSCardParts{
   
   Business business;
-  String _wallpaper;
+  String _wallpaper ="";
   List<Terminal> _terminals        = List();
   List<TerminalCard> _terminalcards = List();
   List<Terminal> get terminals =>_terminals;

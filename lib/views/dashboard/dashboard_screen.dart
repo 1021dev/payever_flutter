@@ -110,7 +110,6 @@ class _DashboardMidScreenState extends State<DashboardMidScreen> {
     Business activeBusiness;
     var _token = !renew ? Token.map(token) : token;
     GlobalUtils.ActiveToken = _token;
-
     SharedPreferences.getInstance().then((prefs) {
       if (!renew)
         GlobalUtils.ActiveToken.refreshToken =
@@ -192,8 +191,6 @@ class _DashboardMidScreenState extends State<DashboardMidScreen> {
         ? MediaQuery.of(context).size.width
         : MediaQuery.of(context).size.height);
     bool isTablet = MediaQuery.of(context).size.width > 600;
-
-//    loadData();
 
     return Stack(
       overflow: Overflow.visible,
@@ -368,7 +365,7 @@ class _DashboardScreenState extends State<DashboardScreen>
     listen.subscribe(this);
     _filter.addListener(() {
       if (_filter.text.isEmpty) {
-        setState(() {
+        setState((){
           _searchText.value = "";
         });
       } else {
@@ -391,17 +388,18 @@ class _DashboardScreenState extends State<DashboardScreen>
           CardParts._activeWid.add(CardParts._transtioncard = TransactionCard(
               wid.type,
               NetworkImage(CardParts.UI_KIT + wid.icon),
-              CardParts._currentBusiness,
+              //CardParts._currentBusiness,
               _isBusiness,
-              CardParts.wallpaper));
+              //CardParts.wallpaper
+              ));
           break;
         case "pos":
           CardParts.indexes.add(i);
           CardParts._activeWid.add(CardParts._poscard = POSCard(
               wid.type,
               NetworkImage(CardParts.UI_KIT + wid.icon),
-              CardParts._currentBusiness,
-              CardParts.wallpaper,
+              //CardParts._currentBusiness,
+              //CardParts.wallpaper,
               wid.help));
           break;
         case "products":
@@ -409,8 +407,8 @@ class _DashboardScreenState extends State<DashboardScreen>
           CardParts._activeWid.add(CardParts._productsCard = ProductsCard(
               wid.type,
               NetworkImage(CardParts.UI_KIT + wid.icon),
-              CardParts._currentBusiness,
-              CardParts.wallpaper,
+              // CardParts._currentBusiness,
+              // CardParts.wallpaper,
               wid.help));
           break;
         case "settings":
@@ -418,8 +416,8 @@ class _DashboardScreenState extends State<DashboardScreen>
           CardParts._activeWid.add(CardParts._settingsCard = SettingsCard(
               wid.type,
               NetworkImage(CardParts.UI_KIT + wid.icon),
-              CardParts._currentBusiness,
-              CardParts.wallpaper,
+              // CardParts._currentBusiness,
+              // CardParts.wallpaper,
               wid.help));
           break;
         default:
@@ -713,7 +711,6 @@ class _DashboardScreenState extends State<DashboardScreen>
                       !_isSearching
                           ? _dashboard
                           : SearchCard(_searchText, widget._business.id),
-
                       _apps,
                       //Text(""),
                       _menu,
@@ -873,8 +870,7 @@ class _AppViewState extends State<AppView> {
     return Navigator.push(
         context,
         PageTransition(
-            child: TrasactionScreen(
-                CardParts.wallpaper, false, CardParts._currentBusiness),
+            child: TrasactionScreen(),
             type: PageTransitionType.fade,duration: Duration(milliseconds: 300)));
   }
 

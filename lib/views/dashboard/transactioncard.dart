@@ -8,11 +8,14 @@ import 'package:payever/utils/translations.dart';
 import 'package:payever/utils/utils.dart';
 import 'package:flutter_sparkline/flutter_sparkline.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:payever/view_models/dashboard_state_model.dart';
+import 'package:payever/view_models/global_state_model.dart';
 import 'package:payever/views/dashboard/dashboard_screen.dart';
 import 'dart:ui';
 import 'package:payever/views/dashboard/dashboardcard.dart';
 import 'package:payever/views/login/login_page.dart';
 import 'package:payever/views/transactions/transactions_screen.dart';
+import 'package:provider/provider.dart';
 
 
 
@@ -24,15 +27,15 @@ DashboardWidgets _dashboardWidgets;
 
 class TransactionScreenData{
   Business _business;
-  String _wallpaper;
+  String wallpaperStr;
   Transaction _transaction;
-  TransactionScreenData(dynamic obj,this._wallpaper){
+  TransactionScreenData(dynamic obj,{this.wallpaperStr}){
     _business = _currentBusiness;
     _transaction = Transaction.toMap(obj);
   }
 
   Business get business => _business;
-  String get wallpaper => _wallpaper;
+  String get wallpaper => wallpaperStr;
   Transaction get transaction => _transaction;
 
   String currency(String currency){
@@ -58,33 +61,23 @@ class TransactionScreenData{
 
 }
 
-class TransactionCard extends StatefulWidget {
+class TransactionCard extends StatelessWidget {
   
   String _appName;
   ImageProvider _imageProvider;
   String _wallpaper;
   Business _business;
   bool _isBusiness ;
-  TransactionCard(this._appName,this._imageProvider,this._business,this._isBusiness,this._wallpaper){
+  TransactionCard(this._appName,this._imageProvider,this._isBusiness){
     _currentWallpaper = _wallpaper;
-    _currentBusiness = _business;
     _dashboardWidgets = DashboardWidgets();
   }
-  @override
-  _TransactionCardState createState() => _TransactionCardState(_appName,_imageProvider,_isBusiness);
-}
-
-class _TransactionCardState extends State<TransactionCard> {
-
-  String _appName;
-  ImageProvider _imageProvider;
   
-  bool _isBusiness ;
-  _TransactionCardState(this._appName,this._imageProvider,this._isBusiness){
-  }
-
+  GlobalStateModel globalStateModel = GlobalStateModel();
   @override
   Widget build(BuildContext context) {
+    globalStateModel = Provider.of<GlobalStateModel>(context);
+    _currentBusiness = globalStateModel.currentBusiness;
     return DashboardCard(_appName, _imageProvider, MainTransactionCard(_isBusiness), TrasactionSecCard(),TransactionNavigation(),true, false);
   }
 
@@ -94,20 +87,20 @@ class MainTransactionCard  extends StatefulWidget  {
   bool _isBusiness ;
   MainTransactionCard(this._isBusiness);
   @override
-  _MainTransactionCardState createState() => _MainTransactionCardState(_isBusiness);
+  _MainTransactionCardState createState() => _MainTransactionCardState();
 }
 
 class _MainTransactionCardState extends State<MainTransactionCard> {
 
-  bool _isBusiness ;
+  bool _isBusiness = true ;
   List<num> _months = new  List();
   List<double> _days   = new List();
   bool _chartLoad = false;
   double _cardSize;
-
+  
   num _hi= 0 ,_low = 1,_mid=0 ;
   
-  _MainTransactionCardState(this._isBusiness){
+  _MainTransactionCardState(){
     _chartLoad= false;
     RestDatasource api = RestDatasource();
     if(_isBusiness){
@@ -136,7 +129,6 @@ class _MainTransactionCardState extends State<MainTransactionCard> {
           });
             setState(() {
               _dashboardWidgets._isDataLoaded.value = true;
-              //_dashboardWidgets._isDataLoaded.notifyListeners();
           });
       }).catchError((onError){
         print("Error in Transaction Card$onError");
@@ -178,7 +170,6 @@ class _MainTransactionCardState extends State<MainTransactionCard> {
         print("Error end");
       });
       });
-     
     }
   }
 
@@ -281,11 +272,9 @@ class _TrasactionSecCardState extends State<TrasactionSecCard> {
   var f = new NumberFormat("###,###.00", "en_US");
   @override
   Widget build(BuildContext context) {
-    
     if(_dashboardWidgets._transactionsData.lastYear!=null){
       if(_dashboardWidgets._transactionsData.lastYear.length > 0){
         for(int i =(_dashboardWidgets._transactionsData.lastYear.length-2);i>=0;i--){
-          
           sum += _dashboardWidgets._transactionsData.lastYear[i].amount;
           monthlysum.add(sum);
         }
@@ -357,7 +346,6 @@ class _TrasactionSecCardState extends State<TrasactionSecCard> {
 
   void listener() {
     setState(() {
-
     });
   }
 }
@@ -419,9 +407,7 @@ class DashboardWidgets{
 class TransactionNavigation implements CardContract{
   @override
   void loadScreen(BuildContext context,ValueNotifier state) {
-    
-    state.notifyListeners();
-    Navigator.push(context, PageTransition(child: TrasactionScreen(_currentWallpaper,false,_currentBusiness), type: PageTransitionType.fade,));
+    Navigator.push(context, PageTransition(child: TrasactionScreen(), type: PageTransitionType.fade,));
     state.value = false;
 
 

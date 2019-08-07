@@ -8,7 +8,10 @@ import 'package:payever/utils/translations.dart';
 import 'package:payever/utils/utils.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:payever/view_models/global_state_model.dart';
+import 'package:payever/views/customelements/wallpaper.dart';
 import 'package:payever/views/switcher/switcher_page.dart';
+import 'package:provider/provider.dart';
 
 
 
@@ -69,22 +72,10 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
         widget.parts.isTablet        = Measurements.width < 600 ? false : true;
         widget.parts.padding         = EdgeInsets.symmetric(horizontal: Measurements.width *0.05,vertical: Measurements.height * 0.01);
         widget.parts.animatedpadding = EdgeInsets.symmetric(horizontal: Measurements.width *(widget.parts.isTablet? 0.03:0.05));
-        return Stack(
-        children: <Widget>[
-          Positioned(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            top: 0.0,
-            child: CachedNetworkImage(
-              imageUrl: widget._wallpaper,
-              placeholder: (context, url) => new CircularProgressIndicator(),
-              errorWidget: (context, url, error) => new Icon(Icons.error),
-              fit: BoxFit.cover,
-            ),
-          ),
-          Scaffold(
-            backgroundColor: Colors.black.withOpacity(0.2),
-            appBar:  AppBar(
+        GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context);
+        return BackgroundBase(
+          true,
+          appBar: AppBar(
             title: Text(Language.getTransactionStrings("actions.details")),
             centerTitle: true,  
             elevation: 0,
@@ -93,22 +84,56 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
             onTap: (){
               Navigator.pop(context);
               },
+            ),),
+          body: OrientationBuilder(
+            builder: (BuildContext context, Orientation orientation) {
+              Measurements.height = (widget.parts.isPortrait ? MediaQuery.of(context).size.height : MediaQuery.of(context).size.width);
+              Measurements.width  = (widget.parts.isPortrait ? MediaQuery.of(context).size.width : MediaQuery.of(context).size.height);
+              widget.parts.isTablet = Measurements.width < 600 ? false : true;  
+              return DetailBody(billingRow: widget.billingRow, headerRow: widget.headerRow, orderNRow: widget.orderNRow, paymentRow: widget.paymentRow, timelineRow: widget.timelineRow, totalRow: widget.totalRow,shippingRow:widget.shippingRow);
+            },
+          ),
+        );
+      //   return Stack(
+      //   children: <Widget>[
+      //     Positioned(
+      //       height: MediaQuery.of(context).size.height,
+      //       width: MediaQuery.of(context).size.width,
+      //       top: 0.0,
+      //       child: CachedNetworkImage(
+      //         imageUrl: globalStateModel.currentWallpaper,
+      //         placeholder: (context, url) => new CircularProgressIndicator(),
+      //         errorWidget: (context, url, error) => new Icon(Icons.error),
+      //         fit: BoxFit.cover,
+      //       ),
+      //     ),
+      //     Scaffold(
+      //       backgroundColor: Colors.black.withOpacity(0.2),
+      //       appBar:  AppBar(
+      //       title: Text(Language.getTransactionStrings("actions.details")),
+      //       centerTitle: true,  
+      //       elevation: 0,
+      //       backgroundColor: Colors.transparent,
+      //       leading: InkWell(radius: 20,child: Icon(IconData(58829, fontFamily: 'MaterialIcons')),
+      //       onTap: (){
+      //         Navigator.pop(context);
+      //         },
             
-            ),
-            ),
-            body: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 10,sigmaY: 10),
-              child: OrientationBuilder(
-                builder: (BuildContext context, Orientation orientation) {
-                  Measurements.height = (widget.parts.isPortrait ? MediaQuery.of(context).size.height : MediaQuery.of(context).size.width);
-                  Measurements.width  = (widget.parts.isPortrait ? MediaQuery.of(context).size.width : MediaQuery.of(context).size.height);
-                  widget.parts.isTablet = Measurements.width < 600 ? false : true;  
-                  return DetailBody(billingRow: widget.billingRow, headerRow: widget.headerRow, orderNRow: widget.orderNRow, paymentRow: widget.paymentRow, timelineRow: widget.timelineRow, totalRow: widget.totalRow,shippingRow:widget.shippingRow);
-                },),
-            )
-          )
-        ]
-      ); 
+      //       ),
+      //       ),
+      //       body: BackdropFilter(
+      //         filter: ImageFilter.blur(sigmaX: 10,sigmaY: 10),
+      //         child: OrientationBuilder(
+      //           builder: (BuildContext context, Orientation orientation) {
+      //             Measurements.height = (widget.parts.isPortrait ? MediaQuery.of(context).size.height : MediaQuery.of(context).size.width);
+      //             Measurements.width  = (widget.parts.isPortrait ? MediaQuery.of(context).size.width : MediaQuery.of(context).size.height);
+      //             widget.parts.isTablet = Measurements.width < 600 ? false : true;  
+      //             return DetailBody(billingRow: widget.billingRow, headerRow: widget.headerRow, orderNRow: widget.orderNRow, paymentRow: widget.paymentRow, timelineRow: widget.timelineRow, totalRow: widget.totalRow,shippingRow:widget.shippingRow);
+      //           },),
+      //       )
+      //     )
+      //   ]
+      // ); 
       },
        
     );

@@ -7,7 +7,8 @@ import 'package:cron/cron.dart';
 
 import 'package:payever/view_models/global_state_model.dart';
 import 'package:payever/utils/utils.dart';
-import 'package:payever/views/dashboard/dashboard_screen.dart';
+//import 'package:payever/views/dashboard/dashboard_screen.dart';
+import 'package:payever/views/dashboard/dashboard_midscreen.dart';
 import 'package:payever/views/login/login_page.dart';
 import 'network/rest_ds.dart';
 import 'view_models/employees_state_model.dart';
@@ -70,14 +71,8 @@ class _MyAppState extends State<MyApp> {
     Widget build(BuildContext context) {
       return MultiProvider(
         providers: [
-//          ChangeNotifierProvider.value(value: GlobalStateModel()),
           ChangeNotifierProvider<GlobalStateModel>(builder: (BuildContext context) => globalStateModel),
           Provider.value(value: RestDatasource()),
-//          ChangeNotifierProvider<EmployeesStateModel>(builder: (BuildContext context) => EmployeesStateModel(globalStateModel, api)),
-//          ProxyProvider<RestDatasource, EmployeesStateModel>(
-//            builder: (context, api, authenticationService) =>
-//                EmployeesStateModel(globalStateModel, api),
-//          ),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
@@ -94,11 +89,12 @@ class _MyAppState extends State<MyApp> {
       String bus               =  prefs.getString(GlobalUtils.BUSINESS)      ?? "" ;
       String rfToken           =  prefs.getString(GlobalUtils.REFRESHTOKEN)  ?? "" ;
       GlobalUtils.fingerprint  =  prefs.getString(GlobalUtils.FINGERPRINT)   ?? "" ;
-      _loadCredentials.value   = false;
+      _loadCredentials.value   =  false;
       _haveCredentials = rfToken.isNotEmpty && bus.isNotEmpty;
     }
     void listener() {
-      setState(() {});
+      setState(() {
+      });
     }
     
 }

@@ -11,7 +11,8 @@ import 'package:payever/utils/global_keys.dart';
 import 'package:payever/utils/local_storage.dart';
 import 'package:payever/utils/translations.dart';
 import 'package:payever/utils/utils.dart';
-import 'package:payever/views/dashboard/dashboard_screen.dart';
+import 'package:payever/view_models/global_state_model.dart';
+import 'package:payever/views/dashboard/dashboard_screen_ref.dart';
 import 'package:payever/views/switcher/loader.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -188,12 +189,18 @@ class _GridItemsState extends State<GridItems> {
           });
           parts.fetchWallpaper(widget.business.id,context).then((img){
             parts.getWidgets(widget.business.id,context).then((onValue){
+
+            Provider.of<GlobalStateModel>(context).setCurrentBusiness(widget.business);
+            SharedPreferences.getInstance().then((p){
+             Provider.of<GlobalStateModel>(context).setCurrentWallpaper(p.getString(GlobalUtils.WALLPAPER));
+
             Navigator.pushReplacement(
               context,
               PageTransition(
-                child:DashboardScreen(GlobalUtils.ActiveToken,img,widget.business,parts._wids,null),
+                //child:DashboardScreen(GlobalUtils.ActiveToken,img,widget.business,parts._wids,null),
+                child:DashboardScreen(appWidgets:parts._wids),
                 type: PageTransitionType.fade)
-              );
+              );});
             });
           });
         },
@@ -288,7 +295,6 @@ class _SwitcherState extends State<Switcher> {
     RestDatasource api = RestDatasource();
       api.getWallpaperPersonal(GlobalUtils.ActiveToken.accesstoken,context).then((dynamic obj){
         wallpaperid= obj[GlobalUtils.CURRENT_WALLPAPER];
-
         api.getWidgetsPersonal(GlobalUtils.ActiveToken.accesstoken,context).then((dynamic obj){
           obj.forEach((item) {
             parts._wids.add(AppWidget.map(item));
@@ -296,12 +302,13 @@ class _SwitcherState extends State<Switcher> {
         Navigator.pushReplacement(
           context,
           PageTransition(
-            child:DashboardScreen(
-              GlobalUtils.ActiveToken,
-              wallpaperid.isEmpty? NetworkImage(WALLPAPER_BASE + wallpaperid):AssetImage("images/loginhorizontaltablet.png"),
-              null,
-              parts._wids,
-              parts._logUser),
+            child:DashboardScreen(appWidgets:parts._wids),
+            // child:DashboardScreen(
+            //   GlobalUtils.ActiveToken,
+            //   wallpaperid.isEmpty? NetworkImage(WALLPAPER_BASE + wallpaperid):AssetImage("images/loginhorizontaltablet.png"),
+            //   null,
+            //   parts._wids,
+            //   parts._logUser),
             type: PageTransitionType.fade)
           );
         }).catchError((onError){
@@ -439,21 +446,18 @@ class _SwitcherState extends State<Switcher> {
                             onTap: () {
                               print("onIconSelect - business");
                               setState(() => _loadBusiness = true);
-
                               parts.fetchWallpaper(parts._active.id,context).then((img){
                                 parts.getWidgets(parts._active.id,context).then((onValue){
+                                  Provider.of<GlobalStateModel>(context).setCurrentBusiness(parts._active);
+                                  SharedPreferences.getInstance().then((p){
+                                    Provider.of<GlobalStateModel>(context).setCurrentWallpaper(p.getString(GlobalUtils.WALLPAPER));
                                   Navigator.pushReplacement(
                                     context,
                                     PageTransition(
-                                      child: DashboardScreen(
-                                        GlobalUtils.ActiveToken,
-                                        img,
-                                        parts._active,
-                                        parts._wids,null),
+                                      child:DashboardScreen(appWidgets:parts._wids),
                                       type: PageTransitionType.fade)
-                                  );
+                                    );});
                                 });
-                                
                               });
                             },
                           ),
@@ -532,6 +536,7 @@ class SwitchParts {
   Widget grid;
   List<GridItems> _busWids = new List();
   List<AppWidget> _wids       = new List();
+
   Future<String> fetchWallpaper(String id,BuildContext context) async{
     String wallpaperid;
     SharedPreferences prefs;

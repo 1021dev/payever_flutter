@@ -121,7 +121,7 @@ class _POSScreenState extends State<POSScreen> {
               api.getTransactionList(widget._terminal.business,GlobalUtils.ActiveToken.accessToken,"?orderBy=created_at&direction=desc&limit=20&query=&page=1&currency=DKK&filters%5Bchannel_set_uuid%5D%5Bcondition%5D=is&filters%5Bchannel_set_uuid%5D%5Bvalue%5D%5B0%5D=${widget._terminal.channelSet}",context).
                 then((obj){
                   print(obj);
-                  TransactionScreenData tsc = TransactionScreenData(obj,widget._wallpaper);
+                  //TransactionScreenData tsc = TransactionScreenData(obj,widget._wallpaper);
                   // changeFragment(TrasactionScreen(widget._wallpaper,false));
                     
               });                                        

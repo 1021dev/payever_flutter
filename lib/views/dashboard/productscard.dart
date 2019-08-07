@@ -13,8 +13,10 @@ import 'package:payever/network/rest_ds.dart';
 import 'package:payever/utils/env.dart';
 import 'package:payever/utils/translations.dart';
 import 'package:payever/utils/utils.dart';
+import 'package:payever/view_models/global_state_model.dart';
 import 'package:payever/views/dashboard/dashboardcard.dart';
 import 'package:payever/views/products/product_screen.dart';
+import 'package:provider/provider.dart';
 
 
 class ProdParts{
@@ -49,7 +51,6 @@ class ProdNavigation implements CardContract{
 
   @override
   void loadScreen(BuildContext context, ValueNotifier state) {
-    state.notifyListeners();
     RestDatasource api = RestDatasource();
     state.value =false;
     Navigator.push(context, PageTransition(child:ProductScreen(business: parts.business,wallpaper: parts._wallpaper, posCall: false ,),type:PageTransitionType.fade));
@@ -66,7 +67,7 @@ class ProductsCard extends StatefulWidget {
   ProdNavigation _posNavigation;
   String help;
 
-  ProductsCard(this._appName,this._imageProvider,this._business,this._wallpaper,this.help){
+  ProductsCard(this._appName,this._imageProvider,this.help){
     parts = ProdParts(); 
     parts.help = help;
     parts.business = _business;
@@ -83,44 +84,53 @@ class _ProductsCardState extends State<ProductsCard> {
   void initState() {
     // TODO: implement initState
     super.initState();
-        RestDatasource api = RestDatasource();
-        api.getProductsPopularWeek(widget.parts.business.id,GlobalUtils.ActiveToken.accessToken,context).then((weekRes){
-          if(weekRes.isNotEmpty){
-            widget.parts._week = Products.toMap(weekRes[0]);
-            widget.parts._isLoadingLW.value = false;           
-          }else{
-
-          }
-        });
-        api.getProductsPopularMonth(widget.parts.business.id,GlobalUtils.ActiveToken.accessToken,context).then((monthRes){
-          if(monthRes.isNotEmpty){
-            widget.parts._month = Products.toMap(monthRes[0]);
-            widget.parts._isLoadingLM.value = false;           
-          }else{
-            widget.parts._noProducts.value = true;
-            widget.parts._noProd = true;
-          } 
-        });
-        api.getProductLastSold(widget.parts.business.id,GlobalUtils.ActiveToken.accessToken,context).then((lastSales){
-          if(lastSales.isNotEmpty){
-            lastSales.forEach((sale){
-              if(widget.parts._lastSales.length<3)
-                widget.parts._lastSales.add(Products.toMap(sale));
-            });
-            widget.parts._isLoadingLS.value = false;   
-          }else{
-            widget.parts._noProducts.value = true;
-          }
-        });
   }
+
+  fetchData() async {
+    RestDatasource api = RestDatasource();
+    api.getProductsPopularWeek(widget.parts.business.id,GlobalUtils.ActiveToken.accessToken,context).then((weekRes){
+      if(weekRes.isNotEmpty){
+        widget.parts._week = Products.toMap(weekRes[0]);
+        widget.parts._isLoadingLW.value = false;           
+      }else{
+
+      }
+    });
+    api.getProductsPopularMonth(widget.parts.business.id,GlobalUtils.ActiveToken.accessToken,context).then((monthRes){
+      if(monthRes.isNotEmpty){
+        widget.parts._month = Products.toMap(monthRes[0]);
+        widget.parts._isLoadingLM.value = false;           
+      }else{
+        widget.parts._noProducts.value = true;
+        widget.parts._noProd = true;
+      } 
+    });
+    api.getProductLastSold(widget.parts.business.id,GlobalUtils.ActiveToken.accessToken,context).then((lastSales){
+      if(lastSales.isNotEmpty){
+        lastSales.forEach((sale){
+          if(widget.parts._lastSales.length<3)
+            widget.parts._lastSales.add(Products.toMap(sale));
+        });
+        widget.parts._isLoadingLS.value = false;   
+      }else{
+        widget.parts._noProducts.value = true;
+      }
+    });
+  }
+  
+  GlobalStateModel globalStateModel;
   @override
   Widget build(BuildContext context) {
+    globalStateModel = Provider.of<GlobalStateModel>(context);
+    widget.parts.business = globalStateModel.currentBusiness;
     widget.parts._isTablet = Measurements.width > 600;
     widget.parts._cardSize = Measurements.height * (widget.parts._isTablet?0.03:0.055);
+    fetchData();
     return OrientationBuilder(
       builder: (BuildContext context, Orientation orientation) {
         return DashboardCard(widget._appName, widget._imageProvider, MainProductCard(widget.parts), SecondProductCard(widget.parts),ProdNavigation(widget.parts),!widget.parts._noProd, false);
-    },);
+    },
+    );
 
 
     }

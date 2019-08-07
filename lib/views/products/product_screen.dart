@@ -19,7 +19,10 @@ import 'package:payever/utils/env.dart';
 import 'package:payever/utils/global_keys.dart';
 import 'package:payever/utils/translations.dart';
 import 'package:payever/utils/utils.dart';
+import 'package:payever/view_models/global_state_model.dart';
+import 'package:payever/views/customelements/wallpaper.dart';
 import 'package:payever/views/login/login_page.dart';
+import 'package:provider/provider.dart';
 import 'new_product.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -153,80 +156,126 @@ class _ProductScreenState extends State<ProductScreen> {
           },
         ),
       );
+      GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context);
       return OrientationBuilder(
         builder: (BuildContext context, Orientation orientation) {
         widget._parts.isPortrait = orientation == Orientation.portrait;
         widget._parts.isTablet = widget._parts.isPortrait? MediaQuery.of(context).size.width > 600:MediaQuery.of(context).size.height > 600;
-          return Stack(
-            children: <Widget>[
-              Positioned(
-                height: widget._parts.isPortrait ? Measurements.height:Measurements.width,
-                width:  widget._parts.isPortrait ? Measurements.width:Measurements.height,
-                child: CachedNetworkImage(
-                    imageUrl: widget.wallpaper,
-                    placeholder: (context, url) =>  Container(),
-                    errorWidget: (context, url, error) => new Icon(Icons.error),
-                    fit: BoxFit.cover,
-                  ),
+          return BackgroundBase(
+            true,
+            appBar: _appBar,
+            bottomNav: Container(
+              height: widget._parts.loadMore.value ? Measurements.height * 0.0001:0,
+              color: Colors.transparent,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  widget._parts.loadMore.value?ProductLoader(isSearching: widget._parts.isSearching ,business: widget._parts.business,page: widget._parts.page ,parts: widget._parts,):Container(),
+                ],
               ),
-              Container(
-                color: Colors.black.withOpacity(0.2),
-                height: widget._parts.isPortrait?Measurements.height:Measurements.width,
-                width: widget._parts.isPortrait?Measurements.width:Measurements.height,
-                child:BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX:25,sigmaY: 40,),
+            ),
+            body: Column(
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.only(bottom: Measurements.height * 0.02,left: Measurements.width* (widget._parts.isTablet?0.01:0.05),right: Measurements.width* (widget._parts.isTablet?0.01:0.05)),
                   child: Container(
-                    height: widget._parts.isPortrait?Measurements.height:Measurements.width,
-                    width: widget._parts.isPortrait?Measurements.width:Measurements.height,
-                    child: Scaffold(
-                      bottomNavigationBar: Container(
-                        height: widget._parts.loadMore.value ? Measurements.height * 0.0001:0,
-                        color: Colors.transparent,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            widget._parts.loadMore.value?ProductLoader(isSearching: widget._parts.isSearching ,business: widget._parts.business,page: widget._parts.page ,parts: widget._parts,):Container(),
-                          ],
-                        ),
-                       ),
-                      backgroundColor: Colors.black.withOpacity(0.2),
-                      appBar: widget.posCall? null : _appBar, 
-                      body: 
-                      Column(children: <Widget>[
-                        Container(
-                          padding: EdgeInsets.only(bottom: Measurements.height * 0.02,left: Measurements.width* (widget._parts.isTablet?0.01:0.05),right: Measurements.width* (widget._parts.isTablet?0.01:0.05)),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(12),
-                              ),
-                            padding:EdgeInsets.only(left: Measurements.width* (widget._parts.isTablet?0.01:0.025)),
-                            child: TextFormField(
-                              decoration: InputDecoration(
-                                hintText: "Search",
-                                border: InputBorder.none,
-                                icon: Container(child:SvgPicture.asset("images/searchicon.svg",height: Measurements.height * 0.0175,color:Colors.white,))
-                              ),
-                              autovalidate: true,
-                              onFieldSubmitted: (doc){
-                                widget._parts.products.clear();
-                                widget._parts.searchDocument = doc; 
-                                widget._parts.page = 1;
-                                widget._parts.isLoading.value = true;
-                              },
-                            ),
-                          ),
-                        ),
-                        widget._parts.isLoading.value?
-                        ProductLoader(business: widget.business,parts: widget._parts,isSearching: false,):
-                        ProductsBody(widget._parts),
-                      ],)
-                    )
-                  )
-                )
-              ),
-            ],
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(12),
+                      ),
+                    padding:EdgeInsets.only(left: Measurements.width* (widget._parts.isTablet?0.01:0.025)),
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                        hintText: "Search",
+                        border: InputBorder.none,
+                        icon: Container(child:SvgPicture.asset("images/searchicon.svg",height: Measurements.height * 0.0175,color:Colors.white,))
+                      ),
+                      autovalidate: true,
+                      onFieldSubmitted: (doc){
+                        widget._parts.products.clear();
+                        widget._parts.searchDocument = doc; 
+                        widget._parts.page = 1;
+                        widget._parts.isLoading.value = true;
+                      },
+                    ),
+                  ),
+                ),
+                widget._parts.isLoading.value?
+                ProductLoader(business: widget.business,parts: widget._parts,isSearching: false,):
+                ProductsBody(widget._parts),
+              ],
+            ),
           );
+          // return Stack(
+          //   children: <Widget>[
+          //     Positioned(
+          //       height: widget._parts.isPortrait ? Measurements.height:Measurements.width,
+          //       width:  widget._parts.isPortrait ? Measurements.width:Measurements.height,
+          //       child: CachedNetworkImage(
+          //           imageUrl: globalStateModel.currentWallpaper,
+          //           placeholder: (context, url) =>  Container(),
+          //           errorWidget: (context, url, error) => new Icon(Icons.error),
+          //           fit: BoxFit.cover,
+          //         ),
+          //     ),
+          //     Container(
+          //       color: Colors.black.withOpacity(0.2),
+          //       height: widget._parts.isPortrait?Measurements.height:Measurements.width,
+          //       width: widget._parts.isPortrait?Measurements.width:Measurements.height,
+          //       child:BackdropFilter(
+          //         filter: ImageFilter.blur(sigmaX:25,sigmaY: 40,),
+          //         child: Container(
+          //           height: widget._parts.isPortrait?Measurements.height:Measurements.width,
+          //           width: widget._parts.isPortrait?Measurements.width:Measurements.height,
+          //           child: Scaffold(
+          //             bottomNavigationBar: Container(
+          //               height: widget._parts.loadMore.value ? Measurements.height * 0.0001:0,
+          //               color: Colors.transparent,
+          //               child: Row(
+          //                 mainAxisAlignment: MainAxisAlignment.center,
+          //                 children: <Widget>[
+          //                   widget._parts.loadMore.value?ProductLoader(isSearching: widget._parts.isSearching ,business: widget._parts.business,page: widget._parts.page ,parts: widget._parts,):Container(),
+          //                 ],
+          //               ),
+          //              ),
+          //             backgroundColor: Colors.black.withOpacity(0.2),
+          //             appBar: widget.posCall? null : _appBar, 
+          //             body: 
+          //             Column(children: <Widget>[
+          //               Container(
+          //                 padding: EdgeInsets.only(bottom: Measurements.height * 0.02,left: Measurements.width* (widget._parts.isTablet?0.01:0.05),right: Measurements.width* (widget._parts.isTablet?0.01:0.05)),
+          //                 child: Container(
+          //                   decoration: BoxDecoration(
+          //                     color: Colors.black.withOpacity(0.2),
+          //                     borderRadius: BorderRadius.circular(12),
+          //                     ),
+          //                   padding:EdgeInsets.only(left: Measurements.width* (widget._parts.isTablet?0.01:0.025)),
+          //                   child: TextFormField(
+          //                     decoration: InputDecoration(
+          //                       hintText: "Search",
+          //                       border: InputBorder.none,
+          //                       icon: Container(child:SvgPicture.asset("images/searchicon.svg",height: Measurements.height * 0.0175,color:Colors.white,))
+          //                     ),
+          //                     autovalidate: true,
+          //                     onFieldSubmitted: (doc){
+          //                       widget._parts.products.clear();
+          //                       widget._parts.searchDocument = doc; 
+          //                       widget._parts.page = 1;
+          //                       widget._parts.isLoading.value = true;
+          //                     },
+          //                   ),
+          //                 ),
+          //               ),
+          //               widget._parts.isLoading.value?
+          //               ProductLoader(business: widget.business,parts: widget._parts,isSearching: false,):
+          //               ProductsBody(widget._parts),
+          //             ],)
+          //           )
+          //         )
+          //       )
+          //     ),
+          //   ],
+          // );
         },
       );
     }

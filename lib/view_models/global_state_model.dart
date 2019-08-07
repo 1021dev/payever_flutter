@@ -4,12 +4,17 @@ import 'package:payever/models/business.dart';
 
 class GlobalStateModel extends ChangeNotifier {
   String _currentWallpaper;
+  String _currentWallpaperBlur;
+
   String _defaultCustomWallpaper =
+      "https://payevertest.azureedge.net/images/commerseos-background.jpg";
+  String _defaultCustomWallpaperBlur =
       "https://payevertest.azureedge.net/images/commerseos-background-blurred.jpg";
+
   Business _currentBusiness;
   List<AppWidget> _appWidgets;
 
-  String get currentWallpaper => _currentWallpaper;
+  String get currentWallpaper => _currentWallpaper??_defaultCustomWallpaper;
 
   String get defaultCustomWallpaper => _defaultCustomWallpaper;
 
@@ -17,14 +22,21 @@ class GlobalStateModel extends ChangeNotifier {
 
   List<AppWidget> get appWidgets => _appWidgets;
 
-  setCurrentWallpaper(String wallpaper) {
+  String get currentWallpaperBlur => _currentWallpaperBlur??_defaultCustomWallpaperBlur;
+
+  setCurrentWallpaper(String wallpaper,{bool notify}) {
     _currentWallpaper = wallpaper;
-    notifyListeners();
+    setCurrentWallpaperBlur(wallpaper+"-blurred",notify: false);
+    if(notify??true)notifyListeners();
+  }
+  setCurrentWallpaperBlur(String wallpaper,{bool notify}) {
+    _currentWallpaperBlur = wallpaper;
+    if(notify??true)notifyListeners();
   }
 
-  setCurrentBusiness(Business business) {
+  setCurrentBusiness(Business business,{bool notify}) {
     _currentBusiness = business;
-    notifyListeners();
+    if(notify??true)notifyListeners();
   }
 
   updateWallpaperBusinessAndAppsWidgets(

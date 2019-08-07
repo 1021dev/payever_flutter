@@ -16,7 +16,7 @@ class NavigationIconView {
        item = BottomNavigationBarItem(
          icon: icon,
          activeIcon: activeIcon,
-         title:Container(padding: EdgeInsets.only(top: Measurements.width * (tablet?0.005:0.015)),child:Text(title,style: TextStyle(fontSize: 10),)),
+         title:Container(padding: EdgeInsets.only(top: 5),child:Text(title,style: TextStyle(fontSize: 10),)),
          backgroundColor: color,
        ),
        controller = AnimationController(

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart' as prefix1;
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart' as prefix0;
@@ -32,7 +33,7 @@ class DashboardCard extends StatefulWidget {
   _DashboardCardState createState() => _DashboardCardState(_appName,_imageProvider,mainCard,secondCard);
 }
 
-class _DashboardCardState extends State<DashboardCard> {
+class _DashboardCardState extends State<DashboardCard> with  TickerProviderStateMixin{
   
   bool _open = false;
   var _isloading = ValueNotifier(false);
@@ -53,6 +54,11 @@ class _DashboardCardState extends State<DashboardCard> {
       throw 'Could not launch $url';
     }
   }
+  @override
+  void initState() {
+    super.initState();
+     _isloading.addListener(listen);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +68,7 @@ class _DashboardCardState extends State<DashboardCard> {
     bool _isTablet = Measurements.width < 600 ? false : true; 
     double _cardSize = Measurements.height * (_isTablet?0.04:0.065);
     widget.pad = _isTablet?0.02:0.04 ;
-    _isloading.addListener(listen);
+   
     if(!widget._active)_open = false;
         return OrientationBuilder(
           builder: (BuildContext context, Orientation orientation) {
@@ -143,7 +149,7 @@ class _DashboardCardState extends State<DashboardCard> {
                         child: BackdropFilter(
                           filter: ImageFilter.blur(sigmaX: 50,sigmaY: 25),
                           child: Container(
-                            color: Colors.black.withOpacity(0.25),
+                            //color: Colors.black.withOpacity(0.25),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               mainAxisSize: MainAxisSize.max,
@@ -169,6 +175,7 @@ class _DashboardCardState extends State<DashboardCard> {
       
     
       void listen() {
+        
         setState(() {
           
         });
@@ -191,27 +198,29 @@ class _DashboardCardState extends State<DashboardCard> {
               ? Measurements.height * 0.02
               : Measurements.width * 0.07,
           child: Center(
-            child: _isloading.value
-                ? Container(
-                constraints: BoxConstraints(
-                  maxWidth: _isTablet
-                      ? Measurements.height * 0.01
-                      : Measurements.width * 0.04,
-                  maxHeight: _isTablet
-                      ? Measurements.height * 0.01
-                      : Measurements.width * 0.04,
-                ),
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                ))
-                : Container(
+            child: 
+            // _isloading.value
+            //     ? Container(
+            //     constraints: BoxConstraints(
+            //       maxWidth: _isTablet
+            //           ? Measurements.height * 0.01
+            //           : Measurements.width * 0.04,
+            //       maxHeight: _isTablet
+            //           ? Measurements.height * 0.01
+            //           : Measurements.width * 0.04,
+            //     ),
+            //     child: CircularProgressIndicator(
+            //       strokeWidth: 2,
+            //     ))
+            //     : 
+                Container(
               alignment: Alignment.center,
                    child:Text(Language.getConnectStrings("actions.open"))
             ),
           )),
       onTap: () {
         setState(() {
-          _isloading.value = true;
+          // _isloading.value = true;
           widget.handler.loadScreen(context, _isloading);
         });
       },
@@ -220,7 +229,7 @@ class _DashboardCardState extends State<DashboardCard> {
   }
 
   Widget actionButtonsWidget(BuildContext context, bool _isTablet, bool isActive) {
-    print("${widget._appName}.card.open");
+    //print("${widget._appName}.card.open");
     return isActive
         ? InkWell(
           key: Key("${widget._appName}.card.open"),
@@ -239,20 +248,22 @@ class _DashboardCardState extends State<DashboardCard> {
               ? Measurements.height * 0.02
               : Measurements.width * 0.07,
           child: Center(
-            child: _isloading.value
-                ? Container(
-                constraints: BoxConstraints(
-                  maxWidth: _isTablet
-                      ? Measurements.height * 0.01
-                      : Measurements.width * 0.04,
-                  maxHeight: _isTablet
-                      ? Measurements.height * 0.01
-                      : Measurements.width * 0.04,
-                ),
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                ))
-                : Container(
+            child: 
+            // _isloading.value
+            //     ? Container(
+            //     constraints: BoxConstraints(
+            //       maxWidth: _isTablet
+            //           ? Measurements.height * 0.01
+            //           : Measurements.width * 0.04,
+            //       maxHeight: _isTablet
+            //           ? Measurements.height * 0.01
+            //           : Measurements.width * 0.04,
+            //     ),
+            //     child: CircularProgressIndicator(
+            //       strokeWidth: 2,
+            //     ))
+            //     :
+                 Container(
               alignment: Alignment.center,
               child:Text(Language.getConnectStrings("actions.open"))
               
@@ -260,7 +271,8 @@ class _DashboardCardState extends State<DashboardCard> {
           )),
       onTap: () {
         setState(() {
-          _isloading.value = true;
+          
+          // _isloading.value = true;
           widget.handler.loadScreen(context, _isloading);
         });
       },
@@ -295,7 +307,8 @@ class _DashboardCardState extends State<DashboardCard> {
                       Text(
                         "Learn more",
                         style: prefix0.TextStyle(
-                            color: Colors.white.withOpacity(0.7)),
+                            color: Colors.white.withOpacity(0.7)
+                            ),
                       ),
                     ],
                   ))),

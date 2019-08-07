@@ -20,6 +20,8 @@ import 'package:payever/utils/translations.dart';
 import 'package:payever/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
+import 'package:payever/view_models/global_state_model.dart';
+import 'package:payever/views/customelements/wallpaper.dart';
 import 'package:payever/views/login/login_page.dart';
 import 'package:payever/views/products/product_categories.dart';
 import 'package:payever/views/products/product_inventory.dart';
@@ -29,6 +31,7 @@ import 'package:payever/views/products/product_type.dart';
 import 'package:payever/views/products/product_variants.dart';
 import 'package:payever/views/products/product_visibility.dart';
 import 'package:payever/views/settings/employees/expandable_component.dart';
+import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
 ValueNotifier<GraphQLClient> clientFor({
@@ -191,7 +194,6 @@ class _NewProductScreenState extends State<NewProductScreen> {
           RestDatasource api = RestDatasource();
           api.getInvetory(widget.business, GlobalUtils.ActiveToken.accessToken, f.sku,context).then((inv){
             InventoryModel currentInventory = InventoryModel.toMap(inv);
-            print("${currentInventory.sku} = ${currentInventory.stock}");
             widget._parts.invManager.addInventory(Inventory(amount: currentInventory.stock, barcode: currentInventory.barcode, sku: currentInventory.sku, tracking: currentInventory.isTrackable));
           });
         });
@@ -249,79 +251,108 @@ class _NewProductScreenState extends State<NewProductScreen> {
         },
       ),
     );
-    scaffold = Scaffold(
-      key: widget._parts.scaffoldKey,
-      backgroundColor: Colors.transparent,
-      appBar: _appBar,
-      body: ListView(
-        children: <Widget>[
-          Form(
-            key: widget._parts._formKey,
-            child: Container(
-              child: Column(
-                children: <Widget>[
-                  buttomrow,
-                  mainrow,
-                  widget._parts.product.variants.length == 0 ? inventoryRow:Container(),
-                  categoryRow,
-                  variantRow,
-                  channelRow,
-                  shippingRow,
-                  taxRow,
-                  visibilityRow
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+    // scaffold = Scaffold(
+    //   key: widget._parts.scaffoldKey,
+    //   backgroundColor: Colors.transparent,
+    //   appBar: _appBar,
+    //   body: ListView(
+    //     children: <Widget>[
+    //       Form(
+    //         key: widget._parts._formKey,
+    //         child: Container(
+    //           child: Column(
+    //             children: <Widget>[
+    //               buttomrow,
+    //               mainrow,
+    //               widget._parts.product.variants.length == 0 ? inventoryRow:Container(),
+    //               categoryRow,
+    //               variantRow,
+    //               channelRow,
+    //               shippingRow,
+    //               taxRow,
+    //               visibilityRow
+    //             ],
+    //           ),
+    //         ),
+    //       ),
+    //     ],
+    //   ),
+    // );
+    GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context);
     return OrientationBuilder(
       builder: (BuildContext context, Orientation orientation) {
         widget._parts.isPortrait = orientation == Orientation.portrait;
         widget._parts.isTablet = widget._parts.isPortrait
             ? MediaQuery.of(context).size.width > 600
             : MediaQuery.of(context).size.height > 600;
-        return Stack(
-          children: <Widget>[
-            Positioned(
-              height: widget._parts.isPortrait
-                  ? Measurements.height
-                  : Measurements.width,
-              width: widget._parts.isPortrait
-                  ? Measurements.width
-                  : Measurements.height,
-              child: CachedNetworkImage(
-                imageUrl: widget.wallpaper,
-                placeholder: (context, url) => Container(),
-                errorWidget: (context, url, error) => new Icon(Icons.error),
-                fit: BoxFit.cover,
-              ),
-            ),
-            Container(
-                color: Colors.black.withOpacity(0.2),
-                height: widget._parts.isPortrait
-                    ? Measurements.height
-                    : Measurements.width,
-                width: widget._parts.isPortrait
-                    ? Measurements.width
-                    : Measurements.height,
-                child: BackdropFilter(
-                    filter: ImageFilter.blur(
-                      sigmaX: 25,
-                      sigmaY: 40,
+
+          return BackgroundBase(
+            true,
+            currentKey: widget._parts.scaffoldKey,
+            appBar: _appBar,
+            body: ListView(
+              children: <Widget>[
+                Form(
+                  key: widget._parts._formKey,
+                  child: Container(
+                    child: Column(
+                      children: <Widget>[
+                        buttomrow,
+                        mainrow,
+                        widget._parts.product.variants.length == 0 ? inventoryRow:Container(),
+                        categoryRow,
+                        variantRow,
+                        channelRow,
+                        shippingRow,
+                        taxRow,
+                        visibilityRow
+                      ],
                     ),
-                    child: Container(
-                      height: widget._parts.isPortrait
-                          ? Measurements.height
-                          : Measurements.width,
-                      width: widget._parts.isPortrait
-                          ? Measurements.width
-                          : Measurements.height,
-                      child: scaffold,
-                    )))
-          ],
-        );
+                  ),
+                ),
+              ],
+            ),
+          );
+        // return Stack(
+        //   children: <Widget>[
+        //     Positioned(
+        //       height: widget._parts.isPortrait
+        //           ? Measurements.height
+        //           : Measurements.width,
+        //       width: widget._parts.isPortrait
+        //           ? Measurements.width
+        //           : Measurements.height,
+        //       child: CachedNetworkImage(
+        //         imageUrl: globalStateModel.currentWallpaper,
+        //         placeholder: (context, url) => Container(),
+        //         errorWidget: (context, url, error) => new Icon(Icons.error),
+        //         fit: BoxFit.cover,
+        //       ),
+        //     ),
+        //     Container(
+        //         color: Colors.black.withOpacity(0.2),
+        //         height: widget._parts.isPortrait
+        //             ? Measurements.height
+        //             : Measurements.width,
+        //         width: widget._parts.isPortrait
+        //             ? Measurements.width
+        //             : Measurements.height,
+        //         child: BackdropFilter(
+        //             filter: ImageFilter.blur(
+        //               sigmaX: 25,
+        //               sigmaY: 40,
+        //             ),
+        //             child: Container(
+        //               height: widget._parts.isPortrait
+        //                   ? Measurements.height
+        //                   : Measurements.width,
+        //               width: widget._parts.isPortrait
+        //                   ? Measurements.width
+        //                   : Measurements.height,
+        //               child: scaffold,
+        //             )))
+        //   ],
+        // );
       },
     );
   }
@@ -369,7 +400,7 @@ class _NewProductScreenState extends State<NewProductScreen> {
         channels += '{id:"${ch.id}", type: "${ch.type}", name: "${ch.name}"}';
       });
 
-      print(channels);
+      
 
       String doc = !widget._parts.editMode?
        '''
@@ -388,7 +419,7 @@ class _NewProductScreenState extends State<NewProductScreen> {
                 }
               }
         ''' ;
-      print(doc);
+      
       showDialog(barrierDismissible: false,
           context: context,
           builder: (BuildContext context) {
@@ -795,7 +826,7 @@ class _InventoryRowState extends State<InventoryRow> {
     widget.openedRow.addListener(listener);
     if(widget.parts.editMode){
       if(widget.parts.inventories.isNotEmpty){
-        print(widget.parts.inventories);
+        
         RestDatasource api = RestDatasource();
         api.getInvetory(widget.parts.business, GlobalUtils.ActiveToken.accessToken, widget.parts.product.sku,context).
           then((inv){
@@ -1667,7 +1698,6 @@ class _ChannelRowState extends State<ChannelRow> {
                                 activeColor: widget.parts.switchColor,
                                 value: shopEnabled,
                                 onChanged: (bool value) {
-                                  print("ONCHANGED");
                                   var shop =widget.parts.shops[index];
                                   if(value){
                                     widget.parts.channels.add(ChannelSet(shop.channelSet,shop.name,GlobalUtils.CHANNEL_SHOP));
