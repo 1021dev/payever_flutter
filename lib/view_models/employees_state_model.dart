@@ -148,13 +148,13 @@ class EmployeesStateModel extends ChangeNotifier with Validators {
     return api.updateEmployee(data, accessToken, businessId, userId);
   }
 
-  Future<void> addEmployeeToGroup(String groupId, String userId) async {
-    return api.addEmployeeToGroup(accessToken, businessId, groupId, userId);
+  Future<void> addEmployeesToGroup(String groupId, Object data) async {
+    return api.addEmployeesToGroup(accessToken, businessId, groupId, data);
   }
 
-  Future<void> deleteEmployeeFromGroup(String groupId, String userId) async {
-    return api.deleteEmployeeFromGroup(
-        accessToken, businessId, groupId, userId);
+  Future<void> deleteEmployeesFromGroup(String groupId, Object data) async {
+    return api.deleteEmployeesFromGroup(
+        accessToken, businessId, groupId, data);
   }
 
   Future<void> deleteEmployeeFromBusiness(String userId) async {

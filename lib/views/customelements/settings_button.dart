@@ -36,18 +36,20 @@ class CustomSettingsButton extends StatelessWidget {
           highlightColor: Colors.grey,
           splashColor: Colors.blueGrey,
           onPressed: _onPressed,
-          child: Row(
-            children: <Widget>[
-              _buttonIcon,
-              SizedBox(width: 10),
-              Text(
-                _buttonText,
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 13,
-                    fontFamily: 'Montserrat'),
-              ),
-            ],
+          child: FittedBox(
+            child: Row(
+              children: <Widget>[
+                _buttonIcon,
+                SizedBox(width: 10),
+                Text(
+                  _buttonText,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 13,
+                      fontFamily: 'Montserrat'),
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -57,7 +57,34 @@ class NetworkUtil {
     });
   }
 
-  Future<dynamic> pacth(String url, {Map headers, body, encoding}) {
+
+  Future<dynamic> deleteWithBody(String url, {Map headers, body, encoding}) {
+
+    final client = http.Client();
+
+    try {
+      return client.send(
+          http.Request("DELETE", Uri.parse(url))
+            ..headers["authorization"] = "${headers['authorization']}"
+            ..headers["content-type"] = "${headers['content-type']}"
+            ..headers["user-agent"] = "${headers['user-agent']}"
+            ..body = body).then((streamedResponse) {
+              http.Response.fromStream(streamedResponse).then((response) {
+                final String res = response.body;
+                final int statusCode = response.statusCode;
+                if (statusCode < 200 || statusCode >= 400 || json == null) {
+                  throw Exception("Error while fetching data");
+                }
+                return _decoder.convert(res);
+              });
+            });
+    } finally {
+      client.close();
+    }
+
+  }
+
+  Future<dynamic> patch(String url, {Map headers, body, encoding}) {
     return http.patch(url, body: body, headers: headers, encoding: encoding).then((http.Response response){
       final String res = response.body;
       final int statusCode = response.statusCode;

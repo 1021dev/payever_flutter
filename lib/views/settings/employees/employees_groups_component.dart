@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:page_transition/page_transition.dart';
 
 import 'package:payever/models/acl.dart';
@@ -16,6 +17,7 @@ import 'package:payever/view_models/global_state_model.dart';
 import 'package:payever/views/customelements/custom_alert_dialog.dart';
 import 'package:payever/views/customelements/custom_future_builder.dart';
 import 'package:payever/views/login/login_page.dart';
+import 'package:payever/views/settings/employees/custom_apps_access_expansion_tile.dart';
 import 'package:payever/views/settings/employees/employees_apps_access_component.dart';
 import 'package:provider/provider.dart';
 
@@ -24,9 +26,15 @@ import 'expandable_component.dart';
 
 class EmployeesGroupComponent extends StatefulWidget {
   final BusinessEmployeesGroups businessEmployeesGroups;
+  final Function(List<String>) employeesToDelete;
+  final Function(List<String>) employeesListOnGroup;
   final ValueNotifier openedRow;
 
-  EmployeesGroupComponent(this.businessEmployeesGroups, this.openedRow);
+  EmployeesGroupComponent(
+      {this.businessEmployeesGroups,
+      this.employeesToDelete,
+      this.employeesListOnGroup,
+      this.openedRow});
 
   @override
   createState() => _EmployeesGroupComponentState();
@@ -43,6 +51,8 @@ class _EmployeesGroupComponentState extends State<EmployeesGroupComponent>
 
 //  StreamController<BusinessEmployeesGroups> _employeesController;
 
+  List<String> employeesIdsToDeleteOnGroup = List<String>();
+
   @override
   void initState() {
     super.initState();
@@ -53,8 +63,7 @@ class _EmployeesGroupComponentState extends State<EmployeesGroupComponent>
 //    fetchEmployeesFromGroup(employeesStateModel);
 //    fetchEmployeesFromGroup();
 
-    bloc.fetchAllEmployees();
-
+//    bloc.fetchAllEmployees();
   }
 
   @override
@@ -63,7 +72,6 @@ class _EmployeesGroupComponentState extends State<EmployeesGroupComponent>
     bloc.dispose();
     super.dispose();
   }
-
 
   _handleTabSelection() {
     setState(() {
@@ -115,10 +123,14 @@ class _EmployeesGroupComponentState extends State<EmployeesGroupComponent>
 
 //    var groupData = await employeesStateModel
 //        .getEmployeesFromGroup(widget.businessEmployeesGroups.id);
-    var groupData = await getEmployeesFromGroup(widget.businessEmployeesGroups.id);
+    var groupData =
+        await getEmployeesFromGroup(widget.businessEmployeesGroups.id);
     print("groupData: $groupData");
     businessEmployeesGroups = BusinessEmployeesGroups.fromMap(groupData);
 //    _employeesController.add(businessEmployeesGroups);
+
+//    widget.employeesListOnGroup(businessEmployeesGroups.employees);
+
     return businessEmployeesGroups;
   }
 
@@ -261,25 +273,23 @@ class _EmployeesGroupComponentState extends State<EmployeesGroupComponent>
                   controller: tabController,
                   children: <Widget>[
                     Padding(
-                  padding: EdgeInsets.all(10),
-                    child: FutureBuilder<BusinessEmployeesGroups>(
-                      future: fetchEmployeesFromGroup(),
-                      builder: (BuildContext context, AsyncSnapshot<BusinessEmployeesGroups> snapshot) {
-                        if (snapshot.hasError) {
-                          return Center(child: Text(snapshot.error));
-                        }
-
-                        if (snapshot.hasData) {
-                          return EmployeesList(
-                            employeesList: snapshot.data.employees,
-                            groupId: widget.businessEmployeesGroups.id,
-                          );
-                        }
-
-                        return Center(child: CircularProgressIndicator(),);
-//
-
-                      },),
+                      padding: EdgeInsets.all(10),
+                      child: CustomFutureBuilder<BusinessEmployeesGroups>(
+                          future: fetchEmployeesFromGroup(),
+                          errorMessage: "Error loading employees",
+                          onDataLoaded: (BusinessEmployeesGroups results) =>
+                              EmployeesList(
+                                  employeesList: results.employees,
+                                  employeesToDelete: (List<String> employees) {
+                                    widget.employeesToDelete(employees);
+                                  },
+                                  employeesIdsToDeleteOnGroup:
+                                      employeesIdsToDeleteOnGroup,
+                                  groupId: widget.businessEmployeesGroups.id,
+                                  employeesListOnGroup:
+                                      (List<String> employees) {
+                                    widget.employeesListOnGroup(employees);
+                                  })),
                     ),
 
 //                    Padding(
@@ -322,7 +332,6 @@ class _EmployeesGroupComponentState extends State<EmployeesGroupComponent>
 //                          }),
 //                    ),
 
-
 //                  Padding(
 //                    padding: EdgeInsets.only(top: 20),
 //                    child: SingleChildScrollView(
@@ -339,17 +348,22 @@ class _EmployeesGroupComponentState extends State<EmployeesGroupComponent>
                     Padding(
                       padding: EdgeInsets.only(top: 20),
                       child: SingleChildScrollView(
-                        child: EmployeesAppsAccessComponent(
-                          openedRow: widget.openedRow,
-                          businessAppsData: results,
-                          groupAclsList: widget.businessEmployeesGroups.acls,
-                          isChanged: (isChanged) {
-                            if (isChanged) {
-                              employeesStateModel.group;
-                            }
-                          },
+                        child: CustomAppsAccessExpansionTile(
+                          employeesStateModel: employeesStateModel,
+                          businessApps: results,
                           isNewEmployeeOrGroup: false,
                         ),
+//                        child: EmployeesAppsAccessComponent(
+//                          openedRow: widget.openedRow,
+//                          businessAppsData: results,
+//                          groupAclsList: widget.businessEmployeesGroups.acls,
+//                          isChanged: (isChanged) {
+//                            if (isChanged) {
+//                              employeesStateModel.group;
+//                            }
+//                          },
+//                          isNewEmployeeOrGroup: false,
+//                        ),
                       ),
                     )
                   ],
@@ -365,9 +379,18 @@ class _EmployeesGroupComponentState extends State<EmployeesGroupComponent>
 
 class EmployeesList extends StatefulWidget {
   final List<String> employeesList;
+  final List<String> employeesIdsToDeleteOnGroup;
+  final Function(List<String>) employeesToDelete;
+  final Function(List<String>) employeesListOnGroup;
   final String groupId;
 
-  const EmployeesList({Key key, this.employeesList, this.groupId})
+  const EmployeesList(
+      {Key key,
+      this.employeesList,
+      this.employeesIdsToDeleteOnGroup,
+      this.employeesToDelete,
+      this.employeesListOnGroup,
+      this.groupId})
       : super(key: key);
 
   @override
@@ -376,6 +399,15 @@ class EmployeesList extends StatefulWidget {
 
 class _EmployeesListState extends State<EmployeesList> {
   final _formEmployeesKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+
+    setState(() {
+      widget.employeesListOnGroup(widget.employeesList);
+    });
+  }
 
   Future<Employees> getEmployeeDetails(
       GlobalStateModel globalStateModel, String employeeId) async {
@@ -410,10 +442,11 @@ class _EmployeesListState extends State<EmployeesList> {
     EmployeesStateModel employeesStateModel =
         Provider.of<EmployeesStateModel>(context);
 
-    bool _isTablet = Measurements.width < 600 ? false : true;
+//    bool _isTablet = Measurements.width < 600 ? false : true;
+
     return ListView.separated(
       key: _formEmployeesKey,
-      padding: EdgeInsets.only(top: 10),
+//      padding: EdgeInsets.only(top: 10),
       shrinkWrap: true,
       itemCount: widget.employeesList.length,
       itemBuilder: (BuildContext context, int index) {
@@ -423,103 +456,177 @@ class _EmployeesListState extends State<EmployeesList> {
           loadingWidget: Container(width: 0, height: 0),
           errorMessage: "Error loading employee data",
           onDataLoaded: (Employees results) {
-            return Column(
-              children: <Widget>[
-                Container(
-                  height: Measurements.width * 0.14,
-                  padding: EdgeInsets.all(5),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Expanded(
-                        flex: 3,
-                        child: Container(
-                          alignment: Alignment.centerLeft,
-//                    width: Measurements.width * 0.2,
-                          child: AutoSizeText(
-                            results.firstName + " " + results.lastName,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                            softWrap: false,
-                            style: TextStyle(color: Colors.white, fontSize: 18),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Container(
-                          alignment: Alignment.centerLeft,
-                          child: InkWell(
-                            radius: _isTablet
-                                ? Measurements.height * 0.02
-                                : Measurements.width * 0.07,
-                            child: Container(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: Measurements.width * 0.02),
-                                //width: widget._active ?50:120,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.rectangle,
-                                  color: Colors.grey.withOpacity(0.5),
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                height: _isTablet
-                                    ? Measurements.height * 0.03
-                                    : Measurements.height * 0.04,
-                                child: Center(
-                                  child: Container(
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        "Delete",
-                                        style: TextStyle(fontSize: 14),
-                                      )),
-                                )),
-                            onTap: () {
-                              print("userId: ${results.id}");
-                              print("groupId: ${widget.groupId}");
-
-                              _deleteEmployeeFromGroupConfirmation(
-                                  context, employeesStateModel, results.id);
-
-//                    Navigator.push(
-//                        context,
-//                        PageTransition(
-//                          child: EmployeesGroupsDetailsScreen(
-//                              _currentEmployeesGroup),
-//                          type: PageTransitionType.fade,
-//                        ));
-                            },
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Divider(),
-              ],
+            return EmployeeDataRow(
+              results: results,
+              groupId: widget.groupId,
+              employeesStateModel: employeesStateModel,
+              deleteEmployeeAction: (bool shouldAddToList) {
+                updateEmployeeToDeleteList(results.id, shouldAddToList);
+              },
+              employeesIdsToDeleteOnGroup: widget.employeesIdsToDeleteOnGroup,
             );
           },
         );
+      },
+      separatorBuilder: (context, index) {
+        return Container();
+//        return Divider(
+//          color: Colors.white,
+//        );
+      },
+    );
+  }
 
-//        return Container(
-//          height: Measurements.width * 0.14,
-//          padding: EdgeInsets.all(5),
-//          child: Row(
-//            crossAxisAlignment: CrossAxisAlignment.center,
-//            children: <Widget>[
-//              Expanded(
-//                flex: 3,
-//                child: Container(
-//                  alignment: Alignment.centerLeft,
-////                    width: Measurements.width * 0.2,
-//                  child: AutoSizeText(
-//                    widget.employeesList[index],
-//                    overflow: TextOverflow.ellipsis,
-//                    maxLines: 1,
-//                    softWrap: false,
-//                    style: TextStyle(color: Colors.white, fontSize: 18),
-//                  ),
-//                ),
-//              ),
+  updateEmployeeToDeleteList(String employeeId, bool shouldAddToList) {
+    if (shouldAddToList) {
+      widget.employeesIdsToDeleteOnGroup.add(employeeId);
+    } else {
+      widget.employeesIdsToDeleteOnGroup.remove(employeeId);
+    }
+
+    widget.employeesToDelete(widget.employeesIdsToDeleteOnGroup);
+
+    print("employeesIdsToDeleteOnGroup: ${widget.employeesIdsToDeleteOnGroup}");
+  }
+}
+
+class EmployeeDataRow extends StatefulWidget {
+  final Employees results;
+  final String groupId;
+  final EmployeesStateModel employeesStateModel;
+  final Function(bool shouldAddToList) deleteEmployeeAction;
+  final List<String> employeesIdsToDeleteOnGroup;
+
+  const EmployeeDataRow(
+      {Key key,
+      this.results,
+      this.groupId,
+      this.employeesStateModel,
+      this.deleteEmployeeAction,
+      this.employeesIdsToDeleteOnGroup})
+      : super(key: key);
+
+  @override
+  createState() => _EmployeeDataRowState();
+}
+
+class _EmployeeDataRowState extends State<EmployeeDataRow> {
+  final _formEmployeesKey = GlobalKey<_EmployeeDataRowState>();
+
+  bool isChecked = false;
+  bool _isTablet = Measurements.width < 600 ? false : true;
+
+  @override
+  void initState() {
+    super.initState();
+
+    setState(() {
+      isChecked =
+          widget.employeesIdsToDeleteOnGroup.contains(widget.results.id);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      key: _formEmployeesKey,
+      children: <Widget>[
+        Container(
+          height: _isTablet
+              ? Measurements.height * 0.05
+              : Measurements.height * 0.06,
+          padding: EdgeInsets.only(left: 10, right: 10),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              InkWell(
+                onTap: () {
+                  setState(() {
+                    isChecked = !isChecked;
+                  });
+                  widget.deleteEmployeeAction(isChecked);
+                },
+                child: Center(
+                  child: SizedBox(
+                    width: _isTablet
+                        ? Measurements.width * 0.03
+                        : Measurements.width * 0.05,
+                    height: _isTablet
+                        ? Measurements.height * 0.0240
+                        : Measurements.height * 0.0280,
+                    child: Container(
+                      child: Center(
+                        child: isChecked
+                            ? Icon(Icons.check,
+                                color: Colors.white,
+                                size: _isTablet
+                                    ? Measurements.width * 0.02
+                                    : Measurements.width * 0.04)
+                            : Container(),
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.transparent,
+                        border: Border.all(
+                            width: Measurements.width * 0.002,
+                            color: isChecked ? Colors.white : Colors.grey),
+                        borderRadius:
+                            const BorderRadius.all(const Radius.circular(5)),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+              SizedBox(
+                width: 20,
+              ),
+
+//                      Expanded(
+//                        flex: 1,
+//                        child: Container(
+//                          child: Checkbox(
+////                            activeColor: Color(0XFF0084ff),
+//                            activeColor: Colors.red,
+//                            checkColor: Colors.white,
+//                            value: true,
+//                            onChanged: (bool value) {
+//                              setState(() {
+//                                isChecked = value;
+//                              });
+//                            }
+//                          ),
+//                        ),
+//                      ),
+              Expanded(
+                flex: 5,
+                child: Container(
+                  alignment: Alignment.centerLeft,
+//                    width: Measurements.width * 0.2,
+                  child: AutoSizeText(
+                    widget.results.firstName + " " + widget.results.lastName,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    softWrap: false,
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                ),
+              ),
+
+              InkWell(
+                child: SvgPicture.asset(
+                  "images/xsinacircle.svg",
+                  height: _isTablet
+                      ? Measurements.width * 0.05
+                      : Measurements.width * 0.08,
+                ),
+                onTap: () {
+                  print("userId: ${widget.results.id}");
+                  print("groupId: ${widget.groupId}");
+
+                  _deleteEmployeeFromGroupConfirmation(
+                      context, widget.employeesStateModel, widget.results.id);
+                },
+              ),
 //              Expanded(
 //                flex: 1,
 //                child: Container(
@@ -538,17 +645,29 @@ class _EmployeesListState extends State<EmployeesList> {
 //                          borderRadius: BorderRadius.circular(15),
 //                        ),
 //                        height: _isTablet
-//                            ? Measurements.height * 0.02
-//                            : Measurements.width * 0.07,
-//                        child: Center(
-//                          child: Container(
-//                              alignment: Alignment.center,
-//                              child: Text(
-//                                "Delete",
-//                                style: TextStyle(fontSize: 14),
-//                              )),
+//                            ? Measurements.height * 0.03
+//                            : Measurements.height * 0.04,
+//                        child: FittedBox(
+//                          child: Center(
+//                            child: Container(
+//                                alignment: Alignment.center,
+//                                child: AutoSizeText(
+//                                  "Delete",
+//                                  overflow: TextOverflow.ellipsis,
+//                                  maxLines: 1,
+//                                  softWrap: false,
+//                                  style: TextStyle(
+//                                      color: Colors.white, fontSize: 18),
+//                                )),
+//                          ),
 //                        )),
 //                    onTap: () {
+//                      print("userId: ${widget.results.id}");
+//                      print("groupId: ${widget.groupId}");
+//
+//                      _deleteEmployeeFromGroupConfirmation(context,
+//                          widget.employeesStateModel, widget.results.id);
+//
 ////                    Navigator.push(
 ////                        context,
 ////                        PageTransition(
@@ -560,16 +679,11 @@ class _EmployeesListState extends State<EmployeesList> {
 //                  ),
 //                ),
 //              ),
-//            ],
-//          ),
-//        );
-      },
-      separatorBuilder: (context, index) {
-        return Container();
-//        return Divider(
-//          color: Colors.white,
-//        );
-      },
+            ],
+          ),
+        ),
+        Divider(),
+      ],
     );
   }
 
@@ -584,15 +698,23 @@ class _EmployeesListState extends State<EmployeesList> {
             message: "Are you sure that you want to delete this employee?",
             onContinuePressed: () {
               Navigator.of(_formEmployeesKey.currentContext).pop();
-              return _deleteEmployeeFromGroup(employeesStateModel, userId);
+              return _deleteEmployeesFromGroup(employeesStateModel, userId);
             });
       },
     );
   }
 
-  _deleteEmployeeFromGroup(
+  _deleteEmployeesFromGroup(
       EmployeesStateModel employeesStateModel, String userId) async {
-    await employeesStateModel.deleteEmployeeFromGroup(widget.groupId, userId);
+    var data = {
+      "employees": [userId]
+    };
+
+    await employeesStateModel.deleteEmployeesFromGroup(widget.groupId, data);
+
+    setState(() {
+      print("Emmployee Deleted");
+    });
 
 //    Navigator.of(_formKey.currentContext).pop();
   }
@@ -619,7 +741,6 @@ class _EmployeesAppsAccessState extends State<EmployeesAppsAccess> {
       shrinkWrap: true,
       itemCount: widget.acls.length,
       itemBuilder: (BuildContext context, int index) {
-//        return Text("Microservice: ${widget.acls[index].microService}");
         return ExpandableListView(
 //          iconData: AssetImage("images/logo"),
           title: widget.acls[index].microService,
@@ -738,110 +859,5 @@ class _EmployeesAppsAccessState extends State<EmployeesAppsAccess> {
         );
       },
     );
-  }
-}
-
-class BubbleTabIndicator extends Decoration {
-  final double indicatorHeight;
-  final Color indicatorColor;
-  final double indicatorRadius;
-  final EdgeInsetsGeometry padding;
-  final EdgeInsetsGeometry insets;
-  final TabBarIndicatorSize tabBarIndicatorSize;
-
-  const BubbleTabIndicator({
-    this.indicatorHeight: 20.0,
-    this.indicatorColor: Colors.greenAccent,
-    this.indicatorRadius: 100.0,
-    this.tabBarIndicatorSize = TabBarIndicatorSize.label,
-    this.padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
-    this.insets: const EdgeInsets.symmetric(horizontal: 0),
-  })  : assert(indicatorHeight != null),
-        assert(indicatorColor != null),
-        assert(indicatorRadius != null),
-        assert(padding != null),
-        assert(insets != null);
-
-  @override
-  Decoration lerpFrom(Decoration a, double t) {
-    if (a is BubbleTabIndicator) {
-      return new BubbleTabIndicator(
-        padding: EdgeInsetsGeometry.lerp(a.padding, padding, t),
-        insets: EdgeInsetsGeometry.lerp(a.insets, insets, t),
-      );
-    }
-    return super.lerpFrom(a, t);
-  }
-
-  @override
-  Decoration lerpTo(Decoration b, double t) {
-    if (b is BubbleTabIndicator) {
-      return new BubbleTabIndicator(
-        padding: EdgeInsetsGeometry.lerp(padding, b.padding, t),
-        insets: EdgeInsetsGeometry.lerp(insets, b.insets, t),
-      );
-    }
-    return super.lerpTo(b, t);
-  }
-
-  @override
-  _BubblePainter createBoxPainter([VoidCallback onChanged]) {
-    return new _BubblePainter(this, onChanged);
-  }
-}
-
-class _BubblePainter extends BoxPainter {
-  _BubblePainter(this.decoration, VoidCallback onChanged)
-      : assert(decoration != null),
-        super(onChanged);
-
-  final BubbleTabIndicator decoration;
-
-  double get indicatorHeight => decoration.indicatorHeight;
-
-  Color get indicatorColor => decoration.indicatorColor;
-
-  double get indicatorRadius => decoration.indicatorRadius;
-
-  EdgeInsetsGeometry get padding => decoration.padding;
-
-  EdgeInsetsGeometry get insets => decoration.insets;
-
-  TabBarIndicatorSize get tabBarIndicatorSize => decoration.tabBarIndicatorSize;
-
-  Rect _indicatorRectFor(Rect rect, TextDirection textDirection) {
-    assert(rect != null);
-    assert(textDirection != null);
-
-    Rect indicator = padding.resolve(textDirection).inflateRect(rect);
-
-    if (tabBarIndicatorSize == TabBarIndicatorSize.tab) {
-      indicator = insets.resolve(textDirection).deflateRect(rect);
-    }
-
-    return new Rect.fromLTWH(
-      indicator.left,
-      indicator.top,
-      indicator.width,
-      indicator.height,
-    );
-  }
-
-  @override
-  void paint(Canvas canvas, Offset offset, ImageConfiguration configuration) {
-    assert(configuration != null);
-    assert(configuration.size != null);
-    final Rect rect = Offset(
-            offset.dx, (configuration.size.height / 2) - indicatorHeight / 2) &
-        Size(configuration.size.width, indicatorHeight);
-    final TextDirection textDirection = configuration.textDirection;
-    final Rect indicator = _indicatorRectFor(rect, textDirection);
-    final Paint paint = Paint();
-    paint.color = indicatorColor;
-    paint.style = PaintingStyle.fill;
-    canvas.drawRRect(
-//        RRect.fromRectAndRadius(indicator, Radius.circular(indicatorRadius)),
-        RRect.fromRectAndRadius(indicator, Radius.circular(indicatorRadius)),
-        paint);
   }
 }

@@ -1,22 +1,21 @@
 import 'dart:ui';
 
+import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
-import 'package:payever/models/employees.dart';
 import 'package:payever/view_models/employees_state_model.dart';
 import 'package:payever/view_models/global_state_model.dart';
-import 'package:payever/network/rest_ds.dart';
-import 'package:payever/utils/translations.dart';
-import 'package:payever/utils/utils.dart';
-import 'package:payever/models/business.dart';
 import 'package:payever/views/customelements/custom_app_bar.dart';
 import 'package:payever/views/customelements/custom_future_builder.dart';
 import 'package:payever/views/login/login_page.dart';
-import 'employee_details_screen.dart';
+import 'package:payever/network/rest_ds.dart';
+import 'package:payever/models/employees.dart';
+import 'package:payever/models/business.dart';
+import 'package:payever/utils/translations.dart';
+import 'package:payever/utils/utils.dart';
 
 bool _isPortrait;
 bool _isTablet;
@@ -124,6 +123,7 @@ class _EmployeesSelectionsListScreenState
                         }),
                     onTap: () {
                       Navigator.pop(context);
+
                     },
                     actions: <Widget>[
                       StreamBuilder(
@@ -133,7 +133,7 @@ class _EmployeesSelectionsListScreenState
                               constraints: BoxConstraints(),
                               padding: EdgeInsets.all(10),
                               child: Text(
-                                'Invite',
+                                'Add',
                                 style: TextStyle(
                                     color: snapshot.hasData
                                         ? Colors.white
@@ -201,16 +201,18 @@ class _EmployeesSelectionsListScreenState
 //                                  );
 //                                }).toList(),),
 
-                                    CustomList(
-                                        globalStateModel.currentBusiness,
-                                        "",
-                                        results,
-                                        EmployeesScreenData(results,
-                                            globalStateModel.currentWallpaper),
-                                        ValueNotifier(false),
-                                        0,
-                                        employeesIdsToGroup,
-                                        employeesStateModel),
+                                    Expanded(
+                                      child: CustomList(
+                                          globalStateModel.currentBusiness,
+                                          "",
+                                          results,
+                                          EmployeesScreenData(results,
+                                              globalStateModel.currentWallpaper),
+                                          ValueNotifier(false),
+                                          0,
+                                          employeesIdsToGroup,
+                                          employeesStateModel),
+                                    ),
                                   ],
                                 ),
                               );
@@ -230,11 +232,12 @@ class _EmployeesSelectionsListScreenState
   }
 
   _inviteEmployeesToGroup(GlobalStateModel globalStateModel,
-      EmployeesStateModel employeesStateModel, BuildContext context) {
+      EmployeesStateModel employeesStateModel, BuildContext context) async {
     print("employeesIdsToGroup: $employeesIdsToGroup");
 
-    employeesStateModel.addEmployeeToGroup(
-        widget.groupId, employeesIdsToGroup[0]);
+    var data = {"employees": employeesIdsToGroup};
+
+    await employeesStateModel.addEmployeesToGroup(widget.groupId, data);
     Navigator.of(context).pop();
   }
 }
@@ -293,6 +296,7 @@ class _CustomListState extends State<CustomList> {
   Widget build(BuildContext context) {
     return ListView.builder(
       shrinkWrap: true,
+//      physics: ClampingScrollPhysics(),
 //          controller: controller,
       itemCount: widget.employeesData.length + 1,
       itemBuilder: (BuildContext context, int index) {
@@ -371,37 +375,88 @@ class _PhoneTableRowState extends State<PhoneTableRow> {
                     flex: 1,
                     child: Container(
                       alignment: Alignment.centerLeft,
+                      height: Measurements.height *
+                          (_isPortrait ? 0.050 : 0.045),
                       child: !widget._isHeader
-                          ? Container(
-//                              height: Measurements.height *
-//                                  (_isPortrait ? 0.050 : 0.085),
-                              child: Checkbox(
-                                activeColor: Color(0XFF0084ff),
-                                value: isChecked,
-                                onChanged: (bool value) {
-                                  setState(() {
-                                    isChecked = value;
-                                    print("value: $value");
-                                    if (value == true) {
-                                      widget.employeesIdsToGroup
-                                          .add(widget._currentEmployee.id);
+                          ?
+//                      Container(
+////                              height: Measurements.height *
+////                                  (_isPortrait ? 0.050 : 0.085),
+//                              child: Checkbox(
+//                                activeColor: Color(0XFF0084ff),
+//                                value: isChecked,
+//                                onChanged: (bool value) {
+//                                  setState(() {
+//                                    isChecked = value;
+//                                    print("value: $value");
+//                                    if (value == true) {
+//                                      widget.employeesIdsToGroup
+//                                          .add(widget._currentEmployee.id);
+//
+//                                      widget.employeesStateModel
+//                                          .changEmployeeList(
+//                                              widget.employeesIdsToGroup);
+//                                    } else {
+//                                      widget.employeesIdsToGroup
+//                                          .remove(widget._currentEmployee.id);
+//
+//                                      widget.employeesStateModel
+//                                          .changEmployeeList(
+//                                              widget.employeesIdsToGroup);
+//                                    }
+//                                  });
+//
+//                                  print(
+//                                      "employeesIdsToGroup: ${widget.employeesIdsToGroup}");
+//                                },
+//                              ),
+//                            )
 
-                                      widget.employeesStateModel
-                                          .changEmployeeList(
-                                              widget.employeesIdsToGroup);
-                                    } else {
-                                      widget.employeesIdsToGroup
-                                          .remove(widget._currentEmployee.id);
+                          InkWell(
+                              onTap: () {
+                                setState(() {
+                                  isChecked = !isChecked;
+                                  if (isChecked == true) {
+                                    widget.employeesIdsToGroup
+                                        .add(widget._currentEmployee.id);
 
-                                      widget.employeesStateModel
-                                          .changEmployeeList(
-                                              widget.employeesIdsToGroup);
-                                    }
-                                  });
+                                    widget.employeesStateModel
+                                        .changEmployeeList(
+                                            widget.employeesIdsToGroup);
+                                  } else {
+                                    widget.employeesIdsToGroup
+                                        .remove(widget._currentEmployee.id);
 
-                                  print(
-                                      "employeesIdsToGroup: ${widget.employeesIdsToGroup}");
-                                },
+                                    widget.employeesStateModel
+                                        .changEmployeeList(
+                                            widget.employeesIdsToGroup);
+                                  }
+                                });
+                              },
+                              child: Center(
+                                child: SizedBox(
+                                  width: Measurements.width * 0.05,
+                                  height: Measurements.height * 0.0280,
+                                  child: Container(
+                                    child: Center(
+                                      child: isChecked
+                                          ? Icon(Icons.check,
+                                              color: Colors.white,
+                                              size: Measurements.width * 0.04)
+                                          : Container(),
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.transparent,
+                                      border: Border.all(
+                                          width: Measurements.width * 0.002,
+                                          color: isChecked
+                                              ? Colors.white
+                                              : Colors.grey),
+                                      borderRadius: const BorderRadius.all(
+                                          const Radius.circular(5)),
+                                    ),
+                                  ),
+                                ),
                               ),
                             )
                           : Container(
@@ -413,6 +468,8 @@ class _PhoneTableRowState extends State<PhoneTableRow> {
                     child: Container(
                       alignment: Alignment.centerLeft,
 //                    width: Measurements.width * 0.2,
+                      height: Measurements.height *
+                          (_isPortrait ? 0.050 : 0.045),
                       child: !widget._isHeader
                           ? AutoSizeText(
                               widget._currentEmployee.firstName +
@@ -423,8 +480,8 @@ class _PhoneTableRowState extends State<PhoneTableRow> {
                               softWrap: false)
                           : Container(
                               alignment: Alignment.centerLeft,
-                              height: Measurements.height *
-                                  (_isPortrait ? 0.050 : 0.055),
+//                              height: Measurements.height *
+//                                  (_isPortrait ? 0.050 : 0.055),
                               child: AutoSizeText(
                                   Language.getTransactionStrings(
                                       "Employee name"),
@@ -439,8 +496,8 @@ class _PhoneTableRowState extends State<PhoneTableRow> {
                     child: Container(
                       alignment: Alignment.centerLeft,
                       width: Measurements.width * (_isPortrait ? 0.20 : 0.25),
-//                      height: Measurements.height *
-//                          (_isPortrait ? 0.050 : 0.085),
+                      height: Measurements.height *
+                          (_isPortrait ? 0.050 : 0.045),
                       child: !widget._isHeader
                           ? AutoSizeText(widget._currentEmployee.position,
                               overflow: TextOverflow.ellipsis,
@@ -448,8 +505,8 @@ class _PhoneTableRowState extends State<PhoneTableRow> {
                               softWrap: false)
                           : Container(
                               alignment: Alignment.centerLeft,
-                              height: Measurements.height *
-                                  (_isPortrait ? 0.050 : 0.055),
+//                              height: Measurements.height *
+//                                  (_isPortrait ? 0.050 : 0.058),
                               child: AutoSizeText(
                                   Language.getTransactionStrings("Position"),
                                   overflow: TextOverflow.ellipsis,
@@ -463,8 +520,8 @@ class _PhoneTableRowState extends State<PhoneTableRow> {
                     child: Container(
                       alignment: Alignment.centerLeft,
                       width: Measurements.width * (_isPortrait ? 0.23 : 0.25),
-//                      height: Measurements.height *
-//                          (_isPortrait ? 0.050 : 0.085),
+                      height: Measurements.height *
+                          (_isPortrait ? 0.050 : 0.045),
                       child: !widget._isHeader
                           ? AutoSizeText(widget._currentEmployee.email,
                               overflow: TextOverflow.ellipsis,
@@ -472,8 +529,8 @@ class _PhoneTableRowState extends State<PhoneTableRow> {
                               softWrap: false)
                           : Container(
                               alignment: Alignment.centerLeft,
-                              height: Measurements.height *
-                                  (_isPortrait ? 0.050 : 0.055),
+//                              height: Measurements.height *
+//                                  (_isPortrait ? 0.050 : 0.055),
                               child: AutoSizeText(
                                   Language.getTransactionStrings("Mail"),
                                   overflow: TextOverflow.ellipsis,
@@ -552,36 +609,85 @@ class _TabletTableRowState extends State<TabletTableRow> {
                     child: Container(
                       alignment: Alignment.centerLeft,
                       child: !widget._isHeader
-                          ? Container(
-                              height: Measurements.height *
-                                  (_isPortrait ? 0.050 : 0.051),
-                              child: Checkbox(
-                                activeColor: Color(0XFF0084ff),
-                                value: isChecked,
-                                onChanged: (bool value) {
-                                  setState(() {
-                                    isChecked = value;
-                                    print("value: $value");
-                                    if (value == true) {
-                                      widget.employeesIdsToGroup
-                                          .add(widget._currentEmployee.id);
+                          ?
+//                      Container(
+////                              height: Measurements.height *
+////                                  (_isPortrait ? 0.050 : 0.085),
+//                              child: Checkbox(
+//                                activeColor: Color(0XFF0084ff),
+//                                value: isChecked,
+//                                onChanged: (bool value) {
+//                                  setState(() {
+//                                    isChecked = value;
+//                                    print("value: $value");
+//                                    if (value == true) {
+//                                      widget.employeesIdsToGroup
+//                                          .add(widget._currentEmployee.id);
+//
+//                                      widget.employeesStateModel
+//                                          .changEmployeeList(
+//                                              widget.employeesIdsToGroup);
+//                                    } else {
+//                                      widget.employeesIdsToGroup
+//                                          .remove(widget._currentEmployee.id);
+//
+//                                      widget.employeesStateModel
+//                                          .changEmployeeList(
+//                                              widget.employeesIdsToGroup);
+//                                    }
+//                                  });
+//
+//                                  print(
+//                                      "employeesIdsToGroup: ${widget.employeesIdsToGroup}");
+//                                },
+//                              ),
+//                            )
 
-                                      widget.employeesStateModel
-                                          .changEmployeeList(
-                                              widget.employeesIdsToGroup);
-                                    } else {
-                                      widget.employeesIdsToGroup
-                                          .remove(widget._currentEmployee.id);
+                          InkWell(
+                              onTap: () {
+                                setState(() {
+                                  isChecked = !isChecked;
+                                  if (isChecked == true) {
+                                    widget.employeesIdsToGroup
+                                        .add(widget._currentEmployee.id);
 
-                                      widget.employeesStateModel
-                                          .changEmployeeList(
-                                              widget.employeesIdsToGroup);
-                                    }
-                                  });
+                                    widget.employeesStateModel
+                                        .changEmployeeList(
+                                            widget.employeesIdsToGroup);
+                                  } else {
+                                    widget.employeesIdsToGroup
+                                        .remove(widget._currentEmployee.id);
 
-                                  print(
-                                      "employeesIdsToGroup: ${widget.employeesIdsToGroup}");
-                                },
+                                    widget.employeesStateModel
+                                        .changEmployeeList(
+                                            widget.employeesIdsToGroup);
+                                  }
+                                });
+                              },
+                              child: Center(
+                                child: SizedBox(
+                                  width: Measurements.width * 0.03,
+                                  height: Measurements.height * 0.0230,
+                                  child: Container(
+                                    child: Center(
+                                      child: isChecked
+                                          ? Icon(Icons.check,
+                                              color: Colors.white,
+                                              size: Measurements.width * 0.02)
+                                          : Container(),
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.transparent,
+                                      border: Border.all(
+                                          width: Measurements.width * 0.002,
+                                          color: isChecked
+                                              ? Colors.white
+                                              : Colors.grey),
+                                      borderRadius: const BorderRadius.all(
+                                          const Radius.circular(5)),
+                                    ),
+                                  ),
+                                ),
                               ),
                             )
                           : Container(

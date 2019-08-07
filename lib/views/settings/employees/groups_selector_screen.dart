@@ -1,13 +1,14 @@
 import 'dart:ui';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:payever/models/business_employees_groups.dart';
-import 'package:payever/utils/utils.dart';
+import 'package:provider/provider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+
 import 'package:payever/view_models/global_state_model.dart';
 import 'package:payever/views/customelements/custom_app_bar.dart';
 import 'package:payever/views/settings/employees/employees_groups_multi_select.dart';
-import 'package:provider/provider.dart';
+import 'package:payever/models/business_employees_groups.dart';
+import 'package:payever/utils/utils.dart';
 
 bool _isPortrait;
 bool _isTablet;

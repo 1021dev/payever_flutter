@@ -24,6 +24,7 @@ class CustomFutureBuilder<T> extends StatelessWidget {
           }
           if (snapshot.hasError) {
             return Center(child: Text(errorMessage));
+//            return Center(child: Text(snapshot.error.toString()));
           }
 
           return loadingWidget != null ? loadingWidget : Center(child: Padding(

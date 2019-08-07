@@ -1,18 +1,19 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
-import 'package:payever/models/business_employees_groups.dart';
 import 'package:payever/view_models/employees_state_model.dart';
 import 'package:payever/view_models/global_state_model.dart';
-import 'package:payever/network/rest_ds.dart';
-import 'package:payever/utils/utils.dart';
+import 'package:payever/views/customelements/custom_alert_dialog.dart';
 import 'package:payever/views/customelements/custom_future_builder.dart';
 import 'package:payever/views/customelements/sliver_appbar_delegate.dart';
 import 'package:payever/views/login/login_page.dart';
+import 'package:payever/models/business_employees_groups.dart';
+import 'package:payever/network/rest_ds.dart';
+import 'package:payever/utils/utils.dart';
 import 'employees_groups_details_screen.dart';
 
 class EmployeesGroupsListTabScreen extends StatefulWidget {
@@ -68,13 +69,16 @@ class _EmployeesGroupsListTabScreenState
   @override
   Widget build(BuildContext context) {
     globalStateModel = Provider.of<GlobalStateModel>(context);
-
     return CustomFutureBuilder<List<BusinessEmployeesGroups>>(
         future: fetchEmployeesGroupsList("", true, globalStateModel),
         errorMessage: "Error loading employees groups",
         onDataLoaded: (results) {
           return CollapsingList(
-              employeesGroups: results, globalStateModel: globalStateModel);
+            employeesGroups: results,
+            updateResults: () {
+              setState(() {});
+            },
+          );
         });
   }
 }
@@ -84,17 +88,15 @@ bool _isTablet;
 
 class CollapsingList extends StatelessWidget {
   final List<BusinessEmployeesGroups> employeesGroups;
-  final GlobalStateModel globalStateModel;
+  final VoidCallback updateResults;
 
-  const CollapsingList(
-      {Key key,
-      @required this.employeesGroups,
-      @required this.globalStateModel})
+  CollapsingList({Key key, @required this.employeesGroups, this.updateResults})
       : super(key: key);
+
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-
     _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
     Measurements.height = (_isPortrait
         ? MediaQuery.of(context).size.height
@@ -103,6 +105,11 @@ class CollapsingList extends StatelessWidget {
         ? MediaQuery.of(context).size.width
         : MediaQuery.of(context).size.height);
     _isTablet = Measurements.width < 600 ? false : true;
+
+    GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context);
+
+    EmployeesStateModel employeesStateModel =
+        Provider.of<EmployeesStateModel>(context);
 
     return SafeArea(
       child: Padding(
@@ -115,28 +122,28 @@ class CollapsingList extends StatelessWidget {
                 minHeight: 50,
                 maxHeight: 50,
                 child: Container(
-                    padding: EdgeInsets.all(10),
                     color: Colors.black.withOpacity(0.5),
                     child: Row(
                       children: [
                         Expanded(
-                          flex: 1,
-                          child: Container(
-                            alignment: Alignment.centerLeft,
+                          flex: _isPortrait && !_isTablet ? 6 : 7,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 25),
+                            child: Container(
+                              alignment: Alignment.centerLeft,
+                              child: Text("Group Name"),
+                            ),
                           ),
                         ),
                         Expanded(
-                          flex: 5,
-                          child: Container(
-                            alignment: Alignment.centerLeft,
-                            child: Text("Employee Name"),
-                          ),
-                        ),
-                        Expanded(
-                          flex: 2,
-                          child: Container(
-                            alignment: Alignment.centerLeft,
-                            child: Text("Quantity"),
+                          flex: 4,
+                          child: Padding(
+                            padding:
+                                EdgeInsets.only(left: _isPortrait ? 1 : 25),
+                            child: Container(
+                              alignment: Alignment.centerLeft,
+                              child: Text("Quantity"),
+                            ),
                           ),
                         ),
                         Expanded(
@@ -149,104 +156,77 @@ class CollapsingList extends StatelessWidget {
                     )),
               ),
             ),
-//        SliverList(
-//          delegate: SliverChildListDelegate(
-//            [
-//              Container(color: Colors.blue, height: 50.0, child: Text("Hello"),),
-//            ],
-//          ),
-//        ),
             SliverList(
+              key: _formKey,
               delegate: SliverChildBuilderDelegate((context, index) {
                 var _currentGroup = employeesGroups[index];
 
-                return Container(
-                  padding: EdgeInsets.all(10),
-                  child: Column(
-//                crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          Expanded(
-                            flex: 1,
-                            child: Container(
-                              alignment: Alignment.centerLeft,
-                            ),
-                          ),
-                          Expanded(
-                            flex: 5,
-                            child: Container(
-                              alignment: Alignment.centerLeft,
-                              child: AutoSizeText(_currentGroup.name,
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
-                                  softWrap: false),
-                            ),
-                          ),
-                          Expanded(
-                            flex: 2,
-                            child: Container(
-                              alignment: Alignment.centerLeft,
-                              child: AutoSizeText(
-                                  _currentGroup.employees.length.toString(),
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
-                                  softWrap: false),
-                            ),
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: Container(
-                              alignment: Alignment.centerLeft,
-                              child: InkWell(
-                                radius: _isTablet
-                                    ? Measurements.height * 0.02
-                                    : Measurements.width * 0.07,
-                                child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: Measurements.width * 0.002),
-                                    //width: widget._active ?50:120,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.rectangle,
-                                      color: Colors.grey.withOpacity(0.5),
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                    height: _isTablet
-                                        ? Measurements.height * 0.02
-                                        : Measurements.width * 0.07,
-                                    child: Center(
-                                      child: Container(
-                                          alignment: Alignment.center,
-                                          child: Text(
-                                            "Edit",
-                                            style: TextStyle(fontSize: 11),
-                                          )),
-                                    )),
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      PageTransition(
-                                        child: ProxyProvider<RestDatasource,
-                                            EmployeesStateModel>(
-                                          builder:
-                                              (context, api, employeesState) =>
-                                                  EmployeesStateModel(
-                                                      globalStateModel, api),
-                                          child: EmployeesGroupsDetailsScreen(
-                                              _currentGroup),
-                                        ),
-                                        type: PageTransitionType.fade,
-                                      ));
-                                },
+                return Column(
+                  children: <Widget>[
+                    ListTile(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            PageTransition(
+                              child: ProxyProvider<RestDatasource,
+                                  EmployeesStateModel>(
+                                builder: (context, api, employeesState) =>
+                                    EmployeesStateModel(globalStateModel, api),
+                                child:
+                                    EmployeesGroupsDetailsScreen(_currentGroup),
                               ),
+                              type: PageTransitionType.fade,
+                            ));
+                      },
+                      title: Container(
+                        padding: EdgeInsets.all(10),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Row(
+                              children: <Widget>[
+                                Expanded(
+                                  flex: 4,
+                                  child: Container(
+                                    alignment: Alignment.centerLeft,
+                                    child: AutoSizeText(_currentGroup.name,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                        softWrap: false),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 2,
+                                  child: Container(
+                                    alignment: Alignment.centerLeft,
+                                    child: AutoSizeText(
+                                        _currentGroup.employees.length
+                                            .toString(),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                        softWrap: false),
+                                  ),
+                                ),
+                                InkWell(
+                                  child: SvgPicture.asset(
+                                    "images/xsinacircle.svg",
+                                    height: _isTablet
+                                        ? Measurements.width * 0.05
+                                        : Measurements.width * 0.08,
+                                  ),
+                                  onTap: () {
+                                    _deleteGroupConfirmation(context,
+                                        employeesStateModel, _currentGroup.id);
+                                  },
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                      Divider()
-                    ],
-                  ),
+                    ),
+                    Divider(),
+                  ],
                 );
               }, childCount: employeesGroups.length),
             ),
@@ -254,5 +234,27 @@ class CollapsingList extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _deleteGroupConfirmation(BuildContext context,
+      EmployeesStateModel employeesStateModel, String currentGroupId) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CustomAlertDialog(
+            title: "Delete group",
+            message: "Are you sure that you want to delete this group?",
+            onContinuePressed: () {
+              Navigator.of(_formKey.currentContext).pop();
+              return _deleteGroup(employeesStateModel, currentGroupId);
+            });
+      },
+    );
+  }
+
+  _deleteGroup(
+      EmployeesStateModel employeesStateModel, String currentGroupId) async {
+    await employeesStateModel.deleteGroup(currentGroupId);
+    updateResults();
   }
 }

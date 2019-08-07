@@ -35,6 +35,9 @@ class _EmployeesGroupsDetailsScreenState
 
   TextEditingController _groupNameController = TextEditingController();
 
+  List<String> employeesIdsToDeleteOnGroup = List<String>();
+  List<String> employeesListOnGroup = List<String>();
+
   @override
   void initState() {
     super.initState();
@@ -83,12 +86,13 @@ class _EmployeesGroupsDetailsScreenState
                 key: _formKey,
                 backgroundColor: Colors.black.withOpacity(0.2),
                 appBar: CustomAppBar(
-                  title: Text("Group Details"),
+//                  title: Text("Group Details"),
+                  title: employeesIdsToDeleteOnGroup.length == 0 ?  Text("Group Details") : Text("${employeesIdsToDeleteOnGroup.length} Employees Selected"),
                   onTap: () {
                     Navigator.pop(context);
                   },
                   actions: <Widget>[
-                    StreamBuilder(
+                    employeesIdsToDeleteOnGroup.length == 0 ? StreamBuilder(
                         stream: employeesStateModel.group,
                         builder: (context, snapshot) {
                           return RawMaterialButton(
@@ -112,7 +116,14 @@ class _EmployeesGroupsDetailsScreenState
                               }
                             },
                           );
-                        }),
+                        }) : RawMaterialButton(
+                      constraints: BoxConstraints(),
+                      padding: EdgeInsets.all(10),
+                      child: Icon(Icons.delete),
+                      onPressed: () {
+                        _deleteEmployeesFromGroupConfirmation(context, employeesStateModel);
+                      },
+                    ),
                   ],
                 ),
                 body: SafeArea(
@@ -248,9 +259,10 @@ class _EmployeesGroupsDetailsScreenState
                                                     EmployeesStateModel(
                                                         globalStateModel, api),
                                             child: EmployeesSelectionsListScreen(
-                                                employeesList: widget
-                                                    .businessEmployeesGroups
-                                                    .employees,
+//                                                employeesList: widget
+//                                                    .businessEmployeesGroups
+//                                                    .employees,
+                                                employeesList: employeesListOnGroup,
                                                 groupId: widget
                                                     .businessEmployeesGroups.id),
                                           ),
@@ -263,8 +275,19 @@ class _EmployeesGroupsDetailsScreenState
                           ),
                         Expanded(
                           child: EmployeesGroupComponent(
-                              widget.businessEmployeesGroups,
-                              openedRow),
+                              businessEmployeesGroups: widget.businessEmployeesGroups,
+                              employeesToDelete: (List<String> employees) {
+                                print("employees: $employees");
+                                setState(() {
+                                  employeesIdsToDeleteOnGroup = employees;
+                                });
+                                print("employeesIdsToDeleteOnGroup::: $employeesIdsToDeleteOnGroup");
+                              },
+                              employeesListOnGroup: (List<String> employees) {
+                                employeesListOnGroup = employees;
+                              },
+                              openedRow: openedRow,
+                          ),
                         ),
 //                        InkWell(
 //                          child: Container(
@@ -302,25 +325,36 @@ class _EmployeesGroupsDetailsScreenState
     });
   }
 
-  void _deleteGroupConfirmation(
-      BuildContext context, EmployeesStateModel employeesStateModel) {
+  void _deleteEmployeesFromGroupConfirmation(BuildContext context,
+      EmployeesStateModel employeesStateModel) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         // return object of type Dialog
         return CustomAlertDialog(
-            title: "Delete group",
-            message: "Are you sure that you want to delete this group?",
+            title: "Delete this employees from group",
+            message: "Are you sure that you want to delete this employees?",
             onContinuePressed: () {
               Navigator.of(_formKey.currentContext).pop();
-              return _deleteGroup(employeesStateModel);
+              return _deleteEmployeesFromGroup(employeesStateModel);
             });
       },
     );
   }
 
-  _deleteGroup(EmployeesStateModel employeesStateModel) {
-    employeesStateModel.deleteGroup(widget.businessEmployeesGroups.id);
-    Navigator.of(_formKey.currentContext).pop();
+  _deleteEmployeesFromGroup(
+      EmployeesStateModel employeesStateModel) async {
+
+    var data = {"employees": employeesIdsToDeleteOnGroup};
+
+    await employeesStateModel.deleteEmployeesFromGroup(widget.businessEmployeesGroups.id, data);
+
+    setState(() {
+      employeesIdsToDeleteOnGroup = [];
+      print("Emmployees Deleted");
+    });
+
+//    Navigator.of(_formKey.currentContext).pop();
   }
+
 }
