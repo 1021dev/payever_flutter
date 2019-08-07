@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:payever/models/transaction.dart';
+import 'package:payever/utils/appStyle.dart';
 import 'package:payever/utils/translations.dart';
 import 'package:payever/utils/utils.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -76,7 +77,7 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
         return BackgroundBase(
           true,
           appBar: AppBar(
-            title: Text(Language.getTransactionStrings("actions.details")),
+            title: Text(Language.getTransactionStrings("actions.details"),style: TextStyle(fontSize: AppStyle.fontSizeAppBar()),),
             centerTitle: true,  
             elevation: 0,
             backgroundColor: Colors.transparent,
@@ -241,8 +242,9 @@ class _HeaderRowState extends State<HeaderRow> {
                             shape: BoxShape.rectangle,
                             borderRadius: BorderRadius.circular(12),
                             color: havePicture?Colors.white:Colors.grey.withOpacity(0.7),
+                            image: !havePicture? null: DecorationImage(image: NetworkImage(widget.parts.currentTransaction.cart.items[0].thumbnail)),
                           ),
-                          child: havePicture? Image.network(widget.parts.currentTransaction.cart.items[0].thumbnail):Center(child:SvgPicture.asset("images/noimage.svg",height: Measurements.height *0.05,color: Colors.white.withOpacity(0.6),),),
+                          child: havePicture? Container():Center(child:SvgPicture.asset("images/noimage.svg",height: Measurements.height *0.05,color: Colors.white.withOpacity(0.6),),),
                         ),
                         Container(
                           padding: EdgeInsets.only(left: Measurements.width * 0.06),
@@ -384,7 +386,7 @@ class _OrderNRowState extends State<OrderNRow> {
                       alignment: Alignment.centerLeft,
                       height: Measurements.height * 0.05,
                       width: Measurements.width * (widget.parts.isTablet?0.17: 0.25),
-                      child: Text(Language.getTransactionStrings("details.order.header"),style: TextStyle(fontSize: 17),)
+                      child: Text(Language.getTransactionStrings("details.order.header"),style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),)
                     ),
                     Expanded(
                       child: 
@@ -395,13 +397,13 @@ class _OrderNRowState extends State<OrderNRow> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             mainAxisSize: MainAxisSize.max,
                             children: <Widget>[
-                              SvgPicture.asset(Measurements.channelIcon(widget.parts.currentTransaction.channel.name),height: Measurements.height* (widget.parts.isTablet? 0.02:0.025),),
+                              SvgPicture.asset(Measurements.channelIcon(widget.parts.currentTransaction.channel.name),height: AppStyle.iconTabSize(widget.parts.isTablet),),
                               Padding(padding: EdgeInsets.only(left: Measurements.width * 0.01),),
-                              Text(Measurements.channel(widget.parts.currentTransaction.channel.name),style: TextStyle(color: Colors.white.withOpacity(0.6),fontSize: 17),)
+                              Text(Measurements.channel(widget.parts.currentTransaction.channel.name),style: TextStyle(color: Colors.white.withOpacity(0.6),fontWeight: FontWeight.bold,fontSize: AppStyle.fontSizeTabTitle()),)
                             ],
                           ),
                           Padding(padding: EdgeInsets.only(top:Measurements.height *0.015),),
-                          Container(child: Text("${Language.getTransactionStrings("details.order.payeverId")} ${widget.parts.currentTransaction.transaction.originalID??widget.parts.currentTransaction.transaction.uuid}",maxLines: 2,style: TextStyle(color: Colors.white.withOpacity(0.6),),overflow: TextOverflow.ellipsis,)),  
+                          Container(child: Text("${Language.getTransactionStrings("details.order.payeverId")} ${widget.parts.currentTransaction.transaction.originalID??widget.parts.currentTransaction.transaction.uuid}",maxLines: 2,style: TextStyle(color: Colors.white.withOpacity(0.6),fontSize: AppStyle.fontSizeTabMid()),overflow: TextOverflow.ellipsis,)),  
                           //payever id
                         ],
                       ),
@@ -439,13 +441,13 @@ class _OrderNRowState extends State<OrderNRow> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    widget.parts.currentTransaction.transaction.originalID!=null      ? Container(alignment:Alignment.centerLeft,height: Measurements.height * (widget.parts.isTablet?0.015:0.05),child: Text("${Language.getTransactionStrings("details.order.payeverId")}: ${widget.parts.currentTransaction.transaction.originalID??widget.parts.currentTransaction.transaction.uuid}",maxLines: 2,                 style: TextStyle(color: Colors.white.withOpacity(0.6))),):Container(),
-                    widget.parts.currentTransaction.details.reference!=null           ? Container(alignment:Alignment.centerLeft,height: Measurements.height * (widget.parts.isTablet?0.015:0.05),child: Text("${Language.getTransactionStrings("details.order.reference")}: ${widget.parts.currentTransaction.details.reference}",                 style: TextStyle(color: Colors.white.withOpacity(0.6))),):Container(),
-                    widget.parts.currentTransaction.details.pan_id!=null              ? Container(alignment:Alignment.centerLeft,height: Measurements.height * (widget.parts.isTablet?0.015:0.05),child: Text("${Language.getTransactionStrings("details.order.panId")}: ${widget.parts.currentTransaction.details.pan_id}",                       style: TextStyle(color: Colors.white.withOpacity(0.6))),):Container(),
-                    widget.parts.currentTransaction.details.application_no!=null      ? Container(alignment:Alignment.centerLeft,height: Measurements.height * (widget.parts.isTablet?0.015:0.05),child: Text("${Language.getTransactionStrings("details.order.santanderApplicationId")}: ${widget.parts.currentTransaction.details.application_no}",       style: TextStyle(color: Colors.white.withOpacity(0.6))),):Container(),
-                    widget.parts.currentTransaction.details.application_number!=null  ? Container(alignment:Alignment.centerLeft,height: Measurements.height * (widget.parts.isTablet?0.015:0.05),child: Text("${Language.getTransactionStrings("details.order.santanderApplicationId")}: ${widget.parts.currentTransaction.details.application_number}",style: TextStyle(color: Colors.white.withOpacity(0.6))),):Container(),
-                    widget.parts.currentTransaction.details.finance_id!=null          ? Container(alignment:Alignment.centerLeft,height: Measurements.height * (widget.parts.isTablet?0.015:0.05),child: Text("${Language.getTransactionStrings("details.order.paymentId")}: ${widget.parts.currentTransaction.details.finance_id}",               style: TextStyle(color: Colors.white.withOpacity(0.6))),):Container(),
-                    widget.parts.currentTransaction.details.usage_text!=null          ? Container(alignment:Alignment.centerLeft,height: Measurements.height * (widget.parts.isTablet?0.015:0.05),child: Text("Usage Text: ${widget.parts.currentTransaction.details.usage_text}",             style: TextStyle(color: Colors.white.withOpacity(0.6))),):Container(),
+                    widget.parts.currentTransaction.transaction.originalID!=null      ? Container(alignment:Alignment.centerLeft,height: Measurements.height * (widget.parts.isTablet?0.015:0.05),child: Text("${Language.getTransactionStrings("details.order.payeverId")}: ${widget.parts.currentTransaction.transaction.originalID??widget.parts.currentTransaction.transaction.uuid}",maxLines: 2,style: TextStyle(fontSize: AppStyle.fontSizeTabContent(),color: Colors.white.withOpacity(0.6))),):Container(),
+                    widget.parts.currentTransaction.details.reference!=null           ? Container(alignment:Alignment.centerLeft,height: Measurements.height * (widget.parts.isTablet?0.015:0.05),child: Text("${Language.getTransactionStrings("details.order.reference")}: ${widget.parts.currentTransaction.details.reference}",                 style: TextStyle(fontSize: AppStyle.fontSizeTabContent(),color: Colors.white.withOpacity(0.6))),):Container(),
+                    widget.parts.currentTransaction.details.pan_id!=null              ? Container(alignment:Alignment.centerLeft,height: Measurements.height * (widget.parts.isTablet?0.015:0.05),child: Text("${Language.getTransactionStrings("details.order.panId")}: ${widget.parts.currentTransaction.details.pan_id}",                        style: TextStyle(fontSize: AppStyle.fontSizeTabContent(),color: Colors.white.withOpacity(0.6))),):Container(),
+                    widget.parts.currentTransaction.details.application_no!=null      ? Container(alignment:Alignment.centerLeft,height: Measurements.height * (widget.parts.isTablet?0.015:0.05),child: Text("${Language.getTransactionStrings("details.order.santanderApplicationId")}: ${widget.parts.currentTransaction.details.application_no}",       style: TextStyle(fontSize: AppStyle.fontSizeTabContent(),color: Colors.white.withOpacity(0.6))),):Container(),
+                    widget.parts.currentTransaction.details.application_number!=null  ? Container(alignment:Alignment.centerLeft,height: Measurements.height * (widget.parts.isTablet?0.015:0.05),child: Text("${Language.getTransactionStrings("details.order.santanderApplicationId")}: ${widget.parts.currentTransaction.details.application_number}",style: TextStyle(fontSize: AppStyle.fontSizeTabContent(),color: Colors.white.withOpacity(0.6))),):Container(),
+                    widget.parts.currentTransaction.details.finance_id!=null          ? Container(alignment:Alignment.centerLeft,height: Measurements.height * (widget.parts.isTablet?0.015:0.05),child: Text("${Language.getTransactionStrings("details.order.paymentId")}: ${widget.parts.currentTransaction.details.finance_id}",               style: TextStyle(fontSize: AppStyle.fontSizeTabContent(),color: Colors.white.withOpacity(0.6))),):Container(),
+                    widget.parts.currentTransaction.details.usage_text!=null          ? Container(alignment:Alignment.centerLeft,height: Measurements.height * (widget.parts.isTablet?0.015:0.05),child: Text("Usage Text: ${widget.parts.currentTransaction.details.usage_text}",             style: TextStyle(fontSize: AppStyle.fontSizeTabContent(),color: Colors.white.withOpacity(0.6))),):Container(),
                   ],
                 ),
               ),
@@ -478,8 +480,8 @@ class _TotalRowState extends State<TotalRow> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Text(Language.getTransactionStrings("form.refund.products_table.subtotal"),style: TextStyle(fontSize: 17),),
-                  Text("${Measurements.currency(widget.parts.currentTransaction.transaction.currency)}${widget.parts.f.format(widget.parts.currentTransaction.transaction.amount)}",style: TextStyle(fontSize: 17),)
+                  Text(Language.getTransactionStrings("form.refund.products_table.subtotal"),style: TextStyle(fontSize: AppStyle.fontSizeTabTitle(),),),
+                  Text("${Measurements.currency(widget.parts.currentTransaction.transaction.currency)}${widget.parts.f.format(widget.parts.currentTransaction.transaction.amount)}",style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),)
                 ],
               ),
             ),
@@ -489,16 +491,16 @@ class _TotalRowState extends State<TotalRow> {
               child:Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Text(Language.getTransactionStrings("details.totals.refunded"),style: TextStyle(fontSize: 17),),
-                  Text("-${Measurements.currency(widget.parts.currentTransaction.transaction.currency)}${widget.parts.f.format(widget.parts.currentTransaction.transaction.amountRefunded)}",style: TextStyle(fontSize: 17),)
+                  Text(Language.getTransactionStrings("details.totals.refunded"),style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),),
+                  Text("-${Measurements.currency(widget.parts.currentTransaction.transaction.currency)}${widget.parts.f.format(widget.parts.currentTransaction.transaction.amountRefunded)}",style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),)
                 ],
               )
             ):Container(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text(Language.getTransactionStrings("details.totals.total_incl_tax"),style: TextStyle(fontSize: 17),),
-                Text("${Measurements.currency(widget.parts.currentTransaction.transaction.currency)}${widget.parts.f.format(widget.parts.currentTransaction.transaction.total)}",style: TextStyle(fontSize: 17),)
+                Text(Language.getTransactionStrings("details.totals.total_incl_tax"),style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),),
+                Text("${Measurements.currency(widget.parts.currentTransaction.transaction.currency)}${widget.parts.f.format(widget.parts.currentTransaction.transaction.total)}",style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),)
               ],
             ),
 
@@ -553,7 +555,7 @@ class _TimelineRowState extends State<TimelineRow> {
                           alignment: Alignment.centerLeft,
                           height: Measurements.height * 0.05,
                           width: Measurements.width * (widget.parts.isTablet?0.4: 0.25),
-                          child: Text(Language.getTransactionStrings("details.history.header"),style: TextStyle(fontSize: 17),)
+                          child: Text(Language.getTransactionStrings("details.history.header"),style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),)
                         ),
                         Container(
                           width: widget.parts.isTablet?Measurements.width * 0.45: Measurements.width * 0.55),
@@ -655,11 +657,12 @@ class _BillingRowState extends State<BillingRow> {
                         Container(
                           alignment: Alignment.centerLeft,
                           height: Measurements.height * 0.05,
-                          width: Measurements.width * (widget.parts.isTablet?0.17: 0.25),
-                          child: Text(Language.getTransactionStrings("details.billing.header"),style: TextStyle(fontSize: 17),)
+                          constraints:BoxConstraints(minWidth:Measurements.width * (widget.parts.isTablet?0.17: 0.25)),
+                          //width: Measurements.width * (widget.parts.isTablet?0.17: 0.25),
+                          child: Text(Language.getTransactionStrings("details.billing.header"),style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),)
                         ),
                         Expanded(
-                          child: Text("${Measurements.salutation(widget.parts.currentTransaction.billingAddress.salutation)} ${widget.parts.currentTransaction.billingAddress.firstName} ${widget.parts.currentTransaction.billingAddress.lastName}",style: TextStyle(color: Colors.white.withOpacity(0.6))),
+                          child: Text("${Measurements.salutation(widget.parts.currentTransaction.billingAddress.salutation)} ${widget.parts.currentTransaction.billingAddress.firstName} ${widget.parts.currentTransaction.billingAddress.lastName}",style: TextStyle(fontSize: AppStyle.fontSizeTabMid(),color: Colors.white.withOpacity(0.6))),
                         ),
                         AnimatedContainer(
                           duration: Duration(milliseconds: 200),
@@ -755,7 +758,7 @@ class _PaymentRowState extends State<PaymentRow> {
                           alignment: Alignment.centerLeft,
                           height: Measurements.height * 0.05,
                           width: Measurements.width * (widget.parts.isTablet?0.17: 0.25),
-                          child: Text(Language.getTransactionStrings("details.payment.header"),style: TextStyle(fontSize: 17),)
+                          child: Text(Language.getTransactionStrings("details.payment.header"),style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),)
                         ),
                         Measurements.paymentTypeIcon(widget.parts.currentTransaction.paymentOption.type,widget.parts.isTablet),
                         Expanded(child: Text("  ${Measurements.paymentTypeName(widget.parts.currentTransaction.paymentOption.type)}",overflow: TextOverflow.ellipsis,style: TextStyle(color: Colors.white.withOpacity(0.6))),),
@@ -853,7 +856,7 @@ class _ShippingRow extends State<ShippingRow> {
                           alignment: Alignment.centerLeft,
                           height: Measurements.height * 0.05,
                           width: Measurements.width * (widget.parts.isTablet?0.17: 0.25),
-                          child: Text(Language.getTransactionStrings("details.shipping.header"),style: TextStyle(fontSize: 17),)
+                          child: Text(Language.getTransactionStrings("details.shipping.header"),style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),)
                         ),
                         //Measurements.paymentTypeIcon(widget.parts.currentTransaction.paymentOption.type,widget.parts.isTablet),
                         //Expanded(child: Text("  ${Measurements.paymentTypeName(widget.parts.currentTransaction.paymentOption.type)}",overflow: TextOverflow.ellipsis,style: TextStyle(color: Colors.white.withOpacity(0.6))),),
@@ -890,7 +893,7 @@ class _ShippingRow extends State<ShippingRow> {
                     children: <Widget>[
                       Container(height:Measurements.height * (widget.parts.isTablet?0.015:0.04),
                       alignment: Alignment.centerLeft,
-                      child: Text("Shipping method: ${Measurements.paymentTypeName(widget.parts.currentTransaction.shipping.methodName.toUpperCase())}",style: TextStyle(fontSize: 13,color: Colors.white.withOpacity(0.7)),)),
+                      child: Text("Shipping method: ${Measurements.paymentTypeName(widget.parts.currentTransaction.shipping.methodName.toUpperCase())}",style: TextStyle(fontSize: AppStyle.fontSizeTabContent(),color: Colors.white.withOpacity(0.7)),)),
                       // widget.parts.currentTransaction.details.iban != null?Container(height:Measurements.height * 0.03,alignment: Alignment.centerLeft,
                       //   child: Text("IBAN: **** ${widget.parts.currentTransaction.details.iban.replaceAll(" ", "").substring(widget.parts.currentTransaction.details.iban.replaceAll(" ", "").length-4)}",style: TextStyle(color: Colors.white.withOpacity(0.7)),),
                       //  ):Container(),

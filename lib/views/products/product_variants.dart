@@ -39,49 +39,77 @@ class _VariantRowState extends State<ProductVariantsRow> {
                 shrinkWrap: true,
                 itemCount: widget.parts.product.variants.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: <Widget>[
-                      Container(
-                        height: Measurements.height* (widget.parts.isTablet?0.05:0.07),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Container(width: Measurements.width * 0.4 ,child: Text("${widget.parts.product.variants[index].title}",overflow: TextOverflow.ellipsis,)),
-                            Container(width: Measurements.width * 0.18,child: Text("${widget.parts.product.variants[index].price} ${Measurements.currency(widget.parts.currency)}")),
-                            Container(
-                              width: Measurements.width * 0.2,
-                              child: IconButton(icon: AutoSizeText(Language.getProductStrings("variantEditor.edit"),minFontSize: 11,maxLines: 1,) , onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  PageTransition(
-                                    child:VariantPopUp(
-                                      parts: widget.parts,
-                                      wallpaper: widget.parts.wallpaper,
-                                      onEdit: true,
-                                      editVariant: widget.parts.product.variants[index],
-                                      index: index,
-                                    ),
-                                    type: PageTransitionType.downToUp,
-                                  )
-                                );
-                              },splashColor: Colors.transparent),
-                            ),
-                            Container(
-                              width: Measurements.width * 0.1,
-                              child: IconButton(
-                                icon: Icon(Icons.close),splashColor: Colors.transparent, 
-                                onPressed: () {
+                  return InkWell(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: <Widget>[
+                        Container(
+                          height: Measurements.height* (widget.parts.isTablet?0.05:0.07),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Container(width: Measurements.width * 0.4 ,child: Text("${widget.parts.product.variants[index].title}",overflow: TextOverflow.ellipsis,)),
+                              Container(width: Measurements.width * 0.18,child: Text("${widget.parts.product.variants[index].price} ${Measurements.currency(widget.parts.currency)}")),
+                              // Container(
+                              //   width: Measurements.width * 0.2,
+                              //   child: IconButton(icon: AutoSizeText(Language.getProductStrings("variantEditor.edit"),minFontSize: 11,maxLines: 1,) , onPressed: () {
+                              //     Navigator.push(
+                              //       context,
+                              //       PageTransition(
+                              //         child:VariantPopUp(
+                              //           parts: widget.parts,
+                              //           wallpaper: widget.parts.wallpaper,
+                              //           onEdit: true,
+                              //           editVariant: widget.parts.product.variants[index],
+                              //           index: index,
+                              //         ),
+                              //         type: PageTransitionType.downToUp,
+                              //       )
+                              //     );
+                              //   },splashColor: Colors.transparent),
+                              // ),
+                              InkWell(
+                                borderRadius: BorderRadius.circular(15),
+                                child: SvgPicture.asset("images/xsinacircle.svg"),
+                                onTap: (){
                                   setState(() {
                                     widget.parts.product.variants.removeAt(index);
                                   });
                                 },
                               ),
-                            ),
-                          ],
+                              // Container(
+                              //   width: Measurements.width * 0.1,
+                              //   child: IconButton(
+                              //     icon: Icon(Icons.close),splashColor: Colors.transparent, 
+                              //     onPressed: () {
+                              //       setState(() {
+                              //         widget.parts.product.variants.removeAt(index);
+                              //       });
+                              //     },
+                              //   ),
+                              // ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                        Divider(height: 1,),
+                      ],
+                    ),
+                    onTap: (){
+                      Navigator.push(
+                        context,
+                        PageTransition(
+                          child:VariantPopUp(
+                            parts: widget.parts,
+                            wallpaper: widget.parts.wallpaper,
+                            onEdit: true,
+                            editVariant: widget.parts.product.variants[index],
+                            index: index,
+                          ),
+                          duration: Duration(milliseconds: 100),
+                          type: PageTransitionType.fade,
+                        )
+                      );
+                    },
                   );
                 },
               )
@@ -105,7 +133,8 @@ class _VariantRowState extends State<ProductVariantsRow> {
                         onEdit: false,
                         editVariant: Variants(),
                       ),
-                      type:PageTransitionType.downToUp ,
+                      duration:Duration(milliseconds: 100),
+                      type:PageTransitionType.fade ,
                     )
                   );
                 },

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/material.dart' as prefix0;
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/models/business.dart';
+import 'package:payever/utils/appStyle.dart';
 import 'package:payever/utils/global_keys.dart';
 import 'package:payever/utils/translations.dart';
 import 'package:payever/utils/utils.dart';
@@ -83,7 +84,7 @@ class _DashboardCardState extends State<DashboardCard> with  TickerProviderState
                       child: ClipRRect(
                         borderRadius: !_open ?  BorderRadius.circular(12) :BorderRadius.only(topRight: Radius.circular(12),topLeft: Radius.circular(12)),
                         child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 20,sigmaY: 40),
+                          filter: ImageFilter.blur(sigmaX: 8,sigmaY: 16),
                           child: Container(
                             color: Colors.black.withOpacity(0.2),
                             child: Column(
@@ -94,7 +95,7 @@ class _DashboardCardState extends State<DashboardCard> with  TickerProviderState
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: <Widget>[
                                     Row(children: <Widget>[
-                                      Container(height: Measurements.width * (_isTablet? 0.025:0.05),child: Image(image:_imageProvider)),
+                                      Container(height: AppStyle.iconDashboardCardSize(_isTablet),child: Image(image:_imageProvider)),
                                       Padding(padding: EdgeInsets.only(right: Measurements.width * (_isTablet? 0.01:0.02)),),
                                       Text(Language.getWidgetStrings("widgets.${widget._appName}.title")),
                                     ],),
@@ -105,10 +106,9 @@ class _DashboardCardState extends State<DashboardCard> with  TickerProviderState
                                             child: Column(
                                               mainAxisAlignment: MainAxisAlignment.center,
                                               children: <Widget>[
-                                                BackdropFilter(
-                                                  filter: ImageFilter.blur(sigmaX: 25,sigmaY: 25),
-                                                ),
-
+                                                // BackdropFilter(
+                                                //   filter: ImageFilter.blur(sigmaX: 25,sigmaY: 25),
+                                                // ),
                                               widget.isSingleActionButton
                                                   ? singleActionButtonWidget(
                                                       context, _isTablet)
@@ -147,9 +147,9 @@ class _DashboardCardState extends State<DashboardCard> with  TickerProviderState
                       child: ClipRRect(
                         borderRadius: BorderRadius.only(bottomLeft: Radius.circular(12),bottomRight:Radius.circular(12) ),
                         child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 50,sigmaY: 25),
+                          filter: ImageFilter.blur(sigmaX: 16,sigmaY: 8),
                           child: Container(
-                            //color: Colors.black.withOpacity(0.25),
+                            color: Colors.black.withOpacity(0.25),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               mainAxisSize: MainAxisSize.max,

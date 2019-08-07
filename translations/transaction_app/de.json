@@ -546,5 +546,7 @@
     "address.suggest_your_email": "Is it your email?",
     "address.header.billing_address": "Billing address",
     "address.header.billing_and_shipping_address": "Billing and shipping address",
-    "address.header.shipping_address": "Shipping address"
+    "address.header.shipping_address": "Shipping address",
+    "channels.shop": "Shop"
+
 }

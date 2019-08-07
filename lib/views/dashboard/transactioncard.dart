@@ -55,7 +55,8 @@ class TransactionScreenData{
         return "DKK";
       case "CHF":
         return "CHF";
-      
+      default:
+        return "€";
     }
   }
 
@@ -106,8 +107,7 @@ class _MainTransactionCardState extends State<MainTransactionCard> {
     if(_isBusiness){
        api.getMonths(_currentBusiness.id,GlobalUtils.ActiveToken.accesstoken,context).then((months){
         months.forEach((month){
-          
-          _dashboardWidgets._transactionsData.lastYear.add(Month.map(month));
+          DashboardWidgets._transactionsData.lastYear.add(Month.map(month));
           _months.add( Month.map(month).amount.toDouble());
         });
       }).then((_){
@@ -115,7 +115,7 @@ class _MainTransactionCardState extends State<MainTransactionCard> {
           num _currentD;
           days.forEach((day){
             _currentD = Day.map(day).amount.toDouble();
-            _dashboardWidgets._transactionsData.lastMonth.add(Day.map(day));
+            DashboardWidgets._transactionsData.lastMonth.add(Day.map(day));
             _days.add(_currentD);
             if(_currentD>_hi){
               _hi = _currentD;
@@ -128,7 +128,7 @@ class _MainTransactionCardState extends State<MainTransactionCard> {
             _chartLoad = true;
           });
             setState(() {
-              _dashboardWidgets._isDataLoaded.value = true;
+              DashboardWidgets._isDataLoaded.value = true;
           });
       }).catchError((onError){
         print("Error in Transaction Card$onError");
@@ -143,7 +143,7 @@ class _MainTransactionCardState extends State<MainTransactionCard> {
     }else {
        api.getMonthsPersonal(GlobalUtils.ActiveToken.accesstoken,context).then((months){
         months.forEach((month){
-          _dashboardWidgets._transactionsData.lastYear.add(Month.map(month));
+          DashboardWidgets._transactionsData.lastYear.add(Month.map(month));
           _months.add( Month.map(month).amount.toDouble());
         });
       }).then((_){
@@ -151,7 +151,7 @@ class _MainTransactionCardState extends State<MainTransactionCard> {
           double _currentD;
           days.forEach((day){
             _currentD = Day.map(day).amount.toDouble();
-            _dashboardWidgets._transactionsData.lastMonth.add(Day.map(day));
+            DashboardWidgets._transactionsData.lastMonth.add(Day.map(day));
             _days.add(_currentD);
             if(_currentD>_hi){
               _hi = _currentD;
@@ -209,7 +209,8 @@ class _MainTransactionCardState extends State<MainTransactionCard> {
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [Color(0xFF00FFD6), Color(0xFF007AAE), Color(0xFF007AAE)],
-                  ),):Center(child: CircularProgressIndicator()),
+                  ),
+                ):Center(child: CircularProgressIndicator()),
               ),
               Padding(padding: EdgeInsets.only(left:Measurements.width * (_isTablet?0.015:0.025)),),
               Expanded(
@@ -229,14 +230,14 @@ class _MainTransactionCardState extends State<MainTransactionCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,      
                   children: <Widget>[
                     Container(child: Text(Language.getWidgetStrings("widgets.transactions.today-revenue"),style: TextStyle(fontSize: 14),)),
-                    Expanded(child: Container(alignment:Alignment.centerLeft,child: AutoSizeText("${ _chartLoad ? DashboardWidgets.numberFilter(_days.last, false): "0"} ${_dashboardWidgets.currency(_dashboardWidgets._transactionsData.lastMonth.isEmpty ? "EUR":_dashboardWidgets._transactionsData.lastMonth[0].currency)}",style: TextStyle(fontSize: _isTablet?26: 20),))),
-                    _isTablet?Container(child: AutoSizeText("${Language.getWidgetStrings("widgets.transactions.this-month")} ${_chartLoad ? DashboardWidgets.numberFilter(_months.last ,false) : "0"} ${_dashboardWidgets.currency(_dashboardWidgets._transactionsData.lastMonth.isEmpty ? "EUR":_dashboardWidgets._transactionsData.lastMonth[0].currency)}",maxLines: 1))
+                    Expanded(child: Container(alignment:Alignment.centerLeft,child: AutoSizeText("${ _chartLoad ? DashboardWidgets.numberFilter(_days.last, false): "0"} ${_dashboardWidgets.currency(DashboardWidgets._transactionsData.lastMonth.isEmpty ? "EUR":DashboardWidgets._transactionsData.lastMonth[0].currency)}",style: TextStyle(fontSize: _isTablet?26: 20),))),
+                    _isTablet?Container(child: AutoSizeText("${Language.getWidgetStrings("widgets.transactions.this-month")} ${_chartLoad ? DashboardWidgets.numberFilter(_months.last ,false) : "0"} ${_dashboardWidgets.currency(DashboardWidgets._transactionsData.lastMonth.isEmpty ? "EUR":DashboardWidgets._transactionsData.lastMonth[0].currency)}",maxLines: 1))
                     :Container(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Container(child: AutoSizeText("${Language.getWidgetStrings("widgets.transactions.this-month")}",maxLines: 1,maxFontSize: 13,),),
-                          Container(child: AutoSizeText("${_chartLoad ? DashboardWidgets.numberFilter(_months.last ,false) : "0"} ${_dashboardWidgets.currency(_dashboardWidgets._transactionsData.lastMonth.isEmpty ? "EUR":_dashboardWidgets._transactionsData.lastMonth[0].currency)}",style: TextStyle(fontWeight: FontWeight.bold))),
+                          Container(child: AutoSizeText("${_chartLoad ? DashboardWidgets.numberFilter(_months.last ,false) : "0"} ${_dashboardWidgets.currency(DashboardWidgets._transactionsData.lastMonth.isEmpty ? "EUR":DashboardWidgets._transactionsData.lastMonth[0].currency)}",style: TextStyle(fontWeight: FontWeight.bold))),
                         ],
                       ),
                     )
@@ -265,23 +266,23 @@ class _TrasactionSecCardState extends State<TrasactionSecCard> {
   @override
   void initState() {
     super.initState();
-    _dashboardWidgets._isDataLoaded.addListener(listener);
+    DashboardWidgets._isDataLoaded.addListener(listener);
   }
   
   
   var f = new NumberFormat("###,###.00", "en_US");
   @override
   Widget build(BuildContext context) {
-    if(_dashboardWidgets._transactionsData.lastYear!=null){
-      if(_dashboardWidgets._transactionsData.lastYear.length > 0){
-        for(int i =(_dashboardWidgets._transactionsData.lastYear.length-2);i>=0;i--){
-          sum += _dashboardWidgets._transactionsData.lastYear[i].amount;
+    if(DashboardWidgets._transactionsData.lastYear!=null){
+      if(DashboardWidgets._transactionsData.lastYear.length > 0){
+        for(int i =(DashboardWidgets._transactionsData.lastYear.length-2);i>=0;i--){
+          sum += DashboardWidgets._transactionsData.lastYear[i].amount;
           monthlysum.add(sum);
         }
       }
     }
     
-    return _dashboardWidgets._isDataLoaded.value ? Container(
+    return DashboardWidgets._isDataLoaded.value ? Container(
       child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -298,7 +299,7 @@ class _TrasactionSecCardState extends State<TrasactionSecCard> {
                 Text(Language.getWidgetStrings("widgets.transactions.1-month").toString().substring(1),style: TextStyle(color: Colors.white.withOpacity(0.6),fontSize: _isTablet?20:16)),
               ],
             ),
-            AutoSizeText("${DashboardWidgets.numberFilter(monthlysum[0],false)} ${_dashboardWidgets.currency(_dashboardWidgets._transactionsData.lastMonth.isEmpty ? "EUR":_dashboardWidgets._transactionsData.lastMonth[0].currency)}",style: TextStyle(fontSize: _isTablet?25: 18,fontWeight: FontWeight.w600))
+            AutoSizeText("${DashboardWidgets.numberFilter(monthlysum[0],false)} ${_dashboardWidgets.currency(DashboardWidgets._transactionsData.lastMonth.isEmpty ? "EUR":DashboardWidgets._transactionsData.lastMonth[0].currency)}",style: TextStyle(fontSize: _isTablet?25: 18,fontWeight: FontWeight.w600))
           ],),
           Column(
             mainAxisSize: MainAxisSize.max,
@@ -311,7 +312,7 @@ class _TrasactionSecCardState extends State<TrasactionSecCard> {
                 Text(Language.getWidgetStrings("widgets.transactions.3-months").toString().substring(1),style: TextStyle(color: Colors.white.withOpacity(0.6),fontSize: _isTablet?20:16)),
               ],
             ),
-            AutoSizeText("${DashboardWidgets.numberFilter(monthlysum[2],false)} ${_dashboardWidgets.currency(_dashboardWidgets._transactionsData.lastMonth.isEmpty ? "EUR":_dashboardWidgets._transactionsData.lastMonth[0].currency)}",style: TextStyle(fontSize: _isTablet?25: 18,fontWeight: FontWeight.w600))
+            AutoSizeText("${DashboardWidgets.numberFilter(monthlysum[2],false)} ${_dashboardWidgets.currency(DashboardWidgets._transactionsData.lastMonth.isEmpty ? "EUR":DashboardWidgets._transactionsData.lastMonth[0].currency)}",style: TextStyle(fontSize: _isTablet?25: 18,fontWeight: FontWeight.w600))
           ],),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -324,7 +325,7 @@ class _TrasactionSecCardState extends State<TrasactionSecCard> {
                 Text(Language.getWidgetStrings("widgets.transactions.6-months").toString().substring(1),style: TextStyle(color:Colors.white.withOpacity(0.6),fontSize: _isTablet?20:16)),
               ],
             ),
-            AutoSizeText("${DashboardWidgets.numberFilter(monthlysum[5],false)} ${_dashboardWidgets.currency(_dashboardWidgets._transactionsData.lastMonth.isEmpty ? "EUR":_dashboardWidgets._transactionsData.lastMonth[0].currency)}",style: TextStyle(fontSize: _isTablet?25: 18,fontWeight: FontWeight.w600))
+            AutoSizeText("${DashboardWidgets.numberFilter(monthlysum[5],false)} ${_dashboardWidgets.currency(DashboardWidgets._transactionsData.lastMonth.isEmpty ? "EUR":DashboardWidgets._transactionsData.lastMonth[0].currency)}",style: TextStyle(fontSize: _isTablet?25: 18,fontWeight: FontWeight.w600))
           ],),
           Column(
             mainAxisSize: MainAxisSize.max,
@@ -337,7 +338,7 @@ class _TrasactionSecCardState extends State<TrasactionSecCard> {
                 Text(Language.getWidgetStrings("widgets.transactions.1-year").toString().substring(1),style: TextStyle(color: Colors.white.withOpacity(0.6),fontSize: _isTablet?20:16)),
               ],
             ),
-            AutoSizeText("${DashboardWidgets.numberFilter(monthlysum[10],false)} ${_dashboardWidgets.currency(_dashboardWidgets._transactionsData.lastMonth[0].currency)}",style: TextStyle(fontSize: _isTablet?25: 18,fontWeight: FontWeight.w600))
+            AutoSizeText("${DashboardWidgets.numberFilter(monthlysum[10],false)} ${_dashboardWidgets.currency(DashboardWidgets._transactionsData.lastMonth[0].currency)}",style: TextStyle(fontSize: _isTablet?25: 18,fontWeight: FontWeight.w600))
           ],),
         ],
       ),
@@ -351,8 +352,8 @@ class _TrasactionSecCardState extends State<TrasactionSecCard> {
 }
 
 class DashboardWidgets{
-  var _isDataLoaded = ValueNotifier(false) ;
-  TransactionCardData _transactionsData = TransactionCardData();
+  static ValueNotifier<bool> _isDataLoaded = ValueNotifier(false) ;
+   static TransactionCardData _transactionsData = TransactionCardData();
   static String numberFilter(double n,bool chart){
   var million = new NumberFormat("###.##", "en_US");
   var thousand = new NumberFormat("###.#", "en_US");
@@ -409,7 +410,6 @@ class TransactionNavigation implements CardContract{
   void loadScreen(BuildContext context,ValueNotifier state) {
     Navigator.push(context, PageTransition(child: TrasactionScreen(), type: PageTransitionType.fade,));
     state.value = false;
-
 
   }
 

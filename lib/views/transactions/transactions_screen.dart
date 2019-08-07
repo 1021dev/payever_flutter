@@ -9,6 +9,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/models/business.dart';
 import 'package:payever/network/rest_ds.dart';
+import 'package:payever/utils/appStyle.dart';
 import 'package:payever/utils/global_keys.dart';
 import 'package:payever/utils/translations.dart';
 import 'package:payever/utils/utils.dart';
@@ -54,7 +55,6 @@ class _TrasactionScreenState extends State<TrasactionScreen> {
     super.initState();
     widget.isLoading.addListener(listener);
     widget.isLoadingSearch.addListener(listener);
-    
     widget.searching.addListener(listener);
   }
   listener(){
@@ -85,25 +85,24 @@ class _TrasactionScreenState extends State<TrasactionScreen> {
   bool isLoading = false;
   @override
   Widget build(BuildContext context) {
-        
     GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context);
     widget._currentBusiness = globalStateModel.currentBusiness;
     widget.wallpaper        = globalStateModel.currentWallpaper;
-    fetchTransactions(init: widget.init,search: "");
+    fetchTransactions(init: widget.init,search: _search);
     widget.init = false;
     _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
     Measurements.height = (_isPortrait ? MediaQuery.of(context).size.height : MediaQuery.of(context).size.width);
     Measurements.width  = (_isPortrait ? MediaQuery.of(context).size.width : MediaQuery.of(context).size.height);
     _isTablet = Measurements.width < 600 ? false : true; 
       if(widget.data != null){
-        _quantity       = widget.data.transaction.paginationData.total??0;
+        _quantity       = widget.isLoadingSearch.value? 0:widget.data.transaction.paginationData.total??0;
         _currency       = widget.data.currency(widget.data.business.currency);
-        _totalAmount    = widget.data.transaction.paginationData.amount??0;
+        _totalAmount    = widget.isLoadingSearch.value? 0:widget.data.transaction.paginationData.amount??0;
       }
       return BackgroundBase(true,
         appBar: AppBar(
           elevation: 0,
-          title: !noTransactions ?AutoSizeText(Language.getTransactionStrings("total_orders.heading").toString().replaceFirst("{{total_count}}", "${_quantity??0}").replaceFirst("{{total_sum}}", "${_currency??"€"}${f.format(_totalAmount??0)}"),overflow: TextOverflow.fade,maxLines: 1,):Container(),
+          title: !noTransactions?AutoSizeText(Language.getTransactionStrings("total_orders.heading").toString().replaceFirst("{{total_count}}", "${_quantity??0}").replaceFirst("{{total_sum}}", "${_currency??"€"}${f.format(_totalAmount??0)}"),overflow: TextOverflow.fade,maxLines: 1,style: TextStyle(fontSize: AppStyle.fontSizeAppBar()),):Container(),
           centerTitle: true,
           backgroundColor: Colors.transparent,
           leading: InkWell(radius: 20,child: Icon(IconData(58829, fontFamily: 'MaterialIcons')),
@@ -227,17 +226,19 @@ class _CustomListState extends State<CustomList> {
   @override
   void initState() {
     super.initState();
-    widget.pageCount = (widget.data.transaction.paginationData.total/50).ceil();
+    
     controller = new ScrollController()..addListener(_scrollListener);
   }
 
   void _scrollListener() {
+    widget.pageCount = (widget.data.transaction.paginationData.total/50).ceil();
     if (controller.position.extentAfter < 500) {
       if(widget.page<widget.pageCount && !widget.isLoading.value){
         setState(() {
           widget.isLoading.value = true;
         });
         widget.page ++;
+      
         RestDatasource().getTransactionList(widget.currentBusiness.id,GlobalUtils.ActiveToken.accessToken,"?orderBy=created_at&direction=desc&limit=50&query=${widget.search}&page=${widget.page}&currency=${widget.currentBusiness.currency}",context).then((transaction){
           List<Collection> temp = Transaction.toMap(transaction).collection;
           if(temp.isNotEmpty){
@@ -281,11 +282,12 @@ class PhoneTableRow extends StatelessWidget {
     DateTime time;
     if(_currentTransaction!= null)time = DateTime.parse(_currentTransaction.createdAt);
     return InkWell(
+      highlightColor: Colors.transparent,
       child: Container(
         alignment: Alignment.topCenter,
         width: Measurements.width,
-        padding: EdgeInsets.symmetric(horizontal: Measurements.width * 0.05),
-        height: Measurements.height * (!_isHeader? 0.07:0.05),
+        padding: AppStyle.listRowPadding(false),
+        height:  AppStyle.listRowSize(false),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
@@ -294,28 +296,28 @@ class PhoneTableRow extends StatelessWidget {
                 Container(
                   alignment: Alignment.centerLeft,
                   width: Measurements.width * (_isPortrait? 0.13:0.25),
-                  child: !_isHeader? TransactionScreenParts.channelIcon(_currentTransaction.channel) : Container(child:Text(Language.getTransactionStrings("form.filter.labels.channel"),style: TextStyle(fontSize:12),)),
+                  child: !_isHeader? TransactionScreenParts.channelIcon(_currentTransaction.channel) : Container(child:Text(Language.getTransactionStrings("form.filter.labels.channel"),style: TextStyle(fontSize:AppStyle.fontSizeListRow()),)),
                 ),
                 Container(
                   alignment: Alignment.centerLeft,
                   width: Measurements.width * (_isPortrait? 0.11:0.2),
-                  child: !_isHeader? TransactionScreenParts.paymentType(_currentTransaction.type): Container(child: Text(Language.getTransactionStrings("form.filter.labels.type"),style: TextStyle(fontSize:12)),) ,
+                  child: !_isHeader? TransactionScreenParts.paymentType(_currentTransaction.type): Container(child: Text(Language.getTransactionStrings("form.filter.labels.type"),style: TextStyle(fontSize:AppStyle.fontSizeListRow())),) ,
                 ),
                 Container(
                   width: Measurements.width * (_isPortrait? 0.39:0.45),
-                  child: !_isHeader? Text(_currentTransaction.customerName):Text(Language.getTransactionStrings("form.filter.labels.customer_name"),style: TextStyle(fontSize:12)),
+                  child: !_isHeader? Text(_currentTransaction.customerName,style: TextStyle(fontSize:AppStyle.fontSizeListRow()),):Text(Language.getTransactionStrings("form.filter.labels.customer_name"),style: TextStyle(fontSize:AppStyle.fontSizeListRow())),
                 ),
                 Container(
                   width: Measurements.width * (_isPortrait? 0.22:0.3),
-                  child: !_isHeader? Text("${Measurements.currency(_currentTransaction.currency)}${f.format(_currentTransaction.total)}",style:TextStyle(fontSize:13) ,):Text(Language.getTransactionStrings("form.filter.labels.total"),style: TextStyle(fontSize:12)),
+                  child: !_isHeader? Text("${Measurements.currency(_currentTransaction.currency)}${f.format(_currentTransaction.total)}",style:TextStyle(fontSize:AppStyle.fontSizeListRow()) ,):Text(Language.getTransactionStrings("form.filter.labels.total"),style: TextStyle(fontSize:AppStyle.fontSizeListRow())),
                 ),
                 !_isPortrait? Container(
                   width: Measurements.width * 0.4,
-                  child: !_isHeader? Text("${DateFormat.d("en_US").add_MMMM().add_y().format(time)} ${DateFormat.Hm("en_US").format(time.add(Duration(hours: 2)))}"):Text(Language.getTransactionStrings("form.filter.labels.created_at"),style: TextStyle(fontSize:12)),
+                  child: !_isHeader? Text("${DateFormat.d("en_US").add_MMMM().add_y().format(time)} ${DateFormat.Hm("en_US").format(time.add(Duration(hours: 2)))}",style:TextStyle(fontSize:AppStyle.fontSizeListRow())):Text(Language.getTransactionStrings("form.filter.labels.created_at"),style: TextStyle(fontSize:AppStyle.fontSizeListRow())),
                 ):Container(),
                 !_isPortrait? Container(
                   width: Measurements.width * 0.35,
-                  child: !_isHeader? Measurements.statusWidget(_currentTransaction.status):Text(Language.getTransactionStrings("form.filter.labels.status"),style: TextStyle(fontSize:12)),
+                  child: !_isHeader? Measurements.statusWidget(_currentTransaction.status):Text(Language.getTransactionStrings("form.filter.labels.status"),style: TextStyle(fontSize:AppStyle.fontSizeListRow())),
                 ):Container(),
                 Container(
                   width: Measurements.width * 0.02,
@@ -374,10 +376,11 @@ class TabletTableRow extends StatelessWidget {
     DateTime time;
     if(_currentTransaction!= null)time = DateTime.parse(_currentTransaction.createdAt);
     return InkWell(
+       highlightColor: Colors.transparent,
       child: Container(
         width: Measurements.width,
-        height: Measurements.height * (!_isHeader? 0.05:0.04),
-        padding: EdgeInsets.symmetric(horizontal: Measurements.width * 0.02),
+        height: AppStyle.listRowSize(true),
+        padding:AppStyle.listRowPadding(true),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
@@ -386,32 +389,32 @@ class TabletTableRow extends StatelessWidget {
                 Container(
                   alignment: Alignment.centerLeft,
                   width:  Measurements.width * (_isPortrait ?0.07:0.08),
-                  child: !_isHeader? TransactionScreenParts.channelIcon(_currentTransaction.channel) : Container(child:AutoSizeText(Language.getTransactionStrings("form.filter.labels.channel"),style: TextStyle(fontSize:12),)),
+                  child: !_isHeader? TransactionScreenParts.channelIcon(_currentTransaction.channel) : Container(child:AutoSizeText(Language.getTransactionStrings("form.filter.labels.channel"),style: TextStyle(fontSize:AppStyle.fontSizeListRow()),)),
                 ),
                 Container(
                   alignment: Alignment.centerLeft,
                   width: Measurements.width * (_isPortrait ?0.06:0.08),
-                  child: !_isHeader? TransactionScreenParts.paymentType(_currentTransaction.type): Container(child:AutoSizeText(Language.getTransactionStrings("form.filter.labels.type"),style: TextStyle(fontSize:12))) ,
+                  child: !_isHeader? TransactionScreenParts.paymentType(_currentTransaction.type): Container(child:AutoSizeText(Language.getTransactionStrings("form.filter.labels.type"),style: TextStyle(fontSize:AppStyle.fontSizeListRow()))) ,
                 ),
                 Container(
                   width: Measurements.width * (_isPortrait ?0.27:0.28),
-                  child: !_isHeader? AutoSizeText("#${_currentTransaction.id}"): AutoSizeText(Language.getTransactionStrings("form.filter.labels.original_id"),maxLines: 1,textAlign: TextAlign.left,style: TextStyle(fontSize:12)),
+                  child: !_isHeader? AutoSizeText("#${_currentTransaction.id}",style: TextStyle(fontSize:AppStyle.fontSizeListRow())): AutoSizeText(Language.getTransactionStrings("form.filter.labels.original_id"),maxLines: 1,textAlign: TextAlign.left,style: TextStyle(fontSize:AppStyle.fontSizeListRow())),
                 ),
                 Container(
                   width: Measurements.width * (_isPortrait ?0.18:0.20),
-                  child: !_isHeader? AutoSizeText(_currentTransaction.customerName):AutoSizeText(Language.getTransactionStrings("form.filter.labels.customer_name"),maxLines: 1,style: TextStyle(fontSize:12)),
+                  child: !_isHeader? AutoSizeText(_currentTransaction.customerName,style: TextStyle(fontSize:AppStyle.fontSizeListRow())):AutoSizeText(Language.getTransactionStrings("form.filter.labels.customer_name"),maxLines: 1,style: TextStyle(fontSize:AppStyle.fontSizeListRow())),
                 ),
                 Container(
                   width: Measurements.width * (_isPortrait ?0.11:0.13),
-                  child: !_isHeader? AutoSizeText("${Measurements.currency(_currentTransaction.currency)}${f.format(_currentTransaction.total)}"):AutoSizeText(Language.getTransactionStrings("form.filter.labels.total"),maxLines: 1,style: TextStyle(fontSize:12)),
+                  child: !_isHeader? AutoSizeText("${Measurements.currency(_currentTransaction.currency)}${f.format(_currentTransaction.total)}",style: TextStyle(fontSize:AppStyle.fontSizeListRow())):AutoSizeText(Language.getTransactionStrings("form.filter.labels.total"),maxLines: 1,style: TextStyle(fontSize:AppStyle.fontSizeListRow())),
                 ),
                 Container(
                   width: Measurements.width * (_isPortrait ?0.17:0.25),
-                  child: !_isHeader? AutoSizeText("${DateFormat.d("en_US").add_MMMM().add_y().format(time)} ${DateFormat.Hm("en_US").format(time.add(Duration(hours: 2)))}"):Text(Language.getTransactionStrings("form.filter.labels.created_at"),style: TextStyle(fontSize:12)),
+                  child: !_isHeader? AutoSizeText("${DateFormat.d("en_US").add_MMMM().add_y().format(time)} ${DateFormat.Hm("en_US").format(time.add(Duration(hours: 2)))}",style: TextStyle(fontSize:AppStyle.fontSizeListRow())):Text(Language.getTransactionStrings("form.filter.labels.created_at"),style: TextStyle(fontSize:AppStyle.fontSizeListRow())),
                 ),
                 Container(
                   width: Measurements.width * 0.10,
-                  child: !_isHeader? Measurements.statusWidget(_currentTransaction.status):Text(Language.getTransactionStrings("form.filter.labels.status"),style: TextStyle(fontSize:12)),
+                  child: !_isHeader? Measurements.statusWidget(_currentTransaction.status):Text(Language.getTransactionStrings("form.filter.labels.status"),style: TextStyle(fontSize:AppStyle.fontSizeListRow())),
                 ),
               ],
             ),
@@ -457,11 +460,11 @@ class TabletTableRow extends StatelessWidget {
 class TransactionScreenParts{
 
   static channelIcon(String channel){
-    double size = Measurements.width * (_isTablet? 0.03:0.06); 
+    double size = AppStyle.iconRowSize(_isTablet);
     return SvgPicture.asset(Measurements.channelIcon(channel),height:  size);
   }
   static paymentType(String type){
-    double size = Measurements.width * (_isTablet? 0.03:0.06); 
+    double size  = AppStyle.iconRowSize(_isTablet); 
     Color _color = Colors.white.withOpacity(0.7);
     return SvgPicture.asset(Measurements.paymentType(type),height: size,color:  _color,);
   }

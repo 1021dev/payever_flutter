@@ -15,6 +15,7 @@ import 'package:payever/models/pos.dart';
 import 'package:payever/models/products.dart';
 import 'package:payever/models/shop.dart';
 import 'package:payever/network/rest_ds.dart';
+import 'package:payever/utils/appStyle.dart';
 import 'package:payever/utils/env.dart';
 import 'package:payever/utils/global_keys.dart';
 import 'package:payever/utils/translations.dart';
@@ -147,7 +148,7 @@ class _ProductScreenState extends State<ProductScreen> {
             Navigator.push(context, PageTransition(child:NewProductScreen(wallpaper: widget.wallpaper,business: widget.business.id,view: this,currency: widget.business.currency,editMode: false,productEdit: null,isLoading: widget._parts.isLoading),type:PageTransitionType.fade));
           },),
         ],
-        title: Text("Products"),
+        title: Text("Products",style: TextStyle(fontSize: AppStyle.fontSizeAppBar()),),
         backgroundColor: Colors.transparent,
         leading: 
         InkWell(radius: 20,child: Icon(IconData(58829, fontFamily: 'MaterialIcons')),

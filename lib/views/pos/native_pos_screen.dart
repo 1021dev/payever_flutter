@@ -154,7 +154,6 @@ class _NativePosScreenState extends State<NativePosScreen> {
             widget.parts.smsenabled = !widget.parts.currentCheckout.sections.firstWhere((test)=> test.code=="send_to_device").enabled;
             setState((){});
           });
-          
         });
     }).catchError((onError){
       print(onError);
@@ -170,7 +169,6 @@ class _NativePosScreenState extends State<NativePosScreen> {
     widget.parts.haveProducts.addListener(listener);
     widget.parts.dataFetched.addListener(listener);
     widget.parts.loadMore.addListener(listener);
-    //widget.parts.searching.addListener(listener); 
   }
 
   listener(){ 

@@ -57,7 +57,7 @@ GlobalStateModel globalStateModel;
     super.initState();
   }
 
-  fetchData() async {
+  fetchData() {
     RestDatasource api = RestDatasource();
     api.getTerminal(widget._business.id, GlobalUtils.ActiveToken.accesstoken,context).then((terminals){
       terminals.forEach((terminal){
@@ -103,13 +103,14 @@ GlobalStateModel globalStateModel;
                       widget._parts._salesCards.add(ProductCard(widget._parts,i));
                     }
                     widget._parts.index.value = widget._parts._terminals.indexWhere((term)=>term.active);
-                    if((terminal.id == widget._parts.terminals.last.id) && (widget._parts._chSets.last.id == chset.id) ){
+                    print("${widget._parts.terminals.last.id} = ${terminal.id}");
+                    //if((terminal.id == widget._parts.terminals.last.id) && (widget._parts._chSets.last.id == chset.id) ){
+                    if((terminal.id == widget._parts.terminals.last.id) ){
                       widget._parts._mainCardLoading.value = false;
                     }
                     CardParts.currentTerminal = widget._parts._terminals[widget._parts.index.value];
                     DashboardStateModel dashboardStateModel =Provider.of<DashboardStateModel>(context);
                       dashboardStateModel.setActiveTermianl(widget._parts._terminals[widget._parts.index.value]);
-                    
                 });
               }
             });
@@ -212,16 +213,13 @@ class POSNavigation implements CardContract{
   @override
   void loadScreen(BuildContext context,ValueNotifier state) {
     state.value =false;
-    state.notifyListeners();
-    
-    Navigator.push(context, PageTransition(child:NativePosScreen(terminal:_parts._terminals[_parts.index.value],business:_parts.business),type:PageTransitionType.fade));
+    Navigator.push(context, PageTransition(child:NativePosScreen(terminal:_parts._terminals[_parts.index.value],business:Provider.of<GlobalStateModel>(context).currentBusiness),type:PageTransitionType.fade));
   }
 
   @override
   String learnMore() {
     return _parts.help;
   }
-
 }
 
 

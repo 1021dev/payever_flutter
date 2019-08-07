@@ -12,9 +12,11 @@ import 'package:payever/network/rest_ds.dart';
 import 'package:payever/utils/env.dart';
 import 'package:payever/utils/utils.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:payever/view_models/global_state_model.dart';
 import 'package:payever/views/login/login_page.dart';
 import 'package:payever/views/pos/native_pos_screen.dart';
 import 'package:payever/views/pos/pos_screen.dart';
+import 'package:provider/provider.dart';
 
 class EditTerminal extends StatefulWidget {
   bool _isPortrait;
@@ -97,6 +99,7 @@ class EditForm extends StatefulWidget {
 
 class _EditFormState extends State<EditForm> {
   String IMAGE_BASE    = Env.Storage + '/images/';
+  GlobalStateModel globalStateModel;
   void _submit() {
     final form = formKey.currentState;
     if (form.validate()) {
@@ -106,7 +109,7 @@ class _EditFormState extends State<EditForm> {
         print(res);
         widget._currentTerm.name = widget._newName;
         widget._currentTerm.logo = widget._logo;
-        Navigator.pushReplacement(context, PageTransition(child:NativePosScreen(terminal:widget._currentTerm,business:widget.business),type:PageTransitionType.fade));        
+        Navigator.pushReplacement(context, PageTransition(child:NativePosScreen(terminal:widget._currentTerm,business:globalStateModel.currentBusiness),type:PageTransitionType.fade));        
       }
     ).catchError((onError){
       if(onError.toString().contains("401")){
@@ -117,8 +120,6 @@ class _EditFormState extends State<EditForm> {
     }
   }
   static final formKey = new GlobalKey<FormState>();
-
-
   File _image;
    
   Future getImage() async {
@@ -151,7 +152,7 @@ class _EditFormState extends State<EditForm> {
 
   @override
   Widget build(BuildContext context) {
-
+    globalStateModel = Provider.of<GlobalStateModel>(context);
     return OrientationBuilder(builder: (BuildContext context, Orientation orientation) {
       return Container(
       padding: EdgeInsets.symmetric(horizontal: (orientation == Orientation.portrait?Measurements.width:Measurements.height) *(widget._isTablet?  0.15:0.05)),
