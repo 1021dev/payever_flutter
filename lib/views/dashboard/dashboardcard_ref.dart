@@ -101,19 +101,19 @@ class _DashboardCardState extends State<DashboardCard> with  TickerProviderState
                                     ],),
                                     Row(
                                       children: <Widget>[
-                                        Container(
-                                          child: ClipRect(
-                                            child: Column(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: <Widget>[
-                                              widget.isSingleActionButton
-                                                  ? singleActionButtonWidget(
-                                                      context, _isTablet)
-                                                  : actionButtonsWidget(
-                                                      context, _isTablet, widget._active),
-                                              ],),
-                                          ),
-                                        ),
+                                        // Container(
+                                        //   child: ClipRect(
+                                        //     child: Column(
+                                        //       mainAxisAlignment: MainAxisAlignment.center,
+                                        //       children: <Widget>[
+                                        //       widget.isSingleActionButton
+                                        //           ? singleActionButtonWidget(
+                                        //               context, _isTablet)
+                                        //           : actionButtonsWidget(
+                                        //               context, _isTablet, widget._active),
+                                        //       ],),
+                                        //   ),
+                                        // ),
                                         Padding(padding: EdgeInsets.only(right: Measurements.width * 0.02),),
                                         widget._active ? InkWell(
                                           radius: _isTablet ? Measurements.height * 0.02: Measurements.width * 0.07,
@@ -125,7 +125,8 @@ class _DashboardCardState extends State<DashboardCard> with  TickerProviderState
                                   ],
                                 ),
                               ),
-                              Container(
+                              AnimatedContainer(
+                                duration: Duration(milliseconds: 100),
                                 padding: EdgeInsets.only(bottom:Measurements.width * widget.pad,left: Measurements.width * widget.pad,right: Measurements.width * widget.pad),
                                 child: mainCard
                               ),
@@ -135,57 +136,22 @@ class _DashboardCardState extends State<DashboardCard> with  TickerProviderState
                       ),
                     ),
                   ),
-                  AnimatedContainer(
-                    padding: EdgeInsets.all(0.01),
-                    height: _open && widget._active?(_cardSize * (_isTablet? 2.2:1.6)):0,
-                    width: Measurements.width * (_isTablet? 0.7 : (_isPortrait? 0.9:1.3)),
-                    child: Container(
-                      margin: EdgeInsets.all(0.0),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(12),bottomRight:Radius.circular(12) ),
-                        child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 16,sigmaY: 8),
-                          child: Container(
-                            color: Colors.black.withOpacity(0.25),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.max,
-                              children: <Widget>[
-                                Container(
-                                  padding: EdgeInsets.all(Measurements.width * widget.pad),
-                                  child: widget._active? secondCard: Container()
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ) 
-                    ,),
-                  duration: Duration(milliseconds: 100),
-                  )
                 ],
               ),
             );
         },);
       }
-    
-      
-    
       void listen() {
-        
         setState(() {
-          
         });
       }
 
   Widget singleActionButtonWidget(BuildContext context, bool _isTablet) {
-
     return InkWell(
       radius:
       _isTablet ? Measurements.height * 0.02 : Measurements.width * 0.07,
       child: Container(
           padding: EdgeInsets.symmetric(horizontal: Measurements.width * 0.02),
-          //width: widget._active ?50:120,
           decoration: BoxDecoration(
             shape: BoxShape.rectangle,
             color: Colors.grey.withOpacity(0.3),
@@ -195,21 +161,7 @@ class _DashboardCardState extends State<DashboardCard> with  TickerProviderState
               ? Measurements.height * 0.02
               : Measurements.width * 0.07,
           child: Center(
-            child: 
-            // _isloading.value
-            //     ? Container(
-            //     constraints: BoxConstraints(
-            //       maxWidth: _isTablet
-            //           ? Measurements.height * 0.01
-            //           : Measurements.width * 0.04,
-            //       maxHeight: _isTablet
-            //           ? Measurements.height * 0.01
-            //           : Measurements.width * 0.04,
-            //     ),
-            //     child: CircularProgressIndicator(
-            //       strokeWidth: 2,
-            //     ))
-            //     : 
+            child:
                 Container(
               alignment: Alignment.center,
                    child:Text(Language.getConnectStrings("actions.open"))
@@ -217,12 +169,10 @@ class _DashboardCardState extends State<DashboardCard> with  TickerProviderState
           )),
       onTap: () {
         setState(() {
-          // _isloading.value = true;
           widget.handler.loadScreen(context, _isloading);
         });
       },
     );
-
   }
 
   Widget actionButtonsWidget(BuildContext context, bool _isTablet, bool isActive) {

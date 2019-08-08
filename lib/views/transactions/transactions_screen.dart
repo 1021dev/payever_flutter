@@ -238,7 +238,6 @@ class _CustomListState extends State<CustomList> {
           widget.isLoading.value = true;
         });
         widget.page ++;
-      
         RestDatasource().getTransactionList(widget.currentBusiness.id,GlobalUtils.ActiveToken.accessToken,"?orderBy=created_at&direction=desc&limit=50&query=${widget.search}&page=${widget.page}&currency=${widget.currentBusiness.currency}",context).then((transaction){
           List<Collection> temp = Transaction.toMap(transaction).collection;
           if(temp.isNotEmpty){
