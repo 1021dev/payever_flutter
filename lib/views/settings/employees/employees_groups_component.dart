@@ -112,19 +112,20 @@ class _EmployeesGroupComponentState extends State<EmployeesGroupComponent>
     return businessApps;
   }
 
-  Future<dynamic> getEmployeesFromGroup(String groupId) async {
+  Future<dynamic> getEmployeesFromGroup(String groupId, GlobalStateModel globalStateModel) async {
     RestDatasource api = RestDatasource();
     return api.getBusinessEmployeesGroup(GlobalUtils.ActiveToken.accessToken,
-        "d884e63e-7671-4bdc-8693-2e0085aec199", groupId);
+        globalStateModel.currentBusiness.id, groupId);
   }
 
-  Future<BusinessEmployeesGroups> fetchEmployeesFromGroup() async {
+  Future<BusinessEmployeesGroups> fetchEmployeesFromGroup(GlobalStateModel
+  globalStateModel) async {
     BusinessEmployeesGroups businessEmployeesGroups;
 
 //    var groupData = await employeesStateModel
 //        .getEmployeesFromGroup(widget.businessEmployeesGroups.id);
     var groupData =
-        await getEmployeesFromGroup(widget.businessEmployeesGroups.id);
+        await getEmployeesFromGroup(widget.businessEmployeesGroups.id, globalStateModel);
     print("groupData: $groupData");
     businessEmployeesGroups = BusinessEmployeesGroups.fromMap(groupData);
 //    _employeesController.add(businessEmployeesGroups);
@@ -185,8 +186,6 @@ class _EmployeesGroupComponentState extends State<EmployeesGroupComponent>
     EmployeesStateModel employeesStateModel =
         Provider.of<EmployeesStateModel>(context);
 
-//    fetchEmployeesFromGroup();
-
     return CustomFutureBuilder<List<BusinessApps>>(
       future: getBusinessApps(employeesStateModel, globalStateModel),
       errorMessage: "Error loading group data",
@@ -209,7 +208,8 @@ class _EmployeesGroupComponentState extends State<EmployeesGroupComponent>
                   width: Measurements.width * 0.6,
                   child: TabBar(
                     controller: tabController,
-                    indicatorColor: Colors.transparent,
+//                    indicatorColor: Colors.transparent,
+                    indicatorColor: Colors.white.withOpacity(0),
 //                  indicator: BubbleTabIndicator(
 //                    indicatorHeight: 40,
 //                    indicatorColor: Colors.black.withOpacity(0.1),
@@ -275,7 +275,7 @@ class _EmployeesGroupComponentState extends State<EmployeesGroupComponent>
                     Padding(
                       padding: EdgeInsets.all(10),
                       child: CustomFutureBuilder<BusinessEmployeesGroups>(
-                          future: fetchEmployeesFromGroup(),
+                          future: fetchEmployeesFromGroup(globalStateModel),
                           errorMessage: "Error loading employees",
                           onDataLoaded: (BusinessEmployeesGroups results) =>
                               EmployeesList(
@@ -444,6 +444,8 @@ class _EmployeesListState extends State<EmployeesList> {
 
 //    bool _isTablet = Measurements.width < 600 ? false : true;
 
+    print("widget.employeesList: ${widget.employeesList}");
+
     return ListView.separated(
       key: _formEmployeesKey,
 //      padding: EdgeInsets.only(top: 10),
@@ -568,7 +570,7 @@ class _EmployeeDataRowState extends State<EmployeeDataRow> {
                         color: Colors.transparent,
                         border: Border.all(
                             width: Measurements.width * 0.002,
-                            color: isChecked ? Colors.white : Colors.grey),
+                            color: isChecked ? Colors.white : Colors.black38),
                         borderRadius:
                             const BorderRadius.all(const Radius.circular(5)),
                       ),

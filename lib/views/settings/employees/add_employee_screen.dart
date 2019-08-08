@@ -6,6 +6,7 @@ import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/models/employees.dart';
+import 'package:payever/views/customelements/wallpaper.dart';
 import 'package:provider/provider.dart';
 
 import 'package:payever/view_models/employees_state_model.dart';
@@ -88,102 +89,84 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
         _isTablet = Measurements.width < 600 ? false : true;
         print("_isTablet: $_isTablet");
 
-        return Stack(
-          children: <Widget>[
-            Positioned(
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width,
-                top: 0.0,
-                child: CachedNetworkImage(
-                  imageUrl: globalStateModel.currentWallpaper ??
-                      globalStateModel.defaultCustomWallpaper,
-                  placeholder: (context, url) => Container(),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
-                  fit: BoxFit.cover,
-                )),
-            BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 25, sigmaY: 25),
-              child: Container(
-                child: Scaffold(
-                  backgroundColor: Colors.black.withOpacity(0.2),
-                  appBar: CustomAppBar(
-                    title: Text("Add Employee"),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    actions: <Widget>[
-                      StreamBuilder(
-                          stream: employeesStateModel.submitValid,
-                          builder: (context, snapshot) {
-                            return RawMaterialButton(
-                              constraints: BoxConstraints(),
-                              padding: EdgeInsets.all(10),
-                              child: Text(
-                                'Invite',
-                                style: TextStyle(
-                                    color: snapshot.hasData
-                                        ? Colors.white
-                                        : Colors.white.withOpacity(0.3),
-                                    fontSize: 18),
-                              ),
-                              onPressed: () {
-                                if (snapshot.hasData) {
-                                  print("data can be send");
-                                  _createNewEmployee(globalStateModel,
-                                      employeesStateModel, context);
-                                } else {
-                                  print("The data can't be send");
-                                }
-                              },
-                            );
-                          }),
-                    ],
-                  ),
-                  body: SafeArea(
-                    child: Form(
-                      key: _formKey,
-                      child: CustomFutureBuilder<List<BusinessApps>>(
-                          future: getBusinessApps(employeesStateModel),
-                          errorMessage: "Error loading data",
-                          onDataLoaded: (List results) {
-                            return Column(
-                              children: <Widget>[
-                                Flexible(
-                                  child: CustomExpansionTile(
-                                    isWithCustomIcon: false,
-                                    widgetsTitleList: <Widget>[
+        return BackgroundBase(
+          true,
+          appBar: CustomAppBar(
+            title: Text("Add Employee"),
+            onTap: () {
+              Navigator.pop(context);
+            },
+            actions: <Widget>[
+              StreamBuilder(
+                  stream: employeesStateModel.submitValid,
+                  builder: (context, snapshot) {
+                    return RawMaterialButton(
+                      constraints: BoxConstraints(),
+                      padding: EdgeInsets.all(10),
+                      child: Text(
+                        'Invite',
+                        style: TextStyle(
+                            color: snapshot.hasData
+                                ? Colors.white
+                                : Colors.white.withOpacity(0.3),
+                            fontSize: 18),
+                      ),
+                      onPressed: () {
+                        if (snapshot.hasData) {
+                          print("data can be send");
+                          _createNewEmployee(
+                              globalStateModel, employeesStateModel, context);
+                        } else {
+                          print("The data can't be send");
+                        }
+                      },
+                    );
+                  }),
+            ],
+          ),
+          body: SafeArea(
+            child: Form(
+              key: _formKey,
+              child: CustomFutureBuilder<List<BusinessApps>>(
+                  future: getBusinessApps(employeesStateModel),
+                  errorMessage: "Error loading data",
+                  onDataLoaded: (List results) {
+                    return Column(
+                      children: <Widget>[
+                        Flexible(
+                          child: CustomExpansionTile(
+                            isWithCustomIcon: false,
+                            widgetsTitleList: <Widget>[
 //                                    ExpandableHeader.toMap({"icon": Icon(
 //                                      Icons.business_center,
 //                                       size: 28,
 //                                    ), "title": "Apps Access", "isExpanded": false}),
-                                      Container(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: <Widget>[
-                                            Container(
-                                              child: Row(
-                                                children: <Widget>[
-                                                  Icon(
-                                                    Icons.person,
-                                                    size: 28,
-                                                  ),
-                                                  SizedBox(width: 10),
-                                                  Text(
-                                                    "Info",
-                                                    style:
-                                                        TextStyle(fontSize: 18),
-                                                  ),
-                                                ],
-                                              ),
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal:
-                                                      Measurements.width *
-                                                          0.05),
-                                            ),
-                                          ],
-                                        ),
+                              Container(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Container(
+                                      child: Row(
+                                        children: <Widget>[
+                                          Icon(
+                                            Icons.person,
+                                            size: 28,
+                                          ),
+                                          SizedBox(width: 10),
+                                          Text(
+                                            "Info",
+                                            style: TextStyle(fontSize: 18),
+                                          ),
+                                        ],
                                       ),
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal:
+                                              Measurements.width * 0.05),
+                                    ),
+                                  ],
+                                ),
+                              ),
 //                                      Container(
 //                                        child: Row(
 //                                          mainAxisAlignment:
@@ -212,35 +195,29 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
 //                                          ],
 //                                        ),
 //                                      ),
-                                    ],
-                                    widgetsBodyList: <Widget>[
-                                      EmployeeInfoRow(
-                                        openedRow: openedRow,
-                                        employeesStateModel:
-                                            employeesStateModel,
-                                        employeeCurrentGroups:
-                                            employeeCurrentGroups,
-                                        employeeCurrentGroupsList:
-                                            employeeCurrentGroupsList,
-                                      ),
+                            ],
+                            widgetsBodyList: <Widget>[
+                              EmployeeInfoRow(
+                                openedRow: openedRow,
+                                employeesStateModel: employeesStateModel,
+                                employeeCurrentGroups: employeeCurrentGroups,
+                                employeeCurrentGroupsList:
+                                    employeeCurrentGroupsList,
+                              ),
 //                                      CustomAppsAccessExpansionTile(
 //                                        employeesStateModel:
 //                                            employeesStateModel,
 //                                        businessApps: results,
 //                                        isNewEmployeeOrGroup: true,
 //                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            );
-                          }),
-                    ),
-                  ),
-                ),
-              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    );
+                  }),
             ),
-          ],
+          ),
         );
       },
     );

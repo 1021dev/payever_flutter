@@ -7,6 +7,7 @@ import 'package:payever/models/acl.dart';
 import 'package:payever/models/group_acl.dart';
 import 'package:payever/views/customelements/custom_expansion_tile.dart';
 import 'package:payever/views/customelements/custom_future_builder.dart';
+import 'package:payever/views/customelements/wallpaper.dart';
 import 'package:provider/provider.dart';
 
 import 'package:payever/models/business_apps.dart';
@@ -89,200 +90,169 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
             ? MediaQuery.of(context).size.width
             : MediaQuery.of(context).size.height);
 
-        return Stack(
-          children: <Widget>[
-            Positioned(
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width,
-                top: 0.0,
-                child: CachedNetworkImage(
-                  imageUrl: globalStateModel.currentWallpaper ??
-                      globalStateModel.defaultCustomWallpaper,
-                  placeholder: (context, url) => Container(),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
-                  fit: BoxFit.cover,
-                )),
-            BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 25, sigmaY: 25),
-              child: Container(
-                child: Scaffold(
-                  backgroundColor: Colors.black.withOpacity(0.2),
-                  appBar: CustomAppBar(
-                    title: Text("Add New Group"),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    actions: <Widget>[
-                      StreamBuilder(
-                          stream: employeesStateModel.group,
-                          builder: (context, snapshot) {
-                            return RawMaterialButton(
-                              constraints: BoxConstraints(),
-                              padding: EdgeInsets.all(10),
-                              child: Text(
-                                'Save',
-                                style: TextStyle(
-                                    color: snapshot.hasData
-                                        ? Colors.white
-                                        : Colors.white.withOpacity(0.3),
-                                    fontSize: 18),
-                              ),
-                              onPressed: () {
-                                if (snapshot.hasData) {
-                                  print("data can be send");
-                                  _createNewGroup(globalStateModel,
-                                      employeesStateModel, context);
-                                } else {
-                                  print("The data can't be send");
-                                }
-                              },
-                            );
-                          }),
-                    ],
-                  ),
-                  body: CustomFutureBuilder<List<BusinessApps>>(
-                    future: getBusinessApps(employeesStateModel),
-                    errorMessage: "Error loading apps access",
-                    onDataLoaded: (List results) {
-                      return SafeArea(
-                        child: Container(
-                          padding: EdgeInsets.only(
-                              top: Measurements.width * 0.01,
+        return BackgroundBase(
+          true,
+          appBar: CustomAppBar(
+            title: Text("Add New Group"),
+            onTap: () {
+              Navigator.pop(context);
+            },
+            actions: <Widget>[
+              StreamBuilder(
+                  stream: employeesStateModel.group,
+                  builder: (context, snapshot) {
+                    return RawMaterialButton(
+                      constraints: BoxConstraints(),
+                      padding: EdgeInsets.all(10),
+                      child: Text(
+                        'Save',
+                        style: TextStyle(
+                            color: snapshot.hasData
+                                ? Colors.white
+                                : Colors.white.withOpacity(0.3),
+                            fontSize: 18),
+                      ),
+                      onPressed: () {
+                        if (snapshot.hasData) {
+                          print("data can be send");
+                          _createNewGroup(
+                              globalStateModel, employeesStateModel, context);
+                        } else {
+                          print("The data can't be send");
+                        }
+                      },
+                    );
+                  }),
+            ],
+          ),
+          body: CustomFutureBuilder<List<BusinessApps>>(
+            future: getBusinessApps(employeesStateModel),
+            errorMessage: "Error loading apps access",
+            onDataLoaded: (List results) {
+              return SafeArea(
+                child: Container(
+                  padding: EdgeInsets.only(
+                      top: Measurements.width * 0.01,
 //                      right: Measurements.width * 0.01,
 //                      left: Measurements.width * 0.01,
-                              bottom: Measurements.width * 0.08),
-                          child: Column(
-                            children: <Widget>[
-                              Container(
-                                alignment: Alignment.centerLeft,
-                                height: Measurements.width *
-                                    (_isTablet ? 0.13 : 0.18),
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: Measurements.width * 0.02),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(10.0),
-                                        topRight: Radius.circular(10.0)),
-                                    color: Colors.black.withOpacity(0.5)),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        StreamBuilder(
-                                            stream: employeesStateModel.group,
-                                            builder: (context, snapshot) {
-                                              return Container(
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal:
-                                                        Measurements.width *
-                                                            0.025),
-                                                alignment: Alignment.center,
-                                                color: Colors.white
-                                                    .withOpacity(0.05),
-                                                width:
-                                                    Measurements.width * 0.475,
+                      bottom: Measurements.width * 0.08),
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        height: Measurements.width * (_isTablet ? 0.13 : 0.18),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: Measurements.width * 0.02),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(10.0),
+                                topRight: Radius.circular(10.0)),
+                            color: Colors.black.withOpacity(0.5)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                StreamBuilder(
+                                    stream: employeesStateModel.group,
+                                    builder: (context, snapshot) {
+                                      return Container(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal:
+                                                Measurements.width * 0.025),
+                                        alignment: Alignment.center,
+                                        color: Colors.white.withOpacity(0.05),
+                                        width: Measurements.width * 0.475,
 //                                              height: Measurements.height *
 //                                                  (_isTablet ? 0.08 : 0.07),
-                                                child: TextField(
-                                                  controller:
-                                                      _groupNameController,
-                                                  onChanged: employeesStateModel
-                                                      .changeGroup,
-                                                  style: TextStyle(
-                                                      fontSize:
-                                                          Measurements.height *
-                                                              0.02),
-                                                  decoration: InputDecoration(
-                                                    hintText: "Group Name",
-                                                    hintStyle: TextStyle(
-                                                      color: snapshot.hasError
-                                                          ? Colors.red
-                                                          : Colors.white
-                                                              .withOpacity(0.5),
-                                                    ),
-                                                    labelText: "Group Name",
-                                                    labelStyle: TextStyle(
-                                                      color: snapshot.hasError
-                                                          ? Colors.red
-                                                          : Colors.grey,
-                                                    ),
-                                                    border: InputBorder.none,
-                                                  ),
+                                        child: TextField(
+                                          controller: _groupNameController,
+                                          onChanged:
+                                              employeesStateModel.changeGroup,
+                                          style: TextStyle(
+                                              fontSize:
+                                                  Measurements.height * 0.02),
+                                          decoration: InputDecoration(
+                                            hintText: "Group Name",
+                                            hintStyle: TextStyle(
+                                              color: snapshot.hasError
+                                                  ? Colors.red
+                                                  : Colors.white
+                                                      .withOpacity(0.5),
+                                            ),
+                                            labelText: "Group Name",
+                                            labelStyle: TextStyle(
+                                              color: snapshot.hasError
+                                                  ? Colors.red
+                                                  : Colors.grey,
+                                            ),
+                                            border: InputBorder.none,
+                                          ),
 //                                                onSaved: (firstName) {},
-                                                  //  validator: (value) {
-                                                  //
-                                                  //  },
-                                                ),
-                                              );
-                                            }),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
+                                          //  validator: (value) {
+                                          //
+                                          //  },
+                                        ),
+                                      );
+                                    }),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
 //                              EmployeesAppsAccessComponent(
 //                                openedRow: ValueNotifier(1),
 //                                businessAppsData: results,
 //                                isNewEmployeeOrGroup: true,
 //                              ),
 
-                              Flexible(
-                                child: CustomExpansionTile(
-                                  isWithCustomIcon: false,
-                                  widgetsTitleList: <Widget>[
-                                    Container(
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: <Widget>[
-                                          Container(
-                                            child: Row(
-                                              children: <Widget>[
-                                                Icon(
-                                                  Icons.business_center,
-                                                  size: 28,
-                                                ),
-                                                SizedBox(width: 10),
-                                                Text(
-                                                  "Apps Access",
-                                                  style:
-                                                      TextStyle(fontSize: 18),
-                                                ),
-                                              ],
-                                            ),
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal:
-                                                    Measurements.width * 0.05),
-                                          ),
-                                        ],
-                                      ),
+                      Flexible(
+                        child: CustomExpansionTile(
+                          isWithCustomIcon: false,
+                          widgetsTitleList: <Widget>[
+                            Container(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Container(
+                                    child: Row(
+                                      children: <Widget>[
+                                        Icon(
+                                          Icons.business_center,
+                                          size: 28,
+                                        ),
+                                        SizedBox(width: 10),
+                                        Text(
+                                          "Apps Access",
+                                          style: TextStyle(fontSize: 18),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                  widgetsBodyList: <Widget>[
-                                    CustomAppsAccessExpansionTile(
-                                      employeesStateModel: employeesStateModel,
-                                      businessApps: results,
-                                      isNewEmployeeOrGroup: true,
-                                    ),
-                                  ],
-                                ),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: Measurements.width * 0.05),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
+                          widgetsBodyList: <Widget>[
+                            CustomAppsAccessExpansionTile(
+                              employeesStateModel: employeesStateModel,
+                              businessApps: results,
+                              isNewEmployeeOrGroup: true,
+                            ),
+                          ],
                         ),
-                      );
-                    },
+                      ),
+                    ],
                   ),
                 ),
-              ),
-            ),
-          ],
+              );
+            },
+          ),
         );
       },
     );

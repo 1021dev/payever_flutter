@@ -4,12 +4,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:payever/models/products.dart';
 import 'package:payever/network/rest_ds.dart';
 import 'package:payever/utils/env.dart';
 import 'package:payever/utils/translations.dart';
 import 'package:payever/utils/utils.dart';
 import 'package:payever/views/customelements/color_picker.dart';
+import 'package:payever/views/customelements/custom_toast_notification.dart';
 import 'package:payever/views/pos/native_pos_screen.dart';
 
 class DetailScreen extends StatefulWidget {
@@ -23,18 +25,20 @@ class DetailScreen extends StatefulWidget {
 class _DetailScreenState extends State<DetailScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.close,color: Colors.black,),
-          onPressed: ()=>Navigator.pop(context),
+    return OKToast(
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.close,color: Colors.black,),
+            onPressed: ()=>Navigator.pop(context),
+          ),
+          centerTitle: true,
+          title: Text("Product details",style: TextStyle(color: Colors.black),),
+          backgroundColor: Colors.white,
         ),
-        centerTitle: true,
-        title: Text("Product details",style: TextStyle(color: Colors.black),),
         backgroundColor: Colors.white,
+        body: DetailedProduct(currentProduct: widget.currentProduct, parts: widget.parts,),
       ),
-      backgroundColor: Colors.white,
-      body: DetailedProduct(currentProduct: widget.currentProduct, parts: widget.parts,),
     );
   }
 }
@@ -375,6 +379,19 @@ class _DetailDetailsState extends State<DetailDetails> {
                 child:Center(child: Text("Add to cart",style: TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.bold),)),
               ),
               onTap: (){
+
+                ToastFuture toastFuture = showToastWidget(
+                  CustomToastNotification(icon: Icons.check_circle_outline, toastText: "Product added to Bag",),
+                  duration: Duration(seconds: 3),
+                  onDismiss: () {
+                    print("The toast was dismised"); // the method will be called on toast dismiss.
+                  },
+                );
+
+                Future.delayed(Duration(seconds: 3), () {
+                  toastFuture.dismiss();
+                });
+
                 if(stc != 0){
                   if(widget.haveVariants){
                     var image = widget.currentProduct.variants[widget.currentVariant.value].images.isNotEmpty?widget.currentProduct.variants[widget.currentVariant.value].images[0]:widget.currentProduct.images.isNotEmpty?widget.currentProduct.images[0]:null;
@@ -383,7 +400,7 @@ class _DetailDetailsState extends State<DetailDetails> {
                     var image = widget.currentProduct.images.isNotEmpty?widget.currentProduct.images[0]:null;
                     widget.parts.add2cart(id:widget.currentProduct.uuid,image:image,uuid: widget.currentProduct.uuid,name: widget.currentProduct.title,price:widget.onSale?widget.currentProduct.salePrice:widget.currentProduct.price,qty: 1,sku:widget.currentProduct.sku);
                   }
-                  Navigator.pop(context);
+//                  Navigator.pop(context);
                 }
               },
             ),

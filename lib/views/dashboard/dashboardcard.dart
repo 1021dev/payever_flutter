@@ -107,8 +107,9 @@ class _DashboardCardState extends State<DashboardCard> with  TickerProviderState
                                               mainAxisAlignment: MainAxisAlignment.center,
                                               children: <Widget>[
                                               widget.isSingleActionButton
-                                                  ? singleActionButtonWidget(
-                                                      context, _isTablet)
+//                                                  ? singleActionButtonWidget(
+//                                                      context, _isTablet)
+                                                  ? Container()
                                                   : actionButtonsWidget(
                                                       context, _isTablet, widget._active),
                                               ],),
