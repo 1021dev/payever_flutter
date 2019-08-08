@@ -7,14 +7,15 @@ class Employees {
   final bool isVerified;
   final String firstName;
   final String lastName;
+  final String fullName;
   final String email;
   final String createdAt;
   final String updatedAt;
   final int v;
-
 //  final List<EmployeePosition> position;
   final String position;
   final String idAgain;
+  final int status;
 
   Employees(
       {this.roles,
@@ -23,12 +24,14 @@ class Employees {
       this.isVerified,
       this.firstName,
       this.lastName,
+      this.fullName,
       this.email,
       this.createdAt,
       this.updatedAt,
       this.v,
       this.position,
-      this.idAgain});
+      this.idAgain,
+      this.status});
 
   factory Employees.fromMap(dynamic obj) {
 
@@ -49,9 +52,11 @@ class Employees {
         groups: employeeGroupDataList,
         firstName: obj['first_name'],
         lastName: obj['last_name'],
+        fullName: obj['fullName'],
         position: obj['position'],
         email: obj['email'],
         id: obj['_id'],
+        status: obj['status'] ?? 1,
     );
 
   }
@@ -73,10 +78,9 @@ enum Positions { Cashier, Sales, Marketing, Staff, Admin, Others }
 
 class UserRoles {
   final List<UserPermissions> permission;
-
+  final String type;
 //  final String id;
 //  final RoleType type;
-  final String type;
 
   UserRoles({this.permission, this.type});
 
@@ -100,24 +104,25 @@ class UserRoles {
 }
 
 class UserPermissions {
-  final String id;
-  final String businessId;
+//  final String id;
   final List<Acl> acls;
-  final bool hasAcls;
-  final int v;
+  final String businessId;
+//  final bool hasAcls;
+//  final int v;
 
-  UserPermissions({this.id, this.businessId, this.acls, this.hasAcls, this.v});
+//  UserPermissions({this.id, this.businessId, this.acls, this.hasAcls, this.v});
+  UserPermissions({this.acls, this.businessId});
 
   factory UserPermissions.fromMap(permissions) {
     var aclsData = permissions['acls'] as List;
     List<Acl> aclsDataList = aclsData.map((data) => Acl.fromMap(data)).toList();
 
     return UserPermissions(
-      id: permissions['_id'] ?? "",
       businessId: permissions['businessId'],
       acls: aclsDataList,
-      hasAcls: permissions['hasAcls'] ?? true,
-      v: permissions['__v'] ?? 0,
+//      id: permissions['_id'] ?? "",
+//      hasAcls: permissions['hasAcls'] ?? true,
+//      v: permissions['__v'] ?? 0,
     );
   }
 }

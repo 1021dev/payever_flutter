@@ -4,8 +4,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:payever/views/customelements/custom_app_bar.dart';
 import 'package:payever/view_models/global_state_model.dart';
+import 'package:payever/views/customelements/custom_app_bar.dart';
 import 'package:payever/utils/utils.dart';
 import 'settings_drawer.dart';
 

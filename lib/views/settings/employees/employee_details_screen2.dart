@@ -4,12 +4,14 @@ import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:payever/views/customelements/custom_expansion_tile.dart';
+import 'package:payever/views/settings/employees/employees_apps_access_component.dart';
 import 'package:provider/provider.dart';
 
 import 'package:payever/models/business_apps.dart';
 import 'package:payever/models/business_employees_groups.dart';
 import 'package:payever/network/rest_ds.dart';
+import 'package:payever/utils/env.dart';
+import 'package:payever/utils/translations.dart';
 import 'package:payever/views/customelements/custom_alert_dialog.dart';
 import 'package:payever/views/customelements/custom_future_builder.dart';
 import 'package:payever/views/login/login_page.dart';
@@ -19,22 +21,21 @@ import 'package:payever/view_models/global_state_model.dart';
 import 'package:payever/utils/utils.dart';
 import 'package:payever/views/customelements/custom_app_bar.dart';
 import 'package:payever/views/customelements/drop_down_menu.dart';
-
-import 'custom_apps_access_expansion_tile.dart';
+import 'package:payever/views/settings/employees/expandable_component.dart';
 
 bool _isPortrait;
 bool _isTablet;
 
-class EmployeeDetailsScreen extends StatefulWidget {
+class EmployeeDetailsScreen2 extends StatefulWidget {
   final Employees employee;
 
-  EmployeeDetailsScreen(this.employee);
+  EmployeeDetailsScreen2(this.employee);
 
   @override
-  createState() => _EmployeeDetailsScreenState();
+  createState() => _EmployeeDetailsScreenState2();
 }
 
-class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
+class _EmployeeDetailsScreenState2 extends State<EmployeeDetailsScreen2> {
   var openedRow = ValueNotifier(0);
 
   final _formKey = GlobalKey<FormState>();
@@ -59,18 +60,18 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
     for (var app in apps) {
       var appData = BusinessApps.fromMap(app);
       if (appData.dashboardInfo.title != null) {
-        if (appData.allowedAcls.create != null) {
-          appData.allowedAcls.create = false;
-        }
-        if (appData.allowedAcls.read != null) {
-          appData.allowedAcls.read = false;
-        }
-        if (appData.allowedAcls.update != null) {
-          appData.allowedAcls.update = false;
-        }
-        if (appData.allowedAcls.delete != null) {
-          appData.allowedAcls.delete = false;
-        }
+//        if (appData.allowedAcls.create != null) {
+//          appData.allowedAcls.create = false;
+//        }
+//        if (appData.allowedAcls.read != null) {
+//          appData.allowedAcls.read = false;
+//        }
+//        if (appData.allowedAcls.update != null) {
+//          appData.allowedAcls.update = false;
+//        }
+//        if (appData.allowedAcls.delete != null) {
+//          appData.allowedAcls.delete = false;
+//        }
         businessApps.add(appData);
       }
     }
@@ -161,128 +162,30 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                     errorMessage: "Error loading employee details",
                     onDataLoaded: (results) {
                       return SafeArea(
-                        child: Form(
-                          key: _formKey,
-                          child: CustomFutureBuilder<List<BusinessApps>>(
-                            future: getBusinessApps(employeesStateModel),
-                            errorMessage: "Error loading apps.",
-                            onDataLoaded: (List results) {
-                              return Column(
-                                children: <Widget>[
-                                  Flexible(
-                                    child: CustomExpansionTile(
-                                      isWithCustomIcon: false,
-                                      listSize: widget.employee.status == 0 ? 1 : null,
-                                      widgetsTitleList: <Widget>[
-                                        Container(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: <Widget>[
-                                              Container(
-                                                child: Row(
-                                                  children: <Widget>[
-                                                    Icon(
-                                                      Icons.person,
-                                                      size: 28,
-                                                    ),
-                                                    SizedBox(width: 10),
-                                                    Text(
-                                                      "Info",
-                                                      style: TextStyle(
-                                                          fontSize: 18),
-                                                    ),
-                                                  ],
-                                                ),
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal:
-                                                        Measurements.width *
-                                                            0.05),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        widget.employee.status != 0 ?
-                                            Container(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment
-                                                .spaceBetween,
-                                            children: <Widget>[
-                                              Container(
-                                                child: Row(
-                                                  children: <Widget>[
-                                                    Icon(
-                                                      Icons
-                                                          .business_center,
-                                                      size: 28,
-                                                    ),
-                                                    SizedBox(width: 10),
-                                                    Text(
-                                                      "Apps Access",
-                                                      style: TextStyle(
-                                                          fontSize: 18),
-                                                    ),
-                                                  ],
-                                                ),
-                                                padding:
-                                                EdgeInsets.symmetric(
-                                                    horizontal:
-                                                    Measurements
-                                                        .width *
-                                                        0.05),
-                                              ),
-                                            ],
-                                          ),
-                                        ) : Container(),
-                                      ],
-                                      widgetsBodyList: <Widget>[
-                                        EmployeeInfoRow(
-                                          openedRow: openedRow,
-                                          employee: widget.employee,
-                                          employeesStateModel:
-                                              employeesStateModel,
-                                        ),
-                                        widget.employee.status != 0 ?
-                                            CustomAppsAccessExpansionTile(
-                                                employeesStateModel:
-                                                    employeesStateModel,
-                                                businessApps: results,
-                                                isNewEmployeeOrGroup: false,
-                                              ) : Container(),
-                                      ],
+                        child: ListView(
+                          children: <Widget>[
+                            Form(
+                              key: _formKey,
+                              child: Container(
+//                                  padding: EdgeInsets.symmetric(horizontal: 5),
+                                child: Column(
+                                  children: <Widget>[
+                                    EmployeeInfoRow(
+                                      openedRow: openedRow,
+                                      employee: widget.employee,
+//                                        employeeGroups: snapshot.data,
+                                      employeesStateModel: employeesStateModel,
                                     ),
-                                  ),
-
-//                                    InkWell(
-//                                      child: Container(
-//                                        color: Colors.white.withOpacity(0.4),
-//                                        width: _isPortrait
-//                                            ? Measurements.width * 0.99
-//                                            : double.infinity,
-//                                        height: Measurements.height *
-//                                            (_isTablet ? 0.05 : 0.07),
-//                                        child: Center(
-//                                            child: Text(
-//                                              "Delete Employee",
-//                                              style: TextStyle(
-//                                                  color: Colors.white,
-//                                                  fontSize: 19),
-//                                            )),
-//                                      ),
-//                                      onTap: () {
-//                                        _deleteEmployeeConfirmation(
-//                                            context, employeesStateModel);
-//                                      },
-//                                    ),
-                                ],
-                              );
-
-//                                        return EmployeesAppsAccessComponent(
-//                                          openedRow: openedRow,
-//                                          businessAppsData: results,
-//                                          isNewEmployeeOrGroup: false,
-//                                        );
+                                    CustomFutureBuilder<List<BusinessApps>>(
+                                      future:
+                                          getBusinessApps(employeesStateModel),
+                                      errorMessage: "Error loading apps.",
+                                      onDataLoaded: (List results) {
+                                        return EmployeesAppsAccessComponent(
+                                          openedRow: openedRow,
+                                          businessAppsData: results,
+                                          isNewEmployeeOrGroup: false,
+                                        );
 
 //                                        return AppsAccessRow(
 //                                          openedRow: openedAppsAccessRow,
@@ -290,8 +193,34 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
 ////                                        employeeGroups: snapshot.data,
 //                                          businessAppsData: results,
 //                                        );
-                            },
-                          ),
+                                      },
+                                    ),
+                                    InkWell(
+                                      child: Container(
+                                        color: Colors.white.withOpacity(0.4),
+                                        width: _isPortrait
+                                            ? Measurements.width * 0.99
+                                            : double.infinity,
+                                        height: Measurements.height *
+                                            (_isTablet ? 0.05 : 0.07),
+                                        child: Center(
+                                            child: Text(
+                                          "Delete Employee",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 19),
+                                        )),
+                                      ),
+                                      onTap: () {
+                                        _deleteEmployeeConfirmation(
+                                            context, employeesStateModel);
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       );
                     },
@@ -324,14 +253,32 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
           "app.allowedAcls.delete: ${app.allowedAcls.delete}");
     }
 
-
-
 //    employeesStateModel.clearEmployeeData();
 
+    await employeesStateModel.updateEmployee(data, widget.employee.id);
+    Navigator.of(context).pop();
+  }
 
+  void _deleteEmployeeConfirmation(
+      BuildContext context, EmployeesStateModel employeesStateModel) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return CustomAlertDialog(
+            title: "Delete employee",
+            message: "Are you sure that you want to delete this employee?",
+            onContinuePressed: () {
+              Navigator.of(_formKey.currentContext).pop();
+              return _deleteEmployeeFromBusiness(employeesStateModel);
+            });
+      },
+    );
+  }
 
-    //await employeesStateModel.updateEmployee(data, widget.employee.id);
-    //Navigator.of(context).pop();
+  _deleteEmployeeFromBusiness(EmployeesStateModel employeesStateModel) {
+    employeesStateModel.deleteEmployeeFromBusiness(widget.employee.id);
+    Navigator.of(_formKey.currentContext).pop();
   }
 }
 
@@ -992,51 +939,51 @@ class _EmployeeInfoRowState extends State<EmployeeInfoRow>
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-//        Container(
-//          decoration: BoxDecoration(
-//            color: Colors.white.withOpacity(0.1),
-//            borderRadius: BorderRadius.only(
-//                topLeft: Radius.circular(15), topRight: Radius.circular(15)),
-//          ),
-//          child: InkWell(
-//            child: Row(
-//              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//              children: <Widget>[
-//                Container(
-////                  child: Text(Language.getProductStrings("sections.main")),
-//                  child: Row(
-//                    children: <Widget>[
-//                      Icon(
-//                        Icons.person,
-//                        size: 28,
-//                      ),
-//                      SizedBox(width: 10),
-//                      Text(
-//                        "Info",
-//                        style: TextStyle(fontSize: 18),
-//                      ),
-//                    ],
-//                  ),
-//                  padding: EdgeInsets.symmetric(
-//                      horizontal: Measurements.width * 0.05),
-//                ),
-//                IconButton(
-//                  icon: Icon(isOpen
-//                      ? Icons.keyboard_arrow_up
-//                      : Icons.keyboard_arrow_down),
-//                  onPressed: () {
-//                    widget.openedRow.notifyListeners();
-//                    widget.openedRow.value = 0;
-//                  },
-//                ),
-//              ],
-//            ),
-//            onTap: () {
-//              widget.openedRow.notifyListeners();
-//              widget.openedRow.value = 0;
-//            },
-//          ),
-//        ),
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.1),
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(15), topRight: Radius.circular(15)),
+          ),
+          child: InkWell(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Container(
+//                  child: Text(Language.getProductStrings("sections.main")),
+                  child: Row(
+                    children: <Widget>[
+                      Icon(
+                        Icons.person,
+                        size: 28,
+                      ),
+                      SizedBox(width: 10),
+                      Text(
+                        "Info",
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ],
+                  ),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: Measurements.width * 0.05),
+                ),
+                IconButton(
+                  icon: Icon(isOpen
+                      ? Icons.keyboard_arrow_up
+                      : Icons.keyboard_arrow_down),
+                  onPressed: () {
+                    widget.openedRow.notifyListeners();
+                    widget.openedRow.value = 0;
+                  },
+                ),
+              ],
+            ),
+            onTap: () {
+              widget.openedRow.notifyListeners();
+              widget.openedRow.value = 0;
+            },
+          ),
+        ),
         AnimatedContainer(
             color: Colors.white.withOpacity(0.05),
 //            height: widget.isOpen ? Measurements.height * 0.62 : 0,
@@ -1094,415 +1041,414 @@ class _EmployeeInfoRowState extends State<EmployeeInfoRow>
 
   Future<void> _addEmployeeToGroup(EmployeesStateModel employeesStateModel,
       BusinessEmployeesGroups group) async {
-    return employeesStateModel.addEmployeesToGroup(
-        group.id, widget.employee.id);
+    return employeesStateModel.addEmployeesToGroup(group.id, widget.employee.id);
   }
 
   Future<void> _deleteEmployeeFromGroup(
       EmployeesStateModel employeesStateModel, String groupId) async {
-    var data = {
-      "employees": [widget.employee.id]
-    };
 
-    return employeesStateModel.deleteEmployeesFromGroup(groupId, data);
+    var data = {"employees": [widget.employee.id]};
+
+    return employeesStateModel.deleteEmployeesFromGroup(
+        groupId, data);
   }
 }
 
-//class AppsAccessRow extends StatefulWidget {
-//  final ValueNotifier openedRow;
-//  final List<BusinessApps> businessAppsData;
-//
-////  final Employees employee;
-////  final dynamic employeeGroups;
-//
-//  AppsAccessRow({this.openedRow, this.businessAppsData});
-//
-////  AppsAccessRow({this.openedRow, this.employee, this.employeeGroups});
-//
-//  @override
-//  createState() => _AppsAccessRowState();
-//}
+class AppsAccessRow extends StatefulWidget {
+  final ValueNotifier openedRow;
+  final List<BusinessApps> businessAppsData;
 
-//class _AppsAccessRowState extends State<AppsAccessRow>
-//    with TickerProviderStateMixin {
-//  bool isOpen = true;
-//
-//  bool _isPortrait;
-//  bool _isTablet;
-//
-//  var appPermissionsRow = ValueNotifier(0);
-//
-//  static String uiKit = Env.Commerceos + "/assets/ui-kit/icons-png/";
-//
-//  listener() {
-//    setState(() {
-//      if (widget.openedRow.value == 0) {
-//        isOpen = !isOpen;
-//      } else {
-//        isOpen = false;
-//      }
-//    });
-//  }
-//
-//  @override
-//  void initState() {
-//    super.initState();
-//    widget.openedRow.addListener(listener);
-//  }
-//
-//  @override
-//  Widget build(BuildContext context) {
-////    GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context);
-//    EmployeesStateModel employeesStateModel =
-//        Provider.of<EmployeesStateModel>(context);
-//
-//    _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
-//    Measurements.height = (_isPortrait
-//        ? MediaQuery.of(context).size.height
-//        : MediaQuery.of(context).size.width);
-//    Measurements.width = (_isPortrait
-//        ? MediaQuery.of(context).size.width
-//        : MediaQuery.of(context).size.height);
-//    _isTablet = Measurements.width < 600 ? false : true;
-//
-//    print("_isPortrait: $_isPortrait");
-//    print("_isTablet: $_isTablet");
-//
-//    Widget getAppsAccessRow() {
-//      return ListView.builder(
-//        padding: EdgeInsets.all(0.1),
-//        shrinkWrap: true,
-//        physics: ClampingScrollPhysics(),
-////        itemCount: widget.businessAppsData.length,
-//        itemCount: employeesStateModel.businessApps.length,
-//        itemBuilder: (BuildContext context, int index) {
-//          var appIndex = widget.businessAppsData[index];
-//          return ExpandableListView(
-//            iconData: NetworkImage(uiKit + appIndex.dashboardInfo.icon),
-//            title: Language.getCommerceOSStrings(appIndex.dashboardInfo.title),
-//            isExpanded: false,
-//            widgetList: Container(
-//              child: Padding(
-//                padding: EdgeInsets.symmetric(
-//                    horizontal: Measurements.width * 0.020),
-//                child: Column(
-//                  children: <Widget>[
-//                    appIndex.allowedAcls.create != null
-//                        ? Divider()
-//                        : Container(width: 0, height: 0),
-//                    appIndex.allowedAcls.create != null
-//                        ? Row(
-//                            mainAxisSize: MainAxisSize.max,
-//                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                            children: <Widget>[
-//                              Text(
-//                                "Create",
-//                                style: TextStyle(
-//                                    color: Colors.white,
-//                                    fontSize: 20,
-//                                    fontWeight: FontWeight.normal),
-//                              ),
-//                              Switch(
-//                                activeColor: Color(0XFF0084ff),
-//                                value: employeesStateModel
-//                                    .businessApps[index].allowedAcls.create,
-//                                onChanged: (bool value) {
-//                                  setState(() {
-//                                    employeesStateModel
-//                                        .updateBusinessAppPermissionCreate(
-//                                            index, value);
-//                                    employeesStateModel
-//                                        .updateBusinessAppPermissionRead(
-//                                            index, value);
-//                                    employeesStateModel
-//                                        .updateBusinessAppPermissionUpdate(
-//                                            index, value);
-//                                    employeesStateModel
-//                                        .updateBusinessAppPermissionDelete(
-//                                            index, value);
-//                                  });
-//                                },
-//                              )
-//                            ],
-//                          )
-//                        : Container(width: 0, height: 0),
-//                    appIndex.allowedAcls.read != null
-//                        ? Divider()
-//                        : Container(width: 0, height: 0),
-//                    appIndex.allowedAcls.read != null
-//                        ? Row(
-//                            mainAxisSize: MainAxisSize.max,
-//                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                            children: <Widget>[
-//                              Text(
-//                                "Read",
-//                                style: TextStyle(
-//                                    color: Colors.white,
-//                                    fontSize: 20,
-//                                    fontWeight: FontWeight.normal),
-//                              ),
-//                              Switch(
-//                                activeColor: Color(0XFF0084ff),
-////                                value: appIndex.allowedAcls.read,
-//                                value: employeesStateModel
-//                                    .businessApps[index].allowedAcls.read,
-//                                onChanged: (bool value) {
-//                                  setState(() {
-//                                    employeesStateModel
-//                                        .updateBusinessAppPermissionRead(
-//                                            index, value);
-//                                    if (employeesStateModel.businessApps[index]
-//                                            .allowedAcls.create ==
-//                                        true) {
-//                                      employeesStateModel
-//                                          .updateBusinessAppPermissionCreate(
-//                                              index, value);
-//                                    }
-//                                    if (employeesStateModel.businessApps[index]
-//                                            .allowedAcls.update ==
-//                                        true) {
-//                                      employeesStateModel
-//                                          .updateBusinessAppPermissionUpdate(
-//                                              index, value);
-//                                    }
-//                                    if (employeesStateModel.businessApps[index]
-//                                            .allowedAcls.delete ==
-//                                        true) {
-//                                      employeesStateModel
-//                                          .updateBusinessAppPermissionDelete(
-//                                              index, value);
-//                                    }
-//                                  });
-//                                },
-//                              )
-//                            ],
-//                          )
-//                        : Container(width: 0, height: 0),
-//                    appIndex.allowedAcls.update != null
-//                        ? Divider()
-//                        : Container(width: 0, height: 0),
-//                    appIndex.allowedAcls.update != null
-//                        ? Row(
-//                            mainAxisSize: MainAxisSize.max,
-//                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                            children: <Widget>[
-//                              Text(
-//                                "Update",
-//                                style: TextStyle(
-//                                    color: Colors.white,
-//                                    fontSize: 20,
-//                                    fontWeight: FontWeight.normal),
-//                              ),
-//                              Switch(
-//                                activeColor: Color(0XFF0084ff),
-////                                value: appIndex.allowedAcls.update,
-//                                value: employeesStateModel
-//                                    .businessApps[index].allowedAcls.update,
-//                                onChanged: (bool value) {
-//                                  setState(() {
-//                                    if (employeesStateModel.businessApps[index]
-//                                            .allowedAcls.read ==
-//                                        false) {
-//                                      print("read not selected");
-//                                    } else {
-//                                      employeesStateModel
-//                                          .updateBusinessAppPermissionUpdate(
-//                                              index, value);
-//                                    }
-//
-////                                    if (employeesStateModel.businessApps[index]
-////                                            .allowedAcls.read ==
-////                                        true) {
-////                                      employeesStateModel
-////                                          .updateBusinessAppPermissionRead(
-////                                              index, value);
-////                                    }
-//                                  });
-//                                },
-//                              )
-//                            ],
-//                          )
-//                        : Container(width: 0, height: 0),
-//                    appIndex.allowedAcls.delete != null
-//                        ? Divider()
-//                        : Container(width: 0, height: 0),
-//                    appIndex.allowedAcls.delete != null
-//                        ? Row(
-//                            mainAxisSize: MainAxisSize.max,
-//                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                            children: <Widget>[
-//                              Text(
-//                                "Delete",
-//                                style: TextStyle(
-//                                    color: Colors.white,
-//                                    fontSize: 20,
-//                                    fontWeight: FontWeight.normal),
-//                              ),
-//                              Switch(
-//                                activeColor: Color(0XFF0084ff),
-////                                value: appIndex.allowedAcls.delete,
-//                                value: employeesStateModel
-//                                    .businessApps[index].allowedAcls.delete,
-//                                onChanged: (bool value) {
-//                                  setState(() {
+//  final Employees employee;
+//  final dynamic employeeGroups;
+
+  AppsAccessRow({this.openedRow, this.businessAppsData});
+
+//  AppsAccessRow({this.openedRow, this.employee, this.employeeGroups});
+
+  @override
+  createState() => _AppsAccessRowState();
+}
+
+class _AppsAccessRowState extends State<AppsAccessRow>
+    with TickerProviderStateMixin {
+  bool isOpen = true;
+
+  bool _isPortrait;
+  bool _isTablet;
+
+  var appPermissionsRow = ValueNotifier(0);
+
+  static String uiKit = Env.Commerceos + "/assets/ui-kit/icons-png/";
+
+  listener() {
+    setState(() {
+      if (widget.openedRow.value == 0) {
+        isOpen = !isOpen;
+      } else {
+        isOpen = false;
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    widget.openedRow.addListener(listener);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+//    GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context);
+    EmployeesStateModel employeesStateModel =
+        Provider.of<EmployeesStateModel>(context);
+
+    _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
+    Measurements.height = (_isPortrait
+        ? MediaQuery.of(context).size.height
+        : MediaQuery.of(context).size.width);
+    Measurements.width = (_isPortrait
+        ? MediaQuery.of(context).size.width
+        : MediaQuery.of(context).size.height);
+    _isTablet = Measurements.width < 600 ? false : true;
+
+    print("_isPortrait: $_isPortrait");
+    print("_isTablet: $_isTablet");
+
+    Widget getAppsAccessRow() {
+      return ListView.builder(
+        padding: EdgeInsets.all(0.1),
+        shrinkWrap: true,
+        physics: ClampingScrollPhysics(),
+//        itemCount: widget.businessAppsData.length,
+        itemCount: employeesStateModel.businessApps.length,
+        itemBuilder: (BuildContext context, int index) {
+          var appIndex = widget.businessAppsData[index];
+          return ExpandableListView(
+            iconData: NetworkImage(uiKit + appIndex.dashboardInfo.icon),
+            title: Language.getCommerceOSStrings(appIndex.dashboardInfo.title),
+            isExpanded: false,
+            widgetList: Container(
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: Measurements.width * 0.020),
+                child: Column(
+                  children: <Widget>[
+                    appIndex.allowedAcls.create != null
+                        ? Divider()
+                        : Container(width: 0, height: 0),
+                    appIndex.allowedAcls.create != null
+                        ? Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(
+                                "Create",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.normal),
+                              ),
+                              Switch(
+                                activeColor: Color(0XFF0084ff),
+                                value: employeesStateModel
+                                    .businessApps[index].allowedAcls.create,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    employeesStateModel
+                                        .updateBusinessAppPermissionCreate(
+                                            index, value);
+                                    employeesStateModel
+                                        .updateBusinessAppPermissionRead(
+                                            index, value);
+                                    employeesStateModel
+                                        .updateBusinessAppPermissionUpdate(
+                                            index, value);
+                                    employeesStateModel
+                                        .updateBusinessAppPermissionDelete(
+                                            index, value);
+                                  });
+                                },
+                              )
+                            ],
+                          )
+                        : Container(width: 0, height: 0),
+                    appIndex.allowedAcls.read != null
+                        ? Divider()
+                        : Container(width: 0, height: 0),
+                    appIndex.allowedAcls.read != null
+                        ? Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(
+                                "Read",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.normal),
+                              ),
+                              Switch(
+                                activeColor: Color(0XFF0084ff),
+//                                value: appIndex.allowedAcls.read,
+                                value: employeesStateModel
+                                    .businessApps[index].allowedAcls.read,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    employeesStateModel
+                                        .updateBusinessAppPermissionRead(
+                                            index, value);
+                                    if (employeesStateModel.businessApps[index]
+                                            .allowedAcls.create ==
+                                        true) {
+                                      employeesStateModel
+                                          .updateBusinessAppPermissionCreate(
+                                              index, value);
+                                    }
+                                    if (employeesStateModel.businessApps[index]
+                                            .allowedAcls.update ==
+                                        true) {
+                                      employeesStateModel
+                                          .updateBusinessAppPermissionUpdate(
+                                              index, value);
+                                    }
+                                    if (employeesStateModel.businessApps[index]
+                                            .allowedAcls.delete ==
+                                        true) {
+                                      employeesStateModel
+                                          .updateBusinessAppPermissionDelete(
+                                              index, value);
+                                    }
+                                  });
+                                },
+                              )
+                            ],
+                          )
+                        : Container(width: 0, height: 0),
+                    appIndex.allowedAcls.update != null
+                        ? Divider()
+                        : Container(width: 0, height: 0),
+                    appIndex.allowedAcls.update != null
+                        ? Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(
+                                "Update",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.normal),
+                              ),
+                              Switch(
+                                activeColor: Color(0XFF0084ff),
+//                                value: appIndex.allowedAcls.update,
+                                value: employeesStateModel
+                                    .businessApps[index].allowedAcls.update,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    if (employeesStateModel.businessApps[index]
+                                            .allowedAcls.read ==
+                                        false) {
+                                      print("read not selected");
+                                    } else {
+                                      employeesStateModel
+                                          .updateBusinessAppPermissionUpdate(
+                                              index, value);
+                                    }
+
 //                                    if (employeesStateModel.businessApps[index]
 //                                            .allowedAcls.read ==
-//                                        false) {
-//                                      print("read not selected");
-//                                    } else {
+//                                        true) {
 //                                      employeesStateModel
-//                                          .updateBusinessAppPermissionDelete(
+//                                          .updateBusinessAppPermissionRead(
 //                                              index, value);
 //                                    }
-////                                    if (employeesStateModel.businessApps[index]
-////                                            .allowedAcls.read ==
-////                                        true) {
-////                                      employeesStateModel
-////                                          .updateBusinessAppPermissionRead(
-////                                              index, value);
-////                                    }
-//                                  });
-//                                },
-//                              )
-//                            ],
-//                          )
-//                        : Container(width: 0, height: 0),
-//                    Divider(),
-//                  ],
-//                ),
-//              ),
-//            ),
-//          );
-//        },
-//      );
-//    }
-//
-//    return Column(
-//      children: <Widget>[
-//        Container(
-//          decoration: BoxDecoration(
-//            color: Colors.white.withOpacity(0.1),
-//          ),
-//          child: InkWell(
-//            child: Row(
-//              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//              children: <Widget>[
-//                Container(
-////                  child: Text(Language.getProductStrings("sections.main")),
-//                  child: Row(
-//                    children: <Widget>[
-//                      Icon(
-//                        Icons.business_center,
-//                        size: 28,
-//                      ),
-//                      SizedBox(width: 10),
-//                      Text(
-//                        "Apps Access",
-//                        style: TextStyle(fontSize: 18),
-//                      ),
-//                    ],
-//                  ),
-//                  padding: EdgeInsets.symmetric(
-//                      horizontal: Measurements.width * 0.05),
-//                ),
-//                IconButton(
-//                  icon: Icon(isOpen
-//                      ? Icons.keyboard_arrow_up
-//                      : Icons.keyboard_arrow_down),
-//                  onPressed: () {
-//                    widget.openedRow.notifyListeners();
-//                    widget.openedRow.value = 0;
-//                  },
-//                ),
-//              ],
-//            ),
-//            onTap: () {
-//              widget.openedRow.notifyListeners();
-//              widget.openedRow.value = 0;
-//            },
-//          ),
-//        ),
-//        AnimatedContainer(
-//            color: Colors.white.withOpacity(0.05),
-////            height: widget.isOpen ? Measurements.height * 0.62 : 0,
-//            duration: Duration(milliseconds: 200),
-//            child: Container(
-//              width: _isPortrait ? Measurements.width : double.infinity,
-//              child: isOpen
-//                  ? AnimatedSize(
-//                      duration: Duration(milliseconds: 500),
-//                      curve: Curves.easeInOut,
-//                      vsync: this,
-//                      child: Container(
-//                        padding: EdgeInsets.symmetric(
-//                            horizontal: Measurements.width * 0.0015),
-//                        color: Colors.black.withOpacity(0.05),
-//                        child: getAppsAccessRow(),
-////                        child: Column(
-////                          mainAxisAlignment: MainAxisAlignment.center,
-////                          children: <Widget>[
-////                            Row(
-////                              mainAxisSize: MainAxisSize.max,
-////                              mainAxisAlignment: MainAxisAlignment.center,
-////                              children: <Widget>[
-////                                Column(
-////                                  children: <Widget>[
-//////                                    Expanded(child: getAppsAccessRow()),
-////                                    getAppsAccessRow(),
-////                                    Padding(
-////                                      padding: EdgeInsets.only(
-////                                          top: Measurements.width * 0.020),
-////                                    ),
-////                                    InkWell(
-////                                      child: Container(
-////                                        color: Colors.white.withOpacity(0.1),
-////                                        width: Measurements.width * 0.99,
-////                                        height: Measurements.height *
-////                                            (_isTablet ? 0.05 : 0.07),
-////                                        child: Center(
-////                                            child: Text(
-////                                          "Save",
-////                                          style: TextStyle(
-////                                              color: Colors.white,
-////                                              fontSize: 19),
-////                                        )),
-////                                      ),
-////                                      onTap: () {},
-////                                    ),
-////                                    Padding(
-////                                      padding: EdgeInsets.only(
-////                                          top: Measurements.width * 0.01),
-////                                    ),
-////                                  ],
+                                  });
+                                },
+                              )
+                            ],
+                          )
+                        : Container(width: 0, height: 0),
+                    appIndex.allowedAcls.delete != null
+                        ? Divider()
+                        : Container(width: 0, height: 0),
+                    appIndex.allowedAcls.delete != null
+                        ? Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(
+                                "Delete",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.normal),
+                              ),
+                              Switch(
+                                activeColor: Color(0XFF0084ff),
+//                                value: appIndex.allowedAcls.delete,
+                                value: employeesStateModel
+                                    .businessApps[index].allowedAcls.delete,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    if (employeesStateModel.businessApps[index]
+                                            .allowedAcls.read ==
+                                        false) {
+                                      print("read not selected");
+                                    } else {
+                                      employeesStateModel
+                                          .updateBusinessAppPermissionDelete(
+                                              index, value);
+                                    }
+//                                    if (employeesStateModel.businessApps[index]
+//                                            .allowedAcls.read ==
+//                                        true) {
+//                                      employeesStateModel
+//                                          .updateBusinessAppPermissionRead(
+//                                              index, value);
+//                                    }
+                                  });
+                                },
+                              )
+                            ],
+                          )
+                        : Container(width: 0, height: 0),
+                    Divider(),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      );
+    }
+
+    return Column(
+      children: <Widget>[
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.1),
+          ),
+          child: InkWell(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Container(
+//                  child: Text(Language.getProductStrings("sections.main")),
+                  child: Row(
+                    children: <Widget>[
+                      Icon(
+                        Icons.business_center,
+                        size: 28,
+                      ),
+                      SizedBox(width: 10),
+                      Text(
+                        "Apps Access",
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ],
+                  ),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: Measurements.width * 0.05),
+                ),
+                IconButton(
+                  icon: Icon(isOpen
+                      ? Icons.keyboard_arrow_up
+                      : Icons.keyboard_arrow_down),
+                  onPressed: () {
+                    widget.openedRow.notifyListeners();
+                    widget.openedRow.value = 0;
+                  },
+                ),
+              ],
+            ),
+            onTap: () {
+              widget.openedRow.notifyListeners();
+              widget.openedRow.value = 0;
+            },
+          ),
+        ),
+        AnimatedContainer(
+            color: Colors.white.withOpacity(0.05),
+//            height: widget.isOpen ? Measurements.height * 0.62 : 0,
+            duration: Duration(milliseconds: 200),
+            child: Container(
+              width: _isPortrait ? Measurements.width : double.infinity,
+              child: isOpen
+                  ? AnimatedSize(
+                      duration: Duration(milliseconds: 500),
+                      curve: Curves.easeInOut,
+                      vsync: this,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: Measurements.width * 0.0015),
+                        color: Colors.black.withOpacity(0.05),
+                        child: getAppsAccessRow(),
+//                        child: Column(
+//                          mainAxisAlignment: MainAxisAlignment.center,
+//                          children: <Widget>[
+//                            Row(
+//                              mainAxisSize: MainAxisSize.max,
+//                              mainAxisAlignment: MainAxisAlignment.center,
+//                              children: <Widget>[
+//                                Column(
+//                                  children: <Widget>[
+////                                    Expanded(child: getAppsAccessRow()),
+//                                    getAppsAccessRow(),
+//                                    Padding(
+//                                      padding: EdgeInsets.only(
+//                                          top: Measurements.width * 0.020),
+//                                    ),
+//                                    InkWell(
+//                                      child: Container(
+//                                        color: Colors.white.withOpacity(0.1),
+//                                        width: Measurements.width * 0.99,
+//                                        height: Measurements.height *
+//                                            (_isTablet ? 0.05 : 0.07),
+//                                        child: Center(
+//                                            child: Text(
+//                                          "Save",
+//                                          style: TextStyle(
+//                                              color: Colors.white,
+//                                              fontSize: 19),
+//                                        )),
+//                                      ),
+//                                      onTap: () {},
+//                                    ),
+//                                    Padding(
+//                                      padding: EdgeInsets.only(
+//                                          top: Measurements.width * 0.01),
+//                                    ),
+//                                  ],
+//                                ),
+////                                Container(
+////                                  height: Measurements.height * 0.3,
+////                                  child: getAppsAccessRow(),
 ////                                ),
-//////                                Container(
-//////                                  height: Measurements.height * 0.3,
-//////                                  child: getAppsAccessRow(),
-//////                                ),
-////                              ],
-////                            )
-////                          ],
-////                        ),
-//                      ),
-//                    )
-//                  : Container(width: 0, height: 0),
+//                              ],
+//                            )
+//                          ],
+//                        ),
+                      ),
+                    )
+                  : Container(width: 0, height: 0),
+            )),
+//        Container(
+//            color: isOpen
+//                ? Colors.transparent
+//                : Colors.white.withOpacity(0.1),
+//            height: Measurements.height * 0.01,
+//            child: isOpen
+//                ? Divider(
+//              color: Colors.white.withOpacity(0),
+//            )
+//                : Divider(
+//              color: Colors.white,
 //            )),
-////        Container(
-////            color: isOpen
-////                ? Colors.transparent
-////                : Colors.white.withOpacity(0.1),
-////            height: Measurements.height * 0.01,
-////            child: isOpen
-////                ? Divider(
-////              color: Colors.white.withOpacity(0),
-////            )
-////                : Divider(
-////              color: Colors.white,
-////            )),
-//      ],
-//    );
-//  }
-//}
+      ],
+    );
+  }
+}
 
 //class AppsAccessRow extends StatefulWidget {
 //  ValueNotifier openedRow;

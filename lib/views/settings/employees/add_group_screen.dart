@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/models/acl.dart';
 import 'package:payever/models/group_acl.dart';
+import 'package:payever/views/customelements/custom_expansion_tile.dart';
 import 'package:payever/views/customelements/custom_future_builder.dart';
 import 'package:provider/provider.dart';
 
@@ -13,6 +14,7 @@ import 'package:payever/view_models/employees_state_model.dart';
 import 'package:payever/utils/utils.dart';
 import 'package:payever/view_models/global_state_model.dart';
 import 'package:payever/views/customelements/custom_app_bar.dart';
+import 'custom_apps_access_expansion_tile.dart';
 import 'employees_apps_access_component.dart';
 
 bool _isPortrait;
@@ -149,11 +151,12 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
 //                      right: Measurements.width * 0.01,
 //                      left: Measurements.width * 0.01,
                               bottom: Measurements.width * 0.08),
-                          child: ListView(
+                          child: Column(
                             children: <Widget>[
                               Container(
                                 alignment: Alignment.centerLeft,
-                                height: Measurements.width * (_isTablet ? 0.13 : 0.18),
+                                height: Measurements.width *
+                                    (_isTablet ? 0.13 : 0.18),
                                 padding: EdgeInsets.symmetric(
                                     horizontal: Measurements.width * 0.02),
                                 decoration: BoxDecoration(
@@ -168,7 +171,8 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
                                     Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: <Widget>[
                                         StreamBuilder(
                                             stream: employeesStateModel.group,
@@ -181,7 +185,8 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
                                                 alignment: Alignment.center,
                                                 color: Colors.white
                                                     .withOpacity(0.05),
-                                                width: Measurements.width * 0.475,
+                                                width:
+                                                    Measurements.width * 0.475,
 //                                              height: Measurements.height *
 //                                                  (_isTablet ? 0.08 : 0.07),
                                                 child: TextField(
@@ -221,10 +226,52 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
                                   ],
                                 ),
                               ),
-                              EmployeesAppsAccessComponent(
-                                openedRow: ValueNotifier(1),
-                                businessAppsData: results,
-                                isNewEmployeeOrGroup: true,
+//                              EmployeesAppsAccessComponent(
+//                                openedRow: ValueNotifier(1),
+//                                businessAppsData: results,
+//                                isNewEmployeeOrGroup: true,
+//                              ),
+
+                              Flexible(
+                                child: CustomExpansionTile(
+                                  isWithCustomIcon: false,
+                                  widgetsTitleList: <Widget>[
+                                    Container(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          Container(
+                                            child: Row(
+                                              children: <Widget>[
+                                                Icon(
+                                                  Icons.business_center,
+                                                  size: 28,
+                                                ),
+                                                SizedBox(width: 10),
+                                                Text(
+                                                  "Apps Access",
+                                                  style:
+                                                      TextStyle(fontSize: 18),
+                                                ),
+                                              ],
+                                            ),
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal:
+                                                    Measurements.width * 0.05),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                  widgetsBodyList: <Widget>[
+                                    CustomAppsAccessExpansionTile(
+                                      employeesStateModel: employeesStateModel,
+                                      businessApps: results,
+                                      isNewEmployeeOrGroup: true,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
@@ -281,6 +328,8 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
       "name": _groupNameController.text,
       "acls": groupAclList,
     };
+
+    print("DATA: $data");
 
     await employeesStateModel.createNewGroup(data);
     Navigator.of(context).pop();

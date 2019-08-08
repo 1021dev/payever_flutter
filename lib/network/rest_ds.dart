@@ -237,6 +237,7 @@ class RestDatasource {
 
   Future<dynamic> getAppsBusiness(String idBusiness,String token) {
     print("TAG - getAppsBusiness()");
+    print(BUSINESS_APPS + idBusiness);
     var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token",HttpHeaders.userAgentHeader :GlobalUtils.fingerprint };
     return _netUtil.get(BUSINESS_APPS + idBusiness,headers: headers ).then((dynamic result){
       return result;
@@ -258,24 +259,26 @@ class RestDatasource {
 //    var body = jsonEncode(data);
     var body = jsonEncode({"position": "Marketing"});
     var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token" ,HttpHeaders.CONTENT_TYPE: "application/json",HttpHeaders.userAgentHeader :GlobalUtils.fingerprint};
-    return _netUtil.pacth(EMPLOYEES_LIST + businessId + "/" + userId, headers: headers, body: body).then((dynamic result) {
+    return _netUtil.patch(EMPLOYEES_LIST + businessId + "/" + userId, headers: headers, body: body).then((dynamic result) {
       return result;
     });
   }
 
-  Future<dynamic> addEmployeeToGroup(String token, String businessId, String groupId, String userId) {
-    print("TAG - addEmployeeToGroup()");
-    var body = jsonEncode({});
+  Future<dynamic> addEmployeesToGroup(String token, String businessId, String groupId, Object data) {
+    print("TAG - addEmployeesToGroup()");
+    var body = jsonEncode(data);
+    print("BODY: $body");
     var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token" ,HttpHeaders.CONTENT_TYPE: "application/json",HttpHeaders.userAgentHeader :GlobalUtils.fingerprint};
-    return _netUtil.post(EMPLOYEE_GROUPS + businessId+"/"+groupId+"/"+userId, headers: headers, body: body).then((dynamic result) {
+    return _netUtil.post(EMPLOYEE_GROUPS + businessId+"/"+groupId+"/employees", headers: headers, body: body).then((dynamic result) {
       return result;
     });
   }
 
-  Future<dynamic> deleteEmployeeFromGroup(String token, String businessId, String groupId, String userId) {
+  Future<dynamic> deleteEmployeesFromGroup(String token, String businessId, String groupId, Object data) {
     print("TAG - deleteEmployeeFromGroup()");
-    var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token",HttpHeaders.userAgentHeader :GlobalUtils.fingerprint };
-    return _netUtil.delete(EMPLOYEE_GROUPS + businessId+"/"+groupId+"/"+userId, headers: headers).then((dynamic result) {
+    var body = jsonEncode(data);
+    var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token" ,HttpHeaders.CONTENT_TYPE: "application/json",HttpHeaders.userAgentHeader :GlobalUtils.fingerprint};
+    return _netUtil.deleteWithBody(EMPLOYEE_GROUPS + businessId+"/"+groupId+"/employees", headers: headers, body: body).then((dynamic result) {
       return result;
     });
   }
@@ -418,7 +421,7 @@ class RestDatasource {
     print("TAG - postEditTerminal()");
     var body = jsonEncode({ "logo": logo, "name": name });
     var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token" , HttpHeaders.CONTENT_TYPE: "application/json"  ,HttpHeaders.userAgentHeader :GlobalUtils.fingerprint };
-    return _netUtil.pacth(POS_BUSINESS+ business+POS_TERMINAL_MID+id, headers: headers , body: body).then((dynamic res) {
+    return _netUtil.patch(POS_BUSINESS+ business+POS_TERMINAL_MID+id, headers: headers , body: body).then((dynamic res) {
       return res;
     });
   }
@@ -508,7 +511,7 @@ class RestDatasource {
     print("TAG - patchInventoryAdd()");
     var body = jsonEncode({"quantity":qt});
     var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token" , HttpHeaders.CONTENT_TYPE: "application/json",HttpHeaders.userAgentHeader :GlobalUtils.fingerprint   };
-    return _netUtil.pacth(INVENTORY_URL + idBusiness + SKU_MID + sku + ADD_END, headers: headers , body: body).then((dynamic res) {
+    return _netUtil.patch(INVENTORY_URL + idBusiness + SKU_MID + sku + ADD_END, headers: headers , body: body).then((dynamic res) {
       return res;
     });
 
@@ -517,7 +520,7 @@ class RestDatasource {
     print("TAG - patchInventorySubtract()");
     var body = jsonEncode({"quantity":qt});
     var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token" , HttpHeaders.CONTENT_TYPE: "application/json",HttpHeaders.userAgentHeader :GlobalUtils.fingerprint   };
-    return _netUtil.pacth(INVENTORY_URL + idBusiness + SKU_MID + sku + SUBTRACT_END, headers: headers , body: body).then((dynamic res) {
+    return _netUtil.patch(INVENTORY_URL + idBusiness + SKU_MID + sku + SUBTRACT_END, headers: headers , body: body).then((dynamic res) {
       return res;
     });
 
@@ -527,7 +530,7 @@ class RestDatasource {
     print("TAG - patchInventory()");
     var body = jsonEncode({"sku":sku,"barcode":barcode,"isTrackable":track});
     var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token" , HttpHeaders.CONTENT_TYPE: "application/json" ,HttpHeaders.userAgentHeader :GlobalUtils.fingerprint  };
-    return _netUtil.pacth(INVENTORY_URL + idBusiness + SKU_MID + sku , headers: headers , body: body).then((dynamic res) {
+    return _netUtil.patch(INVENTORY_URL + idBusiness + SKU_MID + sku , headers: headers , body: body).then((dynamic res) {
       return res;
     });
 
@@ -555,7 +558,7 @@ class RestDatasource {
     var body = jsonEncode({ "amount": amount, "cart": cart ,"x_frame_host":host});
   
     var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token" , HttpHeaders.CONTENT_TYPE: "application/json" ,HttpHeaders.USER_AGENT:GlobalUtils.fingerprint };
-      return _netUtil.pacth(CHECKOUT_V1+ "/$id", headers: headers, body: body).then((dynamic res) {
+      return _netUtil.patch(CHECKOUT_V1+ "/$id", headers: headers, body: body).then((dynamic res) {
         return res;
       });
   }
@@ -566,7 +569,7 @@ class RestDatasource {
     print("TAG - patchCheckout()");
     var body = jsonEncode({"sku":sku,"barcode":barcode,"isTrackable":track});
     var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token" , HttpHeaders.CONTENT_TYPE: "application/json",HttpHeaders.userAgentHeader :GlobalUtils.fingerprint   };
-    return _netUtil.pacth(INVENTORY_URL  + SKU_MID + sku , headers: headers , body: body).then((dynamic res) {
+    return _netUtil.patch(INVENTORY_URL  + SKU_MID + sku , headers: headers , body: body).then((dynamic res) {
       return res;
     });
 
