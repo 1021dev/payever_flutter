@@ -6,6 +6,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:payever/network/rest_ds.dart';
 import 'package:payever/view_models/employees_state_model.dart';
 import 'package:payever/views/customelements/custom_alert_dialog.dart';
+import 'package:payever/views/customelements/wallpaper.dart';
 import 'package:provider/provider.dart';
 
 import 'package:payever/utils/utils.dart';
@@ -66,89 +67,78 @@ class _EmployeesGroupsDetailsScreenState
       Measurements.width = (_isPortrait
           ? MediaQuery.of(context).size.width
           : MediaQuery.of(context).size.height);
-      return Stack(
-        children: <Widget>[
-          Positioned(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              top: 0.0,
-              child: CachedNetworkImage(
-                imageUrl: globalStateModel.currentWallpaper ??
-                    globalStateModel.defaultCustomWallpaper,
-                placeholder: (context, url) => Container(),
-                errorWidget: (context, url, error) => Icon(Icons.error),
-                fit: BoxFit.cover,
-              )),
-          BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 25, sigmaY: 25),
-            child: Container(
-              child: Scaffold(
-                key: _formKey,
-                backgroundColor: Colors.black.withOpacity(0.2),
-                appBar: CustomAppBar(
+      return BackgroundBase(
+        true,
+        appBar: CustomAppBar(
 //                  title: Text("Group Details"),
-                  title: employeesIdsToDeleteOnGroup.length == 0 ?  Text("Group Details") : Text("${employeesIdsToDeleteOnGroup.length} Employees Selected"),
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  actions: <Widget>[
-                    employeesIdsToDeleteOnGroup.length == 0 ? StreamBuilder(
-                        stream: employeesStateModel.group,
-                        builder: (context, snapshot) {
-                          return RawMaterialButton(
-                            constraints: BoxConstraints(),
-                            padding: EdgeInsets.all(10),
-                            child: Text(
-                              'Save',
-                              style: TextStyle(
-                                  color: snapshot.hasData
-                                      ? Colors.white
-                                      : Colors.white.withOpacity(0.3),
-                                  fontSize: 18),
-                            ),
-                            onPressed: () {
-                              if (snapshot.hasData) {
-                                print("data can be send");
+          title: employeesIdsToDeleteOnGroup.length == 0
+              ? Text("Group Details")
+              : Text(
+                  "${employeesIdsToDeleteOnGroup.length} Employees Selected"),
+          onTap: () {
+            Navigator.pop(context);
+          },
+          actions: <Widget>[
+            employeesIdsToDeleteOnGroup.length == 0
+                ? StreamBuilder(
+                    stream: employeesStateModel.group,
+                    builder: (context, snapshot) {
+                      return RawMaterialButton(
+                        constraints: BoxConstraints(),
+                        padding: EdgeInsets.all(10),
+                        child: Text(
+                          'Save',
+                          style: TextStyle(
+                              color: snapshot.hasData
+                                  ? Colors.white
+                                  : Colors.white.withOpacity(0.3),
+                              fontSize: 18),
+                        ),
+                        onPressed: () {
+                          if (snapshot.hasData) {
+                            print("data can be send");
 //                                _createNewGroup(globalStateModel,
 //                                    employeesStateModel, context);
-                              } else {
-                                print("The data can't be send");
-                              }
-                            },
-                          );
-                        }) : RawMaterialButton(
-                      constraints: BoxConstraints(),
-                      padding: EdgeInsets.all(10),
-                      child: Icon(Icons.delete),
-                      onPressed: () {
-                        _deleteEmployeesFromGroupConfirmation(context, employeesStateModel);
-                      },
-                    ),
-                  ],
-                ),
-                body: SafeArea(
-                  child: Container(
-                    padding: EdgeInsets.only(
-                        top: Measurements.width * 0.01,
+                          } else {
+                            print("The data can't be send");
+                          }
+                        },
+                      );
+                    })
+                : RawMaterialButton(
+                    constraints: BoxConstraints(),
+                    padding: EdgeInsets.all(10),
+                    child: Icon(Icons.delete),
+                    onPressed: () {
+                      _deleteEmployeesFromGroupConfirmation(
+                          context, employeesStateModel);
+                    },
+                  ),
+          ],
+        ),
+        body: SafeArea(
+          child: Container(
+            padding: EdgeInsets.only(
+                top: Measurements.width * 0.01,
 //                      right: Measurements.width * 0.01,
 //                      left: Measurements.width * 0.01,
-                        bottom: Measurements.width * 0.001),
-                    child: Column(
+                bottom: Measurements.width * 0.001),
+            child: Column(
 //                      mainAxisSize: MainAxisSize.max,
-                      children: <Widget>[
-                          Container(
-                            alignment: Alignment.centerLeft,
-                            height: Measurements.width * (_isTablet ? 0.13 : 0.18),
-                            padding: EdgeInsets.symmetric(
-                                horizontal: Measurements.width * 0.02),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(10.0),
-                                    topRight: Radius.circular(10.0)),
-                                color: Colors.black.withOpacity(0.5)),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
+              children: <Widget>[
+                Container(
+                  alignment: Alignment.centerLeft,
+                  height: Measurements.width * (_isTablet ? 0.13 : 0.18),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: Measurements.width * 0.02),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(10.0),
+                          topRight: Radius.circular(10.0)),
+                      color: Colors.black.withOpacity(0.5)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
 //                            Column(
 //                              crossAxisAlignment: CrossAxisAlignment.start,
 //                              mainAxisAlignment: MainAxisAlignment.center,
@@ -170,125 +160,120 @@ class _EmployeesGroupsDetailsScreenState
 //                              ],
 //                            ),
 
-                                Container(
-                                  alignment: Alignment.centerLeft,
-                                  height: Measurements.width * 0.18,
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: Measurements.width * 0.02),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(10.0),
-                                        topRight: Radius.circular(10.0)),
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        height: Measurements.width * 0.18,
+                        padding: EdgeInsets.symmetric(
+                            horizontal: Measurements.width * 0.02),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(10.0),
+                              topRight: Radius.circular(10.0)),
 //                                  color: Colors.black.withOpacity(0.5)
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          StreamBuilder(
-                                              stream: employeesStateModel.group,
-                                              builder: (context, snapshot) {
-                                                return Container(
-                                                  padding: EdgeInsets.symmetric(
-                                                      horizontal:
-                                                          Measurements.width *
-                                                              0.025),
-                                                  alignment: Alignment.center,
-                                                  color: Colors.white
-                                                      .withOpacity(0.05),
-                                                  width: Measurements.width * 0.475,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                StreamBuilder(
+                                    stream: employeesStateModel.group,
+                                    builder: (context, snapshot) {
+                                      return Container(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal:
+                                                Measurements.width * 0.025),
+                                        alignment: Alignment.center,
+                                        color: Colors.white.withOpacity(0.05),
+                                        width: Measurements.width * 0.475,
 //                                              height: Measurements.height *
 //                                                  (_isTablet ? 0.08 : 0.07),
-                                                  child: TextField(
-                                                    controller:
-                                                        _groupNameController,
-                                                    onChanged: employeesStateModel
-                                                        .changeGroup,
-                                                    style: TextStyle(
-                                                        fontSize:
-                                                            Measurements.height *
-                                                                0.02),
-                                                    decoration: InputDecoration(
-                                                      hintText: "Group Name",
-                                                      hintStyle: TextStyle(
-                                                        color: snapshot.hasError
-                                                            ? Colors.red
-                                                            : Colors.white
-                                                                .withOpacity(0.5),
-                                                      ),
-                                                      labelText: "Group Name",
-                                                      labelStyle: TextStyle(
-                                                        color: snapshot.hasError
-                                                            ? Colors.red
-                                                            : Colors.grey,
-                                                      ),
-                                                      border: InputBorder.none,
-                                                    ),
+                                        child: TextField(
+                                          controller: _groupNameController,
+                                          onChanged:
+                                              employeesStateModel.changeGroup,
+                                          style: TextStyle(
+                                              fontSize:
+                                                  Measurements.height * 0.02),
+                                          decoration: InputDecoration(
+                                            hintText: "Group Name",
+                                            hintStyle: TextStyle(
+                                              color: snapshot.hasError
+                                                  ? Colors.red
+                                                  : Colors.white
+                                                      .withOpacity(0.5),
+                                            ),
+                                            labelText: "Group Name",
+                                            labelStyle: TextStyle(
+                                              color: snapshot.hasError
+                                                  ? Colors.red
+                                                  : Colors.grey,
+                                            ),
+                                            border: InputBorder.none,
+                                          ),
 //                                                onSaved: (firstName) {},
-                                                    //  validator: (value) {
-                                                    //
-                                                    //  },
-                                                  ),
-                                                );
-                                              }),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                                          //  validator: (value) {
+                                          //
+                                          //  },
+                                        ),
+                                      );
+                                    }),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
 
-                                RawMaterialButton(
-                                  padding: EdgeInsets.only(top: 10, right: 14, bottom: 10, left: 14),
-                                  fillColor: Colors.white.withOpacity(0.5),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30)),
-                                  child: Text("Add Employee"),
-                                  onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        PageTransition(
-                                          child: ProxyProvider<RestDatasource,
-                                              EmployeesStateModel>(
-                                            builder:
-                                                (context, api, employeesState) =>
-                                                    EmployeesStateModel(
-                                                        globalStateModel, api),
-                                            child: EmployeesSelectionsListScreen(
+                      RawMaterialButton(
+                        padding: EdgeInsets.only(
+                            top: 10, right: 14, bottom: 10, left: 14),
+                        fillColor: Colors.white.withOpacity(0.5),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30)),
+                        child: Text("Add Employee"),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              PageTransition(
+                                child: ProxyProvider<RestDatasource,
+                                    EmployeesStateModel>(
+                                  builder: (context, api, employeesState) =>
+                                      EmployeesStateModel(
+                                          globalStateModel, api),
+                                  child: EmployeesSelectionsListScreen(
 //                                                employeesList: widget
 //                                                    .businessEmployeesGroups
 //                                                    .employees,
-                                                employeesList: employeesListOnGroup,
-                                                groupId: widget
-                                                    .businessEmployeesGroups.id),
-                                          ),
-                                          type: PageTransitionType.fade,
-                                        ));
-                                },),
-
-                              ],
-                            ),
-                          ),
-                        Expanded(
-                          child: EmployeesGroupComponent(
-                              businessEmployeesGroups: widget.businessEmployeesGroups,
-                              employeesToDelete: (List<String> employees) {
-                                print("employees: $employees");
-                                setState(() {
-                                  employeesIdsToDeleteOnGroup = employees;
-                                });
-                                print("employeesIdsToDeleteOnGroup::: $employeesIdsToDeleteOnGroup");
-                              },
-                              employeesListOnGroup: (List<String> employees) {
-                                employeesListOnGroup = employees;
-                              },
-                              openedRow: openedRow,
-                          ),
-                        ),
+                                      employeesList: employeesListOnGroup,
+                                      groupId:
+                                          widget.businessEmployeesGroups.id),
+                                ),
+                                type: PageTransitionType.fade,
+                              ));
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: EmployeesGroupComponent(
+                    businessEmployeesGroups: widget.businessEmployeesGroups,
+                    employeesToDelete: (List<String> employees) {
+                      print("employees: $employees");
+                      setState(() {
+                        employeesIdsToDeleteOnGroup = employees;
+                      });
+                      print(
+                          "employeesIdsToDeleteOnGroup::: $employeesIdsToDeleteOnGroup");
+                    },
+                    employeesListOnGroup: (List<String> employees) {
+                      employeesListOnGroup = employees;
+                    },
+                    openedRow: openedRow,
+                  ),
+                ),
 //                        InkWell(
 //                          child: Container(
 ////                          width: Measurements.width * 0.99,
@@ -313,20 +298,16 @@ class _EmployeesGroupsDetailsScreenState
 //                                context, employeesStateModel);
 //                          },
 //                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+              ],
             ),
           ),
-        ],
+        ),
       );
     });
   }
 
-  void _deleteEmployeesFromGroupConfirmation(BuildContext context,
-      EmployeesStateModel employeesStateModel) {
+  void _deleteEmployeesFromGroupConfirmation(
+      BuildContext context, EmployeesStateModel employeesStateModel) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -342,12 +323,11 @@ class _EmployeesGroupsDetailsScreenState
     );
   }
 
-  _deleteEmployeesFromGroup(
-      EmployeesStateModel employeesStateModel) async {
-
+  _deleteEmployeesFromGroup(EmployeesStateModel employeesStateModel) async {
     var data = {"employees": employeesIdsToDeleteOnGroup};
 
-    await employeesStateModel.deleteEmployeesFromGroup(widget.businessEmployeesGroups.id, data);
+    await employeesStateModel.deleteEmployeesFromGroup(
+        widget.businessEmployeesGroups.id, data);
 
     setState(() {
       employeesIdsToDeleteOnGroup = [];
@@ -356,5 +336,4 @@ class _EmployeesGroupsDetailsScreenState
 
 //    Navigator.of(_formKey.currentContext).pop();
   }
-
 }

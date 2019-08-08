@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/views/customelements/custom_expansion_tile.dart';
+import 'package:payever/views/customelements/wallpaper.dart';
 import 'package:provider/provider.dart';
 
 import 'package:payever/models/business_apps.dart';
@@ -104,155 +105,131 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
       Measurements.width = (_isPortrait
           ? MediaQuery.of(context).size.width
           : MediaQuery.of(context).size.height);
-      return Stack(
-        children: <Widget>[
-          Positioned(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              top: 0.0,
-              child: CachedNetworkImage(
-                imageUrl: globalStateModel.currentWallpaper ??
-                    globalStateModel.defaultCustomWallpaper,
-                placeholder: (context, url) => Container(),
-                errorWidget: (context, url, error) => Icon(Icons.error),
-                fit: BoxFit.cover,
-              )),
-          BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 25, sigmaY: 25),
-              child: Container(
-                child: Scaffold(
-                  backgroundColor: Colors.black.withOpacity(0.2),
-                  appBar: CustomAppBar(
-                    title: Text("Employee Details"),
-                    onTap: () {
-                      Navigator.pop(context);
+      return BackgroundBase(
+        true,
+        appBar: CustomAppBar(
+          title: Text("Employee Details"),
+          onTap: () {
+            Navigator.pop(context);
+          },
+          actions: <Widget>[
+            StreamBuilder(
+                stream: employeesStateModel.submitValid,
+                builder: (context, snapshot) {
+                  return RawMaterialButton(
+                    constraints: BoxConstraints(),
+                    padding: EdgeInsets.all(10),
+                    child: Text(
+                      'Save',
+                      style: TextStyle(
+                          color: snapshot.hasData
+                              ? Colors.white
+                              : Colors.white.withOpacity(0.3),
+                          fontSize: 18),
+                    ),
+                    onPressed: () {
+                      if (snapshot.hasData) {
+                        print("Data can be send");
+                        _updateEmployee(
+                            globalStateModel, employeesStateModel, context);
+                      } else {
+                        print("The data can't be send");
+                      }
                     },
-                    actions: <Widget>[
-                      StreamBuilder(
-                          stream: employeesStateModel.submitValid,
-                          builder: (context, snapshot) {
-                            return RawMaterialButton(
-                              constraints: BoxConstraints(),
-                              padding: EdgeInsets.all(10),
-                              child: Text(
-                                'Save',
-                                style: TextStyle(
-                                    color: snapshot.hasData
-                                        ? Colors.white
-                                        : Colors.white.withOpacity(0.3),
-                                    fontSize: 18),
-                              ),
-                              onPressed: () {
-                                if (snapshot.hasData) {
-                                  print("Data can be send");
-                                  _updateEmployee(globalStateModel,
-                                      employeesStateModel, context);
-                                } else {
-                                  print("The data can't be send");
-                                }
-                              },
-                            );
-                          }),
-                    ],
-                  ),
-                  body: CustomFutureBuilder(
-                    future: fetchAppsAccessOptions(
-                        globalStateModel, widget.employee.id),
-                    errorMessage: "Error loading employee details",
-                    onDataLoaded: (results) {
-                      return SafeArea(
-                        child: Form(
-                          key: _formKey,
-                          child: CustomFutureBuilder<List<BusinessApps>>(
-                            future: getBusinessApps(employeesStateModel),
-                            errorMessage: "Error loading apps.",
-                            onDataLoaded: (List results) {
-                              return Column(
-                                children: <Widget>[
-                                  Flexible(
-                                    child: CustomExpansionTile(
-                                      isWithCustomIcon: false,
-                                      listSize: widget.employee.status == 0 ? 1 : null,
-                                      widgetsTitleList: <Widget>[
-                                        Container(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: <Widget>[
-                                              Container(
-                                                child: Row(
-                                                  children: <Widget>[
-                                                    Icon(
-                                                      Icons.person,
-                                                      size: 28,
-                                                    ),
-                                                    SizedBox(width: 10),
-                                                    Text(
-                                                      "Info",
-                                                      style: TextStyle(
-                                                          fontSize: 18),
-                                                    ),
-                                                  ],
-                                                ),
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal:
-                                                        Measurements.width *
-                                                            0.05),
-                                              ),
-                                            ],
+                  );
+                }),
+          ],
+        ),
+        body: CustomFutureBuilder(
+          future: fetchAppsAccessOptions(globalStateModel, widget.employee.id),
+          errorMessage: "Error loading employee details",
+          onDataLoaded: (results) {
+            return SafeArea(
+              child: Form(
+                key: _formKey,
+                child: CustomFutureBuilder<List<BusinessApps>>(
+                  future: getBusinessApps(employeesStateModel),
+                  errorMessage: "Error loading apps.",
+                  onDataLoaded: (List results) {
+                    return Column(
+                      children: <Widget>[
+                        Flexible(
+                          child: CustomExpansionTile(
+                            isWithCustomIcon: false,
+                            listSize: widget.employee.status == 0 ? 1 : null,
+                            widgetsTitleList: <Widget>[
+                              Container(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Container(
+                                      child: Row(
+                                        children: <Widget>[
+                                          Icon(
+                                            Icons.person,
+                                            size: 28,
                                           ),
-                                        ),
-                                        widget.employee.status != 0 ?
-                                            Container(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment
-                                                .spaceBetween,
-                                            children: <Widget>[
-                                              Container(
-                                                child: Row(
-                                                  children: <Widget>[
-                                                    Icon(
-                                                      Icons
-                                                          .business_center,
-                                                      size: 28,
-                                                    ),
-                                                    SizedBox(width: 10),
-                                                    Text(
-                                                      "Apps Access",
-                                                      style: TextStyle(
-                                                          fontSize: 18),
-                                                    ),
-                                                  ],
-                                                ),
-                                                padding:
-                                                EdgeInsets.symmetric(
-                                                    horizontal:
-                                                    Measurements
-                                                        .width *
-                                                        0.05),
-                                              ),
-                                            ],
+                                          SizedBox(width: 10),
+                                          Text(
+                                            "Info",
+                                            style: TextStyle(fontSize: 18),
                                           ),
-                                        ) : Container(),
-                                      ],
-                                      widgetsBodyList: <Widget>[
-                                        EmployeeInfoRow(
-                                          openedRow: openedRow,
-                                          employee: widget.employee,
-                                          employeesStateModel:
-                                              employeesStateModel,
-                                        ),
-                                        widget.employee.status != 0 ?
-                                            CustomAppsAccessExpansionTile(
-                                                employeesStateModel:
-                                                    employeesStateModel,
-                                                businessApps: results,
-                                                isNewEmployeeOrGroup: false,
-                                              ) : Container(),
-                                      ],
+                                        ],
+                                      ),
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal:
+                                              Measurements.width * 0.05),
                                     ),
-                                  ),
+                                  ],
+                                ),
+                              ),
+                              widget.employee.status != 0
+                                  ? Container(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          Container(
+                                            child: Row(
+                                              children: <Widget>[
+                                                Icon(
+                                                  Icons.business_center,
+                                                  size: 28,
+                                                ),
+                                                SizedBox(width: 10),
+                                                Text(
+                                                  "Apps Access",
+                                                  style:
+                                                      TextStyle(fontSize: 18),
+                                                ),
+                                              ],
+                                            ),
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal:
+                                                    Measurements.width * 0.05),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  : Container(),
+                            ],
+                            widgetsBodyList: <Widget>[
+                              EmployeeInfoRow(
+                                openedRow: openedRow,
+                                employee: widget.employee,
+                                employeesStateModel: employeesStateModel,
+                              ),
+                              widget.employee.status != 0
+                                  ? CustomAppsAccessExpansionTile(
+                                      employeesStateModel: employeesStateModel,
+                                      businessApps: results,
+                                      isNewEmployeeOrGroup: false,
+                                    )
+                                  : Container(),
+                            ],
+                          ),
+                        ),
 
 //                                    InkWell(
 //                                      child: Container(
@@ -275,8 +252,8 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
 //                                            context, employeesStateModel);
 //                                      },
 //                                    ),
-                                ],
-                              );
+                      ],
+                    );
 
 //                                        return EmployeesAppsAccessComponent(
 //                                          openedRow: openedRow,
@@ -290,15 +267,12 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
 ////                                        employeeGroups: snapshot.data,
 //                                          businessAppsData: results,
 //                                        );
-                            },
-                          ),
-                        ),
-                      );
-                    },
-                  ),
+                  },
                 ),
-              )),
-        ],
+              ),
+            );
+          },
+        ),
       );
     });
   }
@@ -324,11 +298,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
           "app.allowedAcls.delete: ${app.allowedAcls.delete}");
     }
 
-
-
 //    employeesStateModel.clearEmployeeData();
-
-
 
     //await employeesStateModel.updateEmployee(data, widget.employee.id);
     //Navigator.of(context).pop();

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:payever/views/customelements/wallpaper.dart';
 import 'package:provider/provider.dart';
 
 import 'package:payever/view_models/employees_state_model.dart';
@@ -94,85 +95,69 @@ class _EmployeesSelectionsListScreenState
 
     return OrientationBuilder(
       builder: (BuildContext context, Orientation orientation) {
-        return Stack(
-          children: <Widget>[
-            Positioned(
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width,
-                top: 0.0,
-                child: CachedNetworkImage(
-                  imageUrl: globalStateModel.currentWallpaper ??
-                      globalStateModel.defaultCustomWallpaper,
-                  placeholder: (context, url) => Container(),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
-                  fit: BoxFit.cover,
-                )),
-            BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-              child: Container(
-                child: Scaffold(
-                  backgroundColor: Colors.black.withOpacity(0.2),
-                  appBar: CustomAppBar(
-                    title: StreamBuilder(
-                        stream: employeesStateModel.availableEmployeeList,
-                        builder:
-                            (BuildContext context, AsyncSnapshot snapshot) {
-                          return Text(snapshot.hasData
-                              ? "${employeesIdsToGroup.length} Employees Selected"
-                              : "Select Employees");
-                        }),
-                    onTap: () {
-                      Navigator.pop(context);
+        return BackgroundBase(
+          true,
+          appBar: CustomAppBar(
+            title: StreamBuilder(
+                stream: employeesStateModel.availableEmployeeList,
+                builder:
+                    (BuildContext context, AsyncSnapshot snapshot) {
+                  return Text(snapshot.hasData
+                      ? "${employeesIdsToGroup.length} Employees Selected"
+                      : "Select Employees");
+                }),
+            onTap: () {
+              Navigator.pop(context);
 
-                    },
-                    actions: <Widget>[
-                      StreamBuilder(
-                          stream: employeesStateModel.availableEmployeeList,
-                          builder: (context, snapshot) {
-                            return RawMaterialButton(
-                              constraints: BoxConstraints(),
-                              padding: EdgeInsets.all(10),
-                              child: Text(
-                                'Add',
-                                style: TextStyle(
-                                    color: snapshot.hasData
-                                        ? Colors.white
-                                        : Colors.white.withOpacity(0.3),
-                                    fontSize: 18),
-                              ),
-                              onPressed: () {
-                                if (snapshot.hasData) {
-                                  print("data can be send");
-                                  _inviteEmployeesToGroup(globalStateModel,
-                                      employeesStateModel, context);
-                                } else {
-                                  print("The data can't be send");
-                                }
-                              },
-                            );
-                          }),
-                    ],
-                  ),
-                  body: SafeArea(
-                    child: Column(
-                      children: <Widget>[
-                        SizedBox(height: 10),
-                        CustomFutureBuilder<List<Employees>>(
-                          future:
-                              fetchEmployeesList("", true, globalStateModel),
-                          errorMessage: "Error loading employees",
-                          onDataLoaded: (results) {
-                            if (results.length == 0) {
-                              return Expanded(
-                                child: Center(
-                                  child: Text("No employees yet"),
-                                ),
-                              );
-                            } else {
-                              return Expanded(
-                                child: Column(
-                                  children: <Widget>[
-                                    SizedBox(height: 2),
+            },
+            actions: <Widget>[
+              StreamBuilder(
+                  stream: employeesStateModel.availableEmployeeList,
+                  builder: (context, snapshot) {
+                    return RawMaterialButton(
+                      constraints: BoxConstraints(),
+                      padding: EdgeInsets.all(10),
+                      child: Text(
+                        'Add',
+                        style: TextStyle(
+                            color: snapshot.hasData
+                                ? Colors.white
+                                : Colors.white.withOpacity(0.3),
+                            fontSize: 18),
+                      ),
+                      onPressed: () {
+                        if (snapshot.hasData) {
+                          print("data can be send");
+                          _inviteEmployeesToGroup(globalStateModel,
+                              employeesStateModel, context);
+                        } else {
+                          print("The data can't be send");
+                        }
+                      },
+                    );
+                  }),
+            ],
+          ),
+          body: SafeArea(
+            child: Column(
+              children: <Widget>[
+                SizedBox(height: 10),
+                CustomFutureBuilder<List<Employees>>(
+                  future:
+                  fetchEmployeesList("", true, globalStateModel),
+                  errorMessage: "Error loading employees",
+                  onDataLoaded: (results) {
+                    if (results.length == 0) {
+                      return Expanded(
+                        child: Center(
+                          child: Text("No employees yet"),
+                        ),
+                      );
+                    } else {
+                      return Expanded(
+                        child: Column(
+                          children: <Widget>[
+                            SizedBox(height: 2),
 //                                  ListView.builder(
 //                                    shrinkWrap: true,
 //                                    itemCount: values.length,
@@ -201,31 +186,27 @@ class _EmployeesSelectionsListScreenState
 //                                  );
 //                                }).toList(),),
 
-                                    Expanded(
-                                      child: CustomList(
-                                          globalStateModel.currentBusiness,
-                                          "",
-                                          results,
-                                          EmployeesScreenData(results,
-                                              globalStateModel.currentWallpaper),
-                                          ValueNotifier(false),
-                                          0,
-                                          employeesIdsToGroup,
-                                          employeesStateModel),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            }
-                          },
+                            Expanded(
+                              child: CustomList(
+                                  globalStateModel.currentBusiness,
+                                  "",
+                                  results,
+                                  EmployeesScreenData(results,
+                                      globalStateModel.currentWallpaper),
+                                  ValueNotifier(false),
+                                  0,
+                                  employeesIdsToGroup,
+                                  employeesStateModel),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
+                      );
+                    }
+                  },
                 ),
-              ),
+              ],
             ),
-          ],
+          ),
         );
       },
     );
@@ -451,7 +432,7 @@ class _PhoneTableRowState extends State<PhoneTableRow> {
                                           width: Measurements.width * 0.002,
                                           color: isChecked
                                               ? Colors.white
-                                              : Colors.grey),
+                                              : Colors.black38),
                                       borderRadius: const BorderRadius.all(
                                           const Radius.circular(5)),
                                     ),
