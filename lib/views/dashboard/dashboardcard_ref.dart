@@ -1,53 +1,42 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart' as prefix1;
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart' as prefix0;
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/models/business.dart';
 import 'package:payever/utils/appStyle.dart';
 import 'package:payever/utils/global_keys.dart';
 import 'package:payever/utils/translations.dart';
 import 'package:payever/utils/utils.dart';
+import 'package:payever/views/customelements/dashboardcard_content.dart';
 import 'dart:ui';
 
 import 'package:url_launcher/url_launcher.dart';
 
 
 
-class DashboardCard extends StatefulWidget {
+class DashboardCard_ref extends StatefulWidget {
 
-  String _appName;
-  ImageProvider _imageProvider;
+  String appName;
+  ImageProvider imageProvider;
   Business _business;
-  Widget mainCard;
-  Widget secondCard;
+  Widget header;
+  Widget body;
   bool _boolbusiness = false;
+  bool _open = false;
   dynamic handler;
   bool _active;
   num pad;
   bool isSingleActionButton;
 
-
-  DashboardCard(this._appName,this._imageProvider,this.mainCard,this.secondCard,this.handler,this._active, this.isSingleActionButton);
+  DashboardCard_ref(this.appName,this.imageProvider,this.header,{this.body});
 
   @override
-  _DashboardCardState createState() => _DashboardCardState(_appName,_imageProvider,mainCard,secondCard);
+  _DashboardCard_refState createState() => _DashboardCard_refState();
 }
 
-class _DashboardCardState extends State<DashboardCard> with  TickerProviderStateMixin{
+class _DashboardCard_refState extends State<DashboardCard_ref> with  TickerProviderStateMixin{
   
-  bool _open = false;
-  var _isloading = ValueNotifier(false);
-  String _appName;
-  Widget mainCard;
-  Widget secondCard;
-
   
-  ImageProvider _imageProvider;
-  
-  _DashboardCardState(this._appName,this._imageProvider,this.mainCard,this.secondCard);
-
-
+  Duration _duration = Duration(milliseconds: 100);
+  _DashboardCard_refState();
   _launchURL(String url) async {
     if (await canLaunch(url)) {
       await launch(url);
@@ -55,10 +44,10 @@ class _DashboardCardState extends State<DashboardCard> with  TickerProviderState
       throw 'Could not launch $url';
     }
   }
+
   @override
   void initState() {
     super.initState();
-     _isloading.addListener(listen);
   }
 
   @override
@@ -66,213 +55,204 @@ class _DashboardCardState extends State<DashboardCard> with  TickerProviderState
     bool _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
     Measurements.height = (_isPortrait ? MediaQuery.of(context).size.height : MediaQuery.of(context).size.width);
     Measurements.width  = (_isPortrait ? MediaQuery.of(context).size.width : MediaQuery.of(context).size.height);
-    bool _isTablet = Measurements.width < 600 ? false : true; 
-    double _cardSize = Measurements.height * (_isTablet?0.04:0.065);
-    widget.pad = _isTablet?0.02:0.04 ;
-   
-    if(!widget._active)_open = false;
-        return OrientationBuilder(
-          builder: (BuildContext context, Orientation orientation) {
-            return Container(
-              padding: EdgeInsets.all(Measurements.width * 0.02),
-              child: Column(
-                children: <Widget>[
-                  AnimatedContainer(
-                    duration: Duration(milliseconds: 50),
-                    width: Measurements.width * (_isTablet? 0.7 : (_isPortrait? 0.9:1.3)),
+    bool _isTablet = Measurements.width < 600 ? false : true;
+    widget.pad = _isTablet?0.02:0.02 ;
+      return Container(
+        padding: EdgeInsets.symmetric(vertical:Measurements.width * 0.01),
+        child: Column(
+          children: <Widget>[
+            AnimatedContainer(
+              duration: _duration,
+              width: Measurements.width * (_isTablet? 0.7 : (_isPortrait? 0.9:1.3)),
+              child: Container(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 4,sigmaY: 8),
                     child: Container(
-                      child: ClipRRect(
-                        borderRadius: !_open ?  BorderRadius.circular(12) :BorderRadius.only(topRight: Radius.circular(12),topLeft: Radius.circular(12)),
-                        child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 8,sigmaY: 16),
-                          child: Container(
-                            color: Colors.black.withOpacity(0.2),
-                            child: Column(
+                      color: Colors.black.withOpacity(0.2),
+                      child: Column(
+                      children: <Widget>[
+                        Container(
+                          color: Colors.black.withOpacity(0.2),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Container(
-                                padding: EdgeInsets.only(left:Measurements.width * widget.pad,top:Measurements.width * widget.pad,right:Measurements.width * widget.pad,bottom:Measurements.width * widget.pad/2,),
+                                padding: EdgeInsets.all(Measurements.width * widget.pad),
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: <Widget>[
-                                    Row(children: <Widget>[
-                                      Container(height: AppStyle.iconDashboardCardSize(_isTablet),child: Image(image:_imageProvider)),
-                                      Padding(padding: EdgeInsets.only(right: Measurements.width * (_isTablet? 0.01:0.02)),),
-                                      Text(Language.getWidgetStrings("widgets.${widget._appName}.title")),
-                                    ],),
-                                    Row(
-                                      children: <Widget>[
-                                        // Container(
-                                        //   child: ClipRect(
-                                        //     child: Column(
-                                        //       mainAxisAlignment: MainAxisAlignment.center,
-                                        //       children: <Widget>[
-                                        //       widget.isSingleActionButton
-                                        //           ? singleActionButtonWidget(
-                                        //               context, _isTablet)
-                                        //           : actionButtonsWidget(
-                                        //               context, _isTablet, widget._active),
-                                        //       ],),
-                                        //   ),
-                                        // ),
-                                        Padding(padding: EdgeInsets.only(right: Measurements.width * 0.02),),
-                                        widget._active ? InkWell(
-                                          radius: _isTablet ? Measurements.height * 0.02: Measurements.width * 0.07,
-                                          splashColor: Colors.transparent,
-                                          child: widget.isSingleActionButton
-                                              ? Container() :  Container(height: _isTablet ? Measurements.height * 0.02: Measurements.width * 0.06,padding:EdgeInsets.symmetric(vertical: _isTablet?3:4) ,child: Text(_open?Language.getWidgetStrings("widgets.actions.less"):Language.getWidgetStrings("widgets.actions.more"))),onTap: (){setState(() =>_open=!_open);},):Container(),
-                                       ],
-                                    ),
+                                    Container(height: AppStyle.iconDashboardCardSize(_isTablet),child: Image(image:widget.imageProvider,height: AppStyle.iconDashboardCardSize(_isTablet))),
+                                    Padding(padding: EdgeInsets.only(right: Measurements.width * (_isTablet? 0.01:0.02)),),
+                                    Text(Language.getWidgetStrings("widgets.${widget.appName}.title"),style: TextStyle(fontSize: AppStyle.fontSizeDashboardTitle()),),
                                   ],
                                 ),
                               ),
-                              AnimatedContainer(
-                                duration: Duration(milliseconds: 100),
-                                padding: EdgeInsets.only(bottom:Measurements.width * widget.pad,left: Measurements.width * widget.pad,right: Measurements.width * widget.pad),
-                                child: mainCard
-                              ),
-                            ],),
+                              widget.body != null?
+                              InkWell(
+                                child: AnimatedContainer(
+                                  padding: EdgeInsets.all(Measurements.width * widget.pad),
+                                  duration: _duration,
+                                  child: !widget._open?Text("Show More"):Text("Show Less"),
+                                ),
+                                onTap:(){
+                                  listen();
+                                },
+                              ):Container(),
+                            ],
                           ),
                         ),
-                      ),
+                        Container(
+                          constraints: BoxConstraints(minHeight: 75),
+                          padding: EdgeInsets.all(Measurements.width * widget.pad),
+                          child: DashboardCardPanel(
+                            animationDuration: _duration,
+                            child: ExpansionPanel(
+                              body: widget.body??Container(),
+                              isExpanded: widget._open,
+                              headerBuilder: (BuildContext context, bool isExpanded) => widget.header,
+                            ),
+                          ),
+                        ),
+                      ],),
                     ),
                   ),
-                ],
+                ),
               ),
-            );
-        },);
+            ),
+          ],
+        ),
+      );
       }
       void listen() {
         setState(() {
+          widget._open = !widget._open;
         });
       }
+  // Widget singleActionButtonWidget(BuildContext context, bool _isTablet) {
+  //   return InkWell(
+  //     radius:
+  //     _isTablet ? Measurements.height * 0.02 : Measurements.width * 0.07,
+  //     child: Container(
+  //         padding: EdgeInsets.symmetric(horizontal: Measurements.width * 0.02),
+  //         decoration: BoxDecoration(
+  //           shape: BoxShape.rectangle,
+  //           color: Colors.grey.withOpacity(0.3),
+  //           borderRadius: BorderRadius.circular(15),
+  //         ),
+  //         height: _isTablet
+  //             ? Measurements.height * 0.02
+  //             : Measurements.width * 0.07,
+  //         child: Center(
+  //           child:
+  //               Container(
+  //             alignment: Alignment.center,
+  //                  child:Text(Language.getConnectStrings("actions.open"))
+  //           ),
+  //         )),
+  //     onTap: () {
+  //       setState(() {
+  //         widget.handler.loadScreen(context, _isloading);
+  //       });
+  //     },
+  //   );
+  // }
 
-  Widget singleActionButtonWidget(BuildContext context, bool _isTablet) {
-    return InkWell(
-      radius:
-      _isTablet ? Measurements.height * 0.02 : Measurements.width * 0.07,
-      child: Container(
-          padding: EdgeInsets.symmetric(horizontal: Measurements.width * 0.02),
-          decoration: BoxDecoration(
-            shape: BoxShape.rectangle,
-            color: Colors.grey.withOpacity(0.3),
-            borderRadius: BorderRadius.circular(15),
-          ),
-          height: _isTablet
-              ? Measurements.height * 0.02
-              : Measurements.width * 0.07,
-          child: Center(
-            child:
-                Container(
-              alignment: Alignment.center,
-                   child:Text(Language.getConnectStrings("actions.open"))
-            ),
-          )),
-      onTap: () {
-        setState(() {
-          widget.handler.loadScreen(context, _isloading);
-        });
-      },
-    );
-  }
-
-  Widget actionButtonsWidget(BuildContext context, bool _isTablet, bool isActive) {
-    //print("${widget._appName}.card.open");
-    return isActive
-        ? InkWell(
-          key: Key("${widget._appName}.card.open"),
-      radius: _isTablet
-          ? Measurements.height * 0.02
-          : Measurements.width * 0.07,
-      child: Container(
-          padding:
-          EdgeInsets.symmetric(horizontal: Measurements.width * 0.02),
-          decoration: BoxDecoration(
-            shape: BoxShape.rectangle,
-            color: Colors.grey.withOpacity(0.3),
-            borderRadius: BorderRadius.circular(15),
-          ),
-          height: _isTablet
-              ? Measurements.height * 0.02
-              : Measurements.width * 0.07,
-          child: Center(
-            child: 
-            // _isloading.value
-            //     ? Container(
-            //     constraints: BoxConstraints(
-            //       maxWidth: _isTablet
-            //           ? Measurements.height * 0.01
-            //           : Measurements.width * 0.04,
-            //       maxHeight: _isTablet
-            //           ? Measurements.height * 0.01
-            //           : Measurements.width * 0.04,
-            //     ),
-            //     child: CircularProgressIndicator(
-            //       strokeWidth: 2,
-            //     ))
-            //     :
-                 Container(
-              alignment: Alignment.center,
-              child:Text(Language.getConnectStrings("actions.open"))
+  // Widget actionButtonsWidget(BuildContext context, bool _isTablet, bool isActive) {
+  //   return isActive
+  //       ? InkWell(
+  //         key: Key("${widget.appName}.card.open"),
+  //     radius: _isTablet
+  //         ? Measurements.height * 0.02
+  //         : Measurements.width * 0.07,
+  //     child: Container(
+  //         padding:
+  //         EdgeInsets.symmetric(horizontal: Measurements.width * 0.02),
+  //         decoration: BoxDecoration(
+  //           shape: BoxShape.rectangle,
+  //           color: Colors.grey.withOpacity(0.3),
+  //           borderRadius: BorderRadius.circular(15),
+  //         ),
+  //         height: _isTablet
+  //             ? Measurements.height * 0.02
+  //             : Measurements.width * 0.07,
+  //         child: Center(
+  //           child: 
+  //           // _isloading.value
+  //           //     ? Container(
+  //           //     constraints: BoxConstraints(
+  //           //       maxWidth: _isTablet
+  //           //           ? Measurements.height * 0.01
+  //           //           : Measurements.width * 0.04,
+  //           //       maxHeight: _isTablet
+  //           //           ? Measurements.height * 0.01
+  //           //           : Measurements.width * 0.04,
+  //           //     ),
+  //           //     child: CircularProgressIndicator(
+  //           //       strokeWidth: 2,
+  //           //     ))
+  //           //     :
+  //                Container(
+  //             alignment: Alignment.center,
+  //             child:Text(Language.getConnectStrings("actions.open"))
               
-            ),
-          )),
-      onTap: () {
-        setState(() {
+  //           ),
+  //         )),
+  //     onTap: () {
+  //       setState(() {
           
-          // _isloading.value = true;
-          widget.handler.loadScreen(context, _isloading);
-        });
-      },
-    )
-        : Container(
-        child: InkWell(
-          child: Container(
-              height: _isTablet
-                  ? Measurements.height * 0.02
-                  : Measurements.width * 0.07,
-              child: Container(
-                  width: 100,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.rectangle,
-                    color: Colors.grey.withOpacity(0.3),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      SvgPicture.asset(
-                        "images/launchicon.svg",
-                        height:
-                        Measurements.width * (_isTablet ? 0.015 : 0.03),
-                        color: Colors.white.withOpacity(0.7),
-                      ),
-                      Padding(
-                        padding:
-                        EdgeInsets.only(left: Measurements.width * 0.008),
-                      ),
-                      Text(
-                        "Learn more",
-                        style: prefix0.TextStyle(
-                            color: Colors.white.withOpacity(0.7)
-                            ),
-                      ),
-                    ],
-                  ))),
-          onTap: () {
-            setState(() {
-              isActive
-                  ? widget.handler.loadScreen(context, _isloading)
-                  : _launchURL(widget.handler.learnMore());
-            });
-          },
-        ));
-  }
+  //         // _isloading.value = true;
+  //         widget.handler.loadScreen(context, _isloading);
+  //       });
+  //     },
+  //   )
+  //       : Container(
+  //       child: InkWell(
+  //         child: Container(
+  //             height: _isTablet
+  //                 ? Measurements.height * 0.02
+  //                 : Measurements.width * 0.07,
+  //             child: Container(
+  //                 width: 100,
+  //                 decoration: BoxDecoration(
+  //                   shape: BoxShape.rectangle,
+  //                   color: Colors.grey.withOpacity(0.3),
+  //                   borderRadius: BorderRadius.circular(15),
+  //                 ),
+  //                 child: Row(
+  //                   mainAxisSize: MainAxisSize.max,
+  //                   mainAxisAlignment: MainAxisAlignment.center,
+  //                   children: <Widget>[
+  //                     SvgPicture.asset(
+  //                       "images/launchicon.svg",
+  //                       height:
+  //                       Measurements.width * (_isTablet ? 0.015 : 0.03),
+  //                       color: Colors.white.withOpacity(0.7),
+  //                     ),
+  //                     Padding(
+  //                       padding:
+  //                       EdgeInsets.only(left: Measurements.width * 0.008),
+  //                     ),
+  //                     Text(
+  //                       "Learn more",
+  //                       style: TextStyle(
+  //                           color: Colors.white.withOpacity(0.7)
+  //                           ),
+  //                     ),
+  //                   ],
+  //                 ))),
+  //         onTap: () {
+  //           setState(() {
+  //             isActive
+  //                 ? widget.handler.loadScreen(context, _isloading)
+  //                 : _launchURL(widget.handler.learnMore());
+  //           });
+  //         },
+  //       ));
+  // }
 }
 
 abstract class CardContract{
-
   void loadScreen(BuildContext context,ValueNotifier state);
   String learnMore();
-
 }

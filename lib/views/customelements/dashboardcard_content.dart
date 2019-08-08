@@ -1,113 +1,77 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
-const double _kPanelHeaderCollapsedHeight = 35;
-const double _kPanelHeaderExpandedHeight  = 35;
+const double _kPanelHeaderCollapsedHeight = 70;
+const double _kPanelHeaderExpandedHeight  = 70;
 
-class CustomExpansionPanelList extends StatelessWidget {
-  const CustomExpansionPanelList(
+class DashboardCardPanel extends StatelessWidget {
+  const DashboardCardPanel(
       {Key key,
-      this.children: const <ExpansionPanel>[],
+      @required this.child,
       this.expansionCallback,
-      @required  this.isWithCustomIcon,
-      this.animationDuration: kThemeAnimationDuration})
-      : assert(children != null),
+      this.animationDuration: kThemeAnimationDuration,})
+      : assert(child != null),
         assert(animationDuration != null),
         super(key: key);
 
-  final List<ExpansionPanel> children;
+  final ExpansionPanel child;
 
   final ExpansionPanelCallback expansionCallback;
 
   final Duration animationDuration;
 
-  final bool isWithCustomIcon;
-
-  bool _isChildExpanded(int index) {
-    return children[index].isExpanded;
+  bool _isChildExpanded() {
+    return child.isExpanded;
   }
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> items = <Widget>[];
     const EdgeInsets kExpandedEdgeInsets = const EdgeInsets.symmetric(
         vertical: _kPanelHeaderExpandedHeight - _kPanelHeaderCollapsedHeight);
 
-    for (int index = 0; index < children.length; index += 1) {
+    
       final Row header = Row(
         children: <Widget>[
           new Expanded(
             child: GestureDetector(
               onTap: () {
                 if (expansionCallback != null)
-                  expansionCallback(index, _isChildExpanded(index));
+                  expansionCallback(0,_isChildExpanded());
               },
               child: new AnimatedContainer(
                 duration: animationDuration,
                 curve: Curves.fastOutSlowIn,
-                margin: _isChildExpanded(index)
+                margin: _isChildExpanded()
                     ? kExpandedEdgeInsets
                     : EdgeInsets.zero,
                 child: new SizedBox(
                   height: _kPanelHeaderCollapsedHeight,
-                  child: children[index].headerBuilder(
+                  child: child.headerBuilder(
                     context,
-                    children[index].isExpanded,
+                    child.isExpanded,
                   ),
                 ),
               ),
             ),
           ),
-          Container(
-            margin: const EdgeInsetsDirectional.only(end: 8),
-            child: isWithCustomIcon ? MyExpandIcon(
-              isExpanded: _isChildExpanded(index),
-              padding: const EdgeInsets.all(16.0),
-              onPressed: (bool isExpanded) {
-                if (expansionCallback != null)
-                  expansionCallback(index, isExpanded);
-              },
-            ) : ExpandIcon(
-              isExpanded: _isChildExpanded(index),
-              padding: const EdgeInsets.all(16.0),
-              onPressed: (bool isExpanded) {
-                if (expansionCallback != null)
-                  expansionCallback(index, isExpanded);
-              },
-            ),
-          ),
         ],
       );
-
-//      double _radiusValue = _isChildExpanded(index) ? 0 : 20;
-      items.add(
-        Container(
-          key: _SaltedKey<BuildContext, int>(context, index * 2),
+    return new Container(
           child: Material(
-            color: Colors.white.withOpacity(0.1),
+            color: Colors.transparent,
             elevation: 0,
-//            borderRadius: new BorderRadius.all(new Radius.circular(_radiusValue)),
-//              decoration: i == 0
-//                    ? BoxDecoration(
-//                    color: Colors.white.withOpacity(0.1),
-//              borderRadius: index == 0 ? BorderRadius.only(
-//                        topLeft: Radius.circular(_radiusValue),
-//                        topRight: Radius.circular(_radiusValue))
-//                    : BorderRadius.only(topLeft: Radius.circular(0),
-//                  topRight: Radius.circular(0)),
             child: Column(
               children: <Widget>[
                 header,
-                Divider(),
                 AnimatedCrossFade(
                   firstChild: Container(height: 0.0),
-                  secondChild: children[index].body,
+                  secondChild: child.body,
                   firstCurve:
                       const Interval(0.0, 0.6, curve: Curves.fastOutSlowIn),
                   secondCurve:
                       const Interval(0.4, 1.0, curve: Curves.fastOutSlowIn),
                   sizeCurve: Curves.fastOutSlowIn,
-                  crossFadeState: _isChildExpanded(index)
+                  crossFadeState: _isChildExpanded()
                       ? CrossFadeState.showSecond
                       : CrossFadeState.showFirst,
                   duration: animationDuration,
@@ -115,19 +79,7 @@ class CustomExpansionPanelList extends StatelessWidget {
               ],
             ),
           ),
-        ),
-      );
-
-      if (_isChildExpanded(index) && index != children.length - 1)
-        items.add(Divider(
-          key: _SaltedKey<BuildContext, int>(context, index * 2 + 1),
-          height: 1,
-        ));
-    }
-
-    return new Column(
-      children: items,
-    );
+        );
   }
 }
 

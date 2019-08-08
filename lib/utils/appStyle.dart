@@ -6,7 +6,8 @@ class AppStyle{
   // ICONS
     static Color  iconActiveColor() => Colors.white;
     static double iconDashboardCardSize(bool _isTablet){
-      return Measurements.width * (_isTablet? 0.025:0.05);
+      return _isTablet? 15:16;
+      //return Measurements.width * (_isTablet? 0.025:0.05);
       //return Measurements.width * (_isTablet? 0.03:0.06);
     }
     static double iconRowSize(bool _isTablet){
@@ -26,14 +27,17 @@ class AppStyle{
   static EdgeInsetsGeometry listRowPadding(bool _isTablet){
     return EdgeInsets.symmetric(horizontal: Measurements.width * (_isTablet?0.02:0.05));
   }
+  
+  static double dashboardCardHeight() => 75;
 
   //Lists
 
   //Fonts
-  static double fontSizeListRow()    => 12;
-  static double fontSizeAppBar()     => 18;
-  static double fontSizeTabTitle()   => 17;
-  static double fontSizeTabMid()     => 14;
-  static double fontSizeTabContent() => 16;
+  static double fontSizeListRow()        => 12;
+  static double fontSizeAppBar()         => 18;
+  static double fontSizeTabTitle()       => 17;
+  static double fontSizeTabMid()         => 14;
+  static double fontSizeTabContent()     => 16;
+  static double fontSizeDashboardTitle() => 14;
   //Fonts
 }

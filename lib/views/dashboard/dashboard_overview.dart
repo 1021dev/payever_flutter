@@ -4,11 +4,14 @@ import 'package:payever/utils/env.dart';
 import 'package:payever/view_models/dashboard_state_model.dart';
 import 'package:payever/view_models/global_state_model.dart';
 import 'package:payever/views/customelements/custom_future_builder.dart';
+import 'package:payever/views/customelements/dashboardcard_content.dart';
 import 'package:payever/views/dashboard/poscard.dart';
 import 'package:payever/views/dashboard/productscard.dart';
 import 'package:payever/views/dashboard/settingsCard.dart';
 import 'package:payever/views/dashboard/transactioncard.dart';
 import 'package:provider/provider.dart';
+
+import 'dashboardcard_ref.dart';
 
 class DashboardOverview extends StatelessWidget {
   DashboardStateModel dashboardStateModel = DashboardStateModel();
@@ -46,6 +49,14 @@ class DashboardOverview extends StatelessWidget {
               wid.type,
               NetworkImage(UI_KIT + wid.icon),
               wid.help));
+              break;
+        case "connect":
+          _activeWid.add(DashboardCard_ref(
+              wid.type,
+              NetworkImage(UI_KIT + wid.icon),
+              Center(child: Text("test"),),
+              body: ListView(shrinkWrap: true,children: <Widget>[Center(child: Text("test"),),Center(child: Text("test"),),Center(child: Text("test"),),],),
+              ));
           break;
         default:
       }
