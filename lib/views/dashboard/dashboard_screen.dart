@@ -28,6 +28,7 @@ import 'package:payever/views/dashboard/transactioncard.dart';
 import 'package:payever/views/login/login_page.dart';
 import 'package:payever/views/pos/native_pos_screen.dart';
 import 'package:payever/views/products/product_screen.dart';
+import 'package:payever/views/settings/employees/employees_screen.dart';
 import 'package:payever/views/settings/settings_screen.dart';
 
 import 'package:payever/views/switcher/switcher_page.dart';
@@ -907,7 +908,8 @@ class _AppViewState extends State<AppView> {
     Navigator.push(
         context,
         PageTransition(
-          child: SettingsScreen(),
+//          child: SettingsScreen(),
+          child: EmployeesScreen(),
           type: PageTransitionType.fade,
         ));
   }
