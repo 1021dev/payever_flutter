@@ -53,7 +53,7 @@ class ProdNavigation implements CardContract{
   void loadScreen(BuildContext context, ValueNotifier state) {
     RestDatasource api = RestDatasource();
     state.value =false;
-    Navigator.push(context, PageTransition(child:ProductScreen(business: parts.business,wallpaper: parts._wallpaper, posCall: false ,),type:PageTransitionType.fade));
+    Navigator.push(context, PageTransition(child:ProductScreen(business: parts.business,wallpaper: parts._wallpaper,posCall: false ,),type:PageTransitionType.fade));
   }
 
 }
@@ -377,7 +377,7 @@ class NoProducts extends StatelessWidget {
               ),
             ),
             onTap: (){
-              Navigator.push(context, PageTransition(child:ProductScreen(business: parts.business,wallpaper: parts._wallpaper, posCall: false ,),type:PageTransitionType.fade));
+              Navigator.push(context, PageTransition(child:ProductScreen(business: parts.business,wallpaper: parts._wallpaper,posCall: false ,),type:PageTransitionType.fade));
             },
           ),
         ),

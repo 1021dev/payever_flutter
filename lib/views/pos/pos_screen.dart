@@ -128,7 +128,7 @@ class _POSScreenState extends State<POSScreen> {
             }
 
           loadProducts(BuildContext context) {
-            changeFragment(ProductScreen(business: widget.business,wallpaper: widget._wallpaper, posCall: true, ));
+            changeFragment(ProductScreen(business: widget.business,wallpaper: widget._wallpaper,posCall: true, ));
           }
         
           void loadTerminal(){

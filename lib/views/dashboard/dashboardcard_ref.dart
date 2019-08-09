@@ -50,6 +50,8 @@ class _DashboardCard_refState extends State<DashboardCard_ref> with  TickerProvi
     super.initState();
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     bool _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;

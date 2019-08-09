@@ -34,6 +34,8 @@ import 'package:payever/views/settings/employees/expandable_component.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
+import 'product_screen.dart';
+
 ValueNotifier<GraphQLClient> clientFor({
   @required String uri,
   String subscriptionUri,
@@ -136,6 +138,7 @@ class NewProductScreen extends StatefulWidget {
   String currency;
   State view;
   bool editMode;
+  bool isFromDashboardCard;
   ValueNotifier isLoading;
   ProductsModel productEdit;
   String initialstate;
@@ -143,6 +146,7 @@ class NewProductScreen extends StatefulWidget {
       {@required this.wallpaper,
       @required this.business,
       @required this.view,
+      @required this.isFromDashboardCard,
       this.currency,
       this.editMode,
       this.productEdit,
@@ -226,6 +230,9 @@ class _NewProductScreenState extends State<NewProductScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context);
+
     _appBar = AppBar(
       elevation: 0,
       actions: <Widget>[
@@ -247,7 +254,21 @@ class _NewProductScreenState extends State<NewProductScreen> {
         radius: 20,
         child: Icon(IconData(58829, fontFamily: 'MaterialIcons')),
         onTap: () {
-          Navigator.pop(context);
+          if(widget.isFromDashboardCard) {
+            Navigator.pop(context);
+            Navigator.push(
+                context,
+                PageTransition(
+                    child: ProductScreen(
+                      wallpaper: globalStateModel.currentWallpaper,
+                      business: globalStateModel.currentBusiness,
+                      posCall: false,
+                    ),
+                    type: PageTransitionType.fade));
+          } else {
+            Navigator.pop(context);
+          }
+
         },
       ),
     );
@@ -278,7 +299,6 @@ class _NewProductScreenState extends State<NewProductScreen> {
     //     ],
     //   ),
     // );
-    GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context);
     return OrientationBuilder(
       builder: (BuildContext context, Orientation orientation) {
         widget._parts.isPortrait = orientation == Orientation.portrait;

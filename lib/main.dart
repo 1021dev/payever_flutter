@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:payever/views/dashboard/dashboard_screen_ref.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:payever/utils/authhandler.dart';
@@ -78,6 +79,9 @@ class _MyAppState extends State<MyApp> {
           debugShowCheckedModeBanner: false,
           title: 'payever',
           theme: _payeverTheme,
+          routes: {
+//            '/dashboard': (context) => DashboardMidScreen(wallpaper),
+          },
           home: _loadCredentials.value ? CircularProgressIndicator(): _haveCredentials?DashboardMidScreen(wallpaper) :LoginScreen(),
         ),
       );
