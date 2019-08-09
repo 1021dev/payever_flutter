@@ -55,20 +55,12 @@ class DashboardOverview extends StatelessWidget {
           ));
           break;
         case "settings":
-<<<<<<< HEAD
-          _activeWid.add(SettingsCard(
-              wid.type,
-              NetworkImage(UI_KIT + wid.icon),
-              wid.help));
-              break;
-=======
           _activeWid.add(DashboardCard_ref(
             wid.type,
             NetworkImage(UI_KIT + wid.icon),
             SettingCardsData(),
           ));
           break;
->>>>>>> 4d07e7baf677487640f048db285f85dcb69d2d73
         case "connect":
           _activeWid.add(DashboardCard_ref(
               wid.type,
