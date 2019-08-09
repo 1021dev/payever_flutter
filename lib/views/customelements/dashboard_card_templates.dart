@@ -20,7 +20,7 @@ class AvatarDescriptionCard extends StatelessWidget {
           backgroundImage: image,
           child: imageTitle!=null?Center(child:Text(Measurements.initials(imageTitle))):Container(),
         ),
-        Padding(padding: EdgeInsets.only(left: 10),),
+        Padding(padding: EdgeInsets.only(left: 15),),
         Expanded(
           child: Column(
             mainAxisAlignment:MainAxisAlignment.center,
@@ -44,7 +44,7 @@ class TitleAmountCardItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: (AppStyle.dashboardCardContentHeight()/2)-1,
-      padding: EdgeInsets.symmetric(horizontal:AppStyle.dashboardCardContentPadding()),
+      padding: EdgeInsets.symmetric(horizontal:AppStyle.dashboardCardContentPadding()* 1.5),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
