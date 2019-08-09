@@ -182,7 +182,16 @@ static String _decodeBase64(String str) {
   return utf8.decode(base64Url.decode(output));
 }
 
-
+static String initials(String name){
+    String displayName;
+    if(name.contains(" ")){
+      displayName = name.substring(0,1);
+      displayName = displayName + name.split(" ")[1].substring(0,1);
+    }else{
+      displayName = name.substring(0,1) + name.substring(name.length-1);
+    }
+    return displayName = displayName.toUpperCase();
+  }
 
 }
 

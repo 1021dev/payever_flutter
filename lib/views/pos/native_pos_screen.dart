@@ -16,11 +16,13 @@ import 'package:payever/utils/customshapes.dart';
 import 'package:payever/utils/env.dart';
 import 'package:payever/utils/translations.dart';
 import 'package:payever/utils/utils.dart';
+import 'package:payever/view_models/dashboard_state_model.dart';
 import 'package:payever/views/pos/detailedProduct.dart';
 import 'package:payever/views/pos/pos_cart.dart';
 import 'package:payever/views/pos/pos_order_section.dart';
 import 'package:payever/views/pos/send2dev.dart';
 import 'package:payever/views/pos/webviewsection.dart';
+import 'package:provider/provider.dart';
 
 ValueNotifier<GraphQLClient> clientFor({
   @required String uri,
@@ -111,7 +113,7 @@ class PosScreenParts{
 class NativePosScreen extends StatefulWidget {
   Terminal terminal;
   Business business;
-  NativePosScreen({@required this.terminal,@required this.business});
+  NativePosScreen({@required this.terminal = null,@required this.business});
   PosScreenParts parts;
 
   @override
@@ -135,7 +137,6 @@ class _NativePosScreenState extends State<NativePosScreen> {
     if(widget.terminal == null){
     List<Terminal> _terminals = List();
     List<ChannelSet> _chSets = List();
-    
     api.getTerminal(widget.business.id, GlobalUtils.ActiveToken.accesstoken,context).then((terminals){
       terminals.forEach((terminal){
         _terminals.add(Terminal.toMap(terminal));
@@ -490,10 +491,8 @@ class _LoaderState extends State<Loader> {
               );
             }
             widget.parts.pageCount = result.data["getProductsByChannelSet"]["info"]["pagination"]["page_count"];
-            print(result.data["getProductsByChannelSet"]["products"].length);
             result.data["getProductsByChannelSet"]["products"].forEach((prod){
               var tempProduct = ProductsModel.toMap(prod);
-              print("TITLE ${tempProduct.title}");
               if((widget.parts.productList.indexWhere((test) => test.sku == tempProduct.sku)<0))
                 widget.parts.productList.add(tempProduct);
             });

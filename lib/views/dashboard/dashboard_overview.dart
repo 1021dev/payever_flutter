@@ -1,20 +1,12 @@
 
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:payever/utils/env.dart';
-import 'package:payever/utils/utils.dart';
 import 'package:payever/view_models/dashboard_state_model.dart';
 import 'package:payever/view_models/global_state_model.dart';
-import 'package:payever/views/customelements/custom_future_builder.dart';
-import 'package:payever/views/customelements/dashboardcard_content.dart';
 import 'package:payever/views/dashboard/poscard.dart';
 import 'package:payever/views/dashboard/productsSoldCard.dart';
-import 'package:payever/views/dashboard/productscard.dart';
-import 'package:payever/views/dashboard/settingsCard.dart';
 import 'package:payever/views/dashboard/settingsCardData.dart';
 import 'package:payever/views/dashboard/transactioncard.dart';
-import 'package:payever/views/settings/employees/employees_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'dashboardcard_ref.dart';
@@ -34,23 +26,26 @@ class DashboardOverview extends StatelessWidget {
       var wid = dashboardStateModel.currentWidgets[i];
       switch (wid.type) {
         case "transactions":
-          _activeWid.add(TransactionCard(
+          // _activeWid.add(TransactionCard(
+          //     wid.type,
+          //     NetworkImage(UI_KIT + wid.icon),
+          //     false,
+          //     ));
+          _activeWid.add(SimplifyTransactions(
               wid.type,
-              NetworkImage(UI_KIT + wid.icon),
-              false,
+              NetworkImage(UI_KIT + wid.icon)
               ));
           break;
         case "pos":
-          _activeWid.add(POSCard(
+          // _activeWid.add(POSCard(
+          //     wid.type,
+          //     NetworkImage(UI_KIT + wid.icon),
+          //     wid.help));
+          _activeWid.add(SimplifyTerminal(
               wid.type,
-              NetworkImage(UI_KIT + wid.icon),
-              wid.help));
+              NetworkImage(UI_KIT + wid.icon),));
           break;
         case "products":
-//          _activeWid.add(ProductsCard(
-//              wid.type,
-//              NetworkImage(UI_KIT + wid.icon),
-//              wid.help));
           _activeWid.add(DashboardCard_ref(
             wid.type,
             NetworkImage(UI_KIT + wid.icon),
@@ -59,19 +54,11 @@ class DashboardOverview extends StatelessWidget {
 //            body: ProductsCardData(wid.help),
           ));
           break;
-//        case "settings":
-//          _activeWid.add(SettingsCard(
-//              wid.type,
-//              NetworkImage(UI_KIT + wid.icon),
-//              wid.help));
-//              break;
         case "settings":
           _activeWid.add(DashboardCard_ref(
             wid.type,
             NetworkImage(UI_KIT + wid.icon),
-//            Center(child: Text("test"),),
             SettingCardsData(),
-//            body: SettingCardsData(),
           ));
           break;
         case "connect":
