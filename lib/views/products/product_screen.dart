@@ -9,6 +9,7 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/models/business.dart';
 import 'package:payever/models/pos.dart';
@@ -21,7 +22,10 @@ import 'package:payever/utils/global_keys.dart';
 import 'package:payever/utils/translations.dart';
 import 'package:payever/utils/utils.dart';
 import 'package:payever/view_models/global_state_model.dart';
+import 'package:payever/views/customelements/custom_future_builder.dart';
+import 'package:payever/views/customelements/custom_toast_notification.dart';
 import 'package:payever/views/customelements/wallpaper.dart';
+import 'package:payever/views/dashboard/dashboard_screen.dart';
 import 'package:payever/views/login/login_page.dart';
 import 'package:provider/provider.dart';
 import 'new_product.dart';
@@ -86,8 +90,10 @@ class ProductScreen extends StatefulWidget {
   Business business;
   ProductScreenParts _parts;
   bool posCall;
+  bool isProductNotAvailable;
+  bool isFromDashboardCard = false;
   int stateCounter =0;
-  ProductScreen({@required this.wallpaper,@required this.business,@required this.posCall});
+  ProductScreen({@required this.wallpaper,@required this.business,@required this.posCall, this.isProductNotAvailable, this.isFromDashboardCard});
   List<ProductsModel> products = List();
   @override
   _ProductScreenState createState() => _ProductScreenState();
@@ -103,9 +109,31 @@ class _ProductScreenState extends State<ProductScreen> {
     });
   }
 
+  Future<void> callToast({BuildContext context}) async {
+
+    if(widget.isProductNotAvailable && widget.isFromDashboardCard) {
+
+      showToastWidget(
+        CustomToastNotification(icon: Icons.error, toastText: "Product not available",),
+        duration: Duration(seconds: 3),
+        onDismiss: () {
+          print("The toast was dismised");
+
+          setState(() {
+            widget.isFromDashboardCard = false;
+          });
+
+        },
+      );
+
+    }
+
+  }
+
   @override
   void initState() {
     super.initState();
+
     widget._parts = ProductScreenParts() ;
     widget._parts.wallpaper = widget.wallpaper;
     widget._parts.business = widget.business;
@@ -142,10 +170,13 @@ class _ProductScreenState extends State<ProductScreen> {
     }
     @override
     Widget build(BuildContext context) {
+
+
+
       _appBar = AppBar(elevation: 0,
         actions: <Widget>[
           IconButton(icon: Icon(Icons.add), onPressed: () {
-            Navigator.push(context, PageTransition(child:NewProductScreen(wallpaper: widget.wallpaper,business: widget.business.id,view: this,currency: widget.business.currency,editMode: false,productEdit: null,isLoading: widget._parts.isLoading),type:PageTransitionType.fade));
+            Navigator.push(context, PageTransition(child:NewProductScreen(wallpaper: widget.wallpaper,business: widget.business.id,view: this,currency: widget.business.currency, isFromDashboardCard: false, editMode: false,productEdit: null,isLoading: widget._parts.isLoading),type:PageTransitionType.fade));
           },),
         ],
         title: Text("Products",style: TextStyle(fontSize: AppStyle.fontSizeAppBar()),),
@@ -153,7 +184,7 @@ class _ProductScreenState extends State<ProductScreen> {
         leading: 
         InkWell(radius: 20,child: Icon(IconData(58829, fontFamily: 'MaterialIcons')),
         onTap: (){
-          Navigator.pop(context);
+              Navigator.pop(context);
           },
         ),
       );
@@ -162,49 +193,58 @@ class _ProductScreenState extends State<ProductScreen> {
         builder: (BuildContext context, Orientation orientation) {
         widget._parts.isPortrait = orientation == Orientation.portrait;
         widget._parts.isTablet = widget._parts.isPortrait? MediaQuery.of(context).size.width > 600:MediaQuery.of(context).size.height > 600;
-          return BackgroundBase(
-            true,
-            appBar: _appBar,
-            bottomNav: Container(
-              height: widget._parts.loadMore.value ? Measurements.height * 0.0001:0,
-              color: Colors.transparent,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  widget._parts.loadMore.value?ProductLoader(isSearching: widget._parts.isSearching ,business: widget._parts.business,page: widget._parts.page ,parts: widget._parts,):Container(),
-                ],
+          return OKToast(
+            child: BackgroundBase(
+              true,
+              appBar: _appBar,
+              bottomNav: Container(
+                height: widget._parts.loadMore.value ? Measurements.height * 0.0001:0,
+                color: Colors.transparent,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    widget._parts.loadMore.value?ProductLoader(isSearching: widget._parts.isSearching ,business: widget._parts.business,page: widget._parts.page ,parts: widget._parts,):Container(),
+                  ],
+                ),
               ),
-            ),
-            body: Column(
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.only(bottom: Measurements.height * 0.02,left: Measurements.width* (widget._parts.isTablet?0.01:0.05),right: Measurements.width* (widget._parts.isTablet?0.01:0.05)),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(12),
+              body: Column(
+                children: <Widget>[
+                  CustomFutureBuilder(
+                    future: callToast(context: context),
+                    loadingWidget: Container(),
+                    errorMessage: "",
+                    onDataLoaded: (results) => Container(),
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(bottom: Measurements.height * 0.02,left: Measurements.width* (widget._parts.isTablet?0.01:0.05),right: Measurements.width* (widget._parts.isTablet?0.01:0.05)),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(12),
+                        ),
+                      padding:EdgeInsets.only(left: Measurements.width* (widget._parts.isTablet?0.01:0.025)),
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                          hintText: "Search",
+                          border: InputBorder.none,
+                          icon: Container(child:SvgPicture.asset("images/searchicon.svg",height: Measurements.height * 0.0175,color:Colors.white,))
+                        ),
+                        autovalidate: true,
+                        onFieldSubmitted: (doc){
+                          widget._parts.products.clear();
+                          widget._parts.searchDocument = doc;
+                          widget._parts.page = 1;
+                          widget._parts.isLoading.value = true;
+                        },
                       ),
-                    padding:EdgeInsets.only(left: Measurements.width* (widget._parts.isTablet?0.01:0.025)),
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        hintText: "Search",
-                        border: InputBorder.none,
-                        icon: Container(child:SvgPicture.asset("images/searchicon.svg",height: Measurements.height * 0.0175,color:Colors.white,))
-                      ),
-                      autovalidate: true,
-                      onFieldSubmitted: (doc){
-                        widget._parts.products.clear();
-                        widget._parts.searchDocument = doc; 
-                        widget._parts.page = 1;
-                        widget._parts.isLoading.value = true;
-                      },
                     ),
                   ),
-                ),
-                widget._parts.isLoading.value?
-                ProductLoader(business: widget.business,parts: widget._parts,isSearching: false,):
-                ProductsBody(widget._parts),
-              ],
+                  widget._parts.isLoading.value?
+                  ProductLoader(business: widget.business,parts: widget._parts,isSearching: false,):
+                  ProductsBody(widget._parts),
+
+                ],
+              ),
             ),
           );
           // return Stack(
@@ -240,8 +280,8 @@ class _ProductScreenState extends State<ProductScreen> {
           //               ),
           //              ),
           //             backgroundColor: Colors.black.withOpacity(0.2),
-          //             appBar: widget.posCall? null : _appBar, 
-          //             body: 
+          //             appBar: widget.posCall? null : _appBar,
+          //             body:
           //             Column(children: <Widget>[
           //               Container(
           //                 padding: EdgeInsets.only(bottom: Measurements.height * 0.02,left: Measurements.width* (widget._parts.isTablet?0.01:0.05),right: Measurements.width* (widget._parts.isTablet?0.01:0.05)),
@@ -260,7 +300,7 @@ class _ProductScreenState extends State<ProductScreen> {
           //                     autovalidate: true,
           //                     onFieldSubmitted: (doc){
           //                       widget._parts.products.clear();
-          //                       widget._parts.searchDocument = doc; 
+          //                       widget._parts.searchDocument = doc;
           //                       widget._parts.page = 1;
           //                       widget._parts.isLoading.value = true;
           //                     },
@@ -322,6 +362,7 @@ class _ProductsBodyState extends State<ProductsBody> {
 
   @override
   Widget build(BuildContext context) {
+
     return Expanded(
       child: RefreshIndicator(
         onRefresh: _refresh,
@@ -615,7 +656,7 @@ class _ProductItemState extends State<ProductItem> {
                 ),
                 onTap: (){
                   widget.parts.isLoading.value = false;
-                  if(!widget.parts.posCall)Navigator.push(context, PageTransition(child:NewProductScreen(wallpaper: widget.parts.wallpaper,business: widget.parts.business.id,view: this,currency: widget.parts.business.currency,editMode: true,productEdit: widget.currentProduct,isLoading: widget.parts.isLoading,),type:PageTransitionType.fade));
+                  if(!widget.parts.posCall)Navigator.push(context, PageTransition(child:NewProductScreen(wallpaper: widget.parts.wallpaper,business: widget.parts.business.id,view: this,currency: widget.parts.business.currency,editMode: true,productEdit: widget.currentProduct, isFromDashboardCard: false, isLoading: widget.parts.isLoading,),type:PageTransitionType.fade));
                 },
               ),
             ],

@@ -80,7 +80,7 @@ class ProductsModel {
   Shipping shipping = Shipping();
 
   ProductsModel.toMap(dynamic obj){
-    uuid = obj[GlobalUtils.DB_PRODMODEL_UUID];
+    uuid = obj[GlobalUtils.DB_PRODMODEL_UUID] ?? "";
     title = obj[GlobalUtils.DB_PRODMODEL_TITLE];
     description = obj[GlobalUtils.DB_PRODMODEL_DESCRIPTION];
     hidden = obj[GlobalUtils.DB_PRODMODEL_HIDDEN];
