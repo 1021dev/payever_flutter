@@ -4,15 +4,18 @@ import 'package:page_transition/page_transition.dart';
 import 'package:payever/models/business.dart';
 import 'package:payever/models/transaction.dart';
 import 'package:payever/network/rest_ds.dart';
+import 'package:payever/utils/appStyle.dart';
 import 'package:payever/utils/translations.dart';
 import 'package:payever/utils/utils.dart';
 import 'package:flutter_sparkline/flutter_sparkline.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:payever/view_models/dashboard_state_model.dart';
 import 'package:payever/view_models/global_state_model.dart';
+import 'package:payever/views/customelements/dashboard_card_templates.dart';
 import 'package:payever/views/dashboard/dashboard_screen.dart';
 import 'dart:ui';
 import 'package:payever/views/dashboard/dashboardcard.dart';
+import 'package:payever/views/dashboard/dashboardcard_ref.dart';
 import 'package:payever/views/login/login_page.dart';
 import 'package:payever/views/transactions/transactions_screen.dart';
 import 'package:provider/provider.dart';
@@ -39,7 +42,6 @@ class TransactionScreenData{
   Transaction get transaction => _transaction;
 
   String currency(String currency){
-    
     switch(currency.toUpperCase()){
       case "EUR":
         return "€";
@@ -410,12 +412,150 @@ class TransactionNavigation implements CardContract{
   void loadScreen(BuildContext context,ValueNotifier state) {
     Navigator.push(context, PageTransition(child: TrasactionScreen(), type: PageTransitionType.fade,));
     state.value = false;
-
   }
-
   @override
   String learnMore() {
     return null;
   }
+}
 
+class SimplifyTransactions extends StatefulWidget {
+
+  List<Month> lastYear = List();
+  List<Day> lastMonth  = List();
+  String _appName;
+  ImageProvider _imageProvider;
+  SimplifyTransactions(this._appName,this._imageProvider);
+  List<double> monthlysum= List();
+  double total;
+  @override
+  _SimplifyTransactionsState createState() => _SimplifyTransactionsState();
+}
+
+class _SimplifyTransactionsState extends State<SimplifyTransactions> {
+  GlobalStateModel globalStateModel;
+  DashboardStateModel dashboardStateModel;
+  @override
+  Widget build(BuildContext context) {
+    globalStateModel = Provider.of<GlobalStateModel>(context);
+    dashboardStateModel = Provider.of<DashboardStateModel>(context);
+    fetchDaily();
+    if(dashboardStateModel.lastMonth.isEmpty){
+      RestDatasource().getMonths(globalStateModel.currentBusiness.id,GlobalUtils.ActiveToken.accesstoken,context).then((months){
+        months.forEach((month){widget.lastYear.add(Month.map(month));});
+        dashboardStateModel.setlastYear(widget.lastYear);    
+      }).then((_){
+        RestDatasource().getTransactionList(globalStateModel.currentBusiness.id,GlobalUtils.ActiveToken.accesstoken, "", context).then((_total){
+          dashboardStateModel.setTotal(Transaction.toMap(_total).paginationData.amount.toDouble());
+          setState((){});
+        });
+      });
+    }else{
+      widget.lastMonth = dashboardStateModel.lastMonth;
+      widget.lastYear  = dashboardStateModel.lastYear;
+      widget.total = dashboardStateModel.total;
+      double sum = 0.0;
+      for(int i =(widget.lastYear.length-2);i>=0;i--){
+        sum += widget.lastYear[i].amount;
+        widget.monthlysum.add(sum);
+      }
+    }
+    return DashboardCard_ref(
+      widget._appName,
+      widget._imageProvider,
+      widget.lastYear.isEmpty?Center(child:CircularProgressIndicator()):
+      Head(lastMonth: widget.lastMonth,lastYear: widget.lastYear,),
+      body:widget.lastYear.isEmpty?null: Body(lastMonth: widget.lastMonth,total: widget.total,monthlysum: widget.monthlysum,),
+      defPad: false,
+    );
+  }
+
+  fetchDaily()async{
+    await RestDatasource().getDays(globalStateModel.currentBusiness.id, GlobalUtils.ActiveToken.accessToken,context).then((days){
+      days.forEach((day){widget.lastMonth.add(Day.map(day));});
+      dashboardStateModel.setlastMonth(widget.lastMonth);
+    });
+  }
+
+}
+class Head extends StatefulWidget {
+  var lastMonth;
+  var lastYear;
+  Head({this.lastMonth,this.lastYear});
+  @override
+  _HeadState createState() => _HeadState();
+}
+
+class _HeadState extends State<Head> {
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      highlightColor: Colors.transparent,
+      child: Column(
+        children: <Widget>[
+          TitleAmountCardItem("${DashboardWidgets.numberFilter(widget.lastMonth.last.amount.toDouble(), false)} ${Measurements.currency(widget.lastMonth.last.currency)}",
+            titleString: Language.getWidgetStrings("widgets.transactions.today-revenue"),
+          ),
+          Divider(height: 2,),
+          TitleAmountCardItem("${DashboardWidgets.numberFilter(widget.lastYear.last.amount.toDouble() ,false)} ${Measurements.currency(widget.lastMonth.last.currency)}",
+          titleString:"${Language.getWidgetStrings("widgets.transactions.this-month")}",)
+        ],
+      ),
+      onTap: (){
+        Navigator.push(context, PageTransition(child: TrasactionScreen(), type: PageTransitionType.fade,));
+      },
+    );
+  }
+  
+}
+
+class Body extends StatefulWidget {
+  var lastMonth;
+  var monthlysum;
+  var total;
+  Body({this.lastMonth,this.monthlysum,this.total});
+  @override
+  _BodyState createState() => _BodyState();
+}
+
+class _BodyState extends State<Body> {
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      child: ListView(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+            children: <Widget>[
+              Divider(height: 2,),
+              TitleAmountCardItem(
+                "${DashboardWidgets.numberFilter(widget.monthlysum[5],false)} ${Measurements.currency(widget.lastMonth.last.currency)}",
+                title:Row(
+                  children: <Widget>[
+                    Text(Language.getWidgetStrings("widgets.transactions.6-months").toString().substring(0,1),style: TextStyle(fontSize: AppStyle.fontSizeDashboardTitleAmount())),
+                    Text(Language.getWidgetStrings("widgets.transactions.6-months").toString().substring(1)  ,style: TextStyle(color: Colors.white.withOpacity(0.6),fontSize:  AppStyle.fontSizeDashboardTitleAmount())),
+                  ],
+                ),
+              ),
+              Divider(height: 2,),
+              TitleAmountCardItem(
+                "${DashboardWidgets.numberFilter(widget.monthlysum[10],false)} ${Measurements.currency(widget.lastMonth.last.currency)}",
+                title:Row(
+                  children: <Widget>[
+                    Text(Language.getWidgetStrings("widgets.transactions.1-year").toString().substring(0,1),style: TextStyle(fontSize: AppStyle.fontSizeDashboardTitleAmount())),
+                    Text(Language.getWidgetStrings("widgets.transactions.1-year").toString().substring(1)  ,style: TextStyle(color: Colors.white.withOpacity(0.6),fontSize:  AppStyle.fontSizeDashboardTitleAmount())),
+                  ],
+                ),
+              ),
+              Divider(height: 2,),
+              TitleAmountCardItem(
+                "${DashboardWidgets.numberFilter(widget.total,false)??0.0} ${Measurements.currency(widget.lastMonth.last.currency)}",
+                titleString:Language.getCartStrings("checkout_cart_edit.form.label.product"),
+              ),
+            ],
+          ),
+          onTap: (){
+            Navigator.push(context, PageTransition(child: TrasactionScreen(), type: PageTransitionType.fade,));
+          },
+    );
+  }
 }

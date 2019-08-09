@@ -14,6 +14,7 @@ import 'package:payever/utils/global_keys.dart';
 import 'package:payever/utils/translations.dart';
 import 'package:payever/utils/utils.dart';
 import 'package:flutter_pagewise/flutter_pagewise.dart';
+import 'package:payever/view_models/dashboard_state_model.dart';
 import 'package:payever/view_models/global_state_model.dart';
 import 'package:payever/views/customelements/wallpaper.dart';
 import 'dart:ui';
@@ -96,7 +97,7 @@ class _TrasactionScreenState extends State<TrasactionScreen> {
     _isTablet = Measurements.width < 600 ? false : true; 
       if(widget.data != null){
         _quantity       = widget.isLoadingSearch.value? 0:widget.data.transaction.paginationData.total??0;
-        _currency       = widget.data.currency(widget.data.business.currency);
+        _currency       = widget.data.currency(globalStateModel.currentBusiness.currency);
         _totalAmount    = widget.isLoadingSearch.value? 0:widget.data.transaction.paginationData.amount??0;
       }
       return BackgroundBase(true,
@@ -331,10 +332,11 @@ class PhoneTableRow extends StatelessWidget {
       onTap: (){
         if(!_isHeader){
           RestDatasource api  = RestDatasource();
+          GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context);
           showDialog(context: context,
           barrierDismissible: false,
           builder:(BuildContext context) {
-            api.getTransactionDetail(data.business.id, GlobalUtils.ActiveToken.accesstoken,_currentTransaction.uuid,context).then((obj){ 
+            api.getTransactionDetail(globalStateModel.currentBusiness.id, GlobalUtils.ActiveToken.accesstoken,_currentTransaction.uuid,context).then((obj){ 
               var td = TransactionDetails.toMap(obj);
               Navigator.pop(context);
               Navigator.push(context, PageTransition(child:TransactionDetailsScreen(td,data.wallpaper),type:PageTransitionType.fade));

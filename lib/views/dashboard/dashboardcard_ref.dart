@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as prefix0;
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/models/business.dart';
 import 'package:payever/utils/appStyle.dart';
@@ -23,19 +24,18 @@ class DashboardCard_ref extends StatefulWidget {
   bool _open = false;
   dynamic handler;
   bool _active;
-  num pad;
+  bool defPad;
+  num pad = 0.02;
   bool isSingleActionButton;
-
-  DashboardCard_ref(this.appName,this.imageProvider,this.header,{this.body});
+  
+  DashboardCard_ref(this.appName,this.imageProvider,this.header,{this.body,this.defPad = true});
 
   @override
   _DashboardCard_refState createState() => _DashboardCard_refState();
 }
 
 class _DashboardCard_refState extends State<DashboardCard_ref> with  TickerProviderStateMixin{
-  
-  
-  Duration _duration = Duration(milliseconds: 100);
+  Duration _duration = Duration(milliseconds: 300);
   _DashboardCard_refState();
   _launchURL(String url) async {
     if (await canLaunch(url)) {
@@ -56,7 +56,6 @@ class _DashboardCard_refState extends State<DashboardCard_ref> with  TickerProvi
     Measurements.height = (_isPortrait ? MediaQuery.of(context).size.height : MediaQuery.of(context).size.width);
     Measurements.width  = (_isPortrait ? MediaQuery.of(context).size.width : MediaQuery.of(context).size.height);
     bool _isTablet = Measurements.width < 600 ? false : true;
-    widget.pad = _isTablet?0.02:0.02 ;
       return Container(
         padding: EdgeInsets.symmetric(vertical:Measurements.width * 0.01),
         child: Column(
@@ -68,18 +67,17 @@ class _DashboardCard_refState extends State<DashboardCard_ref> with  TickerProvi
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
                   child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 4,sigmaY: 8),
+                    filter: ImageFilter.blur(sigmaX: 8,sigmaY: 16),
                     child: Container(
                       color: Colors.black.withOpacity(0.2),
                       child: Column(
                       children: <Widget>[
                         Container(
-                          color: Colors.black.withOpacity(0.2),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Container(
-                                padding: EdgeInsets.all(Measurements.width * widget.pad),
+                                padding:EdgeInsets.all(Measurements.width * widget.pad),
                                 child: Row(
                                   children: <Widget>[
                                     Container(height: AppStyle.iconDashboardCardSize(_isTablet),child: Image(image:widget.imageProvider,height: AppStyle.iconDashboardCardSize(_isTablet))),
@@ -93,7 +91,7 @@ class _DashboardCard_refState extends State<DashboardCard_ref> with  TickerProvi
                                 child: AnimatedContainer(
                                   padding: EdgeInsets.all(Measurements.width * widget.pad),
                                   duration: _duration,
-                                  child: !widget._open?Text("Show More"):Text("Show Less"),
+                                  child: Text(!widget._open?"Show More":"Show Less",style: TextStyle(fontSize: AppStyle.fontSizeDashboardShow()),),
                                 ),
                                 onTap:(){
                                   listen();
@@ -104,7 +102,7 @@ class _DashboardCard_refState extends State<DashboardCard_ref> with  TickerProvi
                         ),
                         Container(
                           constraints: BoxConstraints(minHeight: 75),
-                          padding: EdgeInsets.all(Measurements.width * widget.pad),
+                          padding: widget.defPad?EdgeInsets.all(AppStyle.dashboardCardContentPadding()):EdgeInsets.symmetric(vertical:AppStyle.dashboardCardContentPadding()),
                           child: DashboardCardPanel(
                             animationDuration: _duration,
                             child: ExpansionPanel(
@@ -252,7 +250,7 @@ class _DashboardCard_refState extends State<DashboardCard_ref> with  TickerProvi
   // }
 }
 
-abstract class CardContract{
-  void loadScreen(BuildContext context,ValueNotifier state);
-  String learnMore();
-}
+// abstract class CardContract{
+//   void loadScreen(BuildContext context,ValueNotifier state);
+//   String learnMore();
+// }

@@ -166,6 +166,7 @@ class _GridItemsState extends State<GridItems> {
     return Container(
       width:itemsHeight,
       child: InkWell(
+        highlightColor: Colors.transparent,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -348,6 +349,7 @@ class _SwitcherState extends State<Switcher> {
                               3),
                     ),
                     InkWell(
+                      highlightColor: Colors.transparent,
                       child: Stack(
                         alignment: Alignment.center,
                         children: <Widget>[
@@ -388,6 +390,7 @@ class _SwitcherState extends State<Switcher> {
                               3),
                     ),
                     InkWell(
+                      highlightColor: Colors.transparent,
                       child:Container(height:48,alignment: Alignment.center ,child: Text(parts._logUser.firstName),),
                       onTap: () {
                         print("onTextSelect - personal");
@@ -415,6 +418,7 @@ class _SwitcherState extends State<Switcher> {
                                     3),
                           ),
                           InkWell(
+                            highlightColor: Colors.transparent,
                             child: Stack(
                               alignment: Alignment.center,
                               children: <Widget>[
@@ -472,6 +476,7 @@ class _SwitcherState extends State<Switcher> {
                           (parts.businesses != null)
                               ? InkWell(
                                 key:GlobalKeys.allButtom,
+                                highlightColor: Colors.transparent,
                                   child: Chip(
                                     backgroundColor:
                                         Colors.black.withOpacity(0.4),

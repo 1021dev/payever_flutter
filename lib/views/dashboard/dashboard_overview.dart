@@ -26,37 +26,44 @@ class DashboardOverview extends StatelessWidget {
       var wid = dashboardStateModel.currentWidgets[i];
       switch (wid.type) {
         case "transactions":
-          _activeWid.add(TransactionCard(
+          // _activeWid.add(TransactionCard(
+          //     wid.type,
+          //     NetworkImage(UI_KIT + wid.icon),
+          //     false,
+          //     ));
+          _activeWid.add(SimplifyTransactions(
               wid.type,
-              NetworkImage(UI_KIT + wid.icon),
-              false,
+              NetworkImage(UI_KIT + wid.icon)
               ));
           break;
         case "pos":
-          _activeWid.add(POSCard(
+          // _activeWid.add(POSCard(
+          //     wid.type,
+          //     NetworkImage(UI_KIT + wid.icon),
+          //     wid.help));
+          _activeWid.add(SimplifyTerminal(
               wid.type,
-              NetworkImage(UI_KIT + wid.icon),
-              wid.help));
+              NetworkImage(UI_KIT + wid.icon),));
           break;
         case "products":
-          _activeWid.add(ProductsCard(
-              wid.type,
-              NetworkImage(UI_KIT + wid.icon),
-              wid.help));
+          // _activeWid.add(ProductsCard(
+          //     wid.type,
+          //     NetworkImage(UI_KIT + wid.icon),
+          //     wid.help));
           break;
         case "settings":
-          _activeWid.add(SettingsCard(
-              wid.type,
-              NetworkImage(UI_KIT + wid.icon),
-              wid.help));
+          // _activeWid.add(SettingsCard(
+          //     wid.type,
+          //     NetworkImage(UI_KIT + wid.icon),
+          //     wid.help));
               break;
         case "connect":
-          _activeWid.add(DashboardCard_ref(
-              wid.type,
-              NetworkImage(UI_KIT + wid.icon),
-              Center(child: Text("test"),),
-              body: ListView(shrinkWrap: true,children: <Widget>[Center(child: Text("test"),),Center(child: Text("test"),),Center(child: Text("test"),),],),
-              ));
+          // _activeWid.add(DashboardCard_ref(
+          //     wid.type,
+          //     NetworkImage(UI_KIT + wid.icon),
+          //     Center(child: Text("test"),),
+          //     body: ListView(shrinkWrap: true,children: <Widget>[Center(child: Text("test"),),Center(child: Text("test"),),Center(child: Text("test"),),],),
+          //     ));
           break;
         default:
       }

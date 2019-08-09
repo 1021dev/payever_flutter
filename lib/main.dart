@@ -66,7 +66,6 @@ class _MyAppState extends State<MyApp> {
     _loadCredentials.addListener(listener);
     _storedCredentials();
     }
-    
     @override
     Widget build(BuildContext context) {
       return MultiProvider(

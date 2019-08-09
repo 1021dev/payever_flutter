@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:ui';
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/cupertino.dart' ;
@@ -15,13 +16,16 @@ import 'package:payever/models/business.dart';
 import 'package:payever/models/pos.dart';
 import 'package:payever/models/transaction.dart';
 import 'package:payever/network/rest_ds.dart';
+import 'package:payever/utils/appStyle.dart';
 import 'package:payever/utils/env.dart';
 import 'package:payever/utils/translations.dart';
 import 'package:payever/utils/utils.dart';
 import 'package:payever/view_models/dashboard_state_model.dart';
 import 'package:payever/view_models/global_state_model.dart';
+import 'package:payever/views/customelements/dashboard_card_templates.dart';
 import 'package:payever/views/dashboard/dashboard_screen.dart';
 import 'package:payever/views/dashboard/dashboardcard.dart';
+import 'package:payever/views/dashboard/dashboardcard_ref.dart';
 import 'package:payever/views/pos/edit_terminal.dart';
 import 'package:payever/views/pos/native_pos_screen.dart';
 import 'package:payever/views/pos/pos_screen.dart';
@@ -543,6 +547,92 @@ class ProductItem extends StatelessWidget {
             ),
         ),
       ],
+    );
+  }
+}
+
+class SimplifyTerminal extends StatefulWidget {
+
+  String _appName;
+  ImageProvider _imageProvider;
+  List<Terminal>_terminals = List();
+  SimplifyTerminal(this._appName,this._imageProvider);
+  List<SimpleTerminal> _terminalList = List();
+  int active = 0;
+
+  @override
+  _SimplifyTerminalState createState() => _SimplifyTerminalState();
+}
+
+class _SimplifyTerminalState extends State<SimplifyTerminal> {
+  int index = 0;
+  @override
+  Widget build(BuildContext context) {
+    index =0;
+    DashboardStateModel dashboardStateModel = Provider.of<DashboardStateModel>(context);
+    if(dashboardStateModel.terminalList.isEmpty){
+      RestDatasource().getTerminal(Provider.of<GlobalStateModel>(context).currentBusiness.id, GlobalUtils.ActiveToken.accesstoken,context).then((terminals){
+        terminals.forEach((terminal){
+          Terminal term = Terminal.toMap(terminal);
+          if(term.active)
+            widget.active = index;
+          else
+            index ++;
+          widget._terminals.add(term);
+          widget._terminalList.add(SimpleTerminal(Terminal.toMap(terminal)));
+          SimpleTerminal temp = widget._terminalList.removeAt(widget.active);
+          widget._terminalList.insert(0, temp);
+        });
+        dashboardStateModel.setTerminalList(widget._terminals);
+        setState(() {
+          print("SetState");
+        });
+      });
+    }else{
+      widget._terminals = dashboardStateModel.terminalList;
+      widget._terminalList.clear();
+      widget._terminals.forEach((terminal){
+        if(terminal.active){
+          widget.active = index;
+          dashboardStateModel.setActiveTermianl(terminal);
+        }else
+          index ++;
+          
+        widget._terminalList.add(SimpleTerminal(terminal));
+      });
+      SimpleTerminal temp = widget._terminalList.removeAt(widget.active);
+      widget._terminalList.insert(0, temp);
+    }
+    return DashboardCard_ref(
+      widget._appName,
+      widget._imageProvider,
+      widget._terminals.isNotEmpty?
+      widget._terminalList[0]:Center(child:CircularProgressIndicator()),
+      body: widget._terminals.isEmpty ?null:widget._terminals.length>1?ListView(physics: NeverScrollableScrollPhysics(),shrinkWrap: true,children: widget._terminalList.sublist(1),):null,
+      );
+  }
+}
+
+class SimpleTerminal extends StatelessWidget {
+  Terminal currenTerminal;
+  bool active;
+  SimpleTerminal(this.currenTerminal);
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical:currenTerminal.active?0:10),
+      child: InkWell(
+        highlightColor: Colors.transparent,
+        child: AvatarDescriptionCard(
+          currenTerminal.logo != null?CachedNetworkImageProvider(Env.Storage + '/images/' + currenTerminal.logo):null,
+          currenTerminal.name,
+          "Click to Open",
+          imageTitle:currenTerminal.logo != null?null:currenTerminal.name,
+        ),
+        onTap: (){
+          Navigator.push(context, PageTransition(child:NativePosScreen(terminal:currenTerminal,business:Provider.of<GlobalStateModel>(context).currentBusiness),type:PageTransitionType.fade));
+        },
+      ),
     );
   }
 }
