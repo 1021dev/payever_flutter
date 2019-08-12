@@ -3,10 +3,10 @@ import 'package:payever/utils/appStyle.dart';
 import 'package:payever/utils/utils.dart';
 
 class AvatarDescriptionCard extends StatelessWidget {
-  ImageProvider image;
-  String  imageTitle;
-  String _title;
-  String _detail;
+  final ImageProvider image;
+  final String  imageTitle;
+  final String _title;
+  final String _detail;
   AvatarDescriptionCard(this.image,this._title,this._detail,{this.imageTitle})
     :assert(image != null || imageTitle != null);
        
@@ -36,9 +36,9 @@ class AvatarDescriptionCard extends StatelessWidget {
   }
 }
 class TitleAmountCardItem extends StatelessWidget {
-  Widget title;
-  String _amount;
-  String titleString;
+  final Widget title;
+  final String _amount;
+  final String titleString;
   TitleAmountCardItem(this._amount,{this.title,this.titleString=""});
   @override
   Widget build(BuildContext context) {
@@ -61,8 +61,8 @@ class TitleAmountCardItem extends StatelessWidget {
 }
 
 class NoItemsCard extends StatelessWidget {
-  Widget title;
-  VoidCallback action;
+  final Widget title;
+  final VoidCallback action;
   NoItemsCard(this.title,this.action);
   @override
   Widget build(BuildContext context) {

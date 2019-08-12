@@ -6,9 +6,11 @@ import 'package:page_transition/page_transition.dart';
 import 'package:payever/models/products.dart';
 import 'package:payever/network/rest_ds.dart';
 import 'package:payever/utils/env.dart';
+import 'package:payever/utils/translations.dart';
 import 'package:payever/utils/utils.dart';
 import 'package:payever/view_models/global_state_model.dart';
 import 'package:payever/views/customelements/custom_future_builder.dart';
+import 'package:payever/views/customelements/dashboard_card_templates.dart';
 import 'package:payever/views/products/new_product.dart';
 import 'package:payever/views/products/product_screen.dart';
 import 'package:provider/provider.dart';
@@ -181,21 +183,21 @@ class _ProductsSoldCardItemState extends State<ProductsSoldCardItem> {
               ),
             ));
           }
-        } else {
-          productsList.add(Center(
-            child: Text("No products yet"),
-          ));
-        }
 
-        return ListView(
-          physics: NeverScrollableScrollPhysics(),
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: productsList,
-            ),
-          ],
-        );
+          return ListView(
+            physics: NeverScrollableScrollPhysics(),
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: productsList,
+              ),
+            ],
+          );
+        } else {
+          return NoItemsCard(Text(Language.getWidgetStrings("widgets.products.actions.add-new")), () {
+            _goToProducts(globalStateModel, context);
+          });
+        }
       },
     );
   }
@@ -335,5 +337,17 @@ class _ProductsSoldCardItemState extends State<ProductsSoldCardItem> {
         }
       },
     );
+  }
+
+  _goToProducts(GlobalStateModel globalStateModel, BuildContext context) {
+    Navigator.push(
+        context,
+        PageTransition(
+            child: ProductScreen(
+              business: globalStateModel.currentBusiness,
+              wallpaper: globalStateModel.currentWallpaper,
+              posCall: false,
+            ),
+            type: PageTransitionType.fade));
   }
 }

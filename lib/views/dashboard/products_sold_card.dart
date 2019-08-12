@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/view_models/global_state_model.dart';
-import 'package:payever/views/dashboard/productsSoldCardItem.dart';
+import 'package:payever/views/dashboard/products_sold_card_item.dart';
 import 'package:payever/views/products/product_screen.dart';
 import 'package:provider/provider.dart';
 

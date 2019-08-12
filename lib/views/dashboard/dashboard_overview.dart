@@ -4,7 +4,7 @@ import 'package:payever/utils/env.dart';
 import 'package:payever/view_models/dashboard_state_model.dart';
 import 'package:payever/view_models/global_state_model.dart';
 import 'package:payever/views/dashboard/poscard.dart';
-import 'package:payever/views/dashboard/productsSoldCardItem.dart';
+import 'package:payever/views/dashboard/products_sold_card_item.dart';
 import 'package:payever/views/dashboard/settingsCardData.dart';
 import 'package:payever/views/dashboard/settingsCardInfo.dart';
 import 'package:payever/views/dashboard/transactioncard.dart';
