@@ -50,6 +50,6 @@ class AppStyle{
 
   //Circular Radios
   static double dashboardRadius()  => 35;
-  static double dashboardRadiusSmall()  => 19;
+  static double dashboardRadiusSmall()  => 15;
   //Circular Radios
 }

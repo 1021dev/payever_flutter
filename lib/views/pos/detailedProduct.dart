@@ -37,7 +37,7 @@ class _DetailScreenState extends State<DetailScreen> {
           backgroundColor: Colors.white,
         ),
         backgroundColor: Colors.white,
-        body: DetailedProduct(currentProduct: widget.currentProduct, parts: widget.parts,),
+        body: SafeArea(child: DetailedProduct(currentProduct: widget.currentProduct, parts: widget.parts,)),
       ),
     );
   }

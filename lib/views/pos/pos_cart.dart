@@ -61,23 +61,25 @@ class _CartBodyState extends State<CartBody> {
   }
   @override
   Widget build(BuildContext context) {
-      return Container(
-        // child: ListView.builder(
-        //   //itemCount: widget.parts.currentCheckout.sections.length,
-        //   itemCount: 2,
-        //   itemBuilder: (BuildContext context, int index) {
-        //     print(widget.parts.currentCheckout.sections[index].code);
-        //     if(widget.parts.currentCheckout.sections[index].code == "order"){
-        //       return SectionWidget(index: index,currentSection: sectionPicker(widget.parts.currentCheckout.sections[index].code,index),title: widget.parts.currentCheckout.sections[index].code.replaceAll("_", " ").toUpperCase(), parts: widget.parts,);
-        //     }else{
-        //       return Container();
-        //     }
-        //   },
-        // ),
-        child: ListView(
-          children: <Widget>[
-            SectionWidget(index: 0,currentSection: OrderSection(parts: widget.parts,index: 0,),title: "order".toUpperCase(), parts: widget.parts,),
-          ],
+      return SafeArea(
+        child: Container(
+          // child: ListView.builder(
+          //   //itemCount: widget.parts.currentCheckout.sections.length,
+          //   itemCount: 2,
+          //   itemBuilder: (BuildContext context, int index) {
+          //     print(widget.parts.currentCheckout.sections[index].code);
+          //     if(widget.parts.currentCheckout.sections[index].code == "order"){
+          //       return SectionWidget(index: index,currentSection: sectionPicker(widget.parts.currentCheckout.sections[index].code,index),title: widget.parts.currentCheckout.sections[index].code.replaceAll("_", " ").toUpperCase(), parts: widget.parts,);
+          //     }else{
+          //       return Container();
+          //     }
+          //   },
+          // ),
+          child: ListView(
+            children: <Widget>[
+              SectionWidget(index: 0,currentSection: OrderSection(parts: widget.parts,index: 0,),title: "order".toUpperCase(), parts: widget.parts,),
+            ],
+          ),
         ),
       );
   }

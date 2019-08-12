@@ -145,6 +145,8 @@ class _ProductsSoldCardItemState extends State<ProductsSoldCardItem> {
         if (results.length > 0) {
           for (var resultData in results) {
             productsList.add(Container(
+              width: 68,
+              height: 68,
               child: GraphQLProvider(
                 client: graphClient,
                 child: Query(
@@ -194,7 +196,9 @@ class _ProductsSoldCardItemState extends State<ProductsSoldCardItem> {
             ],
           );
         } else {
-          return NoItemsCard(Text(Language.getWidgetStrings("widgets.products.actions.add-new")), () {
+          return NoItemsCard(
+              Text(Language.getWidgetStrings(
+                  "widgets.products.actions.add-new")), () {
             _goToProducts(globalStateModel, context);
           });
         }
@@ -205,16 +209,18 @@ class _ProductsSoldCardItemState extends State<ProductsSoldCardItem> {
   Widget productSoldItemElementCard(GlobalStateModel globalStateModel,
       ProductsModel productData, Products resultData, BuildContext context) {
     return InkWell(
-      child: Padding(
-        padding: EdgeInsets.all(0),
+      child: Container(
+        width: 69,
+        height: 69,
         child: Stack(
+          alignment: Alignment.center,
           children: <Widget>[
             Container(
-              width: 70,
-              height: 70,
+              width: 69,
+              height: 69,
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(5),
+                borderRadius: BorderRadius.circular(10),
                 image: resultData.thumbnail != null
                     ? DecorationImage(
                         image: NetworkImage(!resultData.thumbnail
@@ -232,74 +238,36 @@ class _ProductsSoldCardItemState extends State<ProductsSoldCardItem> {
                     ))
                   : Container(),
             ),
-            Positioned.fill(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.3),
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: Padding(
-                  padding:
-                      EdgeInsets.only(left: 10, top: 2, right: 10, bottom: 2),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-//                      Row(
-//                        crossAxisAlignment: CrossAxisAlignment.center,
-//                        children: <Widget>[
-//                          Flexible(
-//                            child: Container(
-//                              child: AutoSizeText(
-//                                productData != null
-//                                    ? productData.title
-//                                    : resultData.name,
-//                                minFontSize: 12,
-//                                overflow: TextOverflow.ellipsis,
-////                                maxLines: 2,
-//
-////                                style: TextStyle(
-////                                  fontSize: 13,
-////                                  color: Colors.white,
-////                                  fontWeight: FontWeight.bold,
-////                                ),
-//                              ),
-//                            ),
-//                          ),
-
-                      AutoSizeText(
+            Container(
+              width: 69,
+              height: 69,
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.3),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Padding(
+                padding:
+                    EdgeInsets.only(top: 10, right: 2, bottom: 10, left: 2),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    AutoSizeText(
+                      productData != null ? productData.title : resultData.name,
+//                        resultData.name,
+                      maxLines: 1,
+                      minFontSize: 10,
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                    AutoSizeText(
 //                            productData != null ? productData.title : resultData.name,
-                        resultData.name,
-                        maxLines: 1,
-                        minFontSize: 10,
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Flexible(
-                            child: Container(
-                              child: Text(
-                                "Sold: ${resultData.quantity}",
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-//                                softWrap: false,
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-//                          FittedBox(
-//                              child: AutoSizeText(
-//                                "Sold: ${resultData.quantity}",
-//                                style: TextStyle(color: Colors.white),
-//                              )),
-                        ],
-                      ),
-                    ],
-                  ),
+                      "Sold: ${resultData.quantity}",
+                      maxLines: 1,
+                      minFontSize: 10,
+                      style: TextStyle(color: Colors.white, fontSize: 11),
+                    ),
+                  ],
                 ),
               ),
             ),

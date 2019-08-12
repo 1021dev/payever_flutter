@@ -33,7 +33,8 @@ class _DashboardAppsState extends State<DashboardApps> {
     List<Widget> _apps = List();
     dashboardStateModel = Provider.of<DashboardStateModel>(context);
     dashboardStateModel.currentWidgets.forEach((wid){
-      if(widget._availableApps.contains(wid.type))
+      if(widget._availableApps.contains(wid.type) && wid.type != "settings")
+//      if(widget._availableApps.contains(wid.type))
         _apps.add(AppView(wid));
     });
     return SafeArea(
@@ -119,13 +120,13 @@ class _AppViewState extends State<AppView> {
                   _isLoading = false;
                 });
                 break;
-              case "settings":
-                loadSettings();
-                setState(() {
-                  _isLoading = false;
-                });
-                print("Settings loaded");
-                break;
+//              case "settings":
+//                loadSettings();
+//                setState(() {
+//                  _isLoading = false;
+//                });
+//                print("Settings loaded");
+//                break;
               default:
             }
           },
