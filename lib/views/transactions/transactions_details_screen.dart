@@ -163,33 +163,33 @@ class _DetailBodyState extends State<DetailBody> {
       builder: (BuildContext context, Orientation orientation) {
         return ListView(
           shrinkWrap: true,
-          // children: <Widget>[
-          //   widget.headerRow,
-          //   widget.orderNRow,
-          //   widget.shippingRow,
-          //   widget.billingRow,
-          //   widget.paymentRow,
-          //   widget.timelineRow,
-          //   widget.totalRow
-          // ],
           children: <Widget>[
-            CustomExpansionTile(
-              listSize: 3,
-              isWithCustomIcon: true, widgetsTitleList: <Widget>[
-              Center(child: Text(Language.getTransactionStrings("details.order.header"),style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),))
-            ], 
-            widgetsBodyList: <Widget>[
-              Text("1"),
-              Text("2"),
-              Text("3"),
-              Text("1"),
-              Text("2"),
-              Text("3"),
-              Text("1"),
-              Text("2"),
-              Text("3"),
-            ],)
+            widget.headerRow,
+            widget.orderNRow,
+            widget.shippingRow,
+            widget.billingRow,
+            widget.paymentRow,
+            widget.timelineRow,
+            widget.totalRow
           ],
+          // children: <Widget>[
+          //   CustomExpansionTile(
+          //     listSize: 3,
+          //     isWithCustomIcon: true, widgetsTitleList: <Widget>[
+          //     Center(child: Text(Language.getTransactionStrings("details.order.header"),style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),))
+          //   ], 
+          //   widgetsBodyList: <Widget>[
+          //     Text("1"),
+          //     Text("2"),
+          //     Text("3"),
+          //     Text("1"),
+          //     Text("2"),
+          //     Text("3"),
+          //     Text("1"),
+          //     Text("2"),
+          //     Text("3"),
+          //   ],)
+          // ],
         );
       },);
   }

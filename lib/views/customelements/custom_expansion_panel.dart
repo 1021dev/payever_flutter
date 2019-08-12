@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
-const double _kPanelHeaderCollapsedHeight = 35;
-const double _kPanelHeaderExpandedHeight = 35;
+const double _kPanelHeaderCollapsedHeight = 25;
+const double _kPanelHeaderExpandedHeight = 25;
 
 class CustomExpansionPanelList extends StatelessWidget {
   const CustomExpansionPanelList(
@@ -41,32 +41,32 @@ class CustomExpansionPanelList extends StatelessWidget {
 //          color: Colors.transparent,
 //        ));
 
-      final Row header = Row(
+      final Row header = 
+      Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          new Expanded(
-            child: GestureDetector(
-              onTap: () {
-                if (expansionCallback != null)
-                  expansionCallback(index, _isChildExpanded(index));
-              },
-              child: new AnimatedContainer(
-                duration: animationDuration,
-                curve: Curves.fastOutSlowIn,
-                margin: _isChildExpanded(index)
-                    ? kExpandedEdgeInsets
-                    : EdgeInsets.zero,
-                child: new SizedBox(
-                  height: _kPanelHeaderCollapsedHeight,
-                  child: children[index].headerBuilder(
-                    context,
-                    children[index].isExpanded,
-                  ),
+          GestureDetector(
+            onTap: () {
+              if (expansionCallback != null)
+                expansionCallback(index, _isChildExpanded(index));
+            },
+            child: new AnimatedContainer(
+              duration: animationDuration,
+              curve: Curves.fastOutSlowIn,
+              margin: _isChildExpanded(index)
+                  ? kExpandedEdgeInsets
+                  : EdgeInsets.zero,
+              child: new Container(
+                child: children[index].headerBuilder(
+                  context,
+                  children[index].isExpanded,
                 ),
               ),
             ),
           ),
           Container(
-            margin: const EdgeInsetsDirectional.only(end: 8),
+           // margin: const EdgeInsetsDirectional.only(end: 8),
             child: isWithCustomIcon ? MyExpandIcon(
               isExpanded: _isChildExpanded(index),
               padding: const EdgeInsets.all(16.0),
@@ -91,7 +91,7 @@ class CustomExpansionPanelList extends StatelessWidget {
         Container(
           key: _SaltedKey<BuildContext, int>(context, index * 2),
           child: Material(
-            color: Colors.white.withOpacity(0.1),
+            color: Colors.transparent,
             elevation: 0,
 //            borderRadius: new BorderRadius.all(new Radius.circular(_radiusValue)),
 //              decoration: i == 0
@@ -104,20 +104,32 @@ class CustomExpansionPanelList extends StatelessWidget {
 //                  topRight: Radius.circular(0)),
             child: Column(
               children: <Widget>[
-                header,
-                Divider(),
-                AnimatedCrossFade(
-                  firstChild: Container(height: 0.0),
-                  secondChild: children[index].body,
-                  firstCurve:
-                      const Interval(0.0, 0.6, curve: Curves.fastOutSlowIn),
-                  secondCurve:
-                      const Interval(0.4, 1.0, curve: Curves.fastOutSlowIn),
-                  sizeCurve: Curves.fastOutSlowIn,
-                  crossFadeState: _isChildExpanded(index)
-                      ? CrossFadeState.showSecond
-                      : CrossFadeState.showFirst,
-                  duration: animationDuration,
+                Container(
+                  padding: EdgeInsets.only(left: 25),
+                  alignment: Alignment.centerLeft,height: 50,child: header),
+                _isChildExpanded(index)?Container():Divider(color: Colors.white,),
+                Container(
+                  color: Colors.black.withOpacity(0.1),
+                  
+                  child: AnimatedCrossFade(
+                    firstChild: Container(height: 0.0),
+                    secondChild: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 25,vertical: 10),
+                      child: Row(
+                        children: <Widget>[children[index].body,
+                        ],
+                      ),
+                    ),
+                    firstCurve:
+                        const Interval(0.0, 0.6, curve: Curves.fastOutSlowIn),
+                    secondCurve:
+                        const Interval(0.4, 1.0, curve: Curves.fastOutSlowIn),
+                    sizeCurve: Curves.fastOutSlowIn,
+                    crossFadeState: _isChildExpanded(index)
+                        ? CrossFadeState.showSecond
+                        : CrossFadeState.showFirst,
+                    duration: animationDuration,
+                  ),
                 ),
               ],
             ),
@@ -245,11 +257,12 @@ class _MyExpandIconState extends State<MyExpandIcon> with SingleTickerProviderSt
     return Semantics(
       onTapHint: widget.onPressed == null ? null : onTapHint,
       child: IconButton(
-        padding: widget.padding,
-        color: _iconColor,
+        //padding: widget.padding,
+        //color: _iconColor,
+        color: Colors.white,
         disabledColor: widget.disabledColor,
         onPressed: widget.onPressed == null ? null : _handlePressed,
-        icon: widget.isExpanded ? Icon(Icons.minimize) : Icon(Icons.add),
+        icon: widget.isExpanded ? Icon(Icons.remove) : Icon(Icons.add),
       ),
     );
   }

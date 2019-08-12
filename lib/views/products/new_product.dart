@@ -21,6 +21,8 @@ import 'package:payever/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:payever/view_models/global_state_model.dart';
+import 'package:payever/views/customelements/custom_expansion_panel.dart';
+import 'package:payever/views/customelements/custom_expansion_tile.dart';
 import 'package:payever/views/customelements/wallpaper.dart';
 import 'package:payever/views/login/login_page.dart';
 import 'package:payever/views/products/product_categories.dart';
@@ -299,19 +301,30 @@ class _NewProductScreenState extends State<NewProductScreen> {
     //     ],
     //   ),
     // );
+    CustomExpansionTile productRowsList = CustomExpansionTile(isWithCustomIcon: true,
+      widgetsBodyList: <Widget>[
+        Container(height: 150,child:Text("1")),
+        Container(height: 100,child:Text("2")),
+      ],
+      widgetsTitleList: <Widget>[
+        Text(Language.getProductStrings("sections.main")),
+        Text("2"),
+      ],
+    
+    );
     return OrientationBuilder(
       builder: (BuildContext context, Orientation orientation) {
         widget._parts.isPortrait = orientation == Orientation.portrait;
         widget._parts.isTablet = widget._parts.isPortrait
             ? MediaQuery.of(context).size.width > 600
             : MediaQuery.of(context).size.height > 600;
-
           return BackgroundBase(
             true,
             currentKey: widget._parts.scaffoldKey,
             appBar: _appBar,
             body: ListView(
               children: <Widget>[
+                productRowsList,
                 Form(
                   key: widget._parts._formKey,
                   child: Container(
