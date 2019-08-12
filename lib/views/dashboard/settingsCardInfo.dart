@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:payever/models/buttons_data.dart';
 import 'package:payever/views/customelements/dashboard_card_templates.dart';
 import 'package:payever/views/dashboard/dashboardcard_ref.dart';
 import 'package:payever/views/settings/employees/employees_screen.dart';
@@ -16,22 +17,23 @@ class SettingsCardInfo extends StatefulWidget {
 }
 
 class _SettingsCardInfoState extends State<SettingsCardInfo> {
+
+  List<ButtonsData> buttonsDataList = List<ButtonsData>();
+
+
   @override
   Widget build(BuildContext context) {
+
+    buttonsDataList = [];
+    buttonsDataList.add(ButtonsData(icon: widget._imageProvider,
+        title: "Employees", action: () => _goToEmployeesScreen()));
+//    buttonsDataList.add(ButtonsData(icon: widget._imageProvider,
+//        title: "Language", action: () => _goToEmployeesScreen()));
+
     return DashboardCard_ref(
       widget._appName,
       widget._imageProvider,
-      InkWell(
-        highlightColor: Colors.transparent,
-        child: NoItemsCard(
-            AvatarDescriptionCardOnButton(
-              widget._imageProvider,
-              "Employees",
-              "View employees and groups.",
-            ),
-            () => _goToEmployeesScreen()),
-        onTap: () => _goToEmployeesScreen(),
-      ),
+      ItemsCardNButtons(buttonsDataList),
     );
   }
 

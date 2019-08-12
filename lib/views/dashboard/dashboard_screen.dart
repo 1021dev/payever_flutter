@@ -134,6 +134,8 @@ class _DashboardMidScreenState extends State<DashboardMidScreen> {
               GlobalUtils.ActiveToken.accessToken, _formKey.currentContext)
           .then((obj) {
         obj.forEach((item) {
+          print("item: $item");
+
           wids.add(AppWidget.map(item));
         });
         RestDatasource()
@@ -412,15 +414,15 @@ class _DashboardScreenState extends State<DashboardScreen>
               // CardParts.wallpaper,
               wid.help));
           break;
-        case "settings":
-          CardParts.indexes.add(i);
-          CardParts._activeWid.add(CardParts._settingsCard = SettingsCard(
-              wid.type,
-              NetworkImage(CardParts.UI_KIT + wid.icon),
-              // CardParts._currentBusiness,
-              // CardParts.wallpaper,
-              wid.help));
-          break;
+//        case "settings":
+//          CardParts.indexes.add(i);
+//          CardParts._activeWid.add(CardParts._settingsCard = SettingsCard(
+//              wid.type,
+//              NetworkImage(CardParts.UI_KIT + wid.icon),
+//              // CardParts._currentBusiness,
+//              // CardParts.wallpaper,
+//              wid.help));
+//          break;
         default:
       }
     }
@@ -851,13 +853,13 @@ class _AppViewState extends State<AppView> {
               _isLoading = false;
             });
             break;
-          case "settings":
-            loadSettings();
-            setState(() {
-              _isLoading = false;
-            });
-            print("Seetings loaded");
-            break;
+//          case "settings":
+//            loadSettings();
+//            setState(() {
+//              _isLoading = false;
+//            });
+//            print("Seetings loaded");
+//            break;
           default:
         }
       },
