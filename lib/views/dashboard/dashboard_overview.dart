@@ -4,13 +4,14 @@ import 'package:payever/utils/env.dart';
 import 'package:payever/view_models/dashboard_state_model.dart';
 import 'package:payever/view_models/global_state_model.dart';
 import 'package:payever/views/dashboard/poscard.dart';
-import 'package:payever/views/dashboard/productsSoldCard.dart';
+import 'package:payever/views/dashboard/productsSoldCardItem.dart';
 import 'package:payever/views/dashboard/settingsCardData.dart';
 import 'package:payever/views/dashboard/settingsCardInfo.dart';
 import 'package:payever/views/dashboard/transactioncard.dart';
 import 'package:provider/provider.dart';
 
 import 'dashboardcard_ref.dart';
+import 'products_sold_card.dart';
 
 class DashboardOverview extends StatelessWidget {
   DashboardStateModel dashboardStateModel = DashboardStateModel();
@@ -47,13 +48,9 @@ class DashboardOverview extends StatelessWidget {
               NetworkImage(UI_KIT + wid.icon),));
           break;
         case "products":
-          _activeWid.add(DashboardCard_ref(
+          _activeWid.add(ProductsSoldCard(
             wid.type,
-            NetworkImage(UI_KIT + wid.icon),
-//            ProductsCardData(wid.help),
-            ProductsSoldCard(),
-//            body: ProductsCardData(wid.help),
-          ));
+            NetworkImage(UI_KIT + wid.icon),));
           break;
 //        case "settings":
 //          _activeWid.add(DashboardCard_ref(
