@@ -83,7 +83,7 @@ class _DashboardCard_refState extends State<DashboardCard_ref> with  TickerProvi
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Container(
-                                padding:EdgeInsets.all(Measurements.width * widget.pad),
+                                padding:EdgeInsets.all(AppStyle.dashboardCardContentPadding()),
                                 child: Row(
                                   children: <Widget>[
                                     Container(height: AppStyle.iconDashboardCardSize(_isTablet),child: Image(image:widget.imageProvider,height: AppStyle.iconDashboardCardSize(_isTablet))),
@@ -95,7 +95,7 @@ class _DashboardCard_refState extends State<DashboardCard_ref> with  TickerProvi
                               widget.body != null?
                               InkWell(
                                 child: AnimatedContainer(
-                                  padding: EdgeInsets.all(Measurements.width * widget.pad),
+                                  padding: EdgeInsets.all(AppStyle.dashboardCardContentPadding()),
                                   duration: _duration,
                                   child: Text(!widget._open?"Show More":"Show Less",style: TextStyle(fontSize: AppStyle.fontSizeDashboardShow()),),
                                 ),
@@ -108,7 +108,7 @@ class _DashboardCard_refState extends State<DashboardCard_ref> with  TickerProvi
                         ),
                         Container(
                           constraints: BoxConstraints(minHeight: 75),
-                          padding: widget.defPad?EdgeInsets.all(AppStyle.dashboardCardContentPadding()):EdgeInsets.symmetric(vertical:AppStyle.dashboardCardContentPadding()),
+                          padding: widget.defPad?EdgeInsets.only(bottom:AppStyle.dashboardCardContentPadding(),left: AppStyle.dashboardCardContentPadding()*1.5,right: AppStyle.dashboardCardContentPadding()*1.5,top: AppStyle.dashboardCardContentPadding()/2):EdgeInsets.symmetric(vertical:AppStyle.dashboardCardContentPadding()/2),
                           child: DashboardCardPanel(
                             animationDuration: _duration,
                             child: ExpansionPanel(

@@ -30,7 +30,8 @@ class AppStyle{
   
   static double dashboardCardHeight()        => 75;
   static double dashboardCardContentHeight() => 70;
-  static double dashboardCardContentPadding() => Measurements.width * 0.02 * 1.5;
+  // static double dashboardCardContentPadding() => Measurements.width * 0.02 * 1.5;
+  static double dashboardCardContentPadding() => 10;
 
   //Lists
 
@@ -48,6 +49,6 @@ class AppStyle{
   //Fonts
 
   //Circular Radios
-  static double dashboardRadius()  => 30;
+  static double dashboardRadius()  => 35;
   //Circular Radios
 }

@@ -522,6 +522,7 @@ class _BodyState extends State<Body> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      highlightColor: Colors.transparent,
       child: ListView(
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
