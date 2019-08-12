@@ -46,7 +46,7 @@ class _ProductsSoldCardState extends State<ProductsSoldCard> {
     List<Products> lastSalesList = List<Products>();
 
     await api
-        .getProductLastSold(globalStateModel.currentBusiness.id,
+        .getProductsPopularMonth(globalStateModel.currentBusiness.id,
             GlobalUtils.ActiveToken.accessToken, context)
         .then((lastSales) {
       if (lastSales.isNotEmpty) {
@@ -212,14 +212,16 @@ class _ProductsSoldCardState extends State<ProductsSoldCard> {
                                       children: <Widget>[
                                         FittedBox(
                                             child: AutoSizeText(
+
 //                                                  resultData.name,
                                           productData.title,
+                                        maxLines: 2,
+                                          minFontSize: 15,
                                           style: TextStyle(color: Colors.white),
                                         )),
                                         FittedBox(
                                             child: AutoSizeText(
-//                                            results[index].quantity.toString(),
-                                          productData.sku,
+                                            "Quanity: ${resultData.quantity}",
                                           style: TextStyle(color: Colors.white),
                                         )),
                                       ],
@@ -345,6 +347,7 @@ class _ProductsSoldCardState extends State<ProductsSoldCard> {
         }
 
         return ListView(
+          physics: NeverScrollableScrollPhysics(),
           children: <Widget>[
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,

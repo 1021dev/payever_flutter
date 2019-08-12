@@ -6,6 +6,7 @@ import 'package:payever/view_models/global_state_model.dart';
 import 'package:payever/views/dashboard/poscard.dart';
 import 'package:payever/views/dashboard/productsSoldCard.dart';
 import 'package:payever/views/dashboard/settingsCardData.dart';
+import 'package:payever/views/dashboard/settingsCardInfo.dart';
 import 'package:payever/views/dashboard/transactioncard.dart';
 import 'package:provider/provider.dart';
 
@@ -54,21 +55,26 @@ class DashboardOverview extends StatelessWidget {
 //            body: ProductsCardData(wid.help),
           ));
           break;
+//        case "settings":
+//          _activeWid.add(DashboardCard_ref(
+//            wid.type,
+//            NetworkImage(UI_KIT + wid.icon),
+//            SettingCardsData(),
+//          ));
         case "settings":
-          _activeWid.add(DashboardCard_ref(
+          _activeWid.add(SettingsCardInfo(
             wid.type,
             NetworkImage(UI_KIT + wid.icon),
-            SettingCardsData(),
           ));
           break;
-        case "connect":
-          _activeWid.add(DashboardCard_ref(
-              wid.type,
-              NetworkImage(UI_KIT + wid.icon),
-              Center(child: Text("test"),),
-              body: ListView(shrinkWrap: true,children: <Widget>[Center(child: Text("test"),),Center(child: Text("test"),),Center(child: Text("test"),),],),
-              ));
-          break;
+//        case "connect":
+//          _activeWid.add(DashboardCard_ref(
+//              wid.type,
+//              NetworkImage(UI_KIT + wid.icon),
+//              Center(child: Text("test"),),
+//              body: ListView(shrinkWrap: true,children: <Widget>[Center(child: Text("test"),),Center(child: Text("test"),),Center(child: Text("test"),),],),
+//              ));
+//          break;
         default:
       }
     }

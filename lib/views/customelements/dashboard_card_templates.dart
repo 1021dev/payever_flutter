@@ -59,3 +59,26 @@ class TitleAmountCardItem extends StatelessWidget {
     );
   }
 }
+
+class NoItemsCard extends StatelessWidget {
+  Widget title;
+  VoidCallback action;
+  NoItemsCard(this.title,this.action);
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding:  EdgeInsets.symmetric(vertical:10),
+      child: Container( height: 10,
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.1),
+          borderRadius:  BorderRadius.circular(12),
+        ),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(12),
+          child: Center(child: title),
+          onTap: action,
+        ),
+      ),
+    );
+  }
+}

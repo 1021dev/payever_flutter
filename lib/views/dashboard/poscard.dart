@@ -48,8 +48,8 @@ class POSCard extends StatefulWidget {
   POSCard(this._appName,this._imageProvider,this._help){
     _parts = POSCardParts(_help,_business);
     _posNavigation = POSNavigation(_parts);
-
   }
+  
   @override
   _POSCardState createState() => _POSCardState();
 }
@@ -393,7 +393,8 @@ class _PaymentMethodsState extends State<PaymentMethods> {
     
     return Container(
       child:Container(
-        child: widget.pm.length == 0? AutoSizeText(Language.getWidgetStrings("widgets.pos.no-payments"),maxLines: 2,minFontSize: 10,style: TextStyle(fontSize: 13),):Row(children: pmIcons.sublist(0,pmIcons.length<5?pmIcons.length:4)))
+        child: widget.pm.length == 0? AutoSizeText(Language.getWidgetStrings("widgets.pos.no-payments"),maxLines: 2,minFontSize: 10,style: TextStyle(fontSize: 13),):Row(children: pmIcons.sublist(0,pmIcons.length<5?pmIcons.length:4))
+      )
     );
   }
 }
@@ -559,7 +560,7 @@ class SimplifyTerminal extends StatefulWidget {
   SimplifyTerminal(this._appName,this._imageProvider);
   List<SimpleTerminal> _terminalList = List();
   int active = 0;
-
+  bool noTerminals = false;
   @override
   _SimplifyTerminalState createState() => _SimplifyTerminalState();
 }
@@ -570,43 +571,46 @@ class _SimplifyTerminalState extends State<SimplifyTerminal> {
   Widget build(BuildContext context) {
     index =0;
     DashboardStateModel dashboardStateModel = Provider.of<DashboardStateModel>(context);
-    if(dashboardStateModel.terminalList.isEmpty){
-      RestDatasource().getTerminal(Provider.of<GlobalStateModel>(context).currentBusiness.id, GlobalUtils.ActiveToken.accesstoken,context).then((terminals){
-        terminals.forEach((terminal){
-          Terminal term = Terminal.toMap(terminal);
-          if(term.active)
+    if(!widget.noTerminals){
+      if(dashboardStateModel.terminalList.isEmpty){
+        RestDatasource().getTerminal(Provider.of<GlobalStateModel>(context).currentBusiness.id, GlobalUtils.ActiveToken.accesstoken,context).then((terminals){
+          terminals.forEach((terminal){
+            Terminal term = Terminal.toMap(terminal);
+            if(term.active)
+              widget.active = index;
+            else
+              index ++;
+            widget._terminals.add(term);
+            widget._terminalList.add(SimpleTerminal(Terminal.toMap(terminal)));
+            SimpleTerminal temp = widget._terminalList.removeAt(widget.active);
+            widget._terminalList.insert(0, temp);
+          });
+          widget.noTerminals = widget._terminals.isEmpty;
+          dashboardStateModel.setTerminalList(widget._terminals);
+          setState(() {
+            print("SetState");
+          });
+        });
+      }else{
+        widget._terminals = dashboardStateModel.terminalList;
+        widget._terminalList.clear();
+        widget._terminals.forEach((terminal){
+          if(terminal.active){
             widget.active = index;
-          else
+            dashboardStateModel.setActiveTermianl(terminal);
+          }else
             index ++;
-          widget._terminals.add(term);
-          widget._terminalList.add(SimpleTerminal(Terminal.toMap(terminal)));
-          SimpleTerminal temp = widget._terminalList.removeAt(widget.active);
-          widget._terminalList.insert(0, temp);
+            
+          widget._terminalList.add(SimpleTerminal(terminal));
         });
-        dashboardStateModel.setTerminalList(widget._terminals);
-        setState(() {
-          print("SetState");
-        });
-      });
-    }else{
-      widget._terminals = dashboardStateModel.terminalList;
-      widget._terminalList.clear();
-      widget._terminals.forEach((terminal){
-        if(terminal.active){
-          widget.active = index;
-          dashboardStateModel.setActiveTermianl(terminal);
-        }else
-          index ++;
-          
-        widget._terminalList.add(SimpleTerminal(terminal));
-      });
-      SimpleTerminal temp = widget._terminalList.removeAt(widget.active);
-      widget._terminalList.insert(0, temp);
+        SimpleTerminal temp = widget._terminalList.removeAt(widget.active);
+        widget._terminalList.insert(0, temp);
+      }
     }
     return DashboardCard_ref(
       widget._appName,
       widget._imageProvider,
-      widget._terminals.isNotEmpty?
+      widget.noTerminals?NoItemsCard(Text(Language.getWidgetStrings("widgets.pos.install-app")),(){print("Click");}):widget._terminals.isNotEmpty?
       widget._terminalList[0]:Center(child:CircularProgressIndicator()),
       body: widget._terminals.isEmpty ?null:widget._terminals.length>1?ListView(physics: NeverScrollableScrollPhysics(),shrinkWrap: true,children: widget._terminalList.sublist(1),):null,
       );

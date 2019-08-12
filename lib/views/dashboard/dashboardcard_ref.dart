@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart' as prefix0;
 import 'package:flutter_svg/svg.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:payever/models/business.dart';
 import 'package:payever/utils/appStyle.dart';
 import 'package:payever/utils/global_keys.dart';
 import 'package:payever/utils/translations.dart';
 import 'package:payever/utils/utils.dart';
+import 'package:payever/views/customelements/dashboard_card_templates.dart';
 import 'package:payever/views/customelements/dashboardcard_content.dart';
+import 'package:payever/views/pos/native_pos_screen.dart';
+import 'package:provider/provider.dart';
 import 'dart:ui';
 
 import 'package:url_launcher/url_launcher.dart';
@@ -104,7 +108,7 @@ class _DashboardCard_refState extends State<DashboardCard_ref> with  TickerProvi
                         ),
                         Container(
                           constraints: BoxConstraints(minHeight: 75),
-                          padding: widget.defPad?EdgeInsets.symmetric(vertical:AppStyle.dashboardCardContentPadding()/(_isTablet?2:2),horizontal: AppStyle.dashboardCardContentPadding()*1.5):EdgeInsets.symmetric(vertical:AppStyle.dashboardCardContentPadding()/2),
+                          padding: widget.defPad?EdgeInsets.only(bottom:AppStyle.dashboardCardContentPadding(),left: AppStyle.dashboardCardContentPadding()*1.5,right: AppStyle.dashboardCardContentPadding()*1.5,top: AppStyle.dashboardCardContentPadding()/2):EdgeInsets.symmetric(vertical:AppStyle.dashboardCardContentPadding()/2),
                           child: DashboardCardPanel(
                             animationDuration: _duration,
                             child: ExpansionPanel(

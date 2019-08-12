@@ -49,6 +49,6 @@ class AppStyle{
   //Fonts
 
   //Circular Radios
-  static double dashboardRadius()  => 30;
+  static double dashboardRadius()  => 35;
   //Circular Radios
 }
