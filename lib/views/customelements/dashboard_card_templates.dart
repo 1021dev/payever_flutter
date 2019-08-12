@@ -15,7 +15,7 @@ class AvatarDescriptionCard extends StatelessWidget {
     return Row(
       children: <Widget>[
         CircleAvatar(
-          backgroundColor: Colors.grey.withOpacity(0.5),
+          backgroundColor:imageTitle!=null?Colors.grey.withOpacity(0.5):Colors.transparent,
           radius: AppStyle.dashboardRadius(),
           backgroundImage: image,
           child: imageTitle!=null?Center(child:Text(Measurements.initials(imageTitle))):Container(),

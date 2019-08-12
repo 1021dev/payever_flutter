@@ -37,18 +37,21 @@ class _BackgroundBaseState extends State<BackgroundBase> {
             ),
           ),
         ),
-        Container(
-          height: Measurements.height,
-          width:  Measurements.width,
-            child: Scaffold(
-              key: widget.currentKey,
-              backgroundColor: Colors.transparent,
-              appBar: widget.appBar,
-              endDrawer: widget.endDrawer,
-              body: widget.body,
-              bottomNavigationBar: widget.bottomNav,
+        SafeArea(
+          bottom: false,
+          child: Container(
+            height: Measurements.height,
+            width:  Measurements.width,
+              child: Scaffold(
+                key: widget.currentKey,
+                backgroundColor: Colors.transparent,
+                appBar: widget.appBar,
+                endDrawer: widget.endDrawer,
+                body: widget.body,
+                bottomNavigationBar: widget.bottomNav,
+              ),
             ),
-          )
+        )
       ]);
   }
 }

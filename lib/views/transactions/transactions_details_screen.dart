@@ -10,6 +10,7 @@ import 'package:payever/utils/utils.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:payever/view_models/global_state_model.dart';
+import 'package:payever/views/customelements/custom_expansion_tile.dart';
 import 'package:payever/views/customelements/wallpaper.dart';
 import 'package:payever/views/switcher/switcher_page.dart';
 import 'package:provider/provider.dart';
@@ -162,14 +163,32 @@ class _DetailBodyState extends State<DetailBody> {
       builder: (BuildContext context, Orientation orientation) {
         return ListView(
           shrinkWrap: true,
+          // children: <Widget>[
+          //   widget.headerRow,
+          //   widget.orderNRow,
+          //   widget.shippingRow,
+          //   widget.billingRow,
+          //   widget.paymentRow,
+          //   widget.timelineRow,
+          //   widget.totalRow
+          // ],
           children: <Widget>[
-            widget.headerRow,
-            widget.orderNRow,
-            widget.shippingRow,
-            widget.billingRow,
-            widget.paymentRow,
-            widget.timelineRow,
-            widget.totalRow
+            CustomExpansionTile(
+              listSize: 3,
+              isWithCustomIcon: true, widgetsTitleList: <Widget>[
+              Center(child: Text(Language.getTransactionStrings("details.order.header"),style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),))
+            ], 
+            widgetsBodyList: <Widget>[
+              Text("1"),
+              Text("2"),
+              Text("3"),
+              Text("1"),
+              Text("2"),
+              Text("3"),
+              Text("1"),
+              Text("2"),
+              Text("3"),
+            ],)
           ],
         );
       },);
@@ -360,13 +379,12 @@ class _OrderNRowState extends State<OrderNRow> {
     super.initState();
     widget.openedRow.addListener(listener);
     int ref     = widget.parts.currentTransaction.details.reference == null? 0:1;
-    int usage   = widget.parts.currentTransaction.details.usage_text == null? 0:1;
     int no      = widget.parts.currentTransaction.details.application_no == null? 0:1;
     int number  = widget.parts.currentTransaction.details.application_number == null? 0:1;
     int finance = widget.parts.currentTransaction.details.finance_id == null? 0:1;
     int pan     = widget.parts.currentTransaction.details.pan_id == null? 0:1;
     int orig     = widget.parts.currentTransaction.transaction.originalID== null? 0:1;
-    widget.length = ref + usage + no + number + finance + pan + orig;
+    widget.length = ref  + no + number + finance + pan + orig;
   }
 
   @override
@@ -447,7 +465,6 @@ class _OrderNRowState extends State<OrderNRow> {
                     widget.parts.currentTransaction.details.application_no!=null      ? Container(alignment:Alignment.centerLeft,height: Measurements.height * (widget.parts.isTablet?0.015:0.05),child: Text("${Language.getTransactionStrings("details.order.santanderApplicationId")}: ${widget.parts.currentTransaction.details.application_no}",       style: TextStyle(fontSize: AppStyle.fontSizeTabContent(),color: Colors.white.withOpacity(0.6))),):Container(),
                     widget.parts.currentTransaction.details.application_number!=null  ? Container(alignment:Alignment.centerLeft,height: Measurements.height * (widget.parts.isTablet?0.015:0.05),child: Text("${Language.getTransactionStrings("details.order.santanderApplicationId")}: ${widget.parts.currentTransaction.details.application_number}",style: TextStyle(fontSize: AppStyle.fontSizeTabContent(),color: Colors.white.withOpacity(0.6))),):Container(),
                     widget.parts.currentTransaction.details.finance_id!=null          ? Container(alignment:Alignment.centerLeft,height: Measurements.height * (widget.parts.isTablet?0.015:0.05),child: Text("${Language.getTransactionStrings("details.order.paymentId")}: ${widget.parts.currentTransaction.details.finance_id}",               style: TextStyle(fontSize: AppStyle.fontSizeTabContent(),color: Colors.white.withOpacity(0.6))),):Container(),
-                    widget.parts.currentTransaction.details.usage_text!=null          ? Container(alignment:Alignment.centerLeft,height: Measurements.height * (widget.parts.isTablet?0.015:0.05),child: Text("Usage Text: ${widget.parts.currentTransaction.details.usage_text}",             style: TextStyle(fontSize: AppStyle.fontSizeTabContent(),color: Colors.white.withOpacity(0.6))),):Container(),
                   ],
                 ),
               ),

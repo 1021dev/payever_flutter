@@ -18,8 +18,8 @@ class DashboardMenu extends StatefulWidget {
 class _DashboardMenuState extends State<DashboardMenu> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Menu(),
+    return ListView(
+      children:<Widget>[Menu()],
     );
   }
 }
