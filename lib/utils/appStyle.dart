@@ -63,6 +63,8 @@ class AppStyle {
 
   static double fontSizeDashboardShow() => 13;
 
+  static double fontSizeButtonTabSelect() => 13;
+
   //Fonts
 
   //Circular Radios
