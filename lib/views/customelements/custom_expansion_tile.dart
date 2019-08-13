@@ -10,6 +10,10 @@ class CustomExpansionTile extends StatefulWidget {
   final List<Widget> widgetsBodyList;
   final bool isWithCustomIcon;
   final int listSize;
+<<<<<<< HEAD
+=======
+  final bool addBorderRadius;
+>>>>>>> 54b7bb8329a49511d9b475510b95593b16a536d8
   final bool scrollable;
 
   const CustomExpansionTile(
@@ -18,8 +22,13 @@ class CustomExpansionTile extends StatefulWidget {
       @required this.widgetsBodyList,
       @required this.isWithCustomIcon,
       this.listSize,
+<<<<<<< HEAD
       this.scrollable = true,
       })
+=======
+      this.addBorderRadius,
+        this.scrollable = true})
+>>>>>>> 54b7bb8329a49511d9b475510b95593b16a536d8
       : super(key: key);
 
   @override
@@ -28,6 +37,20 @@ class CustomExpansionTile extends StatefulWidget {
 
 class _CustomExpansionTileState extends State<CustomExpansionTile> {
   int _activeIndex = 0;
+
+  bool addBorderRadius = true;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if(widget.addBorderRadius != null) {
+      setState(() {
+        addBorderRadius = widget.addBorderRadius ;
+      });
+    }
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,8 +61,8 @@ class _CustomExpansionTileState extends State<CustomExpansionTile> {
         itemBuilder: (BuildContext context, int i) {
           return Container(
 //              margin: EdgeInsets.only(bottom: 60),
-            decoration: i == 0
-                ? BoxDecoration(
+            decoration: i == 0 && addBorderRadius
+                ?  BoxDecoration(
                     color: Colors.white.withOpacity(0.1),
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(20),

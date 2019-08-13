@@ -29,6 +29,7 @@ class TrasactionScreen extends StatefulWidget {
   TransactionScreenData data;
 
   Business _currentBusiness;
+
 //  bool _pos;
   bool initQueryNotEmpty = false;
   ValueNotifier<String> searching = ValueNotifier("");
@@ -384,7 +385,7 @@ class PhoneTableRow extends StatelessWidget {
                         ),
                 ),
                 Container(
-                  width: Measurements.width * (_isPortrait ? 0.39 : 0.45),
+                  width: Measurements.width * (_isPortrait ? 0.39 : 0.43),
                   child: !_isHeader
                       ? Text(
                           _currentTransaction.customerName,
@@ -413,7 +414,7 @@ class PhoneTableRow extends StatelessWidget {
                 ),
                 !_isPortrait
                     ? Container(
-                        width: Measurements.width * 0.4,
+                        width: Measurements.width * (_isPortrait ? 0.3 : 0.4),
                         child: !_isHeader
                             ? Text(
                                 "${DateFormat.d("en_US").add_MMMM().add_y().format(time)} ${DateFormat.Hm("en_US").format(time.add(Duration(hours: 2)))}",
@@ -428,7 +429,7 @@ class PhoneTableRow extends StatelessWidget {
                     : Container(),
                 !_isPortrait
                     ? Container(
-                        width: Measurements.width * 0.24,
+                        width: Measurements.width * (_isPortrait ? 0.20 : 0.24),
                         child: !_isHeader
                             ? Measurements.statusWidget(
                                 _currentTransaction.status)
@@ -440,16 +441,16 @@ class PhoneTableRow extends StatelessWidget {
                       )
                     : Container(),
                 !_isPortrait
-                    ? Container() :
-                Container(
-                  width: Measurements.width * 0.02,
-                  child: !_isHeader
-                      ? Icon(
-                    IconData(58849, fontFamily: 'MaterialIcons'),
-                    size: Measurements.width * 0.04,
-                  )
-                      : Container(),
-                ),
+                    ? Container()
+                    : Container(
+                        width: Measurements.width * 0.02,
+                        child: !_isHeader
+                            ? Icon(
+                                IconData(58849, fontFamily: 'MaterialIcons'),
+                                size: Measurements.width * 0.04,
+                              )
+                            : Container(),
+                      ),
               ],
             ),
             Divider()
@@ -477,7 +478,7 @@ class PhoneTableRow extends StatelessWidget {
                   Navigator.push(
                       context,
                       PageTransition(
-                          child: TransactionDetailsScreen(td, data.wallpaper),
+                          child: TransactionDetailsScreen(td),
                           type: PageTransitionType.fade));
                 }).catchError((onError) {
                   if (onError.toString().contains("401")) {
@@ -518,8 +519,14 @@ class TabletTableRow extends StatelessWidget {
 
   var f = new NumberFormat("###,##0.00", "en_US");
 
+  bool _isPortrait;
+
   @override
   Widget build(BuildContext context) {
+    GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context);
+
+    _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
+
     DateTime time;
     if (_currentTransaction != null)
       time = DateTime.parse(_currentTransaction.createdAt);
@@ -562,7 +569,7 @@ class TabletTableRow extends StatelessWidget {
                                   fontSize: AppStyle.fontSizeListRow()))),
                 ),
                 Container(
-                  width: Measurements.width * (_isPortrait ? 0.27 : 0.28),
+                  width: Measurements.width * (_isPortrait ? 0.24 : 0.28),
                   child: !_isHeader
                       ? AutoSizeText("#${_currentTransaction.id}",
                           style:
@@ -616,7 +623,7 @@ class TabletTableRow extends StatelessWidget {
                               TextStyle(fontSize: AppStyle.fontSizeListRow())),
                 ),
                 Container(
-                  width: Measurements.width * 0.10,
+                  width: Measurements.width * (_isPortrait ? 0.13 : 0.15),
                   child: !_isHeader
                       ? Measurements.statusWidget(_currentTransaction.status)
                       : Text(
@@ -640,7 +647,7 @@ class TabletTableRow extends StatelessWidget {
               builder: (BuildContext context) {
                 api
                     .getTransactionDetail(
-                        data.business.id,
+                        globalStateModel.currentBusiness.id,
                         GlobalUtils.ActiveToken.accesstoken,
                         _currentTransaction.uuid,
                         context)
@@ -650,7 +657,7 @@ class TabletTableRow extends StatelessWidget {
                   Navigator.push(
                       context,
                       PageTransition(
-                          child: TransactionDetailsScreen(td, data.wallpaper),
+                          child: TransactionDetailsScreen(td),
                           type: PageTransitionType.fade));
                 }).catchError((onError) {
                   Navigator.pop(context);
