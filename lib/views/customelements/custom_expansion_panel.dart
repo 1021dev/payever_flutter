@@ -46,22 +46,16 @@ class CustomExpansionPanelList extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          GestureDetector(
-            onTap: () {
-              if (expansionCallback != null)
-                expansionCallback(index, _isChildExpanded(index));
-            },
-            child: new AnimatedContainer(
-              duration: animationDuration,
-              curve: Curves.fastOutSlowIn,
-              margin: _isChildExpanded(index)
-                  ? kExpandedEdgeInsets
-                  : EdgeInsets.zero,
-              child: new Container(
-                child: children[index].headerBuilder(
-                  context,
-                  children[index].isExpanded,
-                ),
+          new AnimatedContainer(
+            duration: animationDuration,
+            curve: Curves.fastOutSlowIn,
+            margin: _isChildExpanded(index)
+                ? kExpandedEdgeInsets
+                : EdgeInsets.zero,
+            child: new Container(
+              child: children[index].headerBuilder(
+                context,
+                children[index].isExpanded,
               ),
             ),
           ),
@@ -104,13 +98,20 @@ class CustomExpansionPanelList extends StatelessWidget {
 //                  topRight: Radius.circular(0)),
             child: Column(
               children: <Widget>[
-                Container(
-                  padding: EdgeInsets.only(left: 25),
-                  alignment: Alignment.centerLeft,height: 50,child: header),
-                _isChildExpanded(index)?Container():Divider(color: Colors.white,),
+                InkWell(
+                  highlightColor: Colors.transparent,
+                  onTap: () {
+                    if (expansionCallback != null)
+                      expansionCallback(index, _isChildExpanded(index)
+                    );
+                  },
+                  child: Container(
+                    padding: EdgeInsets.only(left: 25),
+                    alignment: Alignment.centerLeft,height: 50,child: header),
+                ),
+                (index == (items.length-1))?Container():_isChildExpanded(index)?Container():Divider(color: Colors.white,),
                 Container(
                   color: Colors.black.withOpacity(0.1),
-                  
                   child: AnimatedCrossFade(
                     firstChild: Container(height: 0.0),
                     secondChild: Container(

@@ -2,6 +2,7 @@ import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:payever/models/products.dart';
+import 'package:payever/utils/appStyle.dart';
 import 'package:payever/utils/translations.dart';
 import 'package:payever/utils/utils.dart';
 import 'package:payever/views/products/new_product.dart';
@@ -46,12 +47,12 @@ class _ProductCategoryRowState extends State<ProductCategoryRow> {
     ''';
     
     widget.doc  = getCat;
-    return Container(
+    return Expanded(
       child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Container(
-          width: Measurements.width * 0.9,
+          //width: Measurements.width * 0.9,
           height: Measurements.height *(widget.parts.isTablet?0.05:0.07),
           child: ListView.builder(
             shrinkWrap: true,
@@ -64,7 +65,7 @@ class _ProductCategoryRowState extends State<ProductCategoryRow> {
                   elevation: 0,
                   shadowColor: Colors.transparent,
                   backgroundColor: Colors.white.withOpacity(0.3),
-                  label:Text( widget.parts.categoryList[index]),
+                  label:Text( widget.parts.categoryList[index],style: TextStyle(fontSize: AppStyle.fontSizeTabContent()),),
                   deleteIcon: Icon(Icons.close),
                   onDeleted: (){
                     setState((){
@@ -111,9 +112,10 @@ class _ProductCategoryRowState extends State<ProductCategoryRow> {
                   color: Colors.white.withOpacity(0.05),
                   borderRadius: BorderRadius.circular(16)
                 ),
-                width: Measurements.width * 0.9,
+                //width: Measurements.width * 0.9,
                 height: Measurements.height *(widget.parts.isTablet?0.05:0.07),
                 child:SimpleAutoCompleteTextField (
+                  style: TextStyle(fontSize: AppStyle.fontSizeTabContent()),
                   textSubmitted: (text){
                     setState(() {
                       bool contained = true;

@@ -15,6 +15,7 @@ import 'package:payever/models/pos.dart';
 import 'package:payever/models/products.dart';
 import 'package:payever/models/shop.dart';
 import 'package:payever/network/rest_ds.dart';
+import 'package:payever/utils/appStyle.dart';
 import 'package:payever/utils/env.dart';
 import 'package:payever/utils/translations.dart';
 import 'package:payever/utils/utils.dart';
@@ -26,9 +27,11 @@ import 'package:payever/views/customelements/custom_expansion_tile.dart';
 import 'package:payever/views/customelements/wallpaper.dart';
 import 'package:payever/views/login/login_page.dart';
 import 'package:payever/views/products/product_categories.dart';
+import 'package:payever/views/products/product_channels.dart';
 import 'package:payever/views/products/product_inventory.dart';
 import 'package:payever/views/products/product_main.dart';
 import 'package:payever/views/products/product_shipping.dart';
+import 'package:payever/views/products/product_tax.dart';
 import 'package:payever/views/products/product_type.dart';
 import 'package:payever/views/products/product_variants.dart';
 import 'package:payever/views/products/product_visibility.dart';
@@ -164,7 +167,7 @@ class _NewProductScreenState extends State<NewProductScreen> {
   AppBar _appBar;
   ButtomRow buttomrow;
   MainRow mainrow;
-  InventoryRow inventoryRow;
+  //InventoryRow inventoryRow;
   CategoryRow categoryRow;
   ShippingRow shippingRow;
   VisibilityRow visibilityRow;
@@ -214,7 +217,7 @@ class _NewProductScreenState extends State<NewProductScreen> {
     buttomrow = ButtomRow(widget._parts.openedRow, widget._parts);
     mainrow = MainRow(parts: widget._parts, openedRow: widget._parts.openedRow);
     channelRow    = ChannelRow(parts: widget._parts, openedRow: widget._parts.openedRow);
-    inventoryRow  = InventoryRow(parts: widget._parts, openedRow: widget._parts.openedRow);
+    //inventoryRow  = InventoryRow(parts: widget._parts, openedRow: widget._parts.openedRow);
     categoryRow =
         CategoryRow(parts: widget._parts, openedRow: widget._parts.openedRow);
     shippingRow =
@@ -229,6 +232,14 @@ class _NewProductScreenState extends State<NewProductScreen> {
   }
 
   Scaffold scaffold;
+  ProductMainRow  main        ;
+  ProductInventoryRow  inventory   ;
+  ProductCategoryRow   category    ;
+  ProductVariantsRow   variants    ;
+  ProductShippingRow   shipping    ;
+  ProductVisibilityRow visibility  ;
+  ProductTaxRow   tax;
+  ProductChannelsRow   channels;
 
   @override
   Widget build(BuildContext context) {
@@ -301,16 +312,30 @@ class _NewProductScreenState extends State<NewProductScreen> {
     //     ],
     //   ),
     // );
+
     CustomExpansionTile productRowsList = CustomExpansionTile(isWithCustomIcon: true,
+    scrollable: false,
       widgetsBodyList: <Widget>[
-        Container(height: 150,child:Text("1")),
-        Container(height: 100,child:Text("2")),
+        main         = ProductMainRow(parts: widget._parts,),
+        inventory    = ProductInventoryRow(parts: widget._parts,),
+        category     = ProductCategoryRow(parts: widget._parts,),
+        variants     = ProductVariantsRow(parts: widget._parts,),
+        channels     = ProductChannelsRow(parts: widget._parts,),
+        shipping     = ProductShippingRow(parts: widget._parts,),
+        visibility   = ProductVisibilityRow(parts: widget._parts,),
+        tax          = ProductTaxRow(parts: widget._parts,),
+        
       ],
       widgetsTitleList: <Widget>[
-        Text(Language.getProductStrings("sections.main")),
-        Text("2"),
+        Text(Language.getProductStrings("sections.main"),style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),),
+        Text(Language.getProductStrings("sections.inventory"),style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),),
+        Text(Language.getProductStrings("sections.category"),style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),),
+        Text(Language.getProductStrings("sections.variants"),style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),),
+        Text(Language.getProductStrings("sections.channels"),style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),),
+        Text(Language.getProductStrings("sections.shipping"),style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),),
+        Text(Language.getProductStrings("sections.visibility"),style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),),
+        Text(Language.getProductStrings("sections.taxes"),style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),),
       ],
-    
     );
     return OrientationBuilder(
       builder: (BuildContext context, Orientation orientation) {
@@ -322,28 +347,25 @@ class _NewProductScreenState extends State<NewProductScreen> {
             true,
             currentKey: widget._parts.scaffoldKey,
             appBar: _appBar,
-            body: ListView(
-              children: <Widget>[
-                productRowsList,
-                Form(
-                  key: widget._parts._formKey,
-                  child: Container(
-                    child: Column(
-                      children: <Widget>[
-                        buttomrow,
-                        mainrow,
-                        widget._parts.product.variants.length == 0 ? inventoryRow:Container(),
-                        categoryRow,
-                        variantRow,
-                        channelRow,
-                        shippingRow,
-                        taxRow,
-                        visibilityRow
-                      ],
-                    ),
-                  ),
+            body: SingleChildScrollView(
+              child: Form(
+                key: widget._parts._formKey,
+                child: Column(
+                  children: <Widget>[
+                    buttomrow,
+                    productRowsList,
+                    // buttomrow,
+                    // mainrow,
+                    // widget._parts.product.variants.length == 0 ? inventoryRow:Container(),
+                    // categoryRow,
+                    // variantRow,
+                    // channelRow,
+                    // //shippingRow,
+                    // taxRow,
+                    // visibilityRow
+                  ],
                 ),
-              ],
+              ),
             ),
           );
         // return Stack(
@@ -395,10 +417,10 @@ class _NewProductScreenState extends State<NewProductScreen> {
     var a = widget._parts._formKey.currentState;
     a.validate();
     okToSave = mainrow.isMainRowOK &&
-        inventoryRow.isInventoryRowOK &&
-        shippingRow.isShippingRowOK;
+        inventory.isInventoryRowOK &&
+        shipping.isShippingRowOK;
 
-
+  print("okToSave: $okToSave");
     // print("____________________");
     // print("MAIN ROW      = ${mainrow.isMainRowOK}");
     // print("INVENTORY ROW = ${inventoryRow.isInventoryRowOK}");
@@ -503,12 +525,14 @@ class _NewProductScreenState extends State<NewProductScreen> {
               ),
               );
             });
-      } else {
+      }else {
         SnackBar snackBar = SnackBar(
           backgroundColor: Colors.black.withOpacity(0.5),
           content: Text("Please fill required fields"),
+          duration: Duration(seconds: 2),
         );
-        widget._parts.scaffoldKey.currentState.showSnackBar(snackBar);
+        Scaffold.of(context).showSnackBar(snackBar);
+        //widget._parts.scaffoldKey.currentState.showSnackBar(snackBar);
       }
     }).catchError((onError){
       if(onError.toString().contains("401")){
@@ -821,133 +845,121 @@ class _MainRowState extends State<MainRow> {
   }
 }
 
-// Inventory
-class InventoryRow extends StatefulWidget {
-  ValueNotifier openedRow;
-  NewProductScreenParts parts;
-  num inv = 0;
+// // Inventory
+// class InventoryRow extends StatefulWidget {
+//   ValueNotifier openedRow;
+//   NewProductScreenParts parts;
+//   num inv = 0;
 
-  bool isOpen = false;
-  bool trackInv = false;
+//   bool isOpen = false;
+//   bool trackInv = false;
 
-  bool get isInventoryRowOK {
-    return parts.product.variants.length>0?
-     true:
-     !parts.skuError;
-  }
+//   bool get isInventoryRowOK {
+//     return parts.product.variants.length>0?
+//      true:
+//      !parts.skuError;
+//   }
 
-  InventoryRow({this.openedRow, this.parts});
+//   InventoryRow({this.openedRow, this.parts});
 
-  @override
-  _InventoryRowState createState() => _InventoryRowState();
-}
+//   @override
+//   _InventoryRowState createState() => _InventoryRowState();
+// }
 
-class _InventoryRowState extends State<InventoryRow> {
-  listener() {
-    setState(() {
-      if (widget.openedRow.value == 1) {
-        widget.isOpen = !widget.isOpen;
-      } else {
-        widget.isOpen = false;
-      }
-    });
-  }
+// class _InventoryRowState extends State<InventoryRow> {
+//   listener() {
+//     setState(() {
+//       if (widget.openedRow.value == 1) {
+//         widget.isOpen = !widget.isOpen;
+//       } else {
+//         widget.isOpen = false;
+//       }
+//     });
+//   }
 
-  @override
-  void initState() {
-    super.initState();
-    widget.openedRow.addListener(listener);
-    if(widget.parts.editMode){
-      if(widget.parts.inventories.isNotEmpty){
-        
-        RestDatasource api = RestDatasource();
-        api.getInvetory(widget.parts.business, GlobalUtils.ActiveToken.accessToken, widget.parts.product.sku,context).
-          then((inv){
-            var _inv = InventoryModel.toMap(inv);
-            setState(() {
-              widget.trackInv = _inv.isTrackable;
-              widget.inv      = _inv.stock;
-            });
-          });}
-    }
-  }
+//   @override
+//   void initState() {
+//     super.initState();
+//     widget.openedRow.addListener(listener);
+    
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    widget.parts.inventoryForm = ProductInventoryRow(parts: widget.parts);
-    return Column(children: <Widget>[
-      Container(
-        decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.1),
-        ),
-        child: InkWell(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Container(
-                child: Text(Language.getProductStrings("sections.inventory")),
-                padding:
-                    EdgeInsets.symmetric(horizontal: Measurements.width * 0.05),
-              ),
-              IconButton(
-                icon: Icon(widget.isOpen ? Icons.remove : Icons.add),
-                onPressed: () {
-                  widget.openedRow.notifyListeners();
-                  widget.openedRow.value = 1;
-                },
-              )
-            ],
-          ),
-          onTap: (){
-              widget.openedRow.notifyListeners();
-              widget.openedRow.value = 1;
-            },
-        ),
-      ),
-      AnimatedContainer(
-        color: Colors.white.withOpacity(0.05),
-        height: widget.isOpen
-            ? Measurements.height * (widget.parts.isTablet ? 0.12 : 0.16)
-            : 0,
-        duration: Duration(milliseconds: 200),
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: Measurements.width * 0.025),
-          color: Colors.black.withOpacity(0.05),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        height: Measurements.height *
-                            (widget.parts.isTablet ? 0.11 : 0.15),
-                        child: widget.parts.inventoryForm,
-                      )
-                    ],
-                  )
-                ],
-              )
-            ],
-          ),
-        ),
-      ),
-      Container(
-          color: Colors.white.withOpacity(0.1),
-          child: widget.isOpen
-              ? Divider(
-                  color: Colors.white.withOpacity(0),
-                )
-              : Divider(
-                  color: Colors.white,
-                )),
-    ]);
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     widget.parts.inventoryForm = ProductInventoryRow(parts: widget.parts);
+//     return Column(children: <Widget>[
+//       Container(
+//         decoration: BoxDecoration(
+//           color: Colors.white.withOpacity(0.1),
+//         ),
+//         child: InkWell(
+//           child: Row(
+//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//             children: <Widget>[
+//               Container(
+//                 child: Text(Language.getProductStrings("sections.inventory")),
+//                 padding:
+//                     EdgeInsets.symmetric(horizontal: Measurements.width * 0.05),
+//               ),
+//               IconButton(
+//                 icon: Icon(widget.isOpen ? Icons.remove : Icons.add),
+//                 onPressed: () {
+//                   widget.openedRow.notifyListeners();
+//                   widget.openedRow.value = 1;
+//                 },
+//               )
+//             ],
+//           ),
+//           onTap: (){
+//               widget.openedRow.notifyListeners();
+//               widget.openedRow.value = 1;
+//             },
+//         ),
+//       ),
+//       AnimatedContainer(
+//         color: Colors.white.withOpacity(0.05),
+//         height: widget.isOpen
+//             ? Measurements.height * (widget.parts.isTablet ? 0.12 : 0.16)
+//             : 0,
+//         duration: Duration(milliseconds: 200),
+//         child: Container(
+//           padding: EdgeInsets.symmetric(horizontal: Measurements.width * 0.025),
+//           color: Colors.black.withOpacity(0.05),
+//           child: Column(
+//             mainAxisAlignment: MainAxisAlignment.center,
+//             children: <Widget>[
+//               Row(
+//                 mainAxisSize: MainAxisSize.max,
+//                 mainAxisAlignment: MainAxisAlignment.center,
+//                 children: <Widget>[
+//                   Column(
+//                     mainAxisAlignment: MainAxisAlignment.center,
+//                     children: <Widget>[
+//                       Container(
+//                         height: Measurements.height *
+//                             (widget.parts.isTablet ? 0.11 : 0.15),
+//                         child: widget.parts.inventoryForm,
+//                       )
+//                     ],
+//                   )
+//                 ],
+//               )
+//             ],
+//           ),
+//         ),
+//       ),
+//       Container(
+//           color: Colors.white.withOpacity(0.1),
+//           child: widget.isOpen
+//               ? Divider(
+//                   color: Colors.white.withOpacity(0),
+//                 )
+//               : Divider(
+//                   color: Colors.white,
+//                 )),
+//     ]);
+//   }
+// }
 //Inventory
 //--------
 //Category

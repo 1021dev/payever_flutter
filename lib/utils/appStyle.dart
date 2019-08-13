@@ -46,6 +46,7 @@ class AppStyle{
   static double fontSizeDashboardAvatarDescriptionDescription() => 13;
   static double fontSizeDashboardTitleAmount()                  => 17;
   static double fontSizeDashboardShow()                         => 13;
+  static double fontSizeButtonTabSelect()                       => 14;
   //Fonts
 
   //Circular Radios

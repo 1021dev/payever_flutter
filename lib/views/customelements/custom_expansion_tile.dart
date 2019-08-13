@@ -10,13 +10,16 @@ class CustomExpansionTile extends StatefulWidget {
   final List<Widget> widgetsBodyList;
   final bool isWithCustomIcon;
   final int listSize;
+  final bool scrollable;
 
   const CustomExpansionTile(
       {Key key,
       @required this.widgetsTitleList,
       @required this.widgetsBodyList,
       @required this.isWithCustomIcon,
-      this.listSize})
+      this.listSize,
+      this.scrollable = true,
+      })
       : super(key: key);
 
   @override
@@ -30,6 +33,7 @@ class _CustomExpansionTileState extends State<CustomExpansionTile> {
   Widget build(BuildContext context) {
     return ListView.builder(
         shrinkWrap: true,
+        physics: widget.scrollable?AlwaysScrollableScrollPhysics():NeverScrollableScrollPhysics(),
         itemCount: widget.listSize == 1 ? widget.listSize : widget.widgetsTitleList.length,
         itemBuilder: (BuildContext context, int i) {
           return Container(

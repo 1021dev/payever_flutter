@@ -1,6 +1,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:payever/utils/appStyle.dart';
 import 'package:payever/utils/translations.dart';
 import 'package:payever/views/products/new_product.dart';
 
@@ -45,7 +46,7 @@ class _ButtomRowState extends State<ButtomRow> {
               topLeft: Radius.circular(20),
               bottomLeft: Radius.circular(20))
             ),
-          child: Text(Language.getProductStrings("category.type.service")),
+          child: Text(Language.getProductStrings("category.type.service"),style: TextStyle(fontSize: AppStyle.fontSizeButtonTabSelect()),),
           onPressed: () {
             setState(() {
               widget.parts.type = "service";
@@ -62,7 +63,7 @@ class _ButtomRowState extends State<ButtomRow> {
           color: widget.digital
               ? Colors.white.withOpacity(0.3)
               : Colors.white.withOpacity(0.1),
-          child: Text(Language.getProductStrings("category.type.digital")),
+          child: Text(Language.getProductStrings("category.type.digital"),style: TextStyle(fontSize: AppStyle.fontSizeButtonTabSelect()),),
           onPressed: () {
             setState((){
               widget.parts.type = "digital";
@@ -84,7 +85,7 @@ class _ButtomRowState extends State<ButtomRow> {
                   topRight: Radius.circular(20),
                   bottomRight: Radius.circular(20))
                   ),
-          child: Text(Language.getProductStrings("category.type.physical")),
+          child: Text(Language.getProductStrings("category.type.physical"),style: TextStyle(fontSize: AppStyle.fontSizeButtonTabSelect()),),
           onPressed: () {
             setState(() {
               widget.parts.type = "physical";
