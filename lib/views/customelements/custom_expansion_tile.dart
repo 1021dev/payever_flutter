@@ -10,10 +10,7 @@ class CustomExpansionTile extends StatefulWidget {
   final List<Widget> widgetsBodyList;
   final bool isWithCustomIcon;
   final int listSize;
-<<<<<<< HEAD
-=======
   final bool addBorderRadius;
->>>>>>> 54b7bb8329a49511d9b475510b95593b16a536d8
   final bool scrollable;
 
   const CustomExpansionTile(
@@ -22,13 +19,8 @@ class CustomExpansionTile extends StatefulWidget {
       @required this.widgetsBodyList,
       @required this.isWithCustomIcon,
       this.listSize,
-<<<<<<< HEAD
-      this.scrollable = true,
-      })
-=======
       this.addBorderRadius,
         this.scrollable = true})
->>>>>>> 54b7bb8329a49511d9b475510b95593b16a536d8
       : super(key: key);
 
   @override

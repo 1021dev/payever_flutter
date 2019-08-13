@@ -58,17 +58,11 @@ class AppStyle {
   static double fontSizeDashboardAvatarDescriptionTitle() => 15;
 
   static double fontSizeDashboardAvatarDescriptionDescription() => 13;
-<<<<<<< HEAD
-  static double fontSizeDashboardTitleAmount()                  => 17;
-  static double fontSizeDashboardShow()                         => 13;
-  static double fontSizeButtonTabSelect()                       => 14;
-=======
 
   static double fontSizeDashboardTitleAmount() => 17;
 
   static double fontSizeDashboardShow() => 13;
 
->>>>>>> 54b7bb8329a49511d9b475510b95593b16a536d8
   //Fonts
 
   //Circular Radios
