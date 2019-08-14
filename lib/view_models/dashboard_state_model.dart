@@ -4,6 +4,7 @@ import 'package:payever/models/appwidgets.dart';
 import 'package:payever/models/business.dart';
 import 'package:payever/models/pos.dart';
 import 'package:payever/models/transaction.dart';
+import 'package:payever/models/tutorial.dart';
 import 'package:payever/utils/env.dart';
 import 'package:payever/utils/validators.dart';
 import 'package:payever/views/dashboard/poscard.dart';
@@ -36,6 +37,10 @@ class DashboardStateModel extends ChangeNotifier with Validators {
   List<Day> _lastMonth = List();
   List<Day> get lastMonth => _lastMonth;
   setlastMonth(List<Day> lastMonth) =>_lastMonth = lastMonth;
+
+  List<Tutorial> _tutorials = List();
+  List<Tutorial> get tutorials => _tutorials;
+  setTutorials(List<Tutorial> tutorials) =>_tutorials = tutorials;
 
   List<Widget> _activeWid = List();
   String UI_KIT = Env.Commerceos + "/assets/ui-kit/icons-png/";

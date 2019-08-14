@@ -410,8 +410,8 @@ class _DetailDetailsState extends State<DetailDetails> {
               child: Text("${widget.description}",style: TextStyle(color: Colors.black,fontSize: 13),
             )
           ),
-          //ColorButtomGrid(colors: <Color>[Colors.red,Colors.blue,Colors.green,Colors.deepOrange,Colors.red,Colors.blue,Colors.green,Colors.deepOrange,Colors.red,Colors.blue,Colors.green,Colors.deepOrange], controller: controller, size: Measurements.height * 0.03,),
-          //ColorButtomContainer(displayColor: Colors.red, size: Measurements.height * 0.03,),
+          ColorButtomGrid(colors: <Color>[Colors.red,Colors.blue,Colors.green,Colors.deepOrange,Colors.red,Colors.blue,Colors.green,Colors.deepOrange,Colors.red,Colors.blue,Colors.green,Colors.deepOrange], controller: controller, size: Measurements.height * 0.03,),
+          //ColorButtomContainer(controller: controller,displayColor: Colors.red, size: Measurements.height * 0.03,),
           widget.parts.isTablet? Padding(padding: EdgeInsets.only(bottom: Measurements.height * 0.02),):Container(),
         ],
       ),

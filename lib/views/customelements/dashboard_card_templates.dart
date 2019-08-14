@@ -112,10 +112,11 @@ class AvatarDescriptionCardOnButton extends StatelessWidget {
 
 class TitleAmountCardItem extends StatelessWidget {
   final Widget title;
+  final Widget amountWidget;
   final String _amount;
   final String titleString;
 
-  TitleAmountCardItem(this._amount, {this.title, this.titleString = ""});
+  TitleAmountCardItem(this._amount,{this.title, this.titleString = "",this.amountWidget});
 
   @override
   Widget build(BuildContext context) {
@@ -134,11 +135,11 @@ class TitleAmountCardItem extends StatelessWidget {
                 : title,
           ),
           Container(
-            child: Text(
+            child: amountWidget == null?Text(
               _amount,
               style:
                   TextStyle(fontSize: AppStyle.fontSizeDashboardTitleAmount()),
-            ),
+            ):amountWidget,
           ),
         ],
       ),

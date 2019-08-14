@@ -610,11 +610,25 @@ class RestDatasource {
     return _netUtil.get(STORAGEURL+"/$id", headers: headers).then((dynamic res) {
       return res;
     });
-
   }
 
-
-
+  Future<dynamic> getTutorials(String token,String id) {
+    print("TAG - getTutorials()");
+    var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token" , HttpHeaders.CONTENT_TYPE: "application/json" ,HttpHeaders.USER_AGENT:GlobalUtils.fingerprint };
+    return _netUtil.get(WIDGETS_URL+"$id"+"/widget-tutorial", headers: headers).then((dynamic res) {
+      return res;
+    });
+  }
+  
+  Future<dynamic> patchTutorials(String token,String id,String video) {
+    print("TAG - patchTutorials()");
+    var body = jsonEncode({});
+    var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token" , HttpHeaders.CONTENT_TYPE: "application/json" ,HttpHeaders.USER_AGENT:GlobalUtils.fingerprint };
+    print(WIDGETS_URL+"$id"+"/widget-tutorial/$video/watched");
+    return _netUtil.patch(WIDGETS_URL+"$id"+"/widget-tutorial/$video/watched", headers: headers,body: body).then((dynamic res) {
+      return res;
+    });
+  }
 }
 
 

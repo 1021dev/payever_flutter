@@ -615,6 +615,15 @@ class GlobalUtils{
       static const String DB_CHECKOUT_SECTIONS_EXCLUDED = "excluded_channels";
       static const String DB_CHECKOUT_SECTIONS_SUBSEC   = "subsections";
 
+    static const String DB_TUTORIAL_INIT                  ="\$init";
+    static const String DB_TUTORIAL_ICON                  ="icon";
+    static const String DB_TUTORIAL_ORDER                 ="order";
+    static const String DB_TUTORIAL_TITLE                 ="title";
+    static const String DB_TUTORIAL_TYPE                  ="type";
+    static const String DB_TUTORIAL_URL                   ="url";
+    static const String DB_TUTORIAL_WATCHED               ="watched";
+    static const String DB_TUTORIAL_ID                    ="_id";
+
 
 
   // env__

@@ -8,6 +8,7 @@ import 'package:payever/views/dashboard/products_sold_card_item.dart';
 import 'package:payever/views/dashboard/settingsCardData.dart';
 import 'package:payever/views/dashboard/settingsCardInfo.dart';
 import 'package:payever/views/dashboard/transactioncard.dart';
+import 'package:payever/views/dashboard/tutorialcard.dart';
 import 'package:provider/provider.dart';
 
 import 'dashboardcard_ref.dart';
@@ -27,6 +28,17 @@ class DashboardOverview extends StatelessWidget {
     for (int i = 0; i < dashboardStateModel.currentWidgets.length; i++) {
       var wid = dashboardStateModel.currentWidgets[i];
       switch (wid.type) {
+        case "tutorial":
+          // _activeWid.add(TransactionCard(
+          //     wid.type,
+          //     NetworkImage(UI_KIT + wid.icon),
+          //     false,
+          //     ));
+          _activeWid.add(SimplyTutorial(
+              wid.type,
+              NetworkImage(UI_KIT + wid.icon)
+              ));
+          break;
         case "transactions":
           // _activeWid.add(TransactionCard(
           //     wid.type,

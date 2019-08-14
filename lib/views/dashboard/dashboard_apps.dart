@@ -20,7 +20,7 @@ import 'package:provider/provider.dart';
 
 bool _isTablet;
 class DashboardApps extends StatefulWidget {
-  List<String> _availableApps = ["transactions","pos","settings","products"];
+  List<String> _availableApps = ["transactions","pos","products"];
   @override
   _DashboardAppsState createState() => _DashboardAppsState();
 }
@@ -33,8 +33,8 @@ class _DashboardAppsState extends State<DashboardApps> {
     List<Widget> _apps = List();
     dashboardStateModel = Provider.of<DashboardStateModel>(context);
     dashboardStateModel.currentWidgets.forEach((wid){
-      if(widget._availableApps.contains(wid.type) && wid.type != "settings")
-//      if(widget._availableApps.contains(wid.type))
+     // if(widget._availableApps.contains(wid.type) && wid.type != "settings")
+      if(widget._availableApps.contains(wid.type))
         _apps.add(AppView(wid));
     });
     return SafeArea(
