@@ -193,6 +193,7 @@ class _NativePosScreenState extends State<NativePosScreen> {
         ),
         ),
       appBar: AppBar(
+        brightness: Brightness.light,
         leading: IconButton(
           icon: Icon(Icons.close,color: Colors.black,),
           onPressed: ()=>Navigator.pop(context),

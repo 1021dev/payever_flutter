@@ -17,6 +17,7 @@ class _POSCartState extends State<POSCart> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        brightness: Brightness.light,
         leading: IconButton(
           icon: Icon(Icons.close,color: Colors.black,),
           onPressed: (){
