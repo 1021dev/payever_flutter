@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:payever/view_models/cart_state_model.dart';
 import 'package:payever/views/dashboard/dashboard_screen_ref.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -72,6 +73,8 @@ class _MyAppState extends State<MyApp> {
       return MultiProvider(
         providers: [
           ChangeNotifierProvider<GlobalStateModel>(builder: (BuildContext context) => globalStateModel),
+          ChangeNotifierProvider<CartStateModel>(builder: (BuildContext context) => CartStateModel()),
+
           Provider.value(value: RestDatasource()),
         ],
         child: MaterialApp(

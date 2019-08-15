@@ -3,23 +3,23 @@ import 'package:flutter/material.dart';
 class DropDownMenu extends StatefulWidget {
   final Function(String text, int value) onChangeSelection;
 
-  final String _placeHolderText;
-  final List<String> _optionsList;
-  final String _selectedValue;
+  final String placeHolderText;
+  final List<String> optionsList;
+  final String selectedValue;
   final String defaultValue;
+  final Color backgroundColor;
+  final Color fontColor;
 
-  DropDownMenu(
-      {Key key,
-      @required String placeHolderText,
-      @required List<String> optionsList,
-      String selectedValue,
-      this.onChangeSelection,
-      String defaultValue})
-      : _placeHolderText = placeHolderText,
-        _optionsList = optionsList,
-        _selectedValue = selectedValue,
-        defaultValue = defaultValue,
-        super(key: key);
+  DropDownMenu({
+    Key key,
+    this.onChangeSelection,
+    @required this.placeHolderText,
+    @required this.optionsList,
+    this.selectedValue,
+    this.defaultValue,
+    this.backgroundColor,
+    this.fontColor,
+  }) : super(key: key);
 
   @override
   createState() => _DropDownMenuState(onChangeSelection);
@@ -30,11 +30,11 @@ class _DropDownMenuState extends State<DropDownMenu> {
 
   _DropDownMenuState(this.onChangeSelection);
 
-  String get _placeHolderText => widget._placeHolderText;
+  String get _placeHolderText => widget.placeHolderText;
 
-  List<String> get _options => widget._optionsList;
+  List<String> get _options => widget.optionsList;
 
-  String get _selectedValue => widget._selectedValue;
+//  String get _selectedValue => widget.selectedValue;
 
   List<DropdownMenuItem<String>> _dropDownMenuItems;
   String _currentOption;
@@ -64,20 +64,23 @@ class _DropDownMenuState extends State<DropDownMenu> {
     return Container(
       child: Card(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
+          borderRadius: BorderRadius.circular(12),
         ),
-        color: Colors.white.withOpacity(0.1),
+//        color: Colors.white.withOpacity(0.1),
+        color: widget.backgroundColor ?? Colors.white.withOpacity(0.1),
         child: Padding(
           padding: EdgeInsets.only(top: 1, right: 1, bottom: 1, left: 10),
           child: Theme(
             data: Theme.of(context).copyWith(
-              canvasColor: Colors.white.withOpacity(0.1),
+//              canvasColor: Colors.white.withOpacity(0.1),
+              canvasColor: widget.backgroundColor ?? Colors.white.withOpacity(0.1),
             ),
             child: DropdownButtonHideUnderline(
               child: ButtonTheme(
                 alignedDropdown: true,
                 child: DropdownButton(
-                  style: TextStyle(fontSize: 18, color: Colors.white),
+                  isDense: true,
+                  style: TextStyle(fontSize: 18, color: widget.fontColor ?? Colors.white),
                   hint: Text(_placeHolderText),
 //                    isDense: true,
 //                    hint: Container(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:payever/utils/utils.dart';
 
 bool _isPortrait;
+bool _isTablet;
 
 class CustomToastNotification extends StatelessWidget {
   final IconData icon;
@@ -20,12 +21,17 @@ class CustomToastNotification extends StatelessWidget {
         ? MediaQuery.of(context).size.width
         : MediaQuery.of(context).size.height);
 
+    _isTablet = MediaQuery.of(context).size.width > 600;
+
     return Center(
       child: Material(
         color: Colors.transparent,
         child: Container(
-          width: Measurements.width * 0.70,
-          height: Measurements.height * 0.07,
+          width:
+              _isTablet ? Measurements.width * 0.40 : Measurements.width * 0.70,
+          height: _isTablet
+              ? Measurements.width * 0.06
+              : Measurements.height * 0.07,
           decoration: BoxDecoration(
             color: Colors.black.withOpacity(0.6),
             borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -34,14 +40,12 @@ class CustomToastNotification extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Container(
-                width: Measurements.width * 0.10,
-                height: Measurements.width * 0.10,
-                child: Icon(
-                  icon,
-                  size: Measurements.width * 0.07,
-                  color: Colors.blueAccent,
-                ),
+              Icon(
+                icon,
+                size: _isTablet
+                    ? Measurements.width * 0.04
+                    : Measurements.width * 0.07,
+                color: Colors.blueAccent,
               ),
               SizedBox(width: 7),
               Text(

@@ -9,8 +9,10 @@ import 'package:payever/network/rest_ds.dart';
 import 'package:payever/utils/env.dart';
 import 'package:payever/utils/translations.dart';
 import 'package:payever/utils/utils.dart';
+import 'package:payever/view_models/cart_state_model.dart';
 import 'package:payever/views/pos/native_pos_screen.dart';
 import 'package:payever/views/pos/webviewsection.dart';
+import 'package:provider/provider.dart';
 // import 'package:payever/views/customelements/custom_dropdown.dart' as custom;
 
 
@@ -39,6 +41,9 @@ class _OrderSectionState extends State<OrderSection> {
   
   @override
   Widget build(BuildContext context) {
+
+    CartStateModel cartStateModel = Provider.of<CartStateModel>(context);
+
     widget.qtys.clear();
     for(int i=1;i<100;i++){
         final number = DropdownMenuItem(
@@ -86,6 +91,9 @@ class _OrderSectionState extends State<OrderSection> {
                       print("click delete");
                       setState(() {
                         widget.parts.deleteProduct(index);
+
+                        cartStateModel.updateCart(true);
+
                       });
                     },
                   ),
