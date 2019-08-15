@@ -192,7 +192,6 @@ class _NewProductScreenState extends State<NewProductScreen> {
     widget._parts.isLoading = widget.isLoading;
 
     if(widget.editMode){
-      
       widget._parts.channels = widget.productEdit.channels;
       widget._parts.product = widget.productEdit;
       widget._parts.type = widget.productEdit.type;
@@ -312,30 +311,40 @@ class _NewProductScreenState extends State<NewProductScreen> {
     //     ],
     //   ),
     // );
+    List<Widget> rows = List();
+      main = ProductMainRow(parts: widget._parts,);
+      inventory   = ProductInventoryRow(parts: widget._parts,);
+      category = ProductCategoryRow(parts: widget._parts,);
+      variants =ProductVariantsRow(parts: widget._parts,);
+      channels = ProductChannelsRow(parts: widget._parts,);
+      shipping = ProductShippingRow(parts: widget._parts,);
+      tax = ProductTaxRow(parts: widget._parts,);
+      visibility = ProductVisibilityRow(parts: widget._parts,);
 
+      rows.add(main);
+      if(widget._parts.product?.variants?.isEmpty??false)rows.add(inventory);
+      rows.add(category);
+      rows.add(variants);
+      rows.add(channels);
+      rows.add(shipping);
+      rows.add(tax);
+      rows.add(visibility);
+
+    List<Widget> heads = List();
+        heads.add(Text(Language.getProductStrings("sections.main"),style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),));
+        if(widget._parts.product?.variants?.isEmpty??false)heads.add(Text(Language.getProductStrings("sections.inventory"),style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),));
+        heads.add(Text(Language.getProductStrings("sections.category"),style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),));
+        heads.add(Text(Language.getProductStrings("sections.variants"),style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),));
+        heads.add(Text(Language.getProductStrings("sections.channels"),style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),));
+        heads.add(Text(Language.getProductStrings("sections.shipping"),style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),));
+        heads.add(Text(Language.getProductStrings("sections.taxes"),style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),));
+        heads.add(Text(Language.getProductStrings("sections.visibility"),style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),));
+      
     CustomExpansionTile productRowsList = CustomExpansionTile(isWithCustomIcon: true,
     scrollable: false,
     headerColor: Colors.transparent,
-      widgetsBodyList: <Widget>[
-        main         = ProductMainRow(parts: widget._parts,),
-        inventory    = ProductInventoryRow(parts: widget._parts,),
-        category     = ProductCategoryRow(parts: widget._parts,),
-        variants     = ProductVariantsRow(parts: widget._parts,),
-        channels     = ProductChannelsRow(parts: widget._parts,),
-        shipping     = ProductShippingRow(parts: widget._parts,),
-        tax          = ProductTaxRow(parts: widget._parts,),
-        visibility   = ProductVisibilityRow(parts: widget._parts,),
-      ],
-      widgetsTitleList: <Widget>[
-        Text(Language.getProductStrings("sections.main"),style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),),
-        Text(Language.getProductStrings("sections.inventory"),style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),),
-        Text(Language.getProductStrings("sections.category"),style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),),
-        Text(Language.getProductStrings("sections.variants"),style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),),
-        Text(Language.getProductStrings("sections.channels"),style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),),
-        Text(Language.getProductStrings("sections.shipping"),style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),),
-        Text(Language.getProductStrings("sections.taxes"),style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),),
-        Text(Language.getProductStrings("sections.visibility"),style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),),
-      ],
+      widgetsBodyList: rows,
+      widgetsTitleList: heads
     );
     return OrientationBuilder(
       builder: (BuildContext context, Orientation orientation) {
