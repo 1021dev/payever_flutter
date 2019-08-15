@@ -20,13 +20,7 @@ class CustomToastNotification extends StatelessWidget {
     Measurements.width = (_isPortrait
         ? MediaQuery.of(context).size.width
         : MediaQuery.of(context).size.height);
-<<<<<<< HEAD
     bool isTablet = MediaQuery.of(context).size.width>600;
-=======
-
-    _isTablet = MediaQuery.of(context).size.width > 600;
-
->>>>>>> 14f9a4311f9cd4671f366ee5424e080255ccab0f
     return Center(
       child: Material(
         color: Colors.transparent,
@@ -44,7 +38,6 @@ class CustomToastNotification extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-<<<<<<< HEAD
               Container(
                 width: Measurements.width * 0.10,
                 height: Measurements.width * 0.10,
@@ -53,14 +46,6 @@ class CustomToastNotification extends StatelessWidget {
                   size: Measurements.width * (isTablet?0.04:0.07),
                   color: Color(0XFF0084ff),
                 ),
-=======
-              Icon(
-                icon,
-                size: _isTablet
-                    ? Measurements.width * 0.04
-                    : Measurements.width * 0.07,
-                color: Colors.blueAccent,
->>>>>>> 14f9a4311f9cd4671f366ee5424e080255ccab0f
               ),
               SizedBox(width: 7),
               Text(
