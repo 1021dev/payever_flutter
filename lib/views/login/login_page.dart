@@ -62,33 +62,33 @@ class _LoginState extends State<Login> implements LoginScreenContract,AuthStateL
     super.initState();
     SharedPreferences.getInstance().then((p){
       _prefs = p;
-      String fingerPrint;
-      if(Platform.isAndroid){
-          deviceInfo.androidInfo.then((info){
-          fingerPrint = "Android (${info.version.release}) ${info.fingerprint} ${info.model}";
-          p.setString(GlobalUtils.FINGERPRINT, fingerPrint);
-        });
-      }else if(Platform.isIOS){
-        deviceInfo.iosInfo.then((info){
-          fingerPrint = "IOS (${info.systemVersion}) ${info.identifierForVendor} ${info.model}";
-          p.setString(GlobalUtils.FINGERPRINT, fingerPrint);
-          print("Fingerprint = $fingerPrint");
-        });
-      }else if(Platform.isFuchsia){
-        fingerPrint = "Fuchsia";
-        p.setString(GlobalUtils.FINGERPRINT, fingerPrint);
-      }else if(Platform.isWindows){
-        fingerPrint = "Windows"; 
-        p.setString(GlobalUtils.FINGERPRINT, fingerPrint); 
-      }else if(Platform.isMacOS){
-        fingerPrint = "Macos";
-        p.setString(GlobalUtils.FINGERPRINT, fingerPrint);
-      }else if(Platform.isLinux){
-        fingerPrint = "Linux";
-        p.setString(GlobalUtils.FINGERPRINT, fingerPrint);
-      }
+      String fingerPrint ="${Platform.operatingSystem}  ${Platform.operatingSystemVersion}";
+      p.setString(GlobalUtils.FINGERPRINT, fingerPrint);
+      // if(Platform.isAndroid){
+      //     deviceInfo.androidInfo.then((info){
+      //     fingerPrint = "Android (${info.version.release}) ${info.fingerprint} ${info.model}";
+      //     p.setString(GlobalUtils.FINGERPRINT, fingerPrint);
+      //   });
+      // }else if(Platform.isIOS){
+      //   deviceInfo.iosInfo.then((info){
+      //     fingerPrint = "IOS (${info.systemVersion}) ${info.identifierForVendor} ${info.model}";
+      //     p.setString(GlobalUtils.FINGERPRINT, fingerPrint);
+      //     print("Fingerprint = $fingerPrint");
+      //   });
+      // }else if(Platform.isFuchsia){
+      //   fingerPrint = "Fuchsia";
+      //   p.setString(GlobalUtils.FINGERPRINT, fingerPrint);
+      // }else if(Platform.isWindows){
+      //   fingerPrint = "Windows"; 
+      //   p.setString(GlobalUtils.FINGERPRINT, fingerPrint); 
+      // }else if(Platform.isMacOS){
+      //   fingerPrint = "Macos";
+      //   p.setString(GlobalUtils.FINGERPRINT, fingerPrint);
+      // }else if(Platform.isLinux){
+      //   fingerPrint = "Linux";
+      //   p.setString(GlobalUtils.FINGERPRINT, fingerPrint);
+      // }
     });
-    
     
     tp = VideoPlayerController.asset(
        'videos/tablet_portrait.mp4')
@@ -167,7 +167,6 @@ class _LoginState extends State<Login> implements LoginScreenContract,AuthStateL
 
   @override
   Widget build(BuildContext context) {
-    
     _ctx = context;
     return Container(
       child: Stack(

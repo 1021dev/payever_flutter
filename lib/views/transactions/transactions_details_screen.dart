@@ -609,33 +609,31 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
 
   Widget paymentRoWHeader() {
     return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      width: Measurements.width -73,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Container(
-                  alignment: Alignment.centerLeft,
-                  width: Measurements.width * getCustomNumber(0.17, 0.25),
-                  child: Text(
-                    Language.getTransactionStrings("details.payment.header"),
-                    style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),
-                  )),
-              Measurements.paymentTypeIcon(
-                  parts.currentTransaction.paymentOption.type, _isTablet),
-              Container(
+          Container(
+            child: Container(
+                alignment: Alignment.centerLeft,
+                width: Measurements.width * getCustomNumber(0.17, 0.25),
                 child: Text(
-                    "  ${Measurements.paymentTypeName(parts.currentTransaction.paymentOption.type)}",
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
+                  Language.getTransactionStrings("details.payment.header"),
+                  style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),
+                )),
+          ),
+          Measurements.paymentTypeIcon(
+              parts.currentTransaction.paymentOption.type, _isTablet),
+          Expanded(
+            child: Text(
+                "  ${Measurements.paymentTypeName(parts.currentTransaction.paymentOption.type)}",
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
 //                softWrap: false,
-                    style: TextStyle(
-                        color: Colors.white.withOpacity(0.6),
-                        fontSize: AppStyle.fontSizeTabContent())),
-              ),
-            ],
+                style: TextStyle(
+                    color: Colors.white.withOpacity(0.6),
+                    fontSize: AppStyle.fontSizeTabContent())),
           ),
         ],
       ),
