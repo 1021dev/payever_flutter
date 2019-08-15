@@ -16,6 +16,7 @@ import 'package:payever/utils/customshapes.dart';
 import 'package:payever/utils/env.dart';
 import 'package:payever/utils/translations.dart';
 import 'package:payever/utils/utils.dart';
+import 'package:payever/view_models/cart_state_model.dart';
 import 'package:payever/view_models/dashboard_state_model.dart';
 import 'package:payever/views/pos/detailedProduct.dart';
 import 'package:payever/views/pos/pos_cart.dart';
@@ -193,6 +194,7 @@ class _NativePosScreenState extends State<NativePosScreen> {
         ),
         ),
       appBar: AppBar(
+        brightness: Brightness.light,
         leading: IconButton(
           icon: Icon(Icons.close,color: Colors.black,),
           onPressed: ()=>Navigator.pop(context),
@@ -412,7 +414,7 @@ class _ProductItemState extends State<ProductItem> {
         ),
         onTap: (){
           Navigator.push(context, PageTransition(child:DetailScreen(parts:widget.parts,currentProduct: widget.currentProduct,),type:PageTransitionType.fade,duration: Duration(milliseconds: 10)));
-        },
+      },
       ),
     );
   }

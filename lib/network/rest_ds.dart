@@ -24,7 +24,7 @@ class RestDatasource {
 
   static String USER_URL            = BASE_URL + '/api/user';
   static String BUSINESS_URL        = BASE_URL + '/api/business';
-  static String BUSINESS_APPS        = GlobalUtils.COMMERCEOS_URL_BACKEND + '/api/apps/business/';
+  static String BUSINESS_APPS        = Env.CommerceosBack + '/api/apps/business/';
 
 
   static String WALLPAPER_URL       = WALLPAPER + '/api/business/';

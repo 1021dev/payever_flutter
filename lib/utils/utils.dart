@@ -219,8 +219,12 @@ class GlobalUtils{
   static String  MAIL = "testcases@payever.de";//test 2
   //static String  MAIL= "service@payever.de";//staging 2
 
+<<<<<<< HEAD
   //static const String COMMERCEOS_URL                    = "https://commerceos.test.devpayever.com";//test
   static const String COMMERCEOS_URL_BACKEND            = "https://commerceos-backend.test.devpayever.com";//test
+=======
+//  static const String COMMERCEOS_URL                    = "https://commerceos.test.devpayever.com";//test
+>>>>>>> 14f9a4311f9cd4671f366ee5424e080255ccab0f
   static const String COMMERCEOS_URL                  = "https://commerceos.staging.devpayever.com";//staging
   //static const String COMMERCEOS_URL                  = "https://commerceos.payever.org";//live
 

@@ -9,17 +9,17 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 
 
-class WebviewSections extends StatefulWidget {
+class WebViewSections extends StatefulWidget {
   PosScreenParts parts;
   bool empty;
   String url = "";
-  WebviewSections({this.parts,this.url});
+  WebViewSections({this.parts,this.url});
   ValueNotifier<bool> isLoading = ValueNotifier(true); 
   @override
-  _WebviewSectionsState createState() => _WebviewSectionsState();
+  _WebViewSectionsState createState() => _WebViewSectionsState();
 }
 
-class _WebviewSectionsState extends State<WebviewSections> {
+class _WebViewSectionsState extends State<WebViewSections> {
   @override
   void initState() {
     super.initState();
@@ -82,6 +82,7 @@ class _WebViewPaymentsState extends State<WebViewPayments> {
     
     return Scaffold(
       appBar: AppBar(
+        brightness: Brightness.light,
         leading: IconButton(
           icon: Icon(Icons.close,color: Colors.black,),
           onPressed: (){

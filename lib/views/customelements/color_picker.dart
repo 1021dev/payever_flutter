@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
-class ColorButtomContainer extends StatefulWidget {
+class ColorButtonContainer extends StatefulWidget {
   Color borderColor =  Color(0XFF0084ff);
   Color displayColor;
   double size;
   int index;
   ColorButtomController controller;
-  ColorButtomContainer({@required this.size,@required this.displayColor,this.controller,this.index});
+  ColorButtonContainer({@required this.size,@required this.displayColor,this.controller,this.index});
   @override
-  _ColorButtomContainerState createState() => _ColorButtomContainerState();
+  createState() => _ColorButtonContainerState();
 }
 
-class _ColorButtomContainerState extends State<ColorButtomContainer> {
+class _ColorButtonContainerState extends State<ColorButtonContainer> {
 
   @override
   Widget build(BuildContext context) {
@@ -60,20 +60,20 @@ class ColorCircle extends StatelessWidget {
   }
 }
 
-class ColorButtomGrid extends StatefulWidget {
+class ColorButtonGrid extends StatefulWidget {
   num size;
   int quantity;
   ColorButtomController controller;
   List<Color> colors = List();
-  List<ColorButtomContainer> colorVariants = List();
+  List<ColorButtonContainer> colorVariants = List();
 
-  ColorButtomGrid({@required this.size,@required this.controller,@required this.colors});
+  ColorButtonGrid({@required this.size,@required this.controller,@required this.colors});
 
   @override
-  _ColorButtomGridState createState() => _ColorButtomGridState();
+  createState() => _ColorButtonGridState();
 }
 
-class _ColorButtomGridState extends State<ColorButtomGrid> {
+class _ColorButtonGridState extends State<ColorButtonGrid> {
   
   listener(){
     setState(() {});
@@ -90,7 +90,7 @@ class _ColorButtomGridState extends State<ColorButtomGrid> {
     widget.colorVariants.clear();
     int index = 0;
     widget.colors.forEach((color){
-      widget.colorVariants.add(ColorButtomContainer(size: widget.size,controller: widget.controller,displayColor: color,index: index,));
+      widget.colorVariants.add(ColorButtonContainer(size: widget.size,controller: widget.controller,displayColor: color,index: index,));
       index++;
     });
     return Wrap(

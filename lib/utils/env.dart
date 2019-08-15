@@ -11,6 +11,7 @@ class Env{
   static String Widgets;
   static String Wallpapers;
   static String Commerceos;
+  static String CommerceosBack;
   static String Transactions;
   static String Pos;
   static String Checkout;
@@ -33,6 +34,7 @@ class Env{
     Env.Transactions  = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_TRANSACTIONS];
     Env.Wallpapers    = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_WALLPAPER];
     Env.Commerceos    = obj[GlobalUtils.ENV_FRONTEND][GlobalUtils.ENV_COMMERCEOS];
+    Env.CommerceosBack = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_COMMERCEOS];
     Env.Pos           = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_POS];
     Env.Checkout      = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_CHECKOUT];
     Env.CheckoutPhp   = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_CHECKOUTPHP];
