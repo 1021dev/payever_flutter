@@ -227,7 +227,8 @@ class GlobalUtils{
   static const String POS_URL                         = "https://getpayever.com/pos";
    
   static const String FORGOT_PASS                     = "/password/forgot";
-  static const String SIGN_UP                         = "/entry/registration/business";
+  //static const String SIGN_UP                         = "/entry/registration/business";
+  static const String SIGN_UP                         = "/business/trial";
 
 
 

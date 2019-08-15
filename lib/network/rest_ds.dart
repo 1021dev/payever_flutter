@@ -148,7 +148,6 @@ class RestDatasource {
     print("TAG - getWallpaper()");
     var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token",HttpHeaders.userAgentHeader :GlobalUtils.fingerprint };
     return _netUtil.get(WALLPAPER_URL + id + WALLPAPER_END,headers: headers ).then((dynamic result){
-      print(result);
       return result;
     });
   }
@@ -211,7 +210,6 @@ class RestDatasource {
 
   Future<dynamic> getTransactionList(String id,String token,String query,BuildContext context) {
     print("TAG - getTransactionList()");
-    print("UserAgent: ${GlobalUtils.fingerprint}");
     var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token",HttpHeaders.userAgentHeader :GlobalUtils.fingerprint };
     return _netUtil.get(TRANSACTIONWID_URL + id + TRANSACTIONWID_END + query,headers: headers ).then((dynamic result){
       return result;
@@ -237,7 +235,6 @@ class RestDatasource {
 
   Future<dynamic> getAppsBusiness(String idBusiness,String token) {
     print("TAG - getAppsBusiness()");
-    print(BUSINESS_APPS + idBusiness);
     var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token",HttpHeaders.userAgentHeader :GlobalUtils.fingerprint };
     return _netUtil.get(BUSINESS_APPS + idBusiness,headers: headers ).then((dynamic result){
       return result;
@@ -267,7 +264,6 @@ class RestDatasource {
   Future<dynamic> addEmployeesToGroup(String token, String businessId, String groupId, Object data) {
     print("TAG - addEmployeesToGroup()");
     var body = jsonEncode(data);
-    print("BODY: $body");
     var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token" ,HttpHeaders.CONTENT_TYPE: "application/json",HttpHeaders.userAgentHeader :GlobalUtils.fingerprint};
     return _netUtil.post(EMPLOYEE_GROUPS + businessId+"/"+groupId+"/employees", headers: headers, body: body).then((dynamic result) {
       return result;
@@ -297,7 +293,6 @@ class RestDatasource {
     var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token",HttpHeaders.userAgentHeader :GlobalUtils.fingerprint };
 
     print("URL: ${EMPLOYEES_LIST + id}");
-
     return _netUtil.get(EMPLOYEES_LIST + id,headers: headers ).then((dynamic result){
 //    return _netUtil.get("http://users.test.devpayever.com/api/employees/2382ffce-5620-4f13-885d-3c069f9dd9b4",headers: headers ).then((dynamic result){
       return result;
@@ -351,7 +346,6 @@ class RestDatasource {
   Future<dynamic> addNewGroup(Object data, String token, String businessId) {
     print("TAG - addNewGroup()");
     var body = jsonEncode(data);
-    print("body: $body");
     var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token" ,HttpHeaders.CONTENT_TYPE: "application/json",HttpHeaders.userAgentHeader :GlobalUtils.fingerprint};
     return _netUtil.post(EMPLOYEE_GROUPS + businessId, headers: headers, body: body).then((dynamic result) {
       return result;
@@ -624,7 +618,6 @@ class RestDatasource {
     print("TAG - patchTutorials()");
     var body = jsonEncode({});
     var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token" , HttpHeaders.CONTENT_TYPE: "application/json" ,HttpHeaders.USER_AGENT:GlobalUtils.fingerprint };
-    print(WIDGETS_URL+"$id"+"/widget-tutorial/$video/watched");
     return _netUtil.patch(WIDGETS_URL+"$id"+"/widget-tutorial/$video/watched", headers: headers,body: body).then((dynamic res) {
       return res;
     });
