@@ -496,7 +496,9 @@ class _DetailDetailsState extends State<DetailDetails> {
                   child: Theme(
                     data: ThemeData.light(),
                     child: Container(
-                      width: Measurements.width * 0.9,
+
+//                      width: Measurements.width * 0.9,
+                      width: widget.parts.isTablet ? Measurements.width * 0.5 : Measurements.width * 0.9,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
 //                        color: Colors.grey.withOpacity(0.2),
@@ -585,6 +587,7 @@ class _DetailDetailsState extends State<DetailDetails> {
           Container(
             alignment: Alignment.center,
             height: Measurements.height * 0.08,
+            width: widget.parts.isTablet ? Measurements.width * 0.8 : Measurements.width * 0.9,
             padding: EdgeInsets.symmetric(
                 vertical: Measurements.height * 0.01,
                 horizontal:
@@ -612,8 +615,7 @@ class _DetailDetailsState extends State<DetailDetails> {
                   ),
                   duration: Duration(seconds: 3),
                   onDismiss: () {
-                    print(
-                        "The toast was dismised"); // the method will be called on toast dismiss.
+                    print("The toast was dismised");
                   },
                 );
 

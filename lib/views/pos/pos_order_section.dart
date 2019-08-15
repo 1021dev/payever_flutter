@@ -185,8 +185,8 @@ class _OrderSectionState extends State<OrderSection> {
           ],
         ):Container(),
         Container(
-          height:Measurements.height * (widget.parts.isTablet?0.05:0.1),
-          width: Measurements.width *(widget.parts.isTablet? 0.3: 0.9),
+          width: Measurements.width *(widget.parts.isTablet? 0.6: 0.9),
+          height:Measurements.height * (widget.parts.isTablet?0.08:0.1),
           padding: EdgeInsets.symmetric(vertical:Measurements.height * (widget.parts.isTablet?0.01:0.02)),
           child: InkWell(
             child:Container(

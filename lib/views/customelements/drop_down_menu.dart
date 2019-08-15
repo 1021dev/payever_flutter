@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 class DropDownMenu extends StatefulWidget {
@@ -54,7 +55,32 @@ class _DropDownMenuState extends State<DropDownMenu> {
   List<DropdownMenuItem<String>> getDropDownMenuItems() {
     List<DropdownMenuItem<String>> items = List();
     for (String option in _options) {
-      items.add(DropdownMenuItem(value: option, child: Text(option)));
+      items.add(DropdownMenuItem(value: option,
+            child: Text(option),
+//          child: Padding(
+//            padding: EdgeInsets.all(1),
+//            child: LimitedBox(
+//              maxHeight: 50,
+//              child: Row(
+//        mainAxisAlignment: MainAxisAlignment.start,
+//        children: <Widget>[
+////          Expanded(child: Text(option)),
+//          Expanded(child: Text(option),),
+////              Flexible(
+////                fit: FlexFit.loose,
+////                child: Container(
+////                  child: Text(option,
+////                    maxLines: 2,
+////                    overflow: TextOverflow.ellipsis,
+////                    softWrap: true,
+////                  ),
+////                ),
+////              ),
+//        ],
+//      ),
+//            ),
+//          )
+      ));
     }
     return items;
   }
@@ -79,6 +105,7 @@ class _DropDownMenuState extends State<DropDownMenu> {
               child: ButtonTheme(
                 alignedDropdown: true,
                 child: DropdownButton(
+                  isExpanded: true,
                   isDense: true,
                   style: TextStyle(fontSize: 18, color: widget.fontColor ?? Colors.white),
                   hint: Text(_placeHolderText),
