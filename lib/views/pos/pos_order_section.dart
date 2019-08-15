@@ -187,7 +187,7 @@ class _OrderSectionState extends State<OrderSection> {
                 borderRadius: BorderRadius.circular(8)
               ),
               child: Center(
-                child: widget.checkStock.value?CircularProgressIndicator():Text(Language.getCartStrings("checkout_cart_edit.form.label.product"),style: TextStyle(fontSize: 15,color: Colors.white,fontWeight: FontWeight.bold)),
+                child: widget.checkStock.value?CircularProgressIndicator():Text(Language.getCustomStrings("checkout_cart_edit.checkout"),style: TextStyle(fontSize: 15,color: Colors.white,fontWeight: FontWeight.bold)),
               )
             ),
             onTap:(){
@@ -227,7 +227,7 @@ class _OrderSectionState extends State<OrderSection> {
             });
           }else{
             Scaffold.of(context).showSnackBar(SnackBar(
-              content: Text(Language.getProductListStrings("filters.quantity.outStock")),
+              content: Text(Language.getCartStrings("checkout_cart_edit.error.products_not_available")),
             ));
           }
           widget.checkStock.value = false;

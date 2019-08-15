@@ -12,6 +12,8 @@ class CustomExpansionTile extends StatefulWidget {
   final int listSize;
   final bool addBorderRadius;
   final bool scrollable;
+  final Color headerColor;
+  final Color bodyColor;
 
   const CustomExpansionTile(
       {Key key,
@@ -20,6 +22,8 @@ class CustomExpansionTile extends StatefulWidget {
       @required this.isWithCustomIcon,
       this.listSize,
       this.addBorderRadius,
+      this.bodyColor,
+      this.headerColor,
         this.scrollable = true})
       : super(key: key);
 
@@ -55,12 +59,12 @@ class _CustomExpansionTileState extends State<CustomExpansionTile> {
 //              margin: EdgeInsets.only(bottom: 60),
             decoration: i == 0 && addBorderRadius
                 ?  BoxDecoration(
-                    color: Colors.white.withOpacity(0.1),
+                    color: widget.headerColor == null?Colors.white.withOpacity(0.1):widget.headerColor,
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(20),
                         topRight: Radius.circular(20)))
                 : BoxDecoration(
-                    color: Colors.white.withOpacity(0.1),
+                    color: widget.headerColor == null?Colors.white.withOpacity(0.1):widget.headerColor,
                   ),
             child: CustomExpansionPanelList(
               isWithCustomIcon: widget.isWithCustomIcon,

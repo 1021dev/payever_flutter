@@ -315,6 +315,7 @@ class _NewProductScreenState extends State<NewProductScreen> {
 
     CustomExpansionTile productRowsList = CustomExpansionTile(isWithCustomIcon: true,
     scrollable: false,
+    headerColor: Colors.transparent,
       widgetsBodyList: <Widget>[
         main         = ProductMainRow(parts: widget._parts,),
         inventory    = ProductInventoryRow(parts: widget._parts,),
@@ -322,9 +323,8 @@ class _NewProductScreenState extends State<NewProductScreen> {
         variants     = ProductVariantsRow(parts: widget._parts,),
         channels     = ProductChannelsRow(parts: widget._parts,),
         shipping     = ProductShippingRow(parts: widget._parts,),
-        visibility   = ProductVisibilityRow(parts: widget._parts,),
         tax          = ProductTaxRow(parts: widget._parts,),
-        
+        visibility   = ProductVisibilityRow(parts: widget._parts,),
       ],
       widgetsTitleList: <Widget>[
         Text(Language.getProductStrings("sections.main"),style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),),
@@ -333,8 +333,8 @@ class _NewProductScreenState extends State<NewProductScreen> {
         Text(Language.getProductStrings("sections.variants"),style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),),
         Text(Language.getProductStrings("sections.channels"),style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),),
         Text(Language.getProductStrings("sections.shipping"),style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),),
-        Text(Language.getProductStrings("sections.visibility"),style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),),
         Text(Language.getProductStrings("sections.taxes"),style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),),
+        Text(Language.getProductStrings("sections.visibility"),style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),),
       ],
     );
     return OrientationBuilder(

@@ -109,7 +109,7 @@ class CustomExpansionPanelList extends StatelessWidget {
                     padding: EdgeInsets.only(left: 25),
                     alignment: Alignment.centerLeft,height: 50,child: header),
                 ),
-                (index == (items.length-1))?Container():_isChildExpanded(index)?Container():Divider(color: Colors.white,),
+                (index == (items.length-1))?Container():_isChildExpanded(index)?Container():Divider(color: Colors.white.withOpacity(0.5),),
                 Container(
                   color: Colors.black.withOpacity(0.1),
                   child: AnimatedCrossFade(

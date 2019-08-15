@@ -78,7 +78,7 @@ class _HeadState extends State<Head> {
       child: Column(
         children: <Widget>[
           widget._tutorials[0],
-          Divider(height: 1,),
+          Divider(height: 1,color: Colors.white.withOpacity(0.5)),
           widget._tutorials[1]
         ],),
     );
@@ -104,7 +104,7 @@ class _BodyState extends State<Body> {
         itemBuilder: (BuildContext context, int index) {
           return Column(
             children: <Widget>[
-              Divider(height: 1,),
+              Divider(height: 1,color: Colors.white.withOpacity(0.5)),
               widget._tutorials[index],
             ],);
         },

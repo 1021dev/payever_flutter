@@ -53,28 +53,31 @@ class _ProductCategoryRowState extends State<ProductCategoryRow> {
       children: <Widget>[
         Container(
           //width: Measurements.width * 0.9,
-          height: Measurements.height *(widget.parts.isTablet?0.05:0.07),
-          child: ListView.builder(
-            shrinkWrap: true,
-            scrollDirection: Axis.horizontal,
-            itemCount: widget.parts.categoryList.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Container(
-                padding: EdgeInsets.only(right: Measurements.width *0.015),
-                child: Chip(
-                  elevation: 0,
-                  shadowColor: Colors.transparent,
-                  backgroundColor: Colors.white.withOpacity(0.3),
-                  label:Text( widget.parts.categoryList[index],style: TextStyle(fontSize: AppStyle.fontSizeTabContent()),),
-                  deleteIcon: Icon(Icons.close),
-                  onDeleted: (){
-                    setState((){
-                      widget.parts.categoryList.removeAt(index);
-                    });
-                  },
-                ),
-              );
-            },
+          height:widget.parts.categoryList.isEmpty?0: Measurements.height *(widget.parts.isTablet?0.05:0.07),
+          child: Container(
+            alignment: Alignment.centerLeft,
+            child: ListView.builder(
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              itemCount: widget.parts.categoryList.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Container(
+                  padding: EdgeInsets.only(right: Measurements.width *0.015),
+                  child: Chip(
+                    elevation: 0,
+                    shadowColor: Colors.transparent,
+                    backgroundColor: Colors.white.withOpacity(0.3),
+                    label:Text( widget.parts.categoryList[index],style: TextStyle(fontSize: AppStyle.fontSizeTabContent()),),
+                    deleteIcon: Icon(Icons.close),
+                    onDeleted: (){
+                      setState((){
+                        widget.parts.categoryList.removeAt(index);
+                      });
+                    },
+                  ),
+                );
+              },
+            ),
           )
         ),
         GraphQLProvider(

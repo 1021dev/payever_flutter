@@ -25,6 +25,7 @@ class DashboardOverview extends StatelessWidget {
     globalStateModel    = Provider.of<GlobalStateModel>(context);
     dashboardStateModel = Provider.of<DashboardStateModel>(context);
 
+    _activeWid.add(Padding(padding: EdgeInsets.only(top: 25),));
     for (int i = 0; i < dashboardStateModel.currentWidgets.length; i++) {
       var wid = dashboardStateModel.currentWidgets[i];
       switch (wid.type) {

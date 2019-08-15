@@ -41,25 +41,27 @@ class Menu extends StatelessWidget {
         child: Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        ListTile(
-            contentPadding: EdgeInsets.only(top: Measurements.height * 0.02),
-            title: Row(
+        Container(
+            padding:  EdgeInsets.symmetric(vertical: 25),
+            child: Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Container(
-                  height: Measurements.height * 0.08,
-                  child: Center(
-                      child: Text(
+                  alignment: Alignment.topCenter,
+                  //height: Measurements.height * 0.08,
+                  child: Text(
                     "Menu",
                     style: TextStyle(fontSize: _isTablet ? 18 : 16),
-                  )),
+                  ),
                 )
               ],
-            )),
-        Divider(),
+            ),
+          ),
+        Divider(height: 1,color: Colors.white.withOpacity(0.3),),
         ListTile(
+          contentPadding: EdgeInsets.all(15),
           title: Row(
             children: <Widget>[
               SvgPicture.asset(
@@ -86,8 +88,9 @@ class Menu extends StatelessWidget {
                     child: SwitcherScreen(), type: PageTransitionType.fade));
           },
         ),
-        Divider(),
+        Divider(height: 1,color: Colors.white.withOpacity(0.3),),
         ListTile(
+          contentPadding: EdgeInsets.all(15),
           title: Row(
             children: <Widget>[
               SvgPicture.asset("images/logout.svg",
@@ -120,8 +123,9 @@ class Menu extends StatelessWidget {
                     child: LoginScreen(), type: PageTransitionType.fade));
           },
         ),
-        Divider(),
+        Divider(height: 1,color: Colors.white.withOpacity(0.3),),
         ListTile(
+          contentPadding: EdgeInsets.all(15),
           title: Row(
             children: <Widget>[
               SvgPicture.asset("images/contact.svg",
@@ -144,8 +148,9 @@ class Menu extends StatelessWidget {
             _launchURL("service@payever.de", "Contact payever", "");
           },
         ),
-        Divider(),
+        Divider(height: 1,color: Colors.white.withOpacity(0.3),),
         ListTile(
+          contentPadding: EdgeInsets.all(15),
           title: Row(
             children: <Widget>[
               SvgPicture.asset("images/feedback.svg",
@@ -169,7 +174,7 @@ class Menu extends StatelessWidget {
                 "service@payever.de", "Feedback for the payever-Team", "");
           },
         ),
-        Divider(),
+        Divider(height: 1,color: Colors.white.withOpacity(0.3),),
       ],
     ));
   }

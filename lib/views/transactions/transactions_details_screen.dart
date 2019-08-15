@@ -50,7 +50,8 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
     CustomExpansionTile productRowsList = CustomExpansionTile(
       scrollable: false,
       isWithCustomIcon: true,
-      addBorderRadius: false,
+      addBorderRadius: true,
+      headerColor: Colors.transparent,
       widgetsTitleList: <Widget>[
         orderRowHeader(),
         shippingRowHeader(),
@@ -148,8 +149,10 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
     }
 
     return Padding(
-      padding: EdgeInsets.all(15),
+      padding: EdgeInsets.all(0),
       child: Container(
+        //color: Colors.white.withOpacity(0.1),
+        padding: EdgeInsets.all(15),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
@@ -246,10 +249,10 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
         decoration: BoxDecoration(
           shape: BoxShape.rectangle,
           borderRadius: BorderRadius.circular(12),
-          color: Colors.black.withOpacity(0.3),
+          // color: Colors.black.withOpacity(0.3),
         ),
         child: Container(
-          height: Measurements.height * getCustomNumber(0.015, 0.06) * length,
+          //height: Measurements.height * getCustomNumber(0.015, 0.06) * length,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -260,15 +263,15 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
                     child: parts.currentTransaction.transaction.originalID !=
                             null
                         ? Container(
-                            padding: EdgeInsets.all(1),
+                            padding: EdgeInsets.all(5),
                             alignment: Alignment.centerLeft,
-                            height: Measurements.height *
-                                getCustomNumber(0.015, 0.05),
+                            // height: Measurements.height *
+                            //     getCustomNumber(0.015, 0.05),
                             child: RichText(
                                 maxLines: 2,
                                 text: TextSpan(
                                     style: TextStyle(
-                                        fontSize: AppStyle.fontSizeListRow(),
+                                        fontSize: AppStyle.fontSizeTabContent(),
                                         color: Colors.white),
                                     children: [
                                       TextSpan(
@@ -276,7 +279,7 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
                                               '${Language.getTransactionStrings("details.order.payeverId")}: ',
                                           style: TextStyle(
                                               fontSize:
-                                                  AppStyle.fontSizeListRow(),
+                                                  AppStyle.fontSizeTabContent(),
                                               color: Colors.white
                                                   .withOpacity(0.6))),
                                       TextSpan(
@@ -292,19 +295,20 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
               parts.currentTransaction.details.reference != null
                   ? Container(
                       alignment: Alignment.centerLeft,
-                      height: Measurements.height * getCustomNumber(0.05, 0.05),
+                      padding: EdgeInsets.all(5),
+                      //height: Measurements.height * getCustomNumber(0.05, 0.05),
                       child: RichText(
                           maxLines: 2,
                           text: TextSpan(
                               style: TextStyle(
-                                  fontSize: AppStyle.fontSizeListRow(),
+                                  fontSize: AppStyle.fontSizeTabContent(),
                                   color: Colors.white),
                               children: [
                                 TextSpan(
                                     text:
                                         '${Language.getTransactionStrings("details.order.reference")}: ',
                                     style: TextStyle(
-                                        fontSize: AppStyle.fontSizeListRow(),
+                                        fontSize: AppStyle.fontSizeTabContent(),
                                         color: Colors.white.withOpacity(0.6))),
                                 TextSpan(
                                   text:
@@ -316,19 +320,20 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
               parts.currentTransaction.details.pan_id != null
                   ? Container(
                       alignment: Alignment.centerLeft,
-                      height: Measurements.height * getCustomNumber(0.05, 0.05),
+                      padding: EdgeInsets.all(5),
+                      // height: Measurements.height * getCustomNumber(0.05, 0.05),
                       child: RichText(
                           maxLines: 2,
                           text: TextSpan(
                               style: TextStyle(
-                                  fontSize: AppStyle.fontSizeListRow(),
+                                  fontSize: AppStyle.fontSizeTabContent(),
                                   color: Colors.white),
                               children: [
                                 TextSpan(
                                     text:
                                         '${Language.getTransactionStrings("details.order.panId")}: ',
                                     style: TextStyle(
-                                        fontSize: AppStyle.fontSizeListRow(),
+                                        fontSize: AppStyle.fontSizeTabContent(),
                                         color: Colors.white.withOpacity(0.6))),
                                 TextSpan(
                                   text:
@@ -340,19 +345,20 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
               parts.currentTransaction.details.application_no != null
                   ? Container(
                       alignment: Alignment.centerLeft,
-                      height: Measurements.height * getCustomNumber(0.05, 0.05),
+                      padding: EdgeInsets.all(5),
+                      // height: Measurements.height * getCustomNumber(0.05, 0.05),
                       child: RichText(
                           maxLines: 2,
                           text: TextSpan(
                               style: TextStyle(
-                                  fontSize: AppStyle.fontSizeListRow(),
+                                  fontSize: AppStyle.fontSizeTabContent(),
                                   color: Colors.white),
                               children: [
                                 TextSpan(
                                     text:
                                         '${Language.getTransactionStrings("details.order.santanderApplicationId")}: ',
                                     style: TextStyle(
-                                        fontSize: AppStyle.fontSizeListRow(),
+                                        fontSize: AppStyle.fontSizeTabContent(),
                                         color: Colors.white.withOpacity(0.6))),
                                 TextSpan(
                                   text:
@@ -364,19 +370,20 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
               parts.currentTransaction.details.application_number != null
                   ? Container(
                       alignment: Alignment.centerLeft,
-                      height: Measurements.height * getCustomNumber(0.05, 0.05),
+                      padding: EdgeInsets.all(5),
+                      // height: Measurements.height * getCustomNumber(0.05, 0.05),
                       child: RichText(
                           maxLines: 2,
                           text: TextSpan(
                               style: TextStyle(
-                                  fontSize: AppStyle.fontSizeListRow(),
+                                  fontSize: AppStyle.fontSizeTabContent(),
                                   color: Colors.white),
                               children: [
                                 TextSpan(
                                     text:
                                         '${Language.getTransactionStrings("details.order.santanderApplicationId")}: ',
                                     style: TextStyle(
-                                        fontSize: AppStyle.fontSizeListRow(),
+                                        fontSize: AppStyle.fontSizeTabContent(),
                                         color: Colors.white.withOpacity(0.6))),
                                 TextSpan(
                                   text:
@@ -388,19 +395,20 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
               parts.currentTransaction.details.finance_id != null
                   ? Container(
                       alignment: Alignment.centerLeft,
-                      height: Measurements.height * getCustomNumber(0.05, 0.05),
+                      padding: EdgeInsets.all(5),
+                      // height: Measurements.height * getCustomNumber(0.05, 0.05),
                       child: RichText(
                           maxLines: 2,
                           text: TextSpan(
                               style: TextStyle(
-                                  fontSize: AppStyle.fontSizeListRow(),
+                                  fontSize: AppStyle.fontSizeTabContent(),
                                   color: Colors.white),
                               children: [
                                 TextSpan(
                                     text:
                                         '${Language.getTransactionStrings("details.order.paymentId")}: ',
                                     style: TextStyle(
-                                        fontSize: AppStyle.fontSizeListRow(),
+                                        fontSize: AppStyle.fontSizeTabContent(),
                                         color: Colors.white.withOpacity(0.6))),
                                 TextSpan(
                                   text:
@@ -430,11 +438,11 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
   Widget shippingRowBody() {
     return Expanded(
       child: Container(
-        height: Measurements.height * getCustomNumber(0.07, 0.08),
+        // height: Measurements.height * getCustomNumber(0.07, 0.08),
         decoration: BoxDecoration(
           shape: BoxShape.rectangle,
           borderRadius: BorderRadius.circular(12),
-          color: Colors.black.withOpacity(0.3),
+          // color: Colors.black.withOpacity(0.3),
         ),
         padding: EdgeInsets.all(Measurements.width * 0.02),
         child: Column(
@@ -446,12 +454,12 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
               children: <Widget>[
                 Flexible(
                   child: Container(
-                      height: Measurements.height * getCustomNumber(0.04, 0.06),
+                      padding: EdgeInsets.all(5),
                       alignment: Alignment.centerLeft,
                       child: AutoSizeText(
                         "Shipping method: ${Measurements.paymentTypeName(parts.currentTransaction.shipping.methodName.toUpperCase())}",
                         style: TextStyle(
-                            fontSize: AppStyle.fontSizeListRow(),
+                            fontSize: AppStyle.fontSizeTabContent(),
                             color: Colors.white.withOpacity(0.7)),
                       )),
                 ),
@@ -465,7 +473,7 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
 
   Widget billingRowHeader() {
     return Container(
-      height: Measurements.height * 0.07,
+      //height: Measurements.height * 0.07,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -501,7 +509,7 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
         decoration: BoxDecoration(
           shape: BoxShape.rectangle,
           borderRadius: BorderRadius.circular(12),
-          color: Colors.black.withOpacity(0.3),
+          // color: Colors.black.withOpacity(0.3),
         ),
         padding: EdgeInsets.all(Measurements.width * 0.02),
         child: Column(
@@ -513,21 +521,20 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
               children: <Widget>[
                 Flexible(
                   child: Container(
-                    padding: EdgeInsets.all(1),
+                    padding: EdgeInsets.all(5),
                     alignment: Alignment.centerLeft,
-                    height: Measurements.height * getCustomNumber(0.015, 0.03),
                     child: RichText(
                         maxLines: 2,
                         text: TextSpan(
                             style: TextStyle(
-                                fontSize: AppStyle.fontSizeListRow(),
+                                fontSize: AppStyle.fontSizeTabContent(),
                                 color: Colors.white),
                             children: [
                               TextSpan(
                                   text:
                                       '${Language.getTransactionStrings("details.billing.name")}: ',
                                   style: TextStyle(
-                                      fontSize: AppStyle.fontSizeListRow(),
+                                      fontSize: AppStyle.fontSizeTabContent(),
                                       color: Colors.white.withOpacity(0.6))),
                               TextSpan(
                                 text:
@@ -542,21 +549,20 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
               children: <Widget>[
                 Flexible(
                   child: Container(
-                    padding: EdgeInsets.all(1),
+                    padding: EdgeInsets.all(5),
                     alignment: Alignment.centerLeft,
-                    height: Measurements.height * getCustomNumber(0.015, 0.03),
                     child: RichText(
                         maxLines: 2,
                         text: TextSpan(
                             style: TextStyle(
-                                fontSize: AppStyle.fontSizeListRow(),
+                                fontSize: AppStyle.fontSizeTabContent(),
                                 color: Colors.white),
                             children: [
                               TextSpan(
                                   text:
                                       '${Language.getTransactionStrings("details.billing.email")}: ',
                                   style: TextStyle(
-                                      fontSize: AppStyle.fontSizeListRow(),
+                                      fontSize: AppStyle.fontSizeTabContent(),
                                       color: Colors.white.withOpacity(0.6))),
                               TextSpan(
                                 text:
@@ -571,21 +577,20 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
               children: <Widget>[
                 Flexible(
                   child: Container(
-                    padding: EdgeInsets.all(1),
+                    padding: EdgeInsets.all(5),
                     alignment: Alignment.centerLeft,
-                    height: Measurements.height * getCustomNumber(0.015, 0.03),
                     child: RichText(
                         maxLines: 2,
                         text: TextSpan(
                             style: TextStyle(
-                                fontSize: AppStyle.fontSizeListRow(),
+                                fontSize: AppStyle.fontSizeTabContent(),
                                 color: Colors.white),
                             children: [
                               TextSpan(
                                   text:
                                       '${Language.getTransactionStrings("details.billing.address")}: ',
                                   style: TextStyle(
-                                      fontSize: AppStyle.fontSizeListRow(),
+                                      fontSize: AppStyle.fontSizeTabContent(),
                                       color: Colors.white.withOpacity(0.6))),
                               TextSpan(
                                 text:
@@ -605,6 +610,7 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
   Widget paymentRoWHeader() {
     return Container(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -612,7 +618,6 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
             children: <Widget>[
               Container(
                   alignment: Alignment.centerLeft,
-                  height: Measurements.height * 0.05,
                   width: Measurements.width * getCustomNumber(0.17, 0.25),
                   child: Text(
                     Language.getTransactionStrings("details.payment.header"),
@@ -628,7 +633,7 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
 //                softWrap: false,
                     style: TextStyle(
                         color: Colors.white.withOpacity(0.6),
-                        fontSize: AppStyle.fontSizeListRow())),
+                        fontSize: AppStyle.fontSizeTabContent())),
               ),
             ],
           ),
@@ -643,7 +648,7 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
         decoration: BoxDecoration(
           shape: BoxShape.rectangle,
           borderRadius: BorderRadius.circular(12),
-          color: Colors.black.withOpacity(0.3),
+          // color: Colors.black.withOpacity(0.3),
         ),
         padding: EdgeInsets.all(Measurements.width * 0.02),
         child: Column(
@@ -654,21 +659,20 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
               children: <Widget>[
                 Flexible(
                   child: Container(
-                    padding: EdgeInsets.all(1),
+                    padding: EdgeInsets.all(5),
                     alignment: Alignment.centerLeft,
-                    height: Measurements.height * getCustomNumber(0.015, 0.03),
                     child: RichText(
                         maxLines: 2,
                         text: TextSpan(
                             style: TextStyle(
-                                fontSize: AppStyle.fontSizeListRow(),
+                                fontSize: AppStyle.fontSizeTabContent(),
                                 color: Colors.white),
                             children: [
                               TextSpan(
                                   text:
                                       '${Language.getTransactionStrings("details.payment.type")}: ',
                                   style: TextStyle(
-                                      fontSize: AppStyle.fontSizeListRow(),
+                                      fontSize: AppStyle.fontSizeTabContent(),
                                       color: Colors.white.withOpacity(0.6))),
                               TextSpan(
                                 text:
@@ -684,15 +688,14 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
                 Flexible(
                   child: parts.currentTransaction.details.iban != null
                       ? Container(
-                          padding: EdgeInsets.all(1),
+                          padding: EdgeInsets.all(5),
                           alignment: Alignment.centerLeft,
-                          height: Measurements.height *
-                              getCustomNumber(0.015, 0.03),
+
                           child: RichText(
                               maxLines: 2,
                               text: TextSpan(
                                   style: TextStyle(
-                                      fontSize: AppStyle.fontSizeListRow(),
+                                      fontSize: AppStyle.fontSizeTabContent(),
                                       color: Colors.white),
                                   children: [
                                     TextSpan(
@@ -700,7 +703,7 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
                                             '${Language.getTransactionStrings("details.payment.iban")}: ',
                                         style: TextStyle(
                                             fontSize:
-                                                AppStyle.fontSizeListRow(),
+                                                AppStyle.fontSizeTabContent(),
                                             color:
                                                 Colors.white.withOpacity(0.6))),
                                     TextSpan(
@@ -744,7 +747,7 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
         decoration: BoxDecoration(
           shape: BoxShape.rectangle,
           borderRadius: BorderRadius.circular(12),
-          color: Colors.black.withOpacity(0.3),
+          // color: Colors.black.withOpacity(0.3),
         ),
         child: ListView.builder(
           shrinkWrap: true,
@@ -755,26 +758,27 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
                 parts.currentTransaction.history[index].createdAt);
             return Container(
               child: Container(
-                height: Measurements.height * getCustomNumber(0.015, 0.04),
-                child: Row(
-                  children: <Widget>[
-                    Text(
-                      "${DateFormat.d("en_US").add_MMM().add_y().format(time)} ${DateFormat.Hm("en_US").format(time.add(Duration(hours: 2)))}",
-                      style: TextStyle(
-                          color: Colors.white.withOpacity(0.6),
-                          fontSize: AppStyle.fontSizeListRow()),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: Measurements.width * 0.02),
-                    ),
-                    AutoSizeText(
-                      "${Measurements.actions(parts.currentTransaction.history[index].action, parts.currentTransaction.history[index], parts.currentTransaction)}",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: AppStyle.fontSizeListRow()),
-                    ),
-                  ],
-                ),
+                padding: EdgeInsets.all(5),
+                child: RichText(
+                    maxLines: 2,
+                    text: TextSpan(
+                        style: TextStyle(
+                            fontSize: AppStyle.fontSizeTabContent(),
+                            color: Colors.white),
+                        children: [
+                          TextSpan(
+                              text:
+                                "${DateFormat.d("en_US").add_MMM().add_y().format(time)} ${DateFormat.Hm("en_US").format(time.add(Duration(hours: 2)))}  ",
+                              style: TextStyle(
+                                  fontSize:
+                                      AppStyle.fontSizeTabContent(),
+                                  color:
+                                      Colors.white.withOpacity(0.6))),
+                          TextSpan(
+                            text:
+                            "${Measurements.actions(parts.currentTransaction.history[index].action, parts.currentTransaction.history[index], parts.currentTransaction)}",
+                          ),
+                        ])), 
               ),
             );
           },
@@ -786,6 +790,7 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
   Widget totalPriceRow() {
     return Container(
       child: Container(
+        //color: Colors.white.withOpacity(0.1),
           padding: parts.padding,
           child: Column(
             children: <Widget>[

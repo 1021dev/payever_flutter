@@ -496,7 +496,7 @@ class _HeadState extends State<Head> {
           TitleAmountCardItem("${DashboardWidgets.numberFilter(widget.lastMonth.last.amount.toDouble(), false)} ${Measurements.currency(widget.lastMonth.last.currency)}",
             titleString: Language.getWidgetStrings("widgets.transactions.today-revenue"),
           ),
-          Divider(height: 2,),
+          Divider(height: 2,color: Colors.white.withOpacity(0.5)),
           TitleAmountCardItem("${DashboardWidgets.numberFilter(widget.lastYear.last.amount.toDouble() ,false)} ${Measurements.currency(widget.lastMonth.last.currency)}",
           titleString:"${Language.getWidgetStrings("widgets.transactions.this-month")}",)
         ],
@@ -527,7 +527,7 @@ class _BodyState extends State<Body> {
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
             children: <Widget>[
-              Divider(height: 2,),
+              Divider(height: 2,color: Colors.white.withOpacity(0.5)),
               TitleAmountCardItem(
                 "${DashboardWidgets.numberFilter(widget.monthlysum[5],false)} ${Measurements.currency(widget.lastMonth.last.currency)}",
                 title:Row(
@@ -537,7 +537,7 @@ class _BodyState extends State<Body> {
                   ],
                 ),
               ),
-              Divider(height: 2,),
+              Divider(height: 2,color: Colors.white.withOpacity(0.5)),
               TitleAmountCardItem(
                 "${DashboardWidgets.numberFilter(widget.monthlysum[10],false)} ${Measurements.currency(widget.lastMonth.last.currency)}",
                 title:Row(
@@ -547,7 +547,7 @@ class _BodyState extends State<Body> {
                   ],
                 ),
               ),
-              Divider(height: 2,),
+              Divider(height: 2,color: Colors.white.withOpacity(0.5)),
               TitleAmountCardItem(
                 "${DashboardWidgets.numberFilter(widget.total,false)??0.0} ${Measurements.currency(widget.lastMonth.last.currency)}",
                 titleString:Language.getCartStrings("checkout_cart_edit.form.label.product"),

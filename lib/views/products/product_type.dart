@@ -32,15 +32,18 @@ class _ButtomRowState extends State<ButtomRow> {
     }
   }
 
+  
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         RaisedButton(
-          color: widget.service
-              ? Colors.white.withOpacity(0.3)
-              : Colors.white.withOpacity(0.1),
+          elevation:0,// widget.service?0:0.1,
+          highlightElevation: 0,
+          color: !widget.service
+              ? Colors.black.withOpacity(0.1)
+              : Colors.white.withOpacity(0.2),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(20),
@@ -60,9 +63,11 @@ class _ButtomRowState extends State<ButtomRow> {
           padding: EdgeInsets.only(left: 1),
         ),
         RaisedButton(
-          color: widget.digital
-              ? Colors.white.withOpacity(0.3)
-              : Colors.white.withOpacity(0.1),
+          elevation:0,// widget.digital?0:0.01,
+          highlightElevation: 0,
+          color: !widget.digital
+              ? Colors.black.withOpacity(0.1)
+              : Colors.white.withOpacity(0.2),
           child: Text(Language.getProductStrings("category.type.digital"),style: TextStyle(fontSize: AppStyle.fontSizeButtonTabSelect()),),
           onPressed: () {
             setState((){
@@ -77,9 +82,11 @@ class _ButtomRowState extends State<ButtomRow> {
           padding: EdgeInsets.only(left: 1),
         ),
         RaisedButton(
-          color: widget.physical
-              ? Colors.white.withOpacity(0.3)
-              : Colors.white.withOpacity(0.1),
+          elevation:0,// widget.physical?0:0.1,
+          highlightElevation: 0,
+          color: !widget.physical
+              ? Colors.black.withOpacity(0.1)
+              : Colors.white.withOpacity(0.2),
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
                   topRight: Radius.circular(20),

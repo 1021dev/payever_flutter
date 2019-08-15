@@ -69,7 +69,10 @@ class _ProductMainRowState extends State<ProductMainRow> {
     Measurements.height = _isPortrait?MediaQuery.of(context).size.height:MediaQuery.of(context).size.width;
     Measurements.width = !_isPortrait?MediaQuery.of(context).size.height:MediaQuery.of(context).size.width;
     print("Portrait: $_isPortrait");
-
+    widget.haveImage = widget.parts.images.isNotEmpty;
+    if(widget.haveImage){
+        widget.currentImage = widget.parts.images[0];
+      }
     return Expanded(
       child: Column(
         children: <Widget>[
@@ -129,7 +132,7 @@ class _ProductMainRowState extends State<ProductMainRow> {
                   ),
                 ),
                 Container(
-                  height: Measurements.height * 0.1,
+                  height: Measurements.height * 0.09,
                   width: Measurements.width * 0.9,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
@@ -148,27 +151,21 @@ class _ProductMainRowState extends State<ProductMainRow> {
                                       0.02),
                               child: InkWell(
                                 child: Container(
-                                  height: Measurements
-                                          .height *
-                                      0.07,
-                                  width: Measurements
-                                          .height *
-                                      0.07,
+                                  height: Measurements.height * 0.07,
+                                  width: Measurements.height  * 0.07,
                                   decoration: BoxDecoration(
+                                    image: DecorationImage(image: NetworkImage(Env.Storage +
+                                        "/products/" +
+                                        widget.parts
+                                                .images[
+                                            index])),
                                       color:
                                           Colors.white,
                                       borderRadius:
                                           BorderRadius
                                               .circular(
                                                   8)),
-                                  child: Image.network(
-                                    Env.Storage +
-                                        "/products/" +
-                                        widget.parts
-                                                .images[
-                                            index],
-                                    fit: BoxFit.contain,
-                                  ),
+                                  
                                 ),
                                 onTap: () {
                                   setState(() {
@@ -195,16 +192,11 @@ class _ProductMainRowState extends State<ProductMainRow> {
                                   });
                                 },),])
                           : Container(
-                              padding: EdgeInsets.all(
-                                  Measurements.width *
+                              padding: EdgeInsets.all(Measurements.width *
                                       0.02),
                               child: Container(
-                                  height: Measurements
-                                          .height *
-                                      0.07,
-                                  width: Measurements
-                                          .height *
-                                      0.07,
+                                  height: Measurements.height * 0.07,
+                                  width: Measurements.height  * 0.07,
                                   decoration: BoxDecoration(
                                       color: Colors
                                           .white

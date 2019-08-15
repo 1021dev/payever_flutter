@@ -18,7 +18,8 @@ class AppStyle {
 
   static double iconTabSize(bool _isTablet) {
     //return Measurements.height * (_isTablet? 0.02:0.025);
-    return Measurements.width * (_isTablet ? 0.025 : 0.05);
+    //return Measurements.width * (_isTablet ? 0.025 : 0.05);
+    return _isTablet ? 17 : 16;
   }
 
   // ICONS
@@ -59,7 +60,7 @@ class AppStyle {
 
   static double fontSizeDashboardAvatarDescriptionDescription() => 13;
 
-  static double fontSizeDashboardTitleAmount() => 17;
+  static double fontSizeDashboardTitleAmount() => 16;
 
   static double fontSizeDashboardShow() => 13;
 

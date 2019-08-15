@@ -1,5 +1,6 @@
 {
     "dashboard.navigation.overview" : "Overview",
     "dashboard.navigation.apps" : "Apps",
-    "dashboard.navigation.menu" : "Men\u00fc"
+    "dashboard.navigation.menu" : "Men\u00fc",
+    "checkout_cart_edit.checkout": "Checkout"
 }

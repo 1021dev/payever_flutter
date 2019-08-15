@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:payever/models/token.dart';
 import 'package:payever/models/transaction.dart';
+import 'package:payever/utils/appStyle.dart';
 import 'package:payever/utils/translations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -144,7 +145,7 @@ class Measurements{
   static paymentTypeIcon(String type,bool isTablet){
     double size = Measurements.width * (isTablet?0.03:0.055);
     Color _color = Colors.white.withOpacity(0.7);
-    return SvgPicture.asset(Measurements.paymentType(type),height: size,color:  _color,);
+    return SvgPicture.asset(Measurements.paymentType(type),height: AppStyle.iconDashboardCardSize(isTablet),color:  _color,);
   }
 
 
@@ -205,7 +206,7 @@ class GlobalUtils{
   
   //URLS
   //static String  PASS= "P@ssword123";//test 1
-  //static String  PASS= "Test1234!";//staging 1
+///static String  PASS= "Test1234!";//staging 1
   //static String  PASS= "";//live 0
   //static String  PASS= "Payever2019!";//live 1
   static String  PASS = "Payever123!";//test 2
@@ -218,9 +219,9 @@ class GlobalUtils{
   static String  MAIL = "testcases@payever.de";//test 2
   //static String  MAIL= "service@payever.de";//staging 2
 
-  static const String COMMERCEOS_URL                    = "https://commerceos.test.devpayever.com";//test
+  //static const String COMMERCEOS_URL                    = "https://commerceos.test.devpayever.com";//test
   static const String COMMERCEOS_URL_BACKEND            = "https://commerceos-backend.test.devpayever.com";//test
-  //static const String COMMERCEOS_URL                  = "https://commerceos.staging.devpayever.com";//staging
+  static const String COMMERCEOS_URL                  = "https://commerceos.staging.devpayever.com";//staging
   //static const String COMMERCEOS_URL                  = "https://commerceos.payever.org";//live
 
 
