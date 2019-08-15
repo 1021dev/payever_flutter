@@ -51,6 +51,7 @@ class _ProductsSoldCardItemState extends State<ProductsSoldCardItem> {
             GlobalUtils.ActiveToken.accessToken, context)
         .then((lastSales) {
       if (lastSales.isNotEmpty) {
+        print("lastSales: $lastSales");
         List<dynamic> lastSaleData = List<dynamic>();
         lastSaleData = lastSales;
         if (lastSaleData.length < 4) {

@@ -122,6 +122,7 @@ class TutorialRow extends StatelessWidget {
   Widget build(BuildContext context) {
     bool _isTablet = Measurements.width > 600;
     return InkWell(
+      highlightColor: Colors.transparent,
       child:Column(
         children: <Widget>[
           TitleAmountCardItem("",

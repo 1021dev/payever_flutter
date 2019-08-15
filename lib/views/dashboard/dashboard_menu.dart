@@ -61,7 +61,7 @@ class Menu extends StatelessWidget {
           ),
         Divider(height: 1,color: Colors.white.withOpacity(0.3),),
         ListTile(
-          contentPadding: EdgeInsets.all(15),
+          contentPadding:  EdgeInsets.symmetric(horizontal:15,vertical: _isTablet?0:10),
           title: Row(
             children: <Widget>[
               SvgPicture.asset(
@@ -90,7 +90,7 @@ class Menu extends StatelessWidget {
         ),
         Divider(height: 1,color: Colors.white.withOpacity(0.3),),
         ListTile(
-          contentPadding: EdgeInsets.all(15),
+          contentPadding: EdgeInsets.symmetric(horizontal:15,vertical: _isTablet?0:10),
           title: Row(
             children: <Widget>[
               SvgPicture.asset("images/logout.svg",
@@ -125,7 +125,7 @@ class Menu extends StatelessWidget {
         ),
         Divider(height: 1,color: Colors.white.withOpacity(0.3),),
         ListTile(
-          contentPadding: EdgeInsets.all(15),
+          contentPadding: EdgeInsets.symmetric(horizontal:15,vertical: _isTablet?0:10),
           title: Row(
             children: <Widget>[
               SvgPicture.asset("images/contact.svg",
@@ -150,7 +150,7 @@ class Menu extends StatelessWidget {
         ),
         Divider(height: 1,color: Colors.white.withOpacity(0.3),),
         ListTile(
-          contentPadding: EdgeInsets.all(15),
+          contentPadding: EdgeInsets.symmetric(horizontal:15,vertical: _isTablet?0:10),
           title: Row(
             children: <Widget>[
               SvgPicture.asset("images/feedback.svg",
