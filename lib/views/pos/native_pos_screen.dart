@@ -203,16 +203,54 @@ class _NativePosScreenState extends State<NativePosScreen> {
           child:Text(widget.parts.currentTerminal?.name??"",style: TextStyle(color: Colors.black),),
         ),
         actions: <Widget>[
+//          IconButton(
+//            icon: Stack(
+//              alignment: Alignment.center,
+//              children: <Widget>[
+//                SvgPicture.asset("images/shopicon.svg",color:Colors.black,height: Measurements.height * 0.035,),
+//                widget.parts.haveProducts.value?CustomPaint(painter: Dot(color: Color(0XFF0084FF), dotSize: Measurements.height * (widget.parts.isTablet?0.003:0.005), canvasSize: Measurements.height * 0.035),):Container(),
+//              ],
+//            ),
+//            onPressed: (){
+//              Navigator.push(context, PageTransition(child:POSCart(parts:widget.parts,),type:PageTransitionType.fade,duration: Duration(milliseconds: 10)));
+//            },
+//          ),
+
           IconButton(
             icon: Stack(
               alignment: Alignment.center,
               children: <Widget>[
-                SvgPicture.asset("images/shopicon.svg",color:Colors.black,height: Measurements.height * 0.035,),
-                widget.parts.haveProducts.value?CustomPaint(painter: Dot(color: Color(0XFF0084FF), dotSize: Measurements.height * (widget.parts.isTablet?0.003:0.005), canvasSize: Measurements.height * 0.035),):Container(),
+                SvgPicture.asset(
+                  "images/shopicon.svg",
+                  color: Colors.black,
+                  height: Measurements.height * 0.035,
+                ),
+                Positioned(
+                  top: widget.parts.isTablet
+                      ? Measurements.height * 0.016
+                      : Measurements.height * 0.014,
+                  child: widget.parts.haveProducts.value
+                      ? Icon(
+                    Icons.brightness_1,
+                    color: Color(0XFF0084FF),
+                    size: Measurements.height *
+                        (widget.parts.isTablet
+                            ? 0.01 * 1.2
+                            : 0.01 * 1.3),
+                  )
+                      : Container() ,
+                ),
               ],
             ),
-            onPressed: (){
-              Navigator.push(context, PageTransition(child:POSCart(parts:widget.parts,),type:PageTransitionType.fade,duration: Duration(milliseconds: 10)));
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  PageTransition(
+                      child: POSCart(
+                        parts: widget.parts,
+                      ),
+                      type: PageTransitionType.fade,
+                      duration: Duration(milliseconds: 10)));
             },
           ),
         ],

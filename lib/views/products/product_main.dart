@@ -254,7 +254,7 @@ class _ProductMainRowState extends State<ProductMainRow> {
                       ),
                       onSaved: (name) {
                         widget.parts.product.title = name;
-                        
+
                       },
                       validator: (value) {
                         if (value.isEmpty) {

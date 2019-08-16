@@ -144,7 +144,7 @@
     "form.filter.labels.original_id": "Id",
     "form.filter.labels.reference": "Reference",
     "form.filter.labels.total": "Total",
-    "form.filter.labels.type": "Payment type",
+    "form.filter.labels.type": "Type",
     "form.filter.labels.customer_name": "Customer name",
     "form.filter.labels.customer_email": "Customer email",
     "form.filter.labels.merchant_email": "Merchant email",

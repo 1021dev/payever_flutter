@@ -357,22 +357,25 @@ class _NewProductScreenState extends State<NewProductScreen> {
             currentKey: widget._parts.scaffoldKey,
             appBar: _appBar,
             body: SingleChildScrollView(
-              child: Form(
-                key: widget._parts._formKey,
-                child: Column(
-                  children: <Widget>[
-                    buttomrow,
-                    productRowsList,
-                    // buttomrow,
-                    // mainrow,
-                    // widget._parts.product.variants.length == 0 ? inventoryRow:Container(),
-                    // categoryRow,
-                    // variantRow,
-                    // channelRow,
-                    // //shippingRow,
-                    // taxRow,
-                    // visibilityRow
-                  ],
+              child: InkWell(
+                onTap: () => _removeFocus(context),
+                child: Form(
+                  key: widget._parts._formKey,
+                  child: Column(
+                    children: <Widget>[
+                      buttomrow,
+                      productRowsList,
+                      // buttomrow,
+                      // mainrow,
+                      // widget._parts.product.variants.length == 0 ? inventoryRow:Container(),
+                      // categoryRow,
+                      // variantRow,
+                      // channelRow,
+                      // //shippingRow,
+                      // taxRow,
+                      // visibilityRow
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -420,7 +423,11 @@ class _NewProductScreenState extends State<NewProductScreen> {
       },
     );
   }
-  
+
+  _removeFocus(BuildContext context){
+    FocusScope.of(context).requestFocus(FocusNode());
+  }
+
   void save() {
     
     var a = widget._parts._formKey.currentState;

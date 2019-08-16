@@ -523,7 +523,9 @@ class _DetailDetailsState extends State<DetailDetails> {
 
                             selectedIndex = index;
 
-                            customCarouselSlider.jumpToPage(imagesBase.length + 1);
+                            if(imagesBase != null && imagesBase.length >= 0) {
+                              customCarouselSlider.jumpToPage(imagesBase.length + 1);
+                            }
 
                           });
                         },

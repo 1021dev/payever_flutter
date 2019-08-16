@@ -23,7 +23,7 @@ import 'package:payever/views/transactions/transactions_details_screen.dart';
 bool _isPortrait;
 bool _isTablet;
 
-class TrasactionScreen extends StatefulWidget {
+class TransactionScreen extends StatefulWidget {
   ValueNotifier<bool> isLoading = ValueNotifier(true);
   ValueNotifier<bool> isLoadingSearch = ValueNotifier(true);
   TransactionScreenData data;
@@ -38,10 +38,10 @@ class TrasactionScreen extends StatefulWidget {
   String wallpaper;
 
   @override
-  createState() => _TrasactionScreenState();
+  createState() => _TransactionScreenState();
 }
 
-class _TrasactionScreenState extends State<TrasactionScreen> {
+class _TransactionScreenState extends State<TransactionScreen> {
   @override
   void initState() {
     super.initState();
@@ -60,7 +60,7 @@ class _TrasactionScreenState extends State<TrasactionScreen> {
         .getTransactionList(
             widget._currentBusiness.id,
             GlobalUtils.ActiveToken.accessToken,
-            "?orderBy=created_at&direction=desc&limit=50&query=${search}&page=1&currency=${widget._currentBusiness.currency}",
+            "?orderBy=created_at&direction=desc&limit=50&query=$search&page=1&currency=${widget._currentBusiness.currency}",
             context)
         .then((obj) {
       widget.data = TransactionScreenData(obj);
@@ -331,137 +331,157 @@ class _CustomListState extends State<CustomList> {
 }
 
 class PhoneTableRow extends StatelessWidget {
-  Collection _currentTransaction;
-  TransactionScreenData data;
-  bool _isHeader;
+  final Collection currentTransaction;
+  final TransactionScreenData data;
+  final bool isHeader;
 
-  PhoneTableRow(this._currentTransaction, this._isHeader, this.data);
+  PhoneTableRow(this.currentTransaction, this.isHeader, this.data);
 
-  var f = new NumberFormat("###,###.00", "en_US");
+  final f = NumberFormat("###,###.00", "en_US");
 
   @override
   Widget build(BuildContext context) {
     DateTime time;
-    if (_currentTransaction != null)
-      time = DateTime.parse(_currentTransaction.createdAt);
+    if (currentTransaction != null)
+      time = DateTime.parse(currentTransaction.createdAt);
+
     return InkWell(
       highlightColor: Colors.transparent,
       child: Container(
         //alignment: Alignment.topCenter,
-        
+
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
             Container(
-              //width: Measurements.width,
               padding: AppStyle.listRowPadding(false),
               height: AppStyle.listRowSize(false),
               child: Row(
                 children: <Widget>[
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    width: Measurements.width * (_isPortrait ? 0.13 : 0.25),
-                    child: !_isHeader
-                        ? TransactionScreenParts.channelIcon(
-                            _currentTransaction.channel)
-                        : Container(
-                            child: Text(
-                            Language.getTransactionStrings(
-                                "form.filter.labels.channel"),
-                            style:
-                                TextStyle(fontSize: AppStyle.fontSizeListRow()),
-                          )),
+                  Expanded(
+//                    flex: _isPortrait ? 2 : 1.2,
+                    flex: 2,
+                    child: Container(
+                      alignment: Alignment.centerLeft,
+                      child: !isHeader
+                          ? TransactionScreenParts.channelIcon(
+                              currentTransaction.channel)
+                          : Container(
+                              child: Text(
+                              Language.getTransactionStrings(
+                                  "form.filter.labels.channel"),
+                              style: TextStyle(
+                                  fontSize: AppStyle.fontSizeListRow()),
+                            )),
+                    ),
                   ),
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    width: Measurements.width * (_isPortrait ? 0.11 : 0.2),
-                    child: !_isHeader
-                        ? TransactionScreenParts.paymentType(
-                            _currentTransaction.type)
+                  Expanded(
+//                    flex: _isPortrait ? 2 : 1,
+                    flex: 2,
+                    child: Container(
+                      alignment: Alignment.centerLeft,
+                      child: !isHeader
+                          ? TransactionScreenParts.paymentType(
+                              currentTransaction.type)
+                          : Container(
+                              child: Text(
+                                  Language.getTransactionStrings(
+                                      "form.filter.labels.type"),
+                                  style: TextStyle(
+                                      fontSize: AppStyle.fontSizeListRow())),
+                            ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: _isPortrait ? 4 : 5,
+                    child: Container(
+                      child: !isHeader
+                          ? Text(
+                              currentTransaction.customerName,
+                              style: TextStyle(
+                                  fontSize: AppStyle.fontSizeListRow()),
+                            )
+                          : Text(
+                              Language.getTransactionStrings(
+                                  "form.filter.labels.customer_name"),
+                              style: TextStyle(
+                                  fontSize: AppStyle.fontSizeListRow())),
+                    ),
+                  ),
+                  Expanded(
+                    flex: _isPortrait ? 2 : 2,
+                    child: Container(
+                      child: !isHeader
+                          ? Text(
+                              "${Measurements.currency(currentTransaction.currency)}${f.format(currentTransaction.total)}",
+                              style: TextStyle(
+                                  fontSize: AppStyle.fontSizeListRow()),
+                            )
+                          : Text(
+                              Language.getTransactionStrings(
+                                  "form.filter.labels.total"),
+                              style: TextStyle(
+                                  fontSize: AppStyle.fontSizeListRow())),
+                    ),
+                  ),
+                  Expanded(
+                    flex: _isPortrait ? 1 : 4,
+                    child: !_isPortrait
+                        ? Container(
+                            child: !isHeader
+                                ? Text(
+                                    "${DateFormat.d("en_US").add_MMMM().add_y().format(time)} ${DateFormat.Hm("en_US").format(time.add(Duration(hours: 2)))}",
+                                    style: TextStyle(
+                                        fontSize: AppStyle.fontSizeListRow()))
+                                : Text(
+                                    Language.getTransactionStrings(
+                                        "form.filter.labels.created_at"),
+                                    style: TextStyle(
+                                        fontSize: AppStyle.fontSizeListRow())),
+                          )
+                        : Container(),
+                  ),
+                  Expanded(
+                    flex: _isPortrait ? 1 : 3,
+                    child: !_isPortrait
+                        ? Container(
+                            width: Measurements.width *
+                                (_isPortrait ? 0.20 : 0.24),
+                            child: !isHeader
+                                ? Measurements.statusWidget(
+                                    currentTransaction.status)
+                                : AutoSizeText(
+                                    Language.getTransactionStrings(
+                                        "form.filter.labels.status"),
+                                    style: TextStyle(
+                                        fontSize: AppStyle.fontSizeListRow())),
+                          )
+                        : Container(),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: !_isPortrait
+                        ? Container()
                         : Container(
-                            child: Text(
-                                Language.getTransactionStrings(
-                                    "form.filter.labels.type"),
-                                style: TextStyle(
-                                    fontSize: AppStyle.fontSizeListRow())),
+                            width: Measurements.width * 0.02,
+                            child: !isHeader
+                                ? Icon(
+                                    IconData(58849,
+                                        fontFamily: 'MaterialIcons'),
+                                    size: Measurements.width * 0.04,
+                                  )
+                                : Container(),
                           ),
                   ),
-                  Container(
-                    width: Measurements.width * (_isPortrait ? 0.39 : 0.43),
-                    child: !_isHeader
-                        ? Text(
-                            _currentTransaction.customerName,
-                            style:
-                                TextStyle(fontSize: AppStyle.fontSizeListRow()),
-                          )
-                        : Text(
-                            Language.getTransactionStrings(
-                                "form.filter.labels.customer_name"),
-                            style:
-                                TextStyle(fontSize: AppStyle.fontSizeListRow())),
-                  ),
-                  Container(
-                    width: Measurements.width * (_isPortrait ? 0.22 : 0.3),
-                    child: !_isHeader
-                        ? Text(
-                            "${Measurements.currency(_currentTransaction.currency)}${f.format(_currentTransaction.total)}",
-                            style:
-                                TextStyle(fontSize: AppStyle.fontSizeListRow()),
-                          )
-                        : Text(
-                            Language.getTransactionStrings(
-                                "form.filter.labels.total"),
-                            style:
-                                TextStyle(fontSize: AppStyle.fontSizeListRow())),
-                  ),
-                  !_isPortrait
-                      ? Container(
-                          width: Measurements.width * (_isPortrait ? 0.3 : 0.4),
-                          child: !_isHeader
-                              ? Text(
-                                  "${DateFormat.d("en_US").add_MMMM().add_y().format(time)} ${DateFormat.Hm("en_US").format(time.add(Duration(hours: 2)))}",
-                                  style: TextStyle(
-                                      fontSize: AppStyle.fontSizeListRow()))
-                              : Text(
-                                  Language.getTransactionStrings(
-                                      "form.filter.labels.created_at"),
-                                  style: TextStyle(
-                                      fontSize: AppStyle.fontSizeListRow())),
-                        )
-                      : Container(),
-                  !_isPortrait
-                      ? Container(
-                          width: Measurements.width * (_isPortrait ? 0.20 : 0.24),
-                          child: !_isHeader
-                              ? Measurements.statusWidget(
-                                  _currentTransaction.status)
-                              : AutoSizeText(
-                                  Language.getTransactionStrings(
-                                      "form.filter.labels.status"),
-                                  style: TextStyle(
-                                      fontSize: AppStyle.fontSizeListRow())),
-                        )
-                      : Container(),
-                  !_isPortrait
-                      ? Container()
-                      : Container(
-                          width: Measurements.width * 0.02,
-                          child: !_isHeader
-                              ? Icon(
-                                  IconData(58849, fontFamily: 'MaterialIcons'),
-                                  size: Measurements.width * 0.04,
-                                )
-                              : Container(),
-                        ),
                 ],
               ),
             ),
-            Divider(height: 1,color: Colors.white.withOpacity(0.5)),
+            Divider(height: 1, color: Colors.white.withOpacity(0.5)),
           ],
         ),
       ),
       onTap: () {
-        if (!_isHeader) {
+        if (!isHeader) {
           RestDatasource api = RestDatasource();
           GlobalStateModel globalStateModel =
               Provider.of<GlobalStateModel>(context);
@@ -473,7 +493,7 @@ class PhoneTableRow extends StatelessWidget {
                     .getTransactionDetail(
                         globalStateModel.currentBusiness.id,
                         GlobalUtils.ActiveToken.accesstoken,
-                        _currentTransaction.uuid,
+                        currentTransaction.uuid,
                         context)
                     .then((obj) {
                   var td = TransactionDetails.toMap(obj);
@@ -509,30 +529,24 @@ class PhoneTableRow extends StatelessWidget {
       },
     );
   }
-
-//channels
 }
 
 class TabletTableRow extends StatelessWidget {
-  Collection _currentTransaction;
-  TransactionScreenData data;
-  bool _isHeader;
+  final Collection currentTransaction;
+  final TransactionScreenData data;
+  final bool isHeader;
 
-  TabletTableRow(this._currentTransaction, this._isHeader, this.data);
+  TabletTableRow(this.currentTransaction, this.isHeader, this.data);
 
-  var f = new NumberFormat("###,##0.00", "en_US");
-
-  bool _isPortrait;
+  final f = new NumberFormat("###,##0.00", "en_US");
 
   @override
   Widget build(BuildContext context) {
     GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context);
 
-    _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
-
     DateTime time;
-    if (_currentTransaction != null)
-      time = DateTime.parse(_currentTransaction.createdAt);
+    if (currentTransaction != null)
+      time = DateTime.parse(currentTransaction.createdAt);
     return InkWell(
       highlightColor: Colors.transparent,
       child: Container(
@@ -540,111 +554,130 @@ class TabletTableRow extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
             Container(
-              //width: Measurements.width,
               height: AppStyle.listRowSize(true),
               padding: AppStyle.listRowPadding(true),
               child: Row(
                 children: <Widget>[
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    width: Measurements.width * (_isPortrait ? 0.07 : 0.08),
-                    child: !_isHeader
-                        ? TransactionScreenParts.channelIcon(
-                            _currentTransaction.channel)
-                        : Container(
-                            child: AutoSizeText(
-                            Language.getTransactionStrings(
-                                "form.filter.labels.channel"),
-                            style:
-                                TextStyle(fontSize: AppStyle.fontSizeListRow()),
-                          )),
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      alignment: Alignment.center,
+                      child: !isHeader
+                          ? Container(
+//                          alignment: _isPortrait ? Alignment.centerLeft : Alignment.center,
+                              alignment: Alignment.center,
+                              child: TransactionScreenParts.channelIcon(
+                                  currentTransaction.channel))
+                          : Container(
+                              child: AutoSizeText(
+                              Language.getTransactionStrings(
+                                  "form.filter.labels.channel"),
+                              style: TextStyle(
+                                  fontSize: AppStyle.fontSizeListRow()),
+                            )),
+                    ),
                   ),
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    width: Measurements.width * (_isPortrait ? 0.06 : 0.08),
-                    child: !_isHeader
-                        ? TransactionScreenParts.paymentType(
-                            _currentTransaction.type)
-                        : Container(
-                            child: AutoSizeText(
-                                Language.getTransactionStrings(
-                                    "form.filter.labels.type"),
-                                style: TextStyle(
-                                    fontSize: AppStyle.fontSizeListRow()))),
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      alignment: Alignment.center,
+                      child: !isHeader
+                          ? Container(
+                              alignment: Alignment.center,
+                              child: TransactionScreenParts.paymentType(
+                                  currentTransaction.type))
+                          : Container(
+                              child: AutoSizeText(
+                                  Language.getTransactionStrings(
+                                      "form.filter.labels.type"),
+                                  style: TextStyle(
+                                      fontSize: AppStyle.fontSizeListRow()))),
+                    ),
                   ),
-                  Container(
-                    width: Measurements.width * (_isPortrait ? 0.24 : 0.28),
-                    child: !_isHeader
-                        ? AutoSizeText("#${_currentTransaction.id}",
-                            style:
-                                TextStyle(fontSize: AppStyle.fontSizeListRow()))
-                        : AutoSizeText(
-                            Language.getTransactionStrings(
-                                "form.filter.labels.original_id"),
-                            maxLines: 1,
-                            textAlign: TextAlign.left,
-                            style:
-                                TextStyle(fontSize: AppStyle.fontSizeListRow())),
+                  Expanded(
+                    flex: 4,
+                    child: Container(
+                      child: !isHeader
+                          ? AutoSizeText("#${currentTransaction.id}",
+                              style: TextStyle(
+                                  fontSize: AppStyle.fontSizeListRow()))
+                          : AutoSizeText(
+                              Language.getTransactionStrings(
+                                  "form.filter.labels.original_id"),
+                              maxLines: 1,
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                  fontSize: AppStyle.fontSizeListRow())),
+                    ),
                   ),
-                  Container(
-                    width: Measurements.width * (_isPortrait ? 0.18 : 0.20),
-                    child: !_isHeader
-                        ? AutoSizeText(_currentTransaction.customerName,
-                            style:
-                                TextStyle(fontSize: AppStyle.fontSizeListRow()))
-                        : AutoSizeText(
-                            Language.getTransactionStrings(
-                                "form.filter.labels.customer_name"),
-                            maxLines: 1,
-                            style:
-                                TextStyle(fontSize: AppStyle.fontSizeListRow())),
+                  Expanded(
+                    flex: 3,
+                    child: Container(
+                      child: !isHeader
+                          ? AutoSizeText(currentTransaction.customerName,
+                              style: TextStyle(
+                                  fontSize: AppStyle.fontSizeListRow()))
+                          : AutoSizeText(
+                              Language.getTransactionStrings(
+                                  "form.filter.labels.customer_name"),
+                              maxLines: 1,
+                              style: TextStyle(
+                                  fontSize: AppStyle.fontSizeListRow())),
+                    ),
                   ),
-                  Container(
-                    width: Measurements.width * (_isPortrait ? 0.11 : 0.13),
-                    child: !_isHeader
-                        ? AutoSizeText(
-                            "${Measurements.currency(_currentTransaction.currency)}${f.format(_currentTransaction.total)}",
-                            style:
-                                TextStyle(fontSize: AppStyle.fontSizeListRow()))
-                        : AutoSizeText(
-                            Language.getTransactionStrings(
-                                "form.filter.labels.total"),
-                            maxLines: 1,
-                            style:
-                                TextStyle(fontSize: AppStyle.fontSizeListRow())),
+                  Expanded(
+                    flex: 2,
+                    child: Container(
+                      child: !isHeader
+                          ? AutoSizeText(
+                              "${Measurements.currency(currentTransaction.currency)}${f.format(currentTransaction.total)}",
+                              style: TextStyle(
+                                  fontSize: AppStyle.fontSizeListRow()))
+                          : AutoSizeText(
+                              Language.getTransactionStrings(
+                                  "form.filter.labels.total"),
+                              maxLines: 1,
+                              style: TextStyle(
+                                  fontSize: AppStyle.fontSizeListRow())),
+                    ),
                   ),
-                  Container(
-                    width: Measurements.width * (_isPortrait ? 0.17 : 0.25),
-                    child: !_isHeader
-                        ? AutoSizeText(
-                            "${DateFormat.d("en_US").add_MMMM().add_y().format(time)} ${DateFormat.Hm("en_US").format(time.add(Duration(hours: 2)))}",
-                            style:
-                                TextStyle(fontSize: AppStyle.fontSizeListRow()))
-                        : Text(
-                            Language.getTransactionStrings(
-                                "form.filter.labels.created_at"),
-                            style:
-                                TextStyle(fontSize: AppStyle.fontSizeListRow())),
+                  Expanded(
+                    flex: 3,
+                    child: Container(
+                      child: !isHeader
+                          ? AutoSizeText(
+                              "${DateFormat.d("en_US").add_MMMM().add_y().format(time)} ${DateFormat.Hm("en_US").format(time.add(Duration(hours: 2)))}",
+                              style: TextStyle(
+                                  fontSize: AppStyle.fontSizeListRow()))
+                          : Text(
+                              Language.getTransactionStrings(
+                                  "form.filter.labels.created_at"),
+                              style: TextStyle(
+                                  fontSize: AppStyle.fontSizeListRow())),
+                    ),
                   ),
-                  Container(
-                    width: Measurements.width * (_isPortrait ? 0.13 : 0.15),
-                    child: !_isHeader
-                        ? Measurements.statusWidget(_currentTransaction.status)
-                        : Text(
-                            Language.getTransactionStrings(
-                                "form.filter.labels.status"),
-                            style:
-                                TextStyle(fontSize: AppStyle.fontSizeListRow())),
+                  Expanded(
+                    flex: 2,
+                    child: Container(
+                      width: Measurements.width * (_isPortrait ? 0.13 : 0.15),
+                      child: !isHeader
+                          ? Measurements.statusWidget(currentTransaction.status)
+                          : Text(
+                              Language.getTransactionStrings(
+                                  "form.filter.labels.status"),
+                              style: TextStyle(
+                                  fontSize: AppStyle.fontSizeListRow())),
+                    ),
                   ),
                 ],
               ),
             ),
-            Divider(height: 1,color: Colors.white.withOpacity(0.5)),
+            Divider(height: 1, color: Colors.white.withOpacity(0.5)),
           ],
         ),
       ),
       onTap: () {
-        if (!_isHeader) {
+        if (!isHeader) {
           RestDatasource api = RestDatasource();
           showDialog(
               context: context,
@@ -654,7 +687,7 @@ class TabletTableRow extends StatelessWidget {
                     .getTransactionDetail(
                         globalStateModel.currentBusiness.id,
                         GlobalUtils.ActiveToken.accesstoken,
-                        _currentTransaction.uuid,
+                        currentTransaction.uuid,
                         context)
                     .then((obj) {
                   var td = TransactionDetails.toMap(obj);

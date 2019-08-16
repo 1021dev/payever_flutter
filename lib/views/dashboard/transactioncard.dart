@@ -410,7 +410,7 @@ class DashboardWidgets{
 class TransactionNavigation implements CardContract{
   @override
   void loadScreen(BuildContext context,ValueNotifier state) {
-    Navigator.push(context, PageTransition(child: TrasactionScreen(), type: PageTransitionType.fade,));
+    Navigator.push(context, PageTransition(child: TransactionScreen(), type: PageTransitionType.fade,));
     state.value = false;
   }
   @override
@@ -502,7 +502,7 @@ class _HeadState extends State<Head> {
         ],
       ),
       onTap: (){
-        Navigator.push(context, PageTransition(child: TrasactionScreen(), type: PageTransitionType.fade,));
+        Navigator.push(context, PageTransition(child: TransactionScreen(), type: PageTransitionType.fade,));
       },
     );
   }
@@ -555,7 +555,7 @@ class _BodyState extends State<Body> {
             ],
           ),
           onTap: (){
-            Navigator.push(context, PageTransition(child: TrasactionScreen(), type: PageTransitionType.fade,));
+            Navigator.push(context, PageTransition(child: TransactionScreen(), type: PageTransitionType.fade,));
           },
     );
   }
