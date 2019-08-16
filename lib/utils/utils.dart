@@ -206,17 +206,17 @@ class GlobalUtils{
   
   //URLS
   //static String  PASS= "P@ssword123";//test 1
-///static String  PASS= "Test1234!";//staging 1
+  static String  PASS= "Test1234!";//staging 1
   //static String  PASS= "";//live 0
   //static String  PASS= "Payever2019!";//live 1
-  static String  PASS = "Payever123!";//test 2
+  //static String  PASS = "Payever123!";//test 2
   //static String  PASS= "12345678";//staging 2
 
   //static String  MAIL= "payever.automation@gmail.com";//test 1
-  //static String  MAIL= "rob@top.com";//staging 1
+  static String  MAIL= "rob@top.com";//staging 1
   //static String  MAIL= "";//live 0
   //static String  MAIL= "abiantgmbh@payever.de";//live 1
-  static String  MAIL = "testcases@payever.de";//test 2
+  //static String  MAIL = "testcases@payever.de";//test 2
   //static String  MAIL= "service@payever.de";//staging 2
 
 //  static const String COMMERCEOS_URL                    = "https://commerceos.test.devpayever.com";//test
@@ -226,9 +226,9 @@ class GlobalUtils{
 
   static const String POS_URL                         = "https://getpayever.com/pos";
    
-  static const String FORGOT_PASS                     = "/password/forgot";
-  //static const String SIGN_UP                         = "/entry/registration/business";
-  static const String SIGN_UP                         = "/business/trial";
+  static const String FORGOT_PASS                     = COMMERCEOS_URL+"/password/forgot";
+  //static const String SIGN_UP                       = COMMERCEOS_URL+"/entry/registration/business";
+  static const String SIGN_UP                         = "https://getpayever.com/business/trial";
 
 
 

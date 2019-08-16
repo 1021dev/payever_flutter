@@ -203,6 +203,7 @@ class Cart {
     items.forEach((f){
       result.add({
         GlobalUtils.DB_POS_CART_CART_UUID:f.uuid,
+        GlobalUtils.DB_POS_CART_CART_ID:f.id,
         GlobalUtils.DB_POS_CART_CART_PRICE:f.price,
         GlobalUtils.DB_POS_CART_CART_QTY:f.quantity,
         }

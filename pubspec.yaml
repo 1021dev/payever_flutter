@@ -53,6 +53,7 @@ dependencies:
   provider: ^3.0.0+1
   rxdart: ^0.22.1
   oktoast: ^2.2.0
+  package_info: ^0.4.0+6
   #zefyr: ^0.6.0
 
 

@@ -153,8 +153,8 @@ class _LoginState extends State<Login> implements LoginScreenContract,AuthStateL
   }
 
   _launchURL(String url) async {
-    if (await canLaunch(GlobalUtils.COMMERCEOS_URL + url)) {
-      await launch(GlobalUtils.COMMERCEOS_URL +url);
+    if (await canLaunch(url)) {
+      await launch(url);
     } else {
       throw 'Could not launch $url';
     }

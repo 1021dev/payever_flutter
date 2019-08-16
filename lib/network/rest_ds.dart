@@ -591,8 +591,9 @@ class RestDatasource {
     
     print("TAG - postStorage()");
     var body = jsonEncode({"data":{"flow":{"channel_set_id":channel,"cart":cart},"force_no_header":true,"force_no_send_to_device": sms ,"force_no_order":order,"generate_payment_code": code},"expiresAt":expiration});
+    print(body);
+    print(STORAGEURL);
     var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token" , HttpHeaders.CONTENT_TYPE: "application/json" ,HttpHeaders.USER_AGENT:GlobalUtils.fingerprint };
-    
     return _netUtil.post(STORAGEURL, headers: headers, body: body).then((dynamic res) {
       return res;
     });

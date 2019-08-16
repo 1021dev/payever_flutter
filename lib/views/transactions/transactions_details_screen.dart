@@ -479,12 +479,13 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Container(
-              alignment: Alignment.centerLeft,
-              height: Measurements.height * getCustomNumber(0.05, 0.06),
-              child: Text(
-                Language.getTransactionStrings("details.billing.header"),
-                style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),
-              )),
+            constraints: BoxConstraints(minWidth: Measurements.width * getCustomNumber(0.17, 0.25),),
+            alignment: Alignment.centerLeft,
+            height: Measurements.height * getCustomNumber(0.05, 0.06),
+            child: Text(
+              Language.getTransactionStrings("details.billing.header"),
+              style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),
+            )),
           SizedBox(
             width: 5,
           ),
@@ -509,7 +510,6 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
         decoration: BoxDecoration(
           shape: BoxShape.rectangle,
           borderRadius: BorderRadius.circular(12),
-          // color: Colors.black.withOpacity(0.3),
         ),
         padding: EdgeInsets.all(Measurements.width * 0.02),
         child: Column(
@@ -609,7 +609,7 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
 
   Widget paymentRoWHeader() {
     return Container(
-      width: Measurements.width -73,
+      width: Measurements.width - 73,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

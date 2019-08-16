@@ -282,7 +282,7 @@ class _ProductInventoryRowState extends State<ProductInventoryRow> {
                           },
                           textAlign: TextAlign.center,
                           controller: TextEditingController(
-                            text: "${widget.parts.prodStock}",
+                            text: "${widget.parts.prodStock??0}",
                           ),
                           onFieldSubmitted: (qtt){
                             widget.parts.prodStock = num.parse(qtt);

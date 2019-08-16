@@ -440,14 +440,14 @@ class _SimplifyTransactionsState extends State<SimplifyTransactions> {
     globalStateModel = Provider.of<GlobalStateModel>(context);
     dashboardStateModel = Provider.of<DashboardStateModel>(context);
     fetchDaily();
-    if(dashboardStateModel.lastMonth.isEmpty){
+    if(widget.lastMonth.isEmpty){
       RestDatasource().getMonths(globalStateModel.currentBusiness.id,GlobalUtils.ActiveToken.accesstoken,context).then((months){
         months.forEach((month){widget.lastYear.add(Month.map(month));});
         dashboardStateModel.setlastYear(widget.lastYear);    
       }).then((_){
         RestDatasource().getTransactionList(globalStateModel.currentBusiness.id,GlobalUtils.ActiveToken.accesstoken, "", context).then((_total){
           dashboardStateModel.setTotal(Transaction.toMap(_total).paginationData.amount.toDouble());
-          setState((){});
+          setState(() { });
         });
       });
     }else{
