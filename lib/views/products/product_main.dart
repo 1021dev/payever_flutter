@@ -42,11 +42,12 @@ class _ProductMainRowState extends State<ProductMainRow> {
   }
 
   Future getImage() async {
-    var image = await ImagePicker.pickImage(imageQuality: 10,source: ImageSource.gallery);
+    var image = await ImagePicker.pickImage(imageQuality: 80,source: ImageSource.gallery);
     if (image.existsSync())
       setState(() {
         RestDatasource api = RestDatasource();
         api.postImage(image, widget.parts.business, GlobalUtils.ActiveToken.accessToken).then((dynamic res) {
+          print(res["blobName"]);
           widget.parts.images.add(res["blobName"]);
           if (widget.currentImage == null) {
             widget.currentImage = res["blobName"];
@@ -254,7 +255,7 @@ class _ProductMainRowState extends State<ProductMainRow> {
                       ),
                       onSaved: (name) {
                         widget.parts.product.title = name;
-                        
+
                       },
                       validator: (value) {
                         if (value.isEmpty) {

@@ -16,6 +16,7 @@ import 'package:payever/utils/env.dart';
 import 'package:payever/utils/translations.dart';
 import 'package:payever/utils/utils.dart';
 import 'package:payever/view_models/global_state_model.dart';
+import 'package:payever/views/customelements/updatedialog.dart';
 //import 'package:payever/views/dashboard/dashboard_screen.dart';
 import 'package:payever/views/dashboard/dashboard_screen_ref.dart';
 import 'package:payever/views/login/login_page.dart';
@@ -36,7 +37,6 @@ class DashboardMidScreen extends StatelessWidget {
   GlobalStateModel globalStateModel;
 
   void _loadUserData() async {
-    
     var dataLoaded = await loadData();
     if (dataLoaded != null) {
       var data = json.decode(dataLoaded);
@@ -161,8 +161,7 @@ class DashboardMidScreen extends StatelessWidget {
         : MediaQuery.of(context).size.height);
     bool isTablet = MediaQuery.of(context).size.width > 600;
     globalStateModel = Provider.of<GlobalStateModel>(context);
-    testVersion(context);
-    //_loadUserData();
+    VersionController().checkVersion(context,_loadUserData);
     return Stack(
       overflow: Overflow.visible,
       fit: StackFit.expand,
@@ -200,75 +199,7 @@ class DashboardMidScreen extends StatelessWidget {
       ],
     );
   }
-
-  Future<void> testVersion(BuildContext context){
-    
-    PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
-      String version = packageInfo.version;
-      Version _version = getSupportedVersion();
-      print(_version.minVersion.compareTo(version));
-      if(_version.minVersion.compareTo(version)<0){
-        showDialog(
-          barrierDismissible: true,
-          context: context,
-          builder: (BuildContext context) {
-            return Center(
-              child: Dialog(
-                backgroundColor: Colors.black.withOpacity(0.8),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  height: 200,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Text("Your App version is no longer supported."),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          RaisedButton(
-                            color: Colors.white.withOpacity(0.1),
-                            child: Text("Close"),
-                            onPressed: (){
-                              exit(0);
-                            },
-                          ),
-                          RaisedButton(
-                            color: Colors.white.withOpacity(0.3),
-                            child: Text("Update"),
-                            onPressed: (){
-                              _launchURL(_version.storeLink(Platform.operatingSystem.contains("ios")));
-                            },
-                          )
-                        ],
-                      )
-                    ],
-                  )
-                ),
-              ),
-            );
-          });
-      }else{
-        _loadUserData();
-      }
-    });
-  }
-
-    _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
   
-  getSupportedVersion(){
-    return Version("1.0.0","1.9.0","https://apps.apple.com/us/app/telegram-messenger/id686449807","https://play.google.com/store/apps");
-  }
-
   Future<dynamic> loadData() async {
     
     RestDatasource api = RestDatasource();

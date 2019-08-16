@@ -289,7 +289,7 @@ class _SwitcherState extends State<Switcher> {
   bool _businessActiveImage = false;
 
   void goPersonalDashDummy(){
-    Future.delayed(Duration(milliseconds: 500)).then((_)=> setState(()=> _loadPersonal = false) );
+    setState(()=> _loadPersonal = false);
   }
   void goPersonalDash(){
     String wallpaperid;

@@ -21,7 +21,9 @@ class _ProductChannelsRowState extends State<ProductChannelsRow> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    
     RestDatasource api = RestDatasource();
+    widget.parts.terminals.clear();
     api.getTerminal(widget.parts.business, GlobalUtils.ActiveToken.accessToken,context).then((terminals){
       terminals.forEach((term){
         widget.parts.terminals.add(Terminal.toMap(term));
@@ -32,8 +34,8 @@ class _ProductChannelsRowState extends State<ProductChannelsRow> {
     }).catchError((onError){
       print(onError);
     });
+    widget.parts.shops.clear();
     api.getShop(widget.parts.business, GlobalUtils.ActiveToken.accessToken,context).then((shops){
-      
       shops.forEach((shop){
         widget.parts.shops.add(Shop.toMap(shop));
       });

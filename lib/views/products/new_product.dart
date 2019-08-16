@@ -357,22 +357,25 @@ class _NewProductScreenState extends State<NewProductScreen> {
             currentKey: widget._parts.scaffoldKey,
             appBar: _appBar,
             body: SingleChildScrollView(
-              child: Form(
-                key: widget._parts._formKey,
-                child: Column(
-                  children: <Widget>[
-                    buttomrow,
-                    productRowsList,
-                    // buttomrow,
-                    // mainrow,
-                    // widget._parts.product.variants.length == 0 ? inventoryRow:Container(),
-                    // categoryRow,
-                    // variantRow,
-                    // channelRow,
-                    // //shippingRow,
-                    // taxRow,
-                    // visibilityRow
-                  ],
+              child: InkWell(
+                onTap: () => _removeFocus(context),
+                child: Form(
+                  key: widget._parts._formKey,
+                  child: Column(
+                    children: <Widget>[
+                      buttomrow,
+                      productRowsList,
+                      // buttomrow,
+                      // mainrow,
+                      // widget._parts.product.variants.length == 0 ? inventoryRow:Container(),
+                      // categoryRow,
+                      // variantRow,
+                      // channelRow,
+                      // //shippingRow,
+                      // taxRow,
+                      // visibilityRow
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -420,7 +423,11 @@ class _NewProductScreenState extends State<NewProductScreen> {
       },
     );
   }
-  
+
+  _removeFocus(BuildContext context){
+    FocusScope.of(context).requestFocus(FocusNode());
+  }
+
   void save() {
     
     var a = widget._parts._formKey.currentState;
@@ -451,7 +458,7 @@ class _NewProductScreenState extends State<NewProductScreen> {
         v.images.forEach((name) {
           images += '"$name"';
         });
-        String id = '"${Uuid().v4()}"';
+        String id = widget._parts.editMode?'"${v.id}"':'"${Uuid().v4()}"';
         variants += '{title: "${v.title}", description: "${v.description}",price: ${v.price}, images: [$images], hidden: ${v.hidden}, salePrice: ${v.salePrice}, sku: "${v.sku}", barcode: "${v.barcode}",id: $id}';
       });
       String stringCategories = "";

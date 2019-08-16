@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:payever/utils/env.dart';
 import 'package:payever/views/customelements/custom_app_bar.dart';
 
 import 'package:payever/models/transaction.dart';
@@ -38,6 +39,7 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
   ScreenParts parts = ScreenParts();
 
   bool _isTablet = false;
+  bool _isPortrait = true;
 
   @override
   void initState() {
@@ -81,6 +83,10 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
       ),
       body: OrientationBuilder(
         builder: (BuildContext context, Orientation orientation) {
+          _isPortrait = Orientation.portrait == orientation;
+
+          print("_isPortrait: $_isPortrait");
+
           parts.isPortrait = Orientation.portrait == orientation;
           Measurements.height = (parts.isPortrait
               ? MediaQuery.of(context).size.height
@@ -117,6 +123,10 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
 
   num getCustomNumber(num option1, num option2) {
     return _isTablet ? option1 : option2;
+  }
+
+  bool getDeviceOrientation() {
+    return _isPortrait;
   }
 
   Widget highlightHeaderRow() {
@@ -168,8 +178,7 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
                   image: !havePicture
                       ? null
                       : DecorationImage(
-                          image: NetworkImage(parts
-                              .currentTransaction.cart.items[0].thumbnail)),
+                          image: NetworkImage(parts.currentTransaction.cart.items[0].thumbnail.contains("https:")?parts.currentTransaction.cart.items[0].thumbnail:Env.Storage+"/products/"+parts.currentTransaction.cart.items[0].thumbnail)),
                 ),
                 child: havePicture
                     ? Container()
@@ -242,6 +251,8 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
     int pan = parts.currentTransaction.details.pan_id == null ? 0 : 1;
     int orig = parts.currentTransaction.transaction.originalID == null ? 0 : 1;
     int length = ref + no + number + finance + pan + orig;
+
+    print("Length: $length");
 
     return Expanded(
       child: Container(
@@ -474,6 +485,9 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
   Widget billingRowHeader() {
     return Container(
       //height: Measurements.height * 0.07,
+//      width:
+//      getDeviceOrientation() ? Measurements.width - 73 : Measurements.width - 13,
+      width: Measurements.width * 0.75,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -489,15 +503,25 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
           SizedBox(
             width: 5,
           ),
-          Container(
-            alignment: Alignment.centerLeft,
+//          Container(
+//            alignment: Alignment.centerLeft,
+//            child: Text(
+//                "${Measurements.salutation(parts.currentTransaction.billingAddress.salutation)} ${parts.currentTransaction.billingAddress.firstName} ${parts.currentTransaction.billingAddress.lastName} ",
+//                maxLines: 1,
+//                overflow: TextOverflow.ellipsis,
+//                style: TextStyle(
+//                    fontSize: AppStyle.fontSizeTabMid(),
+//                    color: Colors.white.withOpacity(0.6))),
+//          ),
+          Expanded(
             child: Text(
                 "${Measurements.salutation(parts.currentTransaction.billingAddress.salutation)} ${parts.currentTransaction.billingAddress.firstName} ${parts.currentTransaction.billingAddress.lastName} ",
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                    fontSize: AppStyle.fontSizeTabMid(),
-                    color: Colors.white.withOpacity(0.6))),
+                  fontSize: AppStyle.fontSizeTabContent(),
+                  color: Colors.white.withOpacity(0.6),
+                )),
           ),
         ],
       ),
@@ -688,7 +712,6 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
                       ? Container(
                           padding: EdgeInsets.all(5),
                           alignment: Alignment.centerLeft,
-
                           child: RichText(
                               maxLines: 2,
                               text: TextSpan(
@@ -766,17 +789,15 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
                         children: [
                           TextSpan(
                               text:
-                                "${DateFormat.d("en_US").add_MMM().add_y().format(time)} ${DateFormat.Hm("en_US").format(time.add(Duration(hours: 2)))}  ",
+                                  "${DateFormat.d("en_US").add_MMM().add_y().format(time)} ${DateFormat.Hm("en_US").format(time.add(Duration(hours: 2)))}  ",
                               style: TextStyle(
-                                  fontSize:
-                                      AppStyle.fontSizeTabContent(),
-                                  color:
-                                      Colors.white.withOpacity(0.6))),
+                                  fontSize: AppStyle.fontSizeTabContent(),
+                                  color: Colors.white.withOpacity(0.6))),
                           TextSpan(
                             text:
-                            "${Measurements.actions(parts.currentTransaction.history[index].action, parts.currentTransaction.history[index], parts.currentTransaction)}",
+                                "${Measurements.actions(parts.currentTransaction.history[index].action, parts.currentTransaction.history[index], parts.currentTransaction)}",
                           ),
-                        ])), 
+                        ])),
               ),
             );
           },
@@ -788,7 +809,7 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
   Widget totalPriceRow() {
     return Container(
       child: Container(
-        //color: Colors.white.withOpacity(0.1),
+          //color: Colors.white.withOpacity(0.1),
           padding: parts.padding,
           child: Column(
             children: <Widget>[

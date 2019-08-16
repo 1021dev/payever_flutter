@@ -361,7 +361,7 @@ class _DetailDetailsState extends State<DetailDetails> {
       productsList = [];
       widget.currentProduct.variants.forEach((f) {
         var temp = widget.parts.productStock[f.sku];
-        if (((temp.contains("null") ? 0 : int.parse(temp ?? "0")) > 0)) {
+        if(temp!=null){if (((temp.contains("null") ? 0 : int.parse(temp ?? "0")) > 0)) {
           PopupMenuItem<String> variant = PopupMenuItem(
             value: "$index",
             child: Container(
@@ -382,12 +382,12 @@ class _DetailDetailsState extends State<DetailDetails> {
           products.add(variant);
 
           productsList.add(f.title);
-        }
+        }}
         index++;
       });
+
       if (widget.currentVariant.value == 0) {
-        print(
-            "${widget.currentVariant.value}  =  ${int.parse(products.first.value)}");
+        print("${widget.currentVariant.value}  =  ${int.parse(products.first.value)}");
         widget.currentVariant.value = int.parse(products.first.value);
       }
       price = widget.currentProduct.variants[widget.currentVariant.value].price;
@@ -523,7 +523,9 @@ class _DetailDetailsState extends State<DetailDetails> {
 
                             selectedIndex = index;
 
-                            customCarouselSlider.jumpToPage(imagesBase.length + 1);
+                            if(imagesBase != null && imagesBase.length >= 0) {
+                              customCarouselSlider.jumpToPage(imagesBase.length + 1);
+                            }
 
                           });
                         },

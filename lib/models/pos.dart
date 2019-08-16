@@ -1,3 +1,4 @@
+import 'package:payever/utils/env.dart';
 import 'package:payever/utils/utils.dart';
 import 'transaction.dart';
 
@@ -203,6 +204,9 @@ class Cart {
     items.forEach((f){
       result.add({
         GlobalUtils.DB_POS_CART_CART_UUID:f.uuid,
+        GlobalUtils.DB_POS_CART_CART_NAME:f.name,
+        GlobalUtils.DB_POS_CART_CART_SKU:f.sku,
+        GlobalUtils.DB_POS_CART_CART_IMAGE:Env.Storage+"/products/"+f.image,
         GlobalUtils.DB_POS_CART_CART_ID:f.id,
         GlobalUtils.DB_POS_CART_CART_PRICE:f.price,
         GlobalUtils.DB_POS_CART_CART_QTY:f.quantity,
