@@ -16,8 +16,9 @@ import 'package:payever/utils/customshapes.dart';
 import 'package:payever/utils/env.dart';
 import 'package:payever/utils/translations.dart';
 import 'package:payever/utils/utils.dart';
-import 'package:payever/view_models/cart_state_model.dart';
+import 'package:payever/view_models/pos_cart_state_model.dart';
 import 'package:payever/view_models/dashboard_state_model.dart';
+import 'package:payever/view_models/pos_state_model.dart';
 import 'package:payever/views/pos/detailedProduct.dart';
 import 'package:payever/views/pos/pos_cart.dart';
 import 'package:payever/views/pos/pos_order_section.dart';
@@ -29,15 +30,17 @@ ValueNotifier<GraphQLClient> clientFor({
   @required String uri,
   String subscriptionUri,     
 }) {
-  Link link = HttpLink(uri: uri) as Link;
+  Link link = HttpLink(uri: uri);
   if (subscriptionUri != null) {
-    WebSocketLink websocketLink = WebSocketLink(
+    WebSocketLink webSocketLink = WebSocketLink(
         config: SocketClientConfig(
           autoReconnect: true,
           inactivityTimeout: Duration(seconds: 30),
         ),
         url: uri
     );
+    print("webSocketLink: $webSocketLink");
+
     final AuthLink authLink = AuthLink(
       getToken: () => 'Bearer ${GlobalUtils.ActiveToken.accessToken}',
     );
@@ -59,7 +62,7 @@ class PosScreenParts{
   
   Map<String,String> productStock = Map();
 
-  bool smsenabled = false;
+  bool smsEnabled = false;
   String shoppingCartID = "";
   String url;
   
@@ -118,7 +121,7 @@ class NativePosScreen extends StatefulWidget {
   PosScreenParts parts;
 
   @override
-  _NativePosScreenState createState() => _NativePosScreenState();
+  createState() => _NativePosScreenState();
 }
 
 class _NativePosScreenState extends State<NativePosScreen> {
@@ -153,7 +156,7 @@ class _NativePosScreenState extends State<NativePosScreen> {
           widget.parts.shoppingCart = Cart(); 
           api.getCheckout(widget.parts.currentTerminal.channelSet,GlobalUtils.ActiveToken.accessToken).then((_checkout){
             widget.parts.currentCheckout = Checkout.toMap(_checkout);
-            widget.parts.smsenabled = !widget.parts.currentCheckout.sections.firstWhere((test)=> test.code=="send_to_device").enabled;
+            widget.parts.smsEnabled = !widget.parts.currentCheckout.sections.firstWhere((test)=> test.code=="send_to_device").enabled;
             setState((){});
           });
         });
@@ -165,7 +168,9 @@ class _NativePosScreenState extends State<NativePosScreen> {
       widget.parts.shoppingCart = Cart(); 
       api.getCheckout(widget.terminal.channelSet,GlobalUtils.ActiveToken.accessToken).then((_checkout){
         widget.parts.currentCheckout = Checkout.toMap(_checkout);
-        widget.parts.smsenabled = !widget.parts.currentCheckout.sections.firstWhere((test)=> test.code=="send_to_device").enabled;
+        print("widget.parts.currentCheckout.sections: ${widget.parts.currentCheckout.sections}");
+
+//        widget.parts.smsEnabled = !widget.parts.currentCheckout.sections.firstWhere((test)=> test.code=="send_to_device").enabled;
       });
     }
     widget.parts.haveProducts.addListener(listener);
@@ -179,8 +184,12 @@ class _NativePosScreenState extends State<NativePosScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+//    PosStateModel posStateModel = Provider.of<PosStateModel>(context);
+
     widget.parts.isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     widget.parts.isTablet = widget.parts.isPortrait? MediaQuery.of(context).size.width > 600:MediaQuery.of(context).size.height > 600;   
+
     return Scaffold(
       backgroundColor: Colors.white,
       bottomNavigationBar: Container(
@@ -243,14 +252,15 @@ class _NativePosScreenState extends State<NativePosScreen> {
               ],
             ),
             onPressed: () {
-              Navigator.push(
-                  context,
-                  PageTransition(
-                      child: POSCart(
-                        parts: widget.parts,
-                      ),
-                      type: PageTransitionType.fade,
-                      duration: Duration(milliseconds: 10)));
+//              Navigator.push(
+//                  context,
+//                  PageTransition(
+//                      child: POSCart(
+////                        parts: widget.parts,
+//                        parts: posStateModel,
+//                      ),
+//                      type: PageTransitionType.fade,
+//                      duration: Duration(milliseconds: 10)));
             },
           ),
         ],
@@ -271,10 +281,16 @@ class _PosBodyState extends State<PosBody> {
   ScrollController controller;
     void _scrollListener(){
     if (controller.position.extentAfter < 800) {
+
+      print("widget.parts.page: ${widget.parts.page}");
+      print("widget.parts.pageCount: ${widget.parts.pageCount}");
+      print("widget.parts.loadMore.value: ${widget.parts.loadMore.value}");
+
+
       if(widget.parts.page < widget.parts.pageCount && !widget.parts.loadMore.value){
         setState(() {
-          widget.parts.page ++;
           widget.parts.loadMore.value = true;
+          widget.parts.page ++;
         });
       }
     }
@@ -299,7 +315,7 @@ class _PosBodyState extends State<PosBody> {
         var _varEmpty = widget.parts.productStock[_variants[0].sku]??"0";
         oneVariant = ((_varEmpty.contains("null")? 0:int.parse(_varEmpty??"0")) > 0);
       }
-      if(!(!((temp.contains("null")? 0:int.parse(temp??"0")) > 0) && prod.variants.isEmpty) && !((prod.variants.length == 1) && !oneVariant))
+//      if(!(!((temp.contains("null")? 0:int.parse(temp??"0")) > 0) && prod.variants.isEmpty) && !((prod.variants.length == 1) && !oneVariant))
         prodList.add( ProductItem(currentProduct: prod, parts: widget.parts) );
     });
 
@@ -324,7 +340,7 @@ class _PosBodyState extends State<PosBody> {
                 ),
               ),
               onTap:(){
-                Navigator.push(context,PageTransition(child:WebViewPayments(parts: widget.parts,url: null,),type:PageTransitionType.fade,duration: Duration(milliseconds: 10)) );            
+//                Navigator.push(context,PageTransition(child:WebViewPayments(parts: widget.parts,url: null,),type:PageTransitionType.fade,duration: Duration(milliseconds: 10)) );
               },
             ),
           ),
@@ -451,7 +467,7 @@ class _ProductItemState extends State<ProductItem> {
           ),
         ),
         onTap: (){
-          Navigator.push(context, PageTransition(child:DetailScreen(parts:widget.parts,currentProduct: widget.currentProduct,),type:PageTransitionType.fade,duration: Duration(milliseconds: 10)));
+//          Navigator.push(context, PageTransition(child:DetailScreen(parts:widget.parts,currentProduct: widget.currentProduct,),type:PageTransitionType.fade,duration: Duration(milliseconds: 10)));
       },
       ),
     );
@@ -462,8 +478,10 @@ class _ProductItemState extends State<ProductItem> {
 class Loader extends StatefulWidget {
   PosScreenParts parts;
   Loader(this.parts);
-  int page = 1;
+//  int page = 1;
   int limit = 36;
+//  int limit = 5;
+
   @override
   _LoaderState createState() => _LoaderState();
 }
@@ -531,12 +549,23 @@ class _LoaderState extends State<Loader> {
               );
             }
             widget.parts.pageCount = result.data["getProductsByChannelSet"]["info"]["pagination"]["page_count"];
+
             result.data["getProductsByChannelSet"]["products"].forEach((prod){
+
+
               var tempProduct = ProductsModel.toMap(prod);
               if((widget.parts.productList.indexWhere((test) => test.sku == tempProduct.sku)<0))
                 widget.parts.productList.add(tempProduct);
+
             });
             if(widget.parts.productList.isNotEmpty){
+
+              print("widget.parts.productList: ${widget.parts.productList}");
+              print("widget.parts.productListCount: ${widget.parts.productList.length}");
+              for(var product in widget.parts.productList) {
+                print("Product: Title: ${product.title} - SKU: ${product.sku}");
+              }
+
               Future.delayed(Duration(microseconds: 1)).then((_){
                 widget.parts.dataFetched.value = true;
                 widget.parts.loadMore.value = false;

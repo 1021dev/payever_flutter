@@ -22,12 +22,14 @@ import 'package:payever/utils/translations.dart';
 import 'package:payever/utils/utils.dart';
 import 'package:payever/view_models/dashboard_state_model.dart';
 import 'package:payever/view_models/global_state_model.dart';
+import 'package:payever/view_models/pos_state_model.dart';
 import 'package:payever/views/customelements/dashboard_card_templates.dart';
 import 'package:payever/views/dashboard/dashboard_screen.dart';
 import 'package:payever/views/dashboard/dashboardcard.dart';
 import 'package:payever/views/dashboard/dashboardcard_ref.dart';
 import 'package:payever/views/pos/edit_terminal.dart';
 import 'package:payever/views/pos/native_pos_screen.dart';
+import 'package:payever/views/pos/pos_products_list_screen.dart';
 import 'package:payever/views/pos/pos_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -217,7 +219,8 @@ class POSNavigation implements CardContract{
   @override
   void loadScreen(BuildContext context,ValueNotifier state) {
     state.value =false;
-    Navigator.push(context, PageTransition(child:NativePosScreen(terminal:_parts._terminals[_parts.index.value],business:Provider.of<GlobalStateModel>(context).currentBusiness),type:PageTransitionType.fade));
+//    Navigator.push(context, PageTransition(child:NativePosScreen(terminal:_parts._terminals[_parts.index.value],business:Provider.of<GlobalStateModel>(context).currentBusiness),type:PageTransitionType.fade));
+    Navigator.push(context, PageTransition(child:PosProductsListScreen(terminal:_parts._terminals[_parts.index.value],business:Provider.of<GlobalStateModel>(context).currentBusiness),type:PageTransitionType.fade));
   }
 
   @override
@@ -634,7 +637,23 @@ class SimpleTerminal extends StatelessWidget {
           imageTitle:currenTerminal.logo != null?null:currenTerminal.name,
         ),
         onTap: (){
-          Navigator.push(context, PageTransition(child:NativePosScreen(terminal:currenTerminal,business:Provider.of<GlobalStateModel>(context).currentBusiness),type:PageTransitionType.fade));
+//          Navigator.push(context, PageTransition(child:NativePosScreen(terminal:currenTerminal,business:Provider.of<GlobalStateModel>(context).currentBusiness),type:PageTransitionType.fade));
+
+          GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context);
+
+          Navigator.push(
+              context,
+              PageTransition(
+                  child: ChangeNotifierProvider<PosStateModel>(
+                    builder: (BuildContext context) =>
+                        PosStateModel(globalStateModel, RestDatasource()),
+                    child: PosProductsListScreen(
+                        terminal: currenTerminal,
+                        business: globalStateModel.currentBusiness),
+                  ),
+                  type: PageTransitionType.fade,
+                  duration: Duration(milliseconds: 50)));
+
         },
       ),
     );

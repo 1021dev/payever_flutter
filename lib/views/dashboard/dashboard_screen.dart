@@ -17,6 +17,7 @@ import 'dart:ui';
 import 'dart:async';
 import 'package:flutter/scheduler.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:payever/view_models/pos_state_model.dart';
 import 'package:payever/views/dashboard/dashboard_screen_controller.dart';
 import 'dart:convert';
 import 'package:payever/views/dashboard/dashboard_screen_navigation.dart';
@@ -27,6 +28,7 @@ import 'package:payever/views/dashboard/settingsCard.dart';
 import 'package:payever/views/dashboard/transactioncard.dart';
 import 'package:payever/views/login/login_page.dart';
 import 'package:payever/views/pos/native_pos_screen.dart';
+import 'package:payever/views/pos/pos_products_list_screen.dart';
 import 'package:payever/views/products/product_screen.dart';
 import 'package:payever/views/settings/employees/employees_screen.dart';
 import 'package:payever/views/settings/settings_screen.dart';
@@ -789,6 +791,9 @@ class _AppViewState extends State<AppView> {
 
   @override
   Widget build(BuildContext context) {
+
+
+
     return InkWell(
       child: Column(
         children: <Widget>[
@@ -841,7 +846,7 @@ class _AppViewState extends State<AppView> {
             loadTransactions(context).then((_) {});
             break;
           case "pos":
-            loadPOS().then((_) {
+            loadPOS(context).then((_) {
               setState(() {
                 _isLoading = false;
               });
@@ -889,17 +894,33 @@ class _AppViewState extends State<AppView> {
             type: PageTransitionType.fade,duration: Duration(milliseconds: 50)));
   }
 
-  Future<void> loadPOS() {
+  Future<void> loadPOS(BuildContext context) {
     setState(() {
       _isLoading = false;
     });
+//    return Navigator.push(
+//        context,
+//        PageTransition(
+//            child: NativePosScreen(
+//                terminal: CardParts.currentTerminal,
+//                business: CardParts._currentBusiness),
+//            type: PageTransitionType.fade,duration: Duration(milliseconds: 50)));
+
+    GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context);
+
     return Navigator.push(
         context,
         PageTransition(
-            child: NativePosScreen(
-                terminal: CardParts.currentTerminal,
-                business: CardParts._currentBusiness),
-            type: PageTransitionType.fade,duration: Duration(milliseconds: 50)));
+            child: ChangeNotifierProvider<PosStateModel>(
+              builder: (BuildContext context) =>
+                  PosStateModel(globalStateModel, RestDatasource()),
+              child: PosProductsListScreen(
+                  terminal: CardParts.currentTerminal,
+                  business: CardParts._currentBusiness),
+            ),
+            type: PageTransitionType.fade,
+            duration: Duration(milliseconds: 50)));
+
   }
 
   void loadSettings() {
@@ -927,6 +948,7 @@ class Menu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     hei = (CardParts._isTablet
         ? Measurements.width * 0.02
         : Measurements.width * 0.06);

@@ -1,39 +1,47 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
-import 'package:payever/view_models/cart_state_model.dart';
+import 'package:payever/view_models/pos_state_model.dart';
+import 'package:payever/view_models/pos_cart_state_model.dart';
 import 'package:payever/views/customelements/custom_toast_notification.dart';
 import 'package:payever/views/customelements/color_picker.dart';
 import 'package:payever/views/customelements/drop_down_menu.dart';
-import 'package:payever/views/pos/native_pos_screen.dart';
 import 'package:payever/views/pos/pos_cart.dart';
 import 'package:payever/models/products.dart';
 import 'package:payever/utils/translations.dart';
 import 'package:payever/utils/utils.dart';
 import 'package:payever/utils/env.dart';
 
-
 CarouselSlider customCarouselSlider;
 
 class DetailScreen extends StatefulWidget {
-  final PosScreenParts parts;
+//  final PosScreenParts parts;
+  final PosStateModel parts;
   final ProductsModel currentProduct;
 
   DetailScreen({this.parts, this.currentProduct});
 
   @override
-  _DetailScreenState createState() => _DetailScreenState();
+  createState() => _DetailScreenState();
 }
 
 class _DetailScreenState extends State<DetailScreen> {
+  bool isPortrait = true;
+  bool isTablet = false;
+
   @override
   Widget build(BuildContext context) {
-    CartStateModel cartStateModel = Provider.of<CartStateModel>(context);
+    PosCartStateModel cartStateModel = Provider.of<PosCartStateModel>(context);
+
+    isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    isTablet = isPortrait
+        ? MediaQuery.of(context).size.width > 600
+        : MediaQuery.of(context).size.height > 600;
 
     return OKToast(
       child: Scaffold(
@@ -63,19 +71,16 @@ class _DetailScreenState extends State<DetailScreen> {
                     height: Measurements.height * 0.035,
                   ),
                   Positioned(
-                    top: widget.parts.isTablet
+                    top: isTablet
                         ? Measurements.height * 0.016
                         : Measurements.height * 0.014,
-                    child: cartStateModel.getIsCartEmpty
-                        ? Container()
-                        : Icon(
-                            Icons.brightness_1,
-                            color: Color(0XFF0084FF),
-                            size: Measurements.height *
-                                (widget.parts.isTablet
-                                    ? 0.01 * 1.2
-                                    : 0.01 * 1.3),
-                          ),
+                    child: cartStateModel.getCartHasItems
+                        ? Icon(
+                        Icons.brightness_1,
+                        color: Color(0XFF0084FF),
+                        size: Measurements.height *
+                            (isTablet ? 0.01 * 1.2 : 0.01 * 1.3))
+                        : Container(),
                   ),
                 ],
               ),
@@ -106,12 +111,12 @@ class _DetailScreenState extends State<DetailScreen> {
 
 class DetailedProduct extends StatefulWidget {
   final ProductsModel currentProduct;
-  final PosScreenParts parts;
+  final PosStateModel parts;
   final int currentVariantIndex = 0;
   final ValueNotifier<bool> stockCount = ValueNotifier(false);
   final ValueNotifier<int> currentVariant = ValueNotifier(0);
   final Map<String, String> productStock = Map();
-  final CartStateModel cartStateModel;
+  final PosCartStateModel cartStateModel;
 
   DetailedProduct(
       {@required this.currentProduct,
@@ -168,7 +173,8 @@ class _DetailedProductState extends State<DetailedProduct> {
 
 class DetailImage extends StatefulWidget {
   final ValueNotifier<int> currentVariant;
-  final PosScreenParts parts;
+
+  final PosStateModel parts;
   final List<String> images;
   final int index;
   final bool haveVariants;
@@ -191,6 +197,9 @@ class _DetailImageState extends State<DetailImage> {
   ProductsModel currentProduct;
   int imageIndex = 0;
 
+  bool isPortrait = true;
+  bool isTablet = false;
+
   @override
   void initState() {
     super.initState();
@@ -207,16 +216,18 @@ class _DetailImageState extends State<DetailImage> {
 
   @override
   Widget build(BuildContext context) {
+    isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    isTablet = isPortrait
+        ? MediaQuery.of(context).size.width > 600
+        : MediaQuery.of(context).size.height > 600;
+
     List<Widget> images = List();
     widget.images.forEach((f) {
       images.add(Container(
 //        color: Colors.red,
-        height: widget.parts.isTablet
-            ? Measurements.width * 0.45
-            : Measurements.height * 0.4,
-        width: widget.parts.isTablet
-            ? Measurements.width * 0.45
-            : Measurements.height * 0.4,
+        height:
+            isTablet ? Measurements.width * 0.45 : Measurements.height * 0.4,
+        width: isTablet ? Measurements.width * 0.45 : Measurements.height * 0.4,
         child: CachedNetworkImage(
           imageUrl: Env.Storage + "/products/" + f,
           placeholder: (context, url) => Container(),
@@ -239,16 +250,16 @@ class _DetailImageState extends State<DetailImage> {
         children: <Widget>[
           Container(
 //            color: Colors.green,
-            height: widget.parts.isTablet
+            height: isTablet
                 ? Measurements.width * 0.45
                 : Measurements.height * 0.4,
-            width: widget.parts.isTablet
+            width: isTablet
                 ? Measurements.width * 0.45
                 : Measurements.height * 0.4,
             child: customCarouselSlider,
           ),
           Container(
-            width: widget.parts.isTablet
+            width: isTablet
                 ? Measurements.width * 0.45
                 : Measurements.height * 0.4,
             height: Measurements.height * 0.1,
@@ -290,12 +301,13 @@ class _DetailImageState extends State<DetailImage> {
 
 class DetailDetails extends StatefulWidget {
   final ValueNotifier<int> currentVariant;
-  final PosScreenParts parts;
+
+  final PosStateModel parts;
   final ProductsModel currentProduct;
   final bool haveVariants;
   final ValueNotifier<bool> stockCount;
   final Map<String, String> productStock;
-  final CartStateModel cartStateModel;
+  final PosCartStateModel cartStateModel;
 
   DetailDetails(
       {@required this.currentVariant,
@@ -325,6 +337,9 @@ class _DetailDetailsState extends State<DetailDetails> {
 
   int selectedIndex = 0;
 
+  bool isPortrait = true;
+  bool isTablet = false;
+
   listener() {
     setState(() {});
   }
@@ -343,11 +358,15 @@ class _DetailDetailsState extends State<DetailDetails> {
       selectedVariantName =
           haveVariants ? "- ${widget.currentProduct.variants[0].title}" : "";
     });
-
   }
 
   @override
   Widget build(BuildContext context) {
+    isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    isTablet = isPortrait
+        ? MediaQuery.of(context).size.width > 600
+        : MediaQuery.of(context).size.height > 600;
+
     if (widget.haveVariants) {
       imagesVariants = imagesBase +
           widget.currentProduct.variants[widget.currentVariant.value].images;
@@ -359,9 +378,19 @@ class _DetailDetailsState extends State<DetailDetails> {
       var index = 0;
       products = List();
       productsList = [];
+      print('widget.currentProduct: ${widget.currentProduct.variants}');
+      print('widget.parts: ${widget.parts}');
+
       widget.currentProduct.variants.forEach((f) {
-        var temp = widget.parts.productStock[f.sku];
-        if (((temp.contains("null") ? 0 : int.parse(temp ?? "0")) > 0)) {
+        var temp = widget.parts.getProductStock[f.sku];
+
+        print("f.title: ${f.title}");
+        print("widget.parts.productStock: ${widget.parts.productStock}");
+        print(
+            "widget.parts.productStock[f.sku]: ${widget.parts.productStock[f.sku]}");
+
+        if (temp != null) {
+//          if (((temp.contains("null") ? 0 : int.parse(temp ?? "0")) > 0)) {
           PopupMenuItem<String> variant = PopupMenuItem(
             value: "$index",
             child: Container(
@@ -380,12 +409,12 @@ class _DetailDetailsState extends State<DetailDetails> {
             ),
           );
           products.add(variant);
-
           productsList.add(f.title);
+//          }
         }
         index++;
       });
-      if (widget.currentVariant.value == 0) {
+      if (widget.currentVariant.value == 0 && products.length > 0) {
         print(
             "${widget.currentVariant.value}  =  ${int.parse(products.first.value)}");
         widget.currentVariant.value = int.parse(products.first.value);
@@ -408,6 +437,7 @@ class _DetailDetailsState extends State<DetailDetails> {
         : widget.currentProduct.sku];
     int stc =
         _stc == null ? 0 : _stc.contains("null") ? 0 : int.parse(_stc ?? "0");
+
     return Container(
       width: Measurements.height * 0.4,
       child: Column(
@@ -441,7 +471,7 @@ class _DetailDetailsState extends State<DetailDetails> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  "${widget.parts.f.format(price)}${Measurements.currency(widget.parts.business.currency)}",
+                  "${widget.parts.f.format(price)}${Measurements.currency(widget.parts.getBusiness.currency)}",
                   style: TextStyle(
                       fontSize: 17,
                       color: widget.parts.titleColor.withOpacity(0.5),
@@ -452,7 +482,7 @@ class _DetailDetailsState extends State<DetailDetails> {
                 ),
                 onSale
                     ? Text(
-                        "  ${widget.parts.f.format(salePrice)}${Measurements.currency(widget.parts.business.currency)}",
+                        "  ${widget.parts.f.format(salePrice)}${Measurements.currency(widget.parts.getBusiness.currency)}",
                         style: TextStyle(
                             fontSize: 17,
                             color: widget.parts.saleColor,
@@ -496,16 +526,15 @@ class _DetailDetailsState extends State<DetailDetails> {
                   child: Theme(
                     data: ThemeData.light(),
                     child: Container(
-
 //                      width: Measurements.width * 0.9,
-                      width: widget.parts.isTablet ? Measurements.width * 0.5 : Measurements.width * 0.9,
+                      width: isTablet
+                          ? Measurements.width * 0.5
+                          : Measurements.width * 0.9,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
 //                        color: Colors.grey.withOpacity(0.2),
                         border: Border.all(
-                          width: 1,
-                          color: Colors.grey.withOpacity(0.2)
-                        ),
+                            width: 1, color: Colors.grey.withOpacity(0.2)),
                       ),
                       child: DropDownMenu(
                         backgroundColor: Colors.white,
@@ -523,10 +552,21 @@ class _DetailDetailsState extends State<DetailDetails> {
 
                             selectedIndex = index;
 
-                            if(imagesBase != null && imagesBase.length >= 0) {
-                              customCarouselSlider.jumpToPage(imagesBase.length + 1);
-                            }
+//                            print("imagesBase.length: ${imagesBase.length}");
 
+                            if (imagesBase != null && imagesBase.length >= 0) {
+                              print("imagesBase.length: ${imagesBase.length}");
+//                              customCarouselSlider.jumpToPage(imagesBase.length + 1);
+                              if (widget
+                                      .currentProduct
+                                      .variants[widget.currentVariant.value]
+                                      .images
+                                      .length >
+                                  0) {
+                                customCarouselSlider
+                                    .jumpToPage(imagesBase.length + 1);
+                              }
+                            }
                           });
                         },
                       ),
@@ -589,11 +629,11 @@ class _DetailDetailsState extends State<DetailDetails> {
           Container(
             alignment: Alignment.center,
             height: Measurements.height * 0.08,
-            width: widget.parts.isTablet ? Measurements.width * 0.8 : Measurements.width * 0.9,
+            width:
+                isTablet ? Measurements.width * 0.8 : Measurements.width * 0.9,
             padding: EdgeInsets.symmetric(
                 vertical: Measurements.height * 0.01,
-                horizontal:
-                    Measurements.width * (widget.parts.isTablet ? 0.15 : 0)),
+                horizontal: Measurements.width * (isTablet ? 0.15 : 0)),
             child: InkWell(
               child: Container(
                 decoration: BoxDecoration(
@@ -669,7 +709,7 @@ class _DetailDetailsState extends State<DetailDetails> {
                         sku: widget.currentProduct.sku);
                   }
 
-                  widget.cartStateModel.updateCart(false);
+                  widget.cartStateModel.updateCart(true);
 
 //                  Navigator.pop(context);
                 }
@@ -708,7 +748,7 @@ class _DetailDetailsState extends State<DetailDetails> {
 //            size: Measurements.height * 0.03,
 //            controller: controller,
 //          ),
-          widget.parts.isTablet
+          isTablet
               ? Padding(
                   padding: EdgeInsets.only(bottom: Measurements.height * 0.02),
                 )
@@ -722,7 +762,8 @@ class _DetailDetailsState extends State<DetailDetails> {
 }
 
 class StockText extends StatefulWidget {
-  final PosScreenParts parts;
+//  final PosScreenParts parts;
+  final PosStateModel parts;
   final String sku;
   final productStock;
   final int stc;

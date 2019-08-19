@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:payever/utils/utils.dart';
-import 'package:payever/views/pos/native_pos_screen.dart';
+
+import 'package:payever/view_models/pos_state_model.dart';
 import 'package:payever/views/pos/pos_order_section.dart';
+import 'package:payever/utils/utils.dart';
 
 class POSCart extends StatefulWidget {
-  PosScreenParts parts;
+  final PosStateModel parts;
+
   POSCart({@required this.parts});
+
   @override
-  _POSCartState createState() => _POSCartState();
+  createState() => _POSCartState();
 }
 
 class _POSCartState extends State<POSCart> {
@@ -19,25 +22,35 @@ class _POSCartState extends State<POSCart> {
       appBar: AppBar(
         brightness: Brightness.light,
         leading: IconButton(
-          icon: Icon(Icons.close,color: Colors.black,),
-          onPressed: (){
+          icon: Icon(
+            Icons.close,
+            color: Colors.black,
+          ),
+          onPressed: () {
             Navigator.pop(context);
           },
         ),
         centerTitle: true,
-        title: SvgPicture.asset("images/payeverlogoandname.svg",color: Colors.black,),
+        title: SvgPicture.asset(
+          "images/payeverlogoandname.svg",
+          color: Colors.black,
+        ),
         backgroundColor: Colors.white,
       ),
-      body: CartBody(parts: widget.parts,),
-      
+      body: CartBody(
+        parts: widget.parts,
+      ),
     );
   }
 }
 
 class CartBody extends StatefulWidget {
-  Color textColor = Colors.black.withOpacity(0.7);
-  PosScreenParts parts;
+  final Color textColor = Colors.black.withOpacity(0.7);
+  final PosStateModel parts;
+//  final PosScreenParts parts;
+
   CartBody({@required this.parts});
+
   final List<DropdownMenuItem<int>> qtys = List();
 
   @override
@@ -48,47 +61,61 @@ class _CartBodyState extends State<CartBody> {
   @override
   void initState() {
     super.initState();
-    widget.parts.openSection.addListener(listener);
-    for(int i=1;i<100;i++){
-        final number = new DropdownMenuItem(
+//    widget.parts.openSection.addListener(listener);
+    for (int i = 1; i < 100; i++) {
+      final number = new DropdownMenuItem(
         value: i,
         child: Text("$i"),
       );
       widget.qtys.add(number);
     }
   }
-  listener(){
+
+  listener() {
     setState(() {});
   }
+
   @override
   Widget build(BuildContext context) {
-      return SafeArea(
-        child: Container(
-          // child: ListView.builder(
-          //   //itemCount: widget.parts.currentCheckout.sections.length,
-          //   itemCount: 2,
-          //   itemBuilder: (BuildContext context, int index) {
-          //     print(widget.parts.currentCheckout.sections[index].code);
-          //     if(widget.parts.currentCheckout.sections[index].code == "order"){
-          //       return SectionWidget(index: index,currentSection: sectionPicker(widget.parts.currentCheckout.sections[index].code,index),title: widget.parts.currentCheckout.sections[index].code.replaceAll("_", " ").toUpperCase(), parts: widget.parts,);
-          //     }else{
-          //       return Container();
-          //     }
-          //   },
-          // ),
-          child: ListView(
-            children: <Widget>[
-              SectionWidget(index: 0,currentSection: OrderSection(parts: widget.parts,index: 0,),title: "order".toUpperCase(), parts: widget.parts,),
-            ],
-          ),
+    return SafeArea(
+      child: Container(
+        // child: ListView.builder(
+        //   //itemCount: widget.parts.currentCheckout.sections.length,
+        //   itemCount: 2,
+        //   itemBuilder: (BuildContext context, int index) {
+        //     print(widget.parts.currentCheckout.sections[index].code);
+        //     if(widget.parts.currentCheckout.sections[index].code == "order"){
+        //       return SectionWidget(index: index,currentSection: sectionPicker(widget.parts.currentCheckout.sections[index].code,index),title: widget.parts.currentCheckout.sections[index].code.replaceAll("_", " ").toUpperCase(), parts: widget.parts,);
+        //     }else{
+        //       return Container();
+        //     }
+        //   },
+        // ),
+        child: ListView(
+          children: <Widget>[
+            SectionWidget(
+              index: 0,
+              currentSection: OrderSection(
+                parts: widget.parts,
+                index: 0,
+              ),
+              title: "order".toUpperCase(),
+              parts: widget.parts,
+            ),
+          ],
         ),
-      );
+      ),
+    );
   }
-  Widget sectionPicker(String title,int index){
-    switch(title){
+
+  Widget sectionPicker(String title, int index) {
+    switch (title) {
       case "order":
-        return OrderSection(parts: widget.parts,index: 0,);
-      break;
+        return OrderSection(
+          parts: widget.parts,
+          index: 0,
+        );
+        break;
       default:
         return Text("");
     }
@@ -96,13 +123,17 @@ class _CartBodyState extends State<CartBody> {
 }
 
 class SectionWidget extends StatefulWidget {
+  final PosStateModel parts;
+  final Widget currentSection;
+  final String title;
+  final int index;
 
-  PosScreenParts parts;
-  Widget currentSection;
-  String title;
-  int index;
+  SectionWidget(
+      {@required this.parts,
+      @required this.index,
+      @required this.currentSection,
+      @required this.title});
 
-  SectionWidget({@required this.parts,@required this.index,@required this.currentSection,@required this.title});
   @override
   _SectionWidgetState createState() => _SectionWidgetState();
 }
@@ -111,24 +142,44 @@ class _SectionWidgetState extends State<SectionWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: Measurements.width* 0.05),
+      padding: EdgeInsets.symmetric(horizontal: Measurements.width * 0.05),
       child: Column(
         children: <Widget>[
           InkWell(
-            onTap: (){
-              if(widget.parts.openSection.value > widget.index)
-                widget.parts.openSection.value = widget.index;
+            onTap: () {
+              if (widget.parts.openSection > widget.index)
+                widget.parts.openSection = widget.index;
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Container(height: Measurements.height * 0.05,alignment: Alignment.center,child: Text(widget.title,style: TextStyle(color: Colors.black,fontWeight: FontWeight.w500),)),//line under black no white
-                Icon(widget.parts.openSection.value == widget.index ? Icons.keyboard_arrow_up:Icons.keyboard_arrow_down,color: widget.parts.openSection.value < widget.index?Colors.white:Colors.white,)
+                Container(
+                    height: Measurements.height * 0.05,
+                    alignment: Alignment.center,
+                    child: Text(
+                      widget.title,
+                      style: TextStyle(
+                          color: Colors.black, fontWeight: FontWeight.w500),
+                    )),
+                //line under black no white
+                Icon(
+                  widget.parts.openSection == widget.index
+                      ? Icons.keyboard_arrow_up
+                      : Icons.keyboard_arrow_down,
+                  color: widget.parts.openSection < widget.index
+                      ? Colors.white
+                      : Colors.white,
+                )
               ],
             ),
           ),
           Container(
-            child: widget.parts.openSection.value == widget.index? AnimatedContainer(child: widget.currentSection, duration: Duration(milliseconds: 100),):Container(),
+            child: widget.parts.openSection == widget.index
+                ? AnimatedContainer(
+                    child: widget.currentSection,
+                    duration: Duration(milliseconds: 100),
+                  )
+                : Container(),
           ),
           //Divider(color:Colors.black.withOpacity(0.7)),
         ],
