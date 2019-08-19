@@ -6,10 +6,12 @@ import 'package:page_transition/page_transition.dart';
 import 'package:payever/models/pos.dart';
 import 'package:payever/models/products.dart';
 import 'package:payever/network/rest_ds.dart';
+import 'package:payever/network/rest_ds.dart' as prefix0;
 import 'package:payever/utils/env.dart';
 import 'package:payever/utils/translations.dart';
 import 'package:payever/utils/utils.dart';
 import 'package:payever/view_models/cart_state_model.dart';
+import 'package:payever/view_models/global_state_model.dart';
 import 'package:payever/views/pos/native_pos_screen.dart';
 import 'package:payever/views/pos/webviewsection.dart';
 import 'package:provider/provider.dart';
@@ -38,10 +40,10 @@ class _OrderSectionState extends State<OrderSection> {
   listener(){
     setState((){});
   }
-  
+  GlobalStateModel globalStateModel;
   @override
   Widget build(BuildContext context) {
-
+    globalStateModel = Provider.of<GlobalStateModel>(context);
     CartStateModel cartStateModel = Provider.of<CartStateModel>(context);
 
     widget.qtys.clear();
@@ -91,9 +93,7 @@ class _OrderSectionState extends State<OrderSection> {
                       print("click delete");
                       setState(() {
                         widget.parts.deleteProduct(index);
-
                         cartStateModel.updateCart(true);
-
                       });
                     },
                   ),
@@ -200,7 +200,7 @@ class _OrderSectionState extends State<OrderSection> {
             ),
             onTap:(){
               if(widget.parts.shoppingCart.items.isEmpty){
-                print("block");
+                //
               }else{
                 if(!widget.checkStock.value){
                   nextStep();
@@ -214,13 +214,12 @@ class _OrderSectionState extends State<OrderSection> {
   }
 
   nextStep() {
-    print("next Step ");
     widget.checkStock.value = true;
     bool ok2Checkout = true;
     widget.parts.shoppingCart.items.forEach((item){
       RestDatasource().getInvetory(widget.parts.business.id, GlobalUtils.ActiveToken.accessToken, item.sku, context).then((inv){
         InventoryModel currentInv  = InventoryModel.toMap(inv);
-        bool isOut = (currentInv.stock - (currentInv.reserved??0)) > item.quantity;
+        bool isOut = (currentInv.stock - (currentInv.reserved??0)) >= item.quantity;
         if(!isOut){
           ok2Checkout  = false;
           item.inStock = false;
@@ -229,10 +228,25 @@ class _OrderSectionState extends State<OrderSection> {
         }
         if(item.sku == widget.parts.shoppingCart.items.last.sku){
           if(ok2Checkout){
-            RestDatasource().postStorageSimple(GlobalUtils.ActiveToken.accessToken, Cart.items2MapSimple(widget.parts.shoppingCart.items),null,true,true,"widget.phone.replaceAll(" ","")",DateTime.now().subtract(Duration(hours: 2)).add(Duration(minutes: 1)).toIso8601String(),widget.parts.currentTerminal.channelSet,widget.parts.smsenabled).then((obj){
-              widget.parts.shoppingCartID = obj["id"];    
-              Navigator.push(context,PageTransition(child:WebViewPayments(parts: widget.parts,url: widget.parts.url = Env.Wrapper + "/pay/restore-flow-from-code/" + obj["id"]+"?noHeaderOnLoading=true",),type:PageTransitionType.fade) );            
-            });
+            RestDatasource api =RestDatasource();
+            api.postFlow(
+              GlobalUtils.ActiveToken.accessToken,
+              widget.parts.shoppingCart.total,
+              Cart.items2MapSimple(widget.parts.shoppingCart.items),
+              widget.parts.currentTerminal.channelSet,
+              globalStateModel.currentBusiness.currency,
+              ).then((flowObj){
+                api.postOrder(GlobalUtils.ActiveToken.accessToken, flowObj, globalStateModel.currentBusiness.id).then((_){
+                  api.postStorageSimple2(GlobalUtils.ActiveToken.accessToken, flowObj, null,true,true,"widget.phone.replaceAll(" ","")", DateTime.now().subtract(Duration(hours: 2)).add(Duration(minutes: 1)).toIso8601String(), widget.parts.currentTerminal.channelSet, widget.parts.smsenabled).then((obj){
+                    widget.parts.shoppingCartID = obj["id"];    
+                    Navigator.push(context,PageTransition(child:WebViewPayments(parts: widget.parts,url: widget.parts.url = Env.Wrapper + "/pay/restore-flow-from-code/" + obj["id"]+"?noHeaderOnLoading=true",),type:PageTransitionType.fade) );            
+                  });
+                });
+              });
+            // RestDatasource().postStorageSimple(GlobalUtils.ActiveToken.accessToken, Cart.items2MapSimple(widget.parts.shoppingCart.items),null,true,true,"widget.phone.replaceAll(" ","")",DateTime.now().subtract(Duration(hours: 2)).add(Duration(minutes: 1)).toIso8601String(),widget.parts.currentTerminal.channelSet,widget.parts.smsenabled).then((obj){
+            //   widget.parts.shoppingCartID = obj["id"];    
+            //   Navigator.push(context,PageTransition(child:WebViewPayments(parts: widget.parts,url: widget.parts.url = Env.Wrapper + "/pay/restore-flow-from-code/" + obj["id"]+"?noHeaderOnLoading=true",),type:PageTransitionType.fade) );            
+            // });
           }else{
             Scaffold.of(context).showSnackBar(SnackBar(
               content: Text(Language.getCartStrings("checkout_cart_edit.error.products_not_available")),

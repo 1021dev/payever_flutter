@@ -202,11 +202,13 @@ class Cart {
   static items2MapSimple(List<CartItem> items) {
     List<Map<String,dynamic>> result = List();
     items.forEach((f){
+      print("SKU = ${f.sku}");
+      print("image = ${f.image}");
       result.add({
         GlobalUtils.DB_POS_CART_CART_UUID:f.uuid,
         GlobalUtils.DB_POS_CART_CART_NAME:f.name,
         GlobalUtils.DB_POS_CART_CART_SKU:f.sku,
-        GlobalUtils.DB_POS_CART_CART_IMAGE:Env.Storage+"/products/"+f.image,
+        GlobalUtils.DB_POS_CART_CART_IMAGE:  Env.Storage+"/products/"+(f.image ?? ""),
         GlobalUtils.DB_POS_CART_CART_ID:f.id,
         GlobalUtils.DB_POS_CART_CART_PRICE:f.price,
         GlobalUtils.DB_POS_CART_CART_QTY:f.quantity,

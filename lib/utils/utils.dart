@@ -209,15 +209,15 @@ class GlobalUtils{
   static String  PASS= "Test1234!";//staging 1
   //static String  PASS= "";//live 0
   //static String  PASS= "Payever2019!";//live 1
-//  static String  PASS = "Payever123!";//test 2
+  //static String  PASS = "Payever123!";//test 2
   //static String  PASS= "12345678";//staging 2
 
   //static String  MAIL= "payever.automation@gmail.com";//test 1
   static String  MAIL= "rob@top.com";//staging 1
   //static String  MAIL= "";//live 0
   //static String  MAIL= "abiantgmbh@payever.de";//live 1
-//  static String  MAIL = "testcases@payever.de";//test 2
-//  static String  MAIL= "service@payever.de";//staging 2
+  //static String  MAIL = "testcases@payever.de";//test 2
+  //static String  MAIL= "service@payever.de";//staging 2
 
   //static const String COMMERCEOS_URL                    = "https://commerceos.test.devpayever.com";//test
   static const String COMMERCEOS_URL                  = "https://commerceos.staging.devpayever.com";//staging
@@ -246,7 +246,6 @@ class GlobalUtils{
   static const String LAST_OPEN                       = "lastOpen";
   static const String EVENTS_KEY                      = "fetch_events";
   static const String LANGUAGE                        = "language";
-
 
   // static Channels
 
@@ -650,6 +649,7 @@ class GlobalUtils{
   static const String ENV_SHOPS                       = "shops";
   static const String ENV_WRAPPER                     = "checkoutWrapper";
   static const String ENV_EMPLOYEES                   = "employees";
+  static const String ENV_APPREGISTRY                 = "appRegistry";
 
   // dashboard_
   static const String  CURRENT_WALLPAPER              = "currentWallpaper";

@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
 import 'package:payever/models/version.dart';
+import 'package:payever/network/rest_ds.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class VersionController{

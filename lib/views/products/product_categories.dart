@@ -31,10 +31,6 @@ class _ProductCategoryRowState extends State<ProductCategoryRow> {
         widget.parts.categoryList.add(f.title);
       });
     }
-  }
-  
-  @override
-  Widget build(BuildContext context) {
     getCat = 
     '''
     query getCategory{getCategories(businessUuid: "${widget.parts.business}", title: "", pageNumber: 1, paginationLimit: 1000) {
@@ -47,6 +43,11 @@ class _ProductCategoryRowState extends State<ProductCategoryRow> {
     ''';
     
     widget.doc  = getCat;
+  }
+  
+  @override
+  Widget build(BuildContext context) {
+    
     return Expanded(
       child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -135,7 +136,6 @@ class _ProductCategoryRowState extends State<ProductCategoryRow> {
                                 slug
                               }
                             }''';
-                            refetch();
                       }else{
                         print("OLD");
                       }

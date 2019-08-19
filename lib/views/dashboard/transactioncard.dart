@@ -493,11 +493,11 @@ class _HeadState extends State<Head> {
       highlightColor: Colors.transparent,
       child: Column(
         children: <Widget>[
-          TitleAmountCardItem("${DashboardWidgets.numberFilter(widget.lastMonth.last.amount.toDouble(), false)} ${Measurements.currency(widget.lastMonth.last.currency)}",
+          TitleAmountCardItem("${DashboardWidgets.numberFilter(widget.lastMonth.last?.amount?.toDouble()??0.0, false)} ${Measurements.currency(widget.lastMonth.last.currency)}",
             titleString: Language.getWidgetStrings("widgets.transactions.today-revenue"),
           ),
           Divider(height: 2,color: Colors.white.withOpacity(0.5)),
-          TitleAmountCardItem("${DashboardWidgets.numberFilter(widget.lastYear.last.amount.toDouble() ,false)} ${Measurements.currency(widget.lastMonth.last.currency)}",
+          TitleAmountCardItem("${DashboardWidgets.numberFilter(widget.lastYear?.last?.amount?.toDouble()??0.0 ,false)} ${Measurements.currency(widget.lastMonth.last.currency)}",
           titleString:"${Language.getWidgetStrings("widgets.transactions.this-month")}",)
         ],
       ),

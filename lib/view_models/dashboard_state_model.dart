@@ -5,7 +5,9 @@ import 'package:payever/models/business.dart';
 import 'package:payever/models/pos.dart';
 import 'package:payever/models/transaction.dart';
 import 'package:payever/models/tutorial.dart';
+import 'package:payever/network/rest_ds.dart';
 import 'package:payever/utils/env.dart';
+import 'package:payever/utils/utils.dart';
 import 'package:payever/utils/validators.dart';
 import 'package:payever/views/dashboard/poscard.dart';
 import 'package:payever/views/dashboard/productscard.dart';
@@ -79,5 +81,42 @@ class DashboardStateModel extends ChangeNotifier with Validators {
     }
     return _activeWid;
   }
+
+  Future<void> fetchDaily(Business currentBusiness) async {
+    return  RestDatasource().getDays(currentBusiness.id, GlobalUtils.ActiveToken.accessToken,null).then((days) async {
+      days.forEach((day){
+        lastMonth.add(Day.map(day));
+      });
+      setlastMonth(lastMonth);
+      return fetchMonthly(currentBusiness);
+    });
+  }
+
+  Future<void> fetchMonthly(Business currentBusiness) async {
+    return await RestDatasource().getMonths(currentBusiness.id,GlobalUtils.ActiveToken.accesstoken,null);
+  }
+  Future<dynamic> fetchTotal(Business currentBusiness) async {
+    return  RestDatasource().getTransactionList(currentBusiness.id,GlobalUtils.ActiveToken.accesstoken, "",null);
+  }
   
+  // void getDaily(Business currentBusiness) async {
+  //   var days = await fetchDaily(currentBusiness);
+  //   days.forEach((day){
+  //     lastMonth.add(Day.map(day));
+  //   });
+  //   setlastMonth(lastMonth);
+  // }
+  // void getMonthly(Business currentBusiness) async {
+  //   var months = await fetchMonthly(currentBusiness);
+  //   months.forEach((month){
+  //       lastYear.add(Month.map(month));
+  //     });
+  //     setlastYear(lastYear);   
+  // }
+  // void getTotal(Business currentBusiness) async {
+  //   var _total = await fetchTotal(currentBusiness);
+  //   setTotal(Transaction.toMap(_total).paginationData.amount.toDouble());
+  // }
+
+
 }

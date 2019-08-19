@@ -432,22 +432,13 @@ class _NewProductScreenState extends State<NewProductScreen> {
     
     var a = widget._parts._formKey.currentState;
     a.validate();
-    okToSave = mainrow.isMainRowOK &&
-        inventory.isInventoryRowOK &&
-        shipping.isShippingRowOK;
+    okToSave = mainrow.isMainRowOK && inventory.isInventoryRowOK && shipping.isShippingRowOK;
 
-  print("okToSave: $okToSave");
-    // print("____________________");
-    // print("MAIN ROW      = ${mainrow.isMainRowOK}");
-    // print("INVENTORY ROW = ${inventoryRow.isInventoryRowOK}");
-    // print("Shipping ROW  = ${shippingRow.isShippingRowOK}");
-    // print("Ok to save    = $okToSave");
-    // print("--------------------");
-    // print("Category List\n ${widget._parts.categoryList}");
-
+    print("okToSave: $okToSave");
     RestDatasource().getBusinesses(GlobalUtils.ActiveToken.accessToken, context).then((_){
       if (okToSave) {
       a.save();
+      print("saving");
       String _images = "";
       widget._parts.images.forEach((name) {
         _images += '"$name"';
@@ -461,11 +452,15 @@ class _NewProductScreenState extends State<NewProductScreen> {
         String id = widget._parts.editMode?'"${v.id}"':'"${Uuid().v4()}"';
         variants += '{title: "${v.title}", description: "${v.description}",price: ${v.price}, images: [$images], hidden: ${v.hidden}, salePrice: ${v.salePrice}, sku: "${v.sku}", barcode: "${v.barcode}",id: $id}';
       });
+      
       String stringCategories = "";
       widget._parts.categoryList.forEach((f){
-        Categories c =widget._parts.categories.where((test) => test.title.toLowerCase() == f.toLowerCase()).toList()[0];
+        print("incategories");
+        Categories c = widget._parts.categories.where((test) => test.title.toLowerCase() == f.toLowerCase()).toList()[0];
+        print(c);
         stringCategories += '{_id: "${c.id}", businessUuid: "${widget.business}", title: "${c.title}",slug: "${c.slug}"}';
       });
+      print("here");
       String channels = "";
       widget._parts.channels.forEach((ch){
         channels += '{id:"${ch.id}", type: "${ch.type}", name: "${ch.name}"}';
@@ -473,27 +468,32 @@ class _NewProductScreenState extends State<NewProductScreen> {
 
       
 
-      String doc = !widget._parts.editMode?
-       '''
+      String doc ;
+      if (!widget._parts.editMode) {
+        doc = '''
         mutation createProduct {
             createProduct(product: {businessUuid: "${widget._parts.business}", images: [$_images], title: "${widget._parts.product.title}", description: "${widget._parts.product.description}", hidden: ${widget._parts.product.hidden} , price: ${widget._parts.product.price}, salePrice: ${widget._parts.product.salePrice}, sku: "${widget._parts.product.sku == null?"":widget._parts.product.sku}", barcode: "${widget._parts.product.barcode == null?"":widget._parts.product.barcode}", type: "${widget._parts.type}", enabled: ${widget._parts.enabled}, channelSets: [$channels], categories: [$stringCategories], variants: [$variants], shipping: {free: ${widget._parts.product.shipping.free}, general: ${widget._parts.product.shipping.general}, weight: ${widget._parts.product.shipping.weight}, width: ${widget._parts.product.shipping.width}, length: ${widget._parts.product.shipping.length}, height:  ${widget._parts.product.shipping.height}}}) {
                 title
                 uuid
                 }
               }
-        ''':
-        '''
+        ''';
+      } else {
+        doc = '''
         mutation updateProduct {
             updateProduct(product: {businessUuid: "${widget._parts.business}", images: [$_images], uuid: "${widget.productEdit.uuid}", title: "${widget._parts.product.title}", description: "${widget._parts.product.description}", hidden: ${widget._parts.product.hidden} , price: ${widget._parts.product.price}, salePrice: ${widget._parts.product.salePrice}, sku: "${widget._parts.product.sku == null?"":widget._parts.product.sku}", barcode: "${widget._parts.product.barcode == null?"":widget._parts.product.barcode}", type: "${widget._parts.type}", enabled: ${widget._parts.product.enabled}, channelSets: [$channels], categories: [$stringCategories], variants: [$variants], shipping: {free: ${widget._parts.product.shipping.free}, general: ${widget._parts.product.shipping.general}, weight: ${widget._parts.product.shipping.weight}, width: ${widget._parts.product.shipping.width}, length: ${widget._parts.product.shipping.length}, height:  ${widget._parts.product.shipping.height}}}) {
                 title
                 uuid
                 }
               }
-        ''' ;
-      
-      showDialog(barrierDismissible: false,
+        ''';
+      }
+
+      showDialog(
+        barrierDismissible: false,
           context: context,
           builder: (BuildContext context) {
+            print("in Dialog");
             return Dialog(
               backgroundColor: Colors.transparent,
               child: BackdropFilter(
@@ -513,7 +513,7 @@ class _NewProductScreenState extends State<NewProductScreen> {
                             children: <Widget>[
                               Text("Error while creating/updating a product"),
                               IconButton(icon: Icon(Icons.close), onPressed: () {
-                                Navigator.pop(context);//popon error
+                                Navigator.pop(context);//pop on error
                               },)
                             ],
                           );

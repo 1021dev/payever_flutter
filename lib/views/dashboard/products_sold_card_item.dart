@@ -51,7 +51,6 @@ class _ProductsSoldCardItemState extends State<ProductsSoldCardItem> {
             GlobalUtils.ActiveToken.accessToken, context)
         .then((lastSales) {
       if (lastSales.isNotEmpty) {
-        print("lastSales: $lastSales");
         List<dynamic> lastSaleData = List<dynamic>();
         lastSaleData = lastSales;
         if (lastSaleData.length < 4) {
@@ -162,7 +161,8 @@ class _ProductsSoldCardItemState extends State<ProductsSoldCardItem> {
                     }
 
                     if (result.loading) {
-                      return Center(child: CircularProgressIndicator());
+                     // return Center(child: CircularProgressIndicator());
+                     return Container();
                     }
 
                     if (result.data != null || result.data['product'] != null) {

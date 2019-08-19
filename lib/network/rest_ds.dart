@@ -100,6 +100,8 @@ class RestDatasource {
 
   static String STORAGEURL         = Env.Media +"/api/storage";
 
+  static String APPREGISTRY_URL    = Env.AppRegistry + "/api/";
+
 
   Future<dynamic> getEnv() {
     print("TAG - getEnv()");
@@ -538,9 +540,9 @@ class RestDatasource {
     });
   }
 
-  Future<dynamic> postFlow(String token,num amount, List<String> cart,dynamic channel,String currency,bool merchant,String shopUrl,String host) {
+  Future<dynamic> postFlow(String token,num amount, dynamic cart,dynamic channel,String currency) {
     print("TAG - postFlow()");
-    var body = jsonEncode({ "amount": amount, "cart": cart ,"channel_set_id":channel,"currency":currency,"pos_merchant_mode":merchant,"shop_url":shopUrl,"x_frame_host":host});
+    var body = jsonEncode({ "amount": amount, "cart": cart ,"channel_set_id":channel,"currency":currency,});
     var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token" , HttpHeaders.CONTENT_TYPE: "application/json" ,HttpHeaders.USER_AGENT:GlobalUtils.fingerprint };
       return _netUtil.post(CHECKOUT_V1, headers: headers, body: body).then((dynamic res) {
         return res;
@@ -586,7 +588,7 @@ class RestDatasource {
       return res;
     });
   }
-
+  
   Future<dynamic> postStorageSimple(String token,dynamic cart,dynamic storage,bool order,bool code,String source,String expiration,String channel,bool sms) {
     
     print("TAG - postStorage()");
@@ -598,6 +600,26 @@ class RestDatasource {
       return res;
     });
   }
+  Future<dynamic> postStorageSimple2(String token,dynamic flow,dynamic storage,bool order,bool code,String source,String expiration,String channel,bool sms) {
+    
+    print("TAG - postStorageSimple2()");
+    var body = jsonEncode({"data":{"flow":flow,"force_no_header":true,"force_no_send_to_device": sms ,"force_no_order":order,"generate_payment_code": code},"expiresAt":expiration});
+    print(body);
+    print(STORAGEURL);
+    var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token" , HttpHeaders.CONTENT_TYPE: "application/json" ,HttpHeaders.USER_AGENT:GlobalUtils.fingerprint };
+    return _netUtil.post(STORAGEURL, headers: headers, body: body).then((dynamic res) {
+      return res;
+    });
+  }
+  Future<dynamic> postOrder(String token,dynamic flow,String business) {
+    print("TAG - postOrder()");
+    var body = jsonEncode(flow);
+    print(body);
+    var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token" , HttpHeaders.CONTENT_TYPE: "application/json" ,HttpHeaders.USER_AGENT:GlobalUtils.fingerprint };
+    return _netUtil.post(INVENTORY_URL+business+"/order",headers: headers, body: body).then((dynamic res) {
+      return res;
+    });
+  }
 
   Future<dynamic> getStorage(String token,String id) {
     print("TAG - getStorage()");
@@ -606,7 +628,7 @@ class RestDatasource {
       return res;
     });
   }
-
+  
   Future<dynamic> getTutorials(String token,String id) {
     print("TAG - getTutorials()");
     var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token" , HttpHeaders.CONTENT_TYPE: "application/json" ,HttpHeaders.USER_AGENT:GlobalUtils.fingerprint };
@@ -623,6 +645,16 @@ class RestDatasource {
       return res;
     });
   }
+
+   Future<dynamic> getVersion(String token) {
+    print("TAG - getVersion()");
+    var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token" , HttpHeaders.CONTENT_TYPE: "application/json" ,HttpHeaders.USER_AGENT:GlobalUtils.fingerprint };
+    return _netUtil.get(APPREGISTRY_URL+"apps", headers: headers).then((dynamic res) {
+      return res;
+    });
+  }
+
+
 }
 
 

@@ -65,13 +65,12 @@ class _WebViewPaymentsState extends State<WebViewPayments> {
     widget.isLoading.addListener(listener);
     print(widget.parts.shoppingCart.items);
     if(widget.url==null){
-      print("url null");
-      RestDatasource().postStorageSimple(GlobalUtils.ActiveToken.accessToken, Cart.items2MapSimple([]),null,false,true,"widget.phone.replaceAll(" ","")",DateTime.now().subtract(Duration(hours: 2)).add(Duration(minutes: 1)).toIso8601String(),widget.parts.currentTerminal.channelSet,widget.parts.smsenabled).then((obj){
-        widget.url = Env.Wrapper + "/pay/restore-flow-from-code/" + obj["id"]+"?noHeaderOnLoading=true";
-        widget.isLoading.notifyListeners();
-      });
+      // print("url null");
+      // RestDatasource().postStorageSimple(GlobalUtils.ActiveToken.accessToken, Cart.items2MapSimple([]),null,false,true,"widget.phone.replaceAll(" ","")",DateTime.now().subtract(Duration(hours: 2)).add(Duration(minutes: 1)).toIso8601String(),widget.parts.currentTerminal.channelSet,widget.parts.smsenabled).then((obj){
+      //   widget.url = Env.Wrapper + "/pay/restore-flow-from-code/" + obj["id"]+"?noHeaderOnLoading=true";
+      //   widget.isLoading.notifyListeners();
+      // });
     }
-      
   }
   listener(){
     setState(() {
