@@ -127,10 +127,13 @@ class _PosProductsListScreenState extends State<PosProductsListScreen> {
           ),
         ),
         onDataLoaded: (results) {
-          return PosProductsLoader(
-            posStateModel,
-            globalStateModel,
-          );
+//          posStateModel.updateIsLoading(true);
+          return posStateModel.isLoading
+              ? PosProductsLoader(
+                  posStateModel,
+                  globalStateModel,
+                )
+              : PosBody(posStateModel, globalStateModel);
         },
       ),
     );
@@ -151,25 +154,13 @@ class _PosBodyState extends State<PosBody> {
   ScrollController controller;
 
   void _scrollListener() {
-    if (controller.position.extentAfter < 800) {
-
+    if (controller.position.extentAfter < 20) {
       if (widget.posStateModel.getPage < widget.posStateModel.getPageCount &&
           !widget.posStateModel.getLoadMore) {
-
-        print("widget.posStateModel.getPage: ${widget.posStateModel.getPage}");
-        print("widget.posStateModel.getPageCount: ${widget.posStateModel.getPageCount}");
-        print("widget.posStateModel.getLoadMore: ${widget.posStateModel.getLoadMore}");
-
-//        setState(() {
-//          widget.posStateModel.updatePage();
-//          widget.posStateModel.updateFetchValues(false, true);
-//        });
-
-        widget.posStateModel.updateFetchValues(false, true);
+        widget.posStateModel.updateLoadMore(true);
+//        widget.posStateModel.updateFetchValues(false, true);
         widget.posStateModel.updatePage();
-
       }
-
     }
   }
 
@@ -453,8 +444,8 @@ class PosProductsLoader extends StatefulWidget {
 
 class _PosProductsLoaderState extends State<PosProductsLoader> {
 //  int page = 1;
-  int limit = 36;
-//  int limit = 4;
+//  int limit = 36;
+  int limit = 8;
 
   @override
   void initState() {
@@ -463,21 +454,8 @@ class _PosProductsLoaderState extends State<PosProductsLoader> {
 
   @override
   Widget build(BuildContext context) {
-
-    print("build.widget.posStateModel.getPage: ${widget.posStateModel.getPage}");
-
-    return widget.posStateModel.getCurrentTerminal == null
-        ? Center(
-            child: const CircularProgressIndicator(
-              backgroundColor: Colors.black,
-            ),
-          )
-        : GraphQLProvider(
-            client: widget.posStateModel.client,
-            child: Query(
-              options:
-                  QueryOptions(variables: <String, dynamic>{}, document: ''' 
-              query getProductsByChannelSet{
+    var queryDocument = ''' 
+              query {
                   getProductsByChannelSet(businessId: "${widget.globalStateModel.currentBusiness.id}", channelSetId: "${widget.posStateModel.currentTerminal.channelSet}",search: "${widget.posStateModel.getSearch}",existInChannelSet: true, paginationLimit: $limit, pageNumber: ${widget.posStateModel.getPage}) {
                         products {      
                           images
@@ -511,7 +489,19 @@ class _PosProductsLoaderState extends State<PosProductsLoader> {
                         }  
                   }
                 }
-              '''),
+              ''';
+
+    return widget.posStateModel.getCurrentTerminal == null
+        ? Center(
+            child: const CircularProgressIndicator(
+              backgroundColor: Colors.black,
+            ),
+          )
+        : GraphQLProvider(
+            client: widget.posStateModel.client,
+            child: Query(
+              options: QueryOptions(
+                  variables: <String, dynamic>{}, document: queryDocument),
               builder: (QueryResult result, {VoidCallback refetch}) {
                 if (result.errors != null) {
                   print(result.errors);
@@ -525,30 +515,29 @@ class _PosProductsLoaderState extends State<PosProductsLoader> {
                   );
                 }
 
-
                 result.data["getProductsByChannelSet"]["products"]
                     .forEach((prod) {
-
                   var tempProduct = ProductsModel.toMap(prod);
-
 
                   if (widget.posStateModel.productList
                           .indexWhere((test) => test.sku == tempProduct.sku) <
                       0) widget.posStateModel.addProductList(tempProduct);
-
                 });
                 if (widget.posStateModel.productList.isNotEmpty) {
-
                   Future.delayed(Duration(microseconds: 1)).then((_) {
                     widget.posStateModel.updatePageCount(
                         result.data["getProductsByChannelSet"]["info"]
                             ["pagination"]["page_count"]);
-                    widget.posStateModel.updateFetchValues(true, false);
+//                    widget.posStateModel.updateFetchValues(true, false);
+                    widget.posStateModel.updateIsLoading(false);
+                    widget.posStateModel.updateLoadMore(false);
+
+                    result = null;
                   });
                 }
 
-                return PosBody(widget.posStateModel, widget.globalStateModel);
-//                return Container();
+//                return PosBody(widget.posStateModel, widget.globalStateModel);
+                return Container();
               },
             ),
           );

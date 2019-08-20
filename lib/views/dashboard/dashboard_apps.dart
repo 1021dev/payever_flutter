@@ -196,6 +196,7 @@ class _AppViewState extends State<AppView> {
             ),
             type: PageTransitionType.fade,
             duration: Duration(milliseconds: 50)));
+
   }
 
   void loadSettings() {

@@ -478,9 +478,9 @@ class _ProductItemState extends State<ProductItem> {
 class Loader extends StatefulWidget {
   PosScreenParts parts;
   Loader(this.parts);
-//  int page = 1;
-  int limit = 36;
-//  int limit = 5;
+  int page = 3;
+//  int limit = 36;
+  int limit = 5;
 
   @override
   _LoaderState createState() => _LoaderState();
