@@ -91,19 +91,33 @@ class _PosProductsListScreenState extends State<PosProductsListScreen> {
                   color: Colors.black,
                   height: Measurements.height * 0.035,
                 ),
-                Positioned(
-                  top: isTablet
-                      ? Measurements.height * 0.016
-                      : Measurements.height * 0.014,
-                  child: posCartStateModel.getCartHasItems
-                      ? Icon(
-                          Icons.brightness_1,
-                          color: Color(0XFF0084FF),
-                          size: Measurements.height *
-                              (isTablet ? 0.01 * 1.2 : 0.01 * 1.3),
-                        )
-                      : Container(),
-                ),
+                Container(
+                    child: Column(
+                      children: <Widget>[
+                        Expanded(flex:3,child: Container(),),
+                          posCartStateModel.getCartHasItems
+                        ? Icon(Icons.brightness_1,
+                            color: Color(0XFF0084FF),
+                            size: Measurements.height *
+                                (isTablet ? 0.01 * 1 : 0.01 * 1.3))
+                        : Container(),
+                        Expanded(flex:2,child: Container(),),
+                      ],
+                    ),
+                  ),
+                // Positioned(
+                //   top: isTablet
+                //       ? Measurements.height * 0.016
+                //       : Measurements.height * 0.014,
+                //   child: posCartStateModel.getCartHasItems
+                //       ? Icon(
+                //           Icons.brightness_1,
+                //           color: Color(0XFF0084FF),
+                //           size: Measurements.height *
+                //               (isTablet ? 0.01 * 1.2 : 0.01 * 1.3),
+                //         )
+                //       : Container(),
+                // ),
               ],
             ),
             onPressed: () {
@@ -118,7 +132,7 @@ class _PosProductsListScreenState extends State<PosProductsListScreen> {
           ),
         ],
       ),
-      body: CustomFutureBuilder<Object>(
+      body: widget.terminal != null?CustomFutureBuilder<Object>(
         future: posStateModel.loadPosProductsList(widget.terminal),
         errorMessage: "Error loading products",
         loadingWidget: Center(
@@ -135,7 +149,7 @@ class _PosProductsListScreenState extends State<PosProductsListScreen> {
                 )
               : PosBody(posStateModel, globalStateModel);
         },
-      ),
+      ):Container(),
     );
   }
 }
@@ -444,8 +458,8 @@ class PosProductsLoader extends StatefulWidget {
 
 class _PosProductsLoaderState extends State<PosProductsLoader> {
 //  int page = 1;
-//  int limit = 36;
-  int limit = 8;
+  int limit = 36;
+  //int limit = 8;
 
   @override
   void initState() {

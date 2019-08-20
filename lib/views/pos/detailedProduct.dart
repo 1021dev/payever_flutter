@@ -74,14 +74,14 @@ class _DetailScreenState extends State<DetailScreen> {
                   Container(
                     child: Column(
                       children: <Widget>[
-                        Expanded(flex:2,child: Container(),),
+                        Expanded(flex:3,child: Container(),),
                           cartStateModel.getCartHasItems
                         ? Icon(Icons.brightness_1,
                             color: Color(0XFF0084FF),
                             size: Measurements.height *
-                                (isTablet ? 0.01 * 1.2 : 0.01 * 1.3))
+                                (isTablet ? 0.01 * 1 : 0.01 * 1.2))
                         : Container(),
-                        Expanded(flex:1,child: Container(),),
+                        Expanded(flex:2,child: Container(),),
                       ],
                     ),
                   ),

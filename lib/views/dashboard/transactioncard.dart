@@ -447,7 +447,7 @@ class _SimplifyTransactionsState extends State<SimplifyTransactions> {
         dashboardStateModel.setlastYear(widget.lastYear);    
       }).then((_){
         RestDatasource().getTransactionList(globalStateModel.currentBusiness.id,GlobalUtils.ActiveToken.accesstoken, "", context).then((_total){
-          dashboardStateModel.setTotal(Transaction.toMap(_total).paginationData.amount.toDouble());
+          dashboardStateModel.setTotal(Transaction.toMap(_total).paginationData.amount?.toDouble()??0.0);
           setState(() { });
         });
       });
@@ -569,7 +569,7 @@ class _BodyState extends State<Body> {
             ],
           ),
           onTap: (){
-            Navigator.push(context, PageTransition(child: TransactionScreen(), type: PageTransitionType.fade,));
+            Navigator.push(context, PageTransition(child: TransactionScreenInit(), type: PageTransitionType.fade,));
           },
     );
   }

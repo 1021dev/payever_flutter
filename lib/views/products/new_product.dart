@@ -358,6 +358,7 @@ class _NewProductScreenState extends State<NewProductScreen> {
             appBar: _appBar,
             body: SingleChildScrollView(
               child: InkWell(
+                highlightColor: Colors.transparent,
                 onTap: () => _removeFocus(context),
                 child: Form(
                   key: widget._parts._formKey,
