@@ -47,6 +47,9 @@ class Measurements{
         return "DKK";
       case "CHF":
         return "CHF";
+        break;
+      default:
+        return "€";
     }
   }
    static String channelIcon(String channel){

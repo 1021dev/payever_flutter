@@ -5,6 +5,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:intl/intl.dart';
+import 'package:payever/view_models/transaction_state_model.dart';
 import 'package:provider/provider.dart';
 
 import 'package:payever/models/business.dart';
@@ -22,6 +23,18 @@ import 'package:payever/views/transactions/transactions_details_screen.dart';
 
 bool _isPortrait;
 bool _isTablet;
+
+class TransactionScreenInit extends StatelessWidget {
+
+  TransactionStateModel dashboardStateModel = TransactionStateModel();
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider<TransactionStateModel>(builder: (BuildContext context) {
+      return dashboardStateModel;
+    }, child: TransactionScreen(),);
+  }
+}
+
 
 class TransactionScreen extends StatefulWidget {
   ValueNotifier<bool> isLoading = ValueNotifier(true);
@@ -56,8 +69,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
 
   fetchTransactions({String search, bool init}) {
     RestDatasource api = RestDatasource();
-    api
-        .getTransactionList(
+    api.getTransactionList(
             widget._currentBusiness.id,
             GlobalUtils.ActiveToken.accessToken,
             "?orderBy=created_at&direction=desc&limit=50&query=$search&page=1&currency=${widget._currentBusiness.currency}",
@@ -84,15 +96,18 @@ class _TransactionScreenState extends State<TransactionScreen> {
   num _totalAmount;
   var f = new NumberFormat("###,###,##0.00", "en_US");
   bool noTransactions = false;
-  String _search = "";
   bool isLoading = false;
+
+  TransactionStateModel transactionsStateModel;
 
   @override
   Widget build(BuildContext context) {
     GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context);
+    transactionsStateModel = Provider.of<TransactionStateModel>(context); 
     widget._currentBusiness = globalStateModel.currentBusiness;
     widget.wallpaper = globalStateModel.currentWallpaper;
-    fetchTransactions(init: widget.init, search: _search);
+    
+    fetchTransactions(init: widget.init, search: transactionsStateModel.searchField );
     widget.init = false;
     _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
     Measurements.height = (_isPortrait
@@ -165,7 +180,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                               color: Colors.white,
                             ))),
                         onFieldSubmitted: (search) {
-                          widget.search = search;
+                          transactionsStateModel.setSearchField(search);
                           widget.isLoadingSearch.value = true;
                           widget.data.transaction.collection.clear();
                           fetchTransactions(init: false, search: search);
