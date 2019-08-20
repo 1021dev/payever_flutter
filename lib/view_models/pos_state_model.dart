@@ -89,11 +89,15 @@ class PosStateModel extends ChangeNotifier {
 
   bool get getLoadMore => loadMore;
 
+  bool isLoading = true;
+
+  bool get getIsLoading => isLoading;
+
   bool haveProducts = false;
 
   bool get getHaveProducts => haveProducts;
 
-  bool dataFetched = false;
+  bool dataFetched = true;
 
   bool get getDataFetched => dataFetched;
 
@@ -118,7 +122,6 @@ class PosStateModel extends ChangeNotifier {
 
   addProductList(productsList) {
     productList.add(productsList);
-
 //    notifyListeners();
   }
 
@@ -132,10 +135,20 @@ class PosStateModel extends ChangeNotifier {
 //    notifyListeners();
   }
 
+  updateIsLoading(bool value) {
+    isLoading = value;
+    notifyListeners();
+  }
+
+  updateLoadMore(bool value) {
+    loadMore = value;
+//    notifyListeners();
+  }
+
   updateFetchValues(bool dataFetchedValue, bool loadMoreValue) {
     dataFetched = dataFetchedValue;
     loadMore = loadMoreValue;
-//    notifyListeners();
+    notifyListeners();
   }
 
   add2cart({
@@ -226,18 +239,16 @@ class PosStateModel extends ChangeNotifier {
         });
 
         currentTerminal = _terminals.firstWhere((term) => term.active);
+
         var checkout = await getCheckout(currentTerminal.channelSet);
         currentCheckout = Checkout.toMap(checkout);
 //        smsEnabled = !currentCheckout.sections.firstWhere((test)=> test.code=="send_to_device").enabled;
 
-        haveProducts = true;
-        dataFetched = false;
-        loadMore = false;
+//        haveProducts = true;
+//        dataFetched = false;
+//        loadMore = false;
 
 //        updateFetchValues(true, false);
-//        notifyListeners();
-
-        print("dataFetchedWithoutTerminal: $dataFetched");
 
         return true;
       } else {
@@ -246,13 +257,11 @@ class PosStateModel extends ChangeNotifier {
 
         currentTerminal = terminal;
 
-        haveProducts = true;
-        dataFetched = false;
-        loadMore = false;
+//        haveProducts = true;
+//        dataFetched = false;
+//        loadMore = false;
 
 //        updateFetchValues(true, false);
-
-        print("dataFetchedWithTerminal: $dataFetched");
 
         return true;
       }
