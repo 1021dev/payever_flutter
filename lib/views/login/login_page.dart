@@ -47,11 +47,11 @@ class _LoginState extends State<Login> implements LoginScreenContract,AuthStateL
   
   String _password , _username;
   LoginScreenPresenter  _presenter;
-  VideoPlayerController _controller;
-  VideoPlayerController pl;
-  VideoPlayerController pp;
-  VideoPlayerController tl;
-  VideoPlayerController tp;
+  // VideoPlayerController _controller;
+  // VideoPlayerController pl;
+  // VideoPlayerController pp;
+  // VideoPlayerController tl;
+  // VideoPlayerController tp;
   _LoginState(){
      _presenter = LoginScreenPresenter(this);
     var authStateProvider = new AuthStateProvider();
@@ -91,39 +91,39 @@ class _LoginState extends State<Login> implements LoginScreenContract,AuthStateL
       // }
     });
     
-    tp = VideoPlayerController.asset(
-       'videos/tablet_portrait.mp4')
-      ..setLooping(true)
-      ..initialize().then((_) {
-        setState(() {
-          tp.play();
-        });
-      });
-    tl = VideoPlayerController.asset(
-        'videos/tablet_landscape.mp4')
-      ..setLooping(true)
-      ..initialize().then((_) {
-        setState(() {
-          tl.play();
-        });
-      });
-    pp = VideoPlayerController.asset(
-        'videos/phone_portrait.mp4')
-      ..setLooping(true)
-      ..initialize().then((_) {
-        setState(() {
-          pp.play();
-        });
-      });
+    // tp = VideoPlayerController.asset(
+    //    'videos/tablet_portrait.mp4')
+    //   ..setLooping(true)
+    //   ..initialize().then((_) {
+    //     setState(() {
+    //       tp.play();
+    //     });
+    //   });
+    // tl = VideoPlayerController.asset(
+    //     'videos/tablet_landscape.mp4')
+    //   ..setLooping(true)
+    //   ..initialize().then((_) {
+    //     setState(() {
+    //       tl.play();
+    //     });
+    //   });
+    // pp = VideoPlayerController.asset(
+    //     'videos/phone_portrait.mp4')
+    //   ..setLooping(true)
+    //   ..initialize().then((_) {
+    //     setState(() {
+    //       pp.play();
+    //     });
+    //   });
 
-      pl = VideoPlayerController.asset(
-       'videos/phone_landscape.mp4')
-      ..setLooping(true)
-      ..initialize().then((_) {
-        setState(() {
-          pl.play();
-        });
-      });
+    //   pl = VideoPlayerController.asset(
+    //    'videos/phone_landscape.mp4')
+    //   ..setLooping(true)
+    //   ..initialize().then((_) {
+    //     setState(() {
+    //       pl.play();
+    //     });
+    //   });
   }
 
   void _submit() {
@@ -178,12 +178,11 @@ class _LoginState extends State<Login> implements LoginScreenContract,AuthStateL
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
             top: 0.0,
-            child: Container(
-              child: VideoPlayer( _isTablet?_isPortrait?tp:tl:_isPortrait?pp:pl) ),
+            child: Image.asset("images/loginverticaltablet.png",fit: BoxFit.cover,),
+            // child: Container(
+              // child: VideoPlayer( _isTablet?_isPortrait?tp:tl:_isPortrait?pp:pl) ),
           ),
-          Container(height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            color: Colors.black.withOpacity(0.5),),
+          
           ListView(
             children: <Widget>[
               Column(
