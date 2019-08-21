@@ -465,8 +465,8 @@ class _SimplifyTransactionsState extends State<SimplifyTransactions> {
       widget._appName,
       widget._imageProvider,
       widget.lastYear.isEmpty?Center(child:CircularProgressIndicator()):
-      Head(lastMonth: widget.lastMonth,lastYear: widget.lastYear,),
-      body:widget.lastYear.isEmpty?null: Body(lastMonth: widget.lastMonth,total: widget.total,monthlysum: widget.monthlysum,),
+      Head(lastMonth: dashboardStateModel.lastMonth,lastYear: dashboardStateModel.lastYear,),
+      body:widget.lastYear.isEmpty?null: Body(lastMonth: dashboardStateModel.lastMonth,total: dashboardStateModel.total,monthlysum: widget.monthlysum,),
       defPad: false,
     );
 
@@ -493,8 +493,9 @@ class _SimplifyTransactionsState extends State<SimplifyTransactions> {
 
 }
 class Head extends StatefulWidget {
-  var lastMonth;
-  var lastYear;
+
+  List<Day> lastMonth  = List();
+  List<Month> lastYear = List();
   Head({this.lastMonth,this.lastYear});
   @override
   _HeadState createState() => _HeadState();
@@ -507,11 +508,11 @@ class _HeadState extends State<Head> {
       highlightColor: Colors.transparent,
       child: Column(
         children: <Widget>[
-          TitleAmountCardItem("${DashboardWidgets.numberFilter(widget.lastMonth.last?.amount?.toDouble()??0.0, false)} ${Measurements.currency(widget.lastMonth.last.currency)}",
+          TitleAmountCardItem("${DashboardWidgets.numberFilter(widget.lastMonth.last?.amount?.toDouble()??0.0, false)} ${Measurements.currency(widget.lastMonth.last?.currency??"")}",
             titleString: Language.getWidgetStrings("widgets.transactions.today-revenue"),
           ),
           Divider(height: 2,color: Colors.white.withOpacity(0.5)),
-          TitleAmountCardItem("${DashboardWidgets.numberFilter(widget.lastYear?.last?.amount?.toDouble()??0.0 ,false)} ${Measurements.currency(widget.lastMonth.last.currency)}",
+          TitleAmountCardItem("${DashboardWidgets.numberFilter(widget.lastYear?.last?.amount?.toDouble()??0.0 ,false)} ${Measurements.currency(widget.lastMonth.last?.currency??"")}",
           titleString:"${Language.getWidgetStrings("widgets.transactions.this-month")}",)
         ],
       ),
@@ -524,9 +525,9 @@ class _HeadState extends State<Head> {
 }
 
 class Body extends StatefulWidget {
-  var lastMonth;
-  var monthlysum;
-  var total;
+  List<Day> lastMonth     = List();
+  List<double> monthlysum = List();
+  double total;
   Body({this.lastMonth,this.monthlysum,this.total});
   @override
   _BodyState createState() => _BodyState();
@@ -543,7 +544,7 @@ class _BodyState extends State<Body> {
             children: <Widget>[
               Divider(height: 2,color: Colors.white.withOpacity(0.5)),
               widget.monthlysum.isNotEmpty?TitleAmountCardItem(
-                "${DashboardWidgets.numberFilter(widget.monthlysum[5]??0.0,false)} ${Measurements.currency(widget.lastMonth.last.currency)}",
+                "${DashboardWidgets.numberFilter(widget.monthlysum[5]??0.0,false)} ${Measurements.currency(widget.lastMonth.last?.currency??"")}",
                 title:Row(
                   children: <Widget>[
                     Text(Language.getWidgetStrings("widgets.transactions.6-months").toString().substring(0,1),style: TextStyle(fontSize: AppStyle.fontSizeDashboardTitleAmount())),
@@ -553,7 +554,7 @@ class _BodyState extends State<Body> {
               ):Container(),
               Divider(height: 2,color: Colors.white.withOpacity(0.5)),
               widget.monthlysum.isNotEmpty?TitleAmountCardItem(
-                "${DashboardWidgets.numberFilter(widget.monthlysum.last??0.0,false)} ${Measurements.currency(widget.lastMonth.last.currency)}",
+                "${DashboardWidgets.numberFilter(widget.monthlysum.last??0.0,false)} ${Measurements.currency(widget.lastMonth.last?.currency??"")}",
                 title:Row(
                   children: <Widget>[
                     Text(Language.getWidgetStrings("widgets.transactions.1-year").toString().substring(0,1),style: TextStyle(fontSize: AppStyle.fontSizeDashboardTitleAmount())),
@@ -563,7 +564,7 @@ class _BodyState extends State<Body> {
               ):Container(),
               Divider(height: 2,color: Colors.white.withOpacity(0.5)),
               TitleAmountCardItem(
-                "${DashboardWidgets.numberFilter(widget.total??0.0,false)??0.0} ${Measurements.currency(widget.lastMonth.last.currency)}",
+                "${DashboardWidgets.numberFilter(widget.total??0.0,false)??0.0} ${Measurements.currency(widget.lastMonth.last?.currency??"")}",
                 titleString:Language.getCartStrings("checkout_cart_edit.form.label.product"),
               ),
             ],

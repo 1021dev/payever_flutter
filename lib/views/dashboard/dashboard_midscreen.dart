@@ -214,8 +214,8 @@ class DashboardMidScreen extends StatelessWidget {
     RestDatasource api = RestDatasource();
         var prefs = await SharedPreferences.getInstance();
         prefs = prefs;
-        var environment = await api.getEnv();
-        Env.map(environment);
+        //  var environment = await api.getEnv();
+        // Env.map(environment);
         if (DateTime.now()
                 .difference(DateTime.fromMillisecondsSinceEpoch(
                     Measurements.parseJwt(

@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:page_transition/page_transition.dart';
@@ -37,7 +38,6 @@ class _DetailScreenState extends State<DetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print("index:${widget.index}");
     PosCartStateModel cartStateModel = Provider.of<PosCartStateModel>(context);
 
     isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
@@ -300,9 +300,6 @@ class _DetailImageState extends State<DetailImage> {
                       imageIndex = index;
                       customCarouselSlider.jumpToPage(imageIndex);
                     });
-
-                    print("index: $index");
-                    print("imageIndex: $imageIndex");
                   },
                 );
               },
@@ -1192,13 +1189,16 @@ class _DetailDetailsState extends State<DetailDetails> {
           ),
 
           Container(
+            alignment: Alignment.center,
               padding: EdgeInsets.only(
                   bottom: Measurements.height * 0.04,
                   top: Measurements.height * 0.02),
-              child: Text(
-                "$description",
-                style: TextStyle(color: Colors.black, fontSize: 13),
-              )),
+              // child: Text(
+              //   "$description",
+              //   style: TextStyle(color: Colors.black, fontSize: 13),
+              // )
+              child: Html(data: description ,defaultTextStyle: TextStyle(color: Colors.black, fontSize: 13),),
+              ),
 //          ColorButtonGrid(
 //            colors: <Color>[
 //              Colors.red,

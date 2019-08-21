@@ -9,6 +9,7 @@ import 'package:payever/utils/auth.dart';
 import 'package:payever/utils/env.dart';
 import 'package:payever/utils/global_keys.dart';
 import 'package:payever/utils/utils.dart';
+import 'package:payever/views/customelements/updatedialog.dart';
 import 'package:payever/views/login/login_page_controller.dart';
 import 'package:payever/views/switcher/switcher_page.dart';
 import 'package:page_transition/page_transition.dart';
@@ -134,7 +135,9 @@ class _LoginState extends State<Login> implements LoginScreenContract,AuthStateL
       form.save();
       api.getEnv().then((dynamic result){
       Env.map(result);
-       _presenter.doLogin(_username, _password);
+      VersionController().checkVersion(context, (){
+        _presenter.doLogin(_username, _password);
+      });
       }).catchError((e){
         setState((){
           _isLoading = false;
@@ -385,7 +388,9 @@ class _LoginState extends State<Login> implements LoginScreenContract,AuthStateL
     print("state" );
     print(state );
     if(state == AuthState.LOGGED_IN) {
-      Navigator.pushReplacement(_ctx, PageTransition(type: PageTransitionType.fade, child: SwitcherScreen()));
+      //VersionController().checkVersion(context, (){
+        Navigator.pushReplacement(_ctx, PageTransition(type: PageTransitionType.fade, child: SwitcherScreen()));
+      //});
     }
   }
 

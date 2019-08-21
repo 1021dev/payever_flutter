@@ -882,7 +882,7 @@ class _VariantPopUpState extends State<VariantPopUp> {
                                             style: TextStyle(fontSize: AppStyle.fontSizeTabContent()),
                                             inputFormatters: [WhitelistingTextInputFormatter(RegExp("[0-9.]"))],
                                             onFieldSubmitted: (qtt){
-                                              widget.inv = num.parse(qtt??0);
+                                              widget.inv = num.parse(qtt??"0");
                                             },
                                             onSaved: (value) {
                                               print("value =  $value");
@@ -891,7 +891,7 @@ class _VariantPopUpState extends State<VariantPopUp> {
                                             textAlign: TextAlign.center,
                                             controller:
                                                 TextEditingController(
-                                              text: "${widget.inv}",
+                                              text: "${widget.inv??0}",
                                             ),
                                             decoration: InputDecoration(
                                               border: InputBorder.none,
