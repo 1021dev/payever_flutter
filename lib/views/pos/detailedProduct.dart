@@ -1,4 +1,3 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -222,10 +221,20 @@ class _DetailImageState extends State<DetailImage> {
     setState(() {
       imageIndex = widget.index;
     });
+
   }
 
   listener() {
     setState(() {});
+  }
+
+  List<T> map<T>(List list, Function handler) {
+    List<T> result = [];
+    for (var i = 0; i < list.length; i++) {
+      result.add(handler(i, list[i]));
+    }
+
+    return result;
   }
 
   @override
@@ -251,12 +260,26 @@ class _DetailImageState extends State<DetailImage> {
       ));
     });
 
+    int _currentImage = imageIndex;
+
     customCarouselSlider = CarouselSlider(
-      aspectRatio: 1,
+//      aspectRatio: 1,
       realPage: imageIndex,
       initialPage: imageIndex,
       items: images,
       enableInfiniteScroll: false,
+//      viewportFraction: 1.0,
+      viewportFraction: 1.0,
+      aspectRatio: 1,
+      scrollDirection: Axis.horizontal,
+      onPageChanged: (index) {
+        setState(() {
+          _currentImage = index;
+          print(index);
+          print(_currentImage);
+
+        });
+      },
     );
 
     return Container(
@@ -270,7 +293,32 @@ class _DetailImageState extends State<DetailImage> {
             width: isTablet
                 ? Measurements.width * 0.45
                 : Measurements.height * 0.4,
-            child: customCarouselSlider,
+//            child: customCarouselSlider,
+            child: Stack(
+                children: [
+                  customCarouselSlider,
+                  images.length > 1 ? Positioned(
+//                      top: 0.0,
+                      left: 0,
+                      right: 0,
+                      bottom: -10,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: map<Widget>(images, (index, url) {
+                          return Container(
+                            width: 8,
+                            height: 8,
+                            margin: EdgeInsets.symmetric(vertical: 10, horizontal: 2),
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: _currentImage == index ? Color.fromRGBO(0, 0, 0, 0.9) : Color.fromRGBO(0, 0, 0, 0.4)
+                            ),
+                          );
+                        }),
+                      )
+                  ) : Container()
+                ]
+            ),
           ),
           Container(
             width: isTablet
