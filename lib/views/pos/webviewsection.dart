@@ -24,6 +24,7 @@ class _WebViewPaymentsState extends State<WebViewPayments> {
   @override
   void initState() {
     super.initState();
+    print(widget.url);
 
     if (widget.url == null)
       RestDatasource()
@@ -50,6 +51,7 @@ class _WebViewPaymentsState extends State<WebViewPayments> {
 
         print("paymentUrl: $paymentUrl");
       });
+      else paymentUrl = widget.url;
   }
 
   @override

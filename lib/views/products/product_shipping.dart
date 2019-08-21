@@ -67,7 +67,7 @@ class _ProductShippingRowState extends State<ProductShippingRow> {
             onSaved: (value) {
               widget.parts.product.shipping.width = num.parse(value);
             },
-            initialValue: widget.parts.editMode?widget.parts.product.shipping.width.toString():"",
+            initialValue: widget.parts.editMode?widget.parts.product.shipping.width?.toString()??"":"",
             inputFormatters: [WhitelistingTextInputFormatter(RegExp("[0-9.]"))],
             decoration: InputDecoration(
               hintText: Language.getProductStrings("shipping.placeholders.width"),
@@ -123,7 +123,7 @@ class _ProductShippingRowState extends State<ProductShippingRow> {
             },
             keyboardType: TextInputType.number,
             inputFormatters: [WhitelistingTextInputFormatter(RegExp("[0-9.]"))],
-            initialValue: widget.parts.editMode?widget.parts.product.shipping.height.toString():"",
+            initialValue: widget.parts.editMode?widget.parts.product.shipping.height?.toString()??"":"",
             decoration: InputDecoration(
               hintText:  Language.getProductStrings("shipping.placeholders.height"),
               hintStyle: TextStyle(
@@ -175,7 +175,7 @@ class _ProductShippingRowState extends State<ProductShippingRow> {
             },
             keyboardType: TextInputType.number,
             inputFormatters: [WhitelistingTextInputFormatter(RegExp("[0-9.]"))],
-            initialValue: widget.parts.editMode?widget.parts.product.shipping.length.toString():"",
+            initialValue: widget.parts.editMode?widget.parts.product.shipping.length?.toString()??"":"",
             decoration: InputDecoration(
               hintText: Language.getProductStrings("shipping.placeholders.length"),
               hintStyle: TextStyle(
@@ -327,7 +327,7 @@ class _ProductShippingRowState extends State<ProductShippingRow> {
                             widget.parts.product.shipping.weight = num.parse(value);
                           },
                           inputFormatters: [WhitelistingTextInputFormatter(RegExp("[0-9.]"))],
-                          initialValue: widget.parts.editMode?widget.parts.product.shipping.weight.toString():"",
+                          initialValue: widget.parts.editMode?widget.parts.product.shipping.weight?.toString()??"":"",
                           decoration: InputDecoration(
                             hintText: Language.getProductStrings("shippingSection.form.weight.label"),
                             border: InputBorder.none,

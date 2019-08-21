@@ -11,6 +11,7 @@ import 'package:flutter_sparkline/flutter_sparkline.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:payever/view_models/dashboard_state_model.dart';
 import 'package:payever/view_models/global_state_model.dart';
+import 'package:payever/views/customelements/custom_future_builder.dart';
 import 'package:payever/views/customelements/dashboard_card_templates.dart';
 import 'package:payever/views/dashboard/dashboard_screen.dart';
 import 'dart:ui';
@@ -446,7 +447,7 @@ class _SimplifyTransactionsState extends State<SimplifyTransactions> {
         dashboardStateModel.setlastYear(widget.lastYear);    
       }).then((_){
         RestDatasource().getTransactionList(globalStateModel.currentBusiness.id,GlobalUtils.ActiveToken.accesstoken, "", context).then((_total){
-          dashboardStateModel.setTotal(Transaction.toMap(_total).paginationData.amount.toDouble());
+          dashboardStateModel.setTotal(Transaction.toMap(_total).paginationData.amount?.toDouble()??0.0);
           setState(() { });
         });
       });
@@ -455,7 +456,7 @@ class _SimplifyTransactionsState extends State<SimplifyTransactions> {
       widget.lastYear  = dashboardStateModel.lastYear;
       widget.total = dashboardStateModel.total;
       double sum = 0.0;
-      for(int i =(widget.lastYear.length-2);i>=0;i--){
+      for(int i =(widget.lastYear.length-1);i>=0;i--){
         sum += widget.lastYear[i].amount;
         widget.monthlysum.add(sum);
       }
@@ -468,6 +469,19 @@ class _SimplifyTransactionsState extends State<SimplifyTransactions> {
       body:widget.lastYear.isEmpty?null: Body(lastMonth: widget.lastMonth,total: widget.total,monthlysum: widget.monthlysum,),
       defPad: false,
     );
+
+    //  return DashboardCard_ref(
+    //   widget._appName,
+    //   widget._imageProvider,
+    //   CustomFutureBuilder(
+    //     errorMessage: "",
+    //     future: dashboardStateModel.getDaily(globalStateModel.currentBusiness),
+    //     onDataLoaded: (results) {
+    //       return Head(lastMonth: dashboardStateModel.lastMonth,lastYear: dashboardStateModel.lastYear,);
+    //     },
+    //   ),
+    //   body:Body(lastMonth: dashboardStateModel.lastMonth,total: dashboardStateModel.total,monthlysum: dashboardStateModel.monthlysum,),
+    //   );
   }
 
   fetchDaily()async{
@@ -502,7 +516,7 @@ class _HeadState extends State<Head> {
         ],
       ),
       onTap: (){
-        Navigator.push(context, PageTransition(child: TransactionScreen(), type: PageTransitionType.fade,));
+        Navigator.push(context, PageTransition(child: TransactionScreenInit(), type: PageTransitionType.fade,));
       },
     );
   }
@@ -528,34 +542,34 @@ class _BodyState extends State<Body> {
           physics: NeverScrollableScrollPhysics(),
             children: <Widget>[
               Divider(height: 2,color: Colors.white.withOpacity(0.5)),
-              TitleAmountCardItem(
-                "${DashboardWidgets.numberFilter(widget.monthlysum[5],false)} ${Measurements.currency(widget.lastMonth.last.currency)}",
+              widget.monthlysum.isNotEmpty?TitleAmountCardItem(
+                "${DashboardWidgets.numberFilter(widget.monthlysum[5]??0.0,false)} ${Measurements.currency(widget.lastMonth.last.currency)}",
                 title:Row(
                   children: <Widget>[
                     Text(Language.getWidgetStrings("widgets.transactions.6-months").toString().substring(0,1),style: TextStyle(fontSize: AppStyle.fontSizeDashboardTitleAmount())),
                     Text(Language.getWidgetStrings("widgets.transactions.6-months").toString().substring(1)  ,style: TextStyle(color: Colors.white.withOpacity(0.6),fontSize:  AppStyle.fontSizeDashboardTitleAmount())),
                   ],
                 ),
-              ),
+              ):Container(),
               Divider(height: 2,color: Colors.white.withOpacity(0.5)),
-              TitleAmountCardItem(
-                "${DashboardWidgets.numberFilter(widget.monthlysum[10],false)} ${Measurements.currency(widget.lastMonth.last.currency)}",
+              widget.monthlysum.isNotEmpty?TitleAmountCardItem(
+                "${DashboardWidgets.numberFilter(widget.monthlysum.last??0.0,false)} ${Measurements.currency(widget.lastMonth.last.currency)}",
                 title:Row(
                   children: <Widget>[
                     Text(Language.getWidgetStrings("widgets.transactions.1-year").toString().substring(0,1),style: TextStyle(fontSize: AppStyle.fontSizeDashboardTitleAmount())),
                     Text(Language.getWidgetStrings("widgets.transactions.1-year").toString().substring(1)  ,style: TextStyle(color: Colors.white.withOpacity(0.6),fontSize:  AppStyle.fontSizeDashboardTitleAmount())),
                   ],
                 ),
-              ),
+              ):Container(),
               Divider(height: 2,color: Colors.white.withOpacity(0.5)),
               TitleAmountCardItem(
-                "${DashboardWidgets.numberFilter(widget.total,false)??0.0} ${Measurements.currency(widget.lastMonth.last.currency)}",
+                "${DashboardWidgets.numberFilter(widget.total??0.0,false)??0.0} ${Measurements.currency(widget.lastMonth.last.currency)}",
                 titleString:Language.getCartStrings("checkout_cart_edit.form.label.product"),
               ),
             ],
           ),
           onTap: (){
-            Navigator.push(context, PageTransition(child: TransactionScreen(), type: PageTransitionType.fade,));
+            Navigator.push(context, PageTransition(child: TransactionScreenInit(), type: PageTransitionType.fade,));
           },
     );
   }

@@ -36,6 +36,10 @@ class DashboardStateModel extends ChangeNotifier with Validators {
   List<Month> get lastYear => _lastYear;
   setlastYear(List<Month> lastYear) =>_lastYear = lastYear;
 
+  List<double> _monthlysum = List();
+  List<double> get monthlysum => _monthlysum;
+  setMonthlysum(List<double> monthlysum) =>_monthlysum = monthlysum;
+
   List<Day> _lastMonth = List();
   List<Day> get lastMonth => _lastMonth;
   setlastMonth(List<Day> lastMonth) =>_lastMonth = lastMonth;
@@ -82,41 +86,44 @@ class DashboardStateModel extends ChangeNotifier with Validators {
     return _activeWid;
   }
 
-  Future<void> fetchDaily(Business currentBusiness) async {
-    return  RestDatasource().getDays(currentBusiness.id, GlobalUtils.ActiveToken.accessToken,null).then((days) async {
-      days.forEach((day){
-        lastMonth.add(Day.map(day));
-      });
-      setlastMonth(lastMonth);
-      return fetchMonthly(currentBusiness);
-    });
+  Future<dynamic> fetchDaily(Business currentBusiness)  {
+    return  RestDatasource().getDays(currentBusiness.id, GlobalUtils.ActiveToken.accessToken,null);
   }
 
-  Future<void> fetchMonthly(Business currentBusiness) async {
-    return await RestDatasource().getMonths(currentBusiness.id,GlobalUtils.ActiveToken.accesstoken,null);
+  Future<dynamic> fetchMonthly(Business currentBusiness)  {
+    return  RestDatasource().getMonths(currentBusiness.id,GlobalUtils.ActiveToken.accesstoken,null);
   }
-  Future<dynamic> fetchTotal(Business currentBusiness) async {
+  Future<dynamic> fetchTotal(Business currentBusiness)  {
     return  RestDatasource().getTransactionList(currentBusiness.id,GlobalUtils.ActiveToken.accesstoken, "",null);
   }
   
-  // void getDaily(Business currentBusiness) async {
-  //   var days = await fetchDaily(currentBusiness);
-  //   days.forEach((day){
-  //     lastMonth.add(Day.map(day));
-  //   });
-  //   setlastMonth(lastMonth);
-  // }
-  // void getMonthly(Business currentBusiness) async {
-  //   var months = await fetchMonthly(currentBusiness);
-  //   months.forEach((month){
-  //       lastYear.add(Month.map(month));
-  //     });
-  //     setlastYear(lastYear);   
-  // }
-  // void getTotal(Business currentBusiness) async {
-  //   var _total = await fetchTotal(currentBusiness);
-  //   setTotal(Transaction.toMap(_total).paginationData.amount.toDouble());
-  // }
+  Future<dynamic> getDaily(Business currentBusiness) async {
+    var days = await fetchDaily(currentBusiness);
+    days.forEach((day){
+      lastMonth.add(Day.map(day));
+    });
+    setlastMonth(lastMonth);
+    return  getMonthly(currentBusiness);
+  }
+  Future<dynamic> getMonthly(Business currentBusiness) async {
+    var months = await fetchMonthly(currentBusiness);
+    months.forEach((month){
+        lastYear.add(Month.map(month));
+      });
+      setlastYear(lastYear);
+      num sum;
+      for(int i =(lastYear.length-1);i>=0;i--){
+        sum += lastYear[i].amount;
+        monthlysum.add(sum);
+      }
+
+      return  getTotal(currentBusiness);   
+  }
+  Future<dynamic> getTotal(Business currentBusiness) async {
+    var _total = await fetchTotal(currentBusiness);
+    setTotal(Transaction.toMap(_total).paginationData.amount.toDouble());
+    return _total;
+  }
 
 
 }

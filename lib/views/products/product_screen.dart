@@ -25,11 +25,9 @@ import 'package:payever/view_models/global_state_model.dart';
 import 'package:payever/views/customelements/custom_future_builder.dart';
 import 'package:payever/views/customelements/custom_toast_notification.dart';
 import 'package:payever/views/customelements/wallpaper.dart';
-import 'package:payever/views/dashboard/dashboard_screen.dart';
 import 'package:payever/views/login/login_page.dart';
 import 'package:provider/provider.dart';
 import 'new_product.dart';
-import 'package:flutter/cupertino.dart';
 
 
 
@@ -118,7 +116,6 @@ class _ProductScreenState extends State<ProductScreen> {
         duration: Duration(seconds: 3),
         onDismiss: () {
           print("The toast was dismised");
-
           setState(() {
             widget.isFromDashboardCard = false;
           });
@@ -223,14 +220,17 @@ class _ProductScreenState extends State<ProductScreen> {
                         borderRadius: BorderRadius.circular(12),
                         ),
                       padding:EdgeInsets.only(left: Measurements.width* (widget._parts.isTablet?0.01:0.025)),
-                      child: TextFormField(
+                      child: TextField(
                         decoration: InputDecoration(
-                          hintText: "Search",
-                          border: InputBorder.none,
-                          icon: Container(child:SvgPicture.asset("images/searchicon.svg",height: Measurements.height * 0.0175,color:Colors.white,))
-                        ),
-                        autovalidate: true,
-                        onFieldSubmitted: (doc){
+                            hintText: "Search",
+                            border: InputBorder.none,
+                            icon: Container(
+                                child: SvgPicture.asset(
+                              "images/searchicon.svg",
+                              height: Measurements.height * 0.0175,
+                              color: Colors.white,
+                            ))),
+                        onSubmitted: (doc){
                           widget._parts.products.clear();
                           widget._parts.searchDocument = doc;
                           widget._parts.page = 1;
@@ -242,7 +242,6 @@ class _ProductScreenState extends State<ProductScreen> {
                   widget._parts.isLoading.value?
                   ProductLoader(business: widget.business,parts: widget._parts,isSearching: false,):
                   ProductsBody(widget._parts),
-
                 ],
               ),
             ),

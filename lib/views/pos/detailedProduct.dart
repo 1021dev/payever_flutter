@@ -71,17 +71,31 @@ class _DetailScreenState extends State<DetailScreen> {
                     color: Colors.black,
                     height: Measurements.height * 0.035,
                   ),
-                  Positioned(
-                    top: isTablet
-                        ? Measurements.height * 0.016
-                        : Measurements.height * 0.014,
-                    child: cartStateModel.getCartHasItems
+                  Container(
+                    child: Column(
+                      children: <Widget>[
+                        Expanded(flex:3,child: Container(),),
+                          cartStateModel.getCartHasItems
                         ? Icon(Icons.brightness_1,
                             color: Color(0XFF0084FF),
                             size: Measurements.height *
-                                (isTablet ? 0.01 * 1.2 : 0.01 * 1.3))
+                                (isTablet ? 0.01 * 1 : 0.01 * 1.2))
                         : Container(),
+                        Expanded(flex:2,child: Container(),),
+                      ],
+                    ),
                   ),
+                  // Positioned(
+                  //   top: isTablet
+                  //       ? Measurements.height * 0.016
+                  //       : Measurements.height * 0.014,
+                  //   child: cartStateModel.getCartHasItems
+                  //       ? Icon(Icons.brightness_1,
+                  //           color: Color(0XFF0084FF),
+                  //           size: Measurements.height *
+                  //               (isTablet ? 0.01 * 1.2 : 0.01 * 1.3))
+                  //       : Container(),
+                  // ),
                 ],
               ),
               onPressed: () {
@@ -877,8 +891,6 @@ class _DetailDetailsState extends State<DetailDetails> {
         index++;
       });
       if (widget.currentVariant.value == 0 && products.length > 0) {
-        print(
-            "${widget.currentVariant.value}  =  ${int.parse(products.first.value)}");
         widget.currentVariant.value = int.parse(products.first.value);
       }
       price = widget.currentProduct.variants[widget.currentVariant.value].price;
@@ -1112,21 +1124,6 @@ class _DetailDetailsState extends State<DetailDetails> {
                     )),
               ),
               onTap: () {
-                ToastFuture toastFuture = showToastWidget(
-                  CustomToastNotification(
-                    icon: Icons.check_circle_outline,
-                    toastText: "Product added to Bag",
-                  ),
-                  duration: Duration(seconds: 3),
-                  onDismiss: () {
-                    print("The toast was dismised");
-                  },
-                );
-
-                Future.delayed(Duration(seconds: 3), () {
-                  toastFuture.dismiss();
-                });
-
                 if (stc != 0) {
                   if (widget.haveVariants) {
                     var image = widget
@@ -1172,6 +1169,20 @@ class _DetailDetailsState extends State<DetailDetails> {
                   }
 
                   widget.cartStateModel.updateCart(true);
+                  ToastFuture toastFuture = showToastWidget(
+                  CustomToastNotification(
+                    icon: Icons.check_circle_outline,
+                    toastText: "Product added to Bag",
+                  ),
+                  duration: Duration(seconds: 3),
+                  onDismiss: () {
+                    print("The toast was dismised");
+                  },
+                );
+
+                Future.delayed(Duration(seconds: 3), () {
+                  toastFuture.dismiss();
+                });
 
 //                  Navigator.pop(context);
                 }

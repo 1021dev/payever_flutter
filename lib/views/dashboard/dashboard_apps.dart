@@ -154,7 +154,7 @@ class _AppViewState extends State<AppView> {
     return Navigator.push(
         context,
         PageTransition(
-            child: TransactionScreen(),
+            child: TransactionScreenInit(),
             type: PageTransitionType.fade,
             duration: Duration(milliseconds: 300)));
   }

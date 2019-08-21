@@ -358,6 +358,7 @@ class _NewProductScreenState extends State<NewProductScreen> {
             appBar: _appBar,
             body: SingleChildScrollView(
               child: InkWell(
+                highlightColor: Colors.transparent,
                 onTap: () => _removeFocus(context),
                 child: Form(
                   key: widget._parts._formKey,
@@ -434,11 +435,10 @@ class _NewProductScreenState extends State<NewProductScreen> {
     a.validate();
     okToSave = mainrow.isMainRowOK && inventory.isInventoryRowOK && shipping.isShippingRowOK;
 
-    print("okToSave: $okToSave");
     RestDatasource().getBusinesses(GlobalUtils.ActiveToken.accessToken, context).then((_){
       if (okToSave) {
       a.save();
-      print("saving");
+      
       String _images = "";
       widget._parts.images.forEach((name) {
         _images += '"$name"';
@@ -455,12 +455,11 @@ class _NewProductScreenState extends State<NewProductScreen> {
       
       String stringCategories = "";
       widget._parts.categoryList.forEach((f){
-        print("incategories");
         Categories c = widget._parts.categories.where((test) => test.title.toLowerCase() == f.toLowerCase()).toList()[0];
         print(c);
         stringCategories += '{_id: "${c.id}", businessUuid: "${widget.business}", title: "${c.title}",slug: "${c.slug}"}';
       });
-      print("here");
+      
       String channels = "";
       widget._parts.channels.forEach((ch){
         channels += '{id:"${ch.id}", type: "${ch.type}", name: "${ch.name}"}';
@@ -493,7 +492,6 @@ class _NewProductScreenState extends State<NewProductScreen> {
         barrierDismissible: false,
           context: context,
           builder: (BuildContext context) {
-            print("in Dialog");
             return Dialog(
               backgroundColor: Colors.transparent,
               child: BackdropFilter(
@@ -547,8 +545,8 @@ class _NewProductScreenState extends State<NewProductScreen> {
           content: Text("Please fill required fields"),
           duration: Duration(seconds: 2),
         );
-        Scaffold.of(context).showSnackBar(snackBar);
-        //widget._parts.scaffoldKey.currentState.showSnackBar(snackBar);
+        //Scaffold.of(context).showSnackBar(snackBar);
+        widget._parts.scaffoldKey.currentState.showSnackBar(snackBar);
       }
     }).catchError((onError){
       if(onError.toString().contains("401")){
