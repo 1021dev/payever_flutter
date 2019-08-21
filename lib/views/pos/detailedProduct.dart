@@ -23,8 +23,8 @@ class DetailScreen extends StatefulWidget {
 //  final PosScreenParts parts;
   final PosStateModel parts;
   final ProductsModel currentProduct;
-
-  DetailScreen({this.parts, this.currentProduct});
+  final int index;
+  DetailScreen({this.parts, this.currentProduct,this.index});
 
   @override
   createState() => _DetailScreenState();
@@ -36,6 +36,7 @@ class _DetailScreenState extends State<DetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print("index:${widget.index}");
     PosCartStateModel cartStateModel = Provider.of<PosCartStateModel>(context);
 
     isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;

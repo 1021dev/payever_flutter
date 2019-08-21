@@ -315,14 +315,34 @@ class ProductItem extends StatefulWidget {
 class _ProductItemState extends State<ProductItem> {
   bool isPortrait;
   bool isTablet;
-
+  int index;
+  num price;
+  Variants _variant;
+  bool onSale;
   @override
   Widget build(BuildContext context) {
     isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     isTablet = isPortrait
         ? MediaQuery.of(context).size.width > 600
         : MediaQuery.of(context).size.height > 600;
-
+    if(widget.currentProduct.variants.isNotEmpty){
+      int i=0;
+      price = widget.currentProduct.variants[0].price;
+      widget.currentProduct.variants.forEach((variant){
+        if(variant.price <= price){
+          price = variant.price;
+          _variant = variant;
+          index = i;
+          onSale = !variant.hidden;
+        }
+        i++;
+      });
+    }else{
+      index = null;
+      onSale = !widget.currentProduct.hidden;
+    }
+    print("onSale:$onSale");
+  
     return Card(
       elevation: 0,
       color: Colors.white,
@@ -372,7 +392,7 @@ class _ProductItemState extends State<ProductItem> {
                         ),
                 ],
               ),
-              !widget.currentProduct.hidden
+              onSale
                   ? Container(
                       alignment: Alignment.bottomCenter,
                       height: Measurements.height * 0.03,
@@ -397,7 +417,8 @@ class _ProductItemState extends State<ProductItem> {
                         fontSize: 15,
                         color: widget.posStateModel.titleColor,
                         fontWeight: FontWeight.bold),
-                  )),
+                    )
+                  ),
               Container(
                   height: Measurements.height * 0.03,
                   alignment: Alignment.center,
@@ -405,19 +426,22 @@ class _ProductItemState extends State<ProductItem> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        Text(
-                          "${widget.posStateModel.f.format(widget.currentProduct.price)}${Measurements.currency(widget.globalStateModel.currentBusiness.currency)}",
+                        Text(index==null?
+                          "${widget.posStateModel.f.format(widget.currentProduct.price)}${Measurements.currency(widget.globalStateModel.currentBusiness.currency)}":
+                          "${widget.posStateModel.f.format(_variant.price)}${Measurements.currency(widget.globalStateModel.currentBusiness.currency)}"
+                          ,
                           style: TextStyle(
                               fontSize: 15,
                               color: widget.posStateModel.titleColor,
                               fontWeight: FontWeight.w400,
-                              decoration: !widget.currentProduct.hidden
+                              decoration: onSale
                                   ? TextDecoration.lineThrough
                                   : TextDecoration.none),
                         ),
-                        !widget.currentProduct.hidden
-                            ? Text(
-                                "  ${widget.posStateModel.f.format(widget.currentProduct.salePrice)}${Measurements.currency(widget.globalStateModel.currentBusiness.currency)}",
+                        onSale
+                            ? Text(index==null?
+                                "  ${widget.posStateModel.f.format(widget.currentProduct.salePrice)}${Measurements.currency(widget.globalStateModel.currentBusiness.currency)}":
+                                "  ${widget.posStateModel.f.format(_variant.salePrice)}${Measurements.currency(widget.globalStateModel.currentBusiness.currency)}",
                                 style: TextStyle(
                                     fontSize: 15,
                                     color: widget.posStateModel.saleColor,
@@ -437,6 +461,7 @@ class _ProductItemState extends State<ProductItem> {
                   child: DetailScreen(
                     parts: widget.posStateModel,
                     currentProduct: widget.currentProduct,
+                    index: index,
                   ),
                   type: PageTransitionType.fade,
                   duration: Duration(milliseconds: 10)));
