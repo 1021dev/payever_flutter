@@ -646,10 +646,10 @@ class RestDatasource {
     });
   }
 
-   Future<dynamic> getVersion(String token) {
+   Future<dynamic> getVersion() {
     print("TAG - getVersion()");
-    var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token" , HttpHeaders.CONTENT_TYPE: "application/json" ,HttpHeaders.USER_AGENT:GlobalUtils.fingerprint };
-    return _netUtil.get(APPREGISTRY_URL+"apps", headers: headers).then((dynamic res) {
+    var headers = {HttpHeaders.CONTENT_TYPE: "application/json" ,HttpHeaders.USER_AGENT:GlobalUtils.fingerprint };
+    return _netUtil.get(APPREGISTRY_URL+"mobile-settings", headers: headers).then((dynamic res) {
       return res;
     });
   }

@@ -449,7 +449,11 @@ class _NewProductScreenState extends State<NewProductScreen> {
         v.images.forEach((name) {
           images += '"$name"';
         });
-        String id = widget._parts.editMode?'"${v.id}"':'"${Uuid().v4()}"';
+        String id = widget._parts.editMode && (v.id!=null)?'"${v.id}"':'"${Uuid().v4()}"';
+        if(id.contains("null")) {
+          id = '"${Uuid().v4()}"';
+        }
+        print("id: ${widget._parts.editMode && (v.id!=null)?'"${v.id}"':'"${Uuid().v4()}"'}");
         variants += '{title: "${v.title}", description: "${v.description}",price: ${v.price}, images: [$images], hidden: ${v.hidden}, salePrice: ${v.salePrice}, sku: "${v.sku}", barcode: "${v.barcode}",id: $id}';
       });
       

@@ -213,7 +213,7 @@ class PosStateModel extends ChangeNotifier {
 
   Future<void> loadPosProductsList(Terminal terminal) async {
     print("loadPosProductsList()");
-
+    print("inventory: ${terminal.channelSet}");
     try {
       var inventories = await getInventoryList();
       List<InventoryModel> inventoryModelList = List<InventoryModel>();
@@ -260,7 +260,6 @@ class PosStateModel extends ChangeNotifier {
 //        haveProducts = true;
 //        dataFetched = false;
 //        loadMore = false;
-
 //        updateFetchValues(true, false);
 
         return true;

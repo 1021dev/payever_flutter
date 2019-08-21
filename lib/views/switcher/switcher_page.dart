@@ -82,18 +82,7 @@ class _SwitcherScreenState extends State<SwitcherScreen>
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
             top: 0.0,
-            child: _isTablet
-                ? Image.asset(
-                    _isPortrait
-                        ? "images/loginverticaltablet.png"
-                        : "images/loginhorizontaltablet.png",
-                    fit: BoxFit.fill,
-                  )
-                : Image.asset(
-                    _isPortrait
-                        ? "images/loginverticalphone.png"
-                        : "images/loginhorizontalphone.png",
-                    fit: BoxFit.fill),
+            child: Image.asset("images/loginverticaltablet.png",fit: BoxFit.cover,),
           ),
           Scaffold(
             backgroundColor: Colors.transparent,

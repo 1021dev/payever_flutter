@@ -132,7 +132,7 @@ class _PosProductsListScreenState extends State<PosProductsListScreen> {
           ),
         ],
       ),
-      body: widget.terminal != null?CustomFutureBuilder<Object>(
+      body: widget.terminal != null? CustomFutureBuilder<Object>(
         future: posStateModel.loadPosProductsList(widget.terminal),
         errorMessage: "Error loading products",
         loadingWidget: Center(
@@ -206,7 +206,6 @@ class _PosBodyState extends State<PosBody> {
         oneVariant =
             ((_varEmpty.contains("null") ? 0 : int.parse(_varEmpty ?? "0")) >
                 0);
-        print(oneVariant);
       }
 //      if(!(!((temp.contains("null")? 0:int.parse(temp??"0")) > 0) && prod.variants.isEmpty) && !((prod.variants.length == 1) && !oneVariant))
       prodList.add(ProductItem(
@@ -341,8 +340,6 @@ class _ProductItemState extends State<ProductItem> {
       index = null;
       onSale = !widget.currentProduct.hidden;
     }
-    print("onSale:$onSale");
-  
     return Card(
       elevation: 0,
       color: Colors.white,
@@ -380,15 +377,21 @@ class _ProductItemState extends State<ProductItem> {
                       : Container(
                           height: Measurements.width * (isTablet ? 0.3 : 0.8),
                           width: Measurements.width * (isTablet ? 0.3 : 0.8),
-                          child: CachedNetworkImage(
-                            imageUrl: Env.Storage +
+                          decoration: BoxDecoration(
+                            image: DecorationImage(image: CachedNetworkImageProvider(
+                              Env.Storage +
                                 "/products/" +
-                                widget.currentProduct.images[0],
-                            placeholder: (context, url) => Container(),
-                            errorWidget: (context, url, error) =>
-                                Icon(Icons.error),
-                            fit: BoxFit.contain,
+                                widget.currentProduct.images[0],),)
                           ),
+                          // child: CachedNetworkImage(
+                          //   imageUrl: Env.Storage +
+                          //       "/products/" +
+                          //       widget.currentProduct.images[0],
+                          //   placeholder: (context, url) => Container(),
+                          //   errorWidget: (context, url, error) =>
+                          //       Icon(Icons.error),
+                          //   fit: BoxFit.contain,
+                          // ),
                         ),
                 ],
               ),
@@ -495,7 +498,7 @@ class _PosProductsLoaderState extends State<PosProductsLoader> {
   Widget build(BuildContext context) {
     var queryDocument = ''' 
               query {
-                  getProductsByChannelSet(businessId: "${widget.globalStateModel.currentBusiness.id}", channelSetId: "${widget.posStateModel.currentTerminal.channelSet}",search: "${widget.posStateModel.getSearch}",existInChannelSet: true, paginationLimit: $limit, pageNumber: ${widget.posStateModel.getPage}) {
+                  getProductsByChannelSet(businessId: "${widget.globalStateModel.currentBusiness.id}", channelSetId: "${widget.posStateModel.currentTerminal?.channelSet??null}",search: "${widget.posStateModel.getSearch}",existInChannelSet: true, paginationLimit: $limit, pageNumber: ${widget.posStateModel.getPage}) {
                         products {      
                           images
                           uuid
@@ -558,9 +561,10 @@ class _PosProductsLoaderState extends State<PosProductsLoader> {
                     .forEach((prod) {
                   var tempProduct = ProductsModel.toMap(prod);
 
-                  if (widget.posStateModel.productList
-                          .indexWhere((test) => test.sku == tempProduct.sku) <
-                      0) widget.posStateModel.addProductList(tempProduct);
+                  // if (widget.posStateModel.productList
+                  //         .indexWhere((test) => test.sku == tempProduct.sku) <
+                  //     0) 
+                  widget.posStateModel.addProductList(tempProduct);
                 });
                 if (widget.posStateModel.productList.isNotEmpty) {
                   Future.delayed(Duration(microseconds: 1)).then((_) {

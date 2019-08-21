@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:payever/views/customelements/custom_carousel_slider.dart';
 import 'package:provider/provider.dart';
 
 import 'package:payever/view_models/pos_state_model.dart';
 import 'package:payever/view_models/pos_cart_state_model.dart';
 import 'package:payever/views/customelements/custom_toast_notification.dart';
+import 'package:payever/views/customelements/custom_carousel_slider.dart';
 import 'package:payever/views/customelements/color_picker.dart';
 import 'package:payever/views/customelements/drop_down_menu.dart';
 import 'package:payever/views/pos/pos_cart.dart';
@@ -215,6 +216,8 @@ class _DetailsInfoState extends State<DetailsInfo> {
 
   String selectedVariantName = "";
 
+  int selectedIndex = 0;
+
   bool isPortrait = true;
   bool isTablet = false;
 
@@ -235,6 +238,7 @@ class _DetailsInfoState extends State<DetailsInfo> {
 
     setState(() {
       imagesBase = widget.currentProduct.images;
+//      haveVariants = widget.haveVariants;
       haveVariants = widget.currentProduct.variants.isNotEmpty;
 
       selectedVariantName = haveVariants
@@ -443,7 +447,7 @@ class _DetailsInfoState extends State<DetailsInfo> {
                                       .length >
                                   0) {
                                 customCarouselSlider
-                                    .jumpToPage(imagesBase.length);
+                                    .jumpToPage(0+imagesBase.length);
                               }
                             }
                           });
@@ -544,13 +548,19 @@ class _DetailsInfoState extends State<DetailsInfo> {
           ),
 
           Container(
-              padding: EdgeInsets.only(
-                  bottom: Measurements.height * 0.04,
-                  top: Measurements.height * 0.02),
-              child: Text(
-                "$description",
-                style: TextStyle(color: Colors.black, fontSize: 13),
-              )),
+            alignment: Alignment.center,
+            padding: EdgeInsets.only(
+                bottom: Measurements.height * 0.04,
+                top: Measurements.height * 0.02),
+            // child: Text(
+            //   "$description",
+            //   style: TextStyle(color: Colors.black, fontSize: 13),
+            // )
+            child: Html(
+              data: description,
+              defaultTextStyle: TextStyle(color: Colors.black, fontSize: 13),
+            ),
+          ),
 //          ColorButtonGrid(
 //            colors: <Color>[
 //              Colors.red,
@@ -708,6 +718,7 @@ class _DetailImageState extends State<DetailImage> {
         setState(() {
           _currentImage = index;
           imageIndex = index;
+          print(_currentImage);
         });
       },
     );

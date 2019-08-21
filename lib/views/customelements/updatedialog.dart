@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
 import 'package:payever/models/version.dart';
 import 'package:payever/network/rest_ds.dart';
+import 'package:payever/utils/env.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class VersionController{
@@ -12,18 +13,24 @@ class VersionController{
   Future<void> checkVersion(BuildContext context,VoidCallback _action){
     PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
       String version = packageInfo.version;
-      Version _version = getSupportedVersion();
-      print(_version.minVersion.compareTo(version));
-      if(_version.minVersion.compareTo(version)<0){
-        showPopUp(context, _version);
-      }else{
-        _action();
-      }
+      getSupportedVersion().then((_version){
+        if(_version.minVersion.compareTo(version)<0){
+          showPopUp(context, _version);
+        }else{
+          _action();
+        }
+      });
+      
     });
+    return null;
   }
   
-  getSupportedVersion(){
-    return Version("1.0.0","1.9.0","https://apps.apple.com/us/app/telegram-messenger/id686449807","https://play.google.com/store/apps");
+  Future<Version> getSupportedVersion() async  {
+    var environment =await RestDatasource().getEnv();
+    Env.map(environment);
+    var _version = await RestDatasource().getVersion();
+    return Version.map(_version);
+    //return Version("1.0.0","1.9.0","https://apps.apple.com/us/app/telegram-messenger/id686449807","https://play.google.com/store/apps");
   }
   showPopUp(BuildContext context,Version _version ){
     showDialog(
