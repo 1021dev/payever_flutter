@@ -168,8 +168,8 @@ class _ProductScreenState extends State<ProductScreen> {
     @override
     Widget build(BuildContext context) {
 
-
-
+      print("\t\t -----product List--------");
+      
       _appBar = AppBar(elevation: 0,
         actions: <Widget>[
           IconButton(icon: Icon(Icons.add), onPressed: () {
@@ -347,7 +347,7 @@ class _ProductsBodyState extends State<ProductsBody> {
     }
   }
   
-  Future _refresh(){
+  Future _refresh({bool state = true}){
     widget._parts.page = 1;
     widget._parts.loadMore.value = true;
     return RestDatasource().getInventory(widget._parts.business.id, GlobalUtils.ActiveToken.accesstoken).then((inventories){
@@ -355,13 +355,13 @@ class _ProductsBodyState extends State<ProductsBody> {
       inventories.forEach((inv){
         widget._parts.inventories.add(InventoryModel.toMap(inv));
       });
-      setState(() {});
+      if(state)setState(() {});
     });
   }
 
   @override
   Widget build(BuildContext context) {
-
+    _refresh(state: false);
     return Expanded(
       child: RefreshIndicator(
         onRefresh: _refresh,

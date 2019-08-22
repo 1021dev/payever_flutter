@@ -242,7 +242,6 @@ class _NewProductScreenState extends State<NewProductScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context);
 
     _appBar = AppBar(

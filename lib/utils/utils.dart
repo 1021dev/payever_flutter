@@ -221,7 +221,7 @@ class GlobalUtils{
   //static String  MAIL= "abiantgmbh@payever.de";//live 1
   //static String  MAIL = "testcases@payever.de";//test 2
   //static String  MAIL= "service@payever.de";//staging 2
-
+  
   //static const String COMMERCEOS_URL                    = "https://commerceos.test.devpayever.com";//test
   static const String COMMERCEOS_URL                  = "https://commerceos.staging.devpayever.com";//staging
   //static const String COMMERCEOS_URL                  = "https://commerceos.payever.org";//live

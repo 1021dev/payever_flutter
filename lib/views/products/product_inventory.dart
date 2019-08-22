@@ -40,11 +40,14 @@ class InventoryManagement{
   saveInventories(String businessID,BuildContext context){
     inventories.forEach((inventory){
       num dif = (inventory.newAmount??0) - (inventory.amount??0);
+      print("num dif = (inventory.newAmount??0) - (inventory.amount??0)");
+      print("$dif = (${inventory.newAmount}) - (${inventory.amount})");
       print(dif);
       RestDatasource().checkSKU(businessID, GlobalUtils.ActiveToken.accessToken, inventory.sku,).then((onValue){
         if(inventory.newAmount != null)
         RestDatasource().patchInventory(businessID, GlobalUtils.ActiveToken.accessToken, inventory.sku, inventory.barcode, inventory.tracking).then((_){
-          if( dif != 0 && (inventory.newAmount != 0)){
+          //if( dif != 0 && (inventory.newAmount != 0)){
+          if( dif != 0){
             dif > 0 ? add(dif,inventory.sku,businessID):sub(dif.abs(),inventory.sku,businessID);
           }
         });
