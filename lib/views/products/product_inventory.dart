@@ -8,10 +8,8 @@ import 'package:payever/utils/appStyle.dart';
 import 'package:payever/utils/translations.dart';
 import 'package:payever/utils/utils.dart';
 import 'package:payever/view_models/global_state_model.dart';
-import 'package:payever/view_models/product_state_model.dart';
 import 'package:payever/views/products/new_product.dart';
 import 'package:payever/views/products/product_screen.dart';
-import 'package:provider/provider.dart';
 
 class InventoryManagement{
   List<Inventory> inventories = List();
@@ -133,7 +131,7 @@ class ProductInventoryRow extends StatefulWidget {
      true:
      !parts.skuError;
   }
-  
+  TextEditingController _controller;
   ProductInventoryRow({@required this.parts});
   @override
   _ProductInventoryRowState createState() => _ProductInventoryRowState();
@@ -147,18 +145,19 @@ class _ProductInventoryRowState extends State<ProductInventoryRow> {
     super.initState();
     print("widget.parts.business: ${widget.parts.business}");
     print("widget.parts.product: ${widget.parts.product}");
-  if(widget.parts.editMode)
-    RestDatasource().getInventory(widget.parts.business, GlobalUtils.ActiveToken.accessToken, widget.parts.product.sku,context).
-    then((inv){
-      var _inv = InventoryModel.toMap(inv);
-      widget.parts.invManager.inventories.add(Inventory(barcode: _inv.barcode,sku: _inv.sku,tracking: _inv.isTrackable,amount: _inv.stock));
-      setState(() {
-        widget.parts.prodTrackInv   = _inv.isTrackable??false;
-        widget.parts.prodStock      = _inv.stock??0;
+    widget._controller = TextEditingController(text: "0");
+    if(widget.parts.editMode)
+      RestDatasource().getInventory(widget.parts.business, GlobalUtils.ActiveToken.accessToken, widget.parts.product.sku,context).
+      then((inv){
+        var _inv = InventoryModel.toMap(inv);
+        widget.parts.invManager.inventories.add(Inventory(barcode: _inv.barcode,sku: _inv.sku,tracking: _inv.isTrackable,amount: _inv.stock));
+        setState(() {
+          widget.parts.prodTrackInv   = _inv.isTrackable??false;
+          widget.parts.prodStock      = _inv.stock??0;
+           widget._controller = TextEditingController(text:widget.parts.editMode?widget.parts.prodStock.toString():"" );
+        });
       });
-    });
-   
-    
+     
   }
   
 
@@ -189,6 +188,7 @@ class _ProductInventoryRowState extends State<ProductInventoryRow> {
                             (widget.parts.isTablet ? 0.05 : 0.07),
                         child: TextFormField(
                           style: TextStyle(fontSize: AppStyle.fontSizeTabContent()),
+                          //controller: widget._controller,
                           initialValue: widget.parts.editMode?widget.parts.product.sku:"",
                           inputFormatters: [
                             WhitelistingTextInputFormatter(RegExp("[a-z A-Z 0-9 _]")),
@@ -313,9 +313,7 @@ class _ProductInventoryRowState extends State<ProductInventoryRow> {
                             widget.parts.invManager.addInventory(Inventory(newAmount: num.parse(value), barcode: widget.parts.product.barcode??"", sku: widget.parts.product.sku, tracking: widget.parts.prodTrackInv));
                           },
                           textAlign: TextAlign.center,
-                          controller: TextEditingController(
-                            text: "${widget.parts.prodStock??0}",
-                          ),
+                          controller: widget._controller,
                           onFieldSubmitted: (qtt){
                             widget.parts.prodStock = num.parse(qtt);
                           },
@@ -325,7 +323,8 @@ class _ProductInventoryRowState extends State<ProductInventoryRow> {
                               icon: Icon(Icons.remove),
                               onPressed: () {
                                 setState(() {
-                                  if (widget.parts.prodStock > 0) widget.parts.prodStock--;
+                                  if (num.parse(widget._controller.text) > 0){ widget._controller.text = (num.parse(widget._controller.text)-1).toString();}
+                                  //if (widget.parts.prodStock > 0) widget.parts.prodStock--;
                                 });
                               },
                             ),
@@ -333,7 +332,7 @@ class _ProductInventoryRowState extends State<ProductInventoryRow> {
                               icon: Icon(Icons.add),
                               onPressed: () {
                                 setState(() {
-                                  widget.parts.prodStock++;
+                                   widget._controller.text = (num.parse(widget._controller.text)+1).toString();
                                 });
                               },
                             ),
