@@ -490,7 +490,8 @@ class _DetailsInfoState extends State<DetailsInfo> {
                       ),
                       child: Center(
                           child: Text(
-                        "Add to cart",
+                            Language.getCustomStrings(
+                                "checkout_cart_add_to_cart"),
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 15,
