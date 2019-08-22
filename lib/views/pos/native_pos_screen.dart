@@ -131,7 +131,7 @@ class _NativePosScreenState extends State<NativePosScreen> {
     widget.parts= PosScreenParts();
     RestDatasource api = RestDatasource();
     widget.parts.business = widget.business;
-    RestDatasource().getInventory(widget.parts.business.id, GlobalUtils.ActiveToken.accessToken).then((inventories){
+    RestDatasource().getAllInventory(widget.parts.business.id, GlobalUtils.ActiveToken.accessToken).then((inventories){
       inventories.forEach((inv){
         InventoryModel _currentInv =InventoryModel.toMap(inv);
         widget.parts.productStock.addAll({"${_currentInv.sku}" : "${_currentInv.stock.toString()}"});

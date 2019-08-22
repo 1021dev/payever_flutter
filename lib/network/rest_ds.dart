@@ -495,8 +495,8 @@ class RestDatasource {
     });
 
   }
-  Future<dynamic> getInventory(String idBusiness,String token) async {
-    print("TAG - getInventory()");
+  Future<dynamic> getAllInventory(String idBusiness,String token) async {
+    print("TAG - getAllInventory()");
     var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token" , HttpHeaders.CONTENT_TYPE: "application/json" ,HttpHeaders.userAgentHeader :GlobalUtils.fingerprint  };
     return _netUtil.get(INVENTORY_URL + idBusiness + INVENTORY_END, headers: headers ).then((dynamic res) {
       return res;
@@ -532,7 +532,7 @@ class RestDatasource {
 
   }
 
-  Future<dynamic> getInvetory(String idBusiness,String token,String sku,BuildContext context) async {
+  Future<dynamic> getInventory(String idBusiness,String token,String sku,BuildContext context) async {
     print("TAG - getInventory()");
     var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token" , HttpHeaders.CONTENT_TYPE: "application/json" ,HttpHeaders.userAgentHeader :GlobalUtils.fingerprint  };
     return _netUtil.get(INVENTORY_URL + idBusiness + SKU_MID + sku , headers: headers).then((dynamic res) {

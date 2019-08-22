@@ -116,7 +116,7 @@ class _ProductInventoryRowState extends State<ProductInventoryRow> {
     print("widget.parts.business: ${widget.parts.business}");
     print("widget.parts.product: ${widget.parts.product}");
   if(widget.parts.editMode)
-    RestDatasource().getInvetory(widget.parts.business, GlobalUtils.ActiveToken.accessToken, widget.parts.product.sku,context).
+    RestDatasource().getInventory(widget.parts.business, GlobalUtils.ActiveToken.accessToken, widget.parts.product.sku,context).
     then((inv){
       var _inv = InventoryModel.toMap(inv);
       widget.parts.invManager.inventories.add(Inventory(barcode: _inv.barcode,sku: _inv.sku,tracking: _inv.isTrackable,amount: _inv.stock));

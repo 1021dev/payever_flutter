@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:payever/view_models/pos_state_model.dart';
 import 'package:payever/view_models/pos_cart_state_model.dart';
 import 'package:payever/views/customelements/custom_toast_notification.dart';
+import 'package:payever/views/customelements/custom_future_builder.dart';
 import 'package:payever/views/customelements/custom_carousel_slider.dart';
 import 'package:payever/views/customelements/color_picker.dart';
 import 'package:payever/views/customelements/drop_down_menu.dart';
@@ -18,7 +19,6 @@ import 'package:payever/utils/translations.dart';
 import 'package:payever/utils/utils.dart';
 import 'package:payever/utils/env.dart';
 
-//CarouselSlider customCarouselSlider;
 CustomCarouselSlider customCarouselSlider;
 
 class DetailScreen extends StatefulWidget {
@@ -135,7 +135,6 @@ class DetailedProduct extends StatefulWidget {
   final ProductsModel currentProduct;
   final PosStateModel parts;
   final ValueNotifier<bool> stockCount = ValueNotifier(false);
-  final Map<String, String> productStock = Map();
   final PosCartStateModel cartStateModel;
   final int defaultVariantIndex;
 
@@ -160,19 +159,20 @@ class _DetailedProductState extends State<DetailedProduct> {
     return Container(
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: Measurements.width * 0.05),
-        child: ListView(
-          shrinkWrap: true,
-          children: <Widget>[
-            DetailsInfo(
-              parts: widget.parts,
-              currentProduct: widget.currentProduct,
-              haveVariants: widget.currentProduct.variants.isNotEmpty,
-              stockCount: widget.stockCount,
-              productStock: widget.productStock,
-              cartStateModel: widget.cartStateModel,
-              defaultVariantIndex: widget.defaultVariantIndex,
-            ),
-          ],
+        child: Center(
+          child: ListView(
+            shrinkWrap: true,
+            children: <Widget>[
+              DetailsInfo(
+                parts: widget.parts,
+                currentProduct: widget.currentProduct,
+                haveVariants: widget.currentProduct.variants.isNotEmpty,
+                stockCount: widget.stockCount,
+                cartStateModel: widget.cartStateModel,
+                defaultVariantIndex: widget.defaultVariantIndex,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -184,7 +184,6 @@ class DetailsInfo extends StatefulWidget {
   final ProductsModel currentProduct;
   final bool haveVariants;
   final ValueNotifier<bool> stockCount;
-  final Map<String, String> productStock;
   final PosCartStateModel cartStateModel;
   final int defaultVariantIndex;
 
@@ -193,7 +192,6 @@ class DetailsInfo extends StatefulWidget {
       @required this.currentProduct,
       @required this.haveVariants,
       @required this.stockCount,
-      @required this.productStock,
       @required this.cartStateModel,
       @required this.defaultVariantIndex});
 
@@ -267,31 +265,31 @@ class _DetailsInfoState extends State<DetailsInfo> {
       productsList = [];
 
       widget.currentProduct.variants.forEach((f) {
-        var temp = widget.parts.getProductStock[f.sku];
+//        var temp = widget.parts.getProductStock[f.sku];
 
-        if (temp != null) {
+//        if (temp != null) {
 //          if (((temp.contains("null") ? 0 : int.parse(temp ?? "0")) > 0)) {
-          PopupMenuItem<String> variant = PopupMenuItem(
-            value: "$index",
-            child: Container(
-              width: Measurements.width,
-              child: ListTile(
-                dense: true,
-                title: Container(
-                  width: Measurements.width,
-                  child: Text(
-                    f.title,
-                    style: textStyle,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+        PopupMenuItem<String> variant = PopupMenuItem(
+          value: "$index",
+          child: Container(
+            width: Measurements.width,
+            child: ListTile(
+              dense: true,
+              title: Container(
+                width: Measurements.width,
+                child: Text(
+                  f.title,
+                  style: textStyle,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ),
-          );
-          products.add(variant);
-          productsList.add(f.title);
+          ),
+        );
+        products.add(variant);
+        productsList.add(f.title);
 //          }
-        }
+//        }
         index++;
       });
 //      if (widget.currentVariant.value == 0 && products.length > 0) {
@@ -312,255 +310,275 @@ class _DetailsInfoState extends State<DetailsInfo> {
       onSale = !widget.currentProduct.hidden;
       description = widget.currentProduct.description;
     }
-    String _stc = widget.parts.productStock[widget.haveVariants
+
+    String _stc = widget.haveVariants
         ? widget.currentProduct.variants[currentVariant.value].sku
-        : widget.currentProduct.sku];
-    int stc =
-        _stc == null ? 0 : _stc.contains("null") ? 0 : int.parse(_stc ?? "0");
+        : widget.currentProduct.sku;
 
     return Container(
       width: Measurements.height * 0.4,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          //for sale
-          Container(
-              alignment: Alignment.center,
-              height: Measurements.height * 0.05,
-              child: onSale
-                  ? Text(
-                      "Sale",
-                      style: TextStyle(color: widget.parts.saleColor),
-                    )
-                  : Container()),
-          //name
-          Container(
-            alignment: Alignment.center,
-            child: Text(
-              "${widget.currentProduct.title} $selectedVariantName",
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold),
-            ),
-          ),
-          //price
-          Container(
-            height: Measurements.height * 0.05,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+      child: CustomFutureBuilder<int>(
+          future: getInventoryState(widget.parts, _stc),
+          errorMessage: "Error loading product details",
+          onDataLoaded: (results) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                Text(
-                  "${widget.parts.f.format(price)}${Measurements.currency(widget.parts.getBusiness.currency)}",
-                  style: TextStyle(
-                      fontSize: 17,
-                      color: widget.parts.titleColor.withOpacity(0.5),
-                      fontWeight: FontWeight.w300,
-                      decoration: onSale
-                          ? TextDecoration.lineThrough
-                          : TextDecoration.none),
+                //for sale
+                Container(
+                    alignment: Alignment.center,
+                    height: Measurements.height * 0.05,
+                    child: onSale
+                        ? Text(
+                            "Sale",
+                            style: TextStyle(color: widget.parts.saleColor),
+                          )
+                        : Container()),
+                //name
+                Container(
+                  alignment: Alignment.center,
+                  child: Text(
+                    "${widget.currentProduct.title} $selectedVariantName",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold),
+                  ),
                 ),
-                onSale
-                    ? Text(
-                        "  ${widget.parts.f.format(salePrice)}${Measurements.currency(widget.parts.getBusiness.currency)}",
+                //price
+                Container(
+                  height: Measurements.height * 0.05,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        "${widget.parts.f.format(price)}${Measurements.currency(widget.parts.getBusiness.currency)}",
                         style: TextStyle(
                             fontSize: 17,
-                            color: widget.parts.saleColor,
-                            fontWeight: FontWeight.w300),
-                      )
-                    : Container(),
-              ],
-            ),
-          ),
-          //Stock
-          Container(
-            child: StockText(
-              parts: widget.parts,
-              stc: stc,
-              productStock: widget.productStock,
-            ),
-          ),
-          //images
-          DetailImage(
-            currentVariant: currentVariant,
-            parts: widget.parts,
-            images: imagesVariants,
-            index: (widget.haveVariants &&
-                    (widget.currentProduct.variants[currentVariant.value].images
-                        .isNotEmpty))
-                ? imagesBase.length
-                : 0,
-          ),
-          //variant Picker
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: Measurements.height * 0.01),
-          ),
+                            color: widget.parts.titleColor.withOpacity(0.5),
+                            fontWeight: FontWeight.w300,
+                            decoration: onSale
+                                ? TextDecoration.lineThrough
+                                : TextDecoration.none),
+                      ),
+                      onSale
+                          ? Text(
+                              "  ${widget.parts.f.format(salePrice)}${Measurements.currency(widget.parts.getBusiness.currency)}",
+                              style: TextStyle(
+                                  fontSize: 17,
+                                  color: widget.parts.saleColor,
+                                  fontWeight: FontWeight.w300),
+                            )
+                          : Container(),
+                    ],
+                  ),
+                ),
+                //Stock
+                Container(
+                  child: StockText(
+                    parts: widget.parts,
+                    stc: results,
+                    productStock: results,
+                  ),
+                ),
+                //images
+                DetailImage(
+                  currentVariant: currentVariant,
+                  parts: widget.parts,
+                  images: imagesVariants,
+                  index: (widget.haveVariants &&
+                          (widget.currentProduct.variants[currentVariant.value]
+                              .images.isNotEmpty))
+                      ? imagesBase.length
+                      : 0,
+                ),
+                //variant Picker
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      vertical: Measurements.height * 0.01),
+                ),
 
-          widget.haveVariants
-              ? Container(
+                widget.haveVariants
+                    ? Container(
 //                  padding: EdgeInsets.symmetric(
 //                      horizontal: Measurements.width *
 //                          (widget.parts.isTablet ? 0.15 : 0)),
-                  height: Measurements.height * 0.07,
-                  child: Theme(
-                    data: ThemeData.light(),
-                    child: Container(
+                        height: Measurements.height * 0.07,
+                        child: Theme(
+                          data: ThemeData.light(),
+                          child: Container(
 //                      width: Measurements.width * 0.9,
-                      width: isTablet
-                          ? Measurements.width * 0.5
-                          : Measurements.width * 0.9,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
+                            width: isTablet
+                                ? Measurements.width * 0.5
+                                : Measurements.width * 0.9,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
 //                        color: Colors.grey.withOpacity(0.2),
-                        border: Border.all(
-                            width: 1, color: Colors.grey.withOpacity(0.2)),
-                      ),
-                      child: DropDownMenu(
-                        backgroundColor: Colors.white,
-                        fontColor: Colors.black.withOpacity(0.6),
-                        optionsList: productsList,
+                              border: Border.all(
+                                  width: 1,
+                                  color: Colors.grey.withOpacity(0.2)),
+                            ),
+                            child: DropDownMenu(
+                              backgroundColor: Colors.white,
+                              fontColor: Colors.black.withOpacity(0.6),
+                              optionsList: productsList,
 //                  defaultValue: products[0].value,
 //                        defaultValue: "Something",
-                        placeHolderText:
-                            productsList[widget.defaultVariantIndex],
-                        onChangeSelection: (String value, int index) {
-                          setState(() {
-                            currentVariant.value = index;
+                              placeHolderText:
+                                  productsList[widget.defaultVariantIndex],
+                              onChangeSelection: (String value, int index) {
+                                setState(() {
+                                  currentVariant.value = index;
 
 //                            widget.cartStateModel.updateCurrentVariant(index);
 
 //                            widget.currentVariant.value =
 //                                widget.cartStateModel.getCurrentSelectedVariant;
 
-                            if (imagesBase != null && imagesBase.length >= 0) {
-                              print("imagesBase.length: ${imagesBase.length}");
-                              print(widget
-                                      .currentProduct
-                                      .variants[currentVariant.value]
-                                      .images
-                                      .length >
-                                  0);
-                              if (widget
-                                      .currentProduct
-                                      .variants[currentVariant.value]
-                                      .images
-                                      .length >
-                                  0) {
-                                customCarouselSlider
-                                    .jumpToPage(0+imagesBase.length);
-                              }
-                            }
-                          });
-                        },
-                      ),
-                    ),
-                  ),
-                )
-              : Container(),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: Measurements.height * 0.01),
-          ),
-          Container(
-            alignment: Alignment.center,
-            height: Measurements.height * 0.08,
-            width:
-                isTablet ? Measurements.width * 0.8 : Measurements.width * 0.9,
-            padding: EdgeInsets.symmetric(
-                vertical: Measurements.height * 0.01,
-                horizontal: Measurements.width * (isTablet ? 0.15 : 0)),
-            child: InkWell(
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  color: stc == 0 ? Colors.grey : Colors.black,
+                                  if (imagesBase != null &&
+                                      imagesBase.length >= 0) {
+                                    print(
+                                        "imagesBase.length: ${imagesBase.length}");
+                                    print(widget
+                                            .currentProduct
+                                            .variants[currentVariant.value]
+                                            .images
+                                            .length >
+                                        0);
+                                    if (widget
+                                            .currentProduct
+                                            .variants[currentVariant.value]
+                                            .images
+                                            .length >
+                                        0) {
+                                      customCarouselSlider
+                                          .jumpToPage(imagesBase.length);
+
+                                      getInventoryState(
+                                          widget.parts,
+                                          widget
+                                              .currentProduct
+                                              .variants[currentVariant.value]
+                                              .sku);
+                                    }
+                                  }
+                                });
+                              },
+                            ),
+                          ),
+                        ),
+                      )
+                    : Container(),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      vertical: Measurements.height * 0.01),
                 ),
-                child: Center(
-                    child: Text(
-                  "Add to cart",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold),
-                )),
-              ),
-              onTap: () {
-                if (stc != 0) {
-                  if (widget.haveVariants) {
-                    var image = widget.currentProduct
-                            .variants[currentVariant.value].images.isNotEmpty
-                        ? widget.currentProduct.variants[currentVariant.value]
-                            .images[0]
-                        : widget.currentProduct.images.isNotEmpty
-                            ? widget.currentProduct.images[0]
-                            : null;
-                    widget.parts.add2cart(
-                        id: widget
-                            .currentProduct.variants[currentVariant.value].id,
-                        image: image,
-                        uuid: widget
-                            .currentProduct.variants[currentVariant.value].id,
-                        name: widget.currentProduct
-                            .variants[currentVariant.value].title,
-                        price: onSale
-                            ? widget.currentProduct
-                                .variants[currentVariant.value].salePrice
-                            : widget.currentProduct
-                                .variants[currentVariant.value].price,
-                        qty: 1,
-                        sku: widget
-                            .currentProduct.variants[currentVariant.value].sku);
-                  } else {
-                    var image = widget.currentProduct.images.isNotEmpty
-                        ? widget.currentProduct.images[0]
-                        : null;
-                    widget.parts.add2cart(
-                        id: widget.currentProduct.uuid,
-                        image: image,
-                        uuid: widget.currentProduct.uuid,
-                        name: widget.currentProduct.title,
-                        price: onSale
-                            ? widget.currentProduct.salePrice
-                            : widget.currentProduct.price,
-                        qty: 1,
-                        sku: widget.currentProduct.sku);
-                  }
-
-                  widget.cartStateModel.updateCart(true);
-                  ToastFuture toastFuture = showToastWidget(
-                    CustomToastNotification(
-                      icon: Icons.check_circle_outline,
-                      toastText: "Product added to Bag",
+                Container(
+                  alignment: Alignment.center,
+                  height: Measurements.height * 0.08,
+                  width: isTablet
+                      ? Measurements.width * 0.8
+                      : Measurements.width * 0.9,
+                  padding: EdgeInsets.symmetric(
+                      vertical: Measurements.height * 0.01,
+                      horizontal: Measurements.width * (isTablet ? 0.15 : 0)),
+                  child: InkWell(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: results == 0 ? Colors.grey : Colors.black,
+                      ),
+                      child: Center(
+                          child: Text(
+                        "Add to cart",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold),
+                      )),
                     ),
-                    duration: Duration(seconds: 3),
-                    onDismiss: () {
-                      print("The toast was dismised");
-                    },
-                  );
+                    onTap: () {
+                      if (results != 0) {
+                        if (widget.haveVariants) {
+                          var image = widget
+                                  .currentProduct
+                                  .variants[currentVariant.value]
+                                  .images
+                                  .isNotEmpty
+                              ? widget.currentProduct
+                                  .variants[currentVariant.value].images[0]
+                              : widget.currentProduct.images.isNotEmpty
+                                  ? widget.currentProduct.images[0]
+                                  : null;
+                          widget.parts.add2cart(
+                              id: widget.currentProduct
+                                  .variants[currentVariant.value].id,
+                              image: image,
+                              uuid: widget.currentProduct
+                                  .variants[currentVariant.value].id,
+                              name: widget.currentProduct
+                                  .variants[currentVariant.value].title,
+                              price: onSale
+                                  ? widget.currentProduct
+                                      .variants[currentVariant.value].salePrice
+                                  : widget.currentProduct
+                                      .variants[currentVariant.value].price,
+                              qty: 1,
+                              sku: widget.currentProduct
+                                  .variants[currentVariant.value].sku);
+                        } else {
+                          var image = widget.currentProduct.images.isNotEmpty
+                              ? widget.currentProduct.images[0]
+                              : null;
+                          widget.parts.add2cart(
+                              id: widget.currentProduct.uuid,
+                              image: image,
+                              uuid: widget.currentProduct.uuid,
+                              name: widget.currentProduct.title,
+                              price: onSale
+                                  ? widget.currentProduct.salePrice
+                                  : widget.currentProduct.price,
+                              qty: 1,
+                              sku: widget.currentProduct.sku);
+                        }
 
-                  Future.delayed(Duration(seconds: 3), () {
-                    toastFuture.dismiss();
-                  });
+                        widget.cartStateModel.updateCart(true);
+                        ToastFuture toastFuture = showToastWidget(
+                          CustomToastNotification(
+                            icon: Icons.check_circle_outline,
+                            toastText: "Product added to Bag",
+                          ),
+                          duration: Duration(seconds: 3),
+                          onDismiss: () {
+                            print("The toast was dismised");
+                          },
+                        );
+
+                        Future.delayed(Duration(seconds: 3), () {
+                          toastFuture.dismiss();
+                        });
 
 //                  Navigator.pop(context);
-                }
-              },
-            ),
-          ),
+                      }
+                    },
+                  ),
+                ),
 
-          Container(
-            alignment: Alignment.center,
-            padding: EdgeInsets.only(
-                bottom: Measurements.height * 0.04,
-                top: Measurements.height * 0.02),
-            // child: Text(
-            //   "$description",
-            //   style: TextStyle(color: Colors.black, fontSize: 13),
-            // )
-            child: Html(
-              data: description,
-              defaultTextStyle: TextStyle(color: Colors.black, fontSize: 13),
-            ),
-          ),
+                Container(
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.only(
+                      bottom: Measurements.height * 0.04,
+                      top: Measurements.height * 0.02),
+                  // child: Text(
+                  //   "$description",
+                  //   style: TextStyle(color: Colors.black, fontSize: 13),
+                  // )
+                  child: Html(
+                    data: description,
+                    defaultTextStyle:
+                        TextStyle(color: Colors.black, fontSize: 13),
+                  ),
+                ),
 //          ColorButtonGrid(
 //            colors: <Color>[
 //              Colors.red,
@@ -584,17 +602,43 @@ class _DetailsInfoState extends State<DetailsInfo> {
 //            size: Measurements.height * 0.03,
 //            controller: controller,
 //          ),
-          isTablet
-              ? Padding(
-                  padding: EdgeInsets.only(bottom: Measurements.height * 0.02),
-                )
-              : Container(),
-        ],
-      ),
+                isTablet
+                    ? Padding(
+                        padding:
+                            EdgeInsets.only(bottom: Measurements.height * 0.02),
+                      )
+                    : Container(),
+              ],
+            );
+          }),
     );
   }
 
   ColorButtomController controller = ColorButtomController();
+
+  Future<int> getInventoryState(
+      PosStateModel posStateModel, String productSku) async {
+    var inventory = await posStateModel.getInventory(productSku);
+    var inventoryData = InventoryModel.toMap(inventory);
+
+    int stockData = 0;
+
+    if (inventoryData.isTrackable) {
+      if (inventoryData.stock != null) {
+        if (inventoryData.stock <= 0) {
+          stockData = 0;
+        } else {
+          stockData = inventoryData.stock;
+        }
+      } else {
+        stockData = 0;
+      }
+    } else {
+      stockData = 10;
+    }
+
+    return stockData;
+  }
 }
 
 class StockText extends StatefulWidget {
@@ -705,7 +749,6 @@ class _DetailImageState extends State<DetailImage> {
 
     int _currentImage = imageIndex;
 
-//    customCarouselSlider = CarouselSlider(
     customCarouselSlider = CustomCarouselSlider(
       realPage: imageIndex,
       startingPage: imageIndex,
@@ -787,12 +830,8 @@ class _DetailImageState extends State<DetailImage> {
                   onTap: () {
                     setState(() {
                       imageIndex = index;
-                      print("imageIndex: $imageIndex");
                       customCarouselSlider.jumpToPage(imageIndex);
                     });
-
-                    print("indexInKwell: $index");
-                    print("imageIndexInKwell: $imageIndex");
                   },
                 );
               },

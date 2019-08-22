@@ -298,8 +298,6 @@ int _getRealIndex(int position, int base, int length) {
 /// Returns the remainder of the modulo operation [input] % [source], and adjust it for
 /// negative values.
 int _remainder(int input, int source) {
-  print("input: $input");
-  print("source: $source");
 
   int result;
   if(input == 0 && source == 0) {
@@ -308,7 +306,6 @@ int _remainder(int input, int source) {
    result = input % source;
   }
 
-  print("${result < 0 ? source + result : result}");
   return result < 0 ? source + result : result;
 
 }

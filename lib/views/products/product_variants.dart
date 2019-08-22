@@ -198,7 +198,7 @@ class _VariantPopUpState extends State<VariantPopUp> {
     //if(widget.parts.editMode)
     super.initState();
     RestDatasource api = RestDatasource();
-    api.getInvetory(widget.parts.business, GlobalUtils.ActiveToken.accessToken, widget.currentVariant.sku,context).then((obj){
+    api.getInventory(widget.parts.business, GlobalUtils.ActiveToken.accessToken, widget.currentVariant.sku,context).then((obj){
       InventoryModel inventory = InventoryModel.toMap(obj);
       widget._inventoryModel  = inventory;
       widget.inv              = inventory.stock;
