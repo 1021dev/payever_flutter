@@ -13,8 +13,13 @@ class VersionController{
   Future<void> checkVersion(BuildContext context,VoidCallback _action){
     PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
       String version = packageInfo.version;
+      
       getSupportedVersion().then((_version){
-        if(_version.minVersion.compareTo(version)<0){
+        print("version:$version");
+        print("_version:${_version.minVersion}");
+        print("compare:${version.compareTo(_version.minVersion)}");
+
+        if(version.compareTo(_version.minVersion)<0){
           showPopUp(context, _version);
         }else{
           _action();
@@ -26,10 +31,11 @@ class VersionController{
   }
   
   Future<Version> getSupportedVersion() async  {
-    var environment =await RestDatasource().getEnv();
+    var environment = await RestDatasource().getEnv();
     Env.map(environment);
-    var _version = await RestDatasource().getVersion();
-    return Version.map(_version);
+    return RestDatasource().getVersion().then((_version){
+      return Version.map(_version);
+    });
     //return Version("1.0.0","1.9.0","https://apps.apple.com/us/app/telegram-messenger/id686449807","https://play.google.com/store/apps");
   }
   showPopUp(BuildContext context,Version _version ){
