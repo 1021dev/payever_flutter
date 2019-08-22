@@ -22,6 +22,7 @@ import 'package:payever/utils/global_keys.dart';
 import 'package:payever/utils/translations.dart';
 import 'package:payever/utils/utils.dart';
 import 'package:payever/view_models/global_state_model.dart';
+import 'package:payever/view_models/product_state_model.dart';
 import 'package:payever/views/customelements/custom_future_builder.dart';
 import 'package:payever/views/customelements/custom_toast_notification.dart';
 import 'package:payever/views/customelements/wallpaper.dart';
@@ -62,6 +63,7 @@ class ProductScreenParts{
   bool isTablet;
   bool isPortrait;
   bool posCall;
+  bool init;
   bool havePOS  = false;
   bool haveShop = false;
   bool isSearching = false;
@@ -103,7 +105,6 @@ class _ProductScreenState extends State<ProductScreen> {
   listener() {
     setState((){
       widget.stateCounter++;
-      
     });
   }
 
@@ -132,6 +133,7 @@ class _ProductScreenState extends State<ProductScreen> {
     super.initState();
 
     widget._parts = ProductScreenParts() ;
+    widget._parts.init = true;
     widget._parts.wallpaper = widget.wallpaper;
     widget._parts.business = widget.business;
     widget._parts.posCall = widget.posCall;
@@ -167,9 +169,6 @@ class _ProductScreenState extends State<ProductScreen> {
     }
     @override
     Widget build(BuildContext context) {
-
-      print("\t\t -----product List--------");
-      
       _appBar = AppBar(elevation: 0,
         actions: <Widget>[
           IconButton(icon: Icon(Icons.add), onPressed: () {
@@ -246,76 +245,6 @@ class _ProductScreenState extends State<ProductScreen> {
               ),
             ),
           );
-          // return Stack(
-          //   children: <Widget>[
-          //     Positioned(
-          //       height: widget._parts.isPortrait ? Measurements.height:Measurements.width,
-          //       width:  widget._parts.isPortrait ? Measurements.width:Measurements.height,
-          //       child: CachedNetworkImage(
-          //           imageUrl: globalStateModel.currentWallpaper,
-          //           placeholder: (context, url) =>  Container(),
-          //           errorWidget: (context, url, error) => new Icon(Icons.error),
-          //           fit: BoxFit.cover,
-          //         ),
-          //     ),
-          //     Container(
-          //       color: Colors.black.withOpacity(0.2),
-          //       height: widget._parts.isPortrait?Measurements.height:Measurements.width,
-          //       width: widget._parts.isPortrait?Measurements.width:Measurements.height,
-          //       child:BackdropFilter(
-          //         filter: ImageFilter.blur(sigmaX:25,sigmaY: 40,),
-          //         child: Container(
-          //           height: widget._parts.isPortrait?Measurements.height:Measurements.width,
-          //           width: widget._parts.isPortrait?Measurements.width:Measurements.height,
-          //           child: Scaffold(
-          //             bottomNavigationBar: Container(
-          //               height: widget._parts.loadMore.value ? Measurements.height * 0.0001:0,
-          //               color: Colors.transparent,
-          //               child: Row(
-          //                 mainAxisAlignment: MainAxisAlignment.center,
-          //                 children: <Widget>[
-          //                   widget._parts.loadMore.value?ProductLoader(isSearching: widget._parts.isSearching ,business: widget._parts.business,page: widget._parts.page ,parts: widget._parts,):Container(),
-          //                 ],
-          //               ),
-          //              ),
-          //             backgroundColor: Colors.black.withOpacity(0.2),
-          //             appBar: widget.posCall? null : _appBar,
-          //             body:
-          //             Column(children: <Widget>[
-          //               Container(
-          //                 padding: EdgeInsets.only(bottom: Measurements.height * 0.02,left: Measurements.width* (widget._parts.isTablet?0.01:0.05),right: Measurements.width* (widget._parts.isTablet?0.01:0.05)),
-          //                 child: Container(
-          //                   decoration: BoxDecoration(
-          //                     color: Colors.black.withOpacity(0.2),
-          //                     borderRadius: BorderRadius.circular(12),
-          //                     ),
-          //                   padding:EdgeInsets.only(left: Measurements.width* (widget._parts.isTablet?0.01:0.025)),
-          //                   child: TextFormField(
-          //                     decoration: InputDecoration(
-          //                       hintText: "Search",
-          //                       border: InputBorder.none,
-          //                       icon: Container(child:SvgPicture.asset("images/searchicon.svg",height: Measurements.height * 0.0175,color:Colors.white,))
-          //                     ),
-          //                     autovalidate: true,
-          //                     onFieldSubmitted: (doc){
-          //                       widget._parts.products.clear();
-          //                       widget._parts.searchDocument = doc;
-          //                       widget._parts.page = 1;
-          //                       widget._parts.isLoading.value = true;
-          //                     },
-          //                   ),
-          //                 ),
-          //               ),
-          //               widget._parts.isLoading.value?
-          //               ProductLoader(business: widget.business,parts: widget._parts,isSearching: false,):
-          //               ProductsBody(widget._parts),
-          //             ],)
-          //           )
-          //         )
-          //       )
-          //     ),
-          //   ],
-          // );
         },
       );
     }
@@ -347,21 +276,32 @@ class _ProductsBodyState extends State<ProductsBody> {
     }
   }
   
-  Future _refresh({bool state = true}){
-    widget._parts.page = 1;
-    widget._parts.loadMore.value = true;
+  Future _refresh({bool loadMore = true}){
+    if(loadMore){
+      widget._parts.page = 1;
+      widget._parts.loadMore.value = true;
+    }
     return RestDatasource().getInventory(widget._parts.business.id, GlobalUtils.ActiveToken.accesstoken).then((inventories){
       widget._parts.inventories.clear();
       inventories.forEach((inv){
         widget._parts.inventories.add(InventoryModel.toMap(inv));
       });
-      if(state)setState(() {});
+      if(!loadMore){
+        widget._parts.page = 1;
+        widget._parts.loadMore.value = true;
+      }else{
+        setState(() {});
+      }
     });
   }
-
+  ProductStateModel productStateModel;
   @override
   Widget build(BuildContext context) {
-    _refresh(state: false);
+    productStateModel =Provider.of<ProductStateModel>(context);
+    if(productStateModel.refresh){
+      productStateModel.setRefresh(false);
+      _refresh(loadMore: false);
+    }
     return Expanded(
       child: RefreshIndicator(
         onRefresh: _refresh,
@@ -373,6 +313,7 @@ class _ProductsBodyState extends State<ProductsBody> {
           shrinkWrap: true,
           itemCount: widget._parts.products.length,
           itemBuilder: (BuildContext context, int index) {
+            widget._parts.init = false;
             return Container(key:Key("product_$index"),child: ProductItem(currentProduct: widget._parts.products[index], parts: widget._parts));
           },)
           :GridView.builder(
@@ -384,6 +325,7 @@ class _ProductsBodyState extends State<ProductsBody> {
             shrinkWrap: true,
             itemCount:widget._parts.products.length,
             itemBuilder: (BuildContext context, int index) {
+              widget._parts.init = false;
               return ProductItem(currentProduct: widget._parts.products[index], parts: widget._parts);
             },
         ),

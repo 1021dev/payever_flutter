@@ -1,12 +1,17 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:payever/models/products.dart';
 import 'package:payever/network/rest_ds.dart';
 import 'package:payever/utils/appStyle.dart';
 import 'package:payever/utils/translations.dart';
 import 'package:payever/utils/utils.dart';
+import 'package:payever/view_models/global_state_model.dart';
+import 'package:payever/view_models/product_state_model.dart';
 import 'package:payever/views/products/new_product.dart';
+import 'package:payever/views/products/product_screen.dart';
+import 'package:provider/provider.dart';
 
 class InventoryManagement{
   List<Inventory> inventories = List();
@@ -37,24 +42,36 @@ class InventoryManagement{
     print("_______________________");
   }
 
-  saveInventories(String businessID,BuildContext context){
+  saveInventories(String businessID,BuildContext context,GlobalStateModel globalStateModel,bool isFromDashboardCard){
     inventories.forEach((inventory){
       num dif = (inventory.newAmount??0) - (inventory.amount??0);
       print("num dif = (inventory.newAmount??0) - (inventory.amount??0)");
       print("$dif = (${inventory.newAmount}) - (${inventory.amount})");
       print(dif);
-      RestDatasource().checkSKU(businessID, GlobalUtils.ActiveToken.accessToken, inventory.sku,).then((onValue){
+      RestDatasource().checkSKU(businessID, GlobalUtils.ActiveToken.accessToken, inventory.sku,).then((onValue) async {
         if(inventory.newAmount != null)
-        RestDatasource().patchInventory(businessID, GlobalUtils.ActiveToken.accessToken, inventory.sku, inventory.barcode, inventory.tracking).then((_){
-          //if( dif != 0 && (inventory.newAmount != 0)){
-          if( dif != 0){
-            dif > 0 ? add(dif,inventory.sku,businessID):sub(dif.abs(),inventory.sku,businessID);
-          }
-        });
+          await RestDatasource().patchInventory(businessID, GlobalUtils.ActiveToken.accessToken, inventory.sku, inventory.barcode, inventory.tracking).then((_) async {
+            //if( dif != 0 && (inventory.newAmount != 0)){
+            if( dif != 0){
+              dif > 0 ?  await add(dif,inventory.sku,businessID): await sub(dif.abs(),inventory.sku,businessID);
+            }
+          });
         if(inventories.last.sku == inventory.sku){
+          Navigator.pop(context);
+          Navigator.pop(context);
+          if(!isFromDashboardCard){
             Navigator.pop(context);
-            Navigator.pop(context);
+            Navigator.push(
+                context,
+                PageTransition(
+                    child: ProductScreen(
+                      wallpaper: globalStateModel.currentWallpaper,
+                      business:  globalStateModel.currentBusiness,
+                      posCall: false,
+                    ),
+                    type: PageTransitionType.fade));
           }
+        }
       }).catchError((onError){
         if(onError.toString().contains("404")){
           RestDatasource().postInventory(businessID, GlobalUtils.ActiveToken.accessToken, inventory.sku, inventory.barcode, inventory.tracking).then((_){
@@ -64,6 +81,18 @@ class InventoryManagement{
             if(inventories.last.sku == inventory.sku){
               Navigator.pop(context);
               Navigator.pop(context);
+              if(!isFromDashboardCard){
+                Navigator.pop(context);
+                Navigator.push(
+                    context,
+                    PageTransition(
+                        child: ProductScreen(
+                          wallpaper: globalStateModel.currentWallpaper,
+                          business:  globalStateModel.currentBusiness,
+                          posCall: false,
+                        ),
+                        type: PageTransitionType.fade));
+              }
             }
           });
         }

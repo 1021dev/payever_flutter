@@ -22,6 +22,7 @@ import 'package:payever/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:payever/view_models/global_state_model.dart';
+import 'package:payever/view_models/product_state_model.dart';
 import 'package:payever/views/customelements/custom_expansion_panel.dart';
 import 'package:payever/views/customelements/custom_expansion_tile.dart';
 import 'package:payever/views/customelements/wallpaper.dart';
@@ -239,7 +240,7 @@ class _NewProductScreenState extends State<NewProductScreen> {
   ProductVisibilityRow visibility  ;
   ProductTaxRow   tax;
   ProductChannelsRow   channels;
-
+  ProductStateModel productStateModel;
   @override
   Widget build(BuildContext context) {
     GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context);
@@ -254,7 +255,7 @@ class _NewProductScreenState extends State<NewProductScreen> {
             child: Text(Language.getProductStrings("save"))
           ),
           onTap: () {
-            save();
+            save(widget.isFromDashboardCard);
           },
         ),
       ],
@@ -266,6 +267,8 @@ class _NewProductScreenState extends State<NewProductScreen> {
         child: Icon(IconData(58829, fontFamily: 'MaterialIcons')),
         onTap: () {
           if(widget.isFromDashboardCard) {
+            productStateModel = Provider.of<ProductStateModel>(context);
+            productStateModel.setRefresh(true);
             Navigator.pop(context);
             Navigator.push(
                 context,
@@ -277,39 +280,14 @@ class _NewProductScreenState extends State<NewProductScreen> {
                     ),
                     type: PageTransitionType.fade));
           } else {
+            productStateModel = Provider.of<ProductStateModel>(context);
+            productStateModel.setRefresh(true);
             Navigator.pop(context);
           }
 
         },
       ),
     );
-    // scaffold = Scaffold(
-    //   key: widget._parts.scaffoldKey,
-    //   backgroundColor: Colors.transparent,
-    //   appBar: _appBar,
-    //   body: ListView(
-    //     children: <Widget>[
-    //       Form(
-    //         key: widget._parts._formKey,
-    //         child: Container(
-    //           child: Column(
-    //             children: <Widget>[
-    //               buttomrow,
-    //               mainrow,
-    //               widget._parts.product.variants.length == 0 ? inventoryRow:Container(),
-    //               categoryRow,
-    //               variantRow,
-    //               channelRow,
-    //               shippingRow,
-    //               taxRow,
-    //               visibilityRow
-    //             ],
-    //           ),
-    //         ),
-    //       ),
-    //     ],
-    //   ),
-    // );
     List<Widget> rows = List();
       main = ProductMainRow(parts: widget._parts,);
       inventory   = ProductInventoryRow(parts: widget._parts,);
@@ -365,61 +343,12 @@ class _NewProductScreenState extends State<NewProductScreen> {
                     children: <Widget>[
                       buttomrow,
                       productRowsList,
-                      // buttomrow,
-                      // mainrow,
-                      // widget._parts.product.variants.length == 0 ? inventoryRow:Container(),
-                      // categoryRow,
-                      // variantRow,
-                      // channelRow,
-                      // //shippingRow,
-                      // taxRow,
-                      // visibilityRow
                     ],
                   ),
                 ),
               ),
             ),
           );
-        // return Stack(
-        //   children: <Widget>[
-        //     Positioned(
-        //       height: widget._parts.isPortrait
-        //           ? Measurements.height
-        //           : Measurements.width,
-        //       width: widget._parts.isPortrait
-        //           ? Measurements.width
-        //           : Measurements.height,
-        //       child: CachedNetworkImage(
-        //         imageUrl: globalStateModel.currentWallpaper,
-        //         placeholder: (context, url) => Container(),
-        //         errorWidget: (context, url, error) => new Icon(Icons.error),
-        //         fit: BoxFit.cover,
-        //       ),
-        //     ),
-        //     Container(
-        //         color: Colors.black.withOpacity(0.2),
-        //         height: widget._parts.isPortrait
-        //             ? Measurements.height
-        //             : Measurements.width,
-        //         width: widget._parts.isPortrait
-        //             ? Measurements.width
-        //             : Measurements.height,
-        //         child: BackdropFilter(
-        //             filter: ImageFilter.blur(
-        //               sigmaX: 25,
-        //               sigmaY: 40,
-        //             ),
-        //             child: Container(
-        //               height: widget._parts.isPortrait
-        //                   ? Measurements.height
-        //                   : Measurements.width,
-        //               width: widget._parts.isPortrait
-        //                   ? Measurements.width
-        //                   : Measurements.height,
-        //               child: scaffold,
-        //             )))
-        //   ],
-        // );
       },
     );
   }
@@ -428,7 +357,7 @@ class _NewProductScreenState extends State<NewProductScreen> {
     FocusScope.of(context).requestFocus(FocusNode());
   }
 
-  void save() {
+  void save(bool fromDashboard) {
     
     var a = widget._parts._formKey.currentState;
     a.validate();
@@ -437,7 +366,6 @@ class _NewProductScreenState extends State<NewProductScreen> {
     RestDatasource().getBusinesses(GlobalUtils.ActiveToken.accessToken, context).then((_){
       if (okToSave) {
       a.save();
-      
       String _images = "";
       widget._parts.images.forEach((name) {
         _images += '"$name"';
@@ -455,7 +383,6 @@ class _NewProductScreenState extends State<NewProductScreen> {
         print("id: ${widget._parts.editMode && (v.id!=null)?'"${v.id}"':'"${Uuid().v4()}"'}");
         variants += '{title: "${v.title}", description: "${v.description}",price: ${v.price}, images: [$images], hidden: ${v.hidden}, salePrice: ${v.salePrice}, sku: "${v.sku}", barcode: "${v.barcode}",id: $id}';
       });
-      
       String stringCategories = "";
       widget._parts.categoryList.forEach((f){
         Categories c = widget._parts.categories.where((test) => test.title.toLowerCase() == f.toLowerCase()).toList()[0];
@@ -527,7 +454,7 @@ class _NewProductScreenState extends State<NewProductScreen> {
                         return OrientationBuilder(
                           builder:
                             (BuildContext context, Orientation orientation) {
-                              widget._parts.invManager.saveInventories(widget.business,context);
+                              widget._parts.invManager.saveInventories(widget.business,context,Provider.of<GlobalStateModel>(context),widget.isFromDashboardCard);
                                 return Container(
                                   height: Measurements.width * 0.3,
                                   width:  Measurements.width * 0.3,
