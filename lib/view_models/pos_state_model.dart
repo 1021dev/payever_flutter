@@ -130,6 +130,11 @@ class PosStateModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  refreshPage() {
+    page = 1;
+    notifyListeners();
+  }
+
   updatePageCount(int value) {
     pageCount = value;
 //    notifyListeners();
