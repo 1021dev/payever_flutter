@@ -189,14 +189,12 @@ class _PosBodyState extends State<PosBody> {
   bool isTablet;
 
 
-  Future<void> _refresh({bool loadMore = true}) async {
+  Future<void> _refresh() async {
 
-    if(loadMore){
-      widget.posStateModel.refreshPage();
-      widget.posStateModel.updateLoadMore(true);
-    }
+    widget.posStateModel.refreshPage();
+    widget.posStateModel.updateLoadMore(true);
+    widget.posStateModel.updateProductList();
     widget.posStateModel.loadPosProductsList(widget.posStateModel.currentTerminal);
-    widget.posStateModel.updateIsLoading(true);
 
   }
 
@@ -207,7 +205,8 @@ class _PosBodyState extends State<PosBody> {
         ? MediaQuery.of(context).size.width > 600
         : MediaQuery.of(context).size.height > 600;
 
-    List<Widget> prodList = List();
+    List<Widget> prodList = List<Widget>();
+    prodList = [];
 
     widget.posStateModel.getProductList.forEach((prod) {
 //      var temp = widget.posStateModel.productStock[prod.sku] ?? "0";
@@ -429,17 +428,18 @@ class _ProductItemState extends State<ProductItem> {
                       height: Measurements.height * 0.03,
                     ),
               Container(
-                  height: Measurements.height * 0.03,
-                  width: Measurements.width * (isTablet ? 0.4 : 0.8),
-                  alignment: Alignment.center,
-                  child: Text(
-                    "${widget.currentProduct.title}",
-                    style: TextStyle(
-                        fontSize: 15,
-                        color: widget.posStateModel.titleColor,
-                        fontWeight: FontWeight.bold),
-                    )
-                  ),
+                height: Measurements.height * 0.03,
+                width: Measurements.width * (isTablet ? 0.4 : 0.8),
+                alignment: Alignment.center,
+                child: Text(
+                  "${widget.currentProduct.title}",
+                  style: TextStyle(
+                      fontSize: 15,
+                      color: widget.posStateModel.titleColor,
+                      fontWeight: FontWeight.bold),overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+              ),
               Container(
                   height: Measurements.height * 0.03,
                   alignment: Alignment.center,

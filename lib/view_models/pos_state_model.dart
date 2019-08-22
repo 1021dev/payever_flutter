@@ -125,6 +125,11 @@ class PosStateModel extends ChangeNotifier {
 //    notifyListeners();
   }
 
+  updateProductList() {
+    productList = [];
+    notifyListeners();
+  }
+
   updatePage() {
     page++;
     notifyListeners();
