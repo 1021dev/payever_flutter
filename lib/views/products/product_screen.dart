@@ -141,7 +141,7 @@ class _ProductScreenState extends State<ProductScreen> {
     widget._parts.loadMore.addListener(listener);
     RestDatasource api = RestDatasource();
     widget._parts.inventories.clear();
-    api.getInventory(widget._parts.business.id, GlobalUtils.ActiveToken.accessToken).then((inventories){
+    api.getAllInventory(widget._parts.business.id, GlobalUtils.ActiveToken.accessToken).then((inventories){
       inventories.forEach((inv){
         widget._parts.inventories.add(InventoryModel.toMap(inv));
       });
@@ -276,12 +276,12 @@ class _ProductsBodyState extends State<ProductsBody> {
     }
   }
   
-  Future _refresh({bool loadMore = true}){
+Future _refresh({bool loadMore = true}){
     if(loadMore){
       widget._parts.page = 1;
       widget._parts.loadMore.value = true;
     }
-    return RestDatasource().getInventory(widget._parts.business.id, GlobalUtils.ActiveToken.accesstoken).then((inventories){
+    return RestDatasource().getAllInventory(widget._parts.business.id, GlobalUtils.ActiveToken.accesstoken).then((inventories){
       widget._parts.inventories.clear();
       inventories.forEach((inv){
         widget._parts.inventories.add(InventoryModel.toMap(inv));

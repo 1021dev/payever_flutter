@@ -29,7 +29,9 @@ class CustomFutureBuilder<T> extends StatelessWidget {
 
           return loadingWidget != null ? loadingWidget : Center(child: Padding(
             padding: EdgeInsets.all(10),
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(
+              backgroundColor: Colors.black,
+            ),
           ));
         });
   }

@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -206,6 +208,7 @@ class _PosBodyState extends State<PosBody> {
         oneVariant =
             ((_varEmpty.contains("null") ? 0 : int.parse(_varEmpty ?? "0")) >
                 0);
+        print(oneVariant);
       }
 //      if(!(!((temp.contains("null")? 0:int.parse(temp??"0")) > 0) && prod.variants.isEmpty) && !((prod.variants.length == 1) && !oneVariant))
       prodList.add(ProductItem(
@@ -560,7 +563,8 @@ class _PosProductsLoaderState extends State<PosProductsLoader> {
                 result.data["getProductsByChannelSet"]["products"]
                     .forEach((prod) {
                   var tempProduct = ProductsModel.toMap(prod);
-
+                  debugPrint("prod: $prod");
+                  developer.log('prod', name: '$prod');
                   // if (widget.posStateModel.productList
                   //         .indexWhere((test) => test.sku == tempProduct.sku) <
                   //     0) 

@@ -199,12 +199,6 @@ class PosStateModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  addProductStock(InventoryModel _currentInv) {
-    productStock
-        .addAll({"${_currentInv.sku}": "${_currentInv.stock.toString()}"});
-    notifyListeners();
-  }
-
   addProductListStock(List<InventoryModel> inventoryModelList) {
     for (var inv in inventoryModelList) {
       productStock.addAll({"${inv.sku}": "${inv.stock.toString()}"});
@@ -215,16 +209,15 @@ class PosStateModel extends ChangeNotifier {
     print("loadPosProductsList()");
     print("inventory: ${terminal.channelSet}");
     try {
-      var inventories = await getInventoryList();
-      List<InventoryModel> inventoryModelList = List<InventoryModel>();
-
-      inventories.forEach((inv) {
-        InventoryModel _currentInv = InventoryModel.toMap(inv);
-//          addProductStock(_currentInv);
-        inventoryModelList.add(_currentInv);
-      });
-
-      addProductListStock(inventoryModelList);
+//      var inventories = await getAllInventory();
+//      List<InventoryModel> inventoryModelList = List<InventoryModel>();
+//
+//      inventories.forEach((inv) {
+//        InventoryModel _currentInv = InventoryModel.toMap(inv);
+//        inventoryModelList.add(_currentInv);
+//      });
+//
+//      addProductListStock(inventoryModelList);
 
       if (terminal == null) {
         List<Terminal> _terminals = List();
@@ -271,8 +264,12 @@ class PosStateModel extends ChangeNotifier {
     }
   }
 
-  Future<dynamic> getInventoryList() async {
-    return api.getInventory(businessId, accessToken);
+  Future<dynamic> getAllInventory() async {
+    return api.getAllInventory(businessId, accessToken);
+  }
+
+  Future<dynamic> getInventory(String sku) async {
+    return api.getInventory(businessId, accessToken, sku, null);
   }
 
   Future<dynamic> getTerminalsList() async {
@@ -286,4 +283,6 @@ class PosStateModel extends ChangeNotifier {
   Future<dynamic> getCheckout(String terminalChannelSet) async {
     return api.getCheckout(terminalChannelSet, accessToken);
   }
+
+
 }

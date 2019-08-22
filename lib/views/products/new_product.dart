@@ -201,13 +201,13 @@ class _NewProductScreenState extends State<NewProductScreen> {
         widget._parts.product.variants.forEach((f){
           //Store all inventories
           RestDatasource api = RestDatasource();
-          api.getInvetory(widget.business, GlobalUtils.ActiveToken.accessToken, f.sku,context).then((inv){
+          api.getInventory(widget.business, GlobalUtils.ActiveToken.accessToken, f.sku,context).then((inv){
             InventoryModel currentInventory = InventoryModel.toMap(inv);
             widget._parts.invManager.addInventory(Inventory(amount: currentInventory.stock, barcode: currentInventory.barcode, sku: currentInventory.sku, tracking: currentInventory.isTrackable));
           });
         });
       }else{
-        RestDatasource().getInvetory(widget.business, GlobalUtils.ActiveToken.accessToken, widget._parts.product.sku,context).then((inv){
+        RestDatasource().getInventory(widget.business, GlobalUtils.ActiveToken.accessToken, widget._parts.product.sku,context).then((inv){
           InventoryModel currentInventory = InventoryModel.toMap(inv);
           widget._parts.invManager.addInventory(Inventory(amount: currentInventory.stock, barcode: currentInventory.barcode, sku: currentInventory.sku, tracking: currentInventory.isTrackable));
         });

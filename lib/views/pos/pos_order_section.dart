@@ -30,7 +30,6 @@ class OrderSection extends StatefulWidget {
 }
 
 class _OrderSectionState extends State<OrderSection> {
-
   bool isPortrait = true;
   bool isTablet = false;
 
@@ -63,7 +62,6 @@ class _OrderSectionState extends State<OrderSection> {
     }
 
     print("widget.parts.shoppingCart: ${widget.parts.shoppingCart}");
-
 
     return Column(
       children: <Widget>[
@@ -120,8 +118,7 @@ class _OrderSectionState extends State<OrderSection> {
                         child: Center(
                             child: SvgPicture.asset(
                           "images/xsinacircle.svg",
-                          width: Measurements.width *
-                              (isTablet ? 0.02 : 0.04),
+                          width: Measurements.width * (isTablet ? 0.02 : 0.04),
                         )),
                       ),
                       onTap: () {
@@ -129,10 +126,9 @@ class _OrderSectionState extends State<OrderSection> {
                         setState(() {
                           widget.parts.deleteProduct(index);
 
-                          if(widget.parts.shoppingCart.items.isEmpty) {
+                          if (widget.parts.shoppingCart.items.isEmpty) {
                             cartStateModel.updateCart(false);
                           }
-
                         });
                       },
                     ),
@@ -293,8 +289,7 @@ class _OrderSectionState extends State<OrderSection> {
           width: Measurements.width * (isTablet ? 0.6 : 0.9),
           height: Measurements.height * (isTablet ? 0.08 : 0.1),
           padding: EdgeInsets.symmetric(
-              vertical:
-                  Measurements.height * (isTablet ? 0.01 : 0.02)),
+              vertical: Measurements.height * (isTablet ? 0.01 : 0.02)),
           child: InkWell(
             child: Container(
                 decoration: BoxDecoration(
@@ -334,12 +329,15 @@ class _OrderSectionState extends State<OrderSection> {
     bool ok2Checkout = true;
     widget.parts.shoppingCart.items.forEach((item) {
       RestDatasource()
-          .getInvetory(widget.parts.getBusiness.id,
+          .getInventory(widget.parts.getBusiness.id,
               GlobalUtils.ActiveToken.accessToken, item.sku, context)
           .then((inv) {
         InventoryModel currentInv = InventoryModel.toMap(inv);
-        bool isOut =
-            (currentInv.stock - (currentInv.reserved ?? 0)) > item.quantity;
+
+        bool isOut = currentInv.isTrackable
+            ? (currentInv.stock - (currentInv.reserved ?? 0)) > item.quantity
+            : true;
+
         if (!isOut) {
           ok2Checkout = false;
           item.inStock = false;
