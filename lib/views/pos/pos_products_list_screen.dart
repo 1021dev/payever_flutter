@@ -1,5 +1,3 @@
-import 'dart:developer' as developer;
-
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -17,6 +15,7 @@ import 'package:payever/views/pos/pos_cart.dart';
 import 'package:payever/models/business.dart';
 import 'package:payever/models/pos.dart';
 import 'package:payever/models/products.dart';
+import 'package:payever/utils/translations.dart';
 import 'package:payever/utils/utils.dart';
 import 'package:payever/utils/env.dart';
 
@@ -189,6 +188,18 @@ class _PosBodyState extends State<PosBody> {
   bool isPortrait;
   bool isTablet;
 
+
+  Future<void> _refresh({bool loadMore = true}) async {
+
+    if(loadMore){
+      widget.posStateModel.refreshPage();
+      widget.posStateModel.updateLoadMore(true);
+    }
+    widget.posStateModel.loadPosProductsList(widget.posStateModel.currentTerminal);
+    widget.posStateModel.updateIsLoading(true);
+
+  }
+
   @override
   Widget build(BuildContext context) {
     isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
@@ -208,7 +219,7 @@ class _PosBodyState extends State<PosBody> {
         oneVariant =
             ((_varEmpty.contains("null") ? 0 : int.parse(_varEmpty ?? "0")) >
                 0);
-        print(oneVariant);
+//        print(oneVariant);
       }
 //      if(!(!((temp.contains("null")? 0:int.parse(temp??"0")) > 0) && prod.variants.isEmpty) && !((prod.variants.length == 1) && !oneVariant))
       prodList.add(ProductItem(
@@ -218,86 +229,90 @@ class _PosBodyState extends State<PosBody> {
       ));
     });
 
-    return Container(
-      padding: EdgeInsets.symmetric(
-          horizontal: Measurements.width * (isTablet ? 0.03 : 0.05)),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Container(
-            height: Measurements.height * (isTablet ? 0.05 : 0.1),
-            width: Measurements.width * (isTablet ? 0.3 : 0.8),
-            padding: EdgeInsets.symmetric(
-                vertical: Measurements.height * (isTablet ? 0.01 : 0.02)),
-            child: InkWell(
-              child: Container(
-                decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(16)),
-                child: Center(
-                  child: Text("Type Amount",
-                      style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold)),
+    return RefreshIndicator(
+      onRefresh: _refresh,
+      child: Container(
+        padding: EdgeInsets.symmetric(
+            horizontal: Measurements.width * (isTablet ? 0.03 : 0.05)),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Container(
+              height: Measurements.height * (isTablet ? 0.05 : 0.1),
+              width: Measurements.width * (isTablet ? 0.3 : 0.8),
+              padding: EdgeInsets.symmetric(
+                  vertical: Measurements.height * (isTablet ? 0.01 : 0.02)),
+              child: InkWell(
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(16)),
+                  child: Center(
+                    child: Text(Language.getCustomStrings(
+                        "checkout_cart_type_amount"),
+                        style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold)),
+                  ),
                 ),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      PageTransition(
+                          child: WebViewPayments(
+                            posStateModel: widget.posStateModel,
+                            url: null,
+                          ),
+                          type: PageTransitionType.fade,
+                          duration: Duration(milliseconds: 10)));
+                },
               ),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    PageTransition(
-                        child: WebViewPayments(
-                          posStateModel: widget.posStateModel,
-                          url: null,
-                        ),
-                        type: PageTransitionType.fade,
-                        duration: Duration(milliseconds: 10)));
-              },
             ),
-          ),
-          //testing search
-          // TextFormField(
-          //   decoration: InputDecoration(
-          //     hintText: "Search",
-          //     border: InputBorder.none,
-          //     icon: Container(child:SvgPicture.asset("images/searchicon.svg",height: Measurements.height * 0.0175,color:Colors.white,))
-          //   ),
-          //   onFieldSubmitted: (doc){
-          //     widget.parts.productList.clear();
-          //     widget.parts.search = doc;
-          //     widget.parts.page = 1;
-          //     widget.parts.searching.value = true;
-          //   },
-          // ),
-          //
-          //widget.parts.searching.value?Center(child:CircularProgressIndicator()):
-          Expanded(
-            child: Container(
-              padding: EdgeInsets.only(top: Measurements.height * 0.02),
-              child: !isTablet
-                  ? ListView.builder(
-                      controller: controller,
-                      shrinkWrap: true,
-                      itemCount: prodList.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return prodList[index];
-                      },
-                    )
-                  : GridView.builder(
-                      controller: controller,
-                      shrinkWrap: true,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: isPortrait ? 3 : 4,
-                          childAspectRatio: 0.65),
-                      itemCount: prodList.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return prodList[index];
-                      },
-                    ),
+            //testing search
+            // TextFormField(
+            //   decoration: InputDecoration(
+            //     hintText: "Search",
+            //     border: InputBorder.none,
+            //     icon: Container(child:SvgPicture.asset("images/searchicon.svg",height: Measurements.height * 0.0175,color:Colors.white,))
+            //   ),
+            //   onFieldSubmitted: (doc){
+            //     widget.parts.productList.clear();
+            //     widget.parts.search = doc;
+            //     widget.parts.page = 1;
+            //     widget.parts.searching.value = true;
+            //   },
+            // ),
+            //
+            //widget.parts.searching.value?Center(child:CircularProgressIndicator()):
+            Expanded(
+              child: Container(
+                padding: EdgeInsets.only(top: Measurements.height * 0.02),
+                child: !isTablet
+                    ? ListView.builder(
+                        controller: controller,
+                        shrinkWrap: true,
+                        itemCount: prodList.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return prodList[index];
+                        },
+                      )
+                    : GridView.builder(
+                        controller: controller,
+                        shrinkWrap: true,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: isPortrait ? 3 : 4,
+                            childAspectRatio: 0.65),
+                        itemCount: prodList.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return prodList[index];
+                        },
+                      ),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -563,8 +578,6 @@ class _PosProductsLoaderState extends State<PosProductsLoader> {
                 result.data["getProductsByChannelSet"]["products"]
                     .forEach((prod) {
                   var tempProduct = ProductsModel.toMap(prod);
-                  debugPrint("prod: $prod");
-                  developer.log('prod', name: '$prod');
                   // if (widget.posStateModel.productList
                   //         .indexWhere((test) => test.sku == tempProduct.sku) <
                   //     0) 
