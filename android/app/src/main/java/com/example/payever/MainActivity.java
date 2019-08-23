@@ -1,4 +1,4 @@
-package com.example.payever;
+package org.payever.app;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;
