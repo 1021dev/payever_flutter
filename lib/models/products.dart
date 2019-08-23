@@ -104,10 +104,13 @@ class ProductsModel {
       obj[GlobalUtils.DB_PRODMODEL_CHANNELSET].forEach((ch){
         channels.add(ChannelSet.toMap(ch));
       });
-    if(obj[GlobalUtils.DB_PRODMODEL_VARIANTS]!= null)
-      obj[GlobalUtils.DB_PRODMODEL_VARIANTS].forEach((variant){
-        variants.add(Variants.toMap(variant));
-      });
+    if(obj[GlobalUtils.DB_PRODMODEL_VARIANTS]!= null && obj[GlobalUtils.DB_PRODMODEL_VARIANTS] != [null])
+      print("obj[GlobalUtils.DB_PRODMODEL_TITLE]: ${obj[GlobalUtils.DB_PRODMODEL_TITLE]}");
+      print("obj[GlobalUtils.DB_PRODMODEL_VARIANTS]: ${obj[GlobalUtils.DB_PRODMODEL_VARIANTS]}");
+
+//      obj[GlobalUtils.DB_PRODMODEL_VARIANTS].forEach((variant){
+//        variants.add(Variants.toMap(variant));
+//      });
     if(obj[GlobalUtils.DB_PRODMODEL_SHIPPING]!= null)
       shipping = Shipping.toMap(obj[GlobalUtils.DB_PRODMODEL_SHIPPING]) ;
   }

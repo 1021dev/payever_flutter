@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:provider/provider.dart';
 
 import 'package:payever/models/acl.dart';
 import 'package:payever/models/business_apps.dart';
@@ -19,7 +20,6 @@ import 'package:payever/views/customelements/custom_future_builder.dart';
 import 'package:payever/views/login/login_page.dart';
 import 'package:payever/views/settings/employees/custom_apps_access_expansion_tile.dart';
 import 'package:payever/views/settings/employees/employees_apps_access_component.dart';
-import 'package:provider/provider.dart';
 
 import 'employees_bloc.dart';
 import 'expandable_component.dart';
@@ -143,8 +143,8 @@ class _EmployeesGroupComponentState extends State<EmployeesGroupComponent>
     RestDatasource api = RestDatasource();
 
     var businessEmployeesGroups = await api
-        .getBusinessEmployeesGroupsList(globalStateModel.currentBusiness.id,
-            GlobalUtils.ActiveToken.accessToken, context)
+        .getBusinessEmployeesGroupsList(GlobalUtils.ActiveToken.accessToken,
+        globalStateModel.currentBusiness.id, "")
         .then((businessEmployeesGroupsData) {
       print(
           "businessEmployeesGroupsData data loaded: $businessEmployeesGroupsData");

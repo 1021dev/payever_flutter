@@ -39,8 +39,8 @@ class _EmployeesGroupsListTabScreenState2 extends State<EmployeesGroupsListTabSc
     RestDatasource api = RestDatasource();
 
     var businessEmployeesGroups = await api
-        .getBusinessEmployeesGroupsList(globalStateModel.currentBusiness.id,
-        GlobalUtils.ActiveToken.accessToken, context)
+        .getBusinessEmployeesGroupsList(GlobalUtils.ActiveToken.accessToken,
+        globalStateModel.currentBusiness.id, "")
         .then((businessEmployeesGroupsData) {
       print("businessEmployeesGroupsData data loaded: $businessEmployeesGroupsData");
 

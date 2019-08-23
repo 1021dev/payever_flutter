@@ -12,6 +12,7 @@ import 'package:payever/views/customelements/custom_future_builder.dart';
 import 'package:payever/views/customelements/sliver_appbar_delegate.dart';
 import 'package:payever/views/login/login_page.dart';
 import 'package:payever/network/rest_ds.dart';
+import 'package:payever/models/employees_list.dart';
 import 'package:payever/models/employees.dart';
 import 'package:payever/utils/utils.dart';
 import 'employee_details_screen.dart';
@@ -29,25 +30,20 @@ class _EmployeesListTabScreenState extends State<EmployeesListTabScreen> {
     super.initState();
   }
 
-  Future<List<Employees>> fetchEmployeesList(
-      String search, bool init, GlobalStateModel globalStateModel) async {
-    List<Employees> employeesList = List<Employees>();
-
+  Future<EmployeesList> fetchEmployeesList(String search, bool init,
+      GlobalStateModel globalStateModel, int limit, int pageNumber) async {
     RestDatasource api = RestDatasource();
 
+    EmployeesList employeesList;
+
+    String queryParams = "?limit=$limit&page=$pageNumber";
+
     await api
-        .getEmployeesList(globalStateModel.currentBusiness.id,
-            GlobalUtils.ActiveToken.accessToken, context)
+        .getEmployeesList(GlobalUtils.ActiveToken.accessToken,
+            globalStateModel.currentBusiness.id, queryParams)
         .then((employeesData) {
-      print("Employees data loaded: $employeesData");
 
-      for (var employee in employeesData) {
-        print("employee: $employee");
-
-        employeesList.add(Employees.fromMap(employee));
-      }
-
-      return employeesList;
+      employeesList = EmployeesList.fromMap(employeesData);
     }).catchError((onError) {
       print("Error loading employees: $onError");
 
@@ -66,15 +62,36 @@ class _EmployeesListTabScreenState extends State<EmployeesListTabScreen> {
   @override
   Widget build(BuildContext context) {
     globalStateModel = Provider.of<GlobalStateModel>(context);
-    return CustomFutureBuilder<List<Employees>>(
-        future: fetchEmployeesList("", true, globalStateModel),
+    return CustomFutureBuilder<EmployeesList>(
+        future: fetchEmployeesList("", true, globalStateModel, 20, 1),
         errorMessage: "Error loading employees",
         onDataLoaded: (results) {
-          return CollapsingList(
-            employeesData: results,
-            updateResults: () {
-              setState(() {});
-            },
+          return Column(
+            children: <Widget>[
+              SizedBox(
+                height: 10,
+              ),
+              Container(
+                child: Center(
+                  child: Text(
+                    "${results.count} employees",
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Expanded(
+                child: CollapsingList(
+                  count: results.count,
+                  employeesData: results.data,
+                  updateResults: () {
+                    setState(() {});
+                  },
+                ),
+              ),
+            ],
           );
         });
   }
@@ -84,10 +101,15 @@ bool _isPortrait;
 bool _isTablet;
 
 class CollapsingList extends StatelessWidget {
+  final int count;
   final List<Employees> employeesData;
   final VoidCallback updateResults;
 
-  CollapsingList({Key key, @required this.employeesData, this.updateResults})
+  CollapsingList(
+      {Key key,
+      @required this.count,
+      @required this.employeesData,
+      this.updateResults})
       : super(key: key);
 
   final _formKey = GlobalKey<FormState>();

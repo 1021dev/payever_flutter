@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:core';
-import 'dart:core' as prefix1;
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -13,7 +12,6 @@ import 'package:payever/models/token.dart';
 import 'package:payever/models/user.dart';
 import 'package:payever/models/version.dart';
 import 'package:payever/network/rest_ds.dart';
-import 'package:payever/network/rest_ds.dart' as prefix0;
 import 'package:payever/utils/env.dart';
 import 'package:payever/utils/translations.dart';
 import 'package:payever/utils/utils.dart';

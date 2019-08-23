@@ -244,11 +244,11 @@ class RestDatasource {
   }
 
 
-  Future<dynamic> addEmployee(Object data, String token, String businessId) {
+  Future<dynamic> addEmployee(Object data, String token, String businessId, String queryParams) {
     print("TAG - addEmployee()");
     var body = jsonEncode(data);
     var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token" ,HttpHeaders.CONTENT_TYPE: "application/json",HttpHeaders.userAgentHeader :GlobalUtils.fingerprint};
-    return _netUtil.post(NEW_EMPLOYEE + businessId, headers: headers, body: body).then((dynamic result) {
+    return _netUtil.post(NEW_EMPLOYEE + businessId + queryParams, headers: headers, body: body).then((dynamic result) {
       return result;
     });
   }
@@ -289,14 +289,11 @@ class RestDatasource {
     });
   }
 
-  Future<dynamic> getEmployeesList(String id,String token,BuildContext context) {
+  Future<dynamic> getEmployeesList(String token, String businessId, String queryParams) {
     print("TAG - getEmployeesList()");
 
     var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token",HttpHeaders.userAgentHeader :GlobalUtils.fingerprint };
-
-    print("URL: ${EMPLOYEES_LIST + id}");
-    return _netUtil.get(EMPLOYEES_LIST + id,headers: headers ).then((dynamic result){
-//    return _netUtil.get("http://users.test.devpayever.com/api/employees/2382ffce-5620-4f13-885d-3c069f9dd9b4",headers: headers ).then((dynamic result){
+    return _netUtil.get(EMPLOYEES_LIST + businessId + queryParams,headers: headers ).then((dynamic result){
       return result;
     });
   }
@@ -323,13 +320,13 @@ class RestDatasource {
     });
   }
 
-  Future<dynamic> getBusinessEmployeesGroupsList(String businessId,String token,BuildContext context) {
+  Future<dynamic> getBusinessEmployeesGroupsList(String token, String businessId, String queryParams) {
     print("TAG - getBusinessEmployeesGroupsList()");
 
     var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token",HttpHeaders.userAgentHeader :GlobalUtils.fingerprint };
 
-    print("URL: ${EMPLOYEE_GROUPS + businessId}");
-    return _netUtil.get(EMPLOYEE_GROUPS + businessId,headers: headers ).then((dynamic result){
+    print("URL: ${EMPLOYEE_GROUPS + businessId + queryParams}");
+    return _netUtil.get(EMPLOYEE_GROUPS + businessId + queryParams,headers: headers ).then((dynamic result){
       return result;
     });
   }

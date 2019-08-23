@@ -12,10 +12,12 @@ class Employees {
   final String createdAt;
   final String updatedAt;
   final int v;
+
 //  final List<EmployeePosition> position;
-  final String position;
   final String idAgain;
+  final String businessId;
   final int status;
+  final String positionType;
 
   Employees(
       {this.roles,
@@ -29,36 +31,37 @@ class Employees {
       this.createdAt,
       this.updatedAt,
       this.v,
-      this.position,
+      this.positionType,
+      this.businessId,
       this.idAgain,
       this.status});
 
   factory Employees.fromMap(dynamic obj) {
-
     List<UserRoles> rolesDataList = List<UserRoles>();
-    if(obj['roles'] != null && obj['roles'] != []) {
+    if (obj['roles'] != null && obj['roles'] != []) {
       var rolesData = obj['roles'] as List;
       rolesDataList = rolesData.map((data) => UserRoles.fromMap(data)).toList();
     }
 
     List<EmployeeGroup> employeeGroupDataList = List<EmployeeGroup>();
-    if(obj['groups'] != null && obj['groups'] != []) {
+    if (obj['groups'] != null && obj['groups'] != []) {
       var groupsData = obj['groups'] as List;
-      employeeGroupDataList = groupsData.map((data) => EmployeeGroup.fromMap(data)).toList();
+      employeeGroupDataList =
+          groupsData.map((data) => EmployeeGroup.fromMap(data)).toList();
     }
 
     return Employees(
-        roles: rolesDataList,
-        groups: employeeGroupDataList,
-        firstName: obj['first_name'],
-        lastName: obj['last_name'],
-        fullName: obj['fullName'],
-        position: obj['position'],
-        email: obj['email'],
-        id: obj['_id'],
-        status: obj['status'] ?? 1,
+      roles: rolesDataList,
+      groups: employeeGroupDataList,
+      firstName: obj['first_name'],
+      lastName: obj['last_name'],
+      fullName: obj['fullName'],
+      positionType: obj['positionType'],
+      businessId: obj['businessId'],
+      email: obj['email'],
+      id: obj['_id'],
+      status: obj['status'] ?? 1,
     );
-
   }
 }
 
@@ -79,6 +82,7 @@ enum Positions { Cashier, Sales, Marketing, Staff, Admin, Others }
 class UserRoles {
   final List<UserPermissions> permission;
   final String type;
+
 //  final String id;
 //  final RoleType type;
 
@@ -107,6 +111,7 @@ class UserPermissions {
 //  final String id;
   final List<Acl> acls;
   final String businessId;
+
 //  final bool hasAcls;
 //  final int v;
 
@@ -141,16 +146,13 @@ class RoleType {
 class EmployeeGroup {
   final String id;
   final String name;
+
 //  String businessId;
 //  List<Acl> acls = List<Acl>();
 
   EmployeeGroup({this.id, this.name});
 
   factory EmployeeGroup.fromMap(group) {
-    return EmployeeGroup(
-      id: group['_id'],
-      name: group['name']
-    );
+    return EmployeeGroup(id: group['_id'], name: group['name']);
   }
-
 }

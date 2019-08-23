@@ -22,7 +22,7 @@ import 'package:provider/provider.dart';
 bool _isTablet;
 
 class DashboardApps extends StatefulWidget {
-  List<String> _availableApps = ["transactions", "pos", "products"];
+  List<String> _availableApps = ["transactions", "pos", "products", "settings"];
 
   @override
   _DashboardAppsState createState() => _DashboardAppsState();
@@ -124,13 +124,13 @@ class _AppViewState extends State<AppView> {
                   _isLoading = false;
                 });
                 break;
-//              case "settings":
-//                loadSettings();
-//                setState(() {
-//                  _isLoading = false;
-//                });
-//                print("Settings loaded");
-//                break;
+              case "settings":
+                loadSettings();
+                setState(() {
+                  _isLoading = false;
+                });
+                print("Settings loaded");
+                break;
               default:
             }
           },

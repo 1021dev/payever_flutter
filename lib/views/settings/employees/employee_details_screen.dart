@@ -93,7 +93,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
     employeesStateModel.changeFirstName(widget.employee.firstName);
     employeesStateModel.changeLastName(widget.employee.lastName);
     employeesStateModel.changeEmail(widget.employee.email);
-    employeesStateModel.changePosition(widget.employee.position);
+    employeesStateModel.changePosition(widget.employee.positionType);
 
     return OrientationBuilder(
         builder: (BuildContext context, Orientation orientation) {
@@ -384,8 +384,8 @@ class _EmployeeInfoRowState extends State<EmployeeInfoRow>
     }
 
     var businessEmployeesGroups = await api
-        .getBusinessEmployeesGroupsList(globalStateModel.currentBusiness.id,
-            GlobalUtils.ActiveToken.accessToken, context)
+        .getBusinessEmployeesGroupsList(GlobalUtils.ActiveToken.accessToken, globalStateModel.currentBusiness.id,
+             "")
         .then((businessEmployeesGroupsData) {
       print(
           "businessEmployeesGroupsData data loaded: $businessEmployeesGroupsData");
@@ -724,7 +724,7 @@ class _EmployeeInfoRowState extends State<EmployeeInfoRow>
                                   width: 1)),
                           child: DropDownMenu(
                             optionsList: GlobalUtils.positionsListOptions(),
-                            defaultValue: widget.employee.position,
+                            defaultValue: widget.employee.positionType,
                             placeHolderText: "Position",
                             onChangeSelection: (selectedOption, index) {
                               print("selectedOption: $selectedOption");

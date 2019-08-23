@@ -140,8 +140,8 @@ class EmployeesStateModel extends ChangeNotifier with Validators {
     return api.getAppsBusiness(businessId, accessToken);
   }
 
-  Future<void> createNewEmployee(Object data) async {
-    return api.addEmployee(data, accessToken, businessId);
+  Future<void> createNewEmployee(Object data, String queryParams) async {
+    return api.addEmployee(data, accessToken, businessId, queryParams);
   }
 
   Future<void> updateEmployee(Object data, String userId) async {

@@ -244,7 +244,9 @@ class _AddEmployeeScreenState2 extends State<AddEmployeeScreen2> {
 
 //    employeesStateModel.clearEmployeeData();
 
-    await employeesStateModel.createNewEmployee(data);
+    String queryParams = "?invite=true";
+
+    await employeesStateModel.createNewEmployee(data, queryParams);
     Navigator.of(context).pop();
   }
 }

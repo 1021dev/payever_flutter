@@ -50,9 +50,14 @@ class _EmployeesSelectionsListScreenState
 
     RestDatasource api = RestDatasource();
 
+    int limit = 20;
+    int pageNumber = 1;
+
+    String queryParams = "?limit=$limit&page=$pageNumber";
+
     await api
-        .getEmployeesList(globalStateModel.currentBusiness.id,
-            GlobalUtils.ActiveToken.accessToken, context)
+        .getEmployeesList(GlobalUtils.ActiveToken.accessToken,
+        globalStateModel.currentBusiness.id, queryParams)
         .then((employeesData) {
       print("getEmployeesList: Employees data loaded: $employeesData");
 
@@ -480,7 +485,7 @@ class _PhoneTableRowState extends State<PhoneTableRow> {
                       height: Measurements.height *
                           (_isPortrait ? 0.050 : 0.045),
                       child: !widget._isHeader
-                          ? AutoSizeText(widget._currentEmployee.position,
+                          ? AutoSizeText(widget._currentEmployee.positionType,
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
                               softWrap: false)
@@ -707,7 +712,7 @@ class _TabletTableRowState extends State<TabletTableRow> {
                       alignment: Alignment.centerLeft,
                       width: Measurements.width * (_isPortrait ? 0.20 : 0.25),
                       child: !widget._isHeader
-                          ? AutoSizeText(widget._currentEmployee.position,
+                          ? AutoSizeText(widget._currentEmployee.positionType,
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
                               softWrap: false)
