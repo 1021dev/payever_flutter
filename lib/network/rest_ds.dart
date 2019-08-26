@@ -30,6 +30,8 @@ class RestDatasource {
   static String WALLPAPER_URL       = WALLPAPER + '/api/business/';
   static String WALLPAPER_URL_PER   = WALLPAPER + '/api/personal/wallpapers';
   static String WALLPAPER_END       = '/wallpapers';
+  static String WALLPAPER_ALL       = WALLPAPER +'/api/products/wallpapers';
+
 
   static String WIDGETS_URL         = WIDGETS + "/api/business/";
   static String WIDGETS_URL_PER     = WIDGETS + "/api/personal/widget";
@@ -646,13 +648,39 @@ class RestDatasource {
     });
   }
 
-   Future<dynamic> getVersion() {
+  Future<dynamic> getVersion() {
     print("TAG - getVersion()");
     var headers = {HttpHeaders.CONTENT_TYPE: "application/json" ,HttpHeaders.USER_AGENT:GlobalUtils.fingerprint };
     return _netUtil.get(APPREGISTRY_URL+"mobile-settings", headers: headers).then((dynamic res) {
       return res;
     });
   }
+
+  Future<dynamic> getWallpapers() {
+    print("TAG - getWallpapers()");
+    var headers = {HttpHeaders.CONTENT_TYPE: "application/json" ,HttpHeaders.USER_AGENT:GlobalUtils.fingerprint };
+    return _netUtil.get(WALLPAPER_ALL, headers: headers).then((dynamic res) {
+      return res;
+    });
+  }
+
+  Future<dynamic> postWallpaper(String token,String wallpaper,String business) {
+    print("TAG - postWallpaper()");
+    var body = jsonEncode({"wallpaper":"$wallpaper"});
+    var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token" , HttpHeaders.CONTENT_TYPE: "application/json" ,HttpHeaders.USER_AGENT:GlobalUtils.fingerprint };
+    return _netUtil.post(WALLPAPER_URL+business+"/wallpapers/active",headers: headers, body: body).then((dynamic res) {
+      return res;
+    });
+  }
+  Future<dynamic> patchLanguage(String token,String language) {
+    print("TAG - patchLanguage()");
+    var body = jsonEncode({"language": "$language"});
+    var headers = { HttpHeaders.AUTHORIZATION: "Bearer $token" , HttpHeaders.CONTENT_TYPE: "application/json" ,HttpHeaders.USER_AGENT:GlobalUtils.fingerprint };
+    return _netUtil.patch(USER_URL, headers: headers,body: body).then((dynamic res) {
+      return res;
+    });
+  }
+
 
 
 }

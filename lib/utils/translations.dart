@@ -49,6 +49,11 @@ class Language{
     }).catchError((onError){
       print(onError);
     });
+    DefaultAssetBundle.of(context).loadString("translations/settings_app/$LANGUAGE.json",cache: false).then((value){
+      SETTINGS_STRINGS = JsonDecoder().convert(value);
+    }).catchError((onError){
+      print(onError);
+    });
     DefaultAssetBundle.of(context).loadString("translations/cart_app/$LANGUAGE.json",cache: false).then((value){
       CART_STRINGS = JsonDecoder().convert(value);
     }).catchError((onError){
@@ -73,6 +78,7 @@ class Language{
   static dynamic COMMERCEOS_STRINGS = Map();
   static dynamic CART_STRINGS = Map();
   static dynamic CUSTOM_STRINGS = Map();
+  static dynamic SETTINGS_STRINGS = Map();
 
   static String getWidgetStrings(String tag)            => WIDGET_STRINGS[tag]??tag;
   static String getCommerceOSStrings(String tag)        => COMMERCEOS_STRINGS[tag]??tag;
@@ -83,10 +89,11 @@ class Language{
   static String getTransactionStatusStrings(String tag) => TRANSACTION_STATUS_STRINGS[tag]??tag;
   static String getCartStrings(String tag)              => CART_STRINGS[tag]??tag;
   static String getCustomStrings(String tag)            => CUSTOM_STRINGS[tag]??tag;
+  static String getSettingsStrings(String tag)          => SETTINGS_STRINGS[tag]??tag;
   
 
   static String  LANGUAGE;
-  static set setLanguage(String current){
+  static setLanguage(String current){
     LANGUAGE = current;
   }
 

@@ -22,9 +22,10 @@ class DashboardOverview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     globalStateModel    = Provider.of<GlobalStateModel>(context);
     dashboardStateModel = Provider.of<DashboardStateModel>(context);
-
+    
     _activeWid.add(Padding(padding: EdgeInsets.only(top: 25),));
     for (int i = 0; i < dashboardStateModel.currentWidgets.length; i++) {
       var wid = dashboardStateModel.currentWidgets[i];
@@ -65,11 +66,11 @@ class DashboardOverview extends StatelessWidget {
             wid.type,
             NetworkImage(UI_KIT + wid.icon),));
           break;
-//        case "settings":
-//          _activeWid.add(SettingsCardInfo(
-//            wid.type,
-//            NetworkImage(UI_KIT + wid.icon),
-//          ));
+       case "settings":
+         _activeWid.add(SettingsCardInfo(
+           wid.type,
+           NetworkImage(UI_KIT + wid.icon),
+         ));
           break;
 //        case "connect":
 //          _activeWid.add(DashboardCard_ref(

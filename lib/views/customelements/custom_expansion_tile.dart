@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:payever/models/expandable_header.dart';
 import 'package:payever/utils/utils.dart';
-import 'custom_expansion_panel.dart';
+import 'package:payever/views/customelements/custom_expansion_panel.dart';
+//import 'custom_expansion_panel.dart';
 
 class CustomExpansionTile extends StatefulWidget {
 //  final List<ExpandableHeader> widgetsTitleList;
@@ -77,32 +78,7 @@ class _CustomExpansionTileState extends State<CustomExpansionTile> {
                 ExpansionPanel(
                   isExpanded: _activeIndex == i,
                   canTapOnHeader: true,
-                  headerBuilder: (BuildContext context, bool isExpanded) =>
-                      widget.widgetsTitleList[i],
-//                        Container(
-//                      decoration: BoxDecoration(
-////                          color: Colors.white.withOpacity(0.8),
-//                          ),
-//                      child: Row(
-//                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                        children: <Widget>[
-//                          Container(
-//                            child: Row(
-//                              children: <Widget>[
-//                                widget.widgetsTitleList[i].icon ?? Container(),
-//                                SizedBox(width: 10),
-//                                Text(
-//                                  widget.widgetsTitleList[i].title,
-//                                  style: TextStyle(fontSize: 18),
-//                                ),
-//                              ],
-//                            ),
-//                            padding: EdgeInsets.symmetric(
-//                                horizontal: Measurements.width * 0.05),
-//                          ),
-//                        ],
-//                      ),
-//                    ),
+                  headerBuilder: (BuildContext context, bool isExpanded) => widget.widgetsTitleList[i],
                   body: widget.widgetsBodyList[i],
                 ),
               ],

@@ -633,6 +633,12 @@ class GlobalUtils{
     static const String DB_VERSION_PLAYSTORE                  ="playStoreUrl";
 
 
+    static const String DB_SETTINGS_WALLPAPER_INDUSTRIES    ="industries";
+    static const String DB_SETTINGS_WALLPAPER_CODE          ="code";
+    static const String DB_SETTINGS_WALLPAPER_WALLPAPERS    ="wallpapers";
+
+
+
 
   // env__
   static const String ENV_CUSTOM                      = "custom";

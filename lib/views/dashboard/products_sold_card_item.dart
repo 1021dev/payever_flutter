@@ -227,7 +227,7 @@ class _ProductsSoldCardItemState extends State<ProductsSoldCardItem> {
                         image: NetworkImage(!resultData.thumbnail
                                 .toString()
                                 .contains("https://")
-                            ? Env.Storage + "/products/" + resultData.thumbnail
+                            ? (Env.Storage + "/products/" + resultData.thumbnail)
                             : resultData.thumbnail))
                     : DecorationImage(image: AssetImage("")),
               ),

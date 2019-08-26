@@ -17,6 +17,7 @@ import 'package:payever/network/rest_ds.dart' as prefix0;
 import 'package:payever/utils/env.dart';
 import 'package:payever/utils/translations.dart';
 import 'package:payever/utils/utils.dart';
+import 'package:payever/view_models/dashboard_state_model.dart';
 import 'package:payever/view_models/global_state_model.dart';
 import 'package:payever/views/customelements/updatedialog.dart';
 //import 'package:payever/views/dashboard/dashboard_screen.dart';
@@ -133,6 +134,10 @@ class DashboardMidScreen extends StatelessWidget {
             Navigator.pushReplacement(
               _formKey.currentContext,
               PageTransition(
+                // child: ChangeNotifierProvider<DashboardStateModel>(builder: (BuildContext context) {
+                //   dashboardStateModel.setCurrentWidget(wids);
+                //   return dashboardStateModel;
+                // }, child: DashboardScreenWidget(),),
                 child: DashboardScreen(appWidgets: wids,),
                 type: PageTransitionType.fade,duration: Duration(milliseconds: 200)
               )

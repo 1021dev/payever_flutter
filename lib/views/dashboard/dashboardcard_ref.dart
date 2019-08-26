@@ -97,7 +97,7 @@ class _DashboardCard_refState extends State<DashboardCard_ref> with  TickerProvi
                                 child: AnimatedContainer(
                                   padding: EdgeInsets.all(AppStyle.dashboardCardContentPadding()),
                                   duration: _duration,
-                                  child: Text(!widget._open?"Show More":"Show Less",style: TextStyle(fontSize: AppStyle.fontSizeDashboardShow()),),
+                                  child: Text(Language.getWidgetStrings(!widget._open?"widgets.actions.more":"widgets.actions.less"),style: TextStyle(fontSize: AppStyle.fontSizeDashboardShow()),),
                                 ),
                                 onTap:(){
                                   listen();

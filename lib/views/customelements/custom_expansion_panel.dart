@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
+
 const double _kPanelHeaderCollapsedHeight = 25;
 const double _kPanelHeaderExpandedHeight = 25;
 
@@ -41,21 +42,23 @@ class CustomExpansionPanelList extends StatelessWidget {
 //          color: Colors.transparent,
 //        ));
 
-      final Row header = 
+      final Widget header = 
       Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          new AnimatedContainer(
-            duration: animationDuration,
-            curve: Curves.fastOutSlowIn,
-            margin: _isChildExpanded(index)
-                ? kExpandedEdgeInsets
-                : EdgeInsets.zero,
-            child: new Container(
-              child: children[index].headerBuilder(
-                context,
-                children[index].isExpanded,
+          Expanded(
+            child: new AnimatedContainer(
+              duration: animationDuration,
+              curve: Curves.fastOutSlowIn,
+              margin: _isChildExpanded(index)
+                  ? kExpandedEdgeInsets
+                  : EdgeInsets.zero,
+              child: new Container(
+                child: children[index].headerBuilder(
+                  context,
+                  children[index].isExpanded,
+                ),
               ),
             ),
           ),

@@ -1,6 +1,6 @@
 {
-    "widgets.actions.less": "Less",
-    "widgets.actions.more": "More",
+    "widgets.actions.less": "Show Less",
+    "widgets.actions.more": "Show More",
     "widgets.actions.close": "Close",
     "widgets.marketing.title": "Mail",
     "widgets.marketing.new-campaign": "New<span class=\"hidden-xs\"> campaign<\/span>",

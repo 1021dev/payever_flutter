@@ -76,7 +76,6 @@ class _MyAppState extends State<MyApp> {
           ChangeNotifierProvider<GlobalStateModel>(builder: (BuildContext context) => globalStateModel),
           ChangeNotifierProvider<PosCartStateModel>(builder: (BuildContext context) => PosCartStateModel()),
           ChangeNotifierProvider<ProductStateModel>(builder: (BuildContext context) => ProductStateModel()),
-
           Provider.value(value: RestDatasource()),
         ],
         child: MaterialApp(
