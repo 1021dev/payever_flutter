@@ -613,7 +613,7 @@ class TabletTableRow extends StatelessWidget {
                     flex: 4,
                     child: Container(
                       child: !isHeader
-                          ? AutoSizeText("#${currentTransaction.id}",
+                          ? AutoSizeText("#${currentTransaction.originalId}",
                               style: TextStyle(
                                   fontSize: AppStyle.fontSizeListRow()))
                           : AutoSizeText(
