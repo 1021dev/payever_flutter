@@ -27,6 +27,8 @@ class RestDataSource {
   static String wallpaperUrl = wallpaper + '/api/business/';
   static String wallpaperUrlPer = wallpaper + '/api/personal/wallpapers';
   static String wallpaperEnd = '/wallpapers';
+  static String wallpaperAll = wallpaper +'/api/products/wallpapers';
+
 
   static String widgetsUrl = widgets + "/api/business/";
   static String widgetsUrlPer = widgets + "/api/personal/widget";
@@ -94,6 +96,8 @@ class RestDataSource {
   static String employeesList = authBaseUrl + "/api/employees/";
   static String employeeDetails = authBaseUrl + "/api/employees/";
   static String employeeGroups = authBaseUrl + "/api/employee-groups/";
+
+
 
   Future<dynamic> getEnv() {
     print("TAG - getEnv()");

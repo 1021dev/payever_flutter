@@ -62,6 +62,7 @@ flutter:
     - assets/translations/product_app/
     - assets/translations/product_app/product_list/
     - assets/translations/transaction_app/
+    - assets/translations/settings_app/
     - assets/translations/transaction_app/transaction_specific/
     - assets/translations/commerceos/
     - assets/translations/cart_app/

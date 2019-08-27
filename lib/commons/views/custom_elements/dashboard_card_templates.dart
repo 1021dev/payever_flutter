@@ -197,7 +197,7 @@ class ItemsCardNButtons extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
             ),
             child: Padding(
-              padding: EdgeInsets.all(2),
+              padding: EdgeInsets.all(10),
               child: InkWell(
                 borderRadius: BorderRadius.circular(12),
                 child: Center(
@@ -205,19 +205,17 @@ class ItemsCardNButtons extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    CircleAvatar(
-                      backgroundColor: Colors.grey.withOpacity(0.5),
-                      radius: AppStyle.dashboardRadiusSmall(),
-                      backgroundImage: item.icon,
-                    ),
-                    SizedBox(width: 15),
-                    FittedBox(
+                    Container(width: 20,child: Image(image: item.icon,)),
+                    SizedBox(width: 10),
+                    Expanded(
                         child: Text(
                       item.title,
                       style: TextStyle(
-                          color: Colors.white,
-                          fontSize: AppStyle.fontSizeDashboardTitle(),
-                          fontWeight: FontWeight.bold),
+                        color: Colors.white,
+                        fontSize: AppStyle.fontSizeDashboardTitle(),
+                        fontWeight: FontWeight.bold),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
                     )),
                   ],
                 )),

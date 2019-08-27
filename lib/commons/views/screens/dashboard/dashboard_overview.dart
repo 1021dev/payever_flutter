@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:payever/commons/views/screens/dashboard/settings_card_info.dart';
 import 'package:provider/provider.dart';
 
 import '../../../view_models/view_models.dart';
@@ -61,11 +62,11 @@ class DashboardOverview extends StatelessWidget {
             ""
           ));
           break;
-//        case "settings":
-//          _activeWid.add(SettingsCardInfo(
-//            wid.type,
-//            NetworkImage(UI_KIT + wid.icon),
-//          ));
+       case "settings":
+         _activeWid.add(SettingsCardInfo(
+           wid.type,
+           NetworkImage(uiKit + wid.icon),
+         ));
           break;
 //        case "connect":
 //          _activeWid.add(DashboardCard_ref(

@@ -251,4 +251,39 @@ class EmployeesApi extends RestDataSource {
       return result;
     });
   }
+
+    Future<dynamic> getWallpapers() {
+    print("TAG - getWallpapers()");
+    var headers = {
+      HttpHeaders.contentTypeHeader: "application/json",
+      HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+    };
+    return _netUtil.get(RestDataSource.wallpaperAll, headers: headers).then((dynamic res) {
+      return res;
+    });
+  }
+
+  Future<dynamic> postWallpaper(String token,String wallpaper,String business) {
+    print("TAG - postWallpaper()");
+    var body = jsonEncode({"wallpaper":"$wallpaper"});
+    var headers = {HttpHeaders.authorizationHeader: "Bearer $token",
+      HttpHeaders.contentTypeHeader: "application/json",
+      HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+    };
+    return _netUtil.post(RestDataSource.wallpaperUrl+business+"/wallpapers/active",headers: headers, body: body).then((dynamic res) {
+      return res;
+    });
+  }
+  Future<dynamic> patchLanguage(String token,String language) {
+    print("TAG - patchLanguage()");
+    var body = jsonEncode({"language": "$language"});
+    var headers = {HttpHeaders.authorizationHeader: "Bearer $token",
+      HttpHeaders.contentTypeHeader: "application/json",
+      HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+    };
+    return _netUtil.patch(RestDataSource.userUrl, headers: headers,body: body).then((dynamic res) {
+      return res;
+    });
+  }
+
 }

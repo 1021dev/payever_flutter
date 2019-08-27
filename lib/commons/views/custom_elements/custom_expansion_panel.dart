@@ -40,19 +40,22 @@ class CustomExpansionPanelList extends StatelessWidget {
 //          color: Colors.transparent,
 //        ));
 
-      final Row header = Row(
+      final Widget header = Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          new AnimatedContainer(
-            duration: animationDuration,
-            curve: Curves.fastOutSlowIn,
-            margin:
-                _isChildExpanded(index) ? kExpandedEdgeInsets : EdgeInsets.zero,
-            child: new Container(
-              child: children[index].headerBuilder(
-                context,
-                children[index].isExpanded,
+          new Expanded(
+            child: new AnimatedContainer(
+              duration: animationDuration,
+              curve: Curves.fastOutSlowIn,
+              margin: _isChildExpanded(index)
+                  ? kExpandedEdgeInsets
+                  : EdgeInsets.zero,
+              child: new Container(
+                child: children[index].headerBuilder(
+                  context,
+                  children[index].isExpanded,
+                ),
               ),
             ),
           ),

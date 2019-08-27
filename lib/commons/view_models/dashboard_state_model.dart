@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:payever/commons/models/wallpaper.dart';
+import 'package:payever/settings/network/employees_api.dart';
 
 import '../models/models.dart';
 import '../network/network.dart';
@@ -131,4 +133,15 @@ class DashboardStateModel extends ChangeNotifier with Validators {
     setTotal(Transaction.toMap(_total).paginationData.amount.toDouble());
     return _total;
   }
+
+
+  Future<List<WallpaperCategory>> getWallpaper() => EmployeesApi().getWallpapers()
+  .then((wallpapers){
+    List<WallpaperCategory> _list = List();
+    wallpapers.forEach((cat){
+        _list.add(WallpaperCategory.map(cat));
+    });
+    return _list;
+  });
+  
 }

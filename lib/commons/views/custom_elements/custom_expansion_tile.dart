@@ -82,32 +82,7 @@ class _CustomExpansionTileState extends State<CustomExpansionTile> {
                 ExpansionPanel(
                   isExpanded: _activeIndex == i,
                   canTapOnHeader: true,
-                  headerBuilder: (BuildContext context, bool isExpanded) =>
-                      widget.widgetsTitleList[i],
-//                        Container(
-//                      decoration: BoxDecoration(
-////                          color: Colors.white.withOpacity(0.8),
-//                          ),
-//                      child: Row(
-//                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                        children: <Widget>[
-//                          Container(
-//                            child: Row(
-//                              children: <Widget>[
-//                                widget.widgetsTitleList[i].icon ?? Container(),
-//                                SizedBox(width: 10),
-//                                Text(
-//                                  widget.widgetsTitleList[i].title,
-//                                  style: TextStyle(fontSize: 18),
-//                                ),
-//                              ],
-//                            ),
-//                            padding: EdgeInsets.symmetric(
-//                                horizontal: Measurements.width * 0.05),
-//                          ),
-//                        ],
-//                      ),
-//                    ),
+                  headerBuilder: (BuildContext context, bool isExpanded) =>widget.widgetsTitleList[i],
                   body: widget.widgetsBodyList[i],
                 ),
               ],

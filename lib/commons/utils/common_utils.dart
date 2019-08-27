@@ -698,6 +698,10 @@ class GlobalUtils {
   static const String DB_VERSION_CURRENT_VERSION = "currentVersion";
   static const String DB_VERSION_MIN_VERSION = "minVersion";
   static const String DB_VERSION_PLAY_STORE = "playStoreUrl";
+  	
+  static const String DB_SETTINGS_WALLPAPER_INDUSTRIES    ="industries";
+  static const String DB_SETTINGS_WALLPAPER_CODE          ="code";
+  static const String DB_SETTINGS_WALLPAPER_WALLPAPERS    ="wallpapers";
 
   // env__
   static const String ENV_CUSTOM = "custom";

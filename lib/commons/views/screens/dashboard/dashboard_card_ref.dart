@@ -110,12 +110,8 @@ class _DashboardCardRefState extends State<DashboardCardRef>
                                         padding: EdgeInsets.all(AppStyle
                                             .dashboardCardContentPadding()),
                                         duration: _duration,
-                                        child: Text(
-                                          !_open ? "Show More" : "Show Less",
-                                          style: TextStyle(
-                                              fontSize: AppStyle
-                                                  .fontSizeDashboardShow()),
-                                        ),
+                                        child: Text(Language.getWidgetStrings(!_open?"widgets.actions.more":"widgets.actions.less"),style: TextStyle(fontSize: AppStyle.fontSizeDashboardShow()),),
+                                        
                                       ),
                                       onTap: () {
                                         listen();
