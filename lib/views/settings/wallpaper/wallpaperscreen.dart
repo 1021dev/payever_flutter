@@ -25,6 +25,7 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
     return BackgroundBase(true,
       appBar: CustomAppBar(onTap: ()=> Navigator.of(context).pop(),title: Text("Wallpaper",style:TextStyle(fontSize: AppStyle.fontSizeAppBar()),),),
       body:CustomFutureBuilder(
+        color: Colors.transparent,
         future: Provider.of<DashboardStateModel>(context).getWallpaper(),
         errorMessage: "",
         onDataLoaded: (List<WallpaperCategory> result) {

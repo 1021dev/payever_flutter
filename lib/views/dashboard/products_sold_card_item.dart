@@ -137,6 +137,7 @@ class _ProductsSoldCardItemState extends State<ProductsSoldCardItem> {
     }
 
     return CustomFutureBuilder<List<Products>>(
+      color: Colors.transparent,
       future: fetchProductsSold(globalStateModel, context),
       errorMessage: "Error loading sales",
       onDataLoaded: (List<Products> results) {

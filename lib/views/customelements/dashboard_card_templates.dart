@@ -209,16 +209,29 @@ class ItemsCardNButtons extends StatelessWidget {
                     //   backgroundImage: item.icon,
                     // ),
                     SizedBox(width: 10),
+                    Measurements.width > 600 ?
+                    Container(
+                      child: Text(
+                        item.title,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: AppStyle.fontSizeDashboardTitle(),
+                          fontWeight: FontWeight.bold),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      )
+                    ):
                     Expanded(
-                        child: Text(
-                      item.title,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: AppStyle.fontSizeDashboardTitle(),
-                        fontWeight: FontWeight.bold),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    )),
+                      child: Text(
+                        item.title,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: AppStyle.fontSizeDashboardTitle(),
+                          fontWeight: FontWeight.bold),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      )
+                    ),
                   ],
                 )),
                 onTap: item.action,
