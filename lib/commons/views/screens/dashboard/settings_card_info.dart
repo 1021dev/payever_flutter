@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:payever/commons/models/buttons_data.dart';
-import 'package:payever/commons/utils/translations.dart';
-import 'package:payever/commons/view_models/dashboard_state_model.dart';
-import 'package:payever/commons/views/custom_elements/dashboard_card_templates.dart';
-import 'package:payever/commons/views/screens/dashboard/dashboard_card_ref.dart';
-import 'package:payever/commons/views/custom_elements/custom_dialog.dart'as dialog;
-import 'package:payever/settings/views/language/language.dart';
-import 'package:payever/settings/views/wallpaper/wallpaperscreen.dart';
 import 'package:provider/provider.dart';
+
+import '../../../view_models/view_models.dart';
+import '../../../models/models.dart';
+import '../../../utils/translations.dart';
+import '../../custom_elements/dashboard_card_templates.dart';
+import '../../custom_elements/custom_dialog.dart'as dialog;
+import '../../../../settings/views/language/language.dart';
+import '../../../../settings/views/wallpaper/wallpaperscreen.dart';
+import 'dashboard_card_ref.dart';
 
 class SettingsCardInfo extends StatefulWidget {
   final String _appName;
@@ -41,16 +42,17 @@ class _SettingsCardInfoState extends State<SettingsCardInfo> {
     );
   }
 
-  _goToEmployeesScreen() {
-    showDialog(
-      context: context,
-      builder: (context){
-        return Dialog(elevation: 1,
-          backgroundColor: Colors.transparent,
-          child: LanguagePopUp());
-      }
-    );
-  }
+//  _goToEmployeesScreen() {
+//    showDialog(
+//      context: context,
+//      builder: (context){
+//        return Dialog(elevation: 1,
+//          backgroundColor: Colors.transparent,
+//          child: LanguagePopUp());
+//      }
+//    );
+//  }
+
   _popLanguages(){
     dialog.showDialog(
       context: context,
