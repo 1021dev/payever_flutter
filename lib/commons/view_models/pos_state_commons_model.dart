@@ -186,9 +186,7 @@ class PosStateCommonsModel extends ChangeNotifier {
       }
     }
     
-    
     haveProducts = shoppingCart.items.isNotEmpty;
-
     notifyListeners();
   }
 
