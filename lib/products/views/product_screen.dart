@@ -270,7 +270,7 @@ class _ProductScreenState extends State<ProductScreen> {
                           border: InputBorder.none,
                           icon: Container(
                               child: SvgPicture.asset(
-                            "images/searchicon.svg",
+                            "assets/images/searchicon.svg",
                             height: Measurements.height * 0.0175,
                             color: Colors.white,
                           ))),
@@ -849,11 +849,11 @@ class _ProductItemState extends State<ProductItem> {
                 Row(
                   children: <Widget>[
                     widget.parts.havePOS
-                        ? SvgPicture.asset("images/posicon.svg",
+                        ? SvgPicture.asset("assets/images/posicon.svg",
                             color: Colors.white)
                         : Container(),
                     widget.parts.haveShop
-                        ? SvgPicture.asset("images/shopicon.svg",
+                        ? SvgPicture.asset("assets/images/shopicon.svg",
                             color: Colors.white)
                         : Container(),
                   ],

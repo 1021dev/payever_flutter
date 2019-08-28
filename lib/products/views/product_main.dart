@@ -82,7 +82,7 @@ class _ProductMainRowState extends State<ProductMainRow> {
             children: <Widget>[
               Container(
                   child: SvgPicture.asset(
-                "images/insertimageicon.svg",
+                "assets/images/insertimageicon.svg",
                 height: Measurements.height * 0.1,
                 color: Colors.white.withOpacity(0.7),
               )),

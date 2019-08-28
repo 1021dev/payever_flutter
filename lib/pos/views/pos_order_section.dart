@@ -345,8 +345,7 @@ class _OrderSectionState extends State<OrderSection> {
             PosApi()
                 .postStorageSimple(
                     GlobalUtils.activeToken.accessToken,
-//                    Cart2.items2MapSimple(widget.parts.shoppingCart.items),
-                    [],
+                    Cart.items2MapSimple(widget.parts.shoppingCart.items),
                     null,
                     true,
                     true,

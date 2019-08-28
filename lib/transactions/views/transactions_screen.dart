@@ -405,7 +405,7 @@ class PhoneTableRow extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                    flex: _isPortrait ? 4 : 5,
+                    flex: _isPortrait ? 6 : 5,
                     child: Container(
                       child: !isHeader
                           ? Text(
@@ -421,7 +421,7 @@ class PhoneTableRow extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                    flex: _isPortrait ? 2 : 2,
+                    flex: _isPortrait ? 3 : 3,
                     child: Container(
                       child: !isHeader
                           ? Text(
@@ -437,7 +437,7 @@ class PhoneTableRow extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                    flex: _isPortrait ? 1 : 4,
+                    flex: _isPortrait ? 0 : 4,
                     child: !_isPortrait
                         ? Container(
                             child: !isHeader
@@ -454,7 +454,7 @@ class PhoneTableRow extends StatelessWidget {
                         : Container(),
                   ),
                   Expanded(
-                    flex: _isPortrait ? 1 : 3,
+                    flex: _isPortrait ? 0 : 3,
                     child: !_isPortrait
                         ? Container(
                             width: Measurements.width *
@@ -607,7 +607,7 @@ class TabletTableRow extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                    flex: 4,
+                    flex: 5,
                     child: Container(
                       child: !isHeader
                           ? AutoSizeText("#${currentTransaction.originalId}",

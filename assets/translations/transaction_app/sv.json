@@ -547,5 +547,6 @@
     "address.header.billing_address": "Billing address",
     "address.header.billing_and_shipping_address": "Billing and shipping address",
     "address.header.shipping_address": "Shipping address",
+    "channels.plentymarkets": "plentymarkets",
     "channels.shop": "Shop"
 }

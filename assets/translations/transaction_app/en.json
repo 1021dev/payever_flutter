@@ -177,6 +177,7 @@
     "channels.magento": "Magento",
     "channels.marketing": "Mail",
     "channels.pos": "POS",
+    "channels.plentymarkets": "plentymarkets",
     "channels.shopware": "Shopware",
     "filters.status.STATUS_NEW": "New",
     "filters.status.STATUS_IN_PROCESS": "In progress",

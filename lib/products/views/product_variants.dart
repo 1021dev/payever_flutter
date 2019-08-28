@@ -64,7 +64,7 @@ class _VariantRowState extends State<ProductVariantsRow> {
                               child: Container(
                                   padding: EdgeInsets.all(16),
                                   child: SvgPicture.asset(
-                                      "images/xsinacircle.svg")),
+                                      "assets/images/xsinacircle.svg")),
                               onTap: () {
                                 setState(() {
                                   widget.parts.product.variants.removeAt(index);
@@ -322,7 +322,7 @@ class _VariantPopUpState extends State<VariantPopUp> {
                               children: <Widget>[
                                 Container(
                                     child: SvgPicture.asset(
-                                  "images/insertimageicon.svg",
+                                  "assets/images/insertimageicon.svg",
                                   height: Measurements.height * 0.1,
                                   color: Colors.white.withOpacity(0.7),
                                 )),

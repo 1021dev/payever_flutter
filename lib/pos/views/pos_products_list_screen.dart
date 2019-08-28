@@ -87,38 +87,25 @@ class _PosProductsListScreenState extends State<PosProductsListScreen> {
                   height: Measurements.height * 0.035,
                 ),
                 Container(
-                  child: Column(
-                    children: <Widget>[
-                      Expanded(
-                        flex: 3,
-                        child: Container(),
-                      ),
-                      posCartStateModel.getCartHasItems
-                          ? Icon(Icons.brightness_1,
-                              color: Color(0XFF0084FF),
-                              size: Measurements.height *
-                                  (isTablet ? 0.01 * 1 : 0.01 * 1.3))
-                          : Container(),
-                      Expanded(
-                        flex: 2,
-                        child: Container(),
-                      ),
-                    ],
+                    child: Column(
+                      children: <Widget>[
+                        Expanded(
+                          flex: 3,
+                          child: Container(),
+                        ),
+                        posCartStateModel.getCartHasItems
+                            ? Icon(Icons.brightness_1,
+                                color: Color(0XFF0084FF),
+                                size: Measurements.height *
+                                    (isTablet ? 0.01 * 1 : 0.01 * 1.2))
+                            : Container(),
+                        Expanded(
+                          flex: 2,
+                          child: Container(),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                // Positioned(
-                //   top: isTablet
-                //       ? Measurements.height * 0.016
-                //       : Measurements.height * 0.014,
-                //   child: posCartStateModel.getCartHasItems
-                //       ? Icon(
-                //           Icons.brightness_1,
-                //           color: Color(0XFF0084FF),
-                //           size: Measurements.height *
-                //               (isTablet ? 0.01 * 1.2 : 0.01 * 1.3),
-                //         )
-                //       : Container(),
-                // ),
               ],
             ),
             onPressed: () {
@@ -386,7 +373,7 @@ class _ProductItemState extends State<ProductItem> {
                   widget.currentProduct.images.isEmpty
                       ? Center(
                           child: SvgPicture.asset(
-                            "assets/assets/images/noimage.svg",
+                            "assets/images/noimage.svg",
                             color: Colors.white.withOpacity(0.7),
                             height: Measurements.width * (isTablet ? 0.1 : 0.2),
                           ),

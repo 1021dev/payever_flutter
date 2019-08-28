@@ -173,7 +173,7 @@ class _LoginState extends State<Login>
             width: MediaQuery.of(context).size.width,
             top: 0.0,
             child: Image.asset(
-              "images/loginverticaltablet.png",
+              "assets/images/loginverticaltablet.png",
               fit: BoxFit.cover,
             ),
             // child: Container(

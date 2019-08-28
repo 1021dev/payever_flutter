@@ -68,8 +68,7 @@ class _ProductChannelsRowState extends State<ProductChannelsRow> {
                       children: <Widget>[
                         SvgPicture.asset(
                           "assets/images/posicon.svg",
-                          height: Measurements.height *
-                              (widget.parts.isTablet ? 0.02 : 0.025),
+                          height: AppStyle.iconTabSize(widget.parts.isTablet),
                         ),
                         Padding(
                           padding:
@@ -77,7 +76,7 @@ class _ProductChannelsRowState extends State<ProductChannelsRow> {
                         ),
                         Text(Language.getWidgetStrings("widgets.pos.title"),
                             style: TextStyle(
-                                fontSize: AppStyle.fontSizeDashboardTitle()))
+                                fontSize: AppStyle.fontSizeTabTitle()))
                       ],
                     ),
                   )
@@ -174,7 +173,7 @@ class _ProductChannelsRowState extends State<ProductChannelsRow> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
                         SvgPicture.asset(
-                          "images/shopicon.svg",
+                          "assets/images/shopicon.svg",
                           height: AppStyle.iconTabSize(widget.parts.isTablet),
                         ),
                         Padding(

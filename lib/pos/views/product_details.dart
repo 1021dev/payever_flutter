@@ -86,17 +86,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       ],
                     ),
                   ),
-                  // Positioned(
-                  //   top: isTablet
-                  //       ? Measurements.height * 0.016
-                  //       : Measurements.height * 0.014,
-                  //   child: cartStateModel.getCartHasItems
-                  //       ? Icon(Icons.brightness_1,
-                  //           color: Color(0XFF0084FF),
-                  //           size: Measurements.height *
-                  //               (isTablet ? 0.01 * 1.2 : 0.01 * 1.3))
-                  //       : Container(),
-                  // ),
                 ],
               ),
               onPressed: () {

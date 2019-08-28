@@ -283,22 +283,22 @@ class GlobalUtils {
 
   //URLS
   //static String  pass= "P@ssword123";//test 1
-  static String  pass= "Test1234!";//staging 1
+  // static String  pass= "Test1234!";//staging 1
   //static String  pass= "";//live 0
-//  static String pass = "Payever2019!"; //live 1
+  static String pass = "Payever2019!"; //live 1
   //static String  pass = "Payever123!";//test 2
   //static String  pass= "12345678";//staging 2
 
   //static String  mail= "payever.automation@gmail.com";//test 1
-  static String  mail= "rob@top.com";//staging 1
+  // static String  mail= "rob@top.com";//staging 1
   //static String  mail= "";//live 0
-//  static String mail = "abiantgmbh@payever.de"; //live 1
+  static String mail = "abiantgmbh@payever.de"; //live 1
   //static String  mail = "testcases@payever.de";//test 2
   //static String  mail= "service@payever.de";//staging 2
 
   //static const String COMMERCE_OS_URL = "https://commerceos.test.devpayever.com";//test
-  static const String COMMERCE_OS_URL = "https://commerceos.staging.devpayever.com";//staging
-//  static const String COMMERCE_OS_URL = "https://commerceos.payever.org"; //live
+  // static const String COMMERCE_OS_URL = "https://commerceos.staging.devpayever.com";//staging
+  static const String COMMERCE_OS_URL = "https://commerceos.payever.org"; //live
 
   static const String POS_URL = "https://getpayever.com/pos";
 
