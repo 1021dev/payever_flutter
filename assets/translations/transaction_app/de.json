@@ -143,7 +143,7 @@
     "form.filter.labels.currency": "W\u00e4hrung",
     "form.filter.labels.original_id": "Transaktionsnummer",
     "form.filter.labels.reference": "Verwendungszweck",
-    "form.filter.labels.total": "Gesamtbetrag",
+    "form.filter.labels.total": "Gesamt",
     "form.filter.labels.type": "Zahlart",
     "form.filter.labels.customer_name": "Kunde",
     "form.filter.labels.customer_email": "E-Mail Kunde",

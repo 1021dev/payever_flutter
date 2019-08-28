@@ -470,7 +470,7 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
                       padding: EdgeInsets.all(5),
                       alignment: Alignment.centerLeft,
                       child: AutoSizeText(
-                        "Shipping method: ${Measurements.paymentTypeName(parts.currentTransaction.shipping.methodName.toUpperCase())}",
+                          "Shipping method: ${Measurements.paymentTypeName(parts.currentTransaction.shipping?.methodName?.toUpperCase()??"")}",
                         style: TextStyle(
                             fontSize: AppStyle.fontSizeTabContent(),
                             color: Colors.white.withOpacity(0.7)),

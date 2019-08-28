@@ -207,6 +207,18 @@ class ItemsCardNButtons extends StatelessWidget {
                   children: <Widget>[
                     Container(width: 20,child: Image(image: item.icon,)),
                     SizedBox(width: 10),
+                     Measurements.width > 600 ?
+                    Container(
+                      child: Text(
+                        item.title,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: AppStyle.fontSizeDashboardTitle(),
+                          fontWeight: FontWeight.bold),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      )
+                    ):
                     Expanded(
                         child: Text(
                       item.title,
