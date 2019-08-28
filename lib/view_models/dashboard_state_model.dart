@@ -5,6 +5,7 @@ import 'package:payever/models/business.dart';
 import 'package:payever/models/pos.dart';
 import 'package:payever/models/transaction.dart';
 import 'package:payever/models/tutorial.dart';
+import 'package:payever/models/wallpaper.dart';
 import 'package:payever/network/rest_ds.dart';
 import 'package:payever/utils/env.dart';
 import 'package:payever/utils/utils.dart';
@@ -125,5 +126,14 @@ class DashboardStateModel extends ChangeNotifier with Validators {
     return _total;
   }
 
+  Future<List<WallpaperCategory>> getWallpaper() => RestDatasource().getWallpapers()
+        .then((wallpapers){
+          List<WallpaperCategory> _list = List();
+          wallpapers.forEach((cat){
+             _list.add(WallpaperCategory.map(cat));
+          });
+          return _list;
+        });
+  
 
 }

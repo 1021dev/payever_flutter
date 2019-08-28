@@ -194,7 +194,7 @@ class ItemsCardNButtons extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
             ),
             child: Padding(
-              padding: EdgeInsets.all(2),
+              padding: EdgeInsets.all(10),
               child: InkWell(
                 borderRadius: BorderRadius.circular(12),
                 child: Center(
@@ -202,20 +202,36 @@ class ItemsCardNButtons extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    CircleAvatar(
-                      backgroundColor: Colors.grey.withOpacity(0.5),
-                      radius: AppStyle.dashboardRadiusSmall(),
-                      backgroundImage: item.icon,
-                    ),
-                    SizedBox(width: 15),
-                    FittedBox(
-                        child: Text(
-                      item.title,
-                      style: TextStyle(
+                    Container(width: 20,child: Image(image: item.icon,)),
+                    // CircleAvatar(
+                    //   backgroundColor: Colors.transparent,
+                    //   radius: AppStyle.dashboardRadiusSmall(),
+                    //   backgroundImage: item.icon,
+                    // ),
+                    SizedBox(width: 10),
+                    Measurements.width > 600 ?
+                    Container(
+                      child: Text(
+                        item.title,
+                        style: TextStyle(
                           color: Colors.white,
                           fontSize: AppStyle.fontSizeDashboardTitle(),
                           fontWeight: FontWeight.bold),
-                    )),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      )
+                    ):
+                    Expanded(
+                      child: Text(
+                        item.title,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: AppStyle.fontSizeDashboardTitle(),
+                          fontWeight: FontWeight.bold),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      )
+                    ),
                   ],
                 )),
                 onTap: item.action,

@@ -137,6 +137,7 @@ class _ProductsSoldCardItemState extends State<ProductsSoldCardItem> {
     }
 
     return CustomFutureBuilder<List<Products>>(
+      color: Colors.transparent,
       future: fetchProductsSold(globalStateModel, context),
       errorMessage: "Error loading sales",
       onDataLoaded: (List<Products> results) {
@@ -227,7 +228,7 @@ class _ProductsSoldCardItemState extends State<ProductsSoldCardItem> {
                         image: NetworkImage(!resultData.thumbnail
                                 .toString()
                                 .contains("https://")
-                            ? Env.Storage + "/products/" + resultData.thumbnail
+                            ? (Env.Storage + "/products/" + resultData.thumbnail)
                             : resultData.thumbnail))
                     : DecorationImage(image: AssetImage("")),
               ),

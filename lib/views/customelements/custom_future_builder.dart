@@ -5,11 +5,13 @@ class CustomFutureBuilder<T> extends StatelessWidget {
   final Widget loadingWidget;
   final String errorMessage;
   final Function(T results) onDataLoaded;
+  final Color color;
 
   const CustomFutureBuilder(
       {Key key,
       @required this.future,
       this.loadingWidget,
+      this.color = Colors.black,
       @required this.errorMessage,
       @required this.onDataLoaded})
       : super(key: key);
@@ -30,7 +32,7 @@ class CustomFutureBuilder<T> extends StatelessWidget {
           return loadingWidget != null ? loadingWidget : Center(child: Padding(
             padding: EdgeInsets.all(10),
             child: CircularProgressIndicator(
-              backgroundColor: Colors.black,
+              backgroundColor: color,
             ),
           ));
         });
