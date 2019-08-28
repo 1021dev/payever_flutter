@@ -178,10 +178,15 @@ class PosStateCommonsModel extends ChangeNotifier {
           quantity: qty,
           uuid: uuid,
           image: image));
+          shoppingCart.total += price;
     } else {
-      shoppingCart.items[index].quantity += qty;
+      if(shoppingCart.items[index].quantity<99){
+        shoppingCart.items[index].quantity += qty;
+        shoppingCart.total += price;
+      }
     }
-    shoppingCart.total += price;
+    
+    
     haveProducts = shoppingCart.items.isNotEmpty;
 
     notifyListeners();
