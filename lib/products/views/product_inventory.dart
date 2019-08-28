@@ -1,6 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:payever/products/views/product_screen.dart';
 
 import '../models/models.dart';
 import '../network/network.dart';
@@ -71,16 +73,16 @@ class InventoryManagement {
           Navigator.pop(context);
           Navigator.pop(context);
           if (!isFromDashboardCard) {
-//            Navigator.pop(context);
-//            Navigator.push(
-//                context,
-//                PageTransition(
-//                    child: ProductScreen(
-//                      wallpaper: globalStateModel.currentWallpaper,
-//                      business:  globalStateModel.currentBusiness,
-//                      posCall: false,
-//                    ),
-//                    type: PageTransitionType.fade));
+           Navigator.pop(context);
+           Navigator.push(
+               context,
+               PageTransition(
+                   child: ProductScreen(
+                     wallpaper: globalStateModel.currentWallpaper,
+                     business:  globalStateModel.currentBusiness,
+                     posCall: false,
+                   ),
+                   type: PageTransitionType.fade));
           }
         }
       }).catchError((onError) {

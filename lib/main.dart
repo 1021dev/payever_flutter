@@ -78,7 +78,7 @@ class _MyAppState extends State<MyApp> {
 //            '/dashboard': (context) => DashboardMidScreen(wallpaper),
         },
         home: _loadCredentials.value
-            ? CircularProgressIndicator()
+            ? Center(child:CircularProgressIndicator())
             : _haveCredentials ? DashboardMidScreen(wallpaper) : LoginScreen(),
       ),
     );

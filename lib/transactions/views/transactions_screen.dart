@@ -319,6 +319,7 @@ class _CustomListState extends State<CustomList> {
 
   @override
   Widget build(BuildContext context) {
+
     return ListView.builder(
       key: GlobalKeys.transactionList,
       shrinkWrap: true,
@@ -571,7 +572,7 @@ class TabletTableRow extends StatelessWidget {
               child: Row(
                 children: <Widget>[
                   Expanded(
-                    flex: 1,
+                    flex: 2,
                     child: Container(
                       alignment: Alignment.center,
                       child: !isHeader
@@ -590,7 +591,7 @@ class TabletTableRow extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                    flex: 1,
+                    flex: 2,
                     child: Container(
                       alignment: Alignment.center,
                       child: !isHeader
@@ -607,7 +608,7 @@ class TabletTableRow extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                    flex: 5,
+                    flex: 12,
                     child: Container(
                       child: !isHeader
                           ? AutoSizeText("#${currentTransaction.originalId}",
@@ -623,7 +624,7 @@ class TabletTableRow extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                    flex: 3,
+                    flex: 6,
                     child: Container(
                       child: !isHeader
                           ? AutoSizeText(currentTransaction.customerName,
@@ -638,7 +639,7 @@ class TabletTableRow extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                    flex: 2,
+                    flex: 3,
                     child: Container(
                       child: !isHeader
                           ? AutoSizeText(
@@ -654,7 +655,7 @@ class TabletTableRow extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                    flex: 3,
+                    flex: 6,
                     child: Container(
                       child: !isHeader
                           ? AutoSizeText(
@@ -669,16 +670,12 @@ class TabletTableRow extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                    flex: 2,
+                    flex: 4,
                     child: Container(
                       width: Measurements.width * (_isPortrait ? 0.13 : 0.15),
                       child: !isHeader
                           ? Measurements.statusWidget(currentTransaction.status)
-                          : Text(
-                              Language.getTransactionStrings(
-                                  "form.filter.labels.status"),
-                              style: TextStyle(
-                                  fontSize: AppStyle.fontSizeListRow())),
+                          : Text(Language.getTransactionStrings("form.filter.labels.status"),style: TextStyle(fontSize: AppStyle.fontSizeListRow())),
                     ),
                   ),
                 ],

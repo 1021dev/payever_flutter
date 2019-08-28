@@ -184,43 +184,30 @@ class ItemsCardNButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<Widget> itemsDataList = List<Widget>();
-
+    bool lock = true;
     for (var item in buttonsDataList) {
       itemsDataList.add(Expanded(
         flex: 1,
-        child: Padding(
-          padding: EdgeInsets.all(1),
-          child: Container(
-            height: 50,
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.1),
+        child: Container(
+          height: 50,
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(10),
+            child: InkWell(
               borderRadius: BorderRadius.circular(12),
-            ),
-            child: Padding(
-              padding: EdgeInsets.all(10),
-              child: InkWell(
-                borderRadius: BorderRadius.circular(12),
-                child: Center(
-                    child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Container(width: 20,child: Image(image: item.icon,)),
-                    SizedBox(width: 10),
-                     Measurements.width > 600 ?
-                    Container(
-                      child: Text(
-                        item.title,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: AppStyle.fontSizeDashboardTitle(),
-                          fontWeight: FontWeight.bold),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                      )
-                    ):
-                    Expanded(
-                        child: Text(
+              child: Center(
+                  child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Container(width: 20,child: Image(image: item.icon,)),
+                  SizedBox(width: 10),
+                   Measurements.width > 600 ?
+                  Container(
+                    child: Text(
                       item.title,
                       style: TextStyle(
                         color: Colors.white,
@@ -228,25 +215,43 @@ class ItemsCardNButtons extends StatelessWidget {
                         fontWeight: FontWeight.bold),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
-                    )),
-                  ],
-                )),
-                onTap: item.action,
-              ),
+                    )
+                  ):
+                  Expanded(
+                      child: Text(
+                    item.title,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: AppStyle.fontSizeDashboardTitle(),
+                      fontWeight: FontWeight.bold),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  )),
+                ],
+              )),
+              onTap: item.action,
             ),
           ),
         ),
       ));
+      if(lock){
+        itemsDataList.add(SizedBox(width: 10,));
+        lock = !lock;
+      }
     }
 
-    return ListView(
-      physics: NeverScrollableScrollPhysics(),
-      children: <Widget>[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: itemsDataList,
-        ),
-      ],
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal:10),
+      child: Column(
+        children: <Widget>[
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: itemsDataList,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

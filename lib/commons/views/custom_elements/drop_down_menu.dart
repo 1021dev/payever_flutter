@@ -8,6 +8,7 @@ class DropDownMenu extends StatefulWidget {
   final List<String> optionsList;
   final String selectedValue;
   final String defaultValue;
+  final bool customColor;
   final Color backgroundColor;
   final Color fontColor;
 
@@ -19,6 +20,7 @@ class DropDownMenu extends StatefulWidget {
     this.selectedValue,
     this.defaultValue,
     this.backgroundColor,
+    this.customColor = true,
     this.fontColor,
   }) : super(key: key);
 
@@ -87,42 +89,11 @@ class _DropDownMenuState extends State<DropDownMenu> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-//        color: Colors.white.withOpacity(0.1),
-        color: widget.backgroundColor ?? Colors.white.withOpacity(0.1),
-        child: Padding(
-          padding: EdgeInsets.only(top: 1, right: 1, bottom: 1, left: 10),
-          child: Theme(
-            data: Theme.of(context).copyWith(
-//              canvasColor: Colors.white.withOpacity(0.1),
-              canvasColor: widget.backgroundColor ?? Colors.white.withOpacity(0.1),
-            ),
-            child: DropdownButtonHideUnderline(
-              child: ButtonTheme(
-                alignedDropdown: true,
-                child: DropdownButton(
+    DropdownButton _dp = DropdownButton(
                   isExpanded: true,
                   isDense: true,
                   style: TextStyle(fontSize: 18, color: widget.fontColor ?? Colors.white),
                   hint: Text(_placeHolderText),
-//                    isDense: true,
-//                    hint: Container(
-//                      child: Column(
-//                        mainAxisSize: MainAxisSize.min,
-//                        crossAxisAlignment: CrossAxisAlignment.start,
-//                        children: <Widget>[
-//                          Text(
-//                            _placeHolderText,
-//                            style: TextStyle(fontSize: 13),
-//                          ),
-//                          Text("Choose " + _placeHolderText),
-//                        ],
-//                      ),
-//                    ),
                   elevation: 1,
                   value: _currentOption,
                   items: _dropDownMenuItems,
@@ -135,7 +106,25 @@ class _DropDownMenuState extends State<DropDownMenu> {
                     });
                   },
 //                disabledHint: Text("You can't select anything."),
-                ),
+                );
+    return Container(
+      child: Card(
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+//        color: Colors.white.withOpacity(0.1),
+        color: widget.backgroundColor ?? Colors.white.withOpacity(0.1),
+        child: Padding(
+          padding: EdgeInsets.only(top: 1, right: 1, bottom: 1, left: 10),
+          child: Theme(
+            data: Theme.of(context).copyWith(
+              canvasColor: _dp.isExpanded?(widget.customColor?widget.backgroundColor:Color(0xff343434)):(widget.backgroundColor ?? Colors.white.withOpacity(0.1)),
+            ),
+            child: DropdownButtonHideUnderline(
+              child: ButtonTheme(
+                alignedDropdown: true,
+                child: _dp,
 //                child: InputDecorator(
 //                  expands: true,
 //                  textAlign: TextAlign.left,

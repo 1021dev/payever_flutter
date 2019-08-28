@@ -306,7 +306,7 @@ class _ProductShippingRowState extends State<ProductShippingRow> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top: Measurements.width * 0.005),
+                padding: EdgeInsets.only(top:2.5),
               ),
               Container(
                 child: Row(
@@ -382,7 +382,7 @@ class _ProductShippingRowState extends State<ProductShippingRow> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top: 2.5),
+                padding: EdgeInsets.only(top:2.5),
               ),
               Container(
                 child: widget.parts.isTablet

@@ -50,7 +50,7 @@ class _LanguagePopUpState extends State<LanguagePopUp> {
         child: BackdropFilter(
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
+              color: Colors.white.withOpacity(0.1),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Column(
@@ -58,13 +58,14 @@ class _LanguagePopUpState extends State<LanguagePopUp> {
                 Expanded(
                   child: Center(
                     child: Container(
+                      //color: Colors.white.withOpacity(0.1),
                       height: 50,
-                      child: DropDownMenu(
+                      child: DropDownMenu(customColor: false,
                         onChangeSelection: (lang,_index){
                           _lang = widget.languagesToConst[lang];
                           setState(() {});
                         },
-                        backgroundColor: Colors.grey.withOpacity(0.5),
+                        backgroundColor: Colors.transparent,
                         optionsList: <String>[
                           "English",
                           "Deutsch"
@@ -77,6 +78,7 @@ class _LanguagePopUpState extends State<LanguagePopUp> {
                 Expanded(
                   child: InkWell(
                     child: Container(
+                      height: 50,
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
                         color: Colors.white.withOpacity(0.1),

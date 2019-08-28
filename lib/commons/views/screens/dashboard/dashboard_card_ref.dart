@@ -56,13 +56,12 @@ class _DashboardCardRefState extends State<DashboardCardRef>
         : MediaQuery.of(context).size.height);
     bool _isTablet = Measurements.width < 600 ? false : true;
     return Container(
-      padding: EdgeInsets.symmetric(vertical: Measurements.width * 0.01),
+      padding: EdgeInsets.symmetric(vertical: Measurements.width * (_isTablet ?0.003:0.01)),
       child: Column(
         children: <Widget>[
           AnimatedContainer(
             duration: _duration,
-            width: Measurements.width *
-                (_isTablet ? 0.7 : (_isPortrait ? 0.9 : 1.3)),
+            width: Measurements.width * (_isTablet ? (Measurements.width < 850?0.6: 0.5): (_isPortrait ? 0.9 : 1.3)),
             child: Container(
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12),

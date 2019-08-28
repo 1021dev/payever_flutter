@@ -5,6 +5,7 @@ import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/view_models/dashboard_state_model.dart';
 import 'package:payever/commons/views/custom_elements/dashboard_card_templates.dart';
 import 'package:payever/commons/views/screens/dashboard/dashboard_card_ref.dart';
+import 'package:payever/commons/views/custom_elements/custom_dialog.dart'as dialog;
 import 'package:payever/settings/views/language/language.dart';
 import 'package:payever/settings/views/wallpaper/wallpaperscreen.dart';
 import 'package:provider/provider.dart';
@@ -36,7 +37,7 @@ class _SettingsCardInfoState extends State<SettingsCardInfo> {
     return DashboardCardRef(
       widget._appName,
       widget._imageProvider,
-      ItemsCardNButtons(buttonsDataList),
+      ItemsCardNButtons(buttonsDataList),defPad: false,
     );
   }
 
@@ -51,11 +52,11 @@ class _SettingsCardInfoState extends State<SettingsCardInfo> {
     );
   }
   _popLanguages(){
-    showDialog(
+    dialog.showDialog(
       context: context,
       builder: (context){
-        return Dialog(elevation: 1,
-          backgroundColor: Colors.transparent,
+        return Dialog(elevation: 1,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          backgroundColor: Colors.white.withOpacity(0.1),
           child: LanguagePopUp());
       }
     );

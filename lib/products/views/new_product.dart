@@ -294,6 +294,16 @@ class _NewProductScreenState extends State<NewProductScreen> {
             productStateModel = Provider.of<ProductStateModel>(context);
             productStateModel.setRefresh(true);
             Navigator.pop(context);
+            Navigator.pop(context);
+            Navigator.push(
+                context,
+                PageTransition(
+                    child: ProductScreen(
+                      wallpaper: globalStateModel.currentWallpaper,
+                      business: globalStateModel.currentBusiness,
+                      posCall: false,
+                    ),
+                    type: PageTransitionType.fade));
           }
         },
       ),
