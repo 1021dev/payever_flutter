@@ -1,21 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:payever/view_models/pos_cart_state_model.dart';
-import 'package:payever/view_models/product_state_model.dart';
-import 'package:payever/views/dashboard/dashboard_screen_ref.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:payever/utils/authhandler.dart';
-import 'package:cron/cron.dart';
+import 'package:provider/provider.dart';
 
-import 'package:payever/view_models/global_state_model.dart';
-import 'package:payever/utils/utils.dart';
-//import 'package:payever/views/dashboard/dashboard_screen.dart';
-import 'package:payever/views/dashboard/dashboard_midscreen.dart';
-import 'package:payever/views/login/login_page.dart';
-import 'network/rest_ds.dart';
-import 'view_models/employees_state_model.dart';
-
+import 'commons/view_models/view_models.dart';
+import 'commons/views/screens/screens.dart';
+import 'commons/utils/utils.dart';
+import 'commons/network/network.dart';
 
 void main() {
   Provider.debugCheckInvalidValueType = null;
@@ -32,7 +23,6 @@ class PayeverApp extends StatelessWidget {
 final ThemeData _payeverTheme = _buildPayeverTheme();
 
 ThemeData _buildPayeverTheme() {
-
   final ThemeData base = ThemeData.dark();
   return base.copyWith(
     splashColor: Colors.transparent,
@@ -41,67 +31,71 @@ ThemeData _buildPayeverTheme() {
     buttonColor: const Color(0xFFFFFFFF),
     cursorColor: const Color(0xFFFFFFFF),
     accentIconTheme: new IconThemeData(color: const Color(0xFFFFFFFF)),
-    textTheme: base.textTheme.copyWith().apply(fontFamily: 'Helvetica Neue', bodyColor: const Color(0xFFFFFFFF)),
+    textTheme: base.textTheme.copyWith().apply(
+        fontFamily: 'Helvetica Neue', bodyColor: const Color(0xFFFFFFFF)),
   );
 }
-final CupertinoThemeData _payeverCupertinoTheme = CupertinoThemeData.raw(Brightness.dark, const Color(0xFFFFFFFF), Color(0xFFFFFFFF), CupertinoTextThemeData(primaryColor: Colors.white), Colors.white, Colors.white);
-
 
 class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
-  
 }
 
 class _MyAppState extends State<MyApp> {
-  SharedPreferences prefs;
+  SharedPreferences preferences;
   var _loadCredentials = ValueNotifier(true);
   bool _haveCredentials;
   String wallpaper;
 
-  RestDatasource api = RestDatasource();
+  RestDataSource api = RestDataSource();
   GlobalStateModel globalStateModel = GlobalStateModel();
-
 
   @override
   void initState() {
     super.initState();
     _loadCredentials.addListener(listener);
     _storedCredentials();
-    }
-    @override
-    Widget build(BuildContext context) {
-      return MultiProvider(
-        providers: [
-          ChangeNotifierProvider<GlobalStateModel>(builder: (BuildContext context) => globalStateModel),
-          ChangeNotifierProvider<PosCartStateModel>(builder: (BuildContext context) => PosCartStateModel()),
-          ChangeNotifierProvider<ProductStateModel>(builder: (BuildContext context) => ProductStateModel()),
-          Provider.value(value: RestDatasource()),
-        ],
-        child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'payever',
-          theme: _payeverTheme,
-          routes: {
-//            '/dashboard': (context) => DashboardMidScreen(wallpaper),
-          },
-          home: _loadCredentials.value ? CircularProgressIndicator(): _haveCredentials?DashboardMidScreen(wallpaper) :LoginScreen(),
-        ),
-      );
-    }
+  }
 
-    _storedCredentials() async {
-      prefs = await SharedPreferences.getInstance();
-      wallpaper                =  prefs.getString(GlobalUtils.WALLPAPER)     ?? "" ;
-      String bus               =  prefs.getString(GlobalUtils.BUSINESS)      ?? "" ;
-      String rfToken           =  prefs.getString(GlobalUtils.REFRESHTOKEN)  ?? "" ;
-      GlobalUtils.fingerprint  =  prefs.getString(GlobalUtils.FINGERPRINT)   ?? "" ;
-      _loadCredentials.value   =  false;
-      _haveCredentials = rfToken.isNotEmpty && bus.isNotEmpty;
-    }
-    void listener() {
-      setState(() {
-      });
-    }
-    
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        Provider.value(value: globalStateModel),
+        Provider.value(value: RestDataSource()),
+        ChangeNotifierProvider<GlobalStateModel>(
+            builder: (BuildContext context) => globalStateModel),
+        ChangeNotifierProvider<PosCartStateModel>(
+            builder: (BuildContext context) => PosCartStateModel()),
+        ChangeNotifierProvider<ProductStateModel>(
+            builder: (BuildContext context) => ProductStateModel()),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'payever',
+        theme: _payeverTheme,
+        routes: {
+//            '/dashboard': (context) => DashboardMidScreen(wallpaper),
+        },
+        home: _loadCredentials.value
+            ? Center(child:CircularProgressIndicator())
+            : _haveCredentials ? DashboardMidScreen(wallpaper) : LoginScreen(),
+      ),
+    );
+  }
+
+  _storedCredentials() async {
+    preferences = await SharedPreferences.getInstance();
+    wallpaper = preferences.getString(GlobalUtils.WALLPAPER) ?? "";
+    String bus = preferences.getString(GlobalUtils.BUSINESS) ?? "";
+    String rfToken = preferences.getString(GlobalUtils.REFRESH_TOKEN) ?? "";
+    GlobalUtils.fingerprint =
+        preferences.getString(GlobalUtils.FINGERPRINT) ?? "";
+    _loadCredentials.value = false;
+    _haveCredentials = rfToken.isNotEmpty && bus.isNotEmpty;
+  }
+
+  void listener() {
+    setState(() {});
+  }
 }
