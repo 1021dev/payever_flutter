@@ -8,7 +8,7 @@ import '../utils/utils.dart';
 
 class EmployeesStateModel extends ChangeNotifier with Validators {
   final GlobalStateModel globalStateModel;
-  final EmployeesApi api;
+  final SettingsApi api;
 
   EmployeesStateModel(this.globalStateModel, this.api);
 

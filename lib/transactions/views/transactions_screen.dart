@@ -14,7 +14,7 @@ import '../../commons/view_models/view_models.dart';
 import '../../commons/models/models.dart';
 import '../../commons/views/custom_elements/custom_elements.dart';
 import '../../commons/views/screens/login/login.dart';
-import '../../commons/views/screens/dashboard/transaction_card.dart';
+import 'transaction_dashboard_card.dart';
 import 'transactions_details_screen.dart';
 
 bool _isPortrait;

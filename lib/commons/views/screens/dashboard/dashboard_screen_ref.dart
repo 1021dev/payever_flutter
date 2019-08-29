@@ -10,9 +10,9 @@ import '../../custom_elements/custom_elements.dart';
 import 'dashboard_apps.dart';
 import 'dashboard_menu.dart';
 import 'dashboard_overview.dart';
-import 'pos_card.dart';
-import 'products_sold_card.dart';
-import 'settings_card.dart';
+import '../../../../products/views/products_sold_dashboard_card.dart';
+import '../../../../pos/views/pos_dashboard_card.dart';
+import '../../../../settings/views/settings_dashboard_card_info.dart';
 
 bool _isTablet;
 
@@ -201,7 +201,7 @@ class CardParts {
   static List<Widget> _activeWid = List();
   static POSCard _posCard;
   static ProductsSoldCard _productsCard;
-  static SettingsCard _settingsCard;
+  static SettingsCardInfo _settingsCard;
   static String uiKit = Env.commerceOs + "/assets/ui-kit/icons-png/";
 
   static double _appBarSize;

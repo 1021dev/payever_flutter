@@ -30,7 +30,7 @@ class _EmployeesListTabScreenState extends State<EmployeesListTabScreen> {
       String search, bool init, GlobalStateModel globalStateModel) async {
     List<Employees> employeesList = List<Employees>();
 
-    EmployeesApi api = EmployeesApi();
+    SettingsApi api = SettingsApi();
 
     await api
         .getEmployeesList(globalStateModel.currentBusiness.id,
@@ -171,7 +171,7 @@ class EmployeesCollapsingList extends StatelessWidget {
                         Navigator.push(
                             context,
                             PageTransition(
-                              child: ProxyProvider<EmployeesApi,
+                              child: ProxyProvider<SettingsApi,
                                   EmployeesStateModel>(
                                 builder: (context, api, employeesState) =>
                                     EmployeesStateModel(globalStateModel, api),

@@ -732,7 +732,7 @@ class _EmployeeInfoRowState extends State<EmployeeInfoRow>
 
   Future<List<BusinessEmployeesGroups>> fetchEmployeesGroupsList(
       String search, bool init, GlobalStateModel globalStateModel) async {
-    EmployeesApi api = EmployeesApi();
+    SettingsApi api = SettingsApi();
 
 //    employeeCurrentGroups = [];
 //    for (var group in widget.employee.groups) {

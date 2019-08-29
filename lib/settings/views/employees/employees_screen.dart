@@ -70,7 +70,7 @@ class _EmployeesScreenState extends State<EmployeesScreen>
                       Navigator.push(
                           context,
                           PageTransition(
-                            child: ProxyProvider<EmployeesApi,
+                            child: ProxyProvider<SettingsApi,
                                 EmployeesStateModel>(
                               builder: (context, api, employeesState) =>
                                   EmployeesStateModel(globalStateModel, api),
@@ -82,7 +82,7 @@ class _EmployeesScreenState extends State<EmployeesScreen>
                       Navigator.push(
                           context,
                           PageTransition(
-                            child: ProxyProvider<EmployeesApi,
+                            child: ProxyProvider<SettingsApi,
                                 EmployeesStateModel>(
                               builder: (context, api, employeesState) =>
                                   EmployeesStateModel(globalStateModel, api),
@@ -163,13 +163,13 @@ class _EmployeesScreenState extends State<EmployeesScreen>
                     controller: tabController,
                     children: <Widget>[
 //                                EmployeesListTabScreen(),
-                      ProxyProvider<EmployeesApi, EmployeesStateModel>(
+                      ProxyProvider<SettingsApi, EmployeesStateModel>(
                         builder: (context, api, employeesState) =>
                             EmployeesStateModel(globalStateModel, api),
                         child: EmployeesListTabScreen(),
                       ),
 //                                EmployeesGroupsListTabScreen(),
-                      ProxyProvider<EmployeesApi, EmployeesStateModel>(
+                      ProxyProvider<SettingsApi, EmployeesStateModel>(
                         builder: (context, api, employeesState) =>
                             EmployeesStateModel(globalStateModel, api),
                         child: EmployeesGroupsListTabScreen(),

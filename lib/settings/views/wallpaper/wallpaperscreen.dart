@@ -140,7 +140,7 @@ class WallpaperItem extends StatelessWidget {
         ),
         onTap: () {
           GlobalStateModel global = Provider.of<GlobalStateModel>(context);
-          EmployeesApi()
+          SettingsApi()
               .postWallpaper(GlobalUtils.activeToken.accessToken, id,
                   global.currentBusiness.id)
               .then((_) {

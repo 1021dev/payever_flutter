@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
-import '../../../view_models/view_models.dart';
-import 'products_sold_card_item.dart';
-import 'dashboard_card_ref.dart';
-
-import '../../../../products/views/views.dart';
+import '../../commons/view_models/view_models.dart';
+import '../../commons/views/screens/dashboard/dashboard_card_ref.dart';
+import 'products_sold_dashboard_card_item.dart';
+import 'product_screen.dart';
 
 class ProductsSoldCard extends StatelessWidget {
   final String _appName;

@@ -2,20 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
-import '../../../view_models/view_models.dart';
-import '../../../models/models.dart';
-import '../../../utils/translations.dart';
-import '../../custom_elements/dashboard_card_templates.dart';
-import '../../custom_elements/custom_dialog.dart'as dialog;
-import '../../../../settings/views/language/language.dart';
-import '../../../../settings/views/wallpaper/wallpaperscreen.dart';
-import 'dashboard_card_ref.dart';
+import '../../commons/view_models/view_models.dart';
+import '../../commons/models/models.dart';
+import '../../commons/utils/translations.dart';
+import '../../commons/views/custom_elements/dashboard_card_templates.dart';
+import '../../commons/views/custom_elements/custom_dialog.dart'as dialog;
+import '../../commons/views/screens/dashboard/dashboard_card_ref.dart';
+import 'wallpaper/wallpaperscreen.dart';
+import 'language/language.dart';
 
 class SettingsCardInfo extends StatefulWidget {
   final String _appName;
   final ImageProvider _imageProvider;
+  final String _help;
 
-  SettingsCardInfo(this._appName, this._imageProvider);
+  SettingsCardInfo(this._appName, this._imageProvider, this._help);
 
   @override
   createState() => _SettingsCardInfoState();
@@ -28,6 +29,8 @@ class _SettingsCardInfoState extends State<SettingsCardInfo> {
 
   @override
   Widget build(BuildContext context) {
+
+    print(widget._help);
 
     buttonsDataList = [];
     buttonsDataList.add(ButtonsData(icon: AssetImage("assets/images/languageicon.png"),

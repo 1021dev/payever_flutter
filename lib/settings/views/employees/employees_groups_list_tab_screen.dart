@@ -32,7 +32,7 @@ class _EmployeesGroupsListTabScreenState
     List<BusinessEmployeesGroups> employeesGroupsList =
         List<BusinessEmployeesGroups>();
 
-    EmployeesApi api = EmployeesApi();
+    SettingsApi api = SettingsApi();
 
     var businessEmployeesGroups = await api
         .getBusinessEmployeesGroupsList(globalStateModel.currentBusiness.id,
@@ -165,7 +165,7 @@ class CollapsingList extends StatelessWidget {
                         Navigator.push(
                             context,
                             PageTransition(
-                              child: ProxyProvider<EmployeesApi,
+                              child: ProxyProvider<SettingsApi,
                                   EmployeesStateModel>(
                                 builder: (context, api, employeesState) =>
                                     EmployeesStateModel(globalStateModel, api),

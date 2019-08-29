@@ -86,7 +86,7 @@ class _LanguagePopUpState extends State<LanguagePopUp> {
                   onTap: () {
                     print("tap");
                     print("${widget.languages[_lang]}");
-                    EmployeesApi()
+                    SettingsApi()
                         .patchLanguage(
                             GlobalUtils.activeToken.accessToken, _lang)
                         .then((_) {

@@ -42,7 +42,7 @@ class _EmployeesSelectionsListScreenState
       String search, bool init, GlobalStateModel globalStateModel) async {
     List<Employees> employeesList = List<Employees>();
 
-    EmployeesApi api = EmployeesApi();
+    SettingsApi api = SettingsApi();
 
     await api
         .getEmployeesList(globalStateModel.currentBusiness.id,

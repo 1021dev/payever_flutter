@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:payever/commons/models/wallpaper.dart';
-import 'package:payever/settings/network/employees_api.dart';
 
 import '../models/models.dart';
 import '../network/network.dart';
 import '../utils/utils.dart';
-import '../views/views.dart';
+
+import '../../transactions/views/transaction_dashboard_card.dart';
+import '../../products/views/products_sold_dashboard_card.dart';
+import '../../pos/views/pos_dashboard_card.dart';
+import '../../settings/views/settings_dashboard_card_info.dart';
 
 class DashboardStateModel extends ChangeNotifier with Validators {
   Terminal _activeTerminal;
@@ -76,12 +78,12 @@ class DashboardStateModel extends ChangeNotifier with Validators {
               .add(POSCard(wid.type, NetworkImage(uiKit + wid.icon), wid.help));
           break;
         case "products":
-          _activeWid.add(
-              ProductsSoldCard(wid.type, NetworkImage(uiKit + wid.icon), wid.help));
+          _activeWid.add(ProductsSoldCard(
+              wid.type, NetworkImage(uiKit + wid.icon), wid.help));
           break;
         case "settings":
-          _activeWid.add(
-              SettingsCard(wid.type, NetworkImage(uiKit + wid.icon), wid.help));
+          _activeWid.add(SettingsCardInfo(
+              wid.type, NetworkImage(uiKit + wid.icon), wid.help));
           break;
         default:
       }
@@ -134,14 +136,12 @@ class DashboardStateModel extends ChangeNotifier with Validators {
     return _total;
   }
 
-
-  Future<List<WallpaperCategory>> getWallpaper() => EmployeesApi().getWallpapers()
-  .then((wallpapers){
-    List<WallpaperCategory> _list = List();
-    wallpapers.forEach((cat){
-        _list.add(WallpaperCategory.map(cat));
-    });
-    return _list;
-  });
-  
+  Future<List<WallpaperCategory>> getWallpaper() =>
+      RestDataSource().getWallpapers().then((wallpapers) {
+        List<WallpaperCategory> _list = List();
+        wallpapers.forEach((cat) {
+          _list.add(WallpaperCategory.map(cat));
+        });
+        return _list;
+      });
 }

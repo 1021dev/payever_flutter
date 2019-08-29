@@ -9,7 +9,7 @@ import '../../../utils/utils.dart';
 import '../../../view_models/view_models.dart';
 import '../../custom_elements/custom_elements.dart';
 
-import 'dashboard_card_ref.dart';
+import '../dashboard/dashboard_card_ref.dart';
 
 class SimplyTutorial extends StatefulWidget {
   final String _appName;

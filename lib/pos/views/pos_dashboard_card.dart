@@ -11,19 +11,18 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
-import '../../../models/models.dart';
-import '../../../network/network.dart';
-import '../../../utils/utils.dart';
-import '../../../view_models/view_models.dart';
-import '../../custom_elements/custom_elements.dart';
+import '../../commons/models/models.dart';
+import '../../commons/network/network.dart';
+import '../../commons/utils/utils.dart';
+import '../../commons/view_models/view_models.dart';
+import '../../commons/views/custom_elements/custom_elements.dart';
+import '../../commons/views/screens/dashboard/dashboard_screen_ref.dart';
+import '../../commons/views/screens/dashboard/dashboard_card.dart';
+import '../../commons/views/screens/dashboard/dashboard_card_ref.dart';
 
-import '../../../../pos/view_models/pos_state_model.dart';
-import '../../../../pos/network/network.dart';
-import '../../../../pos/views/pos_products_list_screen.dart';
-
-import 'dashboard_screen_ref.dart';
-import 'dashboard_card.dart';
-import 'dashboard_card_ref.dart';
+import '../view_models/pos_state_model.dart';
+import '../network/network.dart';
+import 'pos_products_list_screen.dart';
 
 class POSCard extends StatefulWidget {
   final String _appName;

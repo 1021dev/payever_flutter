@@ -6,19 +6,16 @@ import 'package:flutter_sparkline/flutter_sparkline.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:provider/provider.dart';
 
-import '../../../view_models/view_models.dart';
-import '../../custom_elements/custom_elements.dart';
-import '../../../network/network.dart';
-import '../../../models/models.dart';
-import '../../../utils/utils.dart';
+import '../../commons/view_models/view_models.dart';
+import '../../commons/views/custom_elements/custom_elements.dart';
+import '../../commons/views/screens/dashboard/dashboard_card.dart';
+import '../../commons/views/screens/dashboard/dashboard_card_ref.dart';
+import '../../commons/views/screens/login/login.dart';
+import '../../commons/network/network.dart';
+import '../../commons/models/models.dart';
+import '../../commons/utils/utils.dart';
 
-import 'dashboard_card.dart';
-import 'dashboard_card_ref.dart';
-
-import '../login/login.dart';
-
-import '../../../../transactions/views/views.dart';
-
+import 'transactions_screen.dart';
 
 bool _isTablet = false;
 bool _isPortrait = true;

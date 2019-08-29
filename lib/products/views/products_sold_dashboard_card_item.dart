@@ -5,14 +5,14 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
-import '../../../network/network.dart';
-import '../../../models/models.dart';
-import '../../../utils/utils.dart';
-import '../../../view_models/view_models.dart';
-import '../../custom_elements/custom_elements.dart';
+import '../../commons/network/network.dart';
+import '../../commons/models/models.dart';
+import '../../commons/utils/utils.dart';
+import '../../commons/view_models/view_models.dart';
+import '../../commons/views/custom_elements/custom_elements.dart';
 
-import '../../../../products/views/product_screen.dart';
-import '../../../../products/views/new_product.dart';
+import 'product_screen.dart';
+import 'new_product.dart';
 
 
 ValueNotifier<GraphQLClient> clientFor({

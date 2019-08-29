@@ -6,41 +6,8 @@ import 'package:flutter/material.dart';
 import '../../commons/network/network.dart';
 import '../utils/utils.dart';
 
-class EmployeesApi extends RestDataSource {
+class SettingsApi extends RestDataSource {
   NetworkUtil _netUtil = NetworkUtil();
-
-  Future<dynamic> checkSKU(String idBusiness, String token, String sku) async {
-    print("TAG - checkSKU()");
-    var headers = {
-      HttpHeaders.authorizationHeader: "Bearer $token",
-      HttpHeaders.contentTypeHeader: "application/json",
-      HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-    };
-    return _netUtil
-        .getWithError(
-            RestDataSource.inventoryUrl +
-                idBusiness +
-                RestDataSource.skuMid +
-                sku,
-            headers: headers)
-        .then((dynamic result) {
-      return result;
-    });
-  }
-
-  Future<dynamic> getAppsBusiness(String idBusiness, String token) {
-    print("TAG - getAppsBusiness()");
-    var headers = {
-      HttpHeaders.authorizationHeader: "Bearer $token",
-      HttpHeaders.contentTypeHeader: "application/json",
-      HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-    };
-    return _netUtil
-        .get(RestDataSource.businessApps + idBusiness, headers: headers)
-        .then((dynamic result) {
-      return result;
-    });
-  }
 
   Future<dynamic> addEmployee(Object data, String token, String businessId) {
     print("TAG - addEmployee()");
@@ -252,38 +219,35 @@ class EmployeesApi extends RestDataSource {
     });
   }
 
-    Future<dynamic> getWallpapers() {
-    print("TAG - getWallpapers()");
+  Future<dynamic> postWallpaper(
+      String token, String wallpaper, String business) {
+    print("TAG - postWallpaper()");
+    var body = jsonEncode({"wallpaper": "$wallpaper"});
     var headers = {
+      HttpHeaders.authorizationHeader: "Bearer $token",
       HttpHeaders.contentTypeHeader: "application/json",
       HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
     };
-    return _netUtil.get(RestDataSource.wallpaperAll, headers: headers).then((dynamic res) {
+    return _netUtil
+        .post(RestDataSource.wallpaperUrl + business + "/wallpapers/active",
+            headers: headers, body: body)
+        .then((dynamic res) {
       return res;
     });
   }
 
-  Future<dynamic> postWallpaper(String token,String wallpaper,String business) {
-    print("TAG - postWallpaper()");
-    var body = jsonEncode({"wallpaper":"$wallpaper"});
-    var headers = {HttpHeaders.authorizationHeader: "Bearer $token",
-      HttpHeaders.contentTypeHeader: "application/json",
-      HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-    };
-    return _netUtil.post(RestDataSource.wallpaperUrl+business+"/wallpapers/active",headers: headers, body: body).then((dynamic res) {
-      return res;
-    });
-  }
-  Future<dynamic> patchLanguage(String token,String language) {
+  Future<dynamic> patchLanguage(String token, String language) {
     print("TAG - patchLanguage()");
     var body = jsonEncode({"language": "$language"});
-    var headers = {HttpHeaders.authorizationHeader: "Bearer $token",
+    var headers = {
+      HttpHeaders.authorizationHeader: "Bearer $token",
       HttpHeaders.contentTypeHeader: "application/json",
       HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
     };
-    return _netUtil.patch(RestDataSource.userUrl, headers: headers,body: body).then((dynamic res) {
+    return _netUtil
+        .patch(RestDataSource.userUrl, headers: headers, body: body)
+        .then((dynamic res) {
       return res;
     });
   }
-
 }

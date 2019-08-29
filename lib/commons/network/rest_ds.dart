@@ -487,4 +487,16 @@ class RestDataSource {
       return result;
     });
   }
+
+  Future<dynamic> getWallpapers() {
+    print("TAG - getWallpapers()");
+    var headers = {
+      HttpHeaders.contentTypeHeader: "application/json",
+      HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+    };
+    return _netUtil.get(RestDataSource.wallpaperAll, headers: headers).then((dynamic res) {
+      return res;
+    });
+  }
+
 }
