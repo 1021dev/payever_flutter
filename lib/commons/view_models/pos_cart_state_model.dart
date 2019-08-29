@@ -1,6 +1,11 @@
 import 'package:flutter/foundation.dart';
 
 class PosCartStateModel extends ChangeNotifier {
+
+  bool isButtonAvailable = true;
+
+  bool get getIsButtonAvailable => isButtonAvailable;
+
   bool cartHasItems = false;
 
   bool get getCartHasItems => cartHasItems;
@@ -13,6 +18,12 @@ class PosCartStateModel extends ChangeNotifier {
     cartHasItems = value;
     notifyListeners();
   }
+
+  void updateBuyButton(bool value) {
+    isButtonAvailable = value;
+    notifyListeners();
+  }
+
 
 //  void updateCurrentVariant(int value) {
 //    currentSelectedVariant = value;

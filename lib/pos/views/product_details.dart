@@ -487,68 +487,73 @@ class _DetailsInfoState extends State<DetailsInfo> {
                       )),
                     ),
                     onTap: () {
-                      if (results != 0) {
-                        if (widget.haveVariants) {
-                          var image = widget
-                                  .currentProduct
-                                  .variants[currentVariant.value]
-                                  .images
-                                  .isNotEmpty
-                              ? widget.currentProduct
-                                  .variants[currentVariant.value].images[0]
-                              : widget.currentProduct.images.isNotEmpty
-                                  ? widget.currentProduct.images[0]
-                                  : null;
-                          widget.parts.add2cart(
-                              id: widget.currentProduct
-                                  .variants[currentVariant.value].id,
-                              image: image,
-                              uuid: widget.currentProduct
-                                  .variants[currentVariant.value].id,
-                              name: widget.currentProduct
-                                  .variants[currentVariant.value].title,
-                              price: onSale
-                                  ? widget.currentProduct
-                                      .variants[currentVariant.value].salePrice
-                                  : widget.currentProduct
-                                      .variants[currentVariant.value].price,
-                              qty: 1,
-                              sku: widget.currentProduct
-                                  .variants[currentVariant.value].sku);
-                        } else {
-                          var image = widget.currentProduct.images.isNotEmpty
-                              ? widget.currentProduct.images[0]
-                              : null;
-                          widget.parts.add2cart(
-                              id: widget.currentProduct.uuid,
-                              image: image,
-                              uuid: widget.currentProduct.uuid,
-                              name: widget.currentProduct.title,
-                              price: onSale
-                                  ? widget.currentProduct.salePrice
-                                  : widget.currentProduct.price,
-                              qty: 1,
-                              sku: widget.currentProduct.sku);
-                        }
+                      if(widget.cartStateModel.getIsButtonAvailable) {
+                        if (results != 0) {
+                          if (widget.haveVariants) {
+                            var image = widget
+                                .currentProduct
+                                .variants[currentVariant.value]
+                                .images
+                                .isNotEmpty
+                                ? widget.currentProduct
+                                .variants[currentVariant.value].images[0]
+                                : widget.currentProduct.images.isNotEmpty
+                                ? widget.currentProduct.images[0]
+                                : null;
+                            widget.parts.add2cart(
+                                id: widget.currentProduct
+                                    .variants[currentVariant.value].id,
+                                image: image,
+                                uuid: widget.currentProduct
+                                    .variants[currentVariant.value].id,
+                                name: widget.currentProduct
+                                    .variants[currentVariant.value].title,
+                                price: onSale
+                                    ? widget.currentProduct
+                                    .variants[currentVariant.value].salePrice
+                                    : widget.currentProduct
+                                    .variants[currentVariant.value].price,
+                                qty: 1,
+                                sku: widget.currentProduct
+                                    .variants[currentVariant.value].sku);
 
-                        widget.cartStateModel.updateCart(true);
-                        ToastFuture toastFuture = showToastWidget(
-                          CustomToastNotification(
-                            icon: Icons.check_circle_outline,
-                            toastText: "Product added to Bag",
-                          ),
-                          duration: Duration(seconds: 3),
-                          onDismiss: () {
-                            print("The toast was dismised");
-                          },
-                        );
+                          } else {
+                            var image = widget.currentProduct.images.isNotEmpty
+                                ? widget.currentProduct.images[0]
+                                : null;
+                            widget.parts.add2cart(
+                                id: widget.currentProduct.uuid,
+                                image: image,
+                                uuid: widget.currentProduct.uuid,
+                                name: widget.currentProduct.title,
+                                price: onSale
+                                    ? widget.currentProduct.salePrice
+                                    : widget.currentProduct.price,
+                                qty: 1,
+                                sku: widget.currentProduct.sku);
+                          }
+                          widget.cartStateModel.updateBuyButton(false);
+                          widget.cartStateModel.updateCart(true);
+                          ToastFuture toastFuture = showToastWidget(
+                            CustomToastNotification(
+                              icon: Icons.check_circle_outline,
+                              toastText: "Product added to Bag",
+                            ),
+                            duration: Duration(seconds: 2),
+                            onDismiss: () {
+                              print("The toast was dismised");
+                              widget.cartStateModel.updateBuyButton(true);
+                            },
+                          );
 
-                        Future.delayed(Duration(seconds: 3), () {
-                          toastFuture.dismiss();
-                        });
+                          Future.delayed(Duration(seconds: 2), () {
+                            toastFuture.dismiss();
+                          });
 
 //                  Navigator.pop(context);
+                        }
                       }
+
                     },
                   ),
                 ),
