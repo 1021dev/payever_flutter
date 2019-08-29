@@ -100,16 +100,16 @@ class InventoryManagement {
               Navigator.pop(context);
               Navigator.pop(context);
               if (!isFromDashboardCard) {
-//                Navigator.pop(context);
-//                Navigator.push(
-//                    context,
-//                    PageTransition(
-//                        child: ProductScreen(
-//                          wallpaper: globalStateModel.currentWallpaper,
-//                          business:  globalStateModel.currentBusiness,
-//                          posCall: false,
-//                        ),
-//                        type: PageTransitionType.fade));
+               Navigator.pop(context);
+               Navigator.push(
+                   context,
+                   PageTransition(
+                       child: ProductScreen(
+                         wallpaper: globalStateModel.currentWallpaper,
+                         business:  globalStateModel.currentBusiness,
+                         posCall: false,
+                       ),
+                       type: PageTransitionType.fade));
               }
             }
           });

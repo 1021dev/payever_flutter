@@ -35,6 +35,7 @@ class _LanguagePopUpState extends State<LanguagePopUp> {
 
   @override
   void initState() {
+    super.initState();
     _lang = Language.language;
   }
 

@@ -938,8 +938,8 @@ class _ProductItemState extends State<ProductItem> {
                                                   Future.delayed(Duration(
                                                           microseconds: 1))
                                                       .then((_) {
-//                                                    widget.parts.isLoading
-//                                                        .notifyListeners();
+                                                   widget.parts.isLoading
+                                                       .notifyListeners();
                                                     widget.parts.products
                                                         .remove(widget
                                                             .currentProduct);
