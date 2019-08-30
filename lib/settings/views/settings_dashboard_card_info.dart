@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:payever/checkout_process/view_models/checkout_process_state_model.dart';
+import 'package:payever/checkout_process/views/checkout_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../../commons/view_models/view_models.dart';
@@ -36,7 +38,7 @@ class _SettingsCardInfoState extends State<SettingsCardInfo> {
     buttonsDataList.add(ButtonsData(icon: AssetImage("assets/images/languageicon.png"),
         title: Language.getWidgetStrings("widgets.settings.actions.edit-language"), action: () => _popLanguages()));
    buttonsDataList.add(ButtonsData(icon: AssetImage("assets/images/wallpapericon.png"),
-       title: Language.getWidgetStrings("widgets.settings.actions.edit-wallpaper"), action: () => _goToWallpaperScreen()));
+       title: Language.getWidgetStrings("widgets.settings.actions.edit-wallpaper"), action: () => _goToWallpaperScreen(context)));
 
     return DashboardCardRef(
       widget._appName,
@@ -67,14 +69,17 @@ class _SettingsCardInfoState extends State<SettingsCardInfo> {
     );
   }
   
-  _goToWallpaperScreen() {
+  _goToWallpaperScreen(context) {
+
+    DashboardStateModel dashboardModel = Provider.of<DashboardStateModel>(context);
     Navigator.push(
         context,
         PageTransition(
-          child: ChangeNotifierProvider<DashboardStateModel>(builder: (BuildContext context) {
-            return DashboardStateModel();
+          child: ChangeNotifierProvider<CheckoutProcessStateModel>(builder: (context) {
+            return CheckoutProcessStateModel(dashboardModel);
           },
-         child: WallpaperScreen(),), type: PageTransitionType.fade));
+         child: CheckOutScreen(),), type: PageTransitionType.fade));
+        //  child: WallpaperScreen(),), type: PageTransitionType.fade));
             // child: WallpaperScreen(), type: PageTransitionType.fade));
   }
 }

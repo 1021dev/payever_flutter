@@ -121,6 +121,7 @@ class _POSCardState extends State<POSCard> {
                     _parts._terminals[_parts.index.value];
                 DashboardStateModel dashboardStateModel =
                     Provider.of<DashboardStateModel>(context);
+                    print("_parts._terminals[_parts.index.value]:${_parts._terminals[_parts.index.value]}");
                 dashboardStateModel
                     .setActiveTerminal(_parts._terminals[_parts.index.value]);
               });
@@ -835,6 +836,7 @@ class _SimplifyTerminalState extends State<SimplifyTerminal> {
         _terminals.forEach((terminal) {
           if (terminal.active) {
             active = index;
+            print("terminal: ${terminal.channelSet}");
             dashboardStateModel.setActiveTerminal(terminal);
           } else
             index++;
