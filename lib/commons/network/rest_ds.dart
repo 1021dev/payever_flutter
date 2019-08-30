@@ -11,7 +11,7 @@ import '../utils/utils.dart';
 class RestDataSource {
   NetworkUtil _netUtil = NetworkUtil();
 
-  static final envUrl = GlobalUtils.COMMERCE_OS_URL + "/env.json";
+  static final envUrl = GlobalUtils.commerceOsUrl + "/env.json";
   static String authBaseUrl = Env.auth;
   static String baseUrl = Env.users;
   static String wallpaper = Env.wallpapers;
