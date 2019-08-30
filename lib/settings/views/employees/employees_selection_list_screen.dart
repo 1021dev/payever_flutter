@@ -30,6 +30,7 @@ class EmployeesSelectionsListScreen extends StatefulWidget {
 class _EmployeesSelectionsListScreenState
     extends State<EmployeesSelectionsListScreen> {
   GlobalStateModel globalStateModel;
+  SettingsApi api;
 
   List<String> employeesIdsToGroup = List<String>();
 
@@ -38,25 +39,19 @@ class _EmployeesSelectionsListScreenState
     super.initState();
   }
 
-  Future<List<Employees>> fetchEmployeesList(
-      String search, bool init, GlobalStateModel globalStateModel) async {
-    List<Employees> employeesList = List<Employees>();
+  Future<EmployeesList> fetchEmployeesList(String search, bool init,
+      GlobalStateModel globalStateModel, int limit, int pageNumber) async {
+    EmployeesList employeesList;
 
-    SettingsApi api = SettingsApi();
+    String queryParams = "?limit=$limit&page=$pageNumber";
 
     await api
-        .getEmployeesList(globalStateModel.currentBusiness.id,
-            GlobalUtils.activeToken.accessToken, context)
+        .getEmployeesList(GlobalUtils.activeToken.accessToken,
+        globalStateModel.currentBusiness.id, queryParams)
         .then((employeesData) {
-      print("getEmployeesList: Employees data loaded: $employeesData");
+      print("Employees data loaded in tab: $employeesData");
 
-      for (var employee in employeesData) {
-        var employeeInfo = Employees.fromMap(employee);
-        print("employeeInfo: $employeeInfo");
-        if (!widget.employeesList.contains(employeeInfo.id)) {
-          employeesList.add(Employees.fromMap(employee));
-        }
-      }
+      employeesList = EmployeesList.fromMap(employeesData);
     }).catchError((onError) {
       print("Error loading employees: $onError");
 
@@ -75,6 +70,8 @@ class _EmployeesSelectionsListScreenState
   @override
   Widget build(BuildContext context) {
     globalStateModel = Provider.of<GlobalStateModel>(context);
+    api = Provider.of<SettingsApi>(context);
+
     _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
     _isTablet = Measurements.width < 600 ? false : true;
     Measurements.height = (_isPortrait
@@ -134,11 +131,11 @@ class _EmployeesSelectionsListScreenState
             child: Column(
               children: <Widget>[
                 SizedBox(height: 10),
-                CustomFutureBuilder<List<Employees>>(
-                  future: fetchEmployeesList("", true, globalStateModel),
+                CustomFutureBuilder<EmployeesList>(
+                  future: fetchEmployeesList("", true, globalStateModel, 20, 1),
                   errorMessage: "Error loading employees",
                   onDataLoaded: (results) {
-                    if (results.length == 0) {
+                    if (results.data.length == 0) {
                       return Expanded(
                         child: Center(
                           child: Text("No employees yet"),
@@ -181,7 +178,7 @@ class _EmployeesSelectionsListScreenState
                               child: CustomList(
                                   globalStateModel.currentBusiness,
                                   "",
-                                  results,
+                                  results.data,
                                   EmployeesScreenData(results,
                                       globalStateModel.currentWallpaper),
                                   ValueNotifier(false),
@@ -471,7 +468,7 @@ class _PhoneTableRowState extends State<PhoneTableRow> {
                       height:
                           Measurements.height * (_isPortrait ? 0.050 : 0.045),
                       child: !widget._isHeader
-                          ? AutoSizeText(widget._currentEmployee.position,
+                          ? AutoSizeText(widget._currentEmployee.positionType,
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
                               softWrap: false)
@@ -698,7 +695,7 @@ class _TabletTableRowState extends State<TabletTableRow> {
                       alignment: Alignment.centerLeft,
                       width: Measurements.width * (_isPortrait ? 0.20 : 0.25),
                       child: !widget._isHeader
-                          ? AutoSizeText(widget._currentEmployee.position,
+                          ? AutoSizeText(widget._currentEmployee.positionType,
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
                               softWrap: false)

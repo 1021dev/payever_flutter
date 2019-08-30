@@ -37,7 +37,7 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
   Future<List<BusinessApps>> getBusinessApps(
       EmployeesStateModel employeesStateModel) async {
     List<BusinessApps> businessApps = List<BusinessApps>();
-    var apps = await employeesStateModel.getAppsBusinessInfo();
+    var apps = await employeesStateModel.getBusinessAppsInfo();
     for (var app in apps) {
       var appData = BusinessApps.fromMap(app);
       if (appData.dashboardInfo.title != null) {

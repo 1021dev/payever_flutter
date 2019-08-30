@@ -9,6 +9,7 @@ export 'employees.dart';
 export 'employees_list.dart';
 export 'expandable_header.dart';
 export 'group_acl.dart';
+export 'groups_list.dart';
 export 'pos.dart';
 export 'products.dart';
 export 'shop.dart';

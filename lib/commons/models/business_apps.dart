@@ -58,6 +58,9 @@ class AllowedAcls {
   AllowedAcls({this.create, this.read, this.update, this.delete});
 
   factory AllowedAcls.fromMap(allowedAcls) {
+
+    print("allowedAcls: $allowedAcls");
+
     return AllowedAcls(
       create: allowedAcls['create'],
       read: allowedAcls['read'],

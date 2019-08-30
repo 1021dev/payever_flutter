@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import '../view_models/view_models.dart';
 import '../../commons/views/custom_elements/custom_elements.dart';
 import '../utils/utils.dart';
-//import 'settings_drawer.dart';
+import 'settings_drawer.dart';
 
 bool _isPortrait;
 
@@ -38,6 +38,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               Navigator.pop(context);
             },
           ),
+          endDrawer: SettingsDrawer(),
           body: Center(
             child: Padding(
               padding: EdgeInsets.all(10),

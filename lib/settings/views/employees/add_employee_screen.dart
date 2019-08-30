@@ -12,6 +12,7 @@ import '../../view_models/view_models.dart';
 import '../../network/network.dart';
 import '../../models/models.dart';
 import '../../utils/utils.dart';
+import 'custom_apps_access_expansion_tile.dart';
 
 bool _isPortrait;
 bool _isTablet;
@@ -32,7 +33,7 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
   Future<List<BusinessApps>> getBusinessApps(
       EmployeesStateModel employeesStateModel) async {
     List<BusinessApps> businessApps = List<BusinessApps>();
-    var apps = await employeesStateModel.getAppsBusinessInfo();
+    var apps = await employeesStateModel.getBusinessAppsInfo();
     for (var app in apps) {
       var appData = BusinessApps.fromMap(app);
       if (appData.dashboardInfo.title != null) {
@@ -49,6 +50,10 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
           appData.allowedAcls.delete = false;
         }
         businessApps.add(appData);
+
+        print("APP Data read: ${appData.allowedAcls.read}");
+
+
       }
     }
 
@@ -118,86 +123,77 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
               child: CustomFutureBuilder<List<BusinessApps>>(
                   future: getBusinessApps(employeesStateModel),
                   errorMessage: "Error loading data",
-                  onDataLoaded: (List results) {
+                  onDataLoaded: (results) {
+                    print("results: $results");
+
                     return Column(
                       children: <Widget>[
-                        Flexible(
-                          child: CustomExpansionTile(
-                            isWithCustomIcon: false,
-                            widgetsTitleList: <Widget>[
+                        Expanded(
+                          child: ListView(
+                            shrinkWrap: true,
+                            children: <Widget>[
+                              CustomExpansionTile(
+                                customPadding: true,
+                                scrollable: false,
+                                isWithCustomIcon: true,
+                                addBorderRadius: true,
+                                headerColor: Colors.transparent,
+                                widgetsTitleList: <Widget>[
 //                                    ExpandableHeader.toMap({"icon": Icon(
 //                                      Icons.business_center,
 //                                       size: 28,
 //                                    ), "title": "Apps Access", "isExpanded": false}),
-                              Container(
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Container(
-                                      child: Row(
-                                        children: <Widget>[
-                                          Icon(
-                                            Icons.person,
-                                            size: 28,
-                                          ),
-                                          SizedBox(width: 10),
-                                          Text(
-                                            "Info",
-                                            style: TextStyle(fontSize: 18),
-                                          ),
-                                        ],
-                                      ),
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal:
-                                              Measurements.width * 0.05),
+                                  Container(
+                                    child: Row(
+                                      children: <Widget>[
+                                        Icon(
+                                          Icons.person,
+                                          size: 28,
+                                        ),
+                                        SizedBox(width: 10),
+                                        Text(
+                                          "Info",
+                                          style: TextStyle(
+                                              fontSize:
+                                                  AppStyle.fontSizeTabTitle()),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                  Container(
+                                    child: Row(
+                                      children: <Widget>[
+                                        Icon(
+                                          Icons.business_center,
+                                          size: 28,
+                                        ),
+                                        SizedBox(width: 10),
+                                        Text(
+                                          "Apps Access",
+                                          style: TextStyle(
+                                              fontSize:
+                                                  AppStyle.fontSizeTabTitle()),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                                widgetsBodyList: <Widget>[
+                                  EmployeeInfoRow(
+                                    openedRow: openedRow,
+                                    employeesStateModel: employeesStateModel,
+                                    employeeCurrentGroups:
+                                        employeeCurrentGroups,
+                                    employeeCurrentGroupsList:
+                                        employeeCurrentGroupsList,
+                                  ),
+                                  CustomAppsAccessExpansionTile(
+                                    employeesStateModel: employeesStateModel,
+                                    businessApps: results,
+                                    isNewEmployeeOrGroup: true,
+                                  ),
+                                ],
                               ),
-//                                      Container(
-//                                        child: Row(
-//                                          mainAxisAlignment:
-//                                              MainAxisAlignment.spaceBetween,
-//                                          children: <Widget>[
-//                                            Container(
-//                                              child: Row(
-//                                                children: <Widget>[
-//                                                  Icon(
-//                                                    Icons.business_center,
-//                                                    size: 28,
-//                                                  ),
-//                                                  SizedBox(width: 10),
-//                                                  Text(
-//                                                    "Apps Access",
-//                                                    style:
-//                                                        TextStyle(fontSize: 18),
-//                                                  ),
-//                                                ],
-//                                              ),
-//                                              padding: EdgeInsets.symmetric(
-//                                                  horizontal:
-//                                                      Measurements.width *
-//                                                          0.05),
-//                                            ),
-//                                          ],
-//                                        ),
-//                                      ),
-                            ],
-                            widgetsBodyList: <Widget>[
-                              EmployeeInfoRow(
-                                openedRow: openedRow,
-                                employeesStateModel: employeesStateModel,
-                                employeeCurrentGroups: employeeCurrentGroups,
-                                employeeCurrentGroupsList:
-                                    employeeCurrentGroupsList,
-                              ),
-//                                      CustomAppsAccessExpansionTile(
-//                                        employeesStateModel:
-//                                            employeesStateModel,
-//                                        businessApps: results,
-//                                        isNewEmployeeOrGroup: true,
-//                                      ),
                             ],
                           ),
                         ),
@@ -215,16 +211,17 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
       EmployeesStateModel employeesStateModel, BuildContext context) async {
     var data = {
       "email": employeesStateModel.emailValue,
-      "first_name": employeesStateModel.firstNameValue,
-      "last_name": employeesStateModel.lastNameValue,
+//      "first_name": employeesStateModel.firstNameValue,
+//      "last_name": employeesStateModel.lastNameValue,
       "position": employeesStateModel.positionValue,
       "groups": employeeCurrentGroupsList,
     };
 
-//    print("DATA: $data");
+    print("DATA: $data");
 
-    await employeesStateModel.createNewEmployee(data);
-    Navigator.of(context).pop();
+//    String queryParams = "?invite=true";
+//    await employeesStateModel.createNewEmployee(data, queryParams);
+//    Navigator.of(context).pop();
   }
 }
 
@@ -251,8 +248,8 @@ class _EmployeeInfoRowState extends State<EmployeeInfoRow>
   bool _isPortrait;
   bool _isTablet;
 
-  TextEditingController _firstNameController = TextEditingController();
-  TextEditingController _lastNameController = TextEditingController();
+//  TextEditingController _firstNameController = TextEditingController();
+//  TextEditingController _lastNameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
 
   final GlobalKey<AutoCompleteTextFieldState<BusinessEmployeesGroups>> acKey =
@@ -276,15 +273,15 @@ class _EmployeeInfoRowState extends State<EmployeeInfoRow>
     super.initState();
     widget.openedRow.addListener(listener);
 
-    _firstNameController.text = widget.employeesStateModel.firstNameValue;
-    _lastNameController.text = widget.employeesStateModel.lastNameValue;
+//    _firstNameController.text = widget.employeesStateModel.firstNameValue;
+//    _lastNameController.text = widget.employeesStateModel.lastNameValue;
     _emailController.text = widget.employeesStateModel.emailValue;
   }
 
   @override
   void dispose() {
-    _firstNameController.dispose();
-    _lastNameController.dispose();
+//    _firstNameController.dispose();
+//    _lastNameController.dispose();
     _emailController.dispose();
     super.dispose();
   }
@@ -308,95 +305,103 @@ class _EmployeeInfoRowState extends State<EmployeeInfoRow>
     print("_isPortrait: $_isPortrait");
     print("_isTablet: $_isTablet");
 
-    Widget getEmployeeInfoRow() {
-      return Column(
+    return Expanded(
+      child: Column(
         children: <Widget>[
-          SizedBox(height: Measurements.height * 0.010),
-          Container(
-//            color: Colors.blueGrey,
-            width: _isPortrait
-                ? Measurements.width * 0.96
-                : MediaQuery.of(context).size.width * 0.88,
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                StreamBuilder(
-                    stream: widget.employeesStateModel.firstName,
-                    builder: (context, snapshot) {
-                      return Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: Measurements.width * 0.025),
-                        alignment: Alignment.center,
-//                        width: Measurements.width * 0.475,
-                        width: _isPortrait
-                            ? Measurements.width * 0.475
-//                            : MediaQuery.of(context).size.width * 0.326,
-                            : MediaQuery.of(context).size.width * 0.436,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.05),
-                        ),
-                        child: TextField(
-                          controller: _firstNameController,
-                          style:
-                              TextStyle(fontSize: Measurements.height * 0.02),
-                          onChanged: widget.employeesStateModel.changeFirstName,
-                          decoration: InputDecoration(
-                            hintText: "First Name",
-                            hintStyle: TextStyle(
-                              color: snapshot.hasError
-                                  ? Colors.red
-                                  : Colors.white.withOpacity(0.5),
-                            ),
-                            labelText: "First Name",
-                            labelStyle: TextStyle(
-                              color:
-                                  snapshot.hasError ? Colors.red : Colors.grey,
-                            ),
-                            border: InputBorder.none,
-                          ),
-                        ),
-                      );
-                    }),
-                StreamBuilder(
-                    stream: widget.employeesStateModel.lastName,
-                    builder: (context, snapshot) {
-                      return Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: Measurements.width * 0.025),
-                        alignment: Alignment.center,
-                        width: _isPortrait
-                            ? Measurements.width * 0.475
-//                            : MediaQuery.of(context).size.width * 0.326,
-                            : MediaQuery.of(context).size.width * 0.436,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.05),
-                        ),
-                        child: TextField(
-                          controller: _lastNameController,
-                          style:
-                              TextStyle(fontSize: Measurements.height * 0.02),
-                          onChanged: widget.employeesStateModel.changeLastName,
-                          decoration: InputDecoration(
-                              hintText: "Last Name",
-                              hintStyle: TextStyle(
-                                color: snapshot.hasError
-                                    ? Colors.red
-                                    : Colors.white.withOpacity(0.5),
-                              ),
-                              border: InputBorder.none,
-                              labelText: "Last Name",
-                              labelStyle: TextStyle(
-                                color: snapshot.hasError
-                                    ? Colors.red
-                                    : Colors.grey,
-                              )),
-                        ),
-                      );
-                    })
-              ],
-            ),
-          ),
+          /// First Name and Last Name were used before, for now are just commented
+//          SizedBox(height: Measurements.height * 0.010),
+//          Container(
+////            color: Colors.blueGrey,
+////              width: _isPortrait
+////                  ? Measurements.width * 0.96
+////                  : MediaQuery.of(context).size.width * 0.88,
+//            child: Row(
+//              mainAxisSize: MainAxisSize.max,
+//              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//              children: <Widget>[
+//                Expanded(
+//                  flex: 1,
+//                  child: StreamBuilder(
+//                      stream: widget.employeesStateModel.firstName,
+//                      builder: (context, snapshot) {
+//                        return Container(
+//                          padding: EdgeInsets.symmetric(
+//                              horizontal: Measurements.width * 0.025),
+//                          alignment: Alignment.center,
+//                          decoration: BoxDecoration(
+//                            color: Colors.white.withOpacity(0.05),
+//                          ),
+//                          child: TextField(
+//                            controller: _firstNameController,
+//                            style:
+//                                TextStyle(fontSize: Measurements.height * 0.02),
+//                            onChanged:
+//                                widget.employeesStateModel.changeFirstName,
+//                            decoration: InputDecoration(
+//                              hintText: "First Name",
+//                              hintStyle: TextStyle(
+//                                color: snapshot.hasError
+//                                    ? Colors.red
+//                                    : Colors.white.withOpacity(0.5),
+//                              ),
+//                              labelText: "First Name",
+//                              labelStyle: TextStyle(
+//                                color: snapshot.hasError
+//                                    ? Colors.red
+//                                    : Colors.grey,
+//                              ),
+//                              border: InputBorder.none,
+//                            ),
+//                          ),
+//                        );
+//                      }),
+//                ),
+//                Padding(
+//                  padding: EdgeInsets.only(left: 3),
+//                ),
+//                Expanded(
+//                  flex: 1,
+//                  child: StreamBuilder(
+//                      stream: widget.employeesStateModel.lastName,
+//                      builder: (context, snapshot) {
+//                        return Container(
+//                          padding: EdgeInsets.symmetric(
+//                              horizontal: Measurements.width * 0.025),
+//                          alignment: Alignment.center,
+////                            width: _isPortrait
+////                                ? Measurements.width * 0.475
+//////                            : MediaQuery.of(context).size.width * 0.326,
+////                                : MediaQuery.of(context).size.width * 0.436,
+//                          decoration: BoxDecoration(
+//                            color: Colors.white.withOpacity(0.05),
+//                          ),
+//                          child: TextField(
+//                            controller: _lastNameController,
+//                            style:
+//                                TextStyle(fontSize: Measurements.height * 0.02),
+//                            onChanged:
+//                                widget.employeesStateModel.changeLastName,
+//                            decoration: InputDecoration(
+//                                hintText: "Last Name",
+//                                hintStyle: TextStyle(
+//                                  color: snapshot.hasError
+//                                      ? Colors.red
+//                                      : Colors.white.withOpacity(0.5),
+//                                ),
+//                                border: InputBorder.none,
+//                                labelText: "Last Name",
+//                                labelStyle: TextStyle(
+//                                  color: snapshot.hasError
+//                                      ? Colors.red
+//                                      : Colors.grey,
+//                                )),
+//                          ),
+//                        );
+//                      }),
+//                )
+//              ],
+//            ),
+//          ),
           Padding(
             padding: EdgeInsets.only(top: Measurements.width * 0.010),
           ),
@@ -408,72 +413,89 @@ class _EmployeeInfoRowState extends State<EmployeeInfoRow>
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                StreamBuilder(
-                    stream: widget.employeesStateModel.email,
-                    builder: (context, snapshot) {
-                      return Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: Measurements.width * 0.025),
-                        alignment: Alignment.center,
-                        width: _isPortrait
-                            ? Measurements.width * 0.475
-                            : MediaQuery.of(context).size.width * 0.436,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.05),
-                        ),
-                        child: TextField(
-                          controller: _emailController,
-                          style:
-                              TextStyle(fontSize: Measurements.height * 0.02),
-                          onChanged: widget.employeesStateModel.changeEmail,
-                          decoration: InputDecoration(
-                            hintText: "Email",
-                            hintStyle: TextStyle(
-                              color: snapshot.hasError
-                                  ? Colors.red
-                                  : Colors.white.withOpacity(0.5),
-                            ),
-                            labelText: "Email",
-                            labelStyle: TextStyle(
-                              color:
-                                  snapshot.hasError ? Colors.red : Colors.grey,
-                            ),
-                            border: InputBorder.none,
-                          ),
-                          keyboardType: TextInputType.emailAddress,
-                        ),
-                      );
-                    }),
-                StreamBuilder(
-                    stream: widget.employeesStateModel.position,
-                    builder: (context, snapshot) {
-                      return Container(
-                        color: Colors.white.withOpacity(0.05),
-                        width: _isPortrait
-                            ? Measurements.width * 0.475
-                            : MediaQuery.of(context).size.width * 0.436,
-                        child: Container(
+                Expanded(
+                  flex: 1,
+                  child: StreamBuilder(
+                      stream: widget.employeesStateModel.email,
+                      builder: (context, snapshot) {
+                        return Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: Measurements.width * 0.025),
+                          alignment: Alignment.center,
+//                            width: _isPortrait
+//                                ? Measurements.width * 0.475
+//                                : MediaQuery.of(context).size.width * 0.436,
                           decoration: BoxDecoration(
-                              border: Border.all(
-                                  color: snapshot.hasError
-                                      ? Colors.red
-                                      : Colors.transparent,
-                                  width: 1)),
-                          child: DropDownMenu(
-                            optionsList: GlobalUtils.positionsListOptions(),
-                            defaultValue:
-                                widget.employeesStateModel.positionValue,
-                            placeHolderText: "Position",
-                            onChangeSelection: (selectedOption, index) {
-                              print("selectedOption: $selectedOption");
-                              print("index: $index");
-                              widget.employeesStateModel
-                                  .changePosition(selectedOption);
-                            },
+                            color: Colors.white.withOpacity(0.05),
                           ),
-                        ),
-                      );
-                    })
+                          child: TextField(
+                            controller: _emailController,
+                            style:
+                                TextStyle(fontSize: Measurements.height * 0.02),
+                            onChanged: widget.employeesStateModel.changeEmail,
+                            decoration: InputDecoration(
+                              hintText: "Email",
+                              hintStyle: TextStyle(
+                                color: snapshot.hasError
+                                    ? Colors.red
+                                    : Colors.white.withOpacity(0.5),
+                              ),
+                              labelText: "Email",
+                              labelStyle: TextStyle(
+                                color: snapshot.hasError
+                                    ? Colors.red
+                                    : Colors.grey,
+                              ),
+                              border: InputBorder.none,
+                            ),
+                            keyboardType: TextInputType.emailAddress,
+                          ),
+                        );
+                      }),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 3),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: StreamBuilder(
+                      stream: widget.employeesStateModel.position,
+                      builder: (context, snapshot) {
+                        return ConstrainedBox(
+                          constraints: BoxConstraints(
+                            minHeight: 60,
+//                            minWidth: 5.0,
+                            maxHeight: 60,
+//                            maxWidth: 30.0,
+                          ),
+                          child: Container(
+                            color: Colors.white.withOpacity(0.05),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: snapshot.hasError
+                                          ? Colors.red
+                                          : Colors.transparent,
+                                      width: 1)),
+                              child: DropDownMenu(
+                                customColor: false,
+                                backgroundColor: Colors.transparent,
+                                optionsList: GlobalUtils.positionsListOptions(),
+                                defaultValue:
+                                    widget.employeesStateModel.positionValue,
+                                placeHolderText: "Position",
+                                onChangeSelection: (selectedOption, index) {
+                                  print("selectedOption: $selectedOption");
+                                  print("index: $index");
+                                  widget.employeesStateModel
+                                      .changePosition(selectedOption);
+                                },
+                              ),
+                            ),
+                          ),
+                        );
+                      }),
+                )
               ],
             ),
           ),
@@ -482,9 +504,9 @@ class _EmployeeInfoRowState extends State<EmployeeInfoRow>
             padding: EdgeInsets.only(top: Measurements.width * 0.020),
           ),
           CustomFutureBuilder<List<BusinessEmployeesGroups>>(
-            future: fetchEmployeesGroupsList("", true, globalStateModel),
+            future: fetchEmployeesGroupsList("", true, globalStateModel, 20, 1),
             errorMessage: "",
-            onDataLoaded: (List results) {
+            onDataLoaded: (results) {
               return Column(
                 children: <Widget>[
                   Container(
@@ -522,65 +544,18 @@ class _EmployeeInfoRowState extends State<EmployeeInfoRow>
                                       print("chip pressed");
                                       var groupIndex =
                                           widget.employeeCurrentGroups[index];
-                                      setState(() {
-                                        widget.employeeCurrentGroups
-                                            .remove(groupIndex);
-                                        widget.employeeCurrentGroupsList
-                                            .remove(groupIndex.id);
-                                      });
+                                      widget.employeeCurrentGroups
+                                          .remove(groupIndex);
+                                      widget.employeeCurrentGroupsList
+                                          .remove(index);
+                                      setState(() {});
+                                      print(
+                                          "widget.employeeCurrentGroups: ${widget.employeeCurrentGroups}");
+                                      print(
+                                          "widget.employeeCurrentGroupsList: ${widget.employeeCurrentGroupsList}");
                                     },
                                   ),
                                 );
-
-//                                return Padding(
-//                                  padding: EdgeInsets.all(
-//                                      Measurements.width * (_isTablet ? 0.025 : 0.020)),
-//                                  child: Container(
-//                                    decoration: BoxDecoration(
-//                                      color: Colors.white.withOpacity(0.05),
-////                                      color: Colors.grey,
-//                                      borderRadius: BorderRadius.circular(26),
-//                                    ),
-//                                    child: Row(
-////                                      mainAxisAlignment:
-////                                          MainAxisAlignment.spaceEvenly,
-//                                      crossAxisAlignment: CrossAxisAlignment.center,
-//                                      children: <Widget>[
-//                                        Padding(
-//                                          padding: EdgeInsets.symmetric(
-//                                              horizontal:
-//                                              Measurements.width * 0.025),
-//                                          child: Center(
-//                                              child: Text(widget.employee
-//                                                  .groups[index].name, style: TextStyle(fontSize: 15))),
-//                                        ),
-//                                        Padding(
-//                                          padding: EdgeInsets.all(
-//                                              Measurements.width * 0.011),
-//                                          child: InkWell(
-//                                            radius: 20,
-//                                            child: Icon(
-//                                              IconData(58829,
-//                                                  fontFamily: 'MaterialIcons'),
-//                                              size: 19,
-//                                            ),
-//                                            onTap: () {
-//                                              setState(() {
-//                                                _deleteEmployeeFromGroup(
-//                                                    employeesStateModel,
-//                                                    widget.employee
-//                                                        .groups[index].id);
-//                                                widget.employee.groups.remove(
-//                                                    widget.employee
-//                                                        .groups[index]);
-//                                              });
-//                                            },
-//                                          ),
-//                                        )
-//                                      ],
-//                                    ),
-//                                  ),
-//                                );
                               },
                             ),
                           ),
@@ -608,11 +583,16 @@ class _EmployeeInfoRowState extends State<EmployeeInfoRow>
                           labelStyle: TextStyle(color: Colors.grey),
                           hintText: "Search groups here"),
                       itemSubmitted: (item) {
+                        print("item: $item");
+
                         setState(() {
-                          widget.employeeCurrentGroups.add(
-                              EmployeeGroup.fromMap(
-                                  {"name": item.name, "_id": item.id}));
-                          widget.employeeCurrentGroupsList.add(item.id);
+                          if (!widget.employeeCurrentGroupsList
+                              .contains(item.id)) {
+                            widget.employeeCurrentGroups.add(
+                                EmployeeGroup.fromMap(
+                                    {"name": item.name, "_id": item.id}));
+                            widget.employeeCurrentGroupsList.add(item.id);
+                          }
                         });
                       },
                       key: acKey,
@@ -620,7 +600,7 @@ class _EmployeeInfoRowState extends State<EmployeeInfoRow>
                       itemBuilder: (context, suggestion) => Padding(
                           child: ListTile(
                             title: Text(suggestion.name),
-//                              trailing: Text("Grroups: ${suggestion.name}")
+//                              trailing: Text("Groups: ${suggestion.name}")
                           ),
                           padding: EdgeInsets.all(8.0)),
                       itemSorter: (a, b) => a.name == b.name ? 0 : -1,
@@ -637,122 +617,35 @@ class _EmployeeInfoRowState extends State<EmployeeInfoRow>
             padding: EdgeInsets.only(top: Measurements.width * 0.020),
           ),
         ],
-      );
-    }
-
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-//        Container(
-//          decoration: BoxDecoration(
-//            color: Colors.white.withOpacity(0.1),
-//            borderRadius: BorderRadius.only(
-//                topLeft: Radius.circular(15), topRight: Radius.circular(15)),
-//          ),
-//          child: InkWell(
-//            child: Row(
-//              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//              children: <Widget>[
-//                Container(
-////                  child: Text(Language.getProductStrings("sections.employee")),
-//                  child: Row(
-//                    children: <Widget>[
-//                      Icon(
-//                        Icons.person,
-//                        size: 28,
-//                      ),
-//                      SizedBox(width: 10),
-//                      Text(
-//                        "Info",
-//                        style: TextStyle(fontSize: 18),
-//                      ),
-//                    ],
-//                  ),
-//                  padding: EdgeInsets.symmetric(
-//                      horizontal: Measurements.width * 0.05),
-//                ),
-//                IconButton(
-//                  icon: Icon(isOpen
-//                      ? Icons.keyboard_arrow_up
-//                      : Icons.keyboard_arrow_down),
-//                  onPressed: () {
-//                    widget.openedRow.notifyListeners();
-//                    widget.openedRow.value = 0;
-//                  },
-//                ),
-//              ],
-//            ),
-//            onTap: () {
-//              widget.openedRow.notifyListeners();
-//              widget.openedRow.value = 0;
-//            },
-//          ),
-//        ),
-        AnimatedContainer(
-            color: Colors.white.withOpacity(0.05),
-            duration: Duration(milliseconds: 200),
-            child: Container(
-              width: _isPortrait ? Measurements.width : double.infinity,
-              child: isOpen
-                  ? AnimatedSize(
-                      duration: Duration(milliseconds: 500),
-                      curve: Curves.easeInOut,
-                      vsync: this,
-                      child: Container(
-                        color: Colors.black.withOpacity(0.3),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                getEmployeeInfoRow(),
-                              ],
-                            )
-                          ],
-                        ),
-                      ),
-                    )
-                  : Container(width: 0, height: 0),
-            )),
-        Container(
-            color: Colors.white.withOpacity(0.1),
-            child: isOpen
-                ? Divider(
-                    color: Colors.white.withOpacity(0.4),
-                  )
-                : Divider(
-                    color: Colors.white.withOpacity(0.8),
-                  )),
-        //
-      ],
+      ),
     );
   }
 
   Future<List<BusinessEmployeesGroups>> fetchEmployeesGroupsList(
-      String search, bool init, GlobalStateModel globalStateModel) async {
+      String search,
+      bool init,
+      GlobalStateModel globalStateModel,
+      int limit,
+      int pageNumber) async {
+    GroupsList groupsList;
     SettingsApi api = SettingsApi();
 
-//    employeeCurrentGroups = [];
-//    for (var group in widget.employee.groups) {
-//      employeeCurrentGroups.add(group.id);
-//    }
+    String queryParams = "?limit=$limit&page=$pageNumber";
 
-    var businessEmployeesGroups = await api
-        .getBusinessEmployeesGroupsList(globalStateModel.currentBusiness.id,
-            GlobalUtils.activeToken.accessToken, context)
+    await api
+        .getBusinessEmployeesGroupsList(GlobalUtils.activeToken.accessToken,
+            globalStateModel.currentBusiness.id, queryParams)
         .then((businessEmployeesGroupsData) {
       print(
           "businessEmployeesGroupsData data loaded: $businessEmployeesGroupsData");
 
       employeesGroupsList = [];
-      for (var group in businessEmployeesGroupsData) {
+
+      groupsList = GroupsList.fromMap(businessEmployeesGroupsData);
+
+      for (var group in groupsList.data) {
         print("group: $group");
-        var groupData = BusinessEmployeesGroups.fromMap(group);
-        if (!widget.employeeCurrentGroups.contains(groupData.id)) {
-          employeesGroupsList.add(groupData);
-        }
+        employeesGroupsList.add(group);
       }
 
       return employeesGroupsList;
@@ -768,18 +661,6 @@ class _EmployeeInfoRowState extends State<EmployeeInfoRow>
       }
     });
 
-    return businessEmployeesGroups;
+    return employeesGroupsList;
   }
-
-//  Future<void> _addEmployeeToGroup(EmployeesStateModel employeesStateModel,
-//      BusinessEmployeesGroups group) async {
-//    return employeesStateModel.addEmployeeToGroup(group.id, widget.employee.id);
-//  }
-//
-//  Future<void> _deleteEmployeeFromGroup(
-//      EmployeesStateModel employeesStateModel, String groupId) async {
-//    return employeesStateModel.deleteEmployeeFromGroup(
-//        groupId, widget.employee.id);
-//  }
-
 }

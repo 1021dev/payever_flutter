@@ -4,23 +4,26 @@ const double _kPanelHeaderCollapsedHeight = 25;
 const double _kPanelHeaderExpandedHeight = 25;
 
 class CustomExpansionPanelList extends StatelessWidget {
-  const CustomExpansionPanelList(
-      {Key key,
-      this.children: const <ExpansionPanel>[],
-      this.expansionCallback,
-      @required this.isWithCustomIcon,
-      this.animationDuration: kThemeAnimationDuration})
-      : assert(children != null),
-        assert(animationDuration != null),
-        super(key: key);
-
   final List<ExpansionPanel> children;
 
   final ExpansionPanelCallback expansionCallback;
 
   final Duration animationDuration;
 
+  final bool customPadding;
+
   final bool isWithCustomIcon;
+
+  const CustomExpansionPanelList(
+      {Key key,
+      this.children: const <ExpansionPanel>[],
+      this.expansionCallback,
+      this.customPadding,
+      @required this.isWithCustomIcon,
+      this.animationDuration: kThemeAnimationDuration})
+      : assert(children != null),
+        assert(animationDuration != null),
+        super(key: key);
 
   bool _isChildExpanded(int index) {
     return children[index].isExpanded;
@@ -44,14 +47,14 @@ class CustomExpansionPanelList extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          new Expanded(
-            child: new AnimatedContainer(
+          Expanded(
+            child: AnimatedContainer(
               duration: animationDuration,
               curve: Curves.fastOutSlowIn,
               margin: _isChildExpanded(index)
                   ? kExpandedEdgeInsets
                   : EdgeInsets.zero,
-              child: new Container(
+              child: Container(
                 child: children[index].headerBuilder(
                   context,
                   children[index].isExpanded,
@@ -107,7 +110,7 @@ class CustomExpansionPanelList extends StatelessWidget {
                       expansionCallback(index, _isChildExpanded(index));
                   },
                   child: Container(
-                      padding: EdgeInsets.only(left: 25),
+                      padding: EdgeInsets.only(left: 15),
                       alignment: Alignment.centerLeft,
                       height: 50,
                       child: header),
@@ -124,8 +127,9 @@ class CustomExpansionPanelList extends StatelessWidget {
                   child: AnimatedCrossFade(
                     firstChild: Container(height: 0.0),
                     secondChild: Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+                      padding: customPadding
+                          ? EdgeInsets.symmetric(horizontal: 5, vertical: 1)
+                          : EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                       child: Row(
                         children: <Widget>[
                           children[index].body,
@@ -156,7 +160,7 @@ class CustomExpansionPanelList extends StatelessWidget {
         ));
     }
 
-    return new Column(
+    return Column(
       children: items,
     );
   }

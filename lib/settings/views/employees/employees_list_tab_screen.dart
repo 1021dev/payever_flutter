@@ -20,31 +20,26 @@ class EmployeesListTabScreen extends StatefulWidget {
 
 class _EmployeesListTabScreenState extends State<EmployeesListTabScreen> {
   GlobalStateModel globalStateModel;
+  SettingsApi api;
 
   @override
   void initState() {
     super.initState();
   }
 
-  Future<List<Employees>> fetchEmployeesList(
-      String search, bool init, GlobalStateModel globalStateModel) async {
-    List<Employees> employeesList = List<Employees>();
+  Future<EmployeesList> fetchEmployeesList(String search, bool init,
+      GlobalStateModel globalStateModel, int limit, int pageNumber) async {
+    EmployeesList employeesList;
 
-    SettingsApi api = SettingsApi();
+    String queryParams = "?limit=$limit&page=$pageNumber";
 
     await api
-        .getEmployeesList(globalStateModel.currentBusiness.id,
-            GlobalUtils.activeToken.accessToken, context)
+        .getEmployeesList(GlobalUtils.activeToken.accessToken,
+            globalStateModel.currentBusiness.id, queryParams)
         .then((employeesData) {
-      print("Employees data loaded: $employeesData");
+      print("Employees data loaded in tab: $employeesData");
 
-      for (var employee in employeesData) {
-        print("employee: $employee");
-
-        employeesList.add(Employees.fromMap(employee));
-      }
-
-      return employeesList;
+      employeesList = EmployeesList.fromMap(employeesData);
     }).catchError((onError) {
       print("Error loading employees: $onError");
 
@@ -63,15 +58,38 @@ class _EmployeesListTabScreenState extends State<EmployeesListTabScreen> {
   @override
   Widget build(BuildContext context) {
     globalStateModel = Provider.of<GlobalStateModel>(context);
-    return CustomFutureBuilder<List<Employees>>(
-        future: fetchEmployeesList("", true, globalStateModel),
+    api = Provider.of<SettingsApi>(context);
+
+    return CustomFutureBuilder<EmployeesList>(
+        future: fetchEmployeesList("", true, globalStateModel, 20, 1),
         errorMessage: "Error loading employees",
         onDataLoaded: (results) {
-          return EmployeesCollapsingList(
-            employeesData: results,
-            updateResults: () {
-              setState(() {});
-            },
+          return Column(
+            children: <Widget>[
+              SizedBox(
+                height: 10,
+              ),
+              Container(
+                child: Center(
+                  child: Text(
+                    "${results.count} employees",
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Expanded(
+                child: EmployeesCollapsingList(
+                  count: results.count,
+                  employeesData: results.data,
+                  updateResults: () {
+                    setState(() {});
+                  },
+                ),
+              ),
+            ],
           );
         });
   }
@@ -81,11 +99,15 @@ bool _isPortrait;
 bool _isTablet;
 
 class EmployeesCollapsingList extends StatelessWidget {
+  final int count;
   final List<Employees> employeesData;
   final VoidCallback updateResults;
 
   EmployeesCollapsingList(
-      {Key key, @required this.employeesData, this.updateResults})
+      {Key key,
+      @required this.count,
+      @required this.employeesData,
+      this.updateResults})
       : super(key: key);
 
   final _formKey = GlobalKey<FormState>();
@@ -199,7 +221,8 @@ class EmployeesCollapsingList extends StatelessWidget {
                                     alignment: Alignment.centerLeft,
 //                    width: Measurements.width * 0.2,
                                     child: AutoSizeText(
-                                        _currentEmployee.fullName,
+                                        _currentEmployee.fullName ??
+                                            _currentEmployee.email,
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 1,
                                         softWrap: false),
@@ -230,7 +253,7 @@ class EmployeesCollapsingList extends StatelessWidget {
 //                                ),
                                 InkWell(
                                   child: SvgPicture.asset(
-                                    "images/xsinacircle.svg",
+                                    "assets/images/xsinacircle.svg",
                                     height: _isTablet
                                         ? Measurements.width * 0.05
                                         : Measurements.width * 0.08,

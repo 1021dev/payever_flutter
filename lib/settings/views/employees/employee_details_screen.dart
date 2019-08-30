@@ -45,7 +45,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
   Future<List<BusinessApps>> getBusinessApps(
       EmployeesStateModel employeesStateModel) async {
     List<BusinessApps> businessApps = List<BusinessApps>();
-    var apps = await employeesStateModel.getAppsBusinessInfo();
+    var apps = await employeesStateModel.getBusinessAppsInfo();
 
     for (var app in apps) {
       var appData = BusinessApps.fromMap(app);
@@ -83,7 +83,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
     employeesStateModel.changeFirstName(widget.employee.firstName);
     employeesStateModel.changeLastName(widget.employee.lastName);
     employeesStateModel.changeEmail(widget.employee.email);
-    employeesStateModel.changePosition(widget.employee.position);
+    employeesStateModel.changePosition(widget.employee.positionType);
 
     return OrientationBuilder(
         builder: (BuildContext context, Orientation orientation) {
@@ -374,8 +374,8 @@ class _EmployeeInfoRowDetailsState extends State<EmployeeInfoRowDetails>
     }
 
     var businessEmployeesGroups = await api
-        .getBusinessEmployeesGroupsList(globalStateModel.currentBusiness.id,
-            GlobalUtils.activeToken.accessToken, context)
+        .getBusinessEmployeesGroupsList(GlobalUtils.activeToken.accessToken,
+    globalStateModel.currentBusiness.id, "")
         .then((businessEmployeesGroupsData) {
       print(
           "businessEmployeesGroupsData data loaded: $businessEmployeesGroupsData");
@@ -714,7 +714,7 @@ class _EmployeeInfoRowDetailsState extends State<EmployeeInfoRowDetails>
                                   width: 1)),
                           child: DropDownMenu(
                             optionsList: GlobalUtils.positionsListOptions(),
-                            defaultValue: widget.employee.position,
+                            defaultValue: widget.employee.positionType,
                             placeHolderText: "Position",
                             onChangeSelection: (selectedOption, index) {
                               print("selectedOption: $selectedOption");

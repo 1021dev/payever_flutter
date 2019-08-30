@@ -231,8 +231,6 @@ class _VariantPopUpState extends State<VariantPopUp> {
     }
   }
 
-  List<Widget> optionsList = List<Widget>();
-
   @override
   Widget build(BuildContext context) {
     return OrientationBuilder(
@@ -531,6 +529,7 @@ class _VariantPopUpState extends State<VariantPopUp> {
     );
   }
 
+  /// A new row is added is added by default
   addOptionValueToList() {
     setState(() {
       variantOptionValueList.add(VariantOptionValue("", ""));

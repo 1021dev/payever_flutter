@@ -70,8 +70,8 @@ class _EmployeesScreenState extends State<EmployeesScreen>
                       Navigator.push(
                           context,
                           PageTransition(
-                            child: ProxyProvider<SettingsApi,
-                                EmployeesStateModel>(
+                            child:
+                                ProxyProvider<SettingsApi, EmployeesStateModel>(
                               builder: (context, api, employeesState) =>
                                   EmployeesStateModel(globalStateModel, api),
                               child: AddEmployeeScreen(),
@@ -82,8 +82,8 @@ class _EmployeesScreenState extends State<EmployeesScreen>
                       Navigator.push(
                           context,
                           PageTransition(
-                            child: ProxyProvider<SettingsApi,
-                                EmployeesStateModel>(
+                            child:
+                                ProxyProvider<SettingsApi, EmployeesStateModel>(
                               builder: (context, api, employeesState) =>
                                   EmployeesStateModel(globalStateModel, api),
                               child: AddGroupScreen(),
@@ -162,13 +162,13 @@ class _EmployeesScreenState extends State<EmployeesScreen>
                     physics: NeverScrollableScrollPhysics(),
                     controller: tabController,
                     children: <Widget>[
-//                                EmployeesListTabScreen(),
+//                      EmployeesListTabScreen(),
                       ProxyProvider<SettingsApi, EmployeesStateModel>(
                         builder: (context, api, employeesState) =>
                             EmployeesStateModel(globalStateModel, api),
                         child: EmployeesListTabScreen(),
                       ),
-//                                EmployeesGroupsListTabScreen(),
+//                      EmployeesGroupsListTabScreen(),
                       ProxyProvider<SettingsApi, EmployeesStateModel>(
                         builder: (context, api, employeesState) =>
                             EmployeesStateModel(globalStateModel, api),

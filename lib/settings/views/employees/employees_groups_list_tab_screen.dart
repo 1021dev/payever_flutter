@@ -27,29 +27,26 @@ class _EmployeesGroupsListTabScreenState
     super.initState();
   }
 
-  Future<List<BusinessEmployeesGroups>> fetchEmployeesGroupsList(
-      String search, bool init, GlobalStateModel globalStateModel) async {
-    List<BusinessEmployeesGroups> employeesGroupsList =
-        List<BusinessEmployeesGroups>();
-
+  Future<GroupsList> fetchEmployeesGroupsList(String search, bool init,
+      GlobalStateModel globalStateModel, int limit, int pageNumber) async {
     SettingsApi api = SettingsApi();
 
-    var businessEmployeesGroups = await api
-        .getBusinessEmployeesGroupsList(globalStateModel.currentBusiness.id,
-            GlobalUtils.activeToken.accessToken, context)
+    GroupsList groupsList;
+
+    String queryParams = "?limit=$limit&page=$pageNumber";
+
+    await api
+        .getBusinessEmployeesGroupsList(GlobalUtils.activeToken.accessToken,
+            globalStateModel.currentBusiness.id, queryParams)
         .then((businessEmployeesGroupsData) {
-      print(
-          "businessEmployeesGroupsData data loaded: $businessEmployeesGroupsData");
 
-      for (var group in businessEmployeesGroupsData) {
-        print("group: $group");
+      print("Business groups data loaded in tab: $businessEmployeesGroupsData");
 
-        employeesGroupsList.add(BusinessEmployeesGroups.fromMap(group));
-      }
+      groupsList = GroupsList.fromMap(businessEmployeesGroupsData);
 
-      return employeesGroupsList;
+      return groupsList;
     }).catchError((onError) {
-      print("Error loading employees groups: $onError");
+      print("Error loading business employees groups: $onError");
 
       if (onError.toString().contains("401")) {
         GlobalUtils.clearCredentials();
@@ -60,21 +57,42 @@ class _EmployeesGroupsListTabScreenState
       }
     });
 
-    return businessEmployeesGroups;
+    return groupsList;
   }
 
   @override
   Widget build(BuildContext context) {
     globalStateModel = Provider.of<GlobalStateModel>(context);
-    return CustomFutureBuilder<List<BusinessEmployeesGroups>>(
-        future: fetchEmployeesGroupsList("", true, globalStateModel),
+    return CustomFutureBuilder<GroupsList>(
+        future: fetchEmployeesGroupsList("", true, globalStateModel, 20, 1),
         errorMessage: "Error loading employees groups",
         onDataLoaded: (results) {
-          return CollapsingList(
-            employeesGroups: results,
-            updateResults: () {
-              setState(() {});
-            },
+          return Column(
+            children: <Widget>[
+              SizedBox(
+                height: 10,
+              ),
+              Container(
+                child: Center(
+                  child: Text(
+                    "${results.count} groups",
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Expanded(
+                child: CollapsingList(
+                  count: results.count,
+                  employeesGroups: results.data,
+                  updateResults: () {
+                    setState(() {});
+                  },
+                ),
+              ),
+            ],
           );
         });
   }
@@ -84,10 +102,15 @@ bool _isPortrait;
 bool _isTablet;
 
 class CollapsingList extends StatelessWidget {
+  final int count;
   final List<BusinessEmployeesGroups> employeesGroups;
   final VoidCallback updateResults;
 
-  CollapsingList({Key key, @required this.employeesGroups, this.updateResults})
+  CollapsingList(
+      {Key key,
+      @required this.count,
+      @required this.employeesGroups,
+      this.updateResults})
       : super(key: key);
 
   final _formKey = GlobalKey<FormState>();
@@ -206,7 +229,7 @@ class CollapsingList extends StatelessWidget {
                                 ),
                                 InkWell(
                                   child: SvgPicture.asset(
-                                    "images/xsinacircle.svg",
+                                    "assets/images/xsinacircle.svg",
                                     height: _isTablet
                                         ? Measurements.width * 0.05
                                         : Measurements.width * 0.08,

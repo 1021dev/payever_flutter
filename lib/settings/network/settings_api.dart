@@ -9,7 +9,8 @@ import '../utils/utils.dart';
 class SettingsApi extends RestDataSource {
   NetworkUtil _netUtil = NetworkUtil();
 
-  Future<dynamic> addEmployee(Object data, String token, String businessId) {
+  Future<dynamic> addEmployee(String token, String businessId, Object data,
+      String queryParams){
     print("TAG - addEmployee()");
     var body = jsonEncode(data);
     var headers = {
@@ -18,7 +19,7 @@ class SettingsApi extends RestDataSource {
       HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
     };
     return _netUtil
-        .post(RestDataSource.newEmployee + businessId,
+        .post(RestDataSource.newEmployee + businessId + queryParams,
             headers: headers, body: body)
         .then((dynamic result) {
       return result;
@@ -106,7 +107,7 @@ class SettingsApi extends RestDataSource {
   }
 
   Future<dynamic> getEmployeesList(
-      String id, String token, BuildContext context) {
+      String token, String businessId, String queryParams) {
     print("TAG - getEmployeesList()");
 
     var headers = {
@@ -115,8 +116,10 @@ class SettingsApi extends RestDataSource {
       HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
     };
 
+    print("url: ${RestDataSource.employeesList + businessId+queryParams}");
+
     return _netUtil
-        .get(RestDataSource.employeesList + id, headers: headers)
+        .get(RestDataSource.employeesList + businessId+queryParams, headers: headers)
         .then((dynamic result) {
       return result;
     });
@@ -155,8 +158,7 @@ class SettingsApi extends RestDataSource {
     });
   }
 
-  Future<dynamic> getBusinessEmployeesGroupsList(
-      String businessId, String token, BuildContext context) {
+  Future<dynamic> getBusinessEmployeesGroupsList(String token, String businessId, String queryParams) {
     print("TAG - getBusinessEmployeesGroupsList()");
 
     var headers = {
@@ -165,7 +167,7 @@ class SettingsApi extends RestDataSource {
       HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
     };
     return _netUtil
-        .get(RestDataSource.employeeGroups + businessId, headers: headers)
+        .get(RestDataSource.employeeGroups + businessId+queryParams, headers: headers)
         .then((dynamic result) {
       return result;
     });

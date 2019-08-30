@@ -474,15 +474,18 @@ class RestDataSource {
     });
   }
 
-  Future<dynamic> getAppsBusiness(String idBusiness, String token) {
-    print("TAG - getAppsBusiness()");
+  Future<dynamic> getBusinessApps(String businessId, String token) {
+    print("TAG - getBusinessApps()");
+
+    print("URL: ${businessApps + businessId}");
+
     var headers = {
       HttpHeaders.authorizationHeader: "Bearer $token",
       HttpHeaders.contentTypeHeader: "application/json",
       HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
     };
     return _netUtil
-        .get(businessApps + idBusiness, headers: headers)
+        .get(businessApps + businessId, headers: headers)
         .then((dynamic result) {
       return result;
     });

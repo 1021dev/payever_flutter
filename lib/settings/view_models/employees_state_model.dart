@@ -34,8 +34,11 @@ class EmployeesStateModel extends ChangeNotifier with Validators {
   Stream<String> get position =>
       _positionController.stream.transform(validateField);
 
-  Stream<bool> get submitValid => Observable.combineLatest4(
-      firstName, lastName, email, position, (a, b, c, d) => true);
+  /// For now we only need to validate the email and position with combineLatest2
+//  Stream<bool> get submitValid => Observable.combineLatest4(
+//      firstName, lastName, email, position, (a, b, c, d) => true);
+  Stream<bool> get submitValid => Observable.combineLatest2(
+      email, position, (a, b) => true);
 
   Stream<String> get group => _groupController.stream.transform(validateField);
 
@@ -133,13 +136,14 @@ class EmployeesStateModel extends ChangeNotifier with Validators {
   }
 
   ///API CALLS
-  Future<dynamic> getAppsBusinessInfo() async {
-    return api.getAppsBusiness(businessId, accessToken);
+  Future<dynamic> getBusinessAppsInfo() async {
+    return api.getBusinessApps(businessId, accessToken);
   }
 
-  Future<void> createNewEmployee(Object data) async {
-    return api.addEmployee(data, accessToken, businessId);
+  Future<void> createNewEmployee(Object data, String queryParams) async {
+    return api.addEmployee(accessToken, businessId, data, queryParams);
   }
+
 
   Future<void> updateEmployee(Object data, String userId) async {
     return api.updateEmployee(data, accessToken, businessId, userId);

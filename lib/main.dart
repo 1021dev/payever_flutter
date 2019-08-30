@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:payever/settings/network/network.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 
@@ -63,6 +64,7 @@ class _MyAppState extends State<MyApp> {
       providers: [
         Provider.value(value: globalStateModel),
         Provider.value(value: RestDataSource()),
+        Provider.value(value: SettingsApi()),
         ChangeNotifierProvider<GlobalStateModel>(
             builder: (BuildContext context) => globalStateModel),
         ChangeNotifierProvider<PosCartStateModel>(

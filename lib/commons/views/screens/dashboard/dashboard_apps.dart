@@ -7,16 +7,14 @@ import 'package:provider/provider.dart';
 
 import '../../../view_models/view_models.dart';
 import '../../../models/models.dart';
-import '../../../network/network.dart';
 import '../../../utils/utils.dart';
-
 
 import '../../../../transactions/views/views.dart';
 import '../../../../products/views/views.dart';
 import '../../../../pos/view_models/pos_state_model.dart';
 import '../../../../pos/network/network.dart';
 import '../../../../pos/views/views.dart';
-import '../../../../settings/views/employees/employees.dart';
+import '../../../../settings/views/views.dart';
 
 bool _isTablet;
 
@@ -28,7 +26,7 @@ class DashboardApps extends StatefulWidget {
 class _DashboardAppsState extends State<DashboardApps> {
   DashboardStateModel dashboardStateModel;
 
-  List<String> _availableApps = ["transactions", "pos", "products"];
+  List<String> _availableApps = ["transactions", "pos", "products" , "settings"];
 
   @override
   Widget build(BuildContext context) {
@@ -124,13 +122,13 @@ class _AppViewState extends State<AppView> {
                   _isLoading = false;
                 });
                 break;
-//              case "settings":
-//                loadSettings();
-//                setState(() {
-//                  _isLoading = false;
-//                });
-//                print("Settings loaded");
-//                break;
+              case "settings":
+                loadSettings();
+                setState(() {
+                  _isLoading = false;
+                });
+                print("Settings loaded");
+                break;
               default:
             }
           },
@@ -176,14 +174,6 @@ class _AppViewState extends State<AppView> {
     setState(() {
       _isLoading = false;
     });
-//    return Navigator.push(
-//        context,
-//        PageTransition(
-//            child: NativePosScreen(
-//                terminal: dashboardStateModel.activeTerminal,
-//                business: globalStateModel.currentBusiness),
-//            type: PageTransitionType.fade,duration: Duration(milliseconds: 50)));
-
 
     return Navigator.push(
         context,
@@ -207,8 +197,8 @@ class _AppViewState extends State<AppView> {
     Navigator.push(
         context,
         PageTransition(
-//          child: SettingsScreen(),
-          child: EmployeesScreen(),
+          child: SettingsScreen(),
+//          child: EmployeesScreen(),
           type: PageTransitionType.fade,
         ));
   }

@@ -14,9 +14,10 @@ class Employees {
   final int v;
 
 //  final List<EmployeePosition> position;
-  final String position;
   final String idAgain;
+  final String businessId;
   final int status;
+  final String positionType;
 
   Employees(
       {this.roles,
@@ -29,14 +30,15 @@ class Employees {
       this.email,
       this.createdAt,
       this.updatedAt,
+      this.positionType,
+      this.businessId,
       this.v,
-      this.position,
       this.idAgain,
       this.status});
 
   factory Employees.fromMap(dynamic obj) {
     List<UserRoles> rolesDataList = List<UserRoles>();
-    if (obj['roles'] != null && obj['roles'] != []) {
+    if(obj['roles'] != null && obj['roles'] != []) {
       var rolesData = obj['roles'] as List;
       rolesDataList = rolesData.map((data) => UserRoles.fromMap(data)).toList();
     }
@@ -54,10 +56,12 @@ class Employees {
       firstName: obj['first_name'],
       lastName: obj['last_name'],
       fullName: obj['fullName'],
-      position: obj['position'],
+      positionType: obj['positionType'],
+      businessId: obj['businessId'],
       email: obj['email'],
       id: obj['_id'],
       status: obj['status'] ?? 1,
+
     );
   }
 }

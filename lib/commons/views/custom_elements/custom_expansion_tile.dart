@@ -10,6 +10,7 @@ class CustomExpansionTile extends StatefulWidget {
   final int listSize;
   final bool addBorderRadius;
   final bool scrollable;
+  final bool customPadding;
   final Color headerColor;
   final Color bodyColor;
 
@@ -22,6 +23,7 @@ class CustomExpansionTile extends StatefulWidget {
       this.addBorderRadius,
       this.bodyColor,
       this.headerColor,
+      this.customPadding,
       this.scrollable = true})
       : super(key: key);
 
@@ -33,6 +35,7 @@ class _CustomExpansionTileState extends State<CustomExpansionTile> {
   int _activeIndex = 0;
 
   bool addBorderRadius = true;
+  bool customPadding = false;
 
   @override
   void initState() {
@@ -41,6 +44,12 @@ class _CustomExpansionTileState extends State<CustomExpansionTile> {
     if (widget.addBorderRadius != null) {
       setState(() {
         addBorderRadius = widget.addBorderRadius;
+      });
+    }
+
+    if (widget.customPadding != null) {
+      setState(() {
+        customPadding = widget.customPadding;
       });
     }
   }
@@ -72,6 +81,7 @@ class _CustomExpansionTileState extends State<CustomExpansionTile> {
                         : widget.headerColor,
                   ),
             child: CustomExpansionPanelList(
+              customPadding: customPadding,
               isWithCustomIcon: widget.isWithCustomIcon,
               expansionCallback: (int index, bool status) {
                 setState(() {
@@ -82,7 +92,8 @@ class _CustomExpansionTileState extends State<CustomExpansionTile> {
                 ExpansionPanel(
                   isExpanded: _activeIndex == i,
                   canTapOnHeader: true,
-                  headerBuilder: (BuildContext context, bool isExpanded) =>widget.widgetsTitleList[i],
+                  headerBuilder: (BuildContext context, bool isExpanded) =>
+                      widget.widgetsTitleList[i],
                   body: widget.widgetsBodyList[i],
                 ),
               ],
