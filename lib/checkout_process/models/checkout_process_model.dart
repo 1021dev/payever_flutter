@@ -108,7 +108,7 @@ class Section{
   Section(this._code,this._enabled,this._excludedChannels,this._fixed,this._order,this._subsections);
 
   factory Section.fromMap(obj){
-    print("obj: $obj");
+    
     List<String> tempExcludedChannels = List();
     if(obj[CheckoutProcessUtils.DB_CHECKOUT_P_SECTION_EXCLUDEDCHANNELS].isNotEmpty){
       for(String exch in obj[CheckoutProcessUtils.DB_CHECKOUT_P_SECTION_EXCLUDEDCHANNELS]){

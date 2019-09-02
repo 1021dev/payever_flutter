@@ -9,6 +9,7 @@ class _CheckoutOrderSectionState extends State<CheckoutOrderSection> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      color:Colors.red,
       child: Text("order"),
     );
   }

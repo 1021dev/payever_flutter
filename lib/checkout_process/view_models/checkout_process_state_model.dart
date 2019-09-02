@@ -5,7 +5,7 @@ import '../models/flow_object.dart';
 import '../views/views.dart';
 class CheckoutProcessStateModel extends ChangeNotifier {
 
-  CheckoutProcessStateModel(this.dashboardStateModel);
+  CheckoutProcessStateModel();
 
   DashboardStateModel dashboardStateModel;
 

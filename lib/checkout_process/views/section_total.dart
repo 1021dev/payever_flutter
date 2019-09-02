@@ -9,6 +9,7 @@ class _CheckoutTotalSectionState extends State<CheckoutTotalSection> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      color: Colors.lime,
       child: Text("total"),
     );
   }

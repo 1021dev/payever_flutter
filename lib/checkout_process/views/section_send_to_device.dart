@@ -9,6 +9,7 @@ class _CheckoutS2DeviceSectionState extends State<CheckoutS2DeviceSection> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      color: Colors.blue,
       child: Text("send 2 dev"),
     );
   }
