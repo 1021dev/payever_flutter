@@ -900,7 +900,6 @@ class SimpleTerminal extends StatelessWidget {
         ),
         onTap: () {
 //          Navigator.push(context, PageTransition(child:NativePosScreen(terminal:currentTerminal,business:Provider.of<GlobalStateModel>(context).currentBusiness),type:PageTransitionType.fade));
-
           Navigator.push(
               context,
               PageTransition(

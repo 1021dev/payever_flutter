@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/widgets.dart';
 
-
 class Language {
   static const String deft = "en";
 
@@ -10,21 +9,24 @@ class Language {
     if (language == null) language = deft;
     DefaultAssetBundle.of(context)
 //        .loadString("../translations/widget_app/$language.json", cache: false)
-        .loadString("assets/translations/widget_app/$language.json", cache: false)
+        .loadString("assets/translations/widget_app/$language.json",
+            cache: false)
         .then((value) {
       widgetStrings = JsonDecoder().convert(value);
     }).catchError((onError) {
       print(onError);
     });
     DefaultAssetBundle.of(context)
-        .loadString("assets/translations/connect_app/$language.json", cache: false)
+        .loadString("assets/translations/connect_app/$language.json",
+            cache: false)
         .then((value) {
       connectStrings = JsonDecoder().convert(value);
     }).catchError((onError) {
       print(onError);
     });
     DefaultAssetBundle.of(context)
-        .loadString("assets/translations/commerceos/$language.json", cache: false)
+        .loadString("assets/translations/commerceos/$language.json",
+            cache: false)
         .then((value) {
       commerceOsStrings = JsonDecoder().convert(value);
     }).catchError((onError) {
@@ -35,7 +37,8 @@ class Language {
 
   Future<void> loadRest(context) async {
     DefaultAssetBundle.of(context)
-        .loadString("assets/translations/transaction_app/$language.json", cache: false)
+        .loadString("assets/translations/transaction_app/$language.json",
+            cache: false)
         .then((value) {
       transactionStrings = JsonDecoder().convert(value);
     }).catchError((onError) {
@@ -51,23 +54,46 @@ class Language {
       print(onError);
     });
     DefaultAssetBundle.of(context)
-        .loadString("assets/translations/product_app/$language.json", cache: false)
+        .loadString("assets/translations/product_app/$language.json",
+            cache: false)
         .then((value) {
       productStrings = JsonDecoder().convert(value);
     }).catchError((onError) {
       print(onError);
     });
     DefaultAssetBundle.of(context)
-        .loadString("assets/translations/product_app/product_list/$language.json",
+        .loadString(
+            "assets/translations/product_app/product_list/$language.json",
             cache: false)
         .then((value) {
       productListStrings = JsonDecoder().convert(value);
     }).catchError((onError) {
       print(onError);
     });
-    DefaultAssetBundle.of(context).loadString("assets/translations/settings_app/$language.json",cache: false).then((value){
+    DefaultAssetBundle.of(context)
+        .loadString(
+            "assets/translations/checkout/$language.json",
+            cache: false)
+        .then((value) {
+      checkoutStrings = JsonDecoder().convert(value);
+    }).catchError((onError) {
+      print(onError);
+    });
+    DefaultAssetBundle.of(context)
+        .loadString(
+            "assets/translations/checkout/sms/$language.json",
+            cache: false)
+        .then((value) {
+      checkoutSMSStrings = JsonDecoder().convert(value);
+    }).catchError((onError) {
+      print(onError);
+    });
+    DefaultAssetBundle.of(context)
+        .loadString("assets/translations/settings_app/$language.json",
+            cache: false)
+        .then((value) {
       settingsStrings = JsonDecoder().convert(value);
-    }).catchError((onError){
+    }).catchError((onError) {
       print(onError);
     });
 
@@ -98,6 +124,8 @@ class Language {
   static dynamic cartStrings = Map();
   static dynamic customStrings = Map();
   static dynamic settingsStrings = Map();
+  static dynamic checkoutStrings = Map();
+  static dynamic checkoutSMSStrings = Map();
 
   static String getWidgetStrings(String tag) => widgetStrings[tag] ?? tag;
 
@@ -122,6 +150,10 @@ class Language {
   static String getCustomStrings(String tag) => customStrings[tag] ?? tag;
 
   static String getSettingsStrings(String tag) => settingsStrings[tag] ?? tag;
+
+  static String getCheckoutStrings(String tag) => checkoutStrings[tag] ?? tag;
+  
+  static String getCheckoutSMSStrings(String tag) => checkoutSMSStrings[tag] ?? tag;
 
   static String language;
 

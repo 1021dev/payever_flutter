@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 const double _kPanelHeaderCollapsedHeight = 25;
 const double _kPanelHeaderExpandedHeight = 25;
 
+
 class CustomExpansionPanelList extends StatelessWidget {
   const CustomExpansionPanelList(
       {Key key,
       this.children: const <ExpansionPanel>[],
       this.expansionCallback,
+      this.iconColor = Colors.white,
       @required this.isWithCustomIcon,
       this.animationDuration: kThemeAnimationDuration})
       : assert(children != null),
@@ -21,6 +23,7 @@ class CustomExpansionPanelList extends StatelessWidget {
   final Duration animationDuration;
 
   final bool isWithCustomIcon;
+  final Color iconColor;
 
   bool _isChildExpanded(int index) {
     return children[index].isExpanded;
@@ -63,6 +66,7 @@ class CustomExpansionPanelList extends StatelessWidget {
             // margin: const EdgeInsetsDirectional.only(end: 8),
             child: isWithCustomIcon
                 ? MyCustomExpandIcon(
+                    color: iconColor,
                     isExpanded: _isChildExpanded(index),
                     padding: const EdgeInsets.all(16.0),
                     onPressed: (bool isExpanded) {
@@ -70,7 +74,7 @@ class CustomExpansionPanelList extends StatelessWidget {
                         expansionCallback(index, isExpanded);
                     },
                   )
-                : ExpandIcon(
+                : ExpandIcon( color: iconColor,
                     isExpanded: _isChildExpanded(index),
                     padding: const EdgeInsets.all(16.0),
                     onPressed: (bool isExpanded) {
@@ -193,7 +197,7 @@ class MyCustomExpandIcon extends StatefulWidget {
     this.size = 24.0,
     @required this.onPressed,
     this.padding = const EdgeInsets.all(8.0),
-    this.color,
+    this.color = Colors.white,
     this.disabledColor,
     this.expandedColor,
   })  : assert(isExpanded != null),
@@ -269,7 +273,7 @@ class _MyCustomExpandIconState extends State<MyCustomExpandIcon>
       child: IconButton(
         //padding: widget.padding,
         //color: _iconColor,
-        color: Colors.white,
+        color: widget.color,
         disabledColor: widget.disabledColor,
         onPressed: widget.onPressed == null ? null : _handlePressed,
         icon: widget.isExpanded ? Icon(Icons.remove) : Icon(Icons.add),

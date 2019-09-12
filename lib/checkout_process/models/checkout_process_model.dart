@@ -6,17 +6,19 @@ class CheckoutStructure{
   String _channelType;
   String _currency;
   List<CheckoutLanguage> _languages = List();
+  String _message;
   // List<dynamic> _limits = List();
   dynamic _limits;
   String _name;
   List<String> _paymentMethods = List();
-  List<Section> _sections= List();
+  List<CheckoutSection> _sections= List();
   bool _testingMode;
   String _uuid;
+  String _phoneNumber;
 
   CheckoutStructure(this._businessUuid,this._channelType,this._currency,
                     this._languages,this._limits,this._name,this._paymentMethods,
-                    this._sections,this._testingMode,this._uuid);
+                    this._sections,this._testingMode,this._uuid,this._phoneNumber,this._message);
 
   factory CheckoutStructure.fromMap(dynamic obj){
      
@@ -35,10 +37,10 @@ class CheckoutStructure{
       }
     }
 
-    List<Section> tempSections = List();
+    List<CheckoutSection> tempSections = List();
     if(obj[0][CheckoutProcessUtils.DB_CHECKOUT_P_SECTIONS].isNotEmpty){
       for(var section in obj[0][CheckoutProcessUtils.DB_CHECKOUT_P_SECTIONS]){
-        tempSections.add(Section.fromMap(section));
+        tempSections.add(CheckoutSection.fromMap(section));
       }
     }
 
@@ -53,6 +55,8 @@ class CheckoutStructure{
       tempSections,
       obj[0][CheckoutProcessUtils.DB_CHECKOUT_P_TESTINGMODE],
       obj[0][CheckoutProcessUtils.DB_CHECKOUT_P_UUID],
+      obj[0][CheckoutProcessUtils.DB_CHECKOUT_P_PHONENUMBER],
+      obj[0][CheckoutProcessUtils.DB_CHECKOUT_P_MESSAGE],
     );
   }
 
@@ -63,9 +67,11 @@ class CheckoutStructure{
   List<dynamic> get limits => _limits;
   String get name => _name;
   List<String>  get paymentMethods => _paymentMethods;
-  List<Section>  get sections => _sections;
+  List<CheckoutSection>  get sections => _sections;
   bool get testingMode => _testingMode;
   String get uuid => _uuid;
+  String get phoneNumber => _phoneNumber;
+  String get message => _message;
 
 }
 class CheckoutLanguage{
@@ -80,13 +86,11 @@ class CheckoutLanguage{
   factory CheckoutLanguage.fromMap(obj) {
     
     return CheckoutLanguage(
-
       obj[CheckoutProcessUtils.DB_CHECKOUT_P_LANGUAGE_ACTIVE],
       obj[CheckoutProcessUtils.DB_CHECKOUT_P_LANGUAGE_CODE],
       obj[CheckoutProcessUtils.DB_CHECKOUT_P_LANGUAGE_ISDEFAULT],
       obj[CheckoutProcessUtils.DB_CHECKOUT_P_LANGUAGE_NAME],
       obj[CheckoutProcessUtils.DB_CHECKOUT_P_LANGUAGE_ID],
-
     );
   }
 
@@ -97,7 +101,7 @@ class CheckoutLanguage{
   String  get id => _id;
 
 }
-class Section{
+class CheckoutSection{
   String _code;
   bool _enabled;
   List<String> _excludedChannels = List();
@@ -105,9 +109,9 @@ class Section{
   num _order;
   List<SubSection> _subsections = List();
 
-  Section(this._code,this._enabled,this._excludedChannels,this._fixed,this._order,this._subsections);
+  CheckoutSection(this._code,this._enabled,this._excludedChannels,this._fixed,this._order,this._subsections);
 
-  factory Section.fromMap(obj){
+  factory CheckoutSection.fromMap(obj){
     
     List<String> tempExcludedChannels = List();
     if(obj[CheckoutProcessUtils.DB_CHECKOUT_P_SECTION_EXCLUDEDCHANNELS].isNotEmpty){
@@ -123,7 +127,7 @@ class Section{
       }
     }
 
-    return Section(
+    return CheckoutSection(
       obj[CheckoutProcessUtils.DB_CHECKOUT_P_SECTION_CODE],
       obj[CheckoutProcessUtils.DB_CHECKOUT_P_SECTION_ENABLE],
       tempExcludedChannels,

@@ -53,6 +53,10 @@
 	<string>Used to capture audio for image picker plugin</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>payever</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>payever</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>payever</string>
 	
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>

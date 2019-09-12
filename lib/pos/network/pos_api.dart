@@ -24,9 +24,11 @@ class PosApi extends RestDataSource {
                 idBusiness +
                 RestDataSource.inventoryEnd,
             headers: headers)
-        .then((dynamic res) {
-      return res;
-    });
+        .then(
+      (dynamic res) {
+        return res;
+      },
+    );
   }
 
   Future<dynamic> patchInventoryAdd(
@@ -99,14 +101,13 @@ class PosApi extends RestDataSource {
   }
 
   Future<dynamic> getInventory(
-      String idBusiness, String token, String sku, BuildContext context) async {
+      String idBusiness, String token, String sku, BuildContext context) {
     print("TAG - getInventory()");
     var headers = {
       HttpHeaders.authorizationHeader: "Bearer $token",
       HttpHeaders.contentTypeHeader: "application/json",
       HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
     };
-
     return _netUtil
         .get(
             RestDataSource.inventoryUrl +

@@ -42,7 +42,7 @@ class _SettingsCardInfoState extends State<SettingsCardInfo> {
         icon: AssetImage("assets/images/wallpapericon.png"),
         title: Language.getWidgetStrings(
             "widgets.settings.actions.edit-wallpaper"),
-        action: () => _goToWallpaperScreen(context),
+        action: () => _goToWallpaperScreen(),
       ),
     );
 
@@ -78,27 +78,37 @@ class _SettingsCardInfoState extends State<SettingsCardInfo> {
         });
   }
 
-  _goToWallpaperScreen(context) {
-    DashboardStateModel dashboardStateModel =
-        Provider.of<DashboardStateModel>(context);
-    print(
-        "dashboardStateModel.activeTerminal.channelSet: ${dashboardStateModel.activeTerminal.channelSet}");
+  // _goToWallpaperScreen(context) {
+  //   DashboardStateModel dashboardStateModel =
+  //       Provider.of<DashboardStateModel>(context);
+  //   print(
+  //       "dashboardStateModel.activeTerminal.channelSet: ${dashboardStateModel.activeTerminal.channelSet}");
+  //   Navigator.push(
+  //     context,
+  //     PageTransition(
+  //   //     child: ChangeNotifierProvider<CheckoutProcessStateModel>(
+  //   //       builder: (context) {
+  //   //          var a = CheckoutProcessStateModel();
+  //   //          a.dashboardStateModel = dashboardStateModel;
+  //   //          a.setChannelSet(dashboardStateModel.activeTerminal.channelSet);
+  //   //         return a;
+  //   //       },
+  //   //       child: CheckOutScreen(),
+  //   //     ),
+  //   //     type: PageTransitionType.fade,
+  //   //   ),
+  //   // );
+  //   child: WallpaperScreen(), type: PageTransitionType.fade));
+  // }
+  
+  _goToWallpaperScreen() {
     Navigator.push(
-      context,
-      PageTransition(
-        child: ChangeNotifierProvider<CheckoutProcessStateModel>(
-          builder: (context) {
-             var a = CheckoutProcessStateModel();
-             a.dashboardStateModel = dashboardStateModel;
-             a.setChannelSet(dashboardStateModel.activeTerminal.channelSet);
-            return a;
+        context,
+        PageTransition(
+          child: ChangeNotifierProvider<DashboardStateModel>(builder: (BuildContext context) {
+            return DashboardStateModel();
           },
-          child: CheckOutScreen(),
-        ),
-        type: PageTransitionType.fade,
-      ),
-    );
-    //child: WallpaperScreen(),), type: PageTransitionType.fade));
-    //child: WallpaperScreen(), type: PageTransitionType.fade));
+         child: WallpaperScreen(),), type: PageTransitionType.fade));
   }
+
 }

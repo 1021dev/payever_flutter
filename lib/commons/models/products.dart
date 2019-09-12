@@ -204,8 +204,6 @@ class InventoryModel {
 
   InventoryModel.toMap(dynamic obj) {
 
-    print("obj: $obj");
-
     _barcode = obj[GlobalUtils.DB_INV_MODEL_BARCODE];
     _business = obj[GlobalUtils.DB_INV_MODEL_BUSINESS];
     _createdAt = obj[GlobalUtils.DB_INV_MODEL_CREATED_AT];

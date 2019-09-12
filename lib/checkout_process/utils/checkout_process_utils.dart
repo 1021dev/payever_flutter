@@ -1,7 +1,9 @@
 import '../utils/utils.dart';
 
 class CheckoutProcessUtils extends GlobalUtils{
-  
+
+  static String googleKey = "AIzaSyCa4uc5NLU3nG5GvKWZ-0ojbTIUpZ1yzh8";
+
   static const DB_CHECKOUT_P_LANGUAGE_ACTIVE    = "active";
   static const DB_CHECKOUT_P_LANGUAGE_CODE      = "code";
   static const DB_CHECKOUT_P_LANGUAGE_ISDEFAULT = "isDefault";
@@ -9,7 +11,7 @@ class CheckoutProcessUtils extends GlobalUtils{
   static const DB_CHECKOUT_P_LANGUAGE_ID        = "_id";
 
   static const DB_CHECKOUT_P_SECTION_CODE             = "code";
-  static const DB_CHECKOUT_P_SECTION_ENABLE           = "enable";
+  static const DB_CHECKOUT_P_SECTION_ENABLE           = "enabled";
   static const DB_CHECKOUT_P_SECTION_EXCLUDEDCHANNELS = "excluded_channels";
   static const DB_CHECKOUT_P_SECTION_FIXED            = "fixed";
   static const DB_CHECKOUT_P_SECTION_ORDER            = "order";
@@ -33,6 +35,8 @@ class CheckoutProcessUtils extends GlobalUtils{
   static const DB_CHECKOUT_P_PAYMENTMETHODS       = "paymentMethods";
   static const DB_CHECKOUT_P_TESTINGMODE          = "testingMode";
   static const DB_CHECKOUT_P_UUID                 = "uuid";
+  static const DB_CHECKOUT_P_PHONENUMBER          = "phoneNumber";
+  static const DB_CHECKOUT_P_MESSAGE              = "message";
   static const DB_CHECKOUT_P_SECTIONS             = "sections";
 
 }

@@ -4,6 +4,8 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:payever/checkout_process/views/views.dart';
+import 'package:payever/commons/views/screens/switcher/switcher.dart' as prefix0;
 import 'package:provider/provider.dart';
 
 import '../../commons/views/custom_elements/custom_elements.dart';
@@ -31,7 +33,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     PosCartStateModel cartStateModel = Provider.of<PosCartStateModel>(context);
 
     isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
@@ -90,13 +91,18 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               ),
               onPressed: () {
                 Navigator.push(
-                    context,
-                    PageTransition(
-                        child: POSCart(
-                          parts: widget.parts,
-                        ),
-                        type: PageTransitionType.fade,
-                        duration: Duration(milliseconds: 10)));
+                  context,
+                  PageTransition(
+                  child: CheckOutScreen(
+                    channelSet: widget.parts.currentTerminal.channelSet,
+                    posCartStateModel: cartStateModel,
+                    posStateModel: widget.parts,
+                  ),
+                  // child: POSCart(parts: posStateModel),
+                  type: PageTransitionType.fade,
+                  duration: Duration(milliseconds: 10),
+                ),
+                );
               },
             ),
           ],
@@ -139,7 +145,6 @@ class _DetailedProductState extends State<DetailedProduct> {
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: Measurements.width * 0.05),
@@ -307,7 +312,6 @@ class _DetailsInfoState extends State<DetailsInfo> {
           future: getInventoryState(widget.parts, _stc),
           errorMessage: "Error loading product details",
           onDataLoaded: (results) {
-
             print("results: $results");
 
             return Column(
@@ -487,19 +491,19 @@ class _DetailsInfoState extends State<DetailsInfo> {
                       )),
                     ),
                     onTap: () {
-                      if(widget.cartStateModel.getIsButtonAvailable) {
+                      if (widget.cartStateModel.getIsButtonAvailable) {
                         if (results != 0) {
                           if (widget.haveVariants) {
                             var image = widget
-                                .currentProduct
-                                .variants[currentVariant.value]
-                                .images
-                                .isNotEmpty
+                                    .currentProduct
+                                    .variants[currentVariant.value]
+                                    .images
+                                    .isNotEmpty
                                 ? widget.currentProduct
-                                .variants[currentVariant.value].images[0]
+                                    .variants[currentVariant.value].images[0]
                                 : widget.currentProduct.images.isNotEmpty
-                                ? widget.currentProduct.images[0]
-                                : null;
+                                    ? widget.currentProduct.images[0]
+                                    : null;
                             widget.parts.add2cart(
                                 id: widget.currentProduct
                                     .variants[currentVariant.value].id,
@@ -509,14 +513,15 @@ class _DetailsInfoState extends State<DetailsInfo> {
                                 name: widget.currentProduct
                                     .variants[currentVariant.value].title,
                                 price: onSale
-                                    ? widget.currentProduct
-                                    .variants[currentVariant.value].salePrice
+                                    ? widget
+                                        .currentProduct
+                                        .variants[currentVariant.value]
+                                        .salePrice
                                     : widget.currentProduct
-                                    .variants[currentVariant.value].price,
+                                        .variants[currentVariant.value].price,
                                 qty: 1,
                                 sku: widget.currentProduct
                                     .variants[currentVariant.value].sku);
-
                           } else {
                             var image = widget.currentProduct.images.isNotEmpty
                                 ? widget.currentProduct.images[0]
@@ -553,7 +558,6 @@ class _DetailsInfoState extends State<DetailsInfo> {
 //                  Navigator.pop(context);
                         }
                       }
-
                     },
                   ),
                 ),
@@ -617,7 +621,7 @@ class _DetailsInfoState extends State<DetailsInfo> {
     try {
       inventory = await posStateModel.getInventory(productSku);
       print("inventoryInfo: $inventory");
-    } catch(e) {
+    } catch (e) {
       print("error: $e");
     }
 

@@ -37,8 +37,8 @@ class PosStateModel extends PosStateCommonsModel {
 
         currentTerminal = _terminals.firstWhere((term) => term.active);
 
-        var checkout = await getCheckout(currentTerminal.channelSet);
-        currentCheckout = Checkout.toMap(checkout);
+        // var checkout = await getCheckout(currentTerminal.channelSet);
+        // currentCheckout = Checkout.toMap(checkout);
 //        smsEnabled = !currentCheckout.sections.firstWhere((test)=> test.code=="send_to_device").enabled;
 
 //        haveProducts = true;
@@ -49,8 +49,8 @@ class PosStateModel extends PosStateCommonsModel {
 
         return true;
       } else {
-        var checkout = await getCheckout(terminal.channelSet);
-        currentCheckout = Checkout.toMap(checkout);
+        // var checkout = await getCheckout(terminal.channelSet);
+        // currentCheckout = Checkout.toMap(checkout);
 
         currentTerminal = terminal;
 

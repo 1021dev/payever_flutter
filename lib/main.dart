@@ -73,6 +73,8 @@ class _MyAppState extends State<MyApp> {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
+        debugShowMaterialGrid: false,
+        
         title: 'payever',
         theme: _payeverTheme,
         routes: {
