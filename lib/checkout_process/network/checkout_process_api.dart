@@ -19,10 +19,9 @@ class CheckoutProcessApi extends RestDataSource {
     };
     return _netUtil
         .getWithError(
-            RestDataSource.checkoutFlow +
-                channelSet +
-                RestDataSource.endCheckout,
-            headers: headers)
+      RestDataSource.checkoutFlow + channelSet + RestDataSource.endCheckout,
+      headers: headers,
+    )
         .then(
       (dynamic result) {
         return result;
@@ -75,12 +74,10 @@ class CheckoutProcessApi extends RestDataSource {
         "x_frame_host": GlobalUtils.commerceOsUrl,
       },
     );
-    print("body => $body");
     return _netUtil
         .post(RestDataSource.checkoutV1, headers: headers, body: body)
         .then(
       (dynamic res) {
-        print("Flow ID => ${res["id"]}",);
         return res;
       },
     );
@@ -102,11 +99,6 @@ class CheckoutProcessApi extends RestDataSource {
         "expiresAt": expiration
       },
     );
-
-    print("body: $body");
-    print("source: $source");
-    print("phone: $phone");
-    print("url: ${RestDataSource.storageUrl}");
     var headers = {
       HttpHeaders.authorizationHeader: "Bearer $token",
       HttpHeaders.contentTypeHeader: "application/json",
@@ -116,33 +108,31 @@ class CheckoutProcessApi extends RestDataSource {
         .post(RestDataSource.storageUrl, headers: headers, body: body)
         .then(
       (dynamic res) {
-        print(res);
         return res;
       },
     );
   }
 
-  Future<dynamic> postCheckout(String id, String chset,) {
+  Future<dynamic> postCheckout(
+    String id,
+    String chset,
+  ) {
+    var body = jsonEncode({});
     print("TAG - postCheckout()");
-    print(id);
-    print(chset);
-    print("${RestDataSource.checkoutBEV1}/$id/channel-set/$chset");
-    var body  = jsonEncode({});
     var headers = {
       HttpHeaders.authorizationHeader: "Bearer $token",
       HttpHeaders.contentTypeHeader: "application/json",
       HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
     };
     return _netUtil
-        .post(RestDataSource.checkoutBEV1 + "/$id/channel-set/$chset", headers: headers, body: body)
+        .post(RestDataSource.checkoutBEV1 + "/$id/channel-set/$chset",
+            headers: headers, body: body)
         .then(
       (dynamic res) {
-        print(res);
         return res;
       },
     );
   }
-
 
   Future<dynamic> postSendToDev(String message, String email, String subject,
       String flowid, String phoneFrom, String phoneTo) {
@@ -165,7 +155,7 @@ class CheckoutProcessApi extends RestDataSource {
           "subject": subject,
         },
       );
-    } else{
+    } else {
       body = jsonEncode(
         {
           "email": email,
@@ -176,12 +166,6 @@ class CheckoutProcessApi extends RestDataSource {
         },
       );
     }
-
-    print("${RestDataSource.checkoutBEV1}/${flowid}/send-to-device");
-    print("email: $email");
-    print("phoneFrom : $phoneFrom");
-    print("phoneTo: $phoneTo");
-
     var headers = {
       HttpHeaders.authorizationHeader: "Bearer $token",
       HttpHeaders.contentTypeHeader: "application/json",

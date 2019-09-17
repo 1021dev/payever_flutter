@@ -38,7 +38,8 @@ class _CheckoutShippingSectionState extends State<CheckoutShippingSection> {
   CustomTextFieldForm postField;
   GoogleAutoComplete autoComplete;
   TextEditingController autoCompleteController;
-
+  List<String> _countries = List();
+  DropDownMenu a;
   fieldsInit() {
     emailTextField.controller.text =
         widget.checkoutProcessStateModel.checkoutUser.email;
@@ -49,11 +50,14 @@ class _CheckoutShippingSectionState extends State<CheckoutShippingSection> {
   @override
   void initState() {
     super.initState();
+    _countries = Language.getCountryNameList();
     emailTextField = EmailTextField(emailStatus, true);
     check = ValueNotifier(true)
-      ..addListener(() => setState(() {
-            print("initial");
-          }));
+      ..addListener(
+        () => setState(
+          () {},
+        ),
+      );
   }
 
   @override
@@ -72,56 +76,86 @@ class _CheckoutShippingSectionState extends State<CheckoutShippingSection> {
                   decoration: BoxDecoration(
                     border: Border(
                       top: BorderSide(
-                        color: _index < 0
-                            ? Colors.red
-                            : Colors.black.withOpacity(0.3),
+                        // color: _index < 0
+                        //     ? Colors.red
+                        //     : Colors.black.withOpacity(0.3),
+                        color: Colors.black.withOpacity(0.1),
                       ),
                       bottom: BorderSide(
-                        color: _index < 0
-                            ? Colors.red
-                            : Colors.black.withOpacity(0.3),
+                        // color: _index < 0
+                        //     ? Colors.red
+                        //     : Colors.black.withOpacity(0.3),
+                        color: Colors.black.withOpacity(0.1),
                       ),
                       left: BorderSide(
-                        color: _index < 0
-                            ? Colors.red
-                            : Colors.black.withOpacity(0.3),
+                        // color: _index < 0
+                        //     ? Colors.red
+                        //     : Colors.black.withOpacity(0.3),
+                        color: Colors.black.withOpacity(0.3),
                       ),
                       right: BorderSide(
-                        color: _index < 0
-                            ? Colors.red
-                            : Colors.black.withOpacity(0.3),
+                        // color: _index < 0
+                        //     ? Colors.red
+                        //     : Colors.black.withOpacity(0.3),
+                        color: Colors.black.withOpacity(0.1),
                       ),
                     ),
                   ),
                   child: Container(
                     alignment: Alignment.centerLeft,
-                    padding: EdgeInsets.only(left: 10, top: 10),
-                    child: DropDownMenu(
-                      iconSize: 15,
-                      fontsize: 15,
-                      noIcon: false,
-                      autoCenter: false,
-                      optionsList: <String>[
-                        Language.getCheckoutStrings("options.salutation_mr"),
-                        Language.getCheckoutStrings("options.salutation_mrs"),
-                      ],
-                      placeHolderText: Language.getCheckoutStrings(
-                          "address.form.label.salutation"),
-                      backgroundColor: Colors.white,
-                      fontColor: Colors.black.withOpacity(0.6),
-                      customColor: true,
-                      onChangeSelection: (name, index) {
-                        
-                        setState(
-                          () {
-                            print("salutation");
-                            _index = index;
-                            widget.checkoutProcessStateModel.salutation.value =
-                                false;
-                            widget.checkoutProcessStateModel.checkShipping();
+                    padding: EdgeInsets.only(left: 10, bottom: 10),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Container(
+                          child: _index < 0
+                              ? Container()
+                              : Text(
+                                  Language.getCheckoutStrings(
+                                    "address.form.label.salutation",
+                                  ),
+                                  style: TextStyle(
+                                    color: Colors.black.withOpacity(0.4),
+                                    fontSize: 10,
+                                  ),
+                                  maxLines: 1,
+                                ),
+                        ),
+                        DropDownMenu(
+                          iconSize: 15,
+                          fontsize: 15,
+                          noIcon: false,
+                          autoCenter: false,
+                          optionsList: <String>[
+                            Language.getCheckoutStrings(
+                                "options.salutation_mr"),
+                            Language.getCheckoutStrings(
+                                "options.salutation_mrs"),
+                          ],
+                          placeHolderText: Language.getCheckoutStrings(
+                              "address.form.label.salutation"),
+                          backgroundColor: Colors.white,
+                          fontColor: Colors.black.withOpacity(0.6),
+                          customColor: true,
+                          hintColor: Colors.red,
+                          onChangeSelection: (name, index) {
+                            setState(
+                              () {
+                                _index = index;
+                                widget.checkoutProcessStateModel.checkoutUser
+                                    .setSalutation(index == 0
+                                        ? "salutation_mr"
+                                        : "salutation_mrs");
+                                widget.checkoutProcessStateModel.salutation
+                                    .value = false;
+                                widget.checkoutProcessStateModel
+                                    .checkShipping();
+                              },
+                            );
                           },
-                        );
-                      },
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -143,6 +177,8 @@ class _CheckoutShippingSectionState extends State<CheckoutShippingSection> {
                           .setName(name);
                       return name.isEmpty;
                     },
+                    borderTop: false,
+                    borderBot: false,
                   ),
                 ),
               ),
@@ -164,6 +200,9 @@ class _CheckoutShippingSectionState extends State<CheckoutShippingSection> {
                           .setLastName(name);
                       return name.isEmpty;
                     },
+                    borderTop: false,
+                    borderLeft: false,
+                    borderBot: false,
                   ),
                 ),
               ),
@@ -181,24 +220,111 @@ class _CheckoutShippingSectionState extends State<CheckoutShippingSection> {
           ),
           Row(
             children: <Widget>[
+              // Expanded(
+              //   flex: 2,
+              //   child: Container(
+              //     child: countryField = CustomTextFieldForm(
+              //       Language.getCheckoutStrings(
+              //         "address.form.label.country",
+              //       ),
+              //       true,
+              //       widget.checkoutProcessStateModel.country,
+              //       widget.checkoutProcessStateModel,
+              //       init: widget
+              //               .checkoutProcessStateModel.checkoutUser?.country ??
+              //           "",
+              //       validator: (name) {
+              //         widget.checkoutProcessStateModel.checkoutUser
+              //             .setCountry(name);
+              //         return name.isEmpty;
+              //       },
+              //     ),
+              //   ),
+              // ),
               Expanded(
                 flex: 2,
                 child: Container(
-                  child: countryField = CustomTextFieldForm(
-                    Language.getCheckoutStrings(
-                      "address.form.label.country",
+                  height: 60,
+                  decoration: BoxDecoration(
+                    border: Border(
+                      top: BorderSide(
+                        // color: widget.checkoutProcessStateModel.checkoutUser.country == null
+                        //     ? Colors.red
+                        //     : Colors.black.withOpacity(0.3),
+                        color: Colors.black.withOpacity(0.1),
+                      ),
+                      bottom: BorderSide(
+                        // color: widget.checkoutProcessStateModel.checkoutUser.country == null
+                        //     ? Colors.red
+                        //     : Colors.black.withOpacity(0.3),
+                        color: Colors.black.withOpacity(0.1),
+                      ),
+                      left: BorderSide(
+                        // color: widget.checkoutProcessStateModel.checkoutUser.country == null
+                        //     ? Colors.red
+                        //     : Colors.black.withOpacity(0.3),
+                        color: Colors.black.withOpacity(0.3),
+                      ),
+                      right: BorderSide(
+                        // color: widget.checkoutProcessStateModel.checkoutUser.country == null
+                        //     ? Colors.red
+                        //     : Colors.black.withOpacity(0.3),
+                        color: Colors.black.withOpacity(0.0),
+                      ),
                     ),
-                    true,
-                    widget.checkoutProcessStateModel.country,
-                    widget.checkoutProcessStateModel,
-                    init: widget
-                            .checkoutProcessStateModel.checkoutUser?.country ??
-                        "",
-                    validator: (name) {
-                      widget.checkoutProcessStateModel.checkoutUser
-                          .setCountry(name);
-                      return name.isEmpty;
-                    },
+                  ),
+                  child: Container(
+                    alignment: Alignment.centerLeft,
+                    padding: EdgeInsets.only(left: 10, bottom: 10),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Container(
+                          child: (widget.checkoutProcessStateModel.checkoutUser?.country??null) == null
+                              ? Container()
+                              : Text(
+                                  Language.getCheckoutStrings(
+                                    "address.form.label.country",
+                                  ),
+                                  style: TextStyle(
+                                    color: Colors.black.withOpacity(0.4),
+                                    fontSize: 10,
+                                  ),
+                                  maxLines: 1,
+                                ),
+                        ),
+                        DropDownMenu(
+                          defaultValue: widget
+                              .checkoutProcessStateModel.checkoutUser.country,
+                          iconSize: 15,
+                          changeDef: true,
+                          fontsize: 15,
+                          noIcon: false,
+                          autoCenter: false,
+                          optionsList: _countries,
+                          placeHolderText: Language.getCheckoutStrings(
+                            "address.form.label.country",
+                          ),
+                          backgroundColor: Colors.white,
+                          fontColor: Colors.black.withOpacity(0.6),
+                          customColor: true,
+                          hintColor: Colors.red,
+                          onChangeSelection: (name, index) {
+                            setState(
+                              () {
+                                widget.checkoutProcessStateModel.checkoutUser
+                                    .setCountry(name);
+                                widget.checkoutProcessStateModel.country.value =
+                                    false;
+                                widget.checkoutProcessStateModel
+                                    .checkShipping();
+                              },
+                            );
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -219,6 +345,8 @@ class _CheckoutShippingSectionState extends State<CheckoutShippingSection> {
                           .setCity(name);
                       return name.isEmpty;
                     },
+                    borderTop: false,
+                    borderBot: false,
                   ),
                 ),
               ),
@@ -242,6 +370,7 @@ class _CheckoutShippingSectionState extends State<CheckoutShippingSection> {
                           .setStreet(name);
                       return name.isEmpty;
                     },
+                    borderRight: false,
                   ),
                 ),
               ),
@@ -251,7 +380,8 @@ class _CheckoutShippingSectionState extends State<CheckoutShippingSection> {
                   child: Container(
                     child: postField = CustomTextFieldForm(
                       Language.getCheckoutStrings(
-                          "address.form.label.zip_code"),
+                        "address.form.label.zip_code",
+                      ),
                       true,
                       widget.checkoutProcessStateModel.post,
                       widget.checkoutProcessStateModel,
@@ -287,6 +417,8 @@ class _CheckoutShippingSectionState extends State<CheckoutShippingSection> {
                           .setCompany(name);
                       return false;
                     },
+                    borderTop: false,
+                    borderBot: false,
                   ),
                 ),
               ),
@@ -315,7 +447,10 @@ class _CheckoutShippingSectionState extends State<CheckoutShippingSection> {
                       if (phone.length == 0) return false;
                       return !regExp.hasMatch(phone);
                     },
-                    bot: false,
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(6),
+                      bottomRight: Radius.circular(6),
+                    ),
                   ),
                 ),
               ),
@@ -346,6 +481,11 @@ class CustomTextFieldForm extends StatefulWidget {
   bool Function(String) validator;
   bool textValidation = false;
   final bool isPhone;
+  bool borderTop;
+  bool borderBot;
+  bool borderRight;
+  bool borderLeft;
+  BorderRadius borderRadius;
 
   CustomTextFieldForm(
     this.label,
@@ -355,6 +495,11 @@ class CustomTextFieldForm extends StatefulWidget {
     this.init = "",
     this.errorLabel,
     this.validator,
+    this.borderRadius,
+    this.borderTop = true,
+    this.borderBot = true,
+    this.borderRight = true,
+    this.borderLeft = true,
     this.isPhone = false,
     this.bot = true,
   }) {
@@ -378,9 +523,7 @@ class _CustomTextFieldFormState extends State<CustomTextFieldForm> {
     widget.error.addListener(
       () {
         setState(
-          () {
-            print("${widget.label}");
-          },
+          () {},
         );
         widget.checkoutProcessStateModel.checkShipping();
       },
@@ -393,28 +536,37 @@ class _CustomTextFieldFormState extends State<CustomTextFieldForm> {
     widget.error.value =
         ((widget.controller?.text?.isEmpty ?? true) && widget.mandatory) ||
             widget.textValidation;
-
+    Color colorOK = Colors.black;
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: 10,
       ),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(widget.bot ? 0 : 6),
-          bottomRight: Radius.circular(widget.bot ? 0 : 6),
-        ),
+        borderRadius: widget.borderRadius,
         border: Border(
           top: BorderSide(
-            color: !widget.error.value ? colorOk : colorError,
+            // color: !widget.error.value ? colorOk : colorError,
+            color: widget.borderTop
+                ? colorOK.withOpacity(0.3)
+                : colorOK.withOpacity(0.1),
           ),
           bottom: BorderSide(
-            color: !widget.error.value ? colorOk : colorError,
+            // color: !widget.error.value ? colorOk : colorError,
+            color: widget.borderBot
+                ? colorOK.withOpacity(0.3)
+                : colorOK.withOpacity(0.1),
           ),
           left: BorderSide(
-            color: !widget.error.value ? colorOk : colorError,
+            // color: !widget.error.value ? colorOk : colorError,
+            color: widget.borderLeft
+                ? colorOK.withOpacity(0.3)
+                : colorOK.withOpacity(0.1),
           ),
           right: BorderSide(
-            color: !widget.error.value ? colorOk : colorError,
+            // color: !widget.error.value ? colorOk : colorError,
+            color: widget.borderRight
+                ? colorOK.withOpacity(0.3)
+                : colorOK.withOpacity(0.1),
           ),
         ),
       ),
@@ -449,7 +601,6 @@ class _CustomTextFieldFormState extends State<CustomTextFieldForm> {
         onChanged: (text) {
           setState(
             () {
-              print("validator");
               widget.textValidation = widget.validator(text);
             },
           );
@@ -475,8 +626,7 @@ class _ShippingButtonState extends State<ShippingButton> {
     widget.check
       ..addListener(
         () {
-          print("shipping");
-          Future.delayed(Duration(milliseconds: 10)).then((_){
+          Future.delayed(Duration(milliseconds: 10)).then((_) {
             setState(() {});
           });
         },
@@ -489,6 +639,7 @@ class _ShippingButtonState extends State<ShippingButton> {
       false,
       () {
         if (widget.check.value) {
+          widget.checkoutProcessStateModel.setAddressDescriptionAuto();
           widget.checkoutProcessStateModel
               .getSectionOk("address", widget.checkoutProcessStateModel)
               .value = true;

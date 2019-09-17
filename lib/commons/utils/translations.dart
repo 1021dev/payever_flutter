@@ -71,17 +71,14 @@ class Language {
       print(onError);
     });
     DefaultAssetBundle.of(context)
-        .loadString(
-            "assets/translations/checkout/$language.json",
-            cache: false)
+        .loadString("assets/translations/checkout/$language.json", cache: false)
         .then((value) {
       checkoutStrings = JsonDecoder().convert(value);
     }).catchError((onError) {
       print(onError);
     });
     DefaultAssetBundle.of(context)
-        .loadString(
-            "assets/translations/checkout/sms/$language.json",
+        .loadString("assets/translations/checkout/sms/$language.json",
             cache: false)
         .then((value) {
       checkoutSMSStrings = JsonDecoder().convert(value);
@@ -104,6 +101,24 @@ class Language {
     }).catchError((onError) {
       print(onError);
     });
+
+    DefaultAssetBundle.of(context)
+        .loadString("assets/translations/countries/de_name_xx.json",
+            cache: false)
+        .then((value) {
+      countriesFullStrings = JsonDecoder().convert(value);
+    }).catchError((onError) {
+      print(onError);
+    });
+    DefaultAssetBundle.of(context)
+        .loadString("assets/translations/countries/de_xx_name.json",
+            cache: false)
+        .then((value) {
+      countriesShortStrings = JsonDecoder().convert(value);
+    }).catchError((onError) {
+      print(onError);
+    });
+
     return await DefaultAssetBundle.of(context)
         .loadString("assets/translations/custom/$language.json", cache: false)
         .then((value) {
@@ -126,6 +141,8 @@ class Language {
   static dynamic settingsStrings = Map();
   static dynamic checkoutStrings = Map();
   static dynamic checkoutSMSStrings = Map();
+  static dynamic countriesFullStrings = Map();
+  static dynamic countriesShortStrings = Map();
 
   static String getWidgetStrings(String tag) => widgetStrings[tag] ?? tag;
 
@@ -152,8 +169,23 @@ class Language {
   static String getSettingsStrings(String tag) => settingsStrings[tag] ?? tag;
 
   static String getCheckoutStrings(String tag) => checkoutStrings[tag] ?? tag;
-  
-  static String getCheckoutSMSStrings(String tag) => checkoutSMSStrings[tag] ?? tag;
+
+  static String getCheckoutSMSStrings(String tag) =>
+      checkoutSMSStrings[tag] ?? tag;
+
+  static String getCountriesFullStrings(String tag) =>
+      countriesFullStrings[tag] ?? tag;
+
+  static String getCountriesShortStrings(String tag) =>
+      countriesShortStrings[tag] ?? tag;
+
+  static List<String> getCountryNameList() {
+    List<String> list = List();
+    countriesShortStrings.forEach((a, b) {
+      list.add(b);
+    });
+    return list;
+  }
 
   static String language;
 

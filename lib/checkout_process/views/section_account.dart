@@ -45,18 +45,36 @@ class _CheckoutAccountSectionState extends State<CheckoutAccountSection> {
 
   @override
   Widget build(BuildContext context) {
-    emailTextField.controller.text =
-        widget.checkoutProcessStateModel.checkoutUser.email;
+    print("_${widget.checkoutProcessStateModel.addressDescription}_");
+
+    if (((widget.checkoutProcessStateModel.checkoutUser.email?.contains("@") ??
+            false) &&
+        (widget.checkoutProcessStateModel.checkoutUser.email?.contains(".") ??
+            false))) {
+      emailStatus.value = ButtonStage.ok;
+      widget.checkoutProcessStateModel.email.value = false;
+      widget.checkoutProcessStateModel.checkShipping();
+    }
     controller = TextEditingController(
         text: widget.checkoutProcessStateModel.addressDescription ?? "");
+    emailTextField.controller.text =
+        widget.checkoutProcessStateModel.checkoutUser.email;
     return Container(
       child: Column(
         children: <Widget>[
           emailTextField,
-          autoComplete = GoogleAutoComplete(CheckoutProcessUtils.googleKey,
-              controller, check, widget.checkoutProcessStateModel),
-          Button(widget.checkoutProcessStateModel, controller, emailStatus,
-              emailTextField),
+          autoComplete = GoogleAutoComplete(
+            CheckoutProcessUtils.googleKey,
+            controller,
+            check,
+            widget.checkoutProcessStateModel,
+          ),
+          Button(
+            widget.checkoutProcessStateModel,
+            controller,
+            emailStatus,
+            emailTextField,
+          ),
         ],
       ),
     );

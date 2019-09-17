@@ -67,29 +67,34 @@ class _GoogleAutoCompleteState extends State<GoogleAutoComplete> {
                 onChanged: (s) {
                   setState(
                     () {
-                      //print
-                      
-                      //
                       List<String> address = s.description.split(",");
-                      widget.checkoutProcessStateModel
-                          .setAddressDescription(s.description);
+                      if (address.last.contains("USA")) {
+                        address.last = " Vereinigte Staaten";
+                        s.description.replaceFirst("USA", "Vereinigte Staaten");
+                      }
                       widget.checkoutProcessStateModel.checkoutUser.setCountry(
-                        address.last.replaceAll(" ", ""),
+                        address.last.replaceFirst(" ", ""),
                       );
+
+                      widget.checkoutProcessStateModel.country.value = false;
+                      widget.checkoutProcessStateModel.checkShipping();
                       if (address.length > 2) {
                         widget.checkoutProcessStateModel.checkoutUser.setStreet(
                           address[0],
                         );
                         widget.checkoutProcessStateModel.checkoutUser.setCity(
-                          address[1].replaceAll(" ", ""),
+                          address[1].replaceFirst(" ", ""),
                         );
                       } else {
                         widget.checkoutProcessStateModel.checkoutUser.setCity(
-                          address[0].replaceAll(" ", ""),
+                          address[0].replaceFirst(" ", ""),
                         );
                         widget.checkoutProcessStateModel.checkoutUser
                             .setStreet("");
                       }
+
+                      widget.checkoutProcessStateModel
+                          .setAddressDescription(s.description);
                     },
                   );
                 },

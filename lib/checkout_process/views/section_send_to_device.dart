@@ -121,10 +121,7 @@ class _CheckoutS2DeviceSectionState extends State<CheckoutS2DeviceSection> {
                                     ));
                               },
                             );
-                            print("sended");
-                            print("clear cart");
-                            print("pop context");
-                            print("load successful pop");
+                            
                           }).catchError((onError) {
                             print(onError.toString());
                           });
@@ -137,7 +134,7 @@ class _CheckoutS2DeviceSectionState extends State<CheckoutS2DeviceSection> {
                     },
                   );
                 } else {
-                  print("not good");
+                  
                 }
               },
               color: continueStatus()

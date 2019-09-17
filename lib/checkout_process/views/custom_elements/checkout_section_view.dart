@@ -91,6 +91,7 @@ class Header extends StatefulWidget {
   final String mid;
   CheckoutProcessStateModel checkoutProcessStateModel;
   Header(this.title, this.index, this.checkoutProcessStateModel,{this.mid});
+  
   @override
   _HeaderState createState() => _HeaderState();
 }
@@ -136,7 +137,17 @@ class _HeaderState extends State<Header> {
                       ),
                     ),
                   )
-                : Container(),
+                : (widget.index != controller.openIndex)?Expanded(
+                    flex: 2,
+                    child: Text(
+                      widget.checkoutProcessStateModel.getHeaderString(widget.title, widget.checkoutProcessStateModel.checkoutUser),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: AppStyle.fontSizeCheckoutTitle(),
+                        color: AppStyle.colorCheckoutDivider(),
+                      ),
+                    ),
+                  ):Container(),
             widget.index > controller.openIndex
                 ? Container(
                     width: 24,
@@ -293,11 +304,7 @@ class StepperController extends ChangeNotifier {
   setIndex(int nopenIndex,CheckoutProcessStateModel checkoutProcessStateModel) {
     _openIndex = nopenIndex;
     notifyListeners();
-    checkoutProcessStateModel.notifyListeners();
+    if(openIndex>0)checkoutProcessStateModel.notifyListeners();
   }
   
-}
-
-abstract class CheckoutSectionContract {
-  bool action();
 }

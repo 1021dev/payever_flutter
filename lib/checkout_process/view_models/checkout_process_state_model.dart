@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:payever/checkout_process/checkout_process.dart';
+import 'package:payever/checkout_process/models/payment_option.dart';
 import 'package:payever/checkout_process/views/custom_elements/checkout_section_view.dart';
 import 'package:provider/provider.dart';
 import '../models/flow_object.dart';
 import '../views/views.dart';
 import '../../commons/models/models.dart';
 import '../../pos/view_models/view_models.dart';
+import '../views/payments/payments.dart';
 
 class CheckoutProcessStateModel extends ChangeNotifier {
   CheckoutProcessStateModel();
@@ -14,11 +16,17 @@ class CheckoutProcessStateModel extends ChangeNotifier {
   String get addressDescription => _addressDescription;
   setAddressDescription(String address) => _addressDescription = address;
 
+  setAddressDescriptionAuto() => _addressDescription = "${_checkoutUser.street}, ${_checkoutUser.city}, ${_checkoutUser.country}";
+
   CheckoutStructure _checkoutStructure;
   CheckoutStructure get checkoutStructure => _checkoutStructure;
   setcheckoutStructure(checkoutStructure) {
     _checkoutStructure = checkoutStructure;
   }
+
+  List<CheckoutPaymentOption> _paymentOption = List();
+  List<CheckoutPaymentOption> get paymentOption => _paymentOption;
+  setPaymentOption(List<CheckoutPaymentOption> paymentOption) => _paymentOption = paymentOption ;
 
   CheckoutUser _checkoutUser = CheckoutUser();
   CheckoutUser get checkoutUser => _checkoutUser;
@@ -56,6 +64,20 @@ class CheckoutProcessStateModel extends ChangeNotifier {
     "choosePayment": CheckoutPayementSection(),
     "payment": CheckoutTotalSection(),
   };
+
+  String getHeaderString(String title, CheckoutUser checkoutUser) {
+    Map<String, String> headerDescriptions = {
+      "order": "",
+      "send_to_device": "",
+      "user": "${checkoutUser.email ?? ""}",
+      "address":
+          "${Language.getCheckoutStrings(("options." + (checkoutUser?.salutation ?? "")))} ${checkoutUser?.name ?? ""} ${checkoutUser?.lastName ?? ""}\n${checkoutUser?.street ?? ""}\n${checkoutUser?.zipCode ?? ""}, ${checkoutUser?.city ?? ""}\n${checkoutUser?.country ?? ""}",
+      "choosePayment": "",
+      "payment": "",
+    };
+
+    return headerDescriptions[title];
+  }
 
   Map<String, int> sectionIndexMap = Map();
 
@@ -102,7 +124,7 @@ class CheckoutProcessStateModel extends ChangeNotifier {
         return addressOK = ValueNotifier(false)
           ..addListener(
             () {
-              if (userOK.value)
+              if (addressOK.value)
                 stepperController.setIndex(
                     sectionIndexMap["address"] + 1, checkoutProcessStateModel);
             },
@@ -132,7 +154,7 @@ class CheckoutProcessStateModel extends ChangeNotifier {
   ValueNotifier<bool> company = ValueNotifier(false);
   ValueNotifier<bool> phone = ValueNotifier(false);
 
-  void checkShipping()async {
+  void checkShipping() async {
     shippingValue.value = !email.value &&
         !salutation.value &&
         !name.value &&
@@ -143,18 +165,30 @@ class CheckoutProcessStateModel extends ChangeNotifier {
         !post.value &&
         !company.value &&
         !phone.value;
-
-        print("total value = ${shippingValue.value}");
-        
-        print("email     -${email.value}");
-        print("zipcode   -${post.value}");
-        print("salutation-${salutation.value}");
-        print("name-------${name.value}");
-        print("lastname  -${lastname.value}");
-        print("country   -${country.value}");
-        print("city-------${city.value}");
-        print("street    -${street.value}");
-        print("company   -${company.value}");
-        print("phone     -${phone.value}");
   }
+
+
+
+
+  final Map<String, Widget> paymentMap = {
+    "paypal": PayPalPayment(),
+    "nopayment": NoPayment(),
+    "pos-santander-invoice-de": SantanderInvoiceDE(),
+    "sofort":Sofort(),
+  };
+
+  Map<String, int> paymentIndexMap = Map();
+
+  ValueNotifier<String> paymentActionText = ValueNotifier("");
+
+  setPaymentActionText(int index){
+    paymentActionText.value = actionsText[paymentOption[index].slug];
+    print("Payment Action : $paymentActionText");
+  }
+
+  final Map<String,String> actionsText ={
+    "paypal":Language.getCheckoutStrings("actions.redirect_to_paypal"),
+    "pos-santander-invoice-de":"pos santander",
+    "credit-card":"card",
+  };
 }

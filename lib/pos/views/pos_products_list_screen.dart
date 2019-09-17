@@ -534,7 +534,7 @@ class _PosProductsLoaderState extends State<PosProductsLoader> {
                             images
                             title
                             description
-                            hidden
+                            onSales
                             price
                             salePrice
                             sku

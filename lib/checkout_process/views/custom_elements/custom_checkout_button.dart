@@ -8,9 +8,11 @@ class CustomCheckoutButton extends StatelessWidget {
   final bool _loading;
   final bool twoButtons;
   final Color color;
+  final String title;
+  final bool payment;
 
   const CustomCheckoutButton(this._loading, this._action,
-      {this.color = Colors.black, this.twoButtons = false, this.secondAction});
+      {this.color = Colors.black, this.twoButtons = false, this.secondAction,this.title = "Next",this.payment = false});
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +61,7 @@ class CustomCheckoutButton extends StatelessWidget {
               ),
               child: !_loading
                   ? Text(
-                      Language.getCheckoutStrings("action.continue"),
+                      payment?title:Language.getCheckoutStrings("action.continue"),
                       style: TextStyle(
                         fontSize: AppStyle.fontSizeCheckoutButton(),
                         fontWeight: FontWeight.w800,

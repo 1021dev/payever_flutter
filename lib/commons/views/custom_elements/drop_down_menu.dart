@@ -10,8 +10,10 @@ class DropDownMenu extends StatefulWidget {
   final String selectedValue;
   final String defaultValue;
   final bool customColor;
+  final bool changeDef;
   final Color backgroundColor;
   final Color fontColor;
+  final Color hintColor;
   final bool noIcon;
   final bool autoCenter;
   final double fontsize;
@@ -28,9 +30,11 @@ class DropDownMenu extends StatefulWidget {
     this.noIcon = false,
     this.fontsize = 18,
     this.iconSize,
+    this.changeDef = false,
     this.autoCenter = true,
     this.customColor = true,
     this.fontColor,
+    this.hintColor,
   }) : super(key: key);
 
   @override
@@ -68,7 +72,7 @@ class _DropDownMenuState extends State<DropDownMenu> {
     for (String option in _options) {
       items.add(DropdownMenuItem(
         value: option,
-        child: Text(option),
+        child: Text(option??""),
 //          child: Padding(
 //            padding: EdgeInsets.all(1),
 //            child: LimitedBox(
@@ -99,16 +103,23 @@ class _DropDownMenuState extends State<DropDownMenu> {
 
   @override
   Widget build(BuildContext context) {
+     if(widget.changeDef) _currentOption = widget.defaultValue;
     DropdownButton _dp = DropdownButton(
       isExpanded: true,
       isDense: true,
-      icon: widget.noIcon?Container():Icon(Icons.keyboard_arrow_down,size: widget.iconSize,),
-      iconEnabledColor: widget.fontColor ?? Colors.white ,
-      style: TextStyle(fontSize: widget.fontsize, color: widget.fontColor ?? Colors.white),
+      icon: widget.noIcon
+          ? Container()
+          : Icon(
+              Icons.keyboard_arrow_down,
+              size: widget.iconSize,
+            ),
+      iconEnabledColor: widget.fontColor ?? Colors.white,
+      style: TextStyle(
+          fontSize: widget.fontsize, color: widget.fontColor ?? Colors.white),
       hint: Text(
-        _placeHolderText,
+        _placeHolderText??"",
         overflow: TextOverflow.ellipsis,
-        style: TextStyle(fontSize:16,color: widget.fontColor ?? Colors.white),
+        style: TextStyle(fontSize: 16, color: widget.hintColor ?? widget.fontColor ?? Colors.white),
       ),
       elevation: 1,
       value: _currentOption,
@@ -116,7 +127,6 @@ class _DropDownMenuState extends State<DropDownMenu> {
       onChanged: (value) {
         setState(() {
           _currentOption = value;
-          print(value);
           var index = _options.indexOf(value);
           onChangeSelection(value, index);
         });
@@ -140,7 +150,39 @@ class _DropDownMenuState extends State<DropDownMenu> {
             child: DropdownButtonHideUnderline(
               child: ButtonTheme(
                 alignedDropdown: widget.autoCenter,
-                child: _dp,
+                // child: _dp,
+                child: DropdownButton(
+                  isExpanded: true,
+                  isDense: true,
+                  icon: widget.noIcon
+                      ? Container()
+                      : Icon(
+                          Icons.keyboard_arrow_down,
+                          size: widget.iconSize,
+                        ),
+                  iconEnabledColor: widget.fontColor ?? Colors.white,
+                  style: TextStyle(
+                      fontSize: widget.fontsize,
+                      color: widget.fontColor ?? Colors.white),
+                  hint: Text(
+                    _placeHolderText??"",
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w300,
+                        fontSize: 16, color: widget.hintColor ??widget.fontColor ?? Colors.white),
+                  ),
+                  elevation: 1,
+                  value: _currentOption,
+                  items: _dropDownMenuItems,
+                  onChanged: (value) {
+                    setState(() {
+                      _currentOption = value;
+                      print(value);
+                      var index = _options.indexOf(value);
+                      onChangeSelection(value, index);
+                    });
+                  },
+                ), //
               ),
             ),
           ),

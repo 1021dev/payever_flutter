@@ -45,7 +45,6 @@ dependencies:
   flutter_google_places: ^0.2.3
 
 
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -60,6 +59,7 @@ flutter:
   assets:
     - assets/images/
     - assets/translations/widget_app/
+    - assets/translations/countries/
     - assets/translations/connect_app/
     - assets/translations/product_app/
     - assets/translations/product_app/product_list/

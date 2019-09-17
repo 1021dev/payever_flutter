@@ -27,6 +27,7 @@ class _EmailTextFieldState extends State<EmailTextField> {
   Widget build(BuildContext context) {
     CheckoutProcessStateModel checkoutProcessStateModel =
         Provider.of<CheckoutProcessStateModel>(context);
+
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: 10,
@@ -34,16 +35,20 @@ class _EmailTextFieldState extends State<EmailTextField> {
       decoration: BoxDecoration(
         border: Border(
           top: BorderSide(
-            color: !widget.error ? colorOk : colorError,
+            // color: !widget.error ? colorOk : colorError,
+            color: colorOk,
           ),
           bottom: BorderSide(
-            color: !widget.error ? colorOk : colorError,
+            // color: !widget.error ? colorOk : colorError,
+            color: colorOk,
           ),
           left: BorderSide(
-            color: !widget.error ? colorOk : colorError,
+            // color: !widget.error ? colorOk : colorError,
+            color: colorOk,
           ),
           right: BorderSide(
-            color: !widget.error ? colorOk : colorError,
+            // color: !widget.error ? colorOk : colorError,
+            color: colorOk,
           ),
         ),
         borderRadius: BorderRadius.only(
@@ -77,6 +82,8 @@ class _EmailTextFieldState extends State<EmailTextField> {
             setState(
               () {
                 widget.notifier.value = ButtonStage.empty;
+                checkoutProcessStateModel.email.value = true;
+                checkoutProcessStateModel.checkShipping();
                 widget.error = false;
               },
             );
@@ -85,6 +92,8 @@ class _EmailTextFieldState extends State<EmailTextField> {
             setState(
               () {
                 widget.notifier.value = ButtonStage.error;
+                checkoutProcessStateModel.email.value = true;
+                checkoutProcessStateModel.checkShipping();
                 widget.error = true;
               },
             );

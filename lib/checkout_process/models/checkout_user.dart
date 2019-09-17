@@ -36,4 +36,9 @@ class CheckoutUser{
   String _company;
   String get company => _company;
   setCompany(String company) => _company = company;
+
+  String _salutation;
+  String get salutation => _salutation;
+  setSalutation(String salutation) => _salutation = salutation;
+
 }

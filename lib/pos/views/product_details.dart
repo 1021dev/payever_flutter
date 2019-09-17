@@ -39,7 +39,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     isTablet = isPortrait
         ? MediaQuery.of(context).size.width > 600
         : MediaQuery.of(context).size.height > 600;
-
+    // print("Product uuid : ${widget.currentProduct.uuid}");
     return OKToast(
       child: Scaffold(
         appBar: AppBar(
@@ -267,7 +267,7 @@ class _DetailsInfoState extends State<DetailsInfo> {
               title: Container(
                 width: Measurements.width,
                 child: Text(
-                  f.title,
+                  f.title??"",
                   style: textStyle,
                   overflow: TextOverflow.ellipsis,
                 ),

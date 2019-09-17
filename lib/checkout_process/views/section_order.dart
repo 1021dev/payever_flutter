@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:payever/checkout_process/checkout_process.dart';
+import 'package:payever/checkout_process/utils/checkout_process_utils.dart';
 import '../../pos/network/network.dart';
 import 'package:provider/provider.dart';
 import '../../pos/view_models/view_models.dart';
@@ -22,7 +23,9 @@ class _CheckoutOrderSectionState extends State<CheckoutOrderSection> {
   bool isPortrait = true;
   bool isTablet = false;
   bool loading = false;
+
   CheckoutProcessStateModel checkoutProcessStateModel;
+
   @override
   Widget build(BuildContext context) {
     checkoutProcessStateModel = Provider.of<CheckoutProcessStateModel>(context);
@@ -310,9 +313,19 @@ class _CheckoutOrderSectionState extends State<CheckoutOrderSection> {
                           true)
                       .then(
                     (fObj) {
+                      checkoutProcessStateModel.paymentOption.clear();
                       checkoutProcessStateModel.flowObj = fObj;
+                      fObj[CheckoutProcessUtils
+                              .DB_CHECKOUT_P_P_O_PAYMENT_OPTIONS]
+                          .forEach(
+                        (pm) {
+                          checkoutProcessStateModel.paymentOption.add(CheckoutPaymentOption.toMap(pm));
+                        },
+                      );
                       setState(() => loading = false);
-                      checkoutProcessStateModel.getSectionOk("order",checkoutProcessStateModel).value = a;
+                      checkoutProcessStateModel
+                          .getSectionOk("order", checkoutProcessStateModel)
+                          .value = a;
                     },
                   );
                   if (!a) {
@@ -360,9 +373,7 @@ class _CheckoutOrderSectionState extends State<CheckoutOrderSection> {
             }
             if (item.sku == widget.parts.shoppingCart.items.last.sku) {
               if (ok2Checkout) {
-                
               } else {
-                
                 Scaffold.of(context).showSnackBar(
                   SnackBar(
                     content: Text(

@@ -650,7 +650,8 @@ class GlobalUtils {
 
   static const String DB_PROD_MODEL_VAR_BARCODE = "barcode";
   static const String DB_PROD_MODEL_VAR_DESCRIPTION = "description";
-  static const String DB_PROD_MODEL_VAR_HIDDEN = "hidden";
+  static const String DB_PROD_MODEL_VAR_HIDDEN = "onSales";//CHECK!!!!!!!!!!!!!!!!!
+  // static const String DB_PROD_MODEL_VAR_HIDDEN = "hidden";//CHECK!!!!!!!!!!!!!!!!!
   static const String DB_PROD_MODEL_VAR_ID = "id";
   static const String DB_PROD_MODEL_VAR_IMAGES = "images";
   static const String DB_PROD_MODEL_VAR_PRICE = "price";

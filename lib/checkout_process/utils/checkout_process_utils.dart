@@ -38,5 +38,31 @@ class CheckoutProcessUtils extends GlobalUtils{
   static const DB_CHECKOUT_P_PHONENUMBER          = "phoneNumber";
   static const DB_CHECKOUT_P_MESSAGE              = "message";
   static const DB_CHECKOUT_P_SECTIONS             = "sections";
+  
+  static const DB_CHECKOUT_P_P_O_PAYMENT_OPTIONS      = "payment_options";
+  static const DB_CHECKOUT_P_P_O_ACCEPT_FEE           = "accept_fee";
+  static const DB_CHECKOUT_P_P_O_CONTRACT_LENGHT      = "contract_length";
+  static const DB_CHECKOUT_P_P_O_DESCRIPTION_FEE      = "description_fee";
+  static const DB_CHECKOUT_P_P_O_DESCRIPTION_OFFER    = "description_offer";
+  static const DB_CHECKOUT_P_P_O_FIXED_FEE            = "fixed_fee";
+  static const DB_CHECKOUT_P_P_O_ID                   = "id";
+  static const DB_CHECKOUT_P_P_O_IMAGE_P_FILE         = "image_primary_filename";
+  static const DB_CHECKOUT_P_P_O_IMAGE_S_FILE         = "image_secondary_filename";
+  static const DB_CHECKOUT_P_P_O_INSTRUCTION_TEXT     = "instruction_text";
+  static const DB_CHECKOUT_P_P_O_MAX                  = "max";
+  static const DB_CHECKOUT_P_P_O_MERCHANT_ALLOW_CN    = "merchant_allowed_countries";
+  static const DB_CHECKOUT_P_P_O_MIN                  = "min";
+  static const DB_CHECKOUT_P_P_O_NAME                 = "name";
+  static const DB_CHECKOUT_P_P_O_OPTIONS              = "options";
+  static const DB_CHECKOUT_P_P_O_PAYMENT_METHOD       = "payment_method";
+  static const DB_CHECKOUT_P_P_O_RELATED_COUNTRY      = "related_country";
+  static const DB_CHECKOUT_P_P_O_RELATED_COUNTRY_NAME = "related_country";
+  static const DB_CHECKOUT_P_P_O_SETTINGS             = "settings";
+  static const DB_CHECKOUT_P_P_O_SLUG                 = "slug";
+  static const DB_CHECKOUT_P_P_O_STATUS               = "status";
+  static const DB_CHECKOUT_P_P_O_THUMBNAIL_1          = "thumbnail1";
+  static const DB_CHECKOUT_P_P_O_THUMBNAIL_2          = "thumbnail2";
+  static const DB_CHECKOUT_P_P_O_VARIABLE_FEE         = "variable_fee";
+
 
 }
