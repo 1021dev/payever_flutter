@@ -89,6 +89,7 @@ class RestDataSource {
 
   static String checkoutV1 = Env.checkoutPhp + "/api/rest/v1/checkout/flow";
   static String checkoutV3 = Env.checkoutPhp + "/api/rest/v3/checkout/flow/";
+  static String checkoutBEV1 = Env.checkout  + "/api/checkout/v1/flow";
 
   static String employees = Env.employees;
   static String newEmployee = authBaseUrl + "/api/employees/create/";

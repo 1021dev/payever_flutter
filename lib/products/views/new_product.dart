@@ -504,7 +504,7 @@ class _NewProductScreenState extends State<NewProductScreen> {
                       child: Query(
                         options: QueryOptions(
                             variables: <String, dynamic>{}, document: doc),
-                        builder: (QueryResult result, {VoidCallback refetch}) {
+                        builder: (QueryResult result, {VoidCallback refetch,fetchMore: null}) {
                           if (result.errors != null) {
                             return Column(
                               children: <Widget>[

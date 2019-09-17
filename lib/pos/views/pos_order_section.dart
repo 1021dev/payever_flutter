@@ -81,13 +81,14 @@ class _OrderSectionState extends State<OrderSection> {
                     style: TextStyle(color: widget.textColor),
                   )),
               Container(
-                  alignment: Alignment.center,
-                  width: Measurements.width * 0.2,
-                  child: Text(
-                    Language.getCartStrings(
-                        "checkout_cart_edit.form.label.price"),
-                    style: TextStyle(color: widget.textColor),
-                  )),
+                alignment: Alignment.center,
+                width: Measurements.width * 0.2,
+                child: Text(
+                  Language.getCartStrings(
+                      "checkout_cart_edit.form.label.price"),
+                  style: TextStyle(color: widget.textColor),
+                ),
+              ),
             ],
           ),
         ),

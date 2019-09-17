@@ -13,6 +13,7 @@ class CustomExpansionTile extends StatefulWidget {
   final bool customPadding;
   final Color headerColor;
   final Color bodyColor;
+  final Color iconColor;
 
   const CustomExpansionTile(
       {Key key,
@@ -23,8 +24,8 @@ class CustomExpansionTile extends StatefulWidget {
       this.addBorderRadius,
       this.bodyColor,
       this.headerColor,
-      this.customPadding,
-      this.scrollable = true})
+      this.iconColor = Colors.white,
+      this.scrollable = true, this.customPadding})
       : super(key: key);
 
   @override
@@ -81,7 +82,7 @@ class _CustomExpansionTileState extends State<CustomExpansionTile> {
                         : widget.headerColor,
                   ),
             child: CustomExpansionPanelList(
-              customPadding: customPadding,
+              iconColor: widget.iconColor,
               isWithCustomIcon: widget.isWithCustomIcon,
               expansionCallback: (int index, bool status) {
                 setState(() {

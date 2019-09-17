@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:payever/checkout_process/views/checkout_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../../commons/views/custom_elements/custom_future_builder.dart';
@@ -87,34 +88,41 @@ class _PosProductsListScreenState extends State<PosProductsListScreen> {
                   height: Measurements.height * 0.035,
                 ),
                 Container(
-                    child: Column(
-                      children: <Widget>[
-                        Expanded(
-                          flex: 3,
-                          child: Container(),
-                        ),
-                        posCartStateModel.getCartHasItems
-                            ? Icon(Icons.brightness_1,
-                                color: Color(0XFF0084FF),
-                                size: Measurements.height *
-                                    (isTablet ? 0.01 * 1 : 0.01 * 1.2))
-                            : Container(),
-                        Expanded(
-                          flex: 2,
-                          child: Container(),
-                        ),
-                      ],
-                    ),
+                  child: Column(
+                    children: <Widget>[
+                      Expanded(
+                        flex: 3,
+                        child: Container(),
+                      ),
+                      posCartStateModel.getCartHasItems
+                          ? Icon(Icons.brightness_1,
+                              color: Color(0XFF0084FF),
+                              size: Measurements.height *
+                                  (isTablet ? 0.01 * 1 : 0.01 * 1.2))
+                          : Container(),
+                      Expanded(
+                        flex: 2,
+                        child: Container(),
+                      ),
+                    ],
                   ),
+                ),
               ],
             ),
             onPressed: () {
               Navigator.push(
-                  context,
-                  PageTransition(
-                      child: POSCart(parts: posStateModel),
-                      type: PageTransitionType.fade,
-                      duration: Duration(milliseconds: 10)));
+                context,
+                PageTransition(
+                  child: CheckOutScreen(
+                    channelSet: widget.terminal.channelSet,
+                    posCartStateModel: Provider.of<PosCartStateModel>(context),
+                    posStateModel: Provider.of<PosStateModel>(context),
+                  ),
+                  // child: POSCart(parts: posStateModel),
+                  type: PageTransitionType.fade,
+                  duration: Duration(milliseconds: 10),
+                ),
+              );
             },
           ),
         ],
@@ -244,14 +252,16 @@ class _PosBodyState extends State<PosBody> {
                 ),
                 onTap: () {
                   Navigator.push(
-                      context,
-                      PageTransition(
-                          child: WebViewPayments(
-                            posStateModel: widget.posStateModel,
-                            url: null,
-                          ),
-                          type: PageTransitionType.fade,
-                          duration: Duration(milliseconds: 10)));
+                    context,
+                    PageTransition(
+                      child: WebViewPayments(
+                        posStateModel: widget.posStateModel,
+                        url: null,
+                      ),
+                      type: PageTransitionType.fade,
+                      duration: Duration(milliseconds: 10),
+                    ),
+                  );
                 },
               ),
             ),
@@ -467,7 +477,6 @@ class _ProductItemState extends State<ProductItem> {
           ),
         ),
         onTap: () {
-
           Navigator.push(
               context,
               PageTransition(
@@ -525,7 +534,7 @@ class _PosProductsLoaderState extends State<PosProductsLoader> {
                             images
                             title
                             description
-                            hidden
+                            onSales
                             price
                             salePrice
                             sku
@@ -555,7 +564,7 @@ class _PosProductsLoaderState extends State<PosProductsLoader> {
             child: Query(
               options: QueryOptions(
                   variables: <String, dynamic>{}, document: queryDocument),
-              builder: (QueryResult result, {VoidCallback refetch}) {
+              builder: (QueryResult result, {VoidCallback refetch,fetchMore: null}) {
                 if (result.errors != null) {
                   print(result.errors);
                   return Center(child: Text("Error while fetching data"));

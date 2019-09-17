@@ -23,6 +23,9 @@ class AppStyle {
     return _isTablet ? 17 : 16;
   }
 
+  // Color
+  static Color colorCheckoutDivider() => Colors.black.withOpacity(0.5);
+  // 
   // ICONS
 
   //Lists
@@ -67,7 +70,24 @@ class AppStyle {
 
   static double fontSizeButtonTabSelect() => 13;
 
+  static double fontSizeCheckoutTitle() => 15;
+
+  static double fontSizeCheckoutButton() => 16;
+
+  static double fontSizeCheckoutSuccessTitle() => 20;
+
+  static double fontSizeCheckoutSuccessMessage() => 14;
+
+  static double fontSizeCheckoutEditTextContent() => 14;
+
+  static double fontSizeCheckoutEditTextLabel() => fontSizeCheckoutEditTextContent();
+
   //Fonts
+  
+  //
+  static FontWeight fontWeightCheckoutEditTextLabel() => FontWeight.w300;
+  //
+
 
   //Circular Radios
   static double dashboardRadius() => 35;

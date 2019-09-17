@@ -14,7 +14,6 @@ import '../../commons/views/custom_elements/custom_elements.dart';
 import 'product_screen.dart';
 import 'new_product.dart';
 
-
 ValueNotifier<GraphQLClient> clientFor({
   @required String uri,
   String subscriptionUri,
@@ -154,8 +153,10 @@ class _ProductsSoldCardItemState extends State<ProductsSoldCardItem> {
                   options: QueryOptions(
                       variables: <String, dynamic>{},
                       document: getInitialDocument(resultData.uuid)),
-                  builder: (QueryResult result, {VoidCallback refetch}) {
+                  builder: (QueryResult result,
+                      {VoidCallback refetch, fetchMore: null}) {
                     if (result.errors != null) {
+                      print(result.errors);
                       return Center(
                         child: Text("Error"),
                       );

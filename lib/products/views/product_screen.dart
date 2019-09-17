@@ -498,7 +498,7 @@ class _ProductLoaderState extends State<ProductLoader> {
         child: Query(
           options: QueryOptions(
               variables: <String, dynamic>{}, document: widget.initialDocument),
-          builder: (QueryResult result, {VoidCallback refetch}) {
+          builder: (QueryResult result, {VoidCallback refetch ,fetchMore: null}) {
             if (result.errors != null) {
               print(result.errors);
               return Center(child: Text("Error while fetching data"));
@@ -886,8 +886,7 @@ class _ProductItemState extends State<ProductItem> {
                                             options: QueryOptions(
                                                 variables: <String, dynamic>{},
                                                 document: doc),
-                                            builder: (QueryResult result,
-                                                {VoidCallback refetch}) {
+                                            builder: (QueryResult result,{VoidCallback refetch, fetchMore: null}) {
                                               if (result.errors != null) {
                                                 print(result.errors);
                                                 return Center(

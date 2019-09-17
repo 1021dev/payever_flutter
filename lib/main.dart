@@ -4,6 +4,7 @@ import 'package:payever/settings/network/network.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 
+
 import 'commons/view_models/view_models.dart';
 import 'commons/views/screens/screens.dart';
 import 'commons/utils/utils.dart';
@@ -74,6 +75,8 @@ class _MyAppState extends State<MyApp> {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
+        debugShowMaterialGrid: false,
+        
         title: 'payever',
         theme: _payeverTheme,
         routes: {

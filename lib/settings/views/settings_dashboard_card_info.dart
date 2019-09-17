@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:payever/checkout_process/view_models/checkout_process_state_model.dart';
+import 'package:payever/checkout_process/views/checkout_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../../commons/view_models/view_models.dart';
@@ -36,25 +38,19 @@ class _SettingsCardInfoState extends State<SettingsCardInfo> {
         title:
             Language.getWidgetStrings("widgets.settings.actions.edit-language"),
         action: () => _popLanguages()));
-    buttonsDataList.add(ButtonsData(
+    buttonsDataList.add(
+      ButtonsData(
         icon: AssetImage("assets/images/wallpapericon.png"),
         title: Language.getWidgetStrings(
             "widgets.settings.actions.edit-wallpaper"),
-        action: () => _goToWallpaperScreen()));
+        action: () => _goToWallpaperScreen(),
+      ),
+    );
 
     return DashboardCardRef(
       widget._appName,
       widget._imageProvider,
-      InkWell(
-        highlightColor: Colors.transparent,
-        child: ItemsCardNButtons(buttonsDataList),
-        onTap: () {
-          Navigator.push(
-              context,
-              PageTransition(
-                  child: SettingsScreen(), type: PageTransitionType.fade));
-        },
-      ),
+      ItemsCardNButtons(buttonsDataList),
       defPad: false,
     );
   }
@@ -83,17 +79,37 @@ class _SettingsCardInfoState extends State<SettingsCardInfo> {
         });
   }
 
+  // _goToWallpaperScreen(context) {
+  //   DashboardStateModel dashboardStateModel =
+  //       Provider.of<DashboardStateModel>(context);
+  //   print(
+  //       "dashboardStateModel.activeTerminal.channelSet: ${dashboardStateModel.activeTerminal.channelSet}");
+  //   Navigator.push(
+  //     context,
+  //     PageTransition(
+  //   //     child: ChangeNotifierProvider<CheckoutProcessStateModel>(
+  //   //       builder: (context) {
+  //   //          var a = CheckoutProcessStateModel();
+  //   //          a.dashboardStateModel = dashboardStateModel;
+  //   //          a.setChannelSet(dashboardStateModel.activeTerminal.channelSet);
+  //   //         return a;
+  //   //       },
+  //   //       child: CheckOutScreen(),
+  //   //     ),
+  //   //     type: PageTransitionType.fade,
+  //   //   ),
+  //   // );
+  //   child: WallpaperScreen(), type: PageTransitionType.fade));
+  // }
+  
   _goToWallpaperScreen() {
     Navigator.push(
         context,
         PageTransition(
-            child: ChangeNotifierProvider<DashboardStateModel>(
-              builder: (BuildContext context) {
-                return DashboardStateModel();
-              },
-              child: WallpaperScreen(),
-            ),
-            type: PageTransitionType.fade));
-    // child: WallpaperScreen(), type: PageTransitionType.fade));
+          child: ChangeNotifierProvider<DashboardStateModel>(builder: (BuildContext context) {
+            return DashboardStateModel();
+          },
+         child: WallpaperScreen(),), type: PageTransitionType.fade));
   }
+
 }

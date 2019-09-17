@@ -290,6 +290,7 @@ class GlobalUtils {
         "live":"Payever2019!",
         "staging1":"Test1234!",
         "staging2":"12345678",
+        "staging3":"santander123",
         "test1":"P@ssword123",
         "test2":"Payever123!",
       },
@@ -298,6 +299,7 @@ class GlobalUtils {
         "live":"abiantgmbh@payever.de",
         "staging1":"rob@top.com",
         "staging2":"service@payever.de",
+        "staging3":"santander@payever.de",
         "test1":"payever.automation@gmail.com",
         "test2":"testcases@payever.de",
       },
@@ -306,10 +308,12 @@ class GlobalUtils {
         "live":"https://commerceos.payever.org",
         "staging1":"https://commerceos.staging.devpayever.com",
         "staging2":"https://commerceos.staging.devpayever.com",
+        "staging3":"https://commerceos.staging.devpayever.com",
         "test1":"https://commerceos.test.devpayever.com",
         "test2":"https://commerceos.test.devpayever.com",
       },
     };
+    
   //URLS
   static String currentEnv = "staging1"; 
   static String  pass= envVariables["password"][currentEnv];
@@ -647,7 +651,8 @@ class GlobalUtils {
 
   static const String DB_PROD_MODEL_VAR_BARCODE = "barcode";
   static const String DB_PROD_MODEL_VAR_DESCRIPTION = "description";
-  static const String DB_PROD_MODEL_VAR_HIDDEN = "hidden";
+  static const String DB_PROD_MODEL_VAR_HIDDEN = "onSales";//CHECK!!!!!!!!!!!!!!!!!
+  // static const String DB_PROD_MODEL_VAR_HIDDEN = "hidden";//CHECK!!!!!!!!!!!!!!!!!
   static const String DB_PROD_MODEL_VAR_ID = "id";
   static const String DB_PROD_MODEL_VAR_IMAGES = "images";
   static const String DB_PROD_MODEL_VAR_PRICE = "price";

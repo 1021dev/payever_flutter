@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 //import 'package:auto_size_text/auto_size_text.dart';
 
@@ -9,8 +10,14 @@ class DropDownMenu extends StatefulWidget {
   final String selectedValue;
   final String defaultValue;
   final bool customColor;
+  final bool changeDef;
   final Color backgroundColor;
   final Color fontColor;
+  final Color hintColor;
+  final bool noIcon;
+  final bool autoCenter;
+  final double fontsize;
+  final double iconSize;
 
   DropDownMenu({
     Key key,
@@ -20,8 +27,14 @@ class DropDownMenu extends StatefulWidget {
     this.selectedValue,
     this.defaultValue,
     this.backgroundColor,
+    this.noIcon = false,
+    this.fontsize = 18,
+    this.iconSize,
+    this.changeDef = false,
+    this.autoCenter = true,
     this.customColor = true,
     this.fontColor,
+    this.hintColor,
   }) : super(key: key);
 
   @override
@@ -57,8 +70,9 @@ class _DropDownMenuState extends State<DropDownMenu> {
   List<DropdownMenuItem<String>> getDropDownMenuItems() {
     List<DropdownMenuItem<String>> items = List();
     for (String option in _options) {
-      items.add(DropdownMenuItem(value: option,
-            child: Text(option),
+      items.add(DropdownMenuItem(
+        value: option,
+        child: Text(option??""),
 //          child: Padding(
 //            padding: EdgeInsets.all(1),
 //            child: LimitedBox(
@@ -89,11 +103,74 @@ class _DropDownMenuState extends State<DropDownMenu> {
 
   @override
   Widget build(BuildContext context) {
+     if(widget.changeDef) _currentOption = widget.defaultValue;
     DropdownButton _dp = DropdownButton(
+      isExpanded: true,
+      isDense: true,
+      icon: widget.noIcon
+          ? Container()
+          : Icon(
+              Icons.keyboard_arrow_down,
+              size: widget.iconSize,
+            ),
+      iconEnabledColor: widget.fontColor ?? Colors.white,
+      style: TextStyle(
+          fontSize: widget.fontsize, color: widget.fontColor ?? Colors.white),
+      hint: Text(
+        _placeHolderText??"",
+        overflow: TextOverflow.ellipsis,
+        style: TextStyle(fontSize: 16, color: widget.hintColor ?? widget.fontColor ?? Colors.white),
+      ),
+      elevation: 1,
+      value: _currentOption,
+      items: _dropDownMenuItems,
+      onChanged: (value) {
+        setState(() {
+          _currentOption = value;
+          var index = _options.indexOf(value);
+          onChangeSelection(value, index);
+        });
+      },
+    );
+    return Container(
+      child: Container(
+        decoration: BoxDecoration(
+          color: widget.backgroundColor ?? Colors.white.withOpacity(0.1),
+        ),
+        child: Padding(
+          padding: EdgeInsets.only(top: 1, right: 1, bottom: 1, left: 1),
+          child: Theme(
+            data: Theme.of(context).copyWith(
+              canvasColor: _dp.isExpanded
+                  ? (widget.customColor
+                      ? widget.backgroundColor
+                      : Color(0xff343434))
+                  : (widget.backgroundColor ?? Colors.white.withOpacity(0.1)),
+            ),
+            child: DropdownButtonHideUnderline(
+              child: ButtonTheme(
+                alignedDropdown: widget.autoCenter,
+                // child: _dp,
+                child: DropdownButton(
                   isExpanded: true,
                   isDense: true,
-                  style: TextStyle(fontSize: 18, color: widget.fontColor ?? Colors.white),
-                  hint: Text(_placeHolderText),
+                  icon: widget.noIcon
+                      ? Container()
+                      : Icon(
+                          Icons.keyboard_arrow_down,
+                          size: widget.iconSize,
+                        ),
+                  iconEnabledColor: widget.fontColor ?? Colors.white,
+                  style: TextStyle(
+                      fontSize: widget.fontsize,
+                      color: widget.fontColor ?? Colors.white),
+                  hint: Text(
+                    _placeHolderText??"",
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w300,
+                        fontSize: 16, color: widget.hintColor ??widget.fontColor ?? Colors.white),
+                  ),
                   elevation: 1,
                   value: _currentOption,
                   items: _dropDownMenuItems,
@@ -105,69 +182,7 @@ class _DropDownMenuState extends State<DropDownMenu> {
                       onChangeSelection(value, index);
                     });
                   },
-//                disabledHint: Text("You can't select anything."),
-                );
-    return Container(
-      child: Card(
-        elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-//        color: Colors.white.withOpacity(0.1),
-        color: widget.backgroundColor ?? Colors.white.withOpacity(0.1),
-        child: Padding(
-          padding: EdgeInsets.only(top: 1, right: 1, bottom: 1, left: 10),
-          child: Theme(
-            data: Theme.of(context).copyWith(
-              canvasColor: _dp.isExpanded?(widget.customColor?widget.backgroundColor:Color(0xff343434)):(widget.backgroundColor ?? Colors.white.withOpacity(0.1)),
-            ),
-            child: DropdownButtonHideUnderline(
-              child: ButtonTheme(
-                alignedDropdown: true,
-                child: _dp,
-//                child: InputDecorator(
-//                  expands: true,
-//                  textAlign: TextAlign.left,
-//                  decoration: InputDecoration(
-//                    border: InputBorder.none,
-//                    labelText: _currentOption == null
-//                        ? _currentOption
-//                        : _placeHolderText,
-//                    hintText: _placeHolderText,
-////                    errorText: _placeHolderText,
-//                  ),
-//                  isEmpty: _currentOption == null,
-//                  child: DropDownButton(
-//                    style: TextStyle(fontSize: 15, color: Colors.white),
-//                    hint: Text(_placeHolderText),
-////                    isDense: true,
-////                    hint: Container(
-////                      child: Column(
-////                        mainAxisSize: MainAxisSize.min,
-////                        crossAxisAlignment: CrossAxisAlignment.start,
-////                        children: <Widget>[
-////                          Text(
-////                            _placeHolderText,
-////                            style: TextStyle(fontSize: 13),
-////                          ),
-////                          Text("Choose " + _placeHolderText),
-////                        ],
-////                      ),
-////                    ),
-//                    elevation: 1,
-//                    value: _currentOption,
-//                    items: _dropDownMenuItems,
-//                    onChanged: (value) {
-//                      setState(() {
-//                        _currentOption = value;
-//                        print(value);
-//                        var index = _options.indexOf(value);
-//                        onChangeSelection(value, index);
-//                      });
-//                    },
-////                disabledHint: Text("You can't select anything."),
-//                  ),
-//                ),
+                ), //
               ),
             ),
           ),
