@@ -64,58 +64,72 @@ class Products {
   String get customId => __id;
 }
 
+
+enum ProductTypeEnum{
+  physical,
+  digital,
+  service,
+}
 class ProductsModel {
 
   ProductsModel();
 
-  List<String> images = List();
-  String uuid;
-  String title;
-  String description;
-  bool hidden;
-  num price;
-  num salePrice;
-  String sku;
-  String barcode;
-  String currency;
-  String type;
-  bool enabled;
-  List<Categories> categories = List();
-  List<ChannelSet> channels = List();
-  List<Variants> variants = List();
-  Shipping shipping = Shipping();
 
-  ProductsModel.toMap(dynamic obj) {
-    uuid = obj[GlobalUtils.DB_PROD_MODEL_UUID] ?? "";
-    title = obj[GlobalUtils.DB_PROD_MODEL_TITLE];
-    description = obj[GlobalUtils.DB_PROD_MODEL_DESCRIPTION];
-    hidden = obj[GlobalUtils.DB_PROD_MODEL_HIDDEN];
-    price = obj[GlobalUtils.DB_PROD_MODEL_PRICE];
-    salePrice = obj[GlobalUtils.DB_PROD_MODEL_SALE_PRICE];
-    sku = obj[GlobalUtils.DB_PROD_MODEL_SKU];
-    barcode = obj[GlobalUtils.DB_PROD_MODEL_BARCODE];
-    currency = obj[GlobalUtils.DB_PROD_MODEL_CURRENCY];
-    type = obj[GlobalUtils.DB_PROD_MODEL_TYPE];
-    enabled = obj[GlobalUtils.DB_PROD_MODEL_ENABLE];
-    if (obj[GlobalUtils.DB_PROD_MODEL_IMAGES] != null)
-      obj[GlobalUtils.DB_PROD_MODEL_IMAGES].forEach((img) {
-        images.add(img);
-      });
-    if (obj[GlobalUtils.DB_PROD_MODEL_CATEGORIES] != null)
-      obj[GlobalUtils.DB_PROD_MODEL_CATEGORIES].forEach((categ) {
-        if (categ != null) categories.add(Categories.toMap(categ));
-      });
-    if (obj[GlobalUtils.DB_PROD_MODEL_CHANNEL_SET] != null)
-      obj[GlobalUtils.DB_PROD_MODEL_CHANNEL_SET].forEach((ch) {
-        channels.add(ChannelSet.toMap(ch));
-      });
-    if (obj[GlobalUtils.DB_PROD_MODEL_VARIANTS] != null)
-      obj[GlobalUtils.DB_PROD_MODEL_VARIANTS].forEach((variant) {
-        variants.add(Variants.toMap(variant));
-      });
-    if (obj[GlobalUtils.DB_PROD_MODEL_SHIPPING] != null)
-      shipping = Shipping.toMap(obj[GlobalUtils.DB_PROD_MODEL_SHIPPING]);
-  }
+  String _businessUuid;
+  List<String> _imagesUrl = List();
+  List<String>_images = List();
+  String _currency;
+  String _uuid;
+  String _title;
+  String _description;
+  bool _onSales;
+  num _price;
+  String _country;
+  num _vatRate;
+  num _salePrice;
+  String _sku;
+  String _barcode;
+  //_marketplaces?: ProductMarketplaceInterface[];
+  String _createdAt;
+  String _updatedAt;
+  //_categories: ProductCategoryInterface[];
+  ProductTypeEnum _type;
+  bool _active;
+  List<Variants> _variants = List();
+  Shipping _shipping;
+//   _marketplaceAssigments?: MarketplaceAssigmentInterface[];
+
+//   ProductsModel.toMap(dynamic obj) {
+//     uuid = obj[GlobalUtils.DB_PROD_MODEL_UUID] ?? "";
+//     title = obj[GlobalUtils.DB_PROD_MODEL_TITLE];
+//     description = obj[GlobalUtils.DB_PROD_MODEL_DESCRIPTION];
+//     hidden = obj[GlobalUtils.DB_PROD_MODEL_HIDDEN];
+//     price = obj[GlobalUtils.DB_PROD_MODEL_PRICE];
+//     salePrice = obj[GlobalUtils.DB_PROD_MODEL_SALE_PRICE];
+//     sku = obj[GlobalUtils.DB_PROD_MODEL_SKU];
+//     barcode = obj[GlobalUtils.DB_PROD_MODEL_BARCODE];
+//     currency = obj[GlobalUtils.DB_PROD_MODEL_CURRENCY];
+//     type = obj[GlobalUtils.DB_PROD_MODEL_TYPE];
+//     enabled = obj[GlobalUtils.DB_PROD_MODEL_ENABLE];
+//     if (obj[GlobalUtils.DB_PROD_MODEL_IMAGES] != null)
+//       obj[GlobalUtils.DB_PROD_MODEL_IMAGES].forEach((img) {
+//         images.add(img);
+//       });
+//     if (obj[GlobalUtils.DB_PROD_MODEL_CATEGORIES] != null)
+//       obj[GlobalUtils.DB_PROD_MODEL_CATEGORIES].forEach((categ) {
+//         if (categ != null) categories.add(Categories.toMap(categ));
+//       });
+//     if (obj[GlobalUtils.DB_PROD_MODEL_CHANNEL_SET] != null)
+//       obj[GlobalUtils.DB_PROD_MODEL_CHANNEL_SET].forEach((ch) {
+//         channels.add(ChannelSet.toMap(ch));
+//       });
+//     if (obj[GlobalUtils.DB_PROD_MODEL_VARIANTS] != null)
+//       obj[GlobalUtils.DB_PROD_MODEL_VARIANTS].forEach((variant) {
+//         variants.add(Variants.toMap(variant));
+//       });
+//     if (obj[GlobalUtils.DB_PROD_MODEL_SHIPPING] != null)
+//       shipping = Shipping.toMap(obj[GlobalUtils.DB_PROD_MODEL_SHIPPING]);
+//   }
 }
 
 class Categories {

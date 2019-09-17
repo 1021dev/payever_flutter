@@ -282,28 +282,43 @@ class GlobalUtils {
   static var isDashboardLoaded = false;
   static String fingerprint = "";
 
+
+  static Map<String,Map<String,String>> envVariables =
+    {
+     "password":{
+        "release":"",
+        "live":"Payever2019!",
+        "staging1":"Test1234!",
+        "staging2":"12345678",
+        "test1":"P@ssword123",
+        "test2":"Payever123!",
+      },
+     "email":{
+        "release":"",
+        "live":"abiantgmbh@payever.de",
+        "staging1":"rob@top.com",
+        "staging2":"service@payever.de",
+        "test1":"payever.automation@gmail.com",
+        "test2":"testcases@payever.de",
+      },
+     "url":{
+        "release":"https://commerceos.payever.org",
+        "live":"https://commerceos.payever.org",
+        "staging1":"https://commerceos.staging.devpayever.com",
+        "staging2":"https://commerceos.staging.devpayever.com",
+        "test1":"https://commerceos.test.devpayever.com",
+        "test2":"https://commerceos.test.devpayever.com",
+      },
+    };
   //URLS
-//  static String  pass= "P@ssword123";//test 1
-//   static String  pass= "Test1234!";//staging 1
-  //static String  pass= "";//live 0
-//  static String pass = "Payever2019!"; //live 1
-  static String  pass = "Payever123!";//test 2
-  //static String  pass= "12345678";//staging 2
-
-  //static String  mail= "payever.automation@gmail.com";//test 1
-//   static String  mail= "rob@top.com";//staging 1
-  //static String  mail= "";//live 0
-//  static String mail = "abiantgmbh@payever.de"; //live 1
-  static String  mail = "testcases@payever.de";//test 2
-  //static String  mail= "service@payever.de";//staging 2
-
-  static const String COMMERCE_OS_URL = "https://commerceos.test.devpayever.com";//test
-//   static const String COMMERCE_OS_URL = "https://commerceos.staging.devpayever.com";//staging
-//  static const String COMMERCE_OS_URL = "https://commerceos.payever.org"; //live
+  static String currentEnv = "staging1"; 
+  static String  pass= envVariables["password"][currentEnv];
+  static String  mail=  envVariables["email"][currentEnv];
+  static String commerceOsUrl =  envVariables["url"][currentEnv];
 
   static const String POS_URL = "https://getpayever.com/pos";
 
-  static const String FORGOT_PASS = COMMERCE_OS_URL + "/password/forgot";
+  static String forgotPass = commerceOsUrl + "/password/forgot";
 
   //static const String SIGN_UP = COMMERCE_OS_URL+"/entry/registration/business";
   static const String SIGN_UP = "https://getpayever.com/business/trial";

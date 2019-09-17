@@ -324,7 +324,7 @@ class _LoginState extends State<Login>
                                                     TextDecoration.underline),
                                           ),
                                           onTap: () {
-                                            _launchURL(GlobalUtils.FORGOT_PASS);
+                                            _launchURL(GlobalUtils.forgotPass);
                                           },
                                         ),
                                       ),
