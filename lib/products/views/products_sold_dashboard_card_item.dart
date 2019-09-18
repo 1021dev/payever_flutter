@@ -95,7 +95,7 @@ class _ProductsSoldCardItemState extends State<ProductsSoldCardItem> {
                     uuid
                     title
                     description
-                    hidden
+                    onSales
                     price
                     salePrice
                     sku
@@ -156,7 +156,7 @@ class _ProductsSoldCardItemState extends State<ProductsSoldCardItem> {
                   builder: (QueryResult result,
                       {VoidCallback refetch, fetchMore: null}) {
                     if (result.errors != null) {
-                      print(result.errors);
+                      
                       return Center(
                         child: Text("Error"),
                       );
@@ -169,8 +169,9 @@ class _ProductsSoldCardItemState extends State<ProductsSoldCardItem> {
 
                     if (result.data != null || result.data['product'] != null) {
                       if (result.data['product'] != null) {
+                        
                         var productData =
-                            ProductsModel.toMap(result.data['product']);
+                            ProductsModel.fromMap(result.data['product']);
 
                         return productSoldItemElementCard(
                             globalStateModel, productData, resultData, context);

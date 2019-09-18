@@ -29,12 +29,12 @@ class _ProductShippingRowState extends State<ProductShippingRow> {
   @override
   void initState() {
     super.initState();
-    //if(widget.parts.editMode){
-    widget.parts.product.shipping.free =
-        widget.parts.product.shipping.free ?? false;
-    widget.parts.product.shipping.general =
-        widget.parts.product.shipping.general ?? false;
-    //}
+    if (widget.parts.editMode) {
+      widget.parts.product.shipping.free =
+          widget.parts.product.shipping.free ?? false;
+      widget.parts.product.shipping.general =
+          widget.parts.product.shipping.general ?? false;
+    }
   }
 
   @override
@@ -239,32 +239,37 @@ class _ProductShippingRowState extends State<ProductShippingRow> {
             children: <Widget>[
               Container(
                 decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.05),
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(16),
-                        topRight: Radius.circular(16))),
+                  color: Colors.white.withOpacity(0.05),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(16),
+                    topRight: Radius.circular(16),
+                  ),
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: Measurements.width * 0.025),
-                        alignment: Alignment.center,
-                        height: Measurements.height *
-                            (widget.parts.isTablet ? 0.05 : 0.07),
-                        child: Text(
-                          Language.getProductStrings(
-                              "shippingSection.form.free.label"),
-                          style: TextStyle(
-                              fontSize: AppStyle.fontSizeTabContent()),
-                        )),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: Measurements.width * 0.025),
+                      alignment: Alignment.center,
+                      height: Measurements.height *
+                          (widget.parts.isTablet ? 0.05 : 0.07),
+                      child: Text(
+                        Language.getProductStrings(
+                            "shippingSection.form.free.label"),
+                        style:
+                            TextStyle(fontSize: AppStyle.fontSizeTabContent()),
+                      ),
+                    ),
                     Switch(
                       activeColor: widget.parts.switchColor,
-                      value: widget.parts.product.shipping.free ?? false,
+                      value: widget.parts.product?.shipping?.free ?? false,
                       onChanged: (bool value) {
-                        setState(() {
-                          widget.parts.product.shipping.free = value;
-                        });
+                        setState(
+                          () {
+                            widget.parts.product.shipping.free = value;
+                          },
+                        );
                       },
                     )
                   ],
@@ -306,7 +311,7 @@ class _ProductShippingRowState extends State<ProductShippingRow> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top:2.5),
+                padding: EdgeInsets.only(top: 2.5),
               ),
               Container(
                 child: Row(
@@ -382,7 +387,7 @@ class _ProductShippingRowState extends State<ProductShippingRow> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top:2.5),
+                padding: EdgeInsets.only(top: 2.5),
               ),
               Container(
                 child: widget.parts.isTablet

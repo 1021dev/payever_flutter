@@ -95,7 +95,6 @@ class ProductScreen extends StatefulWidget {
 
 class _ProductScreenState extends State<ProductScreen> {
   AppBar _appBar;
-
   listener() {
     setState(() {
       widget.stateCounter++;
@@ -412,64 +411,15 @@ class ProductLoader extends StatefulWidget {
     initialDocument = ''' 
               query Product {
                   getProducts(
-                    businessUuid: "${business.id}",
-                    paginationLimit: $limit,
-                    pageNumber: $page,
-                    orderBy: "createdAt",
+                    businessUuid:"${business.id}",
+                    paginationLimit:$limit,
+                    pageNumber:$page,
+                    orderBy:"createdAt",
                     orderDirection: "desc",
-                    search: "${parts.searchDocument}",
-                  ){
-                    products {
-                      images
-                      uuid
-                      title
-                      description
-                      hidden
-                      price
-                      salePrice
-                      sku
-                      barcode
-                      currency
-                      type
-                      enabled
-                      categories {
-                        title
-                      }
-                      channelSets {
-                        id
-                        type
-                        name
-                      }
-                      variants {
-                        id
-                        images
-                        title
-                        description
-                        hidden
-                        price
-                        salePrice
-                        sku
-                        barcode
-                      }
-                      shipping {
-                        free
-                        general
-                        weight
-                        width
-                        length
-                        height
-                      }
-                    }
-                    info {
-                      pagination {
-                        page
-                        page_count
-                        per_page
-                        item_count
-                      }
-                    }
-                  }
-                }
+                    filterById:[]
+                    search:"${parts.searchDocument}",
+                    filters:[]
+                  ){    products {      images      id      title      description      onSales      price      salePrice      sku      barcode      currency      type      active      categories {        title      }      variants {        id        images        options {          name          value        }        description        onSales        price        salePrice        sku        barcode      }      channelSets {        id        type        name      }      shipping {        free        general        weight        width        length        height      }    }    info {      pagination {        page        page_count        per_page        item_count      }    }  }}
               ''';
   }
 
@@ -498,7 +448,8 @@ class _ProductLoaderState extends State<ProductLoader> {
         child: Query(
           options: QueryOptions(
               variables: <String, dynamic>{}, document: widget.initialDocument),
-          builder: (QueryResult result, {VoidCallback refetch ,fetchMore: null}) {
+          builder: (QueryResult result,
+              {VoidCallback refetch, fetchMore: null}) {
             if (result.errors != null) {
               print(result.errors);
               return Center(child: Text("Error while fetching data"));
@@ -510,15 +461,24 @@ class _ProductLoaderState extends State<ProductLoader> {
                     : CircularProgressIndicator(),
               );
             }
+
             if (widget.parts.page == 1) widget.parts.products.clear();
             widget.parts.pageCount =
                 result.data["getProducts"]["info"]["pagination"]["page_count"];
-            result.data["getProducts"]["products"].forEach((prod) {
-              var tempProduct = ProductsModel.toMap(prod);
-              if ((widget.parts.products
-                      .indexWhere((test) => test.uuid == tempProduct.uuid) <
-                  0)) widget.parts.products.add(tempProduct);
-            });
+            var i = 1;
+            result.data["getProducts"]["products"].forEach(
+              (prod) {
+                print(i);
+                i++;
+                // print(prod);
+                var tempProduct = ProductsModel.fromMap(prod);
+                if ((widget.parts.products.indexWhere((test) {
+                      return test.uuid == tempProduct.uuid;
+                    }) <
+                    0)) widget.parts.products.add(tempProduct);
+              },
+            );
+            print("lenght ${widget.parts.products.length}");
             Future.delayed(Duration(seconds: 1)).then((_) {
               result = null;
               widget.parts.isLoading.value = false;
@@ -572,7 +532,7 @@ class _ProductItemState extends State<ProductItem> {
     }
     widget.parts.haveShop = false;
     widget.parts.havePOS = false;
-    widget.currentProduct.channels.forEach((channel) {
+    widget.currentProduct.channelSets.forEach((channel) {
       widget.parts.shops.forEach((shop) {
         if (shop.channelSet == channel.id) {
           widget.parts.haveShop = true;
@@ -721,7 +681,7 @@ class _ProductItemState extends State<ProductItem> {
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: <Widget>[
-                            !widget.currentProduct.hidden
+                            widget.currentProduct.onSales
                                 ? Container(
                                     padding: EdgeInsets.only(
                                         right: Measurements.width *
@@ -741,10 +701,10 @@ class _ProductItemState extends State<ProductItem> {
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                     fontSize: 16,
-                                    decoration: !widget.currentProduct.hidden
+                                    decoration: widget.currentProduct.onSales
                                         ? TextDecoration.lineThrough
                                         : TextDecoration.none,
-                                    color: widget.currentProduct.hidden
+                                    color: !widget.currentProduct.onSales
                                         ? Colors.white
                                         : Colors.white.withOpacity(0.7)),
                               ),
@@ -799,19 +759,20 @@ class _ProductItemState extends State<ProductItem> {
                   widget.parts.isLoading.value = false;
                   if (!widget.parts.posCall)
                     Navigator.push(
-                        context,
-                        PageTransition(
-                            child: NewProductScreen(
-                              wallpaper: widget.parts.wallpaper,
-                              business: widget.parts.business.id,
-                              view: this,
-                              currency: widget.parts.business.currency,
-                              editMode: true,
-                              productEdit: widget.currentProduct,
-                              isFromDashboardCard: false,
-                              isLoading: widget.parts.isLoading,
-                            ),
-                            type: PageTransitionType.fade));
+                      context,
+                      PageTransition(
+                          child: NewProductScreen(
+                            wallpaper: widget.parts.wallpaper,
+                            business: widget.parts.business.id,
+                            view: this,
+                            currency: widget.parts.business.currency,
+                            editMode: true,
+                            productEdit: widget.currentProduct,
+                            isFromDashboardCard: false,
+                            isLoading: widget.parts.isLoading,
+                          ),
+                          type: PageTransitionType.fade),
+                    );
                 },
               ),
             ],
@@ -886,7 +847,9 @@ class _ProductItemState extends State<ProductItem> {
                                             options: QueryOptions(
                                                 variables: <String, dynamic>{},
                                                 document: doc),
-                                            builder: (QueryResult result,{VoidCallback refetch, fetchMore: null}) {
+                                            builder: (QueryResult result,
+                                                {VoidCallback refetch,
+                                                fetchMore: null}) {
                                               if (result.errors != null) {
                                                 print(result.errors);
                                                 return Center(
@@ -937,8 +900,8 @@ class _ProductItemState extends State<ProductItem> {
                                                   Future.delayed(Duration(
                                                           microseconds: 1))
                                                       .then((_) {
-                                                   widget.parts.isLoading
-                                                       .notifyListeners();
+                                                    widget.parts.isLoading
+                                                        .notifyListeners();
                                                     widget.parts.products
                                                         .remove(widget
                                                             .currentProduct);

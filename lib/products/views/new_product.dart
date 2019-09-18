@@ -71,11 +71,11 @@ class NewProductScreenParts {
 
   List<String> categoryList = List();
   List<String> images = List();
-  List<Categories> categories = List();
+  List<ProductCategoryInterface> categories = List();
   List<Inventory> inventories = List();
   List<Terminal> terminals = List();
   List<Shop> shops = List();
-  List<ChannelSet> channels = List();
+  List<ProductChannelSet> channels = List();
 
   var qKey = GlobalKey();
   final GlobalKey<FormState> popUpKey = GlobalKey<FormState>();
@@ -86,7 +86,7 @@ class NewProductScreenParts {
 
   var openedRow = ValueNotifier(0);
   String business;
-  String type;
+  ProductTypeEnum type;
   String currency;
   Widget mainForm;
   Widget inventoryForm;
@@ -97,7 +97,7 @@ class NewProductScreenParts {
   Widget categoryForm;
   Widget channelForm;
   ProductsModel product = ProductsModel();
-  List<Variants> variants = List();
+  List<ProductVariantModel> variants = List();
   InventoryManagement invManager = InventoryManagement();
 
   final ValueNotifier<GraphQLClient> client = clientForNewProduct(
@@ -183,7 +183,7 @@ class _NewProductScreenState extends State<NewProductScreen> {
     widget._parts.isLoading = widget.isLoading;
 
     if (widget.editMode) {
-      widget._parts.channels = widget.productEdit.channels;
+      widget._parts.channels = widget.productEdit.channelSets;
       widget._parts.product = widget.productEdit;
       widget._parts.type = widget.productEdit.type;
 
@@ -449,11 +449,11 @@ class _NewProductScreenState extends State<NewProductScreen> {
           print(
               "id: ${widget._parts.editMode && (v.id != null) ? '"${v.id}"' : '"${Uuid().v4()}"'}");
           variants +=
-              '{title: "${v.title}", description: "${v.description}",price: ${v.price}, images: [$images], hidden: ${v.hidden}, salePrice: ${v.salePrice}, sku: "${v.sku}", barcode: "${v.barcode}",id: $id}';
+              '{title: "${v.title}", description: "${v.description}",price: ${v.price}, images: [$images], hidden: ${v.onSales}, salePrice: ${v.salePrice}, sku: "${v.sku}", barcode: "${v.barcode}",id: $id}';
         });
         String stringCategories = "";
         widget._parts.categoryList.forEach((f) {
-          Categories c = widget._parts.categories
+          ProductCategoryInterface c = widget._parts.categories
               .where((test) => test.title.toLowerCase() == f.toLowerCase())
               .toList()[0];
           print(c);
@@ -470,7 +470,7 @@ class _NewProductScreenState extends State<NewProductScreen> {
         if (!widget._parts.editMode) {
           doc = '''
         mutation createProduct {
-            createProduct(product: {businessUuid: "${widget._parts.business}", images: [$_images], title: "${widget._parts.product.title}", description: "${widget._parts.product.description}", hidden: ${widget._parts.product.hidden} , price: ${widget._parts.product.price}, salePrice: ${widget._parts.product.salePrice}, sku: "${widget._parts.product.sku == null ? "" : widget._parts.product.sku}", barcode: "${widget._parts.product.barcode == null ? "" : widget._parts.product.barcode}", type: "${widget._parts.type}", enabled: ${widget._parts.enabled}, channelSets: [$channels], categories: [$stringCategories], variants: [$variants], shipping: {free: ${widget._parts.product.shipping.free}, general: ${widget._parts.product.shipping.general}, weight: ${widget._parts.product.shipping.weight}, width: ${widget._parts.product.shipping.width}, length: ${widget._parts.product.shipping.length}, height:  ${widget._parts.product.shipping.height}}}) {
+            createProduct(product: {businessUuid: "${widget._parts.business}", images: [$_images], title: "${widget._parts.product.title}", description: "${widget._parts.product.description}", hidden: ${widget._parts.product.onSales} , price: ${widget._parts.product.price}, salePrice: ${widget._parts.product.salePrice}, sku: "${widget._parts.product.sku == null ? "" : widget._parts.product.sku}", barcode: "${widget._parts.product.barcode == null ? "" : widget._parts.product.barcode}", type: "${widget._parts.type}", enabled: ${widget._parts.enabled}, channelSets: [$channels], categories: [$stringCategories], variants: [$variants], shipping: {free: ${widget._parts.product.shipping.free}, general: ${widget._parts.product.shipping.general}, weight: ${widget._parts.product.shipping.weight}, width: ${widget._parts.product.shipping.width}, length: ${widget._parts.product.shipping.length}, height:  ${widget._parts.product.shipping.height}}}) {
                 title
                 uuid
                 }
@@ -479,7 +479,7 @@ class _NewProductScreenState extends State<NewProductScreen> {
         } else {
           doc = '''
         mutation updateProduct {
-            updateProduct(product: {businessUuid: "${widget._parts.business}", images: [$_images], uuid: "${widget.productEdit.uuid}", title: "${widget._parts.product.title}", description: "${widget._parts.product.description}", hidden: ${widget._parts.product.hidden} , price: ${widget._parts.product.price}, salePrice: ${widget._parts.product.salePrice}, sku: "${widget._parts.product.sku == null ? "" : widget._parts.product.sku}", barcode: "${widget._parts.product.barcode == null ? "" : widget._parts.product.barcode}", type: "${widget._parts.type}", enabled: ${widget._parts.product.enabled}, channelSets: [$channels], categories: [$stringCategories], variants: [$variants], shipping: {free: ${widget._parts.product.shipping.free}, general: ${widget._parts.product.shipping.general}, weight: ${widget._parts.product.shipping.weight}, width: ${widget._parts.product.shipping.width}, length: ${widget._parts.product.shipping.length}, height:  ${widget._parts.product.shipping.height}}}) {
+            updateProduct(product: {businessUuid: "${widget._parts.business}", images: [$_images], uuid: "${widget.productEdit.uuid}", title: "${widget._parts.product.title}", description: "${widget._parts.product.description}", hidden: ${widget._parts.product.onSales} , price: ${widget._parts.product.price}, salePrice: ${widget._parts.product.salePrice}, sku: "${widget._parts.product.sku == null ? "" : widget._parts.product.sku}", barcode: "${widget._parts.product.barcode == null ? "" : widget._parts.product.barcode}", type: "${widget._parts.type}", enabled: ${widget._parts.product.active}, channelSets: [$channels], categories: [$stringCategories], variants: [$variants], shipping: {free: ${widget._parts.product.shipping.free}, general: ${widget._parts.product.shipping.general}, weight: ${widget._parts.product.shipping.weight}, width: ${widget._parts.product.shipping.width}, length: ${widget._parts.product.shipping.length}, height:  ${widget._parts.product.shipping.height}}}) {
                 title
                 uuid
                 }
@@ -504,7 +504,8 @@ class _NewProductScreenState extends State<NewProductScreen> {
                       child: Query(
                         options: QueryOptions(
                             variables: <String, dynamic>{}, document: doc),
-                        builder: (QueryResult result, {VoidCallback refetch,fetchMore: null}) {
+                        builder: (QueryResult result,
+                            {VoidCallback refetch, fetchMore: null}) {
                           if (result.errors != null) {
                             return Column(
                               children: <Widget>[
@@ -555,15 +556,17 @@ class _NewProductScreenState extends State<NewProductScreen> {
         //Scaffold.of(context).showSnackBar(snackBar);
         widget._parts.scaffoldKey.currentState.showSnackBar(snackBar);
       }
-    }).catchError((onError) {
-      if (onError.toString().contains("401")) {
-        GlobalUtils.clearCredentials();
-        Navigator.pushReplacement(
+    }).catchError(
+      (onError) {
+        if (onError.toString().contains("401")) {
+          GlobalUtils.clearCredentials();
+          Navigator.pushReplacement(
             context,
-            PageTransition(
-                child: LoginScreen(), type: PageTransitionType.fade));
-      }
-    });
+            PageTransition(child: LoginScreen(), type: PageTransitionType.fade),
+          );
+        }
+      },
+    );
   }
 }
 
@@ -575,9 +578,9 @@ class MainRow extends StatefulWidget {
   MainRow({this.openedRow, this.parts});
 
   get isMainRowOK {
-    parts.product.hidden = parts.product.hidden ?? true;
+    parts.product.onSales = parts.product.onSales ?? true;
     return !(parts.nameError || parts.priceError || parts.descriptionError) &&
-        !(!parts.product.hidden && parts.onSaleError);
+        !(!parts.product.onSales && parts.onSaleError);
   }
 
   bool isOpen = true;
@@ -1556,7 +1559,7 @@ class _VisibilityRowState extends State<VisibilityRow> {
     super.initState();
     widget.openedRow.addListener(listener);
     if (widget.parts.editMode) {
-      widget.enabled = widget.parts.product.enabled ?? true;
+      widget.enabled = widget.parts.product.active ?? true;
     }
   }
 
@@ -1782,10 +1785,15 @@ class _ChannelRowState extends State<ChannelRow> {
                                         var term =
                                             widget.parts.terminals[index];
                                         if (value) {
-                                          widget.parts.channels.add(ChannelSet(
-                                              term.channelSet,
-                                              term.name,
-                                              GlobalUtils.CHANNEL_POS));
+                                          widget.parts.channels.add(
+                                            ProductChannelSet(
+                                                name: term.name,
+                                                id: term.channelSet,
+                                                type: GlobalUtils.CHANNEL_POS),
+                                            //     term.channelSet,
+                                            //     term.name,
+                                            //     GlobalUtils.CHANNEL_POS),
+                                          );
                                         } else {
                                           widget.parts.channels.removeWhere(
                                               (ch) => term.channelSet == ch.id);
@@ -1881,10 +1889,16 @@ class _ChannelRowState extends State<ChannelRow> {
                                       onChanged: (bool value) {
                                         var shop = widget.parts.shops[index];
                                         if (value) {
-                                          widget.parts.channels.add(ChannelSet(
-                                              shop.channelSet,
-                                              shop.name,
-                                              GlobalUtils.CHANNEL_SHOP));
+                                          widget.parts.channels.add(
+                                            ProductChannelSet(
+                                              id:shop.channelSet ,
+                                              name:shop.name ,
+                                              type: GlobalUtils.CHANNEL_SHOP,
+                                                // shop.channelSet,
+                                                // shop.name,
+                                                // GlobalUtils.CHANNEL_SHOP
+                                              ),
+                                          );
                                         } else {
                                           widget.parts.channels.removeWhere(
                                               (ch) => shop.channelSet == ch.id);

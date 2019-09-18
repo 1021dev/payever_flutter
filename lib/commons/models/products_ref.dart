@@ -64,144 +64,407 @@ class Products {
   String get customId => __id;
 }
 
-
-enum ProductTypeEnum{
+enum ProductTypeEnum {
   physical,
   digital,
   service,
 }
+
 class ProductsModel {
-
-  ProductsModel();
-
-
-  String _businessUuid;
-  List<String> _imagesUrl = List();
-  List<String>_images = List();
-  String _currency;
-  String _uuid;
-  String _title;
-  String _description;
-  bool _onSales;
-  num _price;
-  String _country;
-  num _vatRate;
-  num _salePrice;
-  String _sku;
-  String _barcode;
-  //_marketplaces?: ProductMarketplaceInterface[];
-  String _createdAt;
-  String _updatedAt;
-  //_categories: ProductCategoryInterface[];
-  ProductTypeEnum _type;
-  bool _active;
-  List<Variants> _variants = List();
-  Shipping _shipping;
-//   _marketplaceAssigments?: MarketplaceAssigmentInterface[];
-
-//   ProductsModel.toMap(dynamic obj) {
-//     uuid = obj[GlobalUtils.DB_PROD_MODEL_UUID] ?? "";
-//     title = obj[GlobalUtils.DB_PROD_MODEL_TITLE];
-//     description = obj[GlobalUtils.DB_PROD_MODEL_DESCRIPTION];
-//     hidden = obj[GlobalUtils.DB_PROD_MODEL_HIDDEN];
-//     price = obj[GlobalUtils.DB_PROD_MODEL_PRICE];
-//     salePrice = obj[GlobalUtils.DB_PROD_MODEL_SALE_PRICE];
-//     sku = obj[GlobalUtils.DB_PROD_MODEL_SKU];
-//     barcode = obj[GlobalUtils.DB_PROD_MODEL_BARCODE];
-//     currency = obj[GlobalUtils.DB_PROD_MODEL_CURRENCY];
-//     type = obj[GlobalUtils.DB_PROD_MODEL_TYPE];
-//     enabled = obj[GlobalUtils.DB_PROD_MODEL_ENABLE];
-//     if (obj[GlobalUtils.DB_PROD_MODEL_IMAGES] != null)
-//       obj[GlobalUtils.DB_PROD_MODEL_IMAGES].forEach((img) {
-//         images.add(img);
-//       });
-//     if (obj[GlobalUtils.DB_PROD_MODEL_CATEGORIES] != null)
-//       obj[GlobalUtils.DB_PROD_MODEL_CATEGORIES].forEach((categ) {
-//         if (categ != null) categories.add(Categories.toMap(categ));
-//       });
-//     if (obj[GlobalUtils.DB_PROD_MODEL_CHANNEL_SET] != null)
-//       obj[GlobalUtils.DB_PROD_MODEL_CHANNEL_SET].forEach((ch) {
-//         channels.add(ChannelSet.toMap(ch));
-//       });
-//     if (obj[GlobalUtils.DB_PROD_MODEL_VARIANTS] != null)
-//       obj[GlobalUtils.DB_PROD_MODEL_VARIANTS].forEach((variant) {
-//         variants.add(Variants.toMap(variant));
-//       });
-//     if (obj[GlobalUtils.DB_PROD_MODEL_SHIPPING] != null)
-//       shipping = Shipping.toMap(obj[GlobalUtils.DB_PROD_MODEL_SHIPPING]);
-//   }
-}
-
-class Categories {
-  String title;
   String businessUuid;
-  String slug;
-  String id;
+  List<String> imagesUrl = List();
+  List<String> images = List();
+  String currency;
+  String uuid;
+  String title;
+  String description;
+  bool onSales;
+  num price;
+  String country;
+  num vatRate;
+  num salePrice;
+  String sku;
+  String barcode;
+  List<ProductChannelSet> channelSets = List();
+  List<ProductMarketplaceInterface> marketplaces = List();
+  String createdAt;
+  String updatedAt;
+  List<ProductCategoryInterface> categories = List();
+  ProductTypeEnum type;
+  bool active;
+  List<ProductVariantModel> variants = List();
+  ProductShippingInterface shipping;
+  MarketplaceAssigmentInterface marketplaceAssigments;
 
-  Categories.toMap(dynamic obj) {
-    title = obj[GlobalUtils.DB_PROD_MODEL_CATEGORIES_TITLE];
-    slug = obj[GlobalUtils.DB_PROD_MODEL_CATEGORIES_SLUG];
-    id = obj[GlobalUtils.DB_PROD_MODEL_CATEGORIES__ID];
-    businessUuid = obj[GlobalUtils.DB_PROD_MODEL_CATEGORIES_BUSINESS_UUID];
+  ProductsModel({
+    this.sku,
+    this.salePrice,
+    this.price,
+    this.onSales,
+    this.imagesUrl,
+    this.images,
+    this.description,
+    this.barcode,
+    this.title,
+    this.businessUuid,
+    this.type,
+    this.uuid,
+    this.active,
+    this.categories,
+    this.channelSets,
+    this.country,
+    this.createdAt,
+    this.currency,
+    this.marketplaceAssigments,
+    this.marketplaces,
+    this.shipping,
+    this.updatedAt,
+    this.variants,
+    this.vatRate,
+  });
+
+  factory ProductsModel.fromMap(dynamic obj) {
+    List<String> _imagesUrl = List();
+    obj["imagesUrl"]?.forEach(
+      (image) {
+        _imagesUrl.add(image);
+      },
+    );
+
+    List<String> _images = List();
+    obj["images"]?.forEach((image) {
+      _images.add(image);
+    });
+
+    List<ProductChannelSet> _channelSets = List();
+    obj["channelSets"]?.forEach((chset) {
+      _channelSets.add(ProductChannelSet.fromMap(chset));
+    });
+
+    List<ProductMarketplaceInterface> _marketplaces = List();
+    obj["marketplaces"]?.forEach((place) {
+      _marketplaces.add(ProductMarketplaceInterface.fromMap(obj));
+    });
+
+    List<ProductCategoryInterface> _categories = List();
+    obj["categories"]?.forEach((cat) {
+      _categories.add(ProductCategoryInterface.fromMap(cat));
+    });
+
+    List<ProductVariantModel> _variants = List();
+    obj["variants"]?.forEach((variant) {
+      _variants.add(ProductVariantModel.fromMap(variant));
+    });
+
+    ProductTypeEnum stringToEnum(String e){
+      switch (e) {
+        case "physical":
+          return ProductTypeEnum.physical;
+          break;
+        case "digital":
+          return ProductTypeEnum.digital;
+          break;
+        case "service":
+          return ProductTypeEnum.service;
+          break;
+      }
+    }
+    // print("____");
+    // print(obj["shipping"]);
+    // print("----");
+    return ProductsModel(
+      active: obj["active"],
+      barcode: obj["barcode"],
+      businessUuid: obj["businessUuid"],
+      categories: _categories,
+      channelSets: _channelSets,
+      country: obj["country"],
+      createdAt: obj["createdAt"],
+      currency: obj["currency"],
+      description: obj["description"],
+      images: _images,
+      imagesUrl: _imagesUrl,
+      marketplaceAssigments: obj["marketplaceAssigments"],
+      marketplaces: _marketplaces,
+      onSales: obj["onSales"],
+      price: obj["price"],
+      salePrice: obj["salePrice"],
+      shipping: ProductShippingInterface.fromMap(obj["shipping"]),
+      sku: obj["sku"],
+      title: obj["title"],
+      type: stringToEnum(obj["type"]),
+      updatedAt: obj["updatedAt"],
+      uuid: obj["id"],
+      variants: _variants,
+      vatRate: obj["vatRate"],
+    );
+  }
+  
+
+  Map<String, dynamic> toJson() {
+    return {
+      "businessUuid": this.businessUuid,
+      "images": this.images,
+      "title": this.title,
+      "description": this.description,
+      "onSales": this.onSales,
+      "price": this.price,
+      "salePrice": this.salePrice,
+      "sku": this.sku,
+      "barcode": this.barcode,
+      "type": this.type,
+      "active": this.active,
+      "channelSets": encondeToJson(this.channelSets),
+      "categories": encondeToJson(this.categories),
+      "variants": encondeToJson(this.variants),
+      "shipping": this.shipping.toJson(),
+    };
+  }
+
+  List encondeToJson(List list) {
+    List jsonList = List();
+    list.map((item) => jsonList.add(item.toJson())).toList();
+    return jsonList;
   }
 }
 
-class Variants {
-  Variants();
+class ProductChannelSet {
 
   String id;
+  String type;
+  String name;
+
+  ProductChannelSet({this.id, this.name, this.type});
+
+  factory ProductChannelSet.fromMap(dynamic obj) {
+    return ProductChannelSet(
+      id: obj["id"],
+      type: obj["type"],
+      name: obj["name"],
+    );
+  }
+
+  Map<String, String> toJson() {
+    return {
+      "id": this.id,
+      "type": this.type,
+      "name": this.name,
+    };
+  }
+}
+
+class ProductMarketplaceInterface {
+  String id;
+  bool activated;
+  String name;
+  String type;
+  bool connected;
+
+  ProductMarketplaceInterface({
+    this.type,
+    this.name,
+    this.id,
+    this.activated,
+    this.connected,
+  });
+  factory ProductMarketplaceInterface.fromMap(dynamic obj) {
+    return ProductMarketplaceInterface(
+      activated: obj["activated"],
+      connected: obj["connected"],
+      id: obj["id"],
+      name: obj["name"],
+      type: obj["type"],
+    );
+  }
+}
+
+class ProductCategoryInterface {
+  String id;
+  String businessUuid;
+  String title;
+  String slug;
+  ProductCategoryInterface({
+    this.id,
+    this.title,
+    this.businessUuid,
+    this.slug,
+  });
+  factory ProductCategoryInterface.fromMap(dynamic obj) {
+    return ProductCategoryInterface(
+      id: obj["id"],
+      businessUuid: obj["businessUuid"],
+      slug: obj["slug"],
+      title: obj["title"],
+    );
+  }
+  Map<String, dynamic> toJson() {
+    return {
+      "id": this.id,
+      "slug": this.slug,
+      "title": this.title,
+      "businessUuid": this.businessUuid,
+    };
+  }
+}
+
+class ProductVariantModel {
+  String id;
+  String businessUuid;
+  List<String> imagesUrl = List();
   List<String> images = List();
   String title;
   String description;
-  bool hidden;
+  bool onSales;
   num price;
   num salePrice;
   String sku;
   String barcode;
+  List<Option> options = List();
 
-  Variants.toMap(dynamic obj) {
-    id = obj[GlobalUtils.DB_PROD_MODEL_VAR_ID];
-    title = obj[GlobalUtils.DB_PROD_MODEL_VAR_TITLE];
-    description = obj[GlobalUtils.DB_PROD_MODEL_VAR_DESCRIPTION];
-    hidden = obj[GlobalUtils.DB_PROD_MODEL_VAR_HIDDEN];
-    price = obj[GlobalUtils.DB_PROD_MODEL_VAR_PRICE];
-    salePrice = obj[GlobalUtils.DB_PROD_MODEL_VAR_SALE_PRICE];
-    sku = obj[GlobalUtils.DB_PROD_MODEL_VAR_SKU];
-    barcode = obj[GlobalUtils.DB_PROD_MODEL_VAR_BARCODE];
-    obj[GlobalUtils.DB_PROD_MODEL_VAR_IMAGES].forEach((img) {
-      images.add(img);
+  ProductVariantModel({
+    this.businessUuid,
+    this.title,
+    this.id,
+    this.barcode,
+    this.description,
+    this.images,
+    this.imagesUrl,
+    this.onSales,
+    this.options,
+    this.price,
+    this.salePrice,
+    this.sku,
+  });
+
+  factory ProductVariantModel.fromMap(dynamic obj) {
+    List<String> _imagesUrl = List();
+    obj["imagesUrl"]?.forEach((image) {
+      _imagesUrl.add(image);
     });
+    List<String> _images = List();
+    obj["images"]?.forEach((image) {
+      _images.add(image);
+    });
+    List<Option> _options = List();
+    obj["options"]?.forEach((option) {
+      _options.add(Option.fromMap(option));
+    });
+    return ProductVariantModel(
+      barcode: obj["barcode"],
+      businessUuid: obj["businessUuid"],
+      title: obj["title"],
+      description: obj["description"],
+      id: obj["id"],
+      imagesUrl: _imagesUrl,
+      images: _images,
+      onSales: obj["onSales"],
+      options: _options,
+      price: obj["price"],
+      salePrice: obj["salePrice"],
+      sku: obj["sku"],
+    );
+  }
+  Map<String,dynamic> toJson(){
+    return {
+      "id": this.id,
+          "images": this.images,
+          "options": encondeToJson(this.options),
+          "description": this.description,
+          "price": this.price,
+          "salePrice": this.salePrice,
+          "onSales": this.onSales,
+          "sku": this.sku,
+          "barcode": this.barcode,
+    };
+  }
+   List encondeToJson(List list) {
+    List jsonList = List();
+    list.map((item) => jsonList.add(item.toJson())).toList();
+    return jsonList;
+  }
+
+}
+
+class Option {
+  String name;
+  String value;
+  Option({this.name, this.value});
+  factory Option.fromMap(dynamic obj) {
+    return Option(
+      name: obj["name"],
+      value: obj["value"],
+    );
+  }
+  Map<String, String> toJson() {
+    return {
+      "name": this.name,
+      "value": this.value,
+    };
   }
 }
 
-class Shipping {
-  Shipping();
-
+class ProductShippingInterface {
   bool free;
   bool general;
   num weight;
   num width;
   num length;
   num height;
+  String measure_mass;
+  String measure_size;
 
-  Shipping.toMap(dynamic obj) {
-    free = obj[GlobalUtils.DB_PROD_MODEL_SHIP_FREE];
-    general = obj[GlobalUtils.DB_PROD_MODEL_SHIP_GENERAL];
-    weight = obj[GlobalUtils.DB_PROD_MODEL_SHIP_WEIGHT];
-    width = obj[GlobalUtils.DB_PROD_MODEL_SHIP_WIDTH];
-    length = obj[GlobalUtils.DB_PROD_MODEL_SHIP_LENGTH];
-    height = obj[GlobalUtils.DB_PROD_MODEL_SHIP_HEIGHT];
+  ProductShippingInterface({
+    this.free,
+    this.general,
+    this.height,
+    this.length,
+    this.measure_mass,
+    this.measure_size,
+    this.weight,
+    this.width,
+  });
+
+  factory ProductShippingInterface.fromMap(dynamic obj) {
+    return obj != null ?ProductShippingInterface(
+      free: obj["free"],
+      general: obj["general"],
+      height: obj["height"],
+      length: obj["length"],
+      measure_mass: obj["measure_mass"],
+      measure_size: obj["measure_size"],
+      weight: obj["weight"],
+      width: obj["width"],
+    ):null;
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "free": this.free,
+      "general": this.general,
+      "weight": this.weight,
+      "width": this.width,
+      "length": this.length,
+      "height": this.height,
+    };
   }
 }
 
-//class Info {
-//  num page;
-//  num page_count;
-//  num per_page;
-//  num item_count;
-//
-//  Info.toMap(dynamic obj) {}
-//}
+class MarketplaceAssigmentInterface {
+  String marketplaceId;
+  String productUuid;
+
+  MarketplaceAssigmentInterface({
+    this.marketplaceId,
+    this.productUuid,
+  });
+
+  factory MarketplaceAssigmentInterface.fromMap(dynamic obj) {
+    return MarketplaceAssigmentInterface(
+      marketplaceId: obj["marketplaceId"],
+      productUuid: obj["productUuid"],
+    );
+  }
+}
 
 class InventoryModel {
   String _barcode;
@@ -217,9 +480,6 @@ class InventoryModel {
   String __id;
 
   InventoryModel.toMap(dynamic obj) {
-
-    print("obj: $obj");
-
     _barcode = obj[GlobalUtils.DB_INV_MODEL_BARCODE];
     _business = obj[GlobalUtils.DB_INV_MODEL_BUSINESS];
     _createdAt = obj[GlobalUtils.DB_INV_MODEL_CREATED_AT];
@@ -256,36 +516,50 @@ class InventoryModel {
   String get _id => __id;
 }
 
-class VariantsRef {
-  VariantsRef();
-
-  String id;
-  List<String> images = List();
-  String title;
-  String description;
-  bool hidden;
-  num price;
-  num salePrice;
-  String sku;
-  String barcode;
-  List<VariantType> type = List();
-
-  VariantsRef.toMap(dynamic obj) {
-    id = obj[GlobalUtils.DB_PROD_MODEL_VAR_ID];
-    title = obj[GlobalUtils.DB_PROD_MODEL_VAR_TITLE];
-    description = obj[GlobalUtils.DB_PROD_MODEL_VAR_DESCRIPTION];
-    hidden = obj[GlobalUtils.DB_PROD_MODEL_VAR_HIDDEN];
-    price = obj[GlobalUtils.DB_PROD_MODEL_VAR_PRICE];
-    salePrice = obj[GlobalUtils.DB_PROD_MODEL_VAR_SALE_PRICE];
-    sku = obj[GlobalUtils.DB_PROD_MODEL_VAR_SKU];
-    barcode = obj[GlobalUtils.DB_PROD_MODEL_VAR_BARCODE];
-    obj[GlobalUtils.DB_PROD_MODEL_VAR_IMAGES].forEach((img) {
-      images.add(img);
-    });
-  }
-}
-
-class VariantType {
-  String type;
-  String value;
-}
+Object a = {
+  "operationName": "updateProduct",
+  "variables": {
+    "product": {
+      "businessUuid": "ed49c090-840d-4442-934f-28f4abe3597b",
+      "images": [],
+      "id": "eafd1de3-2b20-4b5d-9e9f-425872e23389",
+      "title": "test",
+      "description": "123",
+      "onSales": false,
+      "price": 123,
+      "salePrice": null,
+      "sku": null,
+      "barcode": "",
+      "type": "physical",
+      "active": true,
+      "channelSets": [],
+      "categories": [],
+      "variants": [
+        {
+          "id": "f370e3f5-cbb0-4063-b1c4-90f1815b1dab",
+          "images": [],
+          "options": [
+            {"name": "Color", "value": "blue"},
+            {"name": "Size", "value": "S"}
+          ],
+          "description": "qwe",
+          "price": 123,
+          "salePrice": null,
+          "onSales": false,
+          "sku": "ooqooaiiyhn13",
+          "barcode": ""
+        }
+      ],
+      "shipping": {
+        "free": false,
+        "general": false,
+        "weight": 1,
+        "width": 1,
+        "length": 1,
+        "height": 1
+      }
+    }
+  },
+  "query":
+      "mutation updateProduct(product: ProductUpdateInput!) {\n  updateProduct(product: product) {\n    title\n    id\n  }\n}\n"
+};

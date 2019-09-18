@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../products.dart';
 import '../utils/utils.dart';
 import 'new_product.dart';
 
@@ -23,11 +24,11 @@ class _ButtonRowState extends State<ButtonRow> {
     super.initState();
     print(widget.parts.type);
     if (!widget.parts.editMode)
-      widget.parts.type = "physical";
+      widget.parts.type = ProductTypeEnum.physical;
     else {
-      service = (widget.parts.type == "service");
-      digital = (widget.parts.type == "digital");
-      physical = (widget.parts.type == "physical");
+      service = (widget.parts.type == ProductTypeEnum.service);
+      digital = (widget.parts.type == ProductTypeEnum.digital);
+      physical = (widget.parts.type == ProductTypeEnum.physical);
     }
   }
 
@@ -53,7 +54,7 @@ class _ButtonRowState extends State<ButtonRow> {
           ),
           onPressed: () {
             setState(() {
-              widget.parts.type = "service";
+              widget.parts.type = ProductTypeEnum.service;
               service = true;
               digital = false;
               physical = false;
@@ -76,7 +77,7 @@ class _ButtonRowState extends State<ButtonRow> {
           ),
           onPressed: () {
             setState(() {
-              widget.parts.type = "digital";
+              widget.parts.type = ProductTypeEnum.digital;
               service = false;
               digital = true;
               physical = false;
@@ -103,7 +104,7 @@ class _ButtonRowState extends State<ButtonRow> {
           ),
           onPressed: () {
             setState(() {
-              widget.parts.type = "physical";
+              widget.parts.type = ProductTypeEnum.physical;
               service = false;
               digital = false;
               physical = true;

@@ -15,9 +15,9 @@ class ProductMainRow extends StatefulWidget {
   bool haveImage = false;
   ProductMainRow({@required this.parts});
   get isMainRowOK {
-    parts.product.hidden = parts.product.hidden??true;
+    parts.product.onSales = parts.product.onSales??true;
     return !(parts.nameError || parts.priceError || parts.descriptionError) &&
-        !(!parts.product.hidden && parts.onSaleError);
+        !(!parts.product.onSales && parts.onSaleError);
   }
   @override
   _ProductMainRowState createState() => _ProductMainRowState();
@@ -62,7 +62,7 @@ class _ProductMainRowState extends State<ProductMainRow> {
 
   @override
   Widget build(BuildContext context) {
-    widget.onSale = !(widget.parts.product.hidden??true);
+    widget.onSale = !(widget.parts.product.onSales??true);
     bool _isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     Measurements.height = _isPortrait?MediaQuery.of(context).size.height:MediaQuery.of(context).size.width;
     Measurements.width = !_isPortrait?MediaQuery.of(context).size.height:MediaQuery.of(context).size.width;
@@ -290,10 +290,10 @@ class _ProductMainRowState extends State<ProductMainRow> {
                             child: AutoSizeText(Language.getProductStrings("price.sale"),style: TextStyle(fontSize: AppStyle.fontSizeTabContent()))),
                           Switch(
                             activeColor: widget.parts.switchColor,
-                            value: !(widget.parts.product.hidden??true),
+                            value: !(widget.parts.product.onSales??true),
                             onChanged: (value) {
                               setState(() {
-                                widget.parts.product.hidden = !value;
+                                widget.parts.product.onSales = !value;
                               });
                             },
                           )

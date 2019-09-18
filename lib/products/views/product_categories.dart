@@ -50,47 +50,48 @@ class _ProductCategoryRowState extends State<ProductCategoryRow> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Container(
-              //width: Measurements.width * 0.9,
-              height: widget.parts.categoryList.isEmpty
-                  ? 0
-                  : Measurements.height * (widget.parts.isTablet ? 0.05 : 0.07),
-              child: Container(
-                alignment: Alignment.centerLeft,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  itemCount: widget.parts.categoryList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                      padding:
-                          EdgeInsets.only(right: Measurements.width * 0.015),
-                      child: Chip(
-                        elevation: 0,
-                        shadowColor: Colors.transparent,
-                        backgroundColor: Colors.white.withOpacity(0.3),
-                        label: Text(
-                          widget.parts.categoryList[index],
-                          style: TextStyle(
-                              fontSize: AppStyle.fontSizeTabContent()),
-                        ),
-                        deleteIcon: Icon(Icons.close),
-                        onDeleted: () {
-                          setState(() {
-                            widget.parts.categoryList.removeAt(index);
-                          });
-                        },
+            //width: Measurements.width * 0.9,
+            height: widget.parts.categoryList.isEmpty
+                ? 0
+                : Measurements.height * (widget.parts.isTablet ? 0.05 : 0.07),
+            child: Container(
+              alignment: Alignment.centerLeft,
+              child: ListView.builder(
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                itemCount: widget.parts.categoryList.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Container(
+                    padding: EdgeInsets.only(right: Measurements.width * 0.015),
+                    child: Chip(
+                      elevation: 0,
+                      shadowColor: Colors.transparent,
+                      backgroundColor: Colors.white.withOpacity(0.3),
+                      label: Text(
+                        widget.parts.categoryList[index],
+                        style:
+                            TextStyle(fontSize: AppStyle.fontSizeTabContent()),
                       ),
-                    );
-                  },
-                ),
-              )),
+                      deleteIcon: Icon(Icons.close),
+                      onDeleted: () {
+                        setState(() {
+                          widget.parts.categoryList.removeAt(index);
+                        });
+                      },
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
           GraphQLProvider(
             client: widget.parts.client,
             child: Query(
               key: widget.parts.qKey,
               options:
                   QueryOptions(variables: <String, dynamic>{}, document: doc),
-              builder: (QueryResult result, {VoidCallback refetch,fetchMore: null}) {
+              builder: (QueryResult result,
+                  {VoidCallback refetch, fetchMore: null}) {
                 if (result.errors != null) {
                   print(result.errors);
                   return Center(
@@ -105,12 +106,12 @@ class _ProductCategoryRowState extends State<ProductCategoryRow> {
                 suggestions = List();
                 if (result.data["createCategory"] != null) {
                   widget.parts.categories
-                      .add(Categories.toMap(result.data["createCategory"]));
+                      .add(ProductCategoryInterface.fromMap(result.data["createCategory"]));
                   doc = getCat;
                 }
                 if (result.data["getCategories"] != null) {
                   result.data["getCategories"].forEach((a) {
-                    widget.parts.categories.add(Categories.toMap(a));
+                    widget.parts.categories.add(ProductCategoryInterface.fromMap(a));
                     suggestions.add(a["title"]);
                   });
                 }

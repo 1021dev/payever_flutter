@@ -329,7 +329,7 @@ class _ProductItemState extends State<ProductItem> {
   bool isTablet;
   int index;
   num price;
-  Variants _variant;
+  ProductVariantModel _variant;
   bool onSale;
 
   @override
@@ -346,13 +346,13 @@ class _ProductItemState extends State<ProductItem> {
           price = variant.price;
           _variant = variant;
           index = i;
-          onSale = !variant.hidden;
+          onSale = variant.onSales;
         }
         i++;
       });
     } else {
       index = null;
-      onSale = !widget.currentProduct.hidden;
+      onSale = widget.currentProduct.onSales;
     }
     return Card(
       elevation: 0,
@@ -524,7 +524,7 @@ class _PosProductsLoaderState extends State<PosProductsLoader> {
                           uuid
                           title
                           description
-                          hidden
+                          onSales
                           price
                           salePrice
                           sku
@@ -579,7 +579,7 @@ class _PosProductsLoaderState extends State<PosProductsLoader> {
 
                 result.data["getProductsByChannelSet"]["products"]
                     .forEach((prod) {
-                  var tempProduct = ProductsModel.toMap(prod);
+                  var tempProduct = ProductsModel.fromMap(prod);
                   // if (widget.posStateModel.productList
                   //         .indexWhere((test) => test.sku == tempProduct.sku) <
                   //     0)

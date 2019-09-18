@@ -10,7 +10,7 @@ export 'employees_list.dart';
 export 'expandable_header.dart';
 export 'group_acl.dart';
 export 'pos.dart';
-export 'products.dart';
+export 'products_ref.dart';
 export 'shop.dart';
 export 'token.dart';
 export 'tutorial.dart';

@@ -6,4 +6,6 @@ class ProductStateModel extends ChangeNotifier {
   bool get refresh => _refresh;
   setRefresh(bool refresh) => _refresh = refresh;
 
+  
+
 }

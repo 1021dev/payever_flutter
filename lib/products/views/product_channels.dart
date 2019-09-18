@@ -137,10 +137,12 @@ class _ProductChannelsRowState extends State<ProductChannelsRow> {
                                         var term =
                                             widget.parts.terminals[index];
                                         if (value) {
-                                          widget.parts.channels.add(ChannelSet(
-                                              term.channelSet,
-                                              term.name,
-                                              GlobalUtils.CHANNEL_POS));
+                                          widget.parts.channels.add(
+                                            ProductChannelSet(
+                                              id:term.channelSet ,
+                                              name:term.name ,
+                                              type: GlobalUtils.CHANNEL_POS,)
+                                              );
                                         } else {
                                           widget.parts.channels.removeWhere(
                                               (ch) => term.channelSet == ch.id);
@@ -238,10 +240,12 @@ class _ProductChannelsRowState extends State<ProductChannelsRow> {
                                     onChanged: (bool value) {
                                       var shop = widget.parts.shops[index];
                                       if (value) {
-                                        widget.parts.channels.add(ChannelSet(
-                                            shop.channelSet,
-                                            shop.name,
-                                            GlobalUtils.CHANNEL_SHOP));
+                                        widget.parts.channels.add(
+                                            ProductChannelSet(
+                                              id:shop.channelSet ,
+                                              name:shop.name ,
+                                              type: GlobalUtils.CHANNEL_SHOP,)
+                                            );
                                       } else {
                                         widget.parts.channels.removeWhere(
                                             (ch) => shop.channelSet == ch.id);

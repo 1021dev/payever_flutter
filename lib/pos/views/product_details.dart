@@ -287,7 +287,7 @@ class _DetailsInfoState extends State<DetailsInfo> {
       price = widget.currentProduct.variants[currentVariant.value].price;
       salePrice =
           widget.currentProduct.variants[currentVariant.value].salePrice;
-      onSale = !widget.currentProduct.variants[currentVariant.value].hidden;
+      onSale = !widget.currentProduct.variants[currentVariant.value].onSales;
       description =
           widget.currentProduct.variants[currentVariant.value].description;
 
@@ -296,7 +296,7 @@ class _DetailsInfoState extends State<DetailsInfo> {
     } else {
       price = widget.currentProduct.price;
       salePrice = widget.currentProduct.salePrice;
-      onSale = !widget.currentProduct.hidden;
+      onSale = !widget.currentProduct.onSales;
       description = widget.currentProduct.description;
     }
 

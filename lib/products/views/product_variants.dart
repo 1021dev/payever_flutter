@@ -115,7 +115,7 @@ class _VariantRowState extends State<ProductVariantsRow> {
                           parts: widget.parts,
                           wallpaper: widget.parts.wallpaper,
                           onEdit: false,
-                          editVariant: Variants(),
+                          editVariant: ProductVariantModel(),
                         ),
                         duration: Duration(milliseconds: 100),
                         type: PageTransitionType.fade,
@@ -146,10 +146,10 @@ class VariantPopUp extends StatefulWidget {
   bool onEdit = false;
   int index;
   num amount;
-  Variants editVariant;
+  ProductVariantModel editVariant;
   final fKey = GlobalKey<FormState>();
   final scKey = GlobalKey<ScaffoldState>();
-  Variants currentVariant = Variants();
+  ProductVariantModel currentVariant = ProductVariantModel();
 
   List<String> variantImages = List();
   String currentImage;
@@ -538,7 +538,7 @@ class _VariantPopUpState extends State<VariantPopUp> {
                                         ),
                                         onSaved: (name) {
                                           widget.currentVariant.title = name;
-                                          widget.currentVariant.hidden =
+                                          widget.currentVariant.onSales =
                                               !widget.onSale;
                                         },
                                         validator: (value) {
