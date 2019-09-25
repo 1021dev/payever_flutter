@@ -10,7 +10,6 @@ import '../../../models/models.dart';
 import '../../../network/network.dart';
 import '../../../utils/utils.dart';
 
-
 import '../../../../transactions/views/views.dart';
 import '../../../../products/views/views.dart';
 import '../../../../pos/view_models/pos_state_model.dart';
@@ -28,13 +27,14 @@ class DashboardApps extends StatefulWidget {
 class _DashboardAppsState extends State<DashboardApps> {
   DashboardStateModel dashboardStateModel;
 
-  List<String> _availableApps = ["transactions", "pos", "products"];
+  List<String> _availableApps = ["transactions", "pos", "products", "settings"];
 
   @override
   Widget build(BuildContext context) {
     _isTablet = MediaQuery.of(context).orientation == Orientation.portrait
         ? MediaQuery.of(context).size.width > 600
         : MediaQuery.of(context).size.height > 600;
+    
     List<Widget> _apps = List();
     dashboardStateModel = Provider.of<DashboardStateModel>(context);
     dashboardStateModel.currentWidgets.forEach((wid) {
@@ -124,13 +124,13 @@ class _AppViewState extends State<AppView> {
                   _isLoading = false;
                 });
                 break;
-//              case "settings":
-//                loadSettings();
-//                setState(() {
-//                  _isLoading = false;
-//                });
-//                print("Settings loaded");
-//                break;
+             case "settings":
+               loadSettings();
+               setState(() {
+                 _isLoading = false;
+               });
+               print("Settings loaded");
+               break;
               default:
             }
           },
@@ -183,7 +183,6 @@ class _AppViewState extends State<AppView> {
 //                terminal: dashboardStateModel.activeTerminal,
 //                business: globalStateModel.currentBusiness),
 //            type: PageTransitionType.fade,duration: Duration(milliseconds: 50)));
-
 
     return Navigator.push(
         context,

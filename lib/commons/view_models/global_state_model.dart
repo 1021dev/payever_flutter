@@ -48,10 +48,11 @@ class GlobalStateModel extends ChangeNotifier {
     _currentBusiness = business;
     _appWidgets = appWidgets;
 
-    print("_currentWallpaper: $_currentWallpaper");
-    print("_currentBusiness: $_currentBusiness");
-    print("_appWidgets: $_appWidgets");
-
     notifyListeners();
   }
+
+  bool _isTablet;
+  bool get isTablet => _isTablet;
+  setIsTablet(bool isTablet) => _isTablet = isTablet;
+
 }

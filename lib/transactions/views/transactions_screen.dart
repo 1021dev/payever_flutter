@@ -34,7 +34,56 @@ class TransactionScreenInit extends StatelessWidget {
   }
 }
 
+class SearchBar extends StatefulWidget {
+  final Function onSubmit;
+  final TextEditingController controller;
+  const SearchBar({this.onSubmit, this.controller});
+  @override
+  _SearchBarState createState() => _SearchBarState();
+}
+
+class _SearchBarState extends State<SearchBar> {
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      decoration: InputDecoration(
+        hintText: "Search",
+        border: InputBorder.none,
+        suffixIcon: IconButton(
+          padding: EdgeInsets.zero,
+          icon: Icon(
+            Icons.close,
+            size: 20,
+            color: widget.controller.text.isNotEmpty
+                ? Colors.white
+                : Colors.transparent,
+          ),
+          onPressed: () {
+            if (widget.controller.text.isNotEmpty) {
+              widget.controller.clear();
+              widget.onSubmit("");
+            }
+          },
+        ),
+        prefixIcon: IconButton(
+          padding: EdgeInsets.zero,
+          icon: SvgPicture.asset(
+            "assets/images/searchicon.svg",
+            color: Colors.white,
+            height: 20,
+          ),
+          onPressed: () {},
+        ),
+      ),
+      onChanged: (_) => setState(() {}),
+      controller: widget.controller,
+      onSubmitted: (doc) => widget.onSubmit(doc),
+    );
+  }
+}
+
 class TransactionScreen extends StatefulWidget {
+  TextEditingController textEditingController =TextEditingController(text: "");
   @override
   createState() => _TransactionScreenState();
 }
@@ -168,22 +217,31 @@ class _TransactionScreenState extends State<TransactionScreen> {
                       padding: EdgeInsets.only(
                           left:
                               Measurements.width * (_isTablet ? 0.01 : 0.025)),
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                            hintText: "Search",
-                            border: InputBorder.none,
-                            icon: Container(
-                                child: SvgPicture.asset(
-                              "assets/images/searchicon.svg",
-                              height: Measurements.height * 0.0175,
-                              color: Colors.white,
-                            ))),
-                        onFieldSubmitted: (search) {
+                      // child: TextFormField(
+                      //   decoration: InputDecoration(
+                      //       hintText: "Search",
+                      //       border: InputBorder.none,
+                      //       icon: Container(
+                      //           child: SvgPicture.asset(
+                      //         "assets/images/searchicon.svg",
+                      //         height: Measurements.height * 0.0175,
+                      //         color: Colors.white,
+                      //       ))),
+                      //   onFieldSubmitted: (search) {
+                      //     transactionsStateModel.setSearchField(search);
+                      //     isLoadingSearch.value = true;
+                      //     data.transaction.collection.clear();
+                      //     fetchTransactions(init: false, search: search);
+                      //   },
+                      // ),
+                      child: SearchBar(
+                        onSubmit: (search) {
                           transactionsStateModel.setSearchField(search);
                           isLoadingSearch.value = true;
                           data.transaction.collection.clear();
                           fetchTransactions(init: false, search: search);
                         },
+                        controller: widget.textEditingController,
                       ),
                     ),
                   ),
@@ -319,7 +377,6 @@ class _CustomListState extends State<CustomList> {
 
   @override
   Widget build(BuildContext context) {
-
     return ListView.builder(
       key: GlobalKeys.transactionList,
       shrinkWrap: true,
@@ -675,7 +732,11 @@ class TabletTableRow extends StatelessWidget {
                       width: Measurements.width * (_isPortrait ? 0.13 : 0.15),
                       child: !isHeader
                           ? Measurements.statusWidget(currentTransaction.status)
-                          : Text(Language.getTransactionStrings("form.filter.labels.status"),style: TextStyle(fontSize: AppStyle.fontSizeListRow())),
+                          : Text(
+                              Language.getTransactionStrings(
+                                  "form.filter.labels.status"),
+                              style: TextStyle(
+                                  fontSize: AppStyle.fontSizeListRow())),
                     ),
                   ),
                 ],

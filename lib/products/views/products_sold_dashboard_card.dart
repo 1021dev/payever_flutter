@@ -18,7 +18,6 @@ class ProductsSoldCard extends StatelessWidget {
   Widget build(BuildContext context) {
     GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context);
 
-    print(_help);
     
     return DashboardCardRef(
       _appName,

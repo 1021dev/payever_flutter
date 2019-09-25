@@ -10,6 +10,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:payever/products/views/new_product_ref.dart';
 import 'package:provider/provider.dart';
 
 import '../models/models.dart';
@@ -141,8 +142,10 @@ class _ProductScreenState extends State<ProductScreen> {
       });
     });
     api
-        .getTerminal(widget._parts.business.id,
-            GlobalUtils.activeToken.accessToken, context)
+        .getTerminal(
+      widget._parts.business.id,
+      GlobalUtils.activeToken.accessToken,
+    )
         .then((terminals) {
       terminals.forEach((term) {
         widget._parts.terminals.add(Terminal.toMap(term));
@@ -163,15 +166,17 @@ class _ProductScreenState extends State<ProductScreen> {
       shops.forEach((shop) {
         widget._parts.shops.add(Shop.toMap(shop));
       });
-    }).catchError((onError) {
-      if (onError.toString().contains("401")) {
-        GlobalUtils.clearCredentials();
-        Navigator.pushReplacement(
+    }).catchError(
+      (onError) {
+        if (onError.toString().contains("401")) {
+          GlobalUtils.clearCredentials();
+          Navigator.pushReplacement(
             context,
-            PageTransition(
-                child: LoginScreen(), type: PageTransitionType.fade));
-      }
-    });
+            PageTransition(child: LoginScreen(), type: PageTransitionType.fade),
+          );
+        }
+      },
+    );
   }
 
   @override
@@ -183,18 +188,22 @@ class _ProductScreenState extends State<ProductScreen> {
           icon: Icon(Icons.add),
           onPressed: () {
             Navigator.push(
-                context,
-                PageTransition(
-                    child: NewProductScreen(
-                        wallpaper: widget.wallpaper,
-                        business: widget.business.id,
-                        view: this,
-                        currency: widget.business.currency,
-                        isFromDashboardCard: false,
-                        editMode: false,
-                        productEdit: null,
-                        isLoading: widget._parts.isLoading),
-                    type: PageTransitionType.fade));
+              context,
+              PageTransition(
+                  // child: NewProductScreen(
+                  //   view: this,
+                  //   isFromDashboardCard: false,
+                  //   editMode: false,
+                  //   productEdit: null,
+                  //   isLoading: widget._parts.isLoading,
+                  // ),
+                  child: ProductEditor(
+                    productProvider: Provider.of<ProductStateModel>(context),
+                    global: Provider.of<GlobalStateModel>(context),
+                    isFromDashboardCard: false,
+                  ),
+                  type: PageTransitionType.fade),
+            );
           },
         ),
       ],
@@ -260,26 +269,55 @@ class _ProductScreenState extends State<ProductScreen> {
                       color: Colors.black.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    padding: EdgeInsets.only(
-                        left: Measurements.width *
-                            (widget._parts.isTablet ? 0.01 : 0.025)),
-                    child: TextField(
-                      decoration: InputDecoration(
-                          hintText: "Search",
-                          border: InputBorder.none,
-                          icon: Container(
-                              child: SvgPicture.asset(
-                            "assets/images/searchicon.svg",
-                            height: Measurements.height * 0.0175,
-                            color: Colors.white,
-                          ))),
-                      onSubmitted: (doc) {
+                    child: SearchBar(
+                      controller: widget.searchController,
+                      onSubmit: (String doc) {
                         widget._parts.products.clear();
                         widget._parts.searchDocument = doc;
                         widget._parts.page = 1;
                         widget._parts.isLoading.value = true;
                       },
                     ),
+                    // padding: EdgeInsets.only(
+                    //     left: Measurements.width *
+                    //         (widget._parts.isTablet ? 0.01 : 0.025)),
+                    // child: TextField(
+                    //   decoration: InputDecoration(
+                    //     hintText: "Search",
+                    //     border: InputBorder.none,
+                    //     suffixIcon: IconButton(
+                    //       padding: EdgeInsets.zero,
+                    //       icon: Icon(
+                    //         Icons.close,
+                    //         size: 20,
+                    //       ),
+                    //       onPressed: () {},
+                    //     ),
+                    //     prefixIcon: IconButton(
+                    //       padding: EdgeInsets.zero,
+                    //       icon: SvgPicture.asset(
+                    //         "assets/images/searchicon.svg",
+                    //         color: Colors.white,
+                    //         height: 20,
+                    //       ),
+                    //       onPressed: () {},
+                    //     ),
+                    //     // icon: Container(
+                    //     //   child: SvgPicture.asset(
+                    //     //     "assets/images/searchicon.svg",
+                    //     //     height: Measurements.height * 0.0175,
+                    //     //     color: Colors.white,
+                    //     //   ),
+                    //     // ),
+                    //   ),
+                    //   controller: widget.searchController,
+                    //   onSubmitted: (doc) {
+                    //     widget._parts.products.clear();
+                    //     widget._parts.searchDocument = doc;
+                    //     widget._parts.page = 1;
+                    //     widget._parts.isLoading.value = true;
+                    //   },
+                    // ),
                   ),
                 ),
                 widget._parts.isLoading.value
@@ -294,6 +332,54 @@ class _ProductScreenState extends State<ProductScreen> {
           ),
         );
       },
+    );
+  }
+}
+
+class SearchBar extends StatefulWidget {
+  final Function onSubmit;
+  final TextEditingController controller;
+  const SearchBar({this.onSubmit, this.controller});
+  @override
+  _SearchBarState createState() => _SearchBarState();
+}
+
+class _SearchBarState extends State<SearchBar> {
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      decoration: InputDecoration(
+        hintText: "Search",
+        border: InputBorder.none,
+        suffixIcon: IconButton(
+          padding: EdgeInsets.zero,
+          icon: Icon(
+            Icons.close,
+            size: 20,
+            color: widget.controller.text.isNotEmpty
+                ? Colors.white
+                : Colors.transparent,
+          ),
+          onPressed: () {
+            if (widget.controller.text.isNotEmpty) {
+              widget.controller.clear();
+              widget.onSubmit("");
+            }
+          },
+        ),
+        prefixIcon: IconButton(
+          padding: EdgeInsets.zero,
+          icon: SvgPicture.asset(
+            "assets/images/searchicon.svg",
+            color: Colors.white,
+            height: 20,
+          ),
+          onPressed: () {},
+        ),
+      ),
+      onChanged: (_) => setState(() {}),
+      controller: widget.controller,
+      onSubmitted: (doc) => widget.onSubmit(doc),
     );
   }
 }
@@ -320,10 +406,12 @@ class _ProductsBodyState extends State<ProductsBody> {
     if (controller.position.extentAfter < 800) {
       if (widget._parts.page < widget._parts.pageCount &&
           !widget._parts.loadMore.value) {
-        setState(() {
-          widget._parts.loadMore.value = true;
-          widget._parts.page++;
-        });
+        setState(
+          () {
+            widget._parts.loadMore.value = true;
+            widget._parts.page++;
+          },
+        );
       }
     }
   }
@@ -336,18 +424,20 @@ class _ProductsBodyState extends State<ProductsBody> {
     return ProductsApi()
         .getAllInventory(
             widget._parts.business.id, GlobalUtils.activeToken.accessToken)
-        .then((inventories) {
-      widget._parts.inventories.clear();
-      inventories.forEach((inv) {
-        widget._parts.inventories.add(InventoryModel.toMap(inv));
-      });
-      if (!loadMore) {
-        widget._parts.page = 1;
-        widget._parts.loadMore.value = true;
-      } else {
-        setState(() {});
-      }
-    });
+        .then(
+      (inventories) {
+        widget._parts.inventories.clear();
+        inventories.forEach((inv) {
+          widget._parts.inventories.add(InventoryModel.toMap(inv));
+        });
+        if (!loadMore) {
+          widget._parts.page = 1;
+          widget._parts.loadMore.value = true;
+        } else {
+          setState(() {});
+        }
+      },
+    );
   }
 
   ProductStateModel productStateModel;
@@ -366,17 +456,20 @@ class _ProductsBodyState extends State<ProductsBody> {
             ? ListView.builder(
                 key: GlobalKeys.productList,
                 physics: AlwaysScrollableScrollPhysics(
-                    parent: BouncingScrollPhysics()),
+                  parent: BouncingScrollPhysics(),
+                ),
                 controller: controller,
                 shrinkWrap: true,
                 itemCount: widget._parts.products.length,
                 itemBuilder: (BuildContext context, int index) {
                   widget._parts.init = false;
                   return Container(
-                      key: Key("product_$index"),
-                      child: ProductItem(
-                          currentProduct: widget._parts.products[index],
-                          parts: widget._parts));
+                    key: Key("product_$index"),
+                    child: ProductItem(
+                      currentProduct: widget._parts.products[index],
+                      parts: widget._parts,
+                    ),
+                  );
                 },
               )
             : GridView.builder(
@@ -390,8 +483,9 @@ class _ProductsBodyState extends State<ProductsBody> {
                 itemBuilder: (BuildContext context, int index) {
                   widget._parts.init = false;
                   return ProductItem(
-                      currentProduct: widget._parts.products[index],
-                      parts: widget._parts);
+                    currentProduct: widget._parts.products[index],
+                    parts: widget._parts,
+                  );
                 },
               ),
       ),
@@ -406,8 +500,12 @@ class ProductLoader extends StatefulWidget {
   int page;
   int limit = 36;
 
-  ProductLoader(
-      {this.parts, this.business, @required this.isSearching, this.page}) {
+  ProductLoader({
+    this.parts,
+    this.business,
+    @required this.isSearching,
+    this.page,
+  }) {
     initialDocument = ''' 
               query Product {
                   getProducts(
@@ -461,24 +559,19 @@ class _ProductLoaderState extends State<ProductLoader> {
                     : CircularProgressIndicator(),
               );
             }
-
             if (widget.parts.page == 1) widget.parts.products.clear();
             widget.parts.pageCount =
                 result.data["getProducts"]["info"]["pagination"]["page_count"];
-            var i = 1;
+
             result.data["getProducts"]["products"].forEach(
               (prod) {
-                print(i);
-                i++;
-                // print(prod);
                 var tempProduct = ProductsModel.fromMap(prod);
                 if ((widget.parts.products.indexWhere((test) {
-                      return test.uuid == tempProduct.uuid;
+                      return test.id == tempProduct.id;
                     }) <
                     0)) widget.parts.products.add(tempProduct);
               },
             );
-            print("lenght ${widget.parts.products.length}");
             Future.delayed(Duration(seconds: 1)).then((_) {
               result = null;
               widget.parts.isLoading.value = false;
@@ -761,15 +854,22 @@ class _ProductItemState extends State<ProductItem> {
                     Navigator.push(
                       context,
                       PageTransition(
-                          child: NewProductScreen(
-                            wallpaper: widget.parts.wallpaper,
-                            business: widget.parts.business.id,
-                            view: this,
-                            currency: widget.parts.business.currency,
-                            editMode: true,
-                            productEdit: widget.currentProduct,
+                          // child: NewProductScreen(
+                          //   wallpaper: widget.parts.wallpaper,
+                          //   business: widget.parts.business.id,
+                          //   view: this,
+                          //   currency: widget.parts.business.currency,
+                          //   editMode: true,
+                          //   productEdit: widget.currentProduct,
+                          //   isFromDashboardCard: false,
+                          //   isLoading: widget.parts.isLoading,
+                          // ),
+                          child: ProductEditor(
+                            global: Provider.of<GlobalStateModel>(context),
+                            productProvider:
+                                Provider.of<ProductStateModel>(context),
                             isFromDashboardCard: false,
-                            isLoading: widget.parts.isLoading,
+                            productsModel: widget.currentProduct,
                           ),
                           type: PageTransitionType.fade),
                     );
@@ -829,101 +929,107 @@ class _ProductItemState extends State<ProductItem> {
                             if (action == "delete") {
                               String doc = '''
                             mutation deleteProduct {
-                                deleteProduct(product: {uuids: ["${widget.currentProduct.uuid}"]}) 
+                                deleteProduct(ids: ["${widget.currentProduct.id}"]) 
                                 }
                             ''';
                               showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return Dialog(
-                                      backgroundColor: Colors.transparent,
-                                      child: Container(
-                                        color: Colors.transparent,
-                                        height: Measurements.width * 0.3,
-                                        width: Measurements.width * 0.3,
-                                        child: GraphQLProvider(
-                                          client: widget.parts.client,
-                                          child: Query(
-                                            options: QueryOptions(
-                                                variables: <String, dynamic>{},
-                                                document: doc),
-                                            builder: (QueryResult result,
-                                                {VoidCallback refetch,
-                                                fetchMore: null}) {
-                                              if (result.errors != null) {
-                                                print(result.errors);
-                                                return Center(
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    mainAxisSize:
-                                                        MainAxisSize.max,
-                                                    children: <Widget>[
-                                                      Text(
-                                                          "Error while Deleting"),
-                                                      IconButton(
-                                                        icon: Icon(Icons.close),
-                                                        onPressed: () {
-                                                          if (result.errors
-                                                              .toString()
-                                                              .contains(
-                                                                  "401")) {
-                                                            GlobalUtils
-                                                                .clearCredentials();
-                                                            Navigator.pushReplacement(
-                                                                context,
-                                                                PageTransition(
-                                                                    child:
-                                                                        LoginScreen(),
-                                                                    type: PageTransitionType
-                                                                        .fade));
-                                                          } else {
-                                                            Navigator.pop(
-                                                                context);
-                                                          }
-                                                        },
-                                                      ),
-                                                    ],
-                                                  ),
-                                                );
-                                              }
-                                              if (result.loading) {
-                                                return Center(
-                                                  child:
-                                                      const CircularProgressIndicator(),
-                                                );
-                                              }
-                                              return OrientationBuilder(
-                                                builder: (BuildContext context,
-                                                    Orientation orientation) {
-                                                  Future.delayed(Duration(
-                                                          microseconds: 1))
-                                                      .then((_) {
-                                                    widget.parts.isLoading
-                                                        .notifyListeners();
-                                                    widget.parts.products
-                                                        .remove(widget
-                                                            .currentProduct);
-                                                    Navigator.pop(context);
-                                                  });
-                                                  return Text("");
-                                                },
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return Dialog(
+                                    backgroundColor: Colors.transparent,
+                                    child: Container(
+                                      color: Colors.transparent,
+                                      height: Measurements.width * 0.3,
+                                      width: Measurements.width * 0.3,
+                                      child: GraphQLProvider(
+                                        client: widget.parts.client,
+                                        child: Query(
+                                          options: QueryOptions(
+                                              variables: <String, dynamic>{},
+                                              document: doc),
+                                          builder: (QueryResult result,
+                                              {VoidCallback refetch,
+                                              fetchMore: null}) {
+                                            if (result.errors != null) {
+                                              print(result.errors);
+                                              return Center(
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  mainAxisSize:
+                                                      MainAxisSize.max,
+                                                  children: <Widget>[
+                                                    Text(
+                                                        "Error while Deleting"),
+                                                    IconButton(
+                                                      icon: Icon(Icons.close),
+                                                      onPressed: () {
+                                                        if (result.errors
+                                                            .toString()
+                                                            .contains("401")) {
+                                                          GlobalUtils
+                                                              .clearCredentials();
+                                                          Navigator.pushReplacement(
+                                                              context,
+                                                              PageTransition(
+                                                                  child:
+                                                                      LoginScreen(),
+                                                                  type: PageTransitionType
+                                                                      .fade));
+                                                        } else {
+                                                          Navigator.pop(
+                                                              context);
+                                                        }
+                                                      },
+                                                    ),
+                                                  ],
+                                                ),
                                               );
-                                            },
-                                          ),
+                                            }
+                                            if (result.loading) {
+                                              return Center(
+                                                child:
+                                                    const CircularProgressIndicator(),
+                                              );
+                                            }
+                                            return OrientationBuilder(
+                                              builder: (BuildContext context,
+                                                  Orientation orientation) {
+                                                Future.delayed(Duration(
+                                                        microseconds: 1))
+                                                    .then((_) {
+                                                  widget.parts.isLoading
+                                                      .notifyListeners();
+                                                  widget.parts.products.remove(
+                                                      widget.currentProduct);
+                                                  Navigator.pop(context);
+                                                });
+                                                return Text("");
+                                              },
+                                            );
+                                          },
                                         ),
                                       ),
-                                    );
-                                  });
+                                    ),
+                                  );
+                                },
+                              );
                             }
                           },
                           child: Container(child: Icon(Icons.more_vert)),
+                          elevation: 0,
+                          color: Color(0xff272627),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8)),
                           itemBuilder: (BuildContext context) =>
                               <PopupMenuItem<String>>[
                             PopupMenuItem<String>(
                               value: "delete",
-                              child: Text(Language.getProductStrings("delete")),
+                              child: Container(
+                                child: Text(
+                                  Language.getProductStrings("delete"),
+                                ),
+                              ),
                             ),
                           ],
                         ),

@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:payever/checkout_process/views/section_shipping.dart';
+import 'package:payever/transactions/transactions.dart';
+import 'package:provider/provider.dart';
 
 import '../utils/utils.dart';
+import 'custom_form_field.dart';
 import 'new_product.dart';
 
 class ProductShippingRow extends StatefulWidget {
@@ -402,6 +406,270 @@ class _ProductShippingRowState extends State<ProductShippingRow> {
                       ),
               ),
             ]),
+      ),
+    );
+  }
+}
+
+//^OLD VERSION
+//
+//
+//NEW VERSION ->
+
+class ShippingBody extends StatefulWidget {
+  @override
+  _ShippingBodyState createState() => _ShippingBodyState();
+}
+
+class _ShippingBodyState extends State<ShippingBody> {
+  bool weightError = false;
+  bool widthError = false;
+  bool heightError = false;
+  bool lengthError = false;
+  @override
+  Widget build(BuildContext context) {
+    ProductStateModel productProvider = Provider.of<ProductStateModel>(context);
+    GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context);
+    List<Widget> list = !globalStateModel.isTablet
+        ? [
+            Row(
+              children: <Widget>[
+                CustomFormField(
+                  format: FieldType.numbers,
+                  sufix:
+                      Language.getProductStrings("shippingSection.measure.cm"),
+                  text:
+                      Language.getProductStrings("shipping.placeholders.width"),
+                  onChange: (String text) {
+                    productProvider.editProduct.shipping.width =
+                        num.parse(text);
+                  },
+                  error: widthError,
+                  controller: TextEditingController(
+                      text: productProvider.editProduct?.shipping?.width
+                              ?.toString() ??
+                          ""),
+                  validator: (String text) {
+                    setState(
+                      () {
+                        widthError = text.isEmpty;
+                      },
+                    );
+                    return widthError ? widthError : null;
+                  },
+                ),
+              ],
+            ),
+            Row(
+              children: <Widget>[
+                CustomFormField(
+                  format: FieldType.numbers,
+                  sufix:
+                      Language.getProductStrings("shippingSection.measure.cm"),
+                  text: Language.getProductStrings(
+                      "shipping.placeholders.length"),
+                  onChange: (String text) {
+                    productProvider.editProduct.shipping.length =
+                        num.parse(text);
+                  },
+                  controller: TextEditingController(
+                      text: productProvider.editProduct?.shipping?.length
+                              ?.toString() ??
+                          ""),
+                  error: lengthError,
+                  validator: (String text) {
+                    setState(
+                      () {
+                        lengthError = text.isEmpty;
+                      },
+                    );
+                    return lengthError ? lengthError : null;
+                  },
+                ),
+              ],
+            ),
+            Row(
+              children: <Widget>[
+                CustomFormField(
+                  format: FieldType.numbers,
+                  bottomLeft: true,
+                  bottomRight: true,
+                  sufix:
+                      Language.getProductStrings("shippingSection.measure.cm"),
+                  text: Language.getProductStrings(
+                      "shipping.placeholders.height"),
+                  onChange: (String text) {
+                    productProvider.editProduct.shipping.height =
+                        num.parse(text);
+                  },
+                  controller: TextEditingController(
+                      text: productProvider.editProduct?.shipping?.height
+                              ?.toString() ??
+                          ""),
+                  error: heightError,
+                  validator: (String text) {
+                    setState(
+                      () {
+                        heightError = text.isEmpty;
+                      },
+                    );
+                    return heightError ? heightError : null;
+                  },
+                ),
+              ],
+            ),
+          ]
+        : [
+            CustomFormField(
+              bottomLeft: true,
+              format: FieldType.numbers,
+              sufix: Language.getProductStrings("shippingSection.measure.cm"),
+              text: Language.getProductStrings("shipping.placeholders.width"),
+              onChange: (String text) {
+                productProvider.editProduct.shipping.width = num.parse(text);
+              },
+              controller: TextEditingController(
+                  text: productProvider.editProduct?.shipping?.width
+                          ?.toString() ??
+                      ""),
+              error: widthError,
+              validator: (String text) {
+                setState(() {
+                  widthError = text.isEmpty;
+                });
+                return widthError ? widthError : null;
+              },
+            ),
+            CustomFormField(
+              format: FieldType.numbers,
+              sufix: Language.getProductStrings("shippingSection.measure.cm"),
+              text: Language.getProductStrings("shipping.placeholders.length"),
+              onChange: (String text) {
+                productProvider.editProduct.shipping.length = num.parse(text);
+              },
+              controller: TextEditingController(
+                  text: productProvider.editProduct?.shipping?.length
+                          ?.toString() ??
+                      ""),
+              error: lengthError,
+              validator: (String text) {
+                setState(() {
+                  lengthError = text.isEmpty;
+                });
+                return lengthError ? lengthError : null;
+              },
+            ),
+            CustomFormField(
+              bottomRight: true,
+              format: FieldType.numbers,
+              sufix: Language.getProductStrings("shippingSection.measure.cm"),
+              text: Language.getProductStrings("shipping.placeholders.height"),
+              onChange: (String text) {
+                productProvider.editProduct.shipping.height = num.parse(text);
+              },
+              controller: TextEditingController(
+                  text: productProvider.editProduct?.shipping?.height
+                          ?.toString() ??
+                      ""),
+              error: heightError,
+              validator: (String text) {
+                setState(() {
+                  heightError = text.isEmpty;
+                });
+                return heightError ? heightError : null;
+              },
+            ),
+          ];
+    return Expanded(
+      child: Column(
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              CustomSwitchField(
+                value: productProvider.editProduct?.shipping?.free ?? false,
+                topRight: true,
+                topLeft: true,
+                text: Language.getProductStrings(
+                  "shippingSection.form.free.label",
+                ),
+                onChange: (bool text) {
+                  setState(
+                    () {
+                      productProvider.editProduct.shipping.free = text;
+                    },
+                  );
+                },
+              ),
+            ],
+          ),
+          Row(
+            children: <Widget>[
+              CustomSwitchField(
+                value: productProvider.editProduct?.shipping?.general ?? false,
+                text: Language.getProductStrings(
+                    "shippingSection.form.general.label"),
+                onChange: (bool text) {
+                  setState(
+                    () {
+                      productProvider.editProduct.shipping.general = text;
+                    },
+                  );
+                },
+              ),
+            ],
+          ),
+          Row(
+            children: <Widget>[
+              CustomFormField(
+                format: FieldType.numbers,
+                sufix: Language.getProductStrings("shippingSection.measure.kg"),
+                text: Language.getProductStrings(
+                    "shippingSection.form.weight.label"),
+                onChange: (String text) {
+                  productProvider.editProduct.shipping.weight = num.parse(text);
+                },
+                controller: TextEditingController(
+                    text: productProvider.editProduct?.shipping?.weight
+                            ?.toString() ??
+                        ""),
+                error: weightError,
+                validator: (String text) {
+                  setState(() {
+                    weightError = text.isEmpty;
+                  });
+                  return weightError ? weightError : null;
+                },
+              ),
+            ],
+          ),
+          !globalStateModel.isTablet
+              ? Column(
+                  children: list,
+                )
+              : Row(
+                  children: list,
+                ),
+        ],
+      ),
+    );
+  }
+}
+
+class NoShipping extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Container(
+        height: 59,
+        decoration: BoxDecoration(
+          // color: Colors.white.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Center(
+          child: Text(
+            Language.getProductStrings("shippingSection.available"),
+          ),
+        ),
       ),
     );
   }

@@ -145,6 +145,7 @@ class _DropDownMenuState extends State<DropDownMenu> {
                   ? (widget.customColor
                       ? widget.backgroundColor
                       : Color(0xff343434))
+                      // : Color(0xff272627))
                   : (widget.backgroundColor ?? Colors.white.withOpacity(0.1)),
             ),
             child: DropdownButtonHideUnderline(

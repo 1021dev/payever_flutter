@@ -189,7 +189,6 @@ class Cart {
 
   Cart.toMap(dynamic obj) {
     cart = obj;
-    print(cart);
     if (obj[GlobalUtils.DB_POS_CART].isNotEmpty)
       obj[GlobalUtils.DB_POS_CART].forEach((item) {
         items.add(CartItem.toMap(item));
@@ -211,7 +210,6 @@ class Cart {
         GlobalUtils.DB_POS_CART_CART_UUID: f.uuid
       });
     });
-    print(result);
     return result;
   }
 

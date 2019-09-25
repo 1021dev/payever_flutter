@@ -1,2 +1,11 @@
 export 'product_screen.dart';
 export 'new_product.dart';
+export 'product_type.dart';
+export 'product_variants.dart';
+export 'product_shipping.dart';
+export 'product_inventory.dart';
+export 'product_main.dart';
+export 'product_tax.dart';
+export 'product_visibility.dart';
+export 'product_categories.dart';
+export 'product_channels.dart';

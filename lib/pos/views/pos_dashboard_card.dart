@@ -55,7 +55,7 @@ class _POSCardState extends State<POSCard> {
   fetchData() {
     RestDataSource api = RestDataSource();
     api
-        .getTerminal(_business.id, GlobalUtils.activeToken.accessToken, context)
+        .getTerminal(_business.id, GlobalUtils.activeToken.accessToken)
         .then((terminals) {
       terminals.forEach((terminal) {
         _parts._terminals.add(Terminal.toMap(terminal));
@@ -112,7 +112,6 @@ class _POSCardState extends State<POSCard> {
                 }
                 _parts.index.value =
                     _parts._terminals.indexWhere((term) => term.active);
-                print("${_parts.terminals.last.id} = ${terminal.id}");
                 //if((terminal.id == widget._parts.terminals.last.id) && (widget._parts._chSets.last.id == channelSet.id) ){
                 if ((terminal.id == _parts.terminals.last.id)) {
                   _parts._mainCardLoading.value = false;
@@ -121,7 +120,7 @@ class _POSCardState extends State<POSCard> {
                     _parts._terminals[_parts.index.value];
                 DashboardStateModel dashboardStateModel =
                     Provider.of<DashboardStateModel>(context);
-                    print("_parts._terminals[_parts.index.value]:${_parts._terminals[_parts.index.value]}");
+
                 dashboardStateModel
                     .setActiveTerminal(_parts._terminals[_parts.index.value]);
               });
@@ -204,8 +203,6 @@ class POSCardParts {
     var hundred = NumberFormat("##0.0", "en_US");
     bool dec;
     if (!chart) {
-      print(_wallpaper);
-      print(_lastWeek);
       if (n >= 10000 && n < 1000000) {
         n = (n / 1000);
         dec = n.truncate() - n == 0.0;
@@ -215,7 +212,6 @@ class POSCardParts {
         return million.format(n) + "M";
       } else {
         dec = n.truncate() - n == 0.0;
-        print(dec);
         return hundred.format(n);
       }
     } else {
@@ -756,8 +752,6 @@ class ProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(_product);
-
     return Row(
       children: <Widget>[
         Padding(
@@ -809,9 +803,9 @@ class _SimplifyTerminalState extends State<SimplifyTerminal> {
       if (dashboardStateModel.terminalList.isEmpty) {
         RestDataSource()
             .getTerminal(
-                Provider.of<GlobalStateModel>(context).currentBusiness.id,
-                GlobalUtils.activeToken.accessToken,
-                context)
+          Provider.of<GlobalStateModel>(context).currentBusiness.id,
+          GlobalUtils.activeToken.accessToken,
+        )
             .then((terminals) {
           terminals.forEach((terminal) {
             Terminal term = Terminal.toMap(terminal);
@@ -827,7 +821,7 @@ class _SimplifyTerminalState extends State<SimplifyTerminal> {
           noTerminals = _terminals.isEmpty;
           dashboardStateModel.setTerminalList(_terminals);
           setState(() {
-            print("SetState");
+
           });
         });
       } else {
@@ -836,7 +830,6 @@ class _SimplifyTerminalState extends State<SimplifyTerminal> {
         _terminals.forEach((terminal) {
           if (terminal.active) {
             active = index;
-            print("terminal: ${terminal.channelSet}");
             dashboardStateModel.setActiveTerminal(terminal);
           } else
             index++;
@@ -853,7 +846,6 @@ class _SimplifyTerminalState extends State<SimplifyTerminal> {
       noTerminals
           ? NoItemsCard(
               Text(Language.getWidgetStrings("widgets.pos.install-app")), () {
-              print("Click");
             })
           : _terminals.isNotEmpty
               ? _terminalList[0]
@@ -880,9 +872,7 @@ class SimpleTerminal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    GlobalStateModel globalStateModel =
-    Provider.of<GlobalStateModel>(context);
+    GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context);
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: currentTerminal.active ? 0 : 10),

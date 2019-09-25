@@ -36,9 +36,11 @@ class _EmployeesScreenState extends State<EmployeesScreen>
   }
 
   _handleTabSelection() {
-    setState(() {
-      _currentIndex = tabController.index;
-    });
+    setState(
+      () {
+        _currentIndex = tabController.index;
+      },
+    );
   }
 
   @override
@@ -68,28 +70,30 @@ class _EmployeesScreenState extends State<EmployeesScreen>
                   onPressed: () {
                     if (tabController.index == 0) {
                       Navigator.push(
-                          context,
-                          PageTransition(
-                            child: ProxyProvider<SettingsApi,
-                                EmployeesStateModel>(
-                              builder: (context, api, employeesState) =>
-                                  EmployeesStateModel(globalStateModel, api),
-                              child: AddEmployeeScreen(),
-                            ),
-                            type: PageTransitionType.fade,
-                          ));
+                        context,
+                        PageTransition(
+                          child:
+                              ProxyProvider<SettingsApi, EmployeesStateModel>(
+                            builder: (context, api, employeesState) =>
+                                EmployeesStateModel(globalStateModel, api),
+                            child: AddEmployeeScreen(),
+                          ),
+                          type: PageTransitionType.fade,
+                        ),
+                      );
                     } else {
                       Navigator.push(
-                          context,
-                          PageTransition(
-                            child: ProxyProvider<SettingsApi,
-                                EmployeesStateModel>(
-                              builder: (context, api, employeesState) =>
-                                  EmployeesStateModel(globalStateModel, api),
-                              child: AddGroupScreen(),
-                            ),
-                            type: PageTransitionType.fade,
-                          ));
+                        context,
+                        PageTransition(
+                          child:
+                              ProxyProvider<SettingsApi, EmployeesStateModel>(
+                            builder: (context, api, employeesState) =>
+                                EmployeesStateModel(globalStateModel, api),
+                            child: AddGroupScreen(),
+                          ),
+                          type: PageTransitionType.fade,
+                        ),
+                      );
                     }
                   },
                 ),

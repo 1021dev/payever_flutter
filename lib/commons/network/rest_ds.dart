@@ -298,7 +298,7 @@ class RestDataSource {
   }
 
   Future<dynamic> getTerminal(
-      String idBusiness, String token, BuildContext context) {
+      String idBusiness, String token) {
     print("TAG - geTerminal()");
     var headers = {
       HttpHeaders.authorizationHeader: "Bearer $token",

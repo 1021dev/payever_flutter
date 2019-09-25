@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/products/views/product_screen.dart';
+import 'package:provider/provider.dart';
 
 import '../models/models.dart';
 import '../network/network.dart';
 import '../view_models/view_models.dart';
 import '../utils/utils.dart';
+import 'custom_form_field.dart';
 import 'new_product.dart';
 
 class InventoryManagement {
@@ -15,8 +17,8 @@ class InventoryManagement {
 
   addInventory(Inventory currentInv) {
     List<Inventory> _inventories = List();
-    Inventory temp =
-        Inventory(amount: null, barcode: null, sku: null, tracking: null);
+    Inventory temp = Inventory(
+        amount: null, barcode: null, sku: null, tracking: null, hiddenIndex: 0);
     inventories.forEach((inv) {
       print(inv.sku);
       if (inv.sku != currentInv.sku) {
@@ -73,16 +75,16 @@ class InventoryManagement {
           Navigator.pop(context);
           Navigator.pop(context);
           if (!isFromDashboardCard) {
-           Navigator.pop(context);
-           Navigator.push(
-               context,
-               PageTransition(
-                   child: ProductScreen(
-                     wallpaper: globalStateModel.currentWallpaper,
-                     business:  globalStateModel.currentBusiness,
-                     posCall: false,
-                   ),
-                   type: PageTransitionType.fade));
+            Navigator.pop(context);
+            Navigator.push(
+                context,
+                PageTransition(
+                    child: ProductScreen(
+                      wallpaper: globalStateModel.currentWallpaper,
+                      business: globalStateModel.currentBusiness,
+                      posCall: false,
+                    ),
+                    type: PageTransitionType.fade));
           }
         }
       }).catchError((onError) {
@@ -100,16 +102,16 @@ class InventoryManagement {
               Navigator.pop(context);
               Navigator.pop(context);
               if (!isFromDashboardCard) {
-               Navigator.pop(context);
-               Navigator.push(
-                   context,
-                   PageTransition(
-                       child: ProductScreen(
-                         wallpaper: globalStateModel.currentWallpaper,
-                         business:  globalStateModel.currentBusiness,
-                         posCall: false,
-                       ),
-                       type: PageTransitionType.fade));
+                Navigator.pop(context);
+                Navigator.push(
+                    context,
+                    PageTransition(
+                        child: ProductScreen(
+                          wallpaper: globalStateModel.currentWallpaper,
+                          business: globalStateModel.currentBusiness,
+                          posCall: false,
+                        ),
+                        type: PageTransitionType.fade));
               }
             }
           });
@@ -136,30 +138,13 @@ class InventoryManagement {
   }
 }
 
-class Inventory {
-  String sku;
-  String barcode;
-  bool tracking;
-  num amount;
-  num newAmount;
-
-  Inventory(
-      {@required this.sku,
-      @required this.barcode,
-      this.amount,
-      @required this.tracking,
-      this.newAmount});
-}
-
 class ProductInventoryRow extends StatefulWidget {
   final NewProductScreenParts parts;
 
   ProductInventoryRow({@required this.parts});
 
   bool get isInventoryRowOK {
-    return parts.product.variants.length > 0
-        ? true
-        : !parts.skuError;
+    return parts.product.variants.length > 0 ? true : !parts.skuError;
   }
 
   @override
@@ -167,8 +152,6 @@ class ProductInventoryRow extends StatefulWidget {
 }
 
 class _ProductInventoryRowState extends State<ProductInventoryRow> {
-
-
   TextEditingController _controller;
 
   @override
@@ -187,6 +170,7 @@ class _ProductInventoryRowState extends State<ProductInventoryRow> {
           .then((inv) {
         var _inv = InventoryModel.toMap(inv);
         widget.parts.invManager.inventories.add(Inventory(
+            hiddenIndex: 0,
             barcode: _inv.barcode,
             sku: _inv.sku,
             tracking: _inv.isTrackable,
@@ -365,6 +349,7 @@ class _ProductInventoryRowState extends State<ProductInventoryRow> {
                           onSaved: (value) {
                             print("on save $value");
                             widget.parts.invManager.addInventory(Inventory(
+                                hiddenIndex: 0,
                                 newAmount: num.parse(value),
                                 barcode: widget.parts.product.barcode ?? "",
                                 sku: widget.parts.product.sku,
@@ -408,6 +393,128 @@ class _ProductInventoryRowState extends State<ProductInventoryRow> {
                 ),
               )
             ]),
+      ),
+    );
+  }
+}
+
+//
+//
+//
+
+class InventoryBody extends StatefulWidget {
+  @override
+  _InventoryBodyState createState() => _InventoryBodyState();
+}
+
+class _InventoryBodyState extends State<InventoryBody> {
+  num stock;
+  bool skuError = false;
+
+  @override
+  Widget build(BuildContext context) {
+    ProductStateModel productProvider = Provider.of<ProductStateModel>(context);
+    return Expanded(
+      child: Column(
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              CustomFormField(
+                format: FieldType.sku,
+                topLeft: true,
+                text:
+                    Language.getProductStrings("variants.placeholders.skucode"),
+                error: skuError,
+                controller: TextEditingController(
+                    text: productProvider.editProduct?.sku ?? ""),
+                onChange: (String text) {
+                  Inventory update = productProvider
+                          .inventories[productProvider.editProduct.sku] ??
+                      Inventory(
+                        hiddenIndex: 0,
+                        tracking: false,
+                        barcode: productProvider.editProduct.barcode,
+                        sku: null,
+                      );
+                  update.sku = text;
+                  productProvider.updateInv(
+                    productProvider.editProduct.sku,
+                    update,
+                  );
+                  productProvider.editProduct.sku = text;
+                },
+                validator: (String text) {
+                  setState(
+                    () {
+                      skuError = text?.isEmpty ?? true;
+                    },
+                  );
+                  return skuError ? skuError : null;
+                },
+              ),
+              CustomFormField(
+                topRight: true,
+                text: Language.getProductStrings("price.placeholders.barcode"),
+                controller: TextEditingController(
+                  text: productProvider.editProduct?.barcode ?? "",
+                ),
+                onChange: (text) {
+                  productProvider.updateBarcode(
+                      productProvider.editProduct.sku, text);
+                  productProvider.editProduct.barcode = text;
+                },
+                validator: (text) {},
+              ),
+            ],
+          ),
+          Row(
+            children: <Widget>[
+              CustomSwitchField(
+                flex: 3,
+                value: productProvider
+                        .inventories[productProvider.editProduct.sku]
+                        ?.tracking ??
+                    false,
+                bottomLeft: true,
+                text: Language.getProductStrings(
+                    "info.placeholders.inventoryTrackingEnabled"),
+                onChange: (text) {
+                  setState(
+                    () {
+                      productProvider
+                          .inventories[productProvider.editProduct.sku]
+                          .tracking = text;
+                    },
+                  );
+                },
+              ),
+              CustomInventoryField(
+                flex: 2,
+                bottomRight: true,
+                text: Language.getProductStrings("info.placeholders.inventory"),
+                controller: TextEditingController(
+                    text: (productProvider
+                                    ?.inventories[
+                                        productProvider.editProduct.sku]
+                                    ?.newAmount ??
+                                productProvider
+                                    ?.inventories[
+                                        productProvider.editProduct.sku]
+                                    ?.amount)
+                            ?.toString() ??
+                        "0"),
+                onChange: (text) {
+                  num stock = num.tryParse(text) ?? 0;
+                  productProvider.updateAmount(
+                    productProvider.editProduct.sku,
+                    stock,
+                  );
+                },
+                validator: (text) {},
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

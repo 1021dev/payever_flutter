@@ -527,9 +527,9 @@ class _DetailsInfoState extends State<DetailsInfo> {
                                 ? widget.currentProduct.images[0]
                                 : null;
                             widget.parts.add2cart(
-                                id: widget.currentProduct.uuid,
+                                id: widget.currentProduct.id,
                                 image: image,
-                                uuid: widget.currentProduct.uuid,
+                                uuid: widget.currentProduct.id,
                                 name: widget.currentProduct.title,
                                 price: onSale
                                     ? widget.currentProduct.salePrice

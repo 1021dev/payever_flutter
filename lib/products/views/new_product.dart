@@ -157,7 +157,6 @@ class _NewProductScreenState extends State<NewProductScreen> {
   AppBar _appBar;
   ButtonRow buttonRow;
   MainRow mainRow;
-
   //InventoryRow inventoryRow;
   CategoryRow categoryRow;
   ShippingRow shippingRow;
@@ -198,6 +197,7 @@ class _NewProductScreenState extends State<NewProductScreen> {
               .then((inv) {
             InventoryModel currentInventory = InventoryModel.toMap(inv);
             widget._parts.invManager.addInventory(Inventory(
+              hiddenIndex: 0,
                 amount: currentInventory.stock,
                 barcode: currentInventory.barcode,
                 sku: currentInventory.sku,
@@ -211,6 +211,7 @@ class _NewProductScreenState extends State<NewProductScreen> {
             .then((inv) {
           InventoryModel currentInventory = InventoryModel.toMap(inv);
           widget._parts.invManager.addInventory(Inventory(
+            hiddenIndex: 0,
               amount: currentInventory.stock,
               barcode: currentInventory.barcode,
               sku: currentInventory.sku,
@@ -468,23 +469,23 @@ class _NewProductScreenState extends State<NewProductScreen> {
 
         String doc;
         if (!widget._parts.editMode) {
-          doc = '''
-        mutation createProduct {
-            createProduct(product: {businessUuid: "${widget._parts.business}", images: [$_images], title: "${widget._parts.product.title}", description: "${widget._parts.product.description}", hidden: ${widget._parts.product.onSales} , price: ${widget._parts.product.price}, salePrice: ${widget._parts.product.salePrice}, sku: "${widget._parts.product.sku == null ? "" : widget._parts.product.sku}", barcode: "${widget._parts.product.barcode == null ? "" : widget._parts.product.barcode}", type: "${widget._parts.type}", enabled: ${widget._parts.enabled}, channelSets: [$channels], categories: [$stringCategories], variants: [$variants], shipping: {free: ${widget._parts.product.shipping.free}, general: ${widget._parts.product.shipping.general}, weight: ${widget._parts.product.shipping.weight}, width: ${widget._parts.product.shipping.width}, length: ${widget._parts.product.shipping.length}, height:  ${widget._parts.product.shipping.height}}}) {
-                title
-                uuid
-                }
-              }
-        ''';
+           doc = "";
+        // mutation createProduct {
+        //     createProduct(product: {businessUuid: "${widget._parts.business}", images: [$_images], title: "${widget._parts.product.title}", description: "${widget._parts.product.description}", hidden: ${widget._parts.product.onSales} , price: ${widget._parts.product.price}, salePrice: ${widget._parts.product.salePrice}, sku: "${widget._parts.product.sku == null ? "" : widget._parts.product.sku}", barcode: "${widget._parts.product.barcode == null ? "" : widget._parts.product.barcode}", type: "${widget._parts.type}", enabled: ${widget._parts.enabled}, channelSets: [$channels], categories: [$stringCategories], variants: [$variants], shipping: {free: ${widget._parts.product.shipping.free}, general: ${widget._parts.product.shipping.general}, weight: ${widget._parts.product.shipping.weight}, width: ${widget._parts.product.shipping.width}, length: ${widget._parts.product.shipping.length}, height:  ${widget._parts.product.shipping.height}}}) {
+        //         title
+        //         uuid
+        //         }
+        //       }
+
         } else {
-          doc = '''
-        mutation updateProduct {
-            updateProduct(product: {businessUuid: "${widget._parts.business}", images: [$_images], uuid: "${widget.productEdit.uuid}", title: "${widget._parts.product.title}", description: "${widget._parts.product.description}", hidden: ${widget._parts.product.onSales} , price: ${widget._parts.product.price}, salePrice: ${widget._parts.product.salePrice}, sku: "${widget._parts.product.sku == null ? "" : widget._parts.product.sku}", barcode: "${widget._parts.product.barcode == null ? "" : widget._parts.product.barcode}", type: "${widget._parts.type}", enabled: ${widget._parts.product.active}, channelSets: [$channels], categories: [$stringCategories], variants: [$variants], shipping: {free: ${widget._parts.product.shipping.free}, general: ${widget._parts.product.shipping.general}, weight: ${widget._parts.product.shipping.weight}, width: ${widget._parts.product.shipping.width}, length: ${widget._parts.product.shipping.length}, height:  ${widget._parts.product.shipping.height}}}) {
-                title
-                uuid
-                }
-              }
-        ''';
+          doc = "";
+        // mutation updateProduct {
+        //     updateProduct(product: {businessUuid: "${widget._parts.business}", images: [$_images], uuid: "${widget.productEdit.uuid}", title: "${widget._parts.product.title}", description: "${widget._parts.product.description}", hidden: ${widget._parts.product.onSales} , price: ${widget._parts.product.price}, salePrice: ${widget._parts.product.salePrice}, sku: "${widget._parts.product.sku == null ? "" : widget._parts.product.sku}", barcode: "${widget._parts.product.barcode == null ? "" : widget._parts.product.barcode}", type: "${widget._parts.type}", enabled: ${widget._parts.product.active}, channelSets: [$channels], categories: [$stringCategories], variants: [$variants], shipping: {free: ${widget._parts.product.shipping.free}, general: ${widget._parts.product.shipping.general}, weight: ${widget._parts.product.shipping.weight}, width: ${widget._parts.product.shipping.width}, length: ${widget._parts.product.shipping.length}, height:  ${widget._parts.product.shipping.height}}}) {
+        //         title
+        //         uuid
+        //         }
+        //       }
+        // ''';
         }
 
         showDialog(
@@ -1673,7 +1674,7 @@ class _ChannelRowState extends State<ChannelRow> {
     ProductsApi api = ProductsApi();
     api
         .getTerminal(
-            widget.parts.business, GlobalUtils.activeToken.accessToken, context)
+            widget.parts.business, GlobalUtils.activeToken.accessToken)
         .then((terminals) {
       terminals.forEach((term) {
         widget.parts.terminals.add(Terminal.toMap(term));
@@ -1894,9 +1895,6 @@ class _ChannelRowState extends State<ChannelRow> {
                                               id:shop.channelSet ,
                                               name:shop.name ,
                                               type: GlobalUtils.CHANNEL_SHOP,
-                                                // shop.channelSet,
-                                                // shop.name,
-                                                // GlobalUtils.CHANNEL_SHOP
                                               ),
                                           );
                                         } else {

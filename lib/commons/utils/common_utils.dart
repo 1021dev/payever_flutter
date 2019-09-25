@@ -788,4 +788,8 @@ class GlobalUtils {
     positions.add("Others");
     return positions;
   }
+   static removeFocus(BuildContext context) {
+    FocusScope.of(context).requestFocus(FocusNode());
+  }
+
 }

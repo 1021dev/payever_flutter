@@ -19,21 +19,21 @@ class _ProductTaxRowState extends State<ProductTaxRow> {
       child: Container(
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.05),
-            borderRadius: BorderRadius.circular(16),
+            color: Colors.white.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(8),
           ),
           child: Container(
-              padding:
-                  EdgeInsets.symmetric(horizontal: Measurements.width * 0.025),
-              alignment: Alignment.center,
-              height:
-                  Measurements.height * (widget.parts.isTablet ? 0.05 : 0.07),
+              // padding:
+              //     EdgeInsets.symmetric(horizontal: Measurements.width * 0.025),
+              // alignment: Alignment.center,
+              // height:
+              //     Measurements.height * (widget.parts.isTablet ? 0.05 : 0.07),
               child: PopupMenuButton(
                 padding: EdgeInsets.zero,
                 child: ListTile(
                   title: Text(
                     'Default taxes apply',
-                    style: TextStyle(fontSize: AppStyle.fontSizeTabContent()),
+                    // style: TextStyle(fontSize: AppStyle.fontSizeTabContent()),
                   ),
                 ),
                 itemBuilder: (BuildContext context) =>

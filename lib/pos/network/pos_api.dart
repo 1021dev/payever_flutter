@@ -238,8 +238,6 @@ class PosApi extends RestDataSource {
       },
       "expiresAt": expiration
     });
-    print(body);
-    print(RestDataSource.storageUrl);
     var headers = {
       HttpHeaders.authorizationHeader: "Bearer $token",
       HttpHeaders.contentTypeHeader: "application/json",
@@ -273,8 +271,6 @@ class PosApi extends RestDataSource {
       },
       "expiresAt": expiration
     });
-    print(body);
-    print(RestDataSource.storageUrl);
     var headers = {
       HttpHeaders.authorizationHeader: "Bearer $token",
       HttpHeaders.contentTypeHeader: "application/json",
@@ -290,7 +286,7 @@ class PosApi extends RestDataSource {
   Future<dynamic> postOrder(String token, dynamic flow, String business) {
     print("TAG - postOrder()");
     var body = jsonEncode(flow);
-    print(body);
+
     var headers = {
       HttpHeaders.authorizationHeader: "Bearer $token",
       HttpHeaders.contentTypeHeader: "application/json",

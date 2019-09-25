@@ -21,6 +21,9 @@ class DashboardOverview extends StatelessWidget {
     DashboardStateModel dashboardStateModel =
         Provider.of<DashboardStateModel>(context);
 
+    Provider.of<GlobalStateModel>(context).setIsTablet(MediaQuery.of(context).orientation == Orientation.portrait
+        ? MediaQuery.of(context).size.width > 600
+        : MediaQuery.of(context).size.height > 600);
     _activeWid.add(Padding(
       padding: EdgeInsets.only(top: 25),
     ));

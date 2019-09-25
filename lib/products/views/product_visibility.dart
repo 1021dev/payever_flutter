@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:payever/commons/view_models/product_state_model.dart';
+import 'package:payever/products/views/custom_form_field.dart';
+import 'package:provider/provider.dart';
 import '../utils/utils.dart';
 import 'new_product.dart';
 
@@ -38,14 +41,38 @@ class _ProductVisibilityRowState extends State<ProductVisibilityRow> {
               activeColor: widget.parts.switchColor,
               value: widget.parts.enabled,
               onChanged: (bool value) {
-                setState(() {
-                  widget.parts.enabled = value;
-                });
+                setState(
+                  () {
+                    widget.parts.enabled = value;
+                  },
+                );
               },
             )
           ],
         ),
       ),
+    );
+  }
+}
+
+class ProductVisibility extends StatefulWidget {
+  @override
+  _ProductVisibilityState createState() => _ProductVisibilityState();
+}
+
+class _ProductVisibilityState extends State<ProductVisibility> {
+  @override
+  Widget build(BuildContext context) {
+    return CustomSwitchField(
+      bottomLeft: true,
+      bottomRight: true,
+      topLeft: true,
+      topRight: true,
+      text: "Show this product",
+      value: Provider.of<ProductStateModel>(context).editProduct.active,
+      onChange: (bool _active){
+        setState(() => Provider.of<ProductStateModel>(context).editProduct.active = _active);
+      },
     );
   }
 }

@@ -172,8 +172,7 @@ class CheckoutPaymentOption {
   }
 
   CheckoutPaymentOption.toMap(obj) {
-    print("payment options");
-    print(obj);
+
     accept_fee = obj[CheckoutProcessUtils.DB_CHECKOUT_P_P_O_ACCEPT_FEE];
     contract_length = obj[CheckoutProcessUtils.DB_CHECKOUT_P_P_O_CONTRACT_LENGHT];
     description_fee = obj[CheckoutProcessUtils.DB_CHECKOUT_P_P_O_DESCRIPTION_FEE];

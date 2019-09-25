@@ -52,7 +52,6 @@ class Transaction {
     _paginationData =
         PaginationData.toMap(obj[GlobalUtils.DB_TRANSACTIONS_PAGINATION]);
     _usages = Usages.toMap(obj[GlobalUtils.DB_TRANSACTIONS_USAGES]);
-    print(_usages);
     dynamic _tempCol = obj[GlobalUtils.DB_TRANSACTIONS_COLLECTION];
 
     _tempCol.forEach((_collections) {

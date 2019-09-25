@@ -1,9 +1,9 @@
 import 'package:intl/intl.dart';
 
-import 'pos.dart';
 import '../utils/utils.dart';
 
 class Products {
+  
   String _business;
   String _id;
   String _lastSale;
@@ -75,7 +75,7 @@ class ProductsModel {
   List<String> imagesUrl = List();
   List<String> images = List();
   String currency;
-  String uuid;
+  String id;
   String title;
   String description;
   bool onSales;
@@ -93,7 +93,7 @@ class ProductsModel {
   ProductTypeEnum type;
   bool active;
   List<ProductVariantModel> variants = List();
-  ProductShippingInterface shipping;
+  ProductShippingInterface shipping = ProductShippingInterface();
   MarketplaceAssigmentInterface marketplaceAssigments;
 
   ProductsModel({
@@ -101,14 +101,14 @@ class ProductsModel {
     this.salePrice,
     this.price,
     this.onSales,
-    this.imagesUrl,
-    this.images,
+    this.imagesUrl = const [],
+    this.images = const [],
     this.description,
     this.barcode,
     this.title,
     this.businessUuid,
     this.type,
-    this.uuid,
+    this.id,
     this.active,
     this.categories,
     this.channelSets,
@@ -156,7 +156,7 @@ class ProductsModel {
       _variants.add(ProductVariantModel.fromMap(variant));
     });
 
-    ProductTypeEnum stringToEnum(String e){
+    ProductTypeEnum stringToEnum(String e) {
       switch (e) {
         case "physical":
           return ProductTypeEnum.physical;
@@ -169,9 +169,7 @@ class ProductsModel {
           break;
       }
     }
-    // print("____");
-    // print(obj["shipping"]);
-    // print("----");
+
     return ProductsModel(
       active: obj["active"],
       barcode: obj["barcode"],
@@ -194,12 +192,11 @@ class ProductsModel {
       title: obj["title"],
       type: stringToEnum(obj["type"]),
       updatedAt: obj["updatedAt"],
-      uuid: obj["id"],
+      id: obj["id"],
       variants: _variants,
       vatRate: obj["vatRate"],
     );
   }
-  
 
   Map<String, dynamic> toJson() {
     return {
@@ -212,29 +209,73 @@ class ProductsModel {
       "salePrice": this.salePrice,
       "sku": this.sku,
       "barcode": this.barcode,
-      "type": this.type,
+      "type": typeString(this.type),
       "active": this.active,
-      "channelSets": encondeToJson(this.channelSets),
-      "categories": encondeToJson(this.categories),
-      "variants": encondeToJson(this.variants),
-      "shipping": this.shipping.toJson(),
+      "channelSets": encondeToJson(this.channelSets) ?? [],
+      "categories": encondeToJson(this.categories) ?? [],
+      "variants": encondeToJson(this.variants) ?? [],
+      "shipping": this.shipping?.toJson(),
     };
+  }
+  Map<String, dynamic> toJsonWithID() {
+    return {
+      "businessUuid": this.businessUuid,
+      "images": this.images,
+      "id":this.id,
+      "title": this.title,
+      "description": this.description,
+      "onSales": this.onSales,
+      "price": this.price,
+      "salePrice": this.salePrice,
+      "sku": this.sku,
+      "barcode": this.barcode,
+      "type": typeString(this.type),
+      "active": this.active,
+      "channelSets": encondeToJson(this.channelSets) ?? [],
+      "categories": encondeToJson(this.categories) ?? [],
+      "variants": encondeToJson(this.variants) ?? [],
+      "shipping": this.shipping?.toJson()??null,
+    };
+  }
+  String typeString(ProductTypeEnum _type){
+    switch (_type) {
+      case ProductTypeEnum.physical:
+        return "physical";
+        break;
+      case ProductTypeEnum.digital:
+        return "digital";
+        break;
+      case ProductTypeEnum.service:
+        return "service";
+        break;
+      default:
+    }
   }
 
   List encondeToJson(List list) {
+    if (list == null) return null;
     List jsonList = List();
-    list.map((item) => jsonList.add(item.toJson())).toList();
+    list
+        .map(
+          (item) => jsonList.add(
+            item.toJson(),
+          ),
+        )
+        .toList();
     return jsonList;
   }
 }
 
 class ProductChannelSet {
-
   String id;
   String type;
   String name;
 
   ProductChannelSet({this.id, this.name, this.type});
+
+  factory ProductChannelSet.fromChannel(dynamic obj,String type){
+    return ProductChannelSet(id: obj["channelSet"],name: obj["name"],type: type);
+  }
 
   factory ProductChannelSet.fromMap(dynamic obj) {
     return ProductChannelSet(
@@ -364,25 +405,25 @@ class ProductVariantModel {
       sku: obj["sku"],
     );
   }
-  Map<String,dynamic> toJson(){
+  Map<String, dynamic> toJson() {
     return {
       "id": this.id,
-          "images": this.images,
-          "options": encondeToJson(this.options),
-          "description": this.description,
-          "price": this.price,
-          "salePrice": this.salePrice,
-          "onSales": this.onSales,
-          "sku": this.sku,
-          "barcode": this.barcode,
+      "images": this.images,
+      "options": encondeToJson(this.options),
+      "description": this.description,
+      "price": this.price,
+      "salePrice": this.salePrice,
+      "onSales": this.onSales,
+      "sku": this.sku,
+      "barcode": this.barcode,
     };
   }
-   List encondeToJson(List list) {
+
+  List encondeToJson(List list) {
     List jsonList = List();
     list.map((item) => jsonList.add(item.toJson())).toList();
     return jsonList;
   }
-
 }
 
 class Option {
@@ -410,31 +451,27 @@ class ProductShippingInterface {
   num width;
   num length;
   num height;
-  String measure_mass;
-  String measure_size;
 
   ProductShippingInterface({
     this.free,
     this.general,
     this.height,
     this.length,
-    this.measure_mass,
-    this.measure_size,
     this.weight,
     this.width,
   });
 
   factory ProductShippingInterface.fromMap(dynamic obj) {
-    return obj != null ?ProductShippingInterface(
-      free: obj["free"],
-      general: obj["general"],
-      height: obj["height"],
-      length: obj["length"],
-      measure_mass: obj["measure_mass"],
-      measure_size: obj["measure_size"],
-      weight: obj["weight"],
-      width: obj["width"],
-    ):null;
+    return obj != null
+        ? ProductShippingInterface(
+            free: obj["free"],
+            general: obj["general"],
+            height: obj["height"],
+            length: obj["length"],
+            weight: obj["weight"],
+            width: obj["width"],
+          )
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -515,51 +552,3 @@ class InventoryModel {
 
   String get _id => __id;
 }
-
-Object a = {
-  "operationName": "updateProduct",
-  "variables": {
-    "product": {
-      "businessUuid": "ed49c090-840d-4442-934f-28f4abe3597b",
-      "images": [],
-      "id": "eafd1de3-2b20-4b5d-9e9f-425872e23389",
-      "title": "test",
-      "description": "123",
-      "onSales": false,
-      "price": 123,
-      "salePrice": null,
-      "sku": null,
-      "barcode": "",
-      "type": "physical",
-      "active": true,
-      "channelSets": [],
-      "categories": [],
-      "variants": [
-        {
-          "id": "f370e3f5-cbb0-4063-b1c4-90f1815b1dab",
-          "images": [],
-          "options": [
-            {"name": "Color", "value": "blue"},
-            {"name": "Size", "value": "S"}
-          ],
-          "description": "qwe",
-          "price": 123,
-          "salePrice": null,
-          "onSales": false,
-          "sku": "ooqooaiiyhn13",
-          "barcode": ""
-        }
-      ],
-      "shipping": {
-        "free": false,
-        "general": false,
-        "weight": 1,
-        "width": 1,
-        "length": 1,
-        "height": 1
-      }
-    }
-  },
-  "query":
-      "mutation updateProduct(product: ProductUpdateInput!) {\n  updateProduct(product: product) {\n    title\n    id\n  }\n}\n"
-};

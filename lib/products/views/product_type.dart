@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../products.dart';
 import '../utils/utils.dart';
@@ -39,7 +40,6 @@ class _ButtonRowState extends State<ButtonRow> {
       children: <Widget>[
         RaisedButton(
           elevation: 0,
-          // widget.service?0:0.1,
           highlightElevation: 0,
           color: !service
               ? Colors.black.withOpacity(0.1)
@@ -103,15 +103,109 @@ class _ButtonRowState extends State<ButtonRow> {
             style: TextStyle(fontSize: AppStyle.fontSizeButtonTabSelect()),
           ),
           onPressed: () {
-            setState(() {
-              widget.parts.type = ProductTypeEnum.physical;
-              service = false;
-              digital = false;
-              physical = true;
-            });
+            setState(
+              () {
+                widget.parts.type = ProductTypeEnum.physical;
+                service = false;
+                digital = false;
+                physical = true;
+              },
+            );
           },
         )
       ],
+    );
+  }
+}
+
+class TypeBody extends StatefulWidget {
+  @override
+  _TypeBodyState createState() => _TypeBodyState();
+}
+
+class _TypeBodyState extends State<TypeBody> {
+  @override
+  Widget build(BuildContext context) {
+    ProductStateModel productProvider = Provider.of<ProductStateModel>(context);
+    return Container(
+      height: 59,
+      padding: EdgeInsets.symmetric(vertical: 15),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          RaisedButton(
+            elevation: 0,
+            highlightElevation: 0,
+            color: productProvider.editProduct.type != ProductTypeEnum.service
+                ? Colors.black.withOpacity(0.1)
+                : Colors.white.withOpacity(0.2),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20),
+                bottomLeft: Radius.circular(20),
+              ),
+            ),
+            child: Text(
+              Language.getProductStrings("category.type.service"),
+              style: TextStyle(fontSize: AppStyle.fontSizeButtonTabSelect()),
+            ),
+            onPressed: () {
+              productProvider.editProduct.type = ProductTypeEnum.service;
+              productProvider.editProduct.shipping = null;
+              productProvider.notifyListeners();
+            },
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 1),
+          ),
+          RaisedButton(
+            elevation: 0,
+            highlightElevation: 0,
+            color: productProvider.editProduct.type != ProductTypeEnum.digital
+                ? Colors.black.withOpacity(0.1)
+                : Colors.white.withOpacity(0.2),
+            child: Text(
+              Language.getProductStrings("category.type.digital"),
+              style: TextStyle(fontSize: AppStyle.fontSizeButtonTabSelect()),
+            ),
+            onPressed: () {
+              productProvider.editProduct.type = ProductTypeEnum.digital;
+              productProvider.editProduct.shipping = null;
+              productProvider.notifyListeners();
+            },
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 1),
+          ),
+          RaisedButton(
+            elevation: 0,
+            highlightElevation: 0,
+            color: productProvider.editProduct.type != ProductTypeEnum.physical
+                ? Colors.black.withOpacity(0.1)
+                : Colors.white.withOpacity(0.2),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(20),
+                bottomRight: Radius.circular(20),
+              ),
+            ),
+            child: Text(
+              Language.getProductStrings("category.type.physical"),
+              style: TextStyle(fontSize: AppStyle.fontSizeButtonTabSelect()),
+            ),
+            onPressed: () {
+              productProvider.editProduct.type = ProductTypeEnum.physical;
+              if (productProvider.editProduct.shipping == null) {
+                productProvider.editProduct.shipping = ProductShippingInterface(
+                  free: false,
+                  general: false,
+                );
+              }
+              productProvider.notifyListeners();
+            },
+          )
+        ],
+      ),
     );
   }
 }

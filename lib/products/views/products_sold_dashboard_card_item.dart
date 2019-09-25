@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:payever/products/views/new_product_ref.dart';
 import 'package:provider/provider.dart';
 
 import '../../commons/network/network.dart';
@@ -48,21 +49,23 @@ class _ProductsSoldCardItemState extends State<ProductsSoldCardItem> {
     await api
         .getProductsPopularMonth(globalStateModel.currentBusiness.id,
             GlobalUtils.activeToken.accessToken, context)
-        .then((lastSales) {
-      if (lastSales.isNotEmpty) {
-        List<dynamic> lastSaleData = List<dynamic>();
-        lastSaleData = lastSales;
-        if (lastSaleData.length < 4) {
-          for (var salesData in lastSaleData) {
-            lastSalesList.add(Products.toMap(salesData));
-          }
-        } else {
-          for (var salesData in lastSaleData.sublist(0, 4)) {
-            lastSalesList.add(Products.toMap(salesData));
+        .then(
+      (lastSales) {
+        if (lastSales.isNotEmpty) {
+          List<dynamic> lastSaleData = List<dynamic>();
+          lastSaleData = lastSales;
+          if (lastSaleData.length < 4) {
+            for (var salesData in lastSaleData) {
+              lastSalesList.add(Products.toMap(salesData));
+            }
+          } else {
+            for (var salesData in lastSaleData.sublist(0, 4)) {
+              lastSalesList.add(Products.toMap(salesData));
+            }
           }
         }
-      }
-    });
+      },
+    );
 
     return lastSalesList;
   }
@@ -89,48 +92,7 @@ class _ProductsSoldCardItemState extends State<ProductsSoldCardItem> {
       return ''' 
               query getProducts {
                 product(uuid: "$uuid") {
-                    businessUuid
-                    images
-                    currency
-                    uuid
-                    title
-                    description
-                    onSales
-                    price
-                    salePrice
-                    sku
-                    barcode
-                    type
-                    enabled
-                    categories {
-                      _id
-                      slug
-                      title
-                    }
-                    channelSets {
-                      id
-                      type
-                      name
-                    }
-                    variants {
-                      id
-                      images
-                      title
-                      description
-                      hidden
-                      price
-                      salePrice
-                      sku
-                      barcode
-                    }
-                    shipping {
-                      free
-                      general
-                      weight
-                      width
-                      length
-                      height
-                    }
+                    images      id      title      description      onSales      price      salePrice      sku      barcode      currency      type      active      categories {        title      }      variants {        id        images        options {          name          value        }        description        onSales        price        salePrice        sku        barcode      }      channelSets {        id        type        name      }      shipping {        free        general        weight        width        length        height      }         
                   }
                 }''';
     }
@@ -144,50 +106,55 @@ class _ProductsSoldCardItemState extends State<ProductsSoldCardItem> {
 
         if (results.length > 0) {
           for (var resultData in results) {
-            productsList.add(Container(
-              width: 68,
-              height: 68,
-              child: GraphQLProvider(
-                client: graphClient,
-                child: Query(
-                  options: QueryOptions(
+            productsList.add(
+              Container(
+                width: 68,
+                height: 68,
+                child: GraphQLProvider(
+                  client: graphClient,
+                  child: Query(
+                    options: QueryOptions(
                       variables: <String, dynamic>{},
-                      document: getInitialDocument(resultData.uuid)),
-                  builder: (QueryResult result,
-                      {VoidCallback refetch, fetchMore: null}) {
-                    if (result.errors != null) {
-                      
-                      return Center(
-                        child: Text("Error"),
-                      );
-                    }
+                      document: getInitialDocument(resultData.uuid),
+                    ),
+                    builder: (QueryResult result,
+                        {VoidCallback refetch, fetchMore: null}) {
+                      if (result.errors != null) {
+                        // print(result.errors);
+                        // return Center(
+                        //   child: Text("Error"),
+                        // );
+                      }
 
-                    if (result.loading) {
-                      // return Center(child: CircularProgressIndicator());
-                      return Container();
-                    }
+                      if (result.loading) {
+                        // return Center(child: CircularProgressIndicator());
+                        return Container();
+                      }
 
-                    if (result.data != null || result.data['product'] != null) {
-                      if (result.data['product'] != null) {
-                        
-                        var productData =
-                            ProductsModel.fromMap(result.data['product']);
-
-                        return productSoldItemElementCard(
-                            globalStateModel, productData, resultData, context);
-                      } else {
+                      if (result.data == null)
                         return productSoldItemElementCard(
                             globalStateModel, null, resultData, context);
+                      if (result.data != null ||
+                          result.data['product'] != null) {
+                        if (result.data['product'] != null) {
+                          var productData =
+                              ProductsModel.fromMap(result.data['product']);
+                          return productSoldItemElementCard(globalStateModel,
+                              productData, resultData, context);
+                        } else {
+                          return productSoldItemElementCard(
+                              globalStateModel, null, resultData, context);
+                        }
+                      } else {
+                        return Center(
+                          child: Container(),
+                        );
                       }
-                    } else {
-                      return Center(
-                        child: Container(),
-                      );
-                    }
-                  },
+                    },
+                  ),
                 ),
               ),
-            ));
+            );
           }
 
           return ListView(
@@ -201,10 +168,11 @@ class _ProductsSoldCardItemState extends State<ProductsSoldCardItem> {
           );
         } else {
           return NoItemsCard(
-              Text(Language.getWidgetStrings(
-                  "widgets.products.actions.add-new")), () {
-            _goToProducts(globalStateModel, context);
-          });
+            Text(Language.getWidgetStrings("widgets.products.actions.add-new")),
+            () {
+              _goToProducts(globalStateModel, context);
+            },
+          );
         }
       },
     );
@@ -227,19 +195,27 @@ class _ProductsSoldCardItemState extends State<ProductsSoldCardItem> {
                 borderRadius: BorderRadius.circular(10),
                 image: resultData.thumbnail != null
                     ? DecorationImage(
-                        image: NetworkImage(!resultData.thumbnail
-                                .toString()
-                                .contains("https://")
-                            ? Env.storage + "/products/" + resultData.thumbnail
-                            : resultData.thumbnail))
-                    : DecorationImage(image: AssetImage("")),
+                        image: NetworkImage(
+                          !resultData.thumbnail.toString().contains("https://")
+                              ? Env.storage +
+                                  "/products/" +
+                                  resultData.thumbnail
+                              : resultData.thumbnail,
+                        ),
+                      )
+                    : DecorationImage(
+                        image: AssetImage(
+                          "assets/images/wallpapericon.png",
+                        ),
+                      ),
               ),
               child: resultData.thumbnail == null
                   ? Center(
                       child: SvgPicture.asset(
-                      "assets/images/noimage.svg",
-                      color: Colors.black.withOpacity(0.3),
-                    ))
+                        "assets/images/noimage.svg",
+                        color: Colors.black.withOpacity(0.3),
+                      ),
+                    )
                   : Container(),
             ),
             Container(
@@ -262,14 +238,19 @@ class _ProductsSoldCardItemState extends State<ProductsSoldCardItem> {
                       maxLines: 1,
                       minFontSize: 10,
                       style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold),
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     AutoSizeText(
 //                            productData != null ? productData.title : resultData.name,
                       "Sold: ${resultData.quantity}",
                       maxLines: 1,
                       minFontSize: 10,
-                      style: TextStyle(color: Colors.white, fontSize: 11),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 11,
+                      ),
                     ),
                   ],
                 ),
@@ -283,29 +264,36 @@ class _ProductsSoldCardItemState extends State<ProductsSoldCardItem> {
           Navigator.push(
               context,
               PageTransition(
-                  child: NewProductScreen(
-                    wallpaper: globalStateModel.currentWallpaper,
-                    business: globalStateModel.currentBusiness.id,
-                    view: this,
-                    currency: globalStateModel.currentBusiness.currency,
-                    editMode: true,
-                    productEdit: productData,
+                  // child: NewProductScreen(
+                  //   wallpaper: globalStateModel.currentWallpaper,
+                  //   business: globalStateModel.currentBusiness.id,
+                  //   view: this,
+                  //   currency: globalStateModel.currentBusiness.currency,
+                  //   editMode: true,
+                  //   productEdit: productData,
+                  //   isFromDashboardCard: true,
+                  //   isLoading: ValueNotifier(0),
+                  // ),
+                  child: ProductEditor(
+                    global: Provider.of<GlobalStateModel>(context),
+                    productProvider: Provider.of<ProductStateModel>(context),
                     isFromDashboardCard: true,
-                    isLoading: ValueNotifier(0),
+                    productsModel: productData,
                   ),
                   type: PageTransitionType.fade));
         } else {
           Navigator.push(
-              context,
-              PageTransition(
-                  child: ProductScreen(
-                    wallpaper: globalStateModel.currentWallpaper,
-                    business: globalStateModel.currentBusiness,
-                    posCall: false,
-                    isProductNotAvailable: true,
-                    isFromDashboardCard: true,
-                  ),
-                  type: PageTransitionType.fade));
+            context,
+            PageTransition(
+                child: ProductScreen(
+                  wallpaper: globalStateModel.currentWallpaper,
+                  business: globalStateModel.currentBusiness,
+                  posCall: false,
+                  isProductNotAvailable: true,
+                  isFromDashboardCard: true,
+                ),
+                type: PageTransitionType.fade),
+          );
         }
       },
     );

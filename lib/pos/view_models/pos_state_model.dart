@@ -81,7 +81,7 @@ class PosStateModel extends PosStateCommonsModel {
   }
 
   Future<dynamic> getTerminalsList() async {
-    return posApi.getTerminal(businessId, accessToken, null);
+    return posApi.getTerminal(businessId, accessToken);
   }
 
   Future<dynamic> getChannel() async {
