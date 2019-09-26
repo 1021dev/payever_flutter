@@ -1328,10 +1328,16 @@ class _VariantImageSelectorState extends State<VariantImageSelector> {
                                   onTap: () {
                                     setState(
                                       () {
-                                        if((index == (productProvider.images.length -1)) && index != 0){
-                                          currentImage = productProvider.images[index -1];
-                                        }else if (index == 0 && productProvider.images.length>1 ){
-                                          currentImage = productProvider.images[1];
+                                        if ((index ==
+                                                (productProvider.images.length -
+                                                    1)) &&
+                                            index != 0) {
+                                          currentImage =
+                                              productProvider.images[index - 1];
+                                        } else if (index == 0 &&
+                                            productProvider.images.length > 1) {
+                                          currentImage =
+                                              productProvider.images[1];
                                         }
                                         productProvider.images.removeAt(index);
                                       },
@@ -1428,6 +1434,7 @@ class _VariantBodyState extends State<VariantBody> {
                           index:
                               productProvider.editProduct.variants.length - 1,
                           onCreate: true,
+                          options: productProvider.createOptions(),
                         ),
                         type: PageTransitionType.fade,
                       ),
@@ -1684,7 +1691,6 @@ class _VariantEditorState extends State<VariantEditor> {
             onTap: () {
               ProductStateModel productStateModel =
                   Provider.of<ProductStateModel>(context);
-
               try {
                 productStateModel.variantFormKey.currentState.save();
                 productStateModel.variantFormKey.currentState.validate();
@@ -1708,18 +1714,9 @@ class _VariantEditorState extends State<VariantEditor> {
                       .then(
                     (onValue) {
                       skuError = true;
-                      Scaffold.of(
+                      Provider.of<GlobalStateModel>(context).launchCustomSnack(
                         productStateModel.variantFormKey.currentContext,
-                      ).showSnackBar(
-                        SnackBar(
-                          backgroundColor: Colors.black.withOpacity(0.5),
-                          content: Text(
-                            "invalid sku",
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
+                        "invalid sku",
                       );
                     },
                   ).catchError(
@@ -1739,17 +1736,9 @@ class _VariantEditorState extends State<VariantEditor> {
                   Navigator.pop(context);
                 }
               } catch (e) {
-                Scaffold.of(productStateModel.variantFormKey.currentContext)
-                    .showSnackBar(
-                  SnackBar(
-                    backgroundColor: Colors.black.withOpacity(0.5),
-                    content: Text(
-                      "mandatory fields",
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
+                Provider.of<GlobalStateModel>(context).launchCustomSnack(
+                  productStateModel.variantFormKey.currentContext,
+                  "mandatory fields",
                 );
               }
             },
@@ -1874,6 +1863,7 @@ class OptionsRow extends StatelessWidget {
         VariantOptions(
           varIndex: index,
           variant: variant,
+          optionNames: Provider.of<ProductStateModel>(context).createOptions(),
         ),
       ],
     );
@@ -1984,37 +1974,66 @@ class _SalesRowState extends State<SalesRow> {
   Widget build(BuildContext context) {
     return Row(
       children: <Widget>[
-        CustomFormField(
-          text: Language.getProductStrings(
-              "variantEditor.placeholders.sale_price"),
-          flex: 3,
-          mandatory: widget.variant.onSales ?? false,
+        // CustomFormField(
+        //   text: Language.getProductStrings(
+        //       "variantEditor.placeholders.sale_price"),
+        //   flex: 3,
+        //   mandatory: widget.variant.onSales ?? false,
+        //   format: FieldType.numbers,
+        //   error: salePriceError,
+        //   controller: TextEditingController(
+        //       text: widget.variant.salePrice?.toString() ?? ""),
+        //   onChange: (String text) {
+        //     widget.variant.salePrice = num.tryParse(text);
+        //   },
+        //   validator: (String text) {
+        //     setState(
+        //       () {
+        //         salePriceError = (widget.variant.onSales && text.isEmpty);
+        //       },
+        //     );
+        //     return salePriceError ? true : null;
+        //   },
+        // ),
+        // CustomSwitchField(
+        //   flex: 2,
+        //   value: widget.variant.onSales ?? false,
+        //   text: Language.getProductStrings("price.sale"),
+        //   onChange: (text) {
+        //     setState(
+        //       () {
+        //         widget.variant.onSales = text;
+        //       },
+        //     );
+        //   },
+        // ),
+        TextFieldWithSwitch(
+          flex: 1,
+          mandatory: widget.variant?.onSales ?? false,
           format: FieldType.numbers,
-          error: salePriceError,
+          text: Language.getProductStrings("placeholders.salePrice"),
           controller: TextEditingController(
-              text: widget.variant.salePrice?.toString() ?? ""),
+              text: widget.variant?.salePrice?.toString() ?? ""),
           onChange: (String text) {
             widget.variant.salePrice = num.tryParse(text);
+            widget.variant.onSales = text.isNotEmpty;
+            return widget.variant.onSales;
           },
+          svalue: widget.variant?.onSales ?? false,
+          error: salePriceError,
           validator: (String text) {
             setState(
               () {
-                salePriceError = (widget.variant.onSales && text.isEmpty);
+                salePriceError = (text?.isEmpty ?? true) &&
+                    (widget.variant?.onSales ?? false);
+                print("sale");
+                print(salePriceError);
               },
             );
-            return salePriceError ? true : null;
+            return salePriceError ? salePriceError : null;
           },
-        ),
-        CustomSwitchField(
-          flex: 2,
-          value: widget.variant.onSales ?? false,
-          text: Language.getProductStrings("price.sale"),
-          onChange: (text) {
-            setState(
-              () {
-                widget.variant.onSales = text;
-              },
-            );
+          onSwitchChange: (value) {
+            widget.variant.onSales = value;
           },
         ),
       ],
@@ -2025,8 +2044,9 @@ class _SalesRowState extends State<SalesRow> {
 class VariantOptions extends StatefulWidget {
   final int varIndex;
   ProductVariantModel variant;
+  final List<Option> optionNames;
 
-  VariantOptions({this.varIndex, this.variant}) {
+  VariantOptions({this.varIndex, this.variant, this.optionNames}) {
     if (variant.options.isEmpty) {
       variant.options.add(Option(name: "", value: ""));
     }
@@ -2068,6 +2088,9 @@ class _VariantOptionsState extends State<VariantOptions> {
                   index: index,
                   top: index == 0,
                   bot: index == widget.variant.options.length - 1,
+                  editable: !(widget.optionNames.indexWhere((_temp) =>
+                          _temp.name == widget.variant.options[index].name) >=
+                      0),
                 );
               },
             ),
@@ -2112,10 +2135,12 @@ class OptionItem extends StatefulWidget {
   final bool bot;
   final VoidCallback action;
   final int index;
+  final bool editable;
   OptionItem({
     this.option,
     this.top = false,
     this.bot = false,
+    this.editable = true,
     this.action,
     this.index,
   });
@@ -2133,6 +2158,7 @@ class _OptionItemState extends State<OptionItem> {
       children: <Widget>[
         CustomFormField(
           text: "Option name",
+          editable: widget.editable,
           topLeft: widget.top,
           bottomLeft: widget.bot,
           error: errorN,

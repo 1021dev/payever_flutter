@@ -32,7 +32,7 @@ class LoginScreenPresenter {
       _view.onLoginSuccess(tokenData);
     }).catchError((e) {
       print(e);
-      _view.onLoginError('Please enter credentials');
+      _view.onLoginError('Please enter valid credentials');
     });
   }
 }

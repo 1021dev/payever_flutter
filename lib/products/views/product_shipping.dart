@@ -602,29 +602,32 @@ class _ShippingBodyState extends State<ShippingBody> {
               ),
             ],
           ),
-          Row(
-            children: <Widget>[
-              CustomSwitchField(
-                value: productProvider.editProduct?.shipping?.general ?? false,
-                text: Language.getProductStrings(
-                    "shippingSection.form.general.label"),
-                onChange: (bool text) {
-                  setState(
-                    () {
-                      productProvider.editProduct.shipping.general = text;
-                    },
-                  );
-                },
-              ),
-            ],
-          ),
+          //  Row(
+          //   children: <Widget>[
+          //     CustomSwitchField(
+          //       value: productProvider.editProduct?.shipping?.general ?? false,
+          //       text: Language.getProductStrings(
+          //           "shippingSection.form.general.label"),
+          //       onChange: (bool text) {
+          //         setState(
+          //           () {
+          //             productProvider.editProduct.shipping.general = text;
+          //           },
+          //         );
+          //       },
+          //     ),
+          //   ],
+          //  ),
           Row(
             children: <Widget>[
               CustomFormField(
                 format: FieldType.numbers,
-                sufix: Language.getProductStrings("shippingSection.measure.kg"),
+                sufix: Language.getProductStrings(
+                  "shippingSection.measure.kg",
+                ),
                 text: Language.getProductStrings(
-                    "shippingSection.form.weight.label"),
+                  "shippingSection.form.weight.label",
+                ),
                 onChange: (String text) {
                   productProvider.editProduct.shipping.weight = num.parse(text);
                 },
@@ -634,9 +637,11 @@ class _ShippingBodyState extends State<ShippingBody> {
                         ""),
                 error: weightError,
                 validator: (String text) {
-                  setState(() {
-                    weightError = text.isEmpty;
-                  });
+                  setState(
+                    () {
+                      weightError = text.isEmpty;
+                    },
+                  );
                   return weightError ? weightError : null;
                 },
               ),

@@ -107,88 +107,95 @@ class ProductStateModel extends ChangeNotifier {
     inventories.forEach((a, b) {
       _inventories.add(b);
     });
-    _inventories.forEach((inventory) {
-      num dif = (inventory.newAmount ?? 0) - (inventory.amount ?? 0);
-      print("$dif = (${inventory.newAmount}) - (${inventory.amount})");
-      ProductsApi()
-          .checkSKU(
-        globalStateModel.currentBusiness.id,
-        GlobalUtils.activeToken.accessToken,
-        inventory.sku,
-      )
-          .then((onValue) async {
-        if (inventory.newAmount != null)
-          await ProductsApi()
-              .patchInventory(
-                  globalStateModel.currentBusiness.id,
-                  GlobalUtils.activeToken.accessToken,
-                  inventory.sku,
-                  inventory.barcode,
-                  inventory.tracking)
-              .then(
-            (_) async {
-              //if( dif != 0 && (inventory.newAmount != 0)){
-              if (dif != 0) {
-                dif > 0
-                    ? await add(
-                        dif, inventory.sku, globalStateModel.currentBusiness.id)
-                    : await sub(dif.abs(), inventory.sku,
-                        globalStateModel.currentBusiness.id);
-              }
-            },
-          );
-        if (_inventories.last.sku == inventory.sku) {
-          Navigator.pop(context);
-          Navigator.pop(context);
-          if (!isFromDashboardCard) {
+    _inventories.forEach(
+      (inventory) {
+        num dif = (inventory.newAmount ?? 0) - (inventory.amount ?? 0);
+        print("$dif = (${inventory.newAmount}) - (${inventory.amount})");
+        ProductsApi()
+            .checkSKU(
+          globalStateModel.currentBusiness.id,
+          GlobalUtils.activeToken.accessToken,
+          inventory.sku,
+        )
+            .then((onValue) async {
+          if (inventory.newAmount != null)
+            await ProductsApi()
+                .patchInventory(
+                    globalStateModel.currentBusiness.id,
+                    GlobalUtils.activeToken.accessToken,
+                    inventory.sku,
+                    inventory.barcode,
+                    inventory.tracking)
+                .then(
+              (_) async {
+                //if( dif != 0 && (inventory.newAmount != 0)){
+                if (dif != 0) {
+                  dif > 0
+                      ? await add(dif, inventory.sku,
+                          globalStateModel.currentBusiness.id)
+                      : await sub(dif.abs(), inventory.sku,
+                          globalStateModel.currentBusiness.id);
+                }
+              },
+            );
+          if (_inventories.last.sku == inventory.sku) {
             Navigator.pop(context);
-            Navigator.push(
-                context,
-                PageTransition(
-                    child: ProductScreen(
-                      wallpaper: globalStateModel.currentWallpaper,
-                      business: globalStateModel.currentBusiness,
-                      posCall: false,
-                    ),
-                    type: PageTransitionType.fade));
+            Navigator.pop(context);
+            if (!isFromDashboardCard) {
+              Navigator.pop(context);
+              Navigator.push(
+                  context,
+                  PageTransition(
+                      child: ProductScreen(
+                        wallpaper: globalStateModel.currentWallpaper,
+                        business: globalStateModel.currentBusiness,
+                        posCall: false,
+                      ),
+                      type: PageTransitionType.fade));
+            }
           }
-        }
-      }).catchError((onError) {
-        if (onError.toString().contains("404")) {
-          ProductsApi()
-              .postInventory(
-                  globalStateModel.currentBusiness.id,
-                  GlobalUtils.activeToken.accessToken,
-                  inventory.sku,
-                  inventory.barcode,
-                  inventory.tracking)
-              .then((_) {
-            if (dif != 0 && (inventory.newAmount != 0)) {
-              dif > 0
-                  ? add(dif, inventory.sku, globalStateModel.currentBusiness.id)
-                  : sub(dif.abs(), inventory.sku,
-                      globalStateModel.currentBusiness.id);
+        }).catchError(
+          (onError) {
+            if (onError.toString().contains("404")) {
+              ProductsApi()
+                  .postInventory(
+                      globalStateModel.currentBusiness.id,
+                      GlobalUtils.activeToken.accessToken,
+                      inventory.sku,
+                      inventory.barcode,
+                      inventory.tracking)
+                  .then(
+                (_) {
+                  if (dif != 0 && (inventory.newAmount != 0)) {
+                    dif > 0
+                        ? add(dif, inventory.sku,
+                            globalStateModel.currentBusiness.id)
+                        : sub(dif.abs(), inventory.sku,
+                            globalStateModel.currentBusiness.id);
+                  }
+                  if (_inventories.last.sku == inventory.sku) {
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                    if (!isFromDashboardCard) {
+                      Navigator.pop(context);
+                      Navigator.push(
+                          context,
+                          PageTransition(
+                              child: ProductScreen(
+                                wallpaper: globalStateModel.currentWallpaper,
+                                business: globalStateModel.currentBusiness,
+                                posCall: false,
+                              ),
+                              type: PageTransitionType.fade));
+                    }
+                  }
+                },
+              );
             }
-            if (_inventories.last.sku == inventory.sku) {
-              Navigator.pop(context);
-              Navigator.pop(context);
-              if (!isFromDashboardCard) {
-                Navigator.pop(context);
-                Navigator.push(
-                    context,
-                    PageTransition(
-                        child: ProductScreen(
-                          wallpaper: globalStateModel.currentWallpaper,
-                          business: globalStateModel.currentBusiness,
-                          posCall: false,
-                        ),
-                        type: PageTransitionType.fade));
-              }
-            }
-          });
-        }
-      });
-    });
+          },
+        );
+      },
+    );
   }
 
   fixCategories(List<ProductCategoryInterface> list) async {
@@ -199,5 +206,27 @@ class ProductStateModel extends ChangeNotifier {
       },
     );
     editProduct.categories = categories;
+  }
+
+
+  Map<String,List<String>> categoryOptions =  {
+    "Fashion":["Color","Size","Material"],
+    "Phone":["Memory","Screen"],
+  };
+
+  List<Option> createOptions() {
+    List<Option> result = List();
+    if (editProduct
+        .categories
+        .isNotEmpty) {
+      categoryOptions[editProduct.categories[0]?.title]
+          ?.forEach(
+        (_name) {
+          Option temp = Option(name: _name);
+          result.add(temp);
+        },
+      );
+    }
+    return result;
   }
 }

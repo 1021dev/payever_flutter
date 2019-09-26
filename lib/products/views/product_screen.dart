@@ -81,12 +81,13 @@ class ProductScreen extends StatefulWidget {
   bool isFromDashboardCard = false;
   int stateCounter = 0;
 
-  ProductScreen(
-      {@required this.wallpaper,
-      @required this.business,
-      @required this.posCall,
-      this.isProductNotAvailable,
-      this.isFromDashboardCard});
+  ProductScreen({
+    @required this.wallpaper,
+    @required this.business,
+    @required this.posCall,
+    this.isProductNotAvailable,
+    this.isFromDashboardCard,
+  });
 
   List<ProductsModel> products = List();
 
@@ -112,9 +113,11 @@ class _ProductScreenState extends State<ProductScreen> {
         duration: Duration(seconds: 3),
         onDismiss: () {
           print("The toast was dismised");
-          setState(() {
-            widget.isFromDashboardCard = false;
-          });
+          setState(
+            () {
+              widget.isFromDashboardCard = false;
+            },
+          );
         },
       );
     }

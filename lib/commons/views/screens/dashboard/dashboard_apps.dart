@@ -27,14 +27,19 @@ class DashboardApps extends StatefulWidget {
 class _DashboardAppsState extends State<DashboardApps> {
   DashboardStateModel dashboardStateModel;
 
-  List<String> _availableApps = ["transactions", "pos", "products", "settings"];
+  List<String> _availableApps = [
+    "transactions",
+    "pos",
+    "products",
+    // "settings",
+  ];
 
   @override
   Widget build(BuildContext context) {
     _isTablet = MediaQuery.of(context).orientation == Orientation.portrait
         ? MediaQuery.of(context).size.width > 600
         : MediaQuery.of(context).size.height > 600;
-    
+
     List<Widget> _apps = List();
     dashboardStateModel = Provider.of<DashboardStateModel>(context);
     dashboardStateModel.currentWidgets.forEach((wid) {
@@ -124,13 +129,13 @@ class _AppViewState extends State<AppView> {
                   _isLoading = false;
                 });
                 break;
-             case "settings":
-               loadSettings();
-               setState(() {
-                 _isLoading = false;
-               });
-               print("Settings loaded");
-               break;
+              case "settings":
+                loadSettings();
+                setState(() {
+                  _isLoading = false;
+                });
+                print("Settings loaded");
+                break;
               default:
             }
           },
@@ -203,12 +208,13 @@ class _AppViewState extends State<AppView> {
       _isLoading = false;
     });
 
-    Navigator.push(
-        context,
-        PageTransition(
-//          child: SettingsScreen(),
-          child: EmployeesScreen(),
-          type: PageTransitionType.fade,
-        ));
+//     Navigator.push(
+//       context,
+//       PageTransition(
+// //          child: SettingsScreen(),
+//         child: EmployeesScreen(),
+//         type: PageTransitionType.fade,
+//       ),
+//     );
   }
 }

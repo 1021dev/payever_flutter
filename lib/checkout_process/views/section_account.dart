@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:payever/checkout_app/utils/utils.dart';
 import 'package:payever/checkout_process/utils/checkout_process_utils.dart';
 import 'package:payever/commons/utils/translations.dart';
@@ -7,7 +6,6 @@ import 'package:provider/provider.dart';
 import '../checkout_process.dart';
 import '../views/custom_elements/custom_elements.dart';
 
-import 'custom_elements/custom_google_places.dart';
 
 class CheckoutAccountSectionStart extends StatelessWidget {
   @override

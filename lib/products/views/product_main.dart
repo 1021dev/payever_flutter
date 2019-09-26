@@ -593,7 +593,6 @@ class _LocalImageSelectorState extends State<LocalImageSelector> {
     }
     List<Widget> _images = List();
 
-
     return (productProvider.editProduct?.images?.isEmpty ?? true)
         ? InkWell(
             child: Container(
@@ -707,11 +706,19 @@ class _LocalImageSelectorState extends State<LocalImageSelector> {
                                   onTap: () {
                                     setState(
                                       () {
-                                        if((index == (productProvider.editProduct.images.length -1)) && index != 0){
-                                          currentImage = productProvider.editProduct.images[index -1];
-                                        }else if (index == 0 && productProvider.editProduct.images.length>1 ){
-                                          currentImage = productProvider.editProduct.images[1];
-
+                                        if ((index ==
+                                                (productProvider.editProduct
+                                                        .images.length -
+                                                    1)) &&
+                                            index != 0) {
+                                          currentImage = productProvider
+                                              .editProduct.images[index - 1];
+                                        } else if (index == 0 &&
+                                            productProvider
+                                                    .editProduct.images.length >
+                                                1) {
+                                          currentImage = productProvider
+                                              .editProduct.images[1];
                                         }
                                         productProvider.editProduct.images
                                             .removeAt(index);
@@ -758,8 +765,8 @@ class MainForm extends StatefulWidget {
 class _MainFormState extends State<MainForm> {
   bool nameError = false;
   bool priceError = false;
-  bool salePriceError = false;
   bool descriptionError = false;
+  bool salePriceError = false;
 
   @override
   Widget build(BuildContext context) {
@@ -784,18 +791,18 @@ class _MainFormState extends State<MainForm> {
                   return nameError ? nameError : null;
                 },
               ),
-              CustomSwitchField(
-                flex: 2,
-                topRight: true,
-                value: productProvider.editProduct?.onSales ?? false,
-                text: Language.getProductStrings("price.sale"),
-                onChange: (bool onSale) {
-                  print(onSale);
-                  setState(() {
-                    productProvider.editProduct.onSales = onSale;
-                  });
-                },
-              ),
+              // CustomSwitchField(
+              //   flex: 2,
+              //   topRight: true,
+              //   value: productProvider.editProduct?.onSales ?? false,
+              //   text: Language.getProductStrings("price.sale"),
+              //   onChange: (bool onSale) {
+              //     print(onSale);
+              //     setState(() {
+              //       productProvider.editProduct.onSales = onSale;
+              //     });
+              //   },
+              // ),
             ],
           ),
           Row(
@@ -815,22 +822,57 @@ class _MainFormState extends State<MainForm> {
                   return priceError ? priceError : null;
                 },
               ),
-              CustomFormField(
+              ProductVisibility(),
+              // CustomFormField(
+              //   flex: 1,
+              //   mandatory: productProvider.editProduct?.onSales ?? false,
+              //   format: FieldType.numbers,
+              //   text: Language.getProductStrings("placeholders.salePrice"),
+              //   controller: TextEditingController(
+              //       text: productProvider.editProduct?.salePrice?.toString() ??
+              //           ""),
+              //   onChange: (String text) {
+              //     productProvider.editProduct.salePrice = num.tryParse(text);
+              //   },
+              //   error: salePriceError,
+              //   validator: (String text) {
+              //     salePriceError = (text?.isEmpty ?? true) &&
+              //         (productProvider.editProduct?.onSales ?? false);
+              //     return salePriceError ? salePriceError : null;
+              //   },
+              // ),
+            ],
+          ),
+          // SalePriceRow(
+          //   productProvider: productProvider,
+          // ),
+          Row(
+            children: <Widget>[
+              TextFieldWithSwitch(
                 flex: 1,
                 mandatory: productProvider.editProduct?.onSales ?? false,
                 format: FieldType.numbers,
                 text: Language.getProductStrings("placeholders.salePrice"),
                 controller: TextEditingController(
-                    text: productProvider.editProduct?.salePrice?.toString() ??
-                        ""),
+                  text:
+                      productProvider.editProduct?.salePrice?.toString() ?? "",
+                ),
                 onChange: (String text) {
                   productProvider.editProduct.salePrice = num.tryParse(text);
+                  productProvider.editProduct.onSales = text.isNotEmpty;
+                  return productProvider.editProduct.onSales;
                 },
+                svalue: productProvider.editProduct?.onSales ?? false,
                 error: salePriceError,
                 validator: (String text) {
                   salePriceError = (text?.isEmpty ?? true) &&
                       (productProvider.editProduct?.onSales ?? false);
+                  print("salePriceError");
+                  print(salePriceError);
                   return salePriceError ? salePriceError : null;
+                },
+                onSwitchChange: (value) {
+                  productProvider.editProduct.onSales = value;
                 },
               ),
             ],
@@ -845,7 +887,8 @@ class _MainFormState extends State<MainForm> {
                 text: Language.getProductStrings(
                     "mainSection.form.description.label"),
                 controller: TextEditingController(
-                    text: productProvider.editProduct?.description ?? ""),
+                  text: productProvider.editProduct?.description ?? "",
+                ),
                 onChange: (String text) {
                   productProvider.editProduct.description = text;
                 },
@@ -863,6 +906,46 @@ class _MainFormState extends State<MainForm> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class SalePriceRow extends StatelessWidget {
+  final ProductStateModel productProvider;
+  SalePriceRow({this.productProvider});
+  bool salePriceError = false;
+  @override
+  Widget build(BuildContext context) {
+    print("error = $salePriceError");
+    return Row(
+      children: <Widget>[
+        TextFieldWithSwitch(
+          flex: 1,
+          mandatory: productProvider.editProduct?.onSales ?? false,
+          format: FieldType.numbers,
+          text: Language.getProductStrings("placeholders.salePrice"),
+          controller: TextEditingController(
+            text: productProvider.editProduct?.salePrice?.toString() ?? "",
+          ),
+          onChange: (String text) {
+            productProvider.editProduct.salePrice = num.tryParse(text);
+            productProvider.editProduct.onSales = text.isNotEmpty;
+            return productProvider.editProduct.onSales;
+          },
+          svalue: productProvider.editProduct?.onSales ?? false,
+          error: salePriceError,
+          validator: (String text) {
+            salePriceError = (text?.isEmpty ?? true) &&
+                (productProvider.editProduct?.onSales ?? false);
+            print("salePriceError");
+            print(salePriceError);
+            return salePriceError ? salePriceError : null;
+          },
+          onSwitchChange: (value) {
+            productProvider.editProduct.onSales = value;
+          },
+        ),
+      ],
     );
   }
 }

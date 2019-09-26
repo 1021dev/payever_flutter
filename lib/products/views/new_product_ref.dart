@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart' as prefix0;
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:payever/products/network/products_api.dart';
 import '../../products/utils/utils.dart';
@@ -192,18 +191,7 @@ class _ProductEditorState extends State<ProductEditor> {
                 );
               } catch (e) {
                 print("error \n -> $e ");
-                Scaffold.of(productProvider.formKey.currentContext)
-                    .showSnackBar(
-                  SnackBar(
-                    backgroundColor: Colors.black.withOpacity(0.5),
-                    content: Text(
-                      "mandatory fields",
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                );
+                Provider.of<GlobalStateModel>(context).launchCustomSnack(productProvider.formKey.currentContext, "msj",);
               }
             },
           ),

@@ -64,10 +64,10 @@ class _ProductVisibilityState extends State<ProductVisibility> {
   @override
   Widget build(BuildContext context) {
     return CustomSwitchField(
-      bottomLeft: true,
-      bottomRight: true,
-      topLeft: true,
-      topRight: true,
+      // bottomLeft: true,
+      // bottomRight: true,
+      // topLeft: true,
+      // topRight: true,
       text: "Show this product",
       value: Provider.of<ProductStateModel>(context).editProduct.active,
       onChange: (bool _active){

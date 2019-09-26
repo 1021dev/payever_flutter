@@ -2,6 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:payever/commons/view_models/global_state_model.dart';
+import 'package:payever/products/views/custom_form_field.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:device_info/device_info.dart';
@@ -147,8 +150,9 @@ class _LoginState extends State<Login>
   }
 
   void _showSnackBar(String text) {
-    scaffoldKey.currentState
-        .showSnackBar(new SnackBar(content: new Text(text)));
+    Provider.of<GlobalStateModel>(context).launchCustomSnack(context, text);
+    // scaffoldKey.currentState
+    //     .showSnackBar(new SnackBar(content: new Text(text)));
   }
 
   _launchURL(String url) async {
@@ -167,6 +171,7 @@ class _LoginState extends State<Login>
     _ctx = context;
     return Container(
       child: Stack(
+        alignment: Alignment.center,
         children: <Widget>[
           Positioned(
             height: MediaQuery.of(context).size.height,
@@ -196,7 +201,8 @@ class _LoginState extends State<Login>
                                     ? _widthFactorTablet
                                     : _widthFactorPhone) *
                                 2),
-                        child: Image.asset("assets/images/logo-payever-white.png")),
+                        child: Image.asset(
+                            "assets/images/logo-payever-white.png")),
                   ),
                   Padding(
                     padding: EdgeInsets.only(
@@ -217,10 +223,11 @@ class _LoginState extends State<Login>
                               (_isTablet
                                   ? _widthFactorTablet
                                   : _widthFactorPhone),
-                          height: Measurements.height *
-                              (_isTablet
-                                  ? _heightFactorTablet
-                                  : _heightFactorPhone),
+                          height: 59,
+                          // height: Measurements.height *
+                          //     (_isTablet
+                          //         ? _heightFactorTablet
+                          //         : _heightFactorPhone),
                           child: Container(
                             decoration: BoxDecoration(
                                 color: Colors.black.withOpacity(0.5),
@@ -228,40 +235,36 @@ class _LoginState extends State<Login>
                                 borderRadius: BorderRadius.only(
                                     topLeft: Radius.circular(8.0),
                                     topRight: Radius.circular(8.0))),
-                            child: Column(
-                              children: <Widget>[
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      left: _paddingText, right: _paddingText),
-                                  child: TextFormField(
-                                    onSaved: (val) => _username = val,
-                                    validator: (value) {
-                                      if (value.isEmpty) {
-                                        return 'Username or email is required!';
-                                      }
-                                      if (!value.contains('@')) {
-                                        return 'Enter valid email address';
-                                      }
-
-                                    },
-                                    decoration: new InputDecoration(
-                                      labelText: "Email",
-                                      border: InputBorder.none,
-                                      contentPadding: _isTablet
-                                          ? EdgeInsets.all(
-                                              Measurements.height * 0.007)
-                                          : null,
-                                    ),
-                                    style: TextStyle(
-                                        fontSize: Measurements.height *
-                                            (_isTablet
-                                                ? (_heightFactorTablet / 3)
-                                                : (_heightFactorTablet / 3))),
-                                    keyboardType: TextInputType.emailAddress,
-                                    initialValue: email,
-                                  ),
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                  left: _paddingText, right: _paddingText),
+                              child: TextFormField(
+                                onSaved: (val) => _username = val,
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Username or email is required!';
+                                  }
+                                  if (!value.contains('@')) {
+                                    return 'Enter valid email address';
+                                  }
+                                },
+                                decoration: new InputDecoration(
+                                  labelText: "Email",
+                                  border: InputBorder.none,
+                                  contentPadding: _isTablet
+                                      ? EdgeInsets.all(
+                                          Measurements.height * 0.007)
+                                      : null,
                                 ),
-                              ],
+                                style: TextStyle(
+                                    // fontSize: Measurements.height *
+                                    //     (_isTablet
+                                    //         ? (_heightFactorTablet / 3)
+                                    //         : (_heightFactorTablet / 3))
+                                    ),
+                                keyboardType: TextInputType.emailAddress,
+                                initialValue: email,
+                              ),
                             ),
                           ),
                         ),
@@ -271,67 +274,64 @@ class _LoginState extends State<Login>
                               (_isTablet
                                   ? _widthFactorTablet
                                   : _widthFactorPhone),
-                          height: Measurements.height *
-                              (_isTablet
-                                  ? _heightFactorTablet
-                                  : _heightFactorPhone),
+                                  height: 59,
+                          // height: Measurements.height *
+                          //     (_isTablet
+                          //         ? _heightFactorTablet
+                          //         : _heightFactorPhone),
                           child: Container(
                             decoration: BoxDecoration(
                               color: Colors.black.withOpacity(0.5),
                               shape: BoxShape.rectangle,
                             ),
-                            child: Column(
-                              children: <Widget>[
-                                Container(
-                                  child: Stack(
-                                    alignment: Alignment.centerRight,
-                                    children: <Widget>[
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: _paddingText,
-                                            right: _paddingText),
-                                        child: TextFormField(
-                                          onSaved: (val) => _password = val,
-                                          validator: (value) {
-                                            if (value.isEmpty) {
-                                              return 'Password is required';
-                                            }
-
-                                          },
-                                          decoration: new InputDecoration(
-                                            labelText: "Password",
-                                            border: InputBorder.none,
-                                            contentPadding: _isTablet
-                                                ? EdgeInsets.all(
-                                                    Measurements.height * 0.007)
-                                                : null,
-                                          ),
-                                          obscureText: true,
-                                          style: TextStyle(
-                                              fontSize: Measurements.height *
-                                                  (_heightFactorTablet / 3)),
-                                          initialValue: password,
-                                        ),
+                            child: Container(
+                              child: Stack(
+                                alignment: Alignment.centerRight,
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: _paddingText,
+                                        right: _paddingText),
+                                    child: TextFormField(
+                                      onSaved: (val) => _password = val,
+                                      validator: (value) {
+                                        if (value.isEmpty) {
+                                          return 'Password is required';
+                                        }
+                                      },
+                                      decoration: new InputDecoration(
+                                        labelText: "Password",
+                                        border: InputBorder.none,
+                                        contentPadding: _isTablet
+                                            ? EdgeInsets.all(
+                                                Measurements.height * 0.007)
+                                            : null,
                                       ),
-                                      Container(
-                                        padding: EdgeInsets.only(
-                                            right: Measurements.width * 0.02),
-                                        child: InkWell(
-                                          child: Text(
-                                            "Forgot your password?",
-                                            style: TextStyle(
-                                                decoration:
-                                                    TextDecoration.underline),
+                                      obscureText: true,
+                                      style: TextStyle(
+                                          // fontSize: Measurements.height *
+                                          //     (_heightFactorTablet / 3)
                                           ),
-                                          onTap: () {
-                                            _launchURL(GlobalUtils.forgotPass);
-                                          },
-                                        ),
-                                      ),
-                                    ],
+                                      initialValue: password,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                  Container(
+                                    padding: EdgeInsets.only(
+                                        right: Measurements.width * 0.02),
+                                    child: InkWell(
+                                      child: Text(
+                                        "Forgot your password?",
+                                        style: TextStyle(
+                                            decoration:
+                                                TextDecoration.underline),
+                                      ),
+                                      onTap: () {
+                                        _launchURL(GlobalUtils.forgotPass);
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -343,8 +343,9 @@ class _LoginState extends State<Login>
                     padding: EdgeInsets.only(top: 1),
                     width: Measurements.width /
                         (_isTablet ? _widthFactorTablet : _widthFactorPhone),
-                    height: Measurements.height *
-                        (_isTablet ? _heightFactorTablet : _heightFactorPhone),
+                        height: 59,
+                    // height: Measurements.height *
+                    //     (_isTablet ? _heightFactorTablet : _heightFactorPhone),
                     child: Container(
                       decoration: BoxDecoration(
                           color: Colors.black.withOpacity(0.6),

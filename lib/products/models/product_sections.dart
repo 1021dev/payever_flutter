@@ -61,12 +61,12 @@ class ProductSections {
         style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),
       ),
     );
-    addHeader(
-      Text(
-        Language.getProductStrings("sections.visibility"),
-        style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),
-      ),
-    );
+    // addHeader(
+    //   Text(
+    //     Language.getProductStrings("sections.visibility"),
+    //     style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),
+    //   ),
+    // );
     addBody(
       MainBody(),
     );
@@ -92,9 +92,9 @@ class ProductSections {
     addBody(
       ProductTaxRow(parts: null),
     );
-    addBody(
-      ProductVisibility(),
-    );
+    // addBody(
+    //   ProductVisibility(),
+    // );
   }
 
   bool sectionFilter(String a) {

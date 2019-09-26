@@ -55,4 +55,21 @@ class GlobalStateModel extends ChangeNotifier {
   bool get isTablet => _isTablet;
   setIsTablet(bool isTablet) => _isTablet = isTablet;
 
+  launchCustomSnack(BuildContext context,String msj,{double elevation = 0.0}) {
+    Scaffold.of(context).showSnackBar(
+      SnackBar(
+        behavior: SnackBarBehavior.floating,
+        elevation: elevation,
+        backgroundColor: Color(0xff272627),
+        content: Container(
+          child: Text(
+            msj,
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
