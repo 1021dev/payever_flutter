@@ -219,7 +219,7 @@ class Measurements {
 
   static paymentTypeIcon(String type, bool isTablet) {
     double size = Measurements.width * (isTablet ? 0.03 : 0.055);
-    print(size);
+    // print(size);
     Color _color = Colors.white.withOpacity(0.7);
     return SvgPicture.asset(
       Measurements.paymentType(type),
@@ -281,43 +281,46 @@ class GlobalUtils {
   static var isDashboardLoaded = false;
   static String fingerprint = "";
 
+  static Map<String, Map<String, String>> envVariables = {
+    "password": {
+      "release": "",
+      "live": "Payever2019!",
+      "staging1": "Test1234!",
+      "staging2": "12345678",
+      "staging3": "santander123",
+      "test1": "P@ssword123",
+      "test2": "Payever123!",
+      "test3": "Test1234!",
 
-  static Map<String,Map<String,String>> envVariables =
-    {
-     "password":{
-        "release":"",
-        "live":"Payever2019!",
-        "staging1":"Test1234!",
-        "staging2":"12345678",
-        "staging3":"santander123",
-        "test1":"P@ssword123",
-        "test2":"Payever123!",
-      },
-     "email":{
-        "release":"",
-        "live":"abiantgmbh@payever.de",
-        "staging1":"rob@top.com",
-        "staging2":"service@payever.de",
-        "staging3":"santander@payever.de",
-        "test1":"payever.automation@gmail.com",
-        "test2":"testcases@payever.de",
-      },
-     "url":{
-        "release":"https://commerceos.payever.org",
-        "live":"https://commerceos.payever.org",
-        "staging1":"https://commerceos.staging.devpayever.com",
-        "staging2":"https://commerceos.staging.devpayever.com",
-        "staging3":"https://commerceos.staging.devpayever.com",
-        "test1":"https://commerceos.test.devpayever.com",
-        "test2":"https://commerceos.test.devpayever.com",
-      },
-    };
-    
+    },
+    "email": {
+      "release": "",
+      "live": "abiantgmbh@payever.de",
+      "staging1": "rob@top.com",
+      "staging2": "service@payever.de",
+      "staging3": "santander@payever.de",
+      "test1": "payever.automation@gmail.com",
+      "test2": "testcases@payever.de",
+      "test3": "rob@top.com",
+
+    },
+    "url": {
+      "release": "https://commerceos.payever.org",
+      "live": "https://commerceos.payever.org",
+      "staging1": "https://commerceos.staging.devpayever.com",
+      "staging2": "https://commerceos.staging.devpayever.com",
+      "staging3": "https://commerceos.staging.devpayever.com",
+      "test1": "https://commerceos.test.devpayever.com",
+      "test2": "https://commerceos.test.devpayever.com",
+      "test3": "https://commerceos.test.devpayever.com",
+    },
+  };
+
   //URLS
-  static String currentEnv = "staging1"; 
-  static String  pass= envVariables["password"][currentEnv];
-  static String  mail=  envVariables["email"][currentEnv];
-  static String commerceOsUrl =  envVariables["url"][currentEnv];
+  static String currentEnv = "test3";
+  static String pass = envVariables["password"][currentEnv];
+  static String mail = envVariables["email"][currentEnv];
+  static String commerceOsUrl = envVariables["url"][currentEnv];
 
   static const String POS_URL = "https://getpayever.com/pos";
 
@@ -341,7 +344,6 @@ class GlobalUtils {
   static const String LANGUAGE = "language";
 
   // static Channels
-
   static const String CHANNEL_POS = "pos";
   static const String CHANNEL_SHOP = "shop";
 
@@ -377,6 +379,8 @@ class GlobalUtils {
   static const String DB_BUSINESS_LOGO = "logo";
   static const String DB_BUSINESS_NAME = "name";
   static const String DB_BUSINESS_ACTIVE = "active";
+  static const String DB_BUSINESS_PRIMARYCOLOR = "primaryColor";
+  static const String DB_BUSINESS_SECONDARYCOLOR = "secondaryColor";
 
   static const String DB_BUSINESS_COMPANY_ADDRESS = "companyAddress";
 
@@ -541,6 +545,7 @@ class GlobalUtils {
   static const String DB_TRANS_DETAIL_SHIPPING = "shipping";
   static const String DB_TRANS_DETAIL_SHIPPING_METHOD = "method_name";
   static const String DB_TRANS_DETAIL_SHIPPING_FEE = "delivery_fee";
+  static const String DB_TRANS_DETAIL_SHIPPING_ADDRESS = "address";
   static const String DB_TRANS_DETAIL_STATUS = "status";
   static const String DB_TRANS_DETAIL_STATUS_GENERAL = "general";
   static const String DB_TRANS_DETAIL_STATUS_PLACE = "place";
@@ -650,7 +655,8 @@ class GlobalUtils {
 
   static const String DB_PROD_MODEL_VAR_BARCODE = "barcode";
   static const String DB_PROD_MODEL_VAR_DESCRIPTION = "description";
-  static const String DB_PROD_MODEL_VAR_HIDDEN = "onSales";//CHECK!!!!!!!!!!!!!!!!!
+  static const String DB_PROD_MODEL_VAR_HIDDEN =
+      "onSales"; //CHECK!!!!!!!!!!!!!!!!!
   // static const String DB_PROD_MODEL_VAR_HIDDEN = "hidden";//CHECK!!!!!!!!!!!!!!!!!
   static const String DB_PROD_MODEL_VAR_ID = "id";
   static const String DB_PROD_MODEL_VAR_IMAGES = "images";
@@ -718,10 +724,10 @@ class GlobalUtils {
   static const String DB_VERSION_CURRENT_VERSION = "currentVersion";
   static const String DB_VERSION_MIN_VERSION = "minVersion";
   static const String DB_VERSION_PLAY_STORE = "playStoreUrl";
-  	
-  static const String DB_SETTINGS_WALLPAPER_INDUSTRIES    ="industries";
-  static const String DB_SETTINGS_WALLPAPER_CODE          ="code";
-  static const String DB_SETTINGS_WALLPAPER_WALLPAPERS    ="wallpapers";
+
+  static const String DB_SETTINGS_WALLPAPER_INDUSTRIES = "industries";
+  static const String DB_SETTINGS_WALLPAPER_CODE = "code";
+  static const String DB_SETTINGS_WALLPAPER_WALLPAPERS = "wallpapers";
 
   // env__
   static const String ENV_CUSTOM = "custom";
@@ -747,6 +753,8 @@ class GlobalUtils {
   static const String ENV_WRAPPER = "checkoutWrapper";
   static const String ENV_EMPLOYEES = "employees";
   static const String ENV_APP_REGISTRY = "appRegistry";
+  static const String ENV_PAYMENTS = "payments";
+  static const String ENV_COMMONS = "common";
 
   // dashboard_
   static const String CURRENT_WALLPAPER = "currentWallpaper";
@@ -765,6 +773,9 @@ class GlobalUtils {
   static const String APP_WID_LAST_CURRENCY = "currency";
   static const String APP_WID_LAST_DATE = "date";
   static const String APP_WID_LAST_AMOUNT = "amount";
+
+  static const String RX_emoji =
+      r"(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])";
 
   static void clearCredentials() {
     SharedPreferences.getInstance().then((p) {
@@ -788,8 +799,8 @@ class GlobalUtils {
     positions.add("Others");
     return positions;
   }
-   static removeFocus(BuildContext context) {
+
+  static removeFocus(BuildContext context) {
     FocusScope.of(context).requestFocus(FocusNode());
   }
-
 }

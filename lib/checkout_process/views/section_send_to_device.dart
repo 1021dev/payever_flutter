@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:payever/products/utils/utils.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../checkout_process.dart';
 import '../views/custom_elements/custom_elements.dart';
@@ -10,11 +11,12 @@ import 'custom_elements/custom_checkout_popup.dart';
 
 class CheckoutS2DeviceSection extends StatefulWidget {
   @override
-  _CheckoutS2DeviceSectionState createState() =>
-      _CheckoutS2DeviceSectionState();
+  _CheckoutS2DeviceSectionPopUpState createState() =>
+      _CheckoutS2DeviceSectionPopUpState();
 }
 
-class _CheckoutS2DeviceSectionState extends State<CheckoutS2DeviceSection> {
+class _CheckoutS2DeviceSectionState
+    extends State<CheckoutS2DeviceSectionPopUp> {
   NumberTextInputFormatter phoneFormatter = NumberTextInputFormatter();
   Color colorOk = Colors.black.withOpacity(0.3);
   Color colorError = Colors.red;
@@ -121,7 +123,6 @@ class _CheckoutS2DeviceSectionState extends State<CheckoutS2DeviceSection> {
                                     ));
                               },
                             );
-                            
                           }).catchError((onError) {
                             print(onError.toString());
                           });
@@ -133,9 +134,7 @@ class _CheckoutS2DeviceSectionState extends State<CheckoutS2DeviceSection> {
                       print(onError.toString());
                     },
                   );
-                } else {
-                  
-                }
+                } else {}
               },
               color: continueStatus()
                   ? phoneSetUp(checkoutProcessStateModel)
@@ -144,9 +143,281 @@ class _CheckoutS2DeviceSectionState extends State<CheckoutS2DeviceSection> {
                   : Colors.black.withOpacity(0.3),
               twoButtons: true,
               secondAction: () {
-                checkoutProcessStateModel.getSectionOk("send_to_device",checkoutProcessStateModel).value =
-                    true;
+                checkoutProcessStateModel
+                    .getSectionOk("send_to_device", checkoutProcessStateModel)
+                    .value = true;
               },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String urlGetter(
+      String url, CheckoutProcessStateModel checkoutProcessStateModel) {
+    return checkoutProcessStateModel.checkoutStructure.message
+            ?.replaceFirst("{{terminal_url}}", url) ??
+        "${checkoutProcessStateModel.checkoutStructure.name} : $url";
+  }
+
+  bool continueStatus() {
+    bool phoneOk = phoneStatus.value == ButtonStage.ok;
+    bool emailOk = emailStatus.value == ButtonStage.ok;
+    bool error = (phoneStatus.value == ButtonStage.error) ||
+        (emailStatus.value == ButtonStage.error);
+
+    return (phoneOk || emailOk) && !error;
+  }
+
+  bool phoneSetUp(CheckoutProcessStateModel checkoutProcessStateModel) {
+    return phoneTextField.controller.text.isNotEmpty &&
+        (checkoutProcessStateModel.checkoutStructure.phoneNumber == null);
+  }
+}
+
+class CheckoutS2DeviceSectionPopUp extends StatefulWidget {
+  final CheckoutProcessStateModel checkoutProcessStateModel;
+  final String payment;
+  const CheckoutS2DeviceSectionPopUp(
+      {this.checkoutProcessStateModel, this.payment});
+  @override
+  _CheckoutS2DeviceSectionPopUpState createState() =>
+      _CheckoutS2DeviceSectionPopUpState();
+}
+
+class _CheckoutS2DeviceSectionPopUpState
+    extends State<CheckoutS2DeviceSectionPopUp> {
+  NumberTextInputFormatter phoneFormatter = NumberTextInputFormatter();
+  Color colorOk = Colors.black.withOpacity(0.3);
+  Color colorError = Colors.red;
+
+  ValueNotifier<ButtonStage> phoneStatus = ValueNotifier(ButtonStage.empty);
+  ValueNotifier<ButtonStage> emailStatus = ValueNotifier(ButtonStage.empty);
+
+  final formKey = new GlobalKey<FormState>();
+  PhoneTextField phoneTextField;
+  EmailTextField emailTextField;
+
+  @override
+  void initState() {
+    super.initState();
+    phoneTextField = PhoneTextField(phoneStatus);
+    emailTextField = EmailTextField(
+      emailStatus,
+      false,
+      provider: widget.checkoutProcessStateModel,
+    );
+    phoneStatus.addListener(listener);
+    emailStatus.addListener(listener);
+  }
+
+  listener() {
+    setState(() {});
+  }
+
+  bool loading = false;
+  @override
+  Widget build(BuildContext context) {
+    CheckoutProcessStateModel checkoutProcessStateModel =
+        widget.checkoutProcessStateModel;
+    checkoutProcessStateModel.paymentOption.forEach(
+      (p) {
+        p.name;
+      },
+    );
+    return Form(
+      key: formKey,
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(bottom: 20.0),
+              child: Text(
+                Language.getCheckoutStrings(
+                  "layout.panel.send_to_device.title",
+                ).toUpperCase(),
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: AppStyle.fontSizeCheckoutTitle(),
+                  color: AppStyle.colorCheckoutDivider(),
+                ),
+              ),
+            ),
+            phoneSetUp(checkoutProcessStateModel) ? PhoneError() : Container(),
+            phoneTextField,
+            emailTextField,
+            CustomCheckoutButton(
+              loading,
+              () async {
+                if (continueStatus() &&
+                    !loading &&
+                    !phoneSetUp(checkoutProcessStateModel)) {
+                  setState(() => loading = true);
+                  String url = "";
+                  // print("payment = ${widget.payment}");
+                  if (widget.payment == "Paypal") {
+                    url = await checkoutProcessStateModel.paypalLauncher(
+                      isEmail: phoneTextField.controller.text.isEmpty,
+                      text: phoneTextField.controller.text,
+                    );
+                  }
+                  if (url.isNotEmpty) {
+                    // launch(url);
+                    CheckoutProcessApi()
+                        .postSendToDev(
+                      urlGetter(url, checkoutProcessStateModel),
+                      emailTextField.controller.text ?? "",
+                      "${checkoutProcessStateModel.checkoutStructure.name}",
+                      checkoutProcessStateModel.flowObj["id"],
+                      phoneTextField.controller.text.isNotEmpty
+                          ? checkoutProcessStateModel
+                                  .checkoutStructure.phoneNumber ??
+                              ""
+                          : "",
+                      phoneTextField.controller.text ?? "",
+                    )
+                        .then(
+                      (_) {
+                        showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (context) {
+                            return Dialog(
+                              backgroundColor: Colors.transparent,
+                              child: CustomCheckoutPopUp(
+                                icon: Icon(
+                                  Icons.check_circle,
+                                  color: Colors.black,
+                                  size: 65,
+                                ),
+                                title: Language.getCheckoutSMSStrings(
+                                  "checkout_send_flow.finish.header",
+                                ),
+                                message: Language.getCheckoutSMSStrings(
+                                  "checkout_send_flow.finish.caption",
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    ).catchError(
+                      (onError) {
+                        print(
+                          onError.toString(),
+                        );
+                      },
+                    );
+                  } else {
+                    Navigator.of(context).pop();
+                  }
+                }
+              },
+
+              // () {
+              //   if (continueStatus() &&
+              //       !loading &&
+              //       !phoneSetUp(checkoutProcessStateModel)) {
+              //     setState(() => loading = true);
+              //     CheckoutProcessApi()
+              //         .postCheckout(checkoutProcessStateModel.flowObj["id"],
+              //             checkoutProcessStateModel.getchannelSet)
+              //         .then(
+              //       (message) {
+              //         CheckoutProcessApi()
+              //             .patchCheckoutPaymentOption(
+              //                 checkoutProcessStateModel.flowObj["id"], 13)
+              //             .then((_) {
+              //           CheckoutProcessApi()
+              //               .postCheckoutPayment(
+              //                   checkoutProcessStateModel.flowObj["id"], 13)
+              //               .then((paymentUrl) {
+              //             CheckoutProcessApi()
+              //                 .postStorageSimple(
+              //               checkoutProcessStateModel.flowObj,
+              //               true,
+              //               true,
+              //               phoneTextField.controller.text,
+              //               phoneTextField.controller.text.isEmpty
+              //                   ? "email"
+              //                   : "sms",
+              //               DateTime.now()
+              //                   .subtract(
+              //                     Duration(
+              //                       hours: 2,
+              //                     ),
+              //                   )
+              //                   .add(
+              //                     Duration(minutes: 1),
+              //                   )
+              //                   .toIso8601String(),
+              //               false,
+              //             )
+              //                 .then(
+              //               (a) {
+              //                 String url = Env.payments + paymentUrl["redirect_url"] +"?access_token=${GlobalUtils.activeToken.accessToken}";
+              //                 launch(url);
+              //                 //     "/pay/restore-flow-from-code/" +
+              //                 //     a["id"];
+              //                 // CheckoutProcessApi()
+              //                 //     .postSendToDev(
+              //                 //   urlGetter(url, checkoutProcessStateModel),
+              //                 //   emailTextField.controller.text ?? "",
+              //                 //   "${checkoutProcessStateModel.checkoutStructure.name}",
+              //                 //   checkoutProcessStateModel.flowObj["id"],
+              //                 //   phoneTextField.controller.text.isNotEmpty
+              //                 //       ? checkoutProcessStateModel
+              //                 //               .checkoutStructure.phoneNumber ??
+              //                 //           ""
+              //                 //       : "",
+              //                 //   phoneTextField.controller.text ?? "",
+              //                 // )
+              //                 //     .then((_) {
+              //                 //   showDialog(
+              //                 //     context: context,
+              //                 //     barrierDismissible: false,
+              //                 //     builder: (context) {
+              //                 //       return Dialog(
+              //                 //         backgroundColor: Colors.transparent,
+              //                 //         child: CustomCheckoutPopUp(
+              //                 //           icon: Icon(
+              //                 //             Icons.check_circle,
+              //                 //             color: Colors.black,
+              //                 //             size: 65,
+              //                 //           ),
+              //                 //           title: Language.getCheckoutSMSStrings(
+              //                 //             "checkout_send_flow.finish.header",
+              //                 //           ),
+              //                 //           message: Language.getCheckoutSMSStrings(
+              //                 //             "checkout_send_flow.finish.caption",
+              //                 //           ),
+              //                 //         ),
+              //                 //       );
+              //                 //     },
+              //                 //   );
+              //                 // }).catchError((onError) {
+              //                 //   print(onError.toString());
+              //                 // });
+              //               },
+              //             );
+              //           });
+              //         });
+              //       },
+              //     ).catchError(
+              //       (onError) {
+              //         print(onError.toString());
+              //       },
+              //     );
+              //   } else {}
+              // },
+
+              color: continueStatus()
+                  ? phoneSetUp(checkoutProcessStateModel)
+                      ? Colors.black.withOpacity(0.3)
+                      : Colors.black
+                  : Colors.black.withOpacity(0.3),
             ),
           ],
         ),
@@ -214,7 +485,9 @@ class PhoneError extends StatelessWidget {
           Language.getCheckoutSMSStrings(
               "checkout_send_flow.errors.from_phone_not_configured"),
           style: TextStyle(
-              color: Colors.red.withAlpha(255), fontWeight: FontWeight.w300),
+            color: Colors.red.withAlpha(255),
+            fontWeight: FontWeight.w300,
+          ),
         ),
       ),
     );
@@ -236,10 +509,16 @@ class NumberTextInputFormatter extends TextInputFormatter {
       if (newValue.selection.end >= 1) selectionIndex++;
     }
     if ((newTextLength >= usedSubstringIndex))
-      newText.write(newValue.text.substring(usedSubstringIndex));
+      newText.write(
+        newValue.text.substring(
+          usedSubstringIndex,
+        ),
+      );
     return TextEditingValue(
       text: newText.toString(),
-      selection: TextSelection.collapsed(offset: selectionIndex),
+      selection: TextSelection.collapsed(
+        offset: selectionIndex,
+      ),
     );
   }
 }

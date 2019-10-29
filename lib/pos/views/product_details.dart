@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -5,14 +6,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/checkout_process/views/views.dart';
-import 'package:payever/commons/views/screens/switcher/switcher.dart' as prefix0;
+import 'package:payever/commons/views/custom_elements/appbar_avatar.dart';
+import '../views/views.dart';
 import 'package:provider/provider.dart';
-
 import '../../commons/views/custom_elements/custom_elements.dart';
 import '../view_models/view_models.dart';
 import '../models/models.dart';
 import '../utils/utils.dart';
-import 'pos_cart.dart';
 
 CustomCarouselSlider customCarouselSlider;
 
@@ -21,7 +21,11 @@ class ProductDetailsScreen extends StatefulWidget {
   final ProductsModel currentProduct;
   final int index;
 
-  ProductDetailsScreen({this.parts, this.currentProduct, this.index});
+  ProductDetailsScreen({
+    this.parts,
+    this.currentProduct,
+    this.index,
+  });
 
   @override
   createState() => _ProductDetailsScreenState();
@@ -32,14 +36,18 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   bool isTablet = false;
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     PosCartStateModel cartStateModel = Provider.of<PosCartStateModel>(context);
-
     isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     isTablet = isPortrait
         ? MediaQuery.of(context).size.width > 600
         : MediaQuery.of(context).size.height > 600;
-    // print("Product uuid : ${widget.currentProduct.uuid}");
     return OKToast(
       child: Scaffold(
         appBar: AppBar(
@@ -52,11 +60,17 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             onPressed: () => Navigator.pop(context),
           ),
           centerTitle: true,
-          title: Text(
-            "Product details",
-            style: TextStyle(color: Colors.black),
-          ),
-          backgroundColor: Colors.white,
+          // title: Text(
+          //   "Product details",
+          //   style: TextStyle(
+          //     color: Colors.black,
+          //   ),
+          // ),
+          title: AppBarAvatar(),
+          backgroundColor: Color(Provider.of<GlobalStateModel>(context)
+                  .currentBusiness
+                  .primaryColor ??
+              0xffffffff),
           actions: <Widget>[
             IconButton(
               icon: Stack(
@@ -93,15 +107,15 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 Navigator.push(
                   context,
                   PageTransition(
-                  child: CheckOutScreen(
-                    channelSet: widget.parts.currentTerminal.channelSet,
-                    posCartStateModel: cartStateModel,
-                    posStateModel: widget.parts,
+                    child: CheckOutScreen(
+                      channelSet: widget.parts.currentTerminal.channelSet,
+                      posCartStateModel: cartStateModel,
+                      posStateModel: Provider.of<PosStateModel>(context),
+                    ),
+                    // child: POSCart(parts: posStateModel),
+                    type: PageTransitionType.fade,
+                    duration: Duration(milliseconds: 10),
                   ),
-                  // child: POSCart(parts: posStateModel),
-                  type: PageTransitionType.fade,
-                  duration: Duration(milliseconds: 10),
-                ),
                 );
               },
             ),
@@ -127,11 +141,12 @@ class DetailedProduct extends StatefulWidget {
   final PosCartStateModel cartStateModel;
   final int defaultVariantIndex;
 
-  DetailedProduct(
-      {@required this.currentProduct,
-      @required this.parts,
-      @required this.cartStateModel,
-      @required this.defaultVariantIndex});
+  DetailedProduct({
+    @required this.currentProduct,
+    @required this.parts,
+    @required this.cartStateModel,
+    @required this.defaultVariantIndex,
+  });
 
   @override
   _DetailedProductState createState() => _DetailedProductState();
@@ -147,21 +162,22 @@ class _DetailedProductState extends State<DetailedProduct> {
   Widget build(BuildContext context) {
     return Container(
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: Measurements.width * 0.05),
-        child: Center(
-          child: ListView(
-            shrinkWrap: true,
-            children: <Widget>[
-              DetailsInfo(
-                parts: widget.parts,
-                currentProduct: widget.currentProduct,
-                haveVariants: widget.currentProduct.variants.isNotEmpty,
-                stockCount: widget.stockCount,
-                cartStateModel: widget.cartStateModel,
-                defaultVariantIndex: widget.defaultVariantIndex,
-              ),
-            ],
-          ),
+        padding: EdgeInsets.symmetric(
+          horizontal: Measurements.width * 0.05,
+        ),
+        child: ListView(
+          shrinkWrap: false,
+          // shrinkWrap: !Provider.of<GlobalStateModel>(context).isTablet,
+          children: <Widget>[
+            DetailsInfo(
+              parts: widget.parts,
+              currentProduct: widget.currentProduct,
+              haveVariants: widget.currentProduct.variants.isNotEmpty,
+              stockCount: widget.stockCount,
+              cartStateModel: widget.cartStateModel,
+              defaultVariantIndex: widget.defaultVariantIndex,
+            ),
+          ],
         ),
       ),
     );
@@ -176,13 +192,14 @@ class DetailsInfo extends StatefulWidget {
   final PosCartStateModel cartStateModel;
   final int defaultVariantIndex;
 
-  DetailsInfo(
-      {@required this.parts,
-      @required this.currentProduct,
-      @required this.haveVariants,
-      @required this.stockCount,
-      @required this.cartStateModel,
-      @required this.defaultVariantIndex});
+  DetailsInfo({
+    @required this.parts,
+    @required this.currentProduct,
+    @required this.haveVariants,
+    @required this.stockCount,
+    @required this.cartStateModel,
+    @required this.defaultVariantIndex,
+  });
 
   @override
   _DetailsInfoState createState() => _DetailsInfoState();
@@ -197,8 +214,6 @@ class _DetailsInfoState extends State<DetailsInfo> {
 
   num price, salePrice;
   String description;
-  List<PopupMenuItem<String>> products;
-  List<String> productsList = List<String>();
   TextStyle textStyle = TextStyle(color: Colors.black);
 
   String selectedVariantName = "";
@@ -207,426 +222,343 @@ class _DetailsInfoState extends State<DetailsInfo> {
 
   bool isPortrait = true;
   bool isTablet = false;
-
-  listener() {
-    setState(() {});
-  }
+  ProductVariantModel initialVariant;
 
   @override
   void initState() {
     super.initState();
-    widget.stockCount.addListener(listener);
-    currentVariant.addListener(listener);
-
-//    widget.currentVariant.value =
-//        widget.cartStateModel.getCurrentSelectedVariant;
-
-    currentVariant.value = widget.defaultVariantIndex;
-
-    setState(() {
-      imagesBase = widget.currentProduct.images;
-//      haveVariants = widget.haveVariants;
-      haveVariants = widget.currentProduct.variants.isNotEmpty;
-
-      selectedVariantName = haveVariants
-          ? "- ${widget.currentProduct.variants[currentVariant.value].title}"
-          : "";
-    });
+    currentVariant.value = 0;
+    haveVariants = widget.currentProduct.variants.isNotEmpty;
+    currentVariant.addListener(
+      () => setState(
+        () {
+          // print("setState on DetailsInfoState");
+        },
+      ),
+    );
+    if (widget.currentProduct.variants != null) {
+      if (widget.currentProduct.variants.isNotEmpty)
+        initialVariant = widget.currentProduct?.variants?.first;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    PosStateModel posProvider = Provider.of<PosStateModel>(context);
     isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     isTablet = isPortrait
         ? MediaQuery.of(context).size.width > 600
         : MediaQuery.of(context).size.height > 600;
-
     if (widget.haveVariants) {
       imagesVariants = imagesBase +
           widget.currentProduct.variants[currentVariant.value].images;
     } else {
-      imagesVariants = imagesBase;
+      imagesBase = imagesVariants = widget.currentProduct.images;
     }
 
     if (widget.haveVariants) {
       var index = 0;
-      products = List();
-      productsList = [];
-
-      widget.currentProduct.variants.forEach((f) {
-//        var temp = widget.parts.getProductStock[f.sku];
-
-//        if (temp != null) {
-//          if (((temp.contains("null") ? 0 : int.parse(temp ?? "0")) > 0)) {
-        PopupMenuItem<String> variant = PopupMenuItem(
-          value: "$index",
-          child: Container(
-            width: Measurements.width,
-            child: ListTile(
-              dense: true,
-              title: Container(
-                width: Measurements.width,
-                child: Text(
-                  f.title??"",
-                  style: textStyle,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ),
-          ),
-        );
-        products.add(variant);
-        productsList.add(f.title);
-//          }
-//        }
-        index++;
-      });
-//      if (widget.currentVariant.value == 0 && products.length > 0) {
-//        widget.currentVariant.value = int.parse(products.first.value);
-//      }
-      price = widget.currentProduct.variants[currentVariant.value].price;
-      salePrice =
-          widget.currentProduct.variants[currentVariant.value].salePrice;
-      onSale = !widget.currentProduct.variants[currentVariant.value].onSales;
-      description =
-          widget.currentProduct.variants[currentVariant.value].description;
-
+      description = (widget.currentProduct.variants[currentVariant.value]
+                  .description?.isEmpty ??
+              true)
+          ? widget.currentProduct.description
+          : widget.currentProduct.variants[currentVariant.value].description;
       selectedVariantName =
           "- ${widget.currentProduct.variants[currentVariant.value].title}";
+      onSale = widget.currentProduct.variants[currentVariant.value].onSales;
     } else {
+      posProvider.selectedValue = Map();
+      posProvider.optionName = List();
       price = widget.currentProduct.price;
       salePrice = widget.currentProduct.salePrice;
-      onSale = !widget.currentProduct.onSales;
+      onSale = widget.currentProduct.onSales;
       description = widget.currentProduct.description;
     }
-
     String _stc = widget.haveVariants
         ? widget.currentProduct.variants[currentVariant.value].sku
         : widget.currentProduct.sku;
-
-//    return Center(child: Text("Hello", style: TextStyle(color: Colors.red),),);
-
+    posProvider.selectedProduct = widget.currentProduct;
+    if (haveVariants) {
+      posProvider.setOptions(variant: initialVariant);
+      posProvider.setSelectedValues(
+        widget.currentProduct.variants[currentVariant.value],
+      );
+    }
+    posProvider.setValues();
     return Container(
+      alignment: Alignment.center,
       width: Measurements.height * 0.4,
       child: CustomFutureBuilder<int>(
-          future: getInventoryState(widget.parts, _stc),
-          errorMessage: "Error loading product details",
-          onDataLoaded: (results) {
-            print("results: $results");
-
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                //for sale
-                Container(
-                    alignment: Alignment.center,
-                    height: Measurements.height * 0.05,
-                    child: onSale
-                        ? Text(
-                            "Sale",
-                            style: TextStyle(color: widget.parts.saleColor),
-                          )
-                        : Container()),
-                //name
-                Container(
-                  alignment: Alignment.center,
-                  child: Text(
-                    "${widget.currentProduct.title} $selectedVariantName",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                //price
-                Container(
-                  height: Measurements.height * 0.05,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        "${widget.parts.f.format(price)}${Measurements.currency(widget.parts.getBusiness.currency)}",
-                        style: TextStyle(
-                            fontSize: 17,
-                            color: widget.parts.titleColor.withOpacity(0.5),
-                            fontWeight: FontWeight.w300,
-                            decoration: onSale
-                                ? TextDecoration.lineThrough
-                                : TextDecoration.none),
+        future: getInventoryState(posProvider, _stc),
+        errorMessage: "Error loading product details",
+        loadingWidget: Column(
+          mainAxisSize: MainAxisSize.max,
+          children: <Widget>[
+            SizedBox(height: MediaQuery.of(context).size.height *0.4,),
+            Center(child: CircularProgressIndicator(backgroundColor: Colors.black,)),
+          ],
+        ),
+        onDataLoaded: (results) {
+          Color color = Color(Provider.of<GlobalStateModel>(context)
+                  .currentBusiness
+                  .secondaryColor ??
+              0xff000000);
+          return isTablet
+              ? Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children:[Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Expanded(
+                      child: Column(
+                        children: <Widget>[
+                          DetailImage(
+                            haveVariants: haveVariants,
+                            currentVariant: currentVariant,
+                            parts: posProvider,
+                            imagesBase: imagesBase,
+                            index: (widget.haveVariants &&
+                                    (widget
+                                        .currentProduct
+                                        .variants[currentVariant.value]
+                                        .images
+                                        .isNotEmpty))
+                                ? imagesBase.length
+                                : 0,
+                          ),
+                          Description(
+                            currentProduct: widget.currentProduct,
+                            currentVariant: currentVariant,
+                            haveVariants: haveVariants,
+                          ),
+                        ],
                       ),
-                      onSale
-                          ? Text(
-                              "  ${widget.parts.f.format(salePrice)}${Measurements.currency(widget.parts.getBusiness.currency)}",
-                              style: TextStyle(
-                                  fontSize: 17,
-                                  color: widget.parts.saleColor,
-                                  fontWeight: FontWeight.w300),
-                            )
-                          : Container(),
-                    ],
-                  ),
-                ),
-                //Stock
-                Container(
-                  child: StockText(
-                    parts: widget.parts,
-                    stc: results,
-                    productStock: results,
-                  ),
-                ),
-                //images
-                DetailImage(
-                  currentVariant: currentVariant,
-                  parts: widget.parts,
-                  images: imagesVariants,
-                  index: (widget.haveVariants &&
-                          (widget.currentProduct.variants[currentVariant.value]
-                              .images.isNotEmpty))
-                      ? imagesBase.length
-                      : 0,
-                ),
-                //variant Picker
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                      vertical: Measurements.height * 0.01),
-                ),
-
-                widget.haveVariants
-                    ? Container(
-//                  padding: EdgeInsets.symmetric(
-//                      horizontal: Measurements.width *
-//                          (widget.parts.isTablet ? 0.15 : 0)),
-                        height: Measurements.height * 0.07,
-                        child: Theme(
-                          data: ThemeData.light(),
-                          child: Container(
-//                      width: Measurements.width * 0.9,
-                            width: isTablet
-                                ? Measurements.width * 0.5
-                                : Measurements.width * 0.9,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-//                        color: Colors.grey.withOpacity(0.2),
-                              border: Border.all(
-                                  width: 1,
-                                  color: Colors.grey.withOpacity(0.2)),
+                    ),
+                    SizedBox(
+                      width: 30,
+                    ),
+                    Expanded(
+                      child: Container(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            NameNPrice(
+                              currentProduct: widget.currentProduct,
+                              currentVariant: currentVariant,
                             ),
-                            child: DropDownMenu(
-                              backgroundColor: Colors.white,
-                              fontColor: Colors.black.withOpacity(0.6),
-                              optionsList: productsList,
-//                  defaultValue: products[0].value,
-//                        defaultValue: "Something",
-                              placeHolderText:
-                                  productsList[widget.defaultVariantIndex],
-                              onChangeSelection: (String value, int index) {
-                                setState(() {
-                                  currentVariant.value = index;
-
-//                            widget.cartStateModel.updateCurrentVariant(index);
-
-//                            widget.currentVariant.value =
-//                                widget.cartStateModel.getCurrentSelectedVariant;
-
-                                  if (imagesBase != null &&
-                                      imagesBase.length >= 0) {
-                                    print(
-                                        "imagesBase.length: ${imagesBase.length}");
-                                    print(widget
-                                            .currentProduct
-                                            .variants[currentVariant.value]
-                                            .images
-                                            .length >
-                                        0);
-                                    if (widget
-                                            .currentProduct
-                                            .variants[currentVariant.value]
-                                            .images
-                                            .length >
-                                        0) {
-                                      customCarouselSlider
-                                          .jumpToPage(imagesBase.length);
-
-                                      getInventoryState(
-                                          widget.parts,
-                                          widget
-                                              .currentProduct
-                                              .variants[currentVariant.value]
-                                              .sku);
-                                    }
-                                  }
-                                });
-                              },
+                            Padding(
+                              padding: EdgeInsets.only(bottom: 20),
+                              child: VariantSection(currentVariant),
+                            ),
+                            Container(
+                              alignment: Alignment.center,
+                              width: isTablet
+                                  ? Measurements.width * 0.8
+                                  : Measurements.width * 0.9,
+                              child: InkWell(
+                                child: Container(
+                                  width: Measurements.width *
+                                      (isTablet ? 0.35 : 0.8),
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 15,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: results == 0
+                                        ? color.withOpacity(0.5)
+                                        : color,
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      Language.getCustomStrings(
+                                        "checkout_cart_add_to_cart",
+                                      ),
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                onTap: () => addProduct(
+                                  Provider.of<PosStateModel>(context),
+                                  results,
+                                ),
+                              ),
+                            ),
+                            isTablet
+                                ? Padding(
+                                    padding: EdgeInsets.only(
+                                      bottom: Measurements.height * 0.02,
+                                    ),
+                                  )
+                                : Container()
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                )])
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    DetailImage(
+                      haveVariants: haveVariants,
+                      currentVariant: currentVariant,
+                      parts: posProvider,
+                      imagesBase: imagesBase,
+                      index: (widget.haveVariants &&
+                              (widget
+                                  .currentProduct
+                                  .variants[currentVariant.value]
+                                  .images
+                                  .isNotEmpty))
+                          ? imagesBase.length
+                          : 0,
+                    ),
+                    //name
+                    NameNPrice(
+                      currentProduct: widget.currentProduct,
+                      currentVariant: currentVariant,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 20),
+                      child: VariantSection(currentVariant),
+                    ),
+                    Container(
+                      alignment: Alignment.center,
+                      width: isTablet
+                          ? Measurements.width * 0.8
+                          : Measurements.width * 0.9,
+                      child: InkWell(
+                        child: Container(
+                          width: Measurements.width * (isTablet ? 0.35 : 0.8),
+                          padding: EdgeInsets.symmetric(
+                            vertical: 15,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: results == 0 ? Colors.grey : Colors.black,
+                          ),
+                          child: Center(
+                            child: Text(
+                              Language.getCustomStrings(
+                                "checkout_cart_add_to_cart",
+                              ),
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),
-                      )
-                    : Container(),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                      vertical: Measurements.height * 0.01),
-                ),
-                Container(
-                  alignment: Alignment.center,
-                  height: Measurements.height * 0.08,
-                  width: isTablet
-                      ? Measurements.width * 0.8
-                      : Measurements.width * 0.9,
-                  padding: EdgeInsets.symmetric(
-                      vertical: Measurements.height * 0.01,
-                      horizontal: Measurements.width * (isTablet ? 0.15 : 0)),
-                  child: InkWell(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        color: results == 0 ? Colors.grey : Colors.black,
-                      ),
-                      child: Center(
-                          child: Text(
-                        Language.getCustomStrings("checkout_cart_add_to_cart"),
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold),
-                      )),
-                    ),
-                    onTap: () {
-                      if (widget.cartStateModel.getIsButtonAvailable) {
-                        if (results != 0) {
-                          if (widget.haveVariants) {
-                            var image = widget
-                                    .currentProduct
-                                    .variants[currentVariant.value]
-                                    .images
-                                    .isNotEmpty
-                                ? widget.currentProduct
-                                    .variants[currentVariant.value].images[0]
-                                : widget.currentProduct.images.isNotEmpty
-                                    ? widget.currentProduct.images[0]
-                                    : null;
-                            widget.parts.add2cart(
-                                id: widget.currentProduct
-                                    .variants[currentVariant.value].id,
-                                image: image,
-                                uuid: widget.currentProduct
-                                    .variants[currentVariant.value].id,
-                                name: widget.currentProduct
-                                    .variants[currentVariant.value].title,
-                                price: onSale
-                                    ? widget
-                                        .currentProduct
-                                        .variants[currentVariant.value]
-                                        .salePrice
-                                    : widget.currentProduct
-                                        .variants[currentVariant.value].price,
-                                qty: 1,
-                                sku: widget.currentProduct
-                                    .variants[currentVariant.value].sku);
-                          } else {
-                            var image = widget.currentProduct.images.isNotEmpty
-                                ? widget.currentProduct.images[0]
-                                : null;
-                            widget.parts.add2cart(
-                                id: widget.currentProduct.id,
-                                image: image,
-                                uuid: widget.currentProduct.id,
-                                name: widget.currentProduct.title,
-                                price: onSale
-                                    ? widget.currentProduct.salePrice
-                                    : widget.currentProduct.price,
-                                qty: 1,
-                                sku: widget.currentProduct.sku);
-                          }
-                          widget.cartStateModel.updateBuyButton(false);
-                          widget.cartStateModel.updateCart(true);
-                          ToastFuture toastFuture = showToastWidget(
-                            CustomToastNotification(
-                              icon: Icons.check_circle_outline,
-                              toastText: "Product added to Bag",
-                            ),
-                            duration: Duration(seconds: 2),
-                            onDismiss: () {
-                              print("The toast was dismised");
-                              widget.cartStateModel.updateBuyButton(true);
-                            },
+                        onTap: () {
+                          addProduct(
+                            Provider.of<PosStateModel>(context),
+                            results,
                           );
-
-                          Future.delayed(Duration(seconds: 2), () {
-                            toastFuture.dismiss();
-                          });
-
-//                  Navigator.pop(context);
-                        }
-                      }
-                    },
-                  ),
-                ),
-
-                Container(
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.only(
-                      bottom: Measurements.height * 0.04,
-                      top: Measurements.height * 0.02),
-                  // child: Text(
-                  //   "$description",
-                  //   style: TextStyle(color: Colors.black, fontSize: 13),
-                  // )
-                  child: Html(
-                    data: description,
-                    defaultTextStyle:
-                        TextStyle(color: Colors.black, fontSize: 13),
-                  ),
-                ),
-//          ColorButtonGrid(
-//            colors: <Color>[
-//              Colors.red,
-//              Colors.blue,
-//              Colors.green,
-//              Colors.deepOrange,
-//              Colors.red,
-//              Colors.blue,
-//              Colors.green,
-//              Colors.deepOrange,
-//              Colors.red,
-//              Colors.blue,
-//              Colors.green,
-//              Colors.deepOrange
-//            ],
-//            controller: controller,
-//            size: Measurements.height * 0.03,
-//          ),
-//          ColorButtonContainer(
-//            displayColor: Colors.red,
-//            size: Measurements.height * 0.03,
-//            controller: controller,
-//          ),
-                isTablet
-                    ? Padding(
-                        padding:
-                            EdgeInsets.only(bottom: Measurements.height * 0.02),
-                      )
-                    : Container(),
-              ],
-            );
-          }),
+                        },
+                      ),
+                    ),
+                    Description(
+                      currentProduct: widget.currentProduct,
+                      currentVariant: currentVariant,
+                      haveVariants: haveVariants,
+                    ),
+                    //test section
+                    //
+                    //
+                    isTablet
+                        ? Padding(
+                            padding: EdgeInsets.only(
+                              bottom: Measurements.height * 0.02,
+                            ),
+                          )
+                        : Container(),
+                  ],
+                );
+        },
+      ),
     );
+  }
+
+  addProduct(PosStateModel posProvider, results) {
+    if (widget.cartStateModel.getIsButtonAvailable) {
+      if (results != 0) {
+        if (widget.haveVariants) {
+          var image = widget.currentProduct.variants[currentVariant.value]
+                  .images.isNotEmpty
+              ? widget.currentProduct.variants[currentVariant.value].images[0]
+              : widget.currentProduct.images.isNotEmpty
+                  ? widget.currentProduct.images[0]
+                  : null;
+          posProvider.add2cart(
+            id: widget.currentProduct.variants[currentVariant.value].id,
+            image: image,
+            uuid: widget.currentProduct.variants[currentVariant.value].id,
+            name: widget.currentProduct.title,
+            price: onSale
+                ? widget.currentProduct.variants[currentVariant.value].salePrice
+                : widget.currentProduct.variants[currentVariant.value].price,
+            qty: 1,
+            sku: widget.currentProduct.variants[currentVariant.value].sku,
+            isVariant: true,
+            options:
+                widget.currentProduct.variants[currentVariant.value].options,
+          );
+        } else {
+          var image = widget.currentProduct.images.isNotEmpty
+              ? widget.currentProduct.images[0]
+              : null;
+          posProvider.add2cart(
+            id: widget.currentProduct.id,
+            image: image,
+            uuid: widget.currentProduct.id,
+            name: widget.currentProduct.title,
+            price: onSale
+                ? widget.currentProduct.salePrice
+                : widget.currentProduct.price,
+            qty: 1,
+            sku: widget.currentProduct.sku,
+          );
+        }
+        widget.cartStateModel.updateBuyButton(false);
+        widget.cartStateModel.updateCart(true);
+        ToastFuture toastFuture = showToastWidget(
+          CustomToastNotification(
+            icon: Icons.check_circle_outline,
+            toastText: "Product added to Bag",
+          ),
+          duration: Duration(seconds: 2),
+          onDismiss: () {
+            print("The toast was dismised");
+            widget.cartStateModel.updateBuyButton(true);
+          },
+        );
+        Future.delayed(
+          Duration(seconds: 2),
+          () {
+            toastFuture.dismiss();
+          },
+        );
+      }
+    }
   }
 
   ColorButtonController controller = ColorButtonController();
 
   Future<int> getInventoryState(
       PosStateModel posStateModel, String productSku) async {
-    print("getInventoryState: $posStateModel");
     var inventory;
     try {
       inventory = await posStateModel.getInventory(productSku);
-      print("inventoryInfo: $inventory");
     } catch (e) {
       print("error: $e");
     }
 
     var inventoryData = InventoryModel.toMap(inventory);
-    print("inventoryData: ${inventoryData.stock}");
 
     int stockData = 0;
 
@@ -645,6 +577,145 @@ class _DetailsInfoState extends State<DetailsInfo> {
     }
 
     return stockData;
+  }
+}
+
+class Description extends StatefulWidget {
+  final ProductsModel currentProduct;
+  final ValueNotifier<int> currentVariant;
+  final bool haveVariants;
+  Description({
+    @required this.currentVariant,
+    @required this.currentProduct,
+    this.haveVariants,
+  });
+  @override
+  _DescriptionState createState() => _DescriptionState();
+}
+
+class _DescriptionState extends State<Description> {
+  @override
+  void initState() {
+    super.initState();
+    // widget.currentVariant.addListener(() => setState(() {}));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // print("From description ${widget.currentVariant.value}");
+
+    String description;
+    if (widget.haveVariants) {
+      description = (widget.currentProduct.variants[widget.currentVariant.value]
+                  .description?.isEmpty ??
+              true)
+          ? widget.currentProduct.description
+          : widget
+              .currentProduct.variants[widget.currentVariant.value].description;
+      // description = widget
+      //     .currentProduct.variants[widget.currentVariant.value].description;
+    } else {
+      description = widget.currentProduct.description;
+    }
+
+    return Container(
+      child: Container(
+        alignment: Alignment.center,
+        padding: EdgeInsets.only(bottom: Measurements.height * 0.04, top: 25),
+        child: Html(
+          data: description,
+          defaultTextStyle: TextStyle(
+            color: Colors.black,
+            fontSize: 17,
+            fontWeight: FontWeight.w300,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class NameNPrice extends StatefulWidget {
+  final ProductsModel currentProduct;
+  final ValueNotifier<int> currentVariant;
+  NameNPrice({@required this.currentProduct, @required this.currentVariant});
+  @override
+  _NameNPriceState createState() => _NameNPriceState();
+}
+
+class _NameNPriceState extends State<NameNPrice> {
+  @override
+  void initState() {
+    super.initState();
+    // widget.currentVariant.addListener(() => setState(() {}));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    PosStateModel posProvider = Provider.of<PosStateModel>(context);
+    bool haveVariants = widget.currentProduct.variants.isNotEmpty;
+    num price = haveVariants
+        ? widget.currentProduct.variants[widget.currentVariant.value].price
+        : widget.currentProduct.price;
+    num salePrice = haveVariants
+        ? widget.currentProduct.variants[widget.currentVariant.value].salePrice
+        : widget.currentProduct.salePrice;
+    bool onSale = haveVariants
+        ? widget.currentProduct.variants[widget.currentVariant.value].onSales
+        : widget.currentProduct.onSales;
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        Row(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 25),
+              child: Container(
+                child: Text(
+                  "${widget.currentProduct.title}",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        //price
+        Container(
+          padding: EdgeInsets.only(
+            bottom: 25,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                "${posProvider.f.format(price)}${Measurements.currency(posProvider.getBusiness.currency)}",
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w600,
+                  decoration:
+                      onSale ? TextDecoration.lineThrough : TextDecoration.none,
+                ),
+              ),
+              onSale
+                  ? Text(
+                      "  ${posProvider.f.format(salePrice ?? 0)}${Measurements.currency(posProvider.getBusiness.currency)}",
+                      style: TextStyle(
+                        fontSize: 22,
+                        color: posProvider.saleColor,
+                        fontWeight: FontWeight.w300,
+                      ),
+                    )
+                  : Container(),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 }
 
@@ -677,7 +748,12 @@ class _StockTextState extends State<StockText> {
     color = (widget.stc > 6)
         ? Colors.green
         : widget.stc > 0 ? Colors.orangeAccent : Colors.red;
-    return Text(value, style: TextStyle(color: color));
+    return Text(
+      value,
+      style: TextStyle(
+        color: color,
+      ),
+    );
   }
 }
 
@@ -685,16 +761,16 @@ class DetailImage extends StatefulWidget {
   final ValueNotifier<int> currentVariant;
 
   final PosStateModel parts;
-  final List<String> images;
+  List<String> imagesBase;
   final int index;
   final bool haveVariants;
 
   DetailImage({
     @required this.currentVariant,
     @required this.parts,
-    @required this.images,
+    @required this.imagesBase,
     @required this.index,
-    this.haveVariants,
+    this.haveVariants = false,
   });
 
   @override
@@ -712,10 +788,11 @@ class _DetailImageState extends State<DetailImage> {
   void initState() {
     super.initState();
     widget.currentVariant.addListener(listener);
-
-    setState(() {
-      imageIndex = widget.index;
-    });
+    setState(
+      () {
+        imageIndex = widget.index;
+      },
+    );
   }
 
   listener() {
@@ -737,22 +814,37 @@ class _DetailImageState extends State<DetailImage> {
     isTablet = isPortrait
         ? MediaQuery.of(context).size.width > 600
         : MediaQuery.of(context).size.height > 600;
-
+    List<String> _images = List();
+    if (widget.haveVariants) {
+      _images = widget.imagesBase +
+          Provider.of<PosStateModel>(context)
+              .selectedProduct
+              .variants[widget.currentVariant.value]
+              .images;
+    } else {
+      _images = widget.imagesBase;
+    }
     List<Widget> images = List();
-    widget.images.forEach((f) {
-      images.add(Container(
-//        color: Colors.red,
-        height:
-            isTablet ? Measurements.width * 0.45 : Measurements.height * 0.4,
-        width: isTablet ? Measurements.width * 0.45 : Measurements.height * 0.4,
-        child: CachedNetworkImage(
-          imageUrl: Env.storage + "/products/" + f,
-          placeholder: (context, url) => Container(),
-          errorWidget: (context, url, error) => Icon(Icons.error),
-          fit: BoxFit.contain,
-        ),
-      ));
-    });
+    _images.forEach(
+      (f) {
+        images.add(
+          Container(
+            height: isTablet
+                ? Measurements.width * 0.45
+                : Measurements.height * 0.4,
+            width: isTablet
+                ? Measurements.width * 0.45
+                : Measurements.height * 0.4,
+            child: CachedNetworkImage(
+              imageUrl: Env.storage + "/products/" + f,
+              placeholder: (context, url) => Container(),
+              errorWidget: (context, url, error) => Icon(Icons.error),
+              fit: BoxFit.contain,
+            ),
+          ),
+        );
+      },
+    );
 
     int _currentImage = imageIndex;
 
@@ -765,11 +857,12 @@ class _DetailImageState extends State<DetailImage> {
       aspectRatio: 1,
       scrollDirection: Axis.horizontal,
       onPageChanged: (index) {
-        setState(() {
-          _currentImage = index;
-          imageIndex = index;
-          print(_currentImage);
-        });
+        setState(
+          () {
+            _currentImage = index;
+            imageIndex = index;
+          },
+        );
       },
     );
 
@@ -777,7 +870,7 @@ class _DetailImageState extends State<DetailImage> {
       child: Column(
         children: <Widget>[
           Container(
-//            color: Colors.green,
+            padding: EdgeInsets.only(bottom: 10, top: 10),
             height: isTablet
                 ? Measurements.width * 0.45
                 : Measurements.height * 0.4,
@@ -785,32 +878,6 @@ class _DetailImageState extends State<DetailImage> {
                 ? Measurements.width * 0.45
                 : Measurements.height * 0.4,
             child: customCarouselSlider,
-//            child: Stack(children: [
-//              customCarouselSlider,
-//              images.length > 1
-//                  ? Positioned(
-////                      top: 0.0,
-//                      left: 0,
-//                      right: 0,
-//                      bottom: -10,
-//                      child: Row(
-//                        mainAxisAlignment: MainAxisAlignment.center,
-//                        children: map<Widget>(images, (index, url) {
-//                          return Container(
-//                            width: 8,
-//                            height: 8,
-//                            margin: EdgeInsets.symmetric(
-//                                vertical: 10, horizontal: 2),
-//                            decoration: BoxDecoration(
-//                                shape: BoxShape.circle,
-//                                color: _currentImage == index
-//                                    ? Color.fromRGBO(0, 0, 0, 0.9)
-//                                    : Color.fromRGBO(0, 0, 0, 0.4)),
-//                          );
-//                        }),
-//                      ))
-//                  : Container()
-//            ]),
           ),
           Container(
             width: isTablet
@@ -820,25 +887,49 @@ class _DetailImageState extends State<DetailImage> {
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               shrinkWrap: true,
-              itemCount: widget.images.length,
+              itemCount: _images.length,
               itemBuilder: (BuildContext context, int index) {
                 return InkWell(
-                  child: Container(
+                  child: Padding(
+                    padding: EdgeInsets.all(2.0),
+                    child: Container(
+                      padding: EdgeInsets.all(2.0),
                       height: Measurements.height * 0.1,
                       width: Measurements.height * 0.1,
-                      padding: EdgeInsets.all(Measurements.width * 0.01),
+                      decoration: BoxDecoration(
+                        border: Border(
+                            // bottom: BorderSide(color: index == imageIndex? Colors.grey:Colors.white ,width: 2)
+                            ),
+                        // image: DecorationImage(
+                        //   image: NetworkImage(
+                        //     Env.storage +
+                        //         "/products/" +
+                        //         _images[index] +
+                        //         "-thumbnail",
+                        //   ),
+                        // ),
+                      ),
                       child: CachedNetworkImage(
-                        imageUrl:
-                            Env.storage + "/products/" + widget.images[index],
+                        // child: Image.network(
+                        imageUrl: Env.storage +
+                            "/products/" +
+                            _images[index], //add +"-thumbnail"
                         placeholder: (context, url) => Container(),
-                        errorWidget: (context, url, error) => Icon(Icons.error),
+                        errorWidget: (context, url, error) => Icon(
+                          Icons.error,
+                          color: Colors.black,
+                        ),
                         fit: BoxFit.contain,
-                      )),
+                      ),
+                    ),
+                  ),
                   onTap: () {
-                    setState(() {
-                      imageIndex = index;
-                      customCarouselSlider.jumpToPage(imageIndex);
-                    });
+                    setState(
+                      () {
+                        imageIndex = index;
+                        customCarouselSlider.jumpToPage(imageIndex);
+                      },
+                    );
                   },
                 );
               },
@@ -849,3 +940,24 @@ class _DetailImageState extends State<DetailImage> {
     );
   }
 }
+
+// Container(
+//   padding: EdgeInsets.symmetric(vertical: 50),
+//   child: ColorButtonGrid(
+//     colors: <Color>[
+//       Colors.red,
+//       Colors.blue,
+//       Colors.green,
+//       Colors.deepOrange,
+//       Colors.red,
+//       Colors.blue,
+//       Colors.green,
+//       Colors.deepOrange,
+//       Colors.white,
+//       Colors.black,
+//       Colors.orange
+//     ],
+//     controller: controller,
+//     size: Measurements.height * 0.03,
+//   ),
+// ),

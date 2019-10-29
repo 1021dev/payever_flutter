@@ -21,6 +21,8 @@ class Env {
   static String wrapper;
   static String employees;
   static String appRegistry;
+  static String payments;
+  static String commons;
 
   Env.map(dynamic obj) {
     Env.users = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_USER];
@@ -43,7 +45,9 @@ class Env {
     Env.shops = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_SHOPS];
     Env.builder = obj[GlobalUtils.ENV_FRONTEND][GlobalUtils.ENV_BUILDER_CLIENT];
     Env.wrapper = obj[GlobalUtils.ENV_FRONTEND][GlobalUtils.ENV_WRAPPER];
-    Env.employees = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_EMPLOYEES];
+    Env.employees = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_AUTH];
     Env.appRegistry = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_APP_REGISTRY];
+    Env.payments = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_PAYMENTS];
+    Env.commons = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_COMMONS];
   }
 }

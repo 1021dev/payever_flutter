@@ -46,28 +46,23 @@ class _EmployeesSelectionsListScreenState
 
     await api
         .getEmployeesList(globalStateModel.currentBusiness.id,
-            GlobalUtils.activeToken.accessToken, context)
-        .then((employeesData) {
-      print("getEmployeesList: Employees data loaded: $employeesData");
-
-      for (var employee in employeesData) {
-        var employeeInfo = Employees.fromMap(employee);
-        print("employeeInfo: $employeeInfo");
-        if (!widget.employeesList.contains(employeeInfo.id)) {
-          employeesList.add(Employees.fromMap(employee));
-        }
-      }
-    }).catchError((onError) {
-      print("Error loading employees: $onError");
-
-      if (onError.toString().contains("401")) {
-        GlobalUtils.clearCredentials();
-        Navigator.pushReplacement(
+            GlobalUtils.activeToken.accessToken, context, 1, "")
+        .then((employeesData) {})
+        .catchError(
+      (onError) {
+        print("Error loading employees: $onError");
+        if (onError.toString().contains("401")) {
+          GlobalUtils.clearCredentials();
+          Navigator.pushReplacement(
             context,
             PageTransition(
-                child: LoginScreen(), type: PageTransitionType.fade));
-      }
-    });
+              child: LoginScreen(),
+              type: PageTransitionType.fade,
+            ),
+          );
+        }
+      },
+    );
 
     return employeesList;
   }
@@ -209,7 +204,7 @@ class _EmployeesSelectionsListScreenState
 
     var data = {"employees": employeesIdsToGroup};
 
-    await employeesStateModel.addEmployeesToGroup(widget.groupId, data);
+    await employeesStateModel.addEmployeesToGroup(widget.groupId, [data]);
     Navigator.of(context).pop();
   }
 }

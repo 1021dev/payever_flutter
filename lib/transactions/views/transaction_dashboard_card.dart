@@ -142,15 +142,18 @@ class _MainTransactionCardState extends State<MainTransactionCard> {
           print("Error in Transaction Card$onError");
           print("Error end");
         });
-      }).catchError((onError) {
-        if (onError.toString().contains("401")) {
-          GlobalUtils.clearCredentials();
-          Navigator.pushReplacement(
+      }).catchError(
+        (onError) {
+          if (onError.toString().contains("401")) {
+            GlobalUtils.clearCredentials();
+            Navigator.pushReplacement(
               context,
               PageTransition(
-                  child: LoginScreen(), type: PageTransitionType.fade));
-        }
-      });
+                  child: LoginScreen(), type: PageTransitionType.fade),
+            );
+          }
+        },
+      );
     } else {
       api
           .getMonthsPersonal(GlobalUtils.activeToken.accessToken, context)
@@ -520,7 +523,6 @@ class DashboardWidgets {
       if (n >= 10000 && n < 1000000) {
         n = (n / 1000);
         dec = n.truncate() - n == 0.0;
-        print(dec);
         return thousand.format(n) + "k";
       } else if (n > 1000000) {
         n = n / 1000000;

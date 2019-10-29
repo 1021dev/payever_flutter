@@ -4,6 +4,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/checkout_process/views/checkout_screen.dart';
+import 'package:payever/commons/views/custom_elements/appbar_avatar.dart';
+import 'package:payever/commons/views/custom_elements/color_picker.dart';
+import 'package:payever/pos/network/network.dart';
 import 'package:provider/provider.dart';
 
 import '../../commons/views/custom_elements/custom_future_builder.dart';
@@ -62,21 +65,29 @@ class _PosProductsListScreenState extends State<PosProductsListScreen> {
       appBar: AppBar(
         brightness: Brightness.light,
         leading: IconButton(
-            icon: Icon(
-              Icons.close,
-              color: Colors.black,
-            ),
-            onPressed: () {
-              posCartStateModel.updateCart(false);
-              Navigator.pop(context);
-            }),
-        centerTitle: true,
-        title: Container(
-          child: Text(
-            widget.terminal?.name ?? "",
-            style: TextStyle(color: Colors.black),
+          icon: Icon(
+            Icons.close,
+            color: Colors.black,
           ),
+          onPressed: () {
+            posCartStateModel.updateCart(false);
+            posStateModel.cleanCart();
+            posStateModel.clear();
+            Navigator.pop(context);
+          },
         ),
+        backgroundColor: Color(Provider.of<GlobalStateModel>(context)
+                .currentBusiness
+                .primaryColor ??
+            0xFFFFFFFF),
+        centerTitle: true,
+        // title: Container(
+        //   child: Text(
+        //     widget.terminal?.name ?? "",
+        //     style: TextStyle(color: Colors.black),
+        //   ),
+        // ),
+        title: AppBarAvatar(),
         actions: <Widget>[
           IconButton(
             icon: Stack(
@@ -95,10 +106,12 @@ class _PosProductsListScreenState extends State<PosProductsListScreen> {
                         child: Container(),
                       ),
                       posCartStateModel.getCartHasItems
-                          ? Icon(Icons.brightness_1,
+                          ? Icon(
+                              Icons.brightness_1,
                               color: Color(0XFF0084FF),
                               size: Measurements.height *
-                                  (isTablet ? 0.01 * 1 : 0.01 * 1.2))
+                                  (isTablet ? 0.01 * 1 : 0.01 * 1.2),
+                            )
                           : Container(),
                       Expanded(
                         flex: 2,
@@ -127,26 +140,36 @@ class _PosProductsListScreenState extends State<PosProductsListScreen> {
           ),
         ],
       ),
-      body: widget.terminal != null
-          ? CustomFutureBuilder<Object>(
-              future: posStateModel.loadPosProductsList(widget.terminal),
-              errorMessage: "Error loading products",
-              loadingWidget: Center(
-                child: CircularProgressIndicator(
-                  backgroundColor: Colors.black,
-                ),
-              ),
-              onDataLoaded: (results) {
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: widget.terminal != null
+                ? CustomFutureBuilder<Object>(
+                    future: posStateModel.loadPosProductsList(widget.terminal),
+                    errorMessage: "Error loading products",
+                    loadingWidget: Center(
+                      child: CircularProgressIndicator(
+                        backgroundColor: Colors.black,
+                      ),
+                    ),
+                    onDataLoaded: (results) {
 //          posStateModel.updateIsLoading(true);
-                return posStateModel.isLoading
-                    ? PosProductsLoader(
-                        posStateModel,
-                        globalStateModel,
-                      )
-                    : PosBody(posStateModel, globalStateModel);
-              },
-            )
-          : Container(),
+                      return posStateModel.isLoading
+                          ? PosProductsLoader(
+                              posStateModel,
+                              globalStateModel,
+                            )
+                          : PosBody(
+                              posStateModel,
+                              globalStateModel,
+                              terminal: widget.terminal,
+                            );
+                    },
+                  )
+                : Container(),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -154,8 +177,8 @@ class _PosProductsListScreenState extends State<PosProductsListScreen> {
 class PosBody extends StatefulWidget {
   final PosStateModel posStateModel;
   final GlobalStateModel globalStateModel;
-
-  PosBody(this.posStateModel, this.globalStateModel);
+  final terminal;
+  PosBody(this.posStateModel, this.globalStateModel, {this.terminal});
 
   @override
   createState() => _PosBodyState();
@@ -201,86 +224,86 @@ class _PosBodyState extends State<PosBody> {
 
     List<Widget> prodList = List<Widget>();
     prodList = [];
-
-    widget.posStateModel.getProductList.forEach((prod) {
+    widget.posStateModel.getProductList.forEach(
+      (prod) {
 //      var temp = widget.posStateModel.productStock[prod.sku] ?? "0";
-      var _variants = prod.variants;
-      bool oneVariant = true;
-      if (_variants.isNotEmpty) {
-        var _varEmpty =
-            widget.posStateModel.productStock[_variants[0].sku] ?? "0";
-        oneVariant =
-            ((_varEmpty.contains("null") ? 0 : int.parse(_varEmpty ?? "0")) >
-                0);
-//        print(oneVariant);
-      }
-//      if(!(!((temp.contains("null")? 0:int.parse(temp??"0")) > 0) && prod.variants.isEmpty) && !((prod.variants.length == 1) && !oneVariant))
-      prodList.add(ProductItem(
-        currentProduct: prod,
-        posStateModel: widget.posStateModel,
-        globalStateModel: widget.globalStateModel,
-      ));
-    });
+        var _variants = prod.variants;
+        bool oneVariant = true;
+        if (_variants.isNotEmpty) {
+          var _varEmpty =
+              widget.posStateModel.productStock[_variants[0].sku] ?? "0";
+          oneVariant =
+              ((_varEmpty.contains("null") ? 0 : int.parse(_varEmpty ?? "0")) >
+                  0);
+        }
+        prodList.add(
+          ProductItem(
+            currentProduct: prod,
+            posStateModel: widget.posStateModel,
+            globalStateModel: widget.globalStateModel,
+          ),
+        );
+      },
+    );
 
     return RefreshIndicator(
       onRefresh: _refresh,
       child: Container(
         padding: EdgeInsets.symmetric(
-            horizontal: Measurements.width * (isTablet ? 0.03 : 0.05)),
+          horizontal: Measurements.width * (isTablet ? 0.03 : 0.05),
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Container(
-              height: Measurements.height * (isTablet ? 0.05 : 0.1),
-              width: Measurements.width * (isTablet ? 0.3 : 0.8),
+              width: Measurements.width * (isTablet ? 0.35 : 0.8),
               padding: EdgeInsets.symmetric(
-                  vertical: Measurements.height * (isTablet ? 0.01 : 0.02)),
+                vertical: Measurements.height * (isTablet ? 0.02 : 0.02),
+              ),
               child: InkWell(
                 child: Container(
                   decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(16)),
-                  child: Center(
-                    child: Text(
+                    color: Color(Provider.of<GlobalStateModel>(context)
+                            .currentBusiness
+                            .secondaryColor ??
+                        0xFF000000),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(vertical: 15),
+                    child: Center(
+                      child: Text(
                         Language.getCustomStrings("checkout_cart_type_amount"),
                         style: TextStyle(
-                            fontSize: 15,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold)),
+                          fontSize: 15,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
                 onTap: () {
                   Navigator.push(
                     context,
                     PageTransition(
-                      child: WebViewPayments(
-                        posStateModel: widget.posStateModel,
-                        url: null,
+                      child: CheckOutScreen(
+                        channelSet: widget.terminal.channelSet,
+                        posCartStateModel:
+                            Provider.of<PosCartStateModel>(context),
+                        posStateModel: Provider.of<PosStateModel>(context),
+                        manual: true,
                       ),
                       type: PageTransitionType.fade,
-                      duration: Duration(milliseconds: 10),
+                      duration: Duration(
+                        milliseconds: 10,
+                      ),
                     ),
                   );
                 },
               ),
             ),
-            //testing search
-            // TextFormField(
-            //   decoration: InputDecoration(
-            //     hintText: "Search",
-            //     border: InputBorder.none,
-            //     icon: Container(child:SvgPicture.asset("assets/images/searchIcon.svg",height: Measurements.height * 0.0175,color:Colors.white,))
-            //   ),
-            //   onFieldSubmitted: (doc){
-            //     widget.parts.productList.clear();
-            //     widget.parts.search = doc;
-            //     widget.parts.page = 1;
-            //     widget.parts.searching.value = true;
-            //   },
-            // ),
-            //
-            //widget.parts.searching.value?Center(child:CircularProgressIndicator()):
             Expanded(
               child: Container(
                 padding: EdgeInsets.only(top: Measurements.height * 0.02),
@@ -297,8 +320,9 @@ class _PosBodyState extends State<PosBody> {
                         controller: controller,
                         shrinkWrap: true,
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: isPortrait ? 3 : 4,
-                            childAspectRatio: 0.65),
+                          crossAxisCount: isPortrait ? 3 : 4,
+                          childAspectRatio: 0.65,
+                        ),
                         itemCount: prodList.length,
                         itemBuilder: (BuildContext context, int index) {
                           return prodList[index];
@@ -318,7 +342,11 @@ class ProductItem extends StatefulWidget {
   final PosStateModel posStateModel;
   final GlobalStateModel globalStateModel;
 
-  ProductItem({this.currentProduct, this.posStateModel, this.globalStateModel});
+  ProductItem({
+    this.currentProduct,
+    this.posStateModel,
+    this.globalStateModel,
+  });
 
   @override
   createState() => _ProductItemState();
@@ -341,22 +369,25 @@ class _ProductItemState extends State<ProductItem> {
     if (widget.currentProduct.variants.isNotEmpty) {
       int i = 0;
       price = widget.currentProduct.variants[0].price;
-      widget.currentProduct.variants.forEach((variant) {
-        if (variant.price <= price) {
-          price = variant.price;
-          _variant = variant;
-          index = i;
-          onSale = variant.onSales;
-        }
-        i++;
-      });
+      widget.currentProduct.variants.forEach(
+        (variant) {
+          if (variant.price <= price) {
+            price = variant.price;
+            _variant = variant;
+            index = i;
+            onSale = variant.onSales;
+          }
+          i++;
+        },
+      );
     } else {
       index = null;
       onSale = widget.currentProduct.onSales;
     }
     return Card(
       elevation: 0,
-      color: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
+      color: Colors.white.withOpacity(0.8),
       child: InkWell(
         child: Container(
           width:
@@ -376,8 +407,9 @@ class _ProductItemState extends State<ProductItem> {
                       color: widget.currentProduct.images.isEmpty
                           ? Colors.black.withOpacity(0.35)
                           : Colors.white,
-                      borderRadius: BorderRadius.circular(
-                          widget.currentProduct.images.isEmpty ? 0 : 12),
+                      // borderRadius: BorderRadius.circular(
+                      //   widget.currentProduct.images.isEmpty ? 0 : 12,
+                      // ),
                     ),
                   ),
                   widget.currentProduct.images.isEmpty
@@ -392,22 +424,16 @@ class _ProductItemState extends State<ProductItem> {
                           height: Measurements.width * (isTablet ? 0.3 : 0.8),
                           width: Measurements.width * (isTablet ? 0.3 : 0.8),
                           decoration: BoxDecoration(
-                              image: DecorationImage(
-                            image: CachedNetworkImageProvider(
-                              Env.storage +
-                                  "/products/" +
-                                  widget.currentProduct.images[0],
-                            ),
-                          )),
-                          // child: CachedNetworkImage(
-                          //   imageUrl: Env.Storage +
-                          //       "/products/" +
-                          //       widget.currentProduct.images[0],
-                          //   placeholder: (context, url) => Container(),
-                          //   errorWidget: (context, url, error) =>
-                          //       Icon(Icons.error),
-                          //   fit: BoxFit.contain,
-                          // ),
+                            borderRadius: BorderRadius.circular(6),
+                            image: DecorationImage(
+                                // image: CachedNetworkImageProvider(
+                                image: NetworkImage(
+                                  Env.storage +
+                                      "/products/" +
+                                      widget.currentProduct.images[0],
+                                ),
+                                fit: BoxFit.contain),
+                          ),
                         ),
                 ],
               ),
@@ -418,9 +444,10 @@ class _ProductItemState extends State<ProductItem> {
                       child: Text(
                         "Sale",
                         style: TextStyle(
-                            fontSize: 15,
-                            color: widget.posStateModel.saleColor,
-                            fontWeight: FontWeight.w300),
+                          fontSize: 15,
+                          color: widget.posStateModel.saleColor,
+                          fontWeight: FontWeight.w300,
+                        ),
                       ),
                     )
                   : Container(
@@ -441,53 +468,88 @@ class _ProductItemState extends State<ProductItem> {
                 ),
               ),
               Container(
-                  height: Measurements.height * 0.03,
-                  alignment: Alignment.center,
-                  child: Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          index == null
-                              ? "${widget.posStateModel.f.format(widget.currentProduct.price)}${Measurements.currency(widget.globalStateModel.currentBusiness.currency)}"
-                              : "${widget.posStateModel.f.format(_variant.price)}${Measurements.currency(widget.globalStateModel.currentBusiness.currency)}",
-                          style: TextStyle(
-                              fontSize: 15,
-                              color: widget.posStateModel.titleColor,
-                              fontWeight: FontWeight.w400,
-                              decoration: onSale
-                                  ? TextDecoration.lineThrough
-                                  : TextDecoration.none),
+                height: Measurements.height * 0.03,
+                alignment: Alignment.center,
+                child: Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        index == null
+                            ? "${widget.posStateModel.f.format(widget.currentProduct.price)}${Measurements.currency(widget.globalStateModel.currentBusiness.currency)}"
+                            : "${widget.posStateModel.f.format(_variant.price)}${Measurements.currency(widget.globalStateModel.currentBusiness.currency)}",
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: widget.posStateModel.titleColor,
+                          fontWeight: FontWeight.w400,
+                          decoration: onSale
+                              ? TextDecoration.lineThrough
+                              : TextDecoration.none,
                         ),
-                        onSale
-                            ? Text(
-                                index == null
-                                    ? "  ${widget.posStateModel.f.format(widget.currentProduct.salePrice)}${Measurements.currency(widget.globalStateModel.currentBusiness.currency)}"
-                                    : "  ${widget.posStateModel.f.format(_variant.salePrice)}${Measurements.currency(widget.globalStateModel.currentBusiness.currency)}",
-                                style: TextStyle(
-                                    fontSize: 15,
-                                    color: widget.posStateModel.saleColor,
-                                    fontWeight: FontWeight.w400),
-                              )
-                            : Container(),
-                      ],
-                    ),
-                  )),
+                      ),
+                      onSale
+                          ? Text(
+                              index == null
+                                  ? "  ${widget.posStateModel.f.format(widget.currentProduct.salePrice)}${Measurements.currency(widget.globalStateModel.currentBusiness.currency)}"
+                                  : "  ${widget.posStateModel.f.format(_variant.salePrice)}${Measurements.currency(widget.globalStateModel.currentBusiness.currency)}",
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: widget.posStateModel.saleColor,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            )
+                          : Container(),
+                    ],
+                  ),
+                ),
+              ),
+
+              /// *** Check ***
+              /// Comment for the A cool Socjcolored bullets in the product item
+              /// needs to be fix to adapt the color value coming from the Backend
+              // Container(
+              //   child: ColorDisplay(
+              //     currentProduct: widget.currentProduct,
+              //   ),
+              // ),
+              Padding(
+                padding: EdgeInsets.all(isTablet ? 0.0 : 20.0),
+              ),
             ],
           ),
         ),
         onTap: () {
           Navigator.push(
-              context,
-              PageTransition(
-                  child: ProductDetailsScreen(
-                    parts: widget.posStateModel,
-                    currentProduct: widget.currentProduct,
-                    index: index,
-                  ),
-                  type: PageTransitionType.fade,
-                  duration: Duration(milliseconds: 10)));
+            context,
+            PageTransition(
+              child: ProductDetailsScreen(
+                parts: widget.posStateModel,
+                currentProduct: widget.currentProduct,
+                index: index,
+              ),
+              type: PageTransitionType.fade,
+              duration: Duration(
+                milliseconds: 10,
+              ),
+            ),
+          );
         },
+      ),
+    );
+  }
+}
+
+class ColorDisplay extends StatelessWidget {
+  final ProductsModel currentProduct;
+  ColorDisplay({
+    this.currentProduct,
+  });
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: ColorButtonGrid(
+        colors: Provider.of<PosStateModel>(context).colorList(currentProduct),
+        size: 15.0,
       ),
     );
   }
@@ -504,11 +566,7 @@ class PosProductsLoader extends StatefulWidget {
 }
 
 class _PosProductsLoaderState extends State<PosProductsLoader> {
-//  int page = 1;
   int limit = 36;
-
-  //int limit = 8;
-
   @override
   void initState() {
     super.initState();
@@ -516,43 +574,13 @@ class _PosProductsLoaderState extends State<PosProductsLoader> {
 
   @override
   Widget build(BuildContext context) {
+    // print("Check");
+    // print(widget.posStateModel.currentTerminal?.channelSet);
     var queryDocument = ''' 
               query {
                   getProductsByChannelSet(businessId: "${widget.globalStateModel.currentBusiness.id}", channelSetId: "${widget.posStateModel.currentTerminal?.channelSet ?? null}",search: "${widget.posStateModel.getSearch}",existInChannelSet: true, paginationLimit: $limit, pageNumber: ${widget.posStateModel.getPage}) {
-                        products {      
-                          images
-                          uuid
-                          title
-                          description
-                          onSales
-                          price
-                          salePrice
-                          sku
-                          barcode
-                          variants {
-                            id
-                            images
-                            title
-                            description
-                            onSales
-                            price
-                            salePrice
-                            sku
-                            barcode
-                          }
-                        }
-                        info {
-                          pagination {
-                          page
-                          page_count
-                          per_page
-                          item_count
-                          }
-                        }  
-                  }
-                }
+                    products {      images      id      title      description      onSales      price      salePrice      sku      barcode      currency      type      active      categories {        title      }      variants {        id        images        options {          name          value        }        description        onSales        price        salePrice        sku        barcode      }      channelSets {        id        type        name      }      shipping {        free        general        weight        width        length        height      }    }    info {      pagination {        page        page_count        per_page        item_count      }    }  }}
               ''';
-
     return widget.posStateModel.getCurrentTerminal == null
         ? Center(
             child: const CircularProgressIndicator(
@@ -560,14 +588,19 @@ class _PosProductsLoaderState extends State<PosProductsLoader> {
             ),
           )
         : GraphQLProvider(
-            client: widget.posStateModel.client,
+            client: widget.posStateModel.createClient(),
             child: Query(
               options: QueryOptions(
-                  variables: <String, dynamic>{}, document: queryDocument),
-              builder: (QueryResult result, {VoidCallback refetch,fetchMore: null}) {
+                variables: <String, dynamic>{},
+                document: queryDocument,
+              ),
+              builder: (QueryResult result,
+                  {VoidCallback refetch, fetchMore: null}) {
                 if (result.errors != null) {
-                  print(result.errors);
-                  return Center(child: Text("Error while fetching data"));
+                  (result.errors);
+                  return Center(
+                    child: Text("Error while fetching data"),
+                  );
                 }
                 if (result.loading) {
                   return Center(
@@ -576,28 +609,32 @@ class _PosProductsLoaderState extends State<PosProductsLoader> {
                     ),
                   );
                 }
-
-                result.data["getProductsByChannelSet"]["products"]
-                    .forEach((prod) {
-                  var tempProduct = ProductsModel.fromMap(prod);
-                  // if (widget.posStateModel.productList
-                  //         .indexWhere((test) => test.sku == tempProduct.sku) <
-                  //     0)
-                  widget.posStateModel.addProductList(tempProduct);
-                });
+                // print("POS Result");
+                result.data["getProductsByChannelSet"]["products"].forEach(
+                  (prod) {
+                    var tempProduct = ProductsModel.fromMap(prod);
+                    // if (widget.posStateModel.productList
+                    //         .indexWhere((test) => test.sku == tempProduct.sku) <
+                    //     0)
+                    widget.posStateModel.addProductList(
+                      tempProduct,
+                    );
+                  },
+                );
                 if (widget.posStateModel.productList.isNotEmpty) {
-                  Future.delayed(Duration(microseconds: 1)).then((_) {
-                    widget.posStateModel.updatePageCount(
+                  Future.delayed(Duration(microseconds: 1)).then(
+                    (_) {
+                      widget.posStateModel.updatePageCount(
                         result.data["getProductsByChannelSet"]["info"]
-                            ["pagination"]["page_count"]);
+                            ["pagination"]["page_count"],
+                      );
 //                    widget.posStateModel.updateFetchValues(true, false);
-                    widget.posStateModel.updateIsLoading(false);
-                    widget.posStateModel.updateLoadMore(false);
-
-                    result = null;
-                  });
+                      widget.posStateModel.updateIsLoading(false);
+                      widget.posStateModel.updateLoadMore(false);
+                      result = null;
+                    },
+                  );
                 }
-
 //                return PosBody(widget.posStateModel, widget.globalStateModel);
                 return Container();
               },

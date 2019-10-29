@@ -123,7 +123,7 @@ class Language {
         .loadString("assets/translations/custom/$language.json", cache: false)
         .then((value) {
       customStrings = JsonDecoder().convert(value);
-      print("last language");
+      // print("last language");
     }).catchError((onError) {
       print(onError);
     });

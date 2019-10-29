@@ -13,20 +13,21 @@ class BusinessApps {
   final String tag;
   final String url;
 
-  BusinessApps(
-      {this.id,
-      this.allowedAcls,
-      this.bootstrapScriptUrl,
-      this.code,
-      this.dashboardInfo,
-      this.isDefault,
-      this.installed,
-      this.microUuid,
-      this.order,
-      this.startAt,
-      this.started,
-      this.tag,
-      this.url});
+  BusinessApps({
+    this.id,
+    this.allowedAcls,
+    this.bootstrapScriptUrl,
+    this.code,
+    this.dashboardInfo,
+    this.isDefault,
+    this.installed,
+    this.microUuid,
+    this.order,
+    this.startAt,
+    this.started,
+    this.tag,
+    this.url,
+  });
 
   factory BusinessApps.fromMap(dynamic app) {
     return BusinessApps(
@@ -41,7 +42,9 @@ class BusinessApps {
       installed: app['installed'],
       microUuid: app['microUuid'],
       order: app['order'],
-      startAt: app['startAt'] != null ? DateTime.parse(app['startAt']) : DateTime.now(),
+      startAt: app['startAt'] != null
+          ? DateTime.parse(app['startAt'])
+          : DateTime.now(),
       started: app['started'],
       tag: app['tag'],
       url: app['url'],
@@ -74,7 +77,6 @@ class AllowedAcls {
       delete: allowedAcls['delete'],
     );
   }
-
 }
 
 class DashboardInfo {

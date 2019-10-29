@@ -152,7 +152,7 @@ class _SendToDeviceState extends State<SendToDevice> {
                                       widget.parts.currentTerminal.channelSet,
                                       true)
                                   .then((obj) {
-                                print(obj);
+                                // print(obj);
                                 //widget.parts.url = Env.Wrapper + "/pay/restore-flow-from-code/" + obj["id"];
                                 Navigator.push(
                                     context,

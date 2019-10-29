@@ -11,6 +11,7 @@ class DropDownMenu extends StatefulWidget {
   final String defaultValue;
   final bool customColor;
   final bool changeDef;
+  final bool onPOS;
   final Color backgroundColor;
   final Color fontColor;
   final Color hintColor;
@@ -35,6 +36,7 @@ class DropDownMenu extends StatefulWidget {
     this.customColor = true,
     this.fontColor,
     this.hintColor,
+    this.onPOS = false,
   }) : super(key: key);
 
   @override
@@ -59,20 +61,25 @@ class _DropDownMenuState extends State<DropDownMenu> {
   void initState() {
     _dropDownMenuItems = getDropDownMenuItems();
     if (widget.defaultValue != null) {
-      setState(() {
-        _currentOption = widget.defaultValue;
-      });
+      setState(
+        () {
+          _currentOption = widget.defaultValue;
+        },
+      );
     }
-
     super.initState();
   }
 
   List<DropdownMenuItem<String>> getDropDownMenuItems() {
     List<DropdownMenuItem<String>> items = List();
+    Color _color =(widget.customColor
+                      ? widget.backgroundColor
+                      : Color(0xff343434));
     for (String option in _options) {
-      items.add(DropdownMenuItem(
-        value: option,
-        child: Text(option??""),
+      items.add(
+        DropdownMenuItem(
+          value: option,
+          child: Text(option ?? ""),
 //          child: Padding(
 //            padding: EdgeInsets.all(1),
 //            child: LimitedBox(
@@ -80,30 +87,35 @@ class _DropDownMenuState extends State<DropDownMenu> {
 //              child: Row(
 //        mainAxisAlignment: MainAxisAlignment.start,
 //        children: <Widget>[
-////          Expanded(child: Text(option)),
+//          Expanded(child: Text(option)),
 //          Expanded(child: Text(option),),
-////              Flexible(
-////                fit: FlexFit.loose,
-////                child: Container(
-////                  child: Text(option,
-////                    maxLines: 2,
-////                    overflow: TextOverflow.ellipsis,
-////                    softWrap: true,
-////                  ),
-////                ),
-////              ),
+//              Flexible(
+//                fit: FlexFit.loose,
+//                child: Container(
+//                  child: Text(option,
+//                    maxLines: 2,
+//                    overflow: TextOverflow.ellipsis,
+//                    softWrap: true,
+//                  ),
+//                ),
+//              ),
 //        ],
 //      ),
 //            ),
 //          )
-      ));
+        ),
+      );
     }
     return items;
   }
 
   @override
   Widget build(BuildContext context) {
-     if(widget.changeDef) _currentOption = widget.defaultValue;
+    _dropDownMenuItems.clear();
+    _dropDownMenuItems = getDropDownMenuItems();
+    if (widget.onPOS) {
+      _currentOption = widget.selectedValue;
+    }
     DropdownButton _dp = DropdownButton(
       isExpanded: true,
       isDense: true,
@@ -115,21 +127,28 @@ class _DropDownMenuState extends State<DropDownMenu> {
             ),
       iconEnabledColor: widget.fontColor ?? Colors.white,
       style: TextStyle(
-          fontSize: widget.fontsize, color: widget.fontColor ?? Colors.white),
-      hint: Text(
-        _placeHolderText??"",
-        overflow: TextOverflow.ellipsis,
-        style: TextStyle(fontSize: 16, color: widget.hintColor ?? widget.fontColor ?? Colors.white),
+        fontSize: widget.fontsize,
+        color: widget.fontColor ?? Colors.white,
       ),
-      elevation: 1,
-      value: _currentOption,
+      hint: Text(
+        _placeHolderText ?? "",
+        overflow: TextOverflow.ellipsis,
+        style: TextStyle(
+          fontSize: 16,
+          color: widget.hintColor ?? widget.fontColor ?? Colors.white,
+        ),
+      ),
+      elevation: 0,
       items: _dropDownMenuItems,
+      value: _currentOption,
       onChanged: (value) {
-        setState(() {
-          _currentOption = value;
-          var index = _options.indexOf(value);
-          onChangeSelection(value, index);
-        });
+        setState(
+          () {
+            _currentOption = value;
+            var index = _options.indexOf(value);
+            onChangeSelection(value, index);
+          },
+        );
       },
     );
     return Container(
@@ -138,52 +157,60 @@ class _DropDownMenuState extends State<DropDownMenu> {
           color: widget.backgroundColor ?? Colors.white.withOpacity(0.1),
         ),
         child: Padding(
-          padding: EdgeInsets.only(top: 1, right: 1, bottom: 1, left: 1),
+          padding: EdgeInsets.only(
+            top: 1,
+            right: 1,
+            bottom: 1,
+            left: 1,
+          ),
           child: Theme(
             data: Theme.of(context).copyWith(
               canvasColor: _dp.isExpanded
                   ? (widget.customColor
                       ? widget.backgroundColor
                       : Color(0xff343434))
-                      // : Color(0xff272627))
+                  // : Color(0xff272627))
                   : (widget.backgroundColor ?? Colors.white.withOpacity(0.1)),
             ),
-            child: DropdownButtonHideUnderline(
+            child: new DropdownButtonHideUnderline(
               child: ButtonTheme(
                 alignedDropdown: widget.autoCenter,
-                // child: _dp,
-                child: DropdownButton(
-                  isExpanded: true,
-                  isDense: true,
-                  icon: widget.noIcon
-                      ? Container()
-                      : Icon(
-                          Icons.keyboard_arrow_down,
-                          size: widget.iconSize,
-                        ),
-                  iconEnabledColor: widget.fontColor ?? Colors.white,
-                  style: TextStyle(
-                      fontSize: widget.fontsize,
-                      color: widget.fontColor ?? Colors.white),
-                  hint: Text(
-                    _placeHolderText??"",
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w300,
-                        fontSize: 16, color: widget.hintColor ??widget.fontColor ?? Colors.white),
-                  ),
-                  elevation: 1,
-                  value: _currentOption,
-                  items: _dropDownMenuItems,
-                  onChanged: (value) {
-                    setState(() {
-                      _currentOption = value;
-                      print(value);
-                      var index = _options.indexOf(value);
-                      onChangeSelection(value, index);
-                    });
-                  },
-                ), //
+                child: _dp,
+                // child: DropdownButton(
+                //   isExpanded: true,
+                //   isDense: true,
+                //   icon: widget.noIcon
+                //       ? Container()
+                //       : Icon(
+                //           Icons.keyboard_arrow_down,
+                //           size: widget.iconSize,
+                //           color: widget.fontColor ?? Colors.white,
+                //         ),
+                //   iconEnabledColor: widget.fontColor ?? Colors.white,
+                //   style: TextStyle(
+                //       fontSize: widget.fontsize,
+                //       color: widget.fontColor ?? Colors.white),
+                //   hint: Text(
+                //     _placeHolderText ?? "",
+                //     overflow: TextOverflow.ellipsis,
+                //     style: TextStyle(
+                //         fontWeight: FontWeight.w300,
+                //         fontSize: 16,
+                //         color: widget.hintColor ??
+                //             widget.fontColor ??
+                //             Colors.white),
+                //   ),
+                //   elevation: 1,
+                //   value: _currentOption,
+                //   items: _dropDownMenuItems,
+                //   onChanged: (value) {
+                //     setState(() {
+                //       _currentOption = value;
+                //       var index = _options.indexOf(value);
+                //       onChangeSelection(value, index);
+                //     });
+                //   },
+                // ),
               ),
             ),
           ),

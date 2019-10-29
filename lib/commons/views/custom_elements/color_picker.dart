@@ -25,22 +25,28 @@ class _ColorButtonContainerState extends State<ColorButtonContainer> {
       highlightColor: Colors.transparent,
       child: PhysicalModel(
         shadowColor: widget.displayColor,
-        color: widget.index == widget.controller.currentIndex.value
-            ? widget.borderColor
+        color: widget.controller != null
+            ? widget.index == widget.controller.currentIndex.value
+                ? widget.borderColor
+                : Colors.white
             : Colors.white,
         borderRadius: BorderRadius.circular(widget.size),
         child: Container(
           padding: EdgeInsets.all(1),
           child: PhysicalModel(
-              borderRadius: BorderRadius.circular(widget.size),
-              color: Colors.white,
-              child:
-                  ColorCircle(color: widget.displayColor, size: widget.size)),
+            borderRadius: BorderRadius.circular(widget.size),
+            color: Colors.white,
+            child: ColorCircle(
+              color: widget.displayColor,
+              size: widget.size,
+            ),
+          ),
         ),
       ),
       onTap: () {
         setState(() {
-          widget.controller.currentIndex.value = widget.index;
+          if (widget.controller != null)
+            widget.controller.currentIndex.value = widget.index;
         });
       },
     );
@@ -57,13 +63,69 @@ class ColorCircle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(2),
-      child: Container(
-        height: size,
-        width: size,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: color,
-        ),
+      child: Stack(
+        children: <Widget>[
+          Container(
+            height: size + 2,
+            width: size + 2,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: color,
+            ),
+          ),
+          Container(
+            height: size + 2,
+            width: size + 2,
+            decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.black.withOpacity(0.25),
+                    Colors.black12,
+                  ],
+                )),
+            padding: EdgeInsets.only(top: 2),
+            child: Stack(
+              alignment: Alignment.center,
+              children: <Widget>[
+                Container(
+                  height: size,
+                  width: size,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: color,
+                  ),
+                ),
+                Container(
+                  height: size,
+                  width: size,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: LinearGradient(
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.topCenter,
+                      colors: <Color>[Colors.white12, Colors.transparent],
+                    ),
+                  ),
+                ),
+                Container(
+                  height: size,
+                  width: size,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: LinearGradient(
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.topCenter,
+                      colors: <Color>[Colors.white24, Colors.transparent],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -75,7 +137,7 @@ class ColorButtonGrid extends StatefulWidget {
   final List<Color> colors;
 
   ColorButtonGrid(
-      {@required this.size, @required this.controller, @required this.colors});
+      {@required this.size, this.controller, @required this.colors});
 
   @override
   createState() => _ColorButtonGridState();
@@ -92,7 +154,8 @@ class _ColorButtonGridState extends State<ColorButtonGrid> {
   @override
   void initState() {
     super.initState();
-    widget.controller.currentIndex.addListener(listener);
+    if (widget.controller != null)
+      widget.controller.currentIndex.addListener(listener);
   }
 
   @override

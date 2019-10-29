@@ -495,8 +495,6 @@ class _RenderCupertinoSwitch extends RenderConstrainedBox {
       trackRect.left + _kTrackInnerEnd - CupertinoThumbPainter.radius - currentThumbExtension,
       visualPosition.roundToDouble(),
     );
-    print("visualPosition $visualPosition");
-    print("currentvalue $currentValue");
     final double thumbRight = lerpDouble(
       trackRect.left + _kTrackInnerStart + CupertinoThumbPainter.radius + currentThumbExtension,
       trackRect.left + _kTrackInnerEnd + CupertinoThumbPainter.radius,

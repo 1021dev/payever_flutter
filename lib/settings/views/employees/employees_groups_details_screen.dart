@@ -1,14 +1,19 @@
 import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import 'package:page_transition/page_transition.dart';
+import 'package:payever/settings/views/employees/add_employee_to_group.dart';
 import 'package:provider/provider.dart';
 
 import '../../../commons/views/custom_elements/custom_elements.dart';
 import '../../view_models/view_models.dart';
-import '../../network/network.dart';
+
 import '../../models/models.dart';
 import '../../utils/utils.dart';
+import 'custom_apps_access_expansion_tile.dart';
+import 'employee_list.dart';
 
 class EmployeesGroupsDetailsScreen extends StatefulWidget {
   final BusinessEmployeesGroups businessEmployeesGroups;
@@ -20,7 +25,8 @@ class EmployeesGroupsDetailsScreen extends StatefulWidget {
 }
 
 class _EmployeesGroupsDetailsScreenState
-    extends State<EmployeesGroupsDetailsScreen> {
+    extends State<EmployeesGroupsDetailsScreen>
+    with SingleTickerProviderStateMixin {
   bool _isPortrait;
   bool _isTablet;
 
@@ -32,12 +38,17 @@ class _EmployeesGroupsDetailsScreenState
 
   List<String> employeesIdsToDeleteOnGroup = List<String>();
   List<String> employeesListOnGroup = List<String>();
-
+  TabController tabController;
   @override
   void initState() {
     super.initState();
+    tabController = TabController(length: 2, vsync: this);
+    tabController.addListener(_handleTabSelection);
+
     _groupNameController.text = widget.businessEmployeesGroups.name;
   }
+
+  int _currentIndex = 0;
 
   @override
   void dispose() {
@@ -45,12 +56,21 @@ class _EmployeesGroupsDetailsScreenState
     super.dispose();
   }
 
+  _handleTabSelection() {
+    setState(
+      () {
+        _currentIndex = tabController.index;
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context);
     EmployeesStateModel employeesStateModel =
         Provider.of<EmployeesStateModel>(context);
-
+        
+        employeesStateModel.changeGroup(widget.businessEmployeesGroups.name);
     return OrientationBuilder(
         builder: (BuildContext context, Orientation orientation) {
       _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
@@ -64,12 +84,12 @@ class _EmployeesGroupsDetailsScreenState
       return BackgroundBase(
         true,
         appBar: CustomAppBar(
-//                  title: Text("Group Details"),
           title: employeesIdsToDeleteOnGroup.length == 0
               ? Text("Group Details")
               : Text(
                   "${employeesIdsToDeleteOnGroup.length} Employees Selected"),
           onTap: () {
+            employeesStateModel.tempEmployees.clear();
             Navigator.pop(context);
           },
           actions: <Widget>[
@@ -78,8 +98,6 @@ class _EmployeesGroupsDetailsScreenState
                     stream: employeesStateModel.group,
                     builder: (context, snapshot) {
                       return RawMaterialButton(
-                        constraints: BoxConstraints(),
-                        padding: EdgeInsets.all(10),
                         child: Text(
                           'Save',
                           style: TextStyle(
@@ -91,208 +109,200 @@ class _EmployeesGroupsDetailsScreenState
                         onPressed: () {
                           if (snapshot.hasData) {
                             print("data can be send");
-//                                _createNewGroup(globalStateModel,
-//                                    employeesStateModel, context);
+                            _saveGroup(context, employeesStateModel);
                           } else {
                             print("The data can't be send");
                           }
                         },
                       );
-                    })
+                    },
+                  )
                 : RawMaterialButton(
                     constraints: BoxConstraints(),
                     padding: EdgeInsets.all(10),
                     child: Icon(Icons.delete),
                     onPressed: () {
                       _deleteEmployeesFromGroupConfirmation(
-                          context, employeesStateModel);
+                        context,
+                        employeesStateModel,
+                      );
                     },
                   ),
           ],
         ),
         body: SafeArea(
           child: Container(
-            padding: EdgeInsets.only(
-                top: Measurements.width * 0.01,
-//                      right: Measurements.width * 0.01,
-//                      left: Measurements.width * 0.01,
-                bottom: Measurements.width * 0.001),
             child: Column(
-//                      mainAxisSize: MainAxisSize.max,
               children: <Widget>[
                 Container(
-                  alignment: Alignment.centerLeft,
-                  height: Measurements.width * (_isTablet ? 0.13 : 0.18),
-                  padding: EdgeInsets.symmetric(
-                      horizontal: Measurements.width * 0.02),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(10.0),
-                          topRight: Radius.circular(10.0)),
-                      color: Colors.black.withOpacity(0.5)),
+                  color: Colors.white.withOpacity(0.05),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-//                            Column(
-//                              crossAxisAlignment: CrossAxisAlignment.start,
-//                              mainAxisAlignment: MainAxisAlignment.center,
-//                              children: <Widget>[
-//                                Text(
-//                                  "Group Name",
-//                                  style: TextStyle(
-//                                    color: Colors.white.withOpacity(0.5),
-//                                    fontSize: 16,
-//                                  ),
-//                                ),
-//                                Text(
-//                                  widget.businessEmployeesGroups.name,
-//                                  style: TextStyle(
-//                                    color: Colors.white,
-//                                    fontSize: 18,
-//                                  ),
-//                                ),
-//                              ],
-//                            ),
-
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        height: Measurements.width * 0.18,
-                        padding: EdgeInsets.symmetric(
-                            horizontal: Measurements.width * 0.02),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(10.0),
-                              topRight: Radius.circular(10.0)),
-//                                  color: Colors.black.withOpacity(0.5)
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                StreamBuilder(
-                                    stream: employeesStateModel.group,
-                                    builder: (context, snapshot) {
-                                      return Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal:
-                                                Measurements.width * 0.025),
-                                        alignment: Alignment.center,
-                                        color: Colors.white.withOpacity(0.05),
-                                        width: Measurements.width * 0.475,
-//                                              height: Measurements.height *
-//                                                  (_isTablet ? 0.08 : 0.07),
-                                        child: TextField(
-                                          controller: _groupNameController,
-                                          onChanged:
-                                              employeesStateModel.changeGroup,
-                                          style: TextStyle(
-                                              fontSize:
-                                                  Measurements.height * 0.02),
-                                          decoration: InputDecoration(
-                                            hintText: "Group Name",
-                                            hintStyle: TextStyle(
-                                              color: snapshot.hasError
-                                                  ? Colors.red
-                                                  : Colors.white
-                                                      .withOpacity(0.5),
-                                            ),
-                                            labelText: "Group Name",
-                                            labelStyle: TextStyle(
-                                              color: snapshot.hasError
-                                                  ? Colors.red
-                                                  : Colors.grey,
-                                            ),
-                                            border: InputBorder.none,
-                                          ),
-//                                                onSaved: (firstName) {},
-                                          //  validator: (value) {
-                                          //
-                                          //  },
-                                        ),
-                                      );
-                                    }),
-                              ],
-                            ),
-                          ],
+                      Expanded(
+                        child: StreamBuilder(
+                          stream: employeesStateModel.group,
+                          builder: (context, snapshot) {
+                            return Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: Measurements.width * 0.025),
+                              alignment: Alignment.center,
+                              child: TextField(
+                                controller: _groupNameController,
+                                onChanged: employeesStateModel.changeGroup,
+                                style: TextStyle(
+                                    fontSize: 15),
+                                decoration: InputDecoration(
+                                  hintStyle: TextStyle(
+                                    color: snapshot.hasError
+                                        ? Colors.red
+                                        : Colors.white.withOpacity(0.5),
+                                  ),
+                                  labelText: "Group Name",
+                                  labelStyle: TextStyle(
+                                    color: snapshot.hasError
+                                        ? Colors.red
+                                        : Colors.grey,
+                                  ),
+                                  border: InputBorder.none,
+                                ),
+                              ),
+                            );
+                          },
                         ),
                       ),
-
-                      RawMaterialButton(
-                        padding: EdgeInsets.only(
-                            top: 10, right: 14, bottom: 10, left: 14),
-                        fillColor: Colors.white.withOpacity(0.5),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30)),
-                        child: Text("Add Employee"),
-                        onPressed: () {
-//                          Navigator.push(
-//                              context,
-//                              PageTransition(
-//                                child: ProxyProvider<EmployeesApi,
-//                                    EmployeesStateModel>(
-//                                  builder: (context, api, employeesState) =>
-//                                      EmployeesStateModel(
-//                                          globalStateModel, api),
-//                                  child: EmployeesSelectionsListScreen(
-////                                                employeesList: widget
-////                                                    .businessEmployeesGroups
-////                                                    .employees,
-//                                      employeesList: employeesListOnGroup,
-//                                      groupId:
-//                                          widget.businessEmployeesGroups.id),
-//                                ),
-//                                type: PageTransitionType.fade,
-//                              ));
-                        },
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: RawMaterialButton(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 12.5, vertical: 5),
+                          constraints: BoxConstraints(),
+                          fillColor: Colors.white.withOpacity(0.2),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          elevation: 0,
+                          textStyle: TextStyle(fontSize: 12),
+                          child: Text(
+                            "Add Employee",
+                          ),
+                          onPressed: () {
+                            print("Click");
+                            Navigator.of(context).push(
+                              PageTransition(
+                                child: AddEmployeePopUp(
+                                  businessEmployeesGroups:
+                                      widget.businessEmployeesGroups,
+                                  employeesStateModel: employeesStateModel,
+                                ),
+                                type: PageTransitionType.fade,
+                              ),
+                            );
+                          },
+                        ),
                       ),
                     ],
                   ),
                 ),
-//                Expanded(
-//                  child: EmployeesGroupComponent(
-//                    businessEmployeesGroups: widget.businessEmployeesGroups,
-//                    employeesToDelete: (List<String> employees) {
-//                      print("employees: $employees");
-//                      setState(() {
-//                        employeesIdsToDeleteOnGroup = employees;
-//                      });
-//                      print(
-//                          "employeesIdsToDeleteOnGroup::: $employeesIdsToDeleteOnGroup");
-//                    },
-//                    employeesListOnGroup: (List<String> employees) {
-//                      employeesListOnGroup = employees;
-//                    },
-//                    openedRow: openedRow,
-//                  ),
-//                ),
-
-//                        InkWell(
-//                          child: Container(
-////                          width: Measurements.width * 0.99,
-//                            height:
-//                                Measurements.height * (_isTablet ? 0.05 : 0.07),
-////                                height: Measurements.width * 0.15,
-//                            padding: EdgeInsets.symmetric(
-//                                horizontal: Measurements.width * 0.02),
-//                            decoration: BoxDecoration(
-//                                borderRadius: BorderRadius.only(
-//                                    bottomLeft: Radius.circular(10.0),
-//                                    bottomRight: Radius.circular(10.0)),
-//                                color: Colors.black.withOpacity(0.5)),
-//                            child: Center(
-//                                child: Text(
-//                              "Delete Group",
-//                              style: TextStyle(color: Colors.white, fontSize: 19),
-//                            )),
-//                          ),
-//                          onTap: () {
-//                            _deleteGroupConfirmation(
-//                                context, employeesStateModel);
-//                          },
-//                        ),
+                Center(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(20),
+                      ),
+                    ),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 30,
+                      vertical: 10,
+                    ),
+                    child: TabBar(
+                      controller: tabController,
+                      indicatorColor: Colors.white.withOpacity(0),
+                      labelColor: Colors.white,
+                      labelPadding: EdgeInsets.all(1),
+                      unselectedLabelColor: Colors.white,
+                      isScrollable: false,
+                      tabs: <Widget>[
+                        Container(
+                          child: Tab(
+                            child: Container(
+                              margin: EdgeInsets.only(
+                                top: 5,
+                                bottom: 5,
+                                left: 25,
+                              ),
+                              decoration: BoxDecoration(
+                                color: _currentIndex == 0
+                                    ? Colors.white.withOpacity(0.3)
+                                    : Colors.white.withOpacity(0.1),
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(20),
+                                  bottomLeft: Radius.circular(20),
+                                ),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Employees',
+                                  style: TextStyle(fontSize: 17),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          child: Tab(
+                            child: Container(
+                              margin: EdgeInsets.only(
+                                top: 5,
+                                bottom: 5,
+                                right: 25,
+                              ),
+                              decoration: BoxDecoration(
+                                color: _currentIndex == 1
+                                    ? Colors.white.withOpacity(0.3)
+                                    : Colors.white.withOpacity(0.1),
+                                borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(20),
+                                  bottomRight: Radius.circular(20),
+                                ),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Access',
+                                  style: TextStyle(fontSize: 17),
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: TabBarView(
+                    physics: NeverScrollableScrollPhysics(),
+                    controller: tabController,
+                    children: <Widget>[
+                      EmployeesListView(
+                        employeesStateModel: employeesStateModel,
+                        businessEmployeesGroups: widget.businessEmployeesGroups,
+                      ),
+                      CustomFutureBuilder<List<BusinessApps>>(
+                        future: getBusinessApps(employeesStateModel),
+                        errorMessage: "Error loading apps access",
+                        onDataLoaded: (List results) {
+                          return CustomAppsAccessExpansionTile(
+                            employeesStateModel: employeesStateModel,
+                            businessApps: results,
+                            isNewEmployeeOrGroup: true,
+                            scrollable: true,
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                )
               ],
             ),
           ),
@@ -301,19 +311,64 @@ class _EmployeesGroupsDetailsScreenState
     });
   }
 
+  Future<List<BusinessApps>> getBusinessApps(
+      EmployeesStateModel employeesStateModel) async {
+    List<BusinessApps> businessApps = List<BusinessApps>();
+    var apps = await employeesStateModel.getAppsBusinessInfo();
+    for (var app in apps) {
+      var appData = BusinessApps.fromMap(app);
+      if (appData.dashboardInfo.title != null) {
+        Map _temp;
+        try {
+          _temp = widget.businessEmployeesGroups.acls
+              .where((_acl) => appData.code == _acl.aclData["microservice"])
+              .first
+              .aclData;
+        } catch (onError) {
+          _temp = {
+            "create": false,
+            "read": false,
+            "update": false,
+            "delete": false
+          };
+        }
+
+        if (appData.allowedAcls.create != null) {
+          appData.allowedAcls.create = _temp["create"];
+        }
+        if (appData.allowedAcls.read != null) {
+          appData.allowedAcls.read = _temp["read"];
+        }
+        if (appData.allowedAcls.update != null) {
+          appData.allowedAcls.update = _temp["update"];
+        }
+        if (appData.allowedAcls.delete != null) {
+          appData.allowedAcls.delete = _temp["delete"];
+        }
+        businessApps.add(appData);
+      }
+    }
+
+    employeesStateModel.updateBusinessApps(businessApps);
+
+    print("businessApps: $businessApps");
+
+    return businessApps;
+  }
+
   void _deleteEmployeesFromGroupConfirmation(
       BuildContext context, EmployeesStateModel employeesStateModel) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        // return object of type Dialog
         return CustomAlertDialog(
-            title: "Delete this employees from group",
-            message: "Are you sure that you want to delete this employees?",
-            onContinuePressed: () {
-              Navigator.of(_formKey.currentContext).pop();
-              return _deleteEmployeesFromGroup(employeesStateModel);
-            });
+          title: "Delete this employees from group",
+          message: "Are you sure that you want to delete this employees?",
+          onContinuePressed: () {
+            Navigator.of(_formKey.currentContext).pop();
+            return _deleteEmployeesFromGroup(employeesStateModel);
+          },
+        );
       },
     );
   }
@@ -324,11 +379,72 @@ class _EmployeesGroupsDetailsScreenState
     await employeesStateModel.deleteEmployeesFromGroup(
         widget.businessEmployeesGroups.id, data);
 
-    setState(() {
-      employeesIdsToDeleteOnGroup = [];
-      print("Emmployees Deleted");
-    });
+    setState(
+      () {
+        employeesIdsToDeleteOnGroup = [];
+        print("Emmployees Deleted");
+      },
+    );
+  }
 
-//    Navigator.of(_formKey.currentContext).pop();
+  void _saveGroup(
+    BuildContext context,
+    EmployeesStateModel employeesStateModel,
+  ) {
+    _savegroup(employeesStateModel, context);
+  }
+
+  _savegroup(
+      EmployeesStateModel employeesStateModel, BuildContext _context) async {
+    employeesStateModel.businessApps;
+    List<Map<String, dynamic>> _data = List();
+    for (var app in employeesStateModel.businessApps) {
+      _data.add(
+        {
+          "microservice": app.code,
+          "create": app.allowedAcls.create,
+          "delete": app.allowedAcls.delete,
+          "read": app.allowedAcls.read,
+          "update": app.allowedAcls.update,
+        },
+      );
+    }
+    var data = {
+      "name": _groupNameController.text,
+      "acls": _data,
+    };
+    try {
+      if (_groupNameController.text != widget.businessEmployeesGroups.name) {
+        int count = await employeesStateModel.getGroupCount(
+            data, _groupNameController.text) as int;
+        if (count > 0) throw Error();
+      }
+      await employeesStateModel.patchGroup(
+        data,
+        widget.businessEmployeesGroups.id,
+      );
+      Navigator.of(_context).pop();
+    } catch (onError) {
+      Scaffold.of(_context).showSnackBar(SnackBar(
+        content: Text(
+          "Error while updating the group.",
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Color(0xff262726),
+        behavior: SnackBarBehavior.floating,
+      ));
+    }
+  }
+}
+
+class EmployeeList extends StatefulWidget {
+  @override
+  _EmployeeListState createState() => _EmployeeListState();
+}
+
+class _EmployeeListState extends State<EmployeeList> {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
   }
 }

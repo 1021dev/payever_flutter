@@ -32,7 +32,6 @@ ValueNotifier<GraphQLClient> clientForProduct({
           inactivityTimeout: Duration(seconds: 30),
         ),
         url: uri);
-    print(webSocketLink);
     final AuthLink authLink = AuthLink(
       getToken: () => 'Bearer ${GlobalUtils.activeToken.accessToken}',
     );
@@ -520,7 +519,7 @@ class ProductLoader extends StatefulWidget {
                     filterById:[]
                     search:"${parts.searchDocument}",
                     filters:[]
-                  ){    products {      images      id      title      description      onSales      price      salePrice      sku      barcode      currency      type      active      categories {        title      }      variants {        id        images        options {          name          value        }        description        onSales        price        salePrice        sku        barcode      }      channelSets {        id        type        name      }      shipping {        free        general        weight        width        length        height      }    }    info {      pagination {        page        page_count        per_page        item_count      }    }  }}
+                  ){    products {      images      id      title      description      onSales      price      salePrice  vatRate    sku      barcode      currency      type      active      categories {        title      }      variants {        id        images        options {          name          value        }        description        onSales        price        salePrice        sku        barcode      }      channelSets {        id        type        name      }      shipping {        free        general        weight        width        length        height      }    }    info {      pagination {        page        page_count        per_page        item_count      }    }  }}
               ''';
   }
 
@@ -553,7 +552,11 @@ class _ProductLoaderState extends State<ProductLoader> {
               {VoidCallback refetch, fetchMore: null}) {
             if (result.errors != null) {
               print(result.errors);
-              return Center(child: Text("Error while fetching data"));
+              return Center(
+                child: Text(
+                  "Error while fetching data",
+                ),
+              );
             }
             if (result.loading) {
               return Center(

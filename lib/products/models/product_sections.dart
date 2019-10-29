@@ -90,7 +90,7 @@ class ProductSections {
       product.type == ProductTypeEnum.physical ?ShippingBody():NoShipping(),
     );
     addBody(
-      ProductTaxRow(parts: null),
+      ProductTaxRow(),
     );
     // addBody(
     //   ProductVisibility(),

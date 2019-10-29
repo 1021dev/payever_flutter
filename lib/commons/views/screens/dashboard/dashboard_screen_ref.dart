@@ -123,17 +123,21 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget>
       bottomNav: BottomNavigationBar(
         items: _navigationViews
             .map<BottomNavigationBarItem>(
-                (NavigationIconView navigationView) => navigationView.item)
+              (NavigationIconView navigationView) => navigationView.item,
+            )
             .toList(),
         currentIndex: _currentIndex,
         type: BottomNavigationBarType.fixed,
         elevation: 0,
         backgroundColor: Colors.black.withOpacity(0.3),
+        // backgroundColor: Colors.transparent,
         onTap: (int index) {
-          setState(() {
-            _currentIndex = index;
-            _controller.index = _currentIndex;
-          });
+          setState(
+            () {
+              _currentIndex = index;
+              _controller.index = _currentIndex;
+            },
+          );
         },
       ),
     );

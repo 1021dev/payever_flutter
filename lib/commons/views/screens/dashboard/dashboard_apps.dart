@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:payever/settings/settings.dart';
 import 'package:provider/provider.dart';
 
 import '../../../view_models/view_models.dart';
@@ -31,7 +32,7 @@ class _DashboardAppsState extends State<DashboardApps> {
     "transactions",
     "pos",
     "products",
-    // "settings",
+    "settings",
   ];
 
   @override
@@ -42,10 +43,12 @@ class _DashboardAppsState extends State<DashboardApps> {
 
     List<Widget> _apps = List();
     dashboardStateModel = Provider.of<DashboardStateModel>(context);
-    dashboardStateModel.currentWidgets.forEach((wid) {
-      // if(widget._availableApps.contains(wid.type) && wid.type != "settings")
-      if (_availableApps.contains(wid.type)) _apps.add(AppView(wid));
-    });
+    dashboardStateModel.currentWidgets.forEach(
+      (wid) {
+        // if(widget._availableApps.contains(wid.type) && wid.type != "settings")
+        if (_availableApps.contains(wid.type)) _apps.add(AppView(wid));
+      },
+    );
     return SafeArea(
       child: Padding(
         padding: EdgeInsets.only(top: 25),
@@ -83,7 +86,7 @@ class _AppViewState extends State<AppView> {
 
   @override
   Widget build(BuildContext context) {
-    print(_isLoading);
+    // print(_isLoading);
     globalStateModel = Provider.of<GlobalStateModel>(context);
     dashboardStateModel = Provider.of<DashboardStateModel>(context);
     return Column(
@@ -134,7 +137,7 @@ class _AppViewState extends State<AppView> {
                 setState(() {
                   _isLoading = false;
                 });
-                print("Settings loaded");
+                // print("Settings loaded");
                 break;
               default:
             }
@@ -178,9 +181,11 @@ class _AppViewState extends State<AppView> {
   }
 
   Future<void> loadPOS() {
-    setState(() {
-      _isLoading = false;
-    });
+    setState(
+      () {
+        _isLoading = false;
+      },
+    );
 //    return Navigator.push(
 //        context,
 //        PageTransition(
@@ -190,17 +195,21 @@ class _AppViewState extends State<AppView> {
 //            type: PageTransitionType.fade,duration: Duration(milliseconds: 50)));
 
     return Navigator.push(
-        context,
-        PageTransition(
-            child: ChangeNotifierProvider<PosStateModel>(
-              builder: (BuildContext context) =>
-                  PosStateModel(globalStateModel, PosApi()),
-              child: PosProductsListScreen(
-                  terminal: dashboardStateModel.activeTerminal,
-                  business: globalStateModel.currentBusiness),
-            ),
-            type: PageTransitionType.fade,
-            duration: Duration(milliseconds: 50)));
+      context,
+      PageTransition(
+        child: ChangeNotifierProvider<PosStateModel>(
+          builder: (BuildContext context) =>
+              PosStateModel(globalStateModel, PosApi()),
+          child: PosProductsListScreen(
+              terminal: dashboardStateModel.activeTerminal,
+              business: globalStateModel.currentBusiness),
+        ),
+        type: PageTransitionType.fade,
+        duration: Duration(
+          milliseconds: 50,
+        ),
+      ),
+    );
   }
 
   void loadSettings() {
@@ -208,13 +217,21 @@ class _AppViewState extends State<AppView> {
       _isLoading = false;
     });
 
-//     Navigator.push(
-//       context,
-//       PageTransition(
-// //          child: SettingsScreen(),
-//         child: EmployeesScreen(),
-//         type: PageTransitionType.fade,
-//       ),
-//     );
+    Navigator.push(
+      context,
+      PageTransition(
+        /// *** to settings drawer
+         child: SettingsScreen(),
+        /// ***
+        /// Directly to the Employee screen
+        // child: ChangeNotifierProvider<EmployeesStateModel>(
+        //   builder: (BuildContext context) =>
+        //       EmployeesStateModel(globalStateModel, SettingsApi()),
+        //   child: EmployeesScreen(),
+        // ),
+        // child: EmployeesScreen(),
+        type: PageTransitionType.fade,
+      ),
+    );
   }
 }

@@ -12,6 +12,8 @@ class Business {
   CompanyAddress _companyAddress;
   CompanyDetails _companyDetails;
   ContactDetails _contactDetails;
+  String _primaryColor;
+  String _secondaryColor;
 
   Business.map(dynamic obj) {
     this._id = obj[GlobalUtils.DB_BUSINESS_ID];
@@ -22,6 +24,8 @@ class Business {
     this._active = obj[GlobalUtils.DB_BUSINESS_ACTIVE];
     this._currency = obj[GlobalUtils.DB_BUSINESS_CURRENCY];
     this._name = obj[GlobalUtils.DB_BUSINESS_NAME];
+    this._primaryColor = obj[GlobalUtils.DB_BUSINESS_PRIMARYCOLOR];
+    this._secondaryColor = obj[GlobalUtils.DB_BUSINESS_SECONDARYCOLOR];
 
     this._companyAddress =
         CompanyAddress.map(obj[GlobalUtils.DB_BUSINESS_COMPANY_ADDRESS]);
@@ -46,6 +50,10 @@ class Business {
   String get currency => _currency;
 
   String get name => _name;
+
+  String get primaryColor => _primaryColor;
+  
+  String get secondaryColor => _secondaryColor;
 
   CompanyAddress get companyAddress => _companyAddress;
 

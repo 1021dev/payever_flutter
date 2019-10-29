@@ -302,7 +302,6 @@ class Usages {
     });
 
     dynamic temStat = obj[GlobalUtils.DB_TRANSACTIONS_U_STATUS];
-    print(temStat);
 
     temSpec.forEach((_histories) {
       _statuses.add(Statuses.toMap(_histories));
@@ -368,8 +367,8 @@ class TransactionDetails {
       });
     }
 
-    billingAddress =
-        TDBillingAddress.toMap(obj[GlobalUtils.DB_TRANS_DETAIL_BILLING_ADDRESS]);
+    billingAddress = TDBillingAddress.toMap(
+        obj[GlobalUtils.DB_TRANS_DETAIL_BILLING_ADDRESS]);
     business = TDBusiness.toMap(obj[GlobalUtils.DB_TRANS_DETAIL_BUSINESS]);
     cart = CartItems.toMap(obj[GlobalUtils.DB_TRANS_DETAIL_CART]);
     channel = TDChannel.toMap(obj[GlobalUtils.DB_TRANS_DETAIL_CHANNEL]);
@@ -542,9 +541,11 @@ class TDDetails {
     reference = obj[GlobalUtils.DB_TRANS_DETAIL_ORDER]
         [GlobalUtils.DB_TRANS_DETAIL_OR_REFERENCE];
     if (obj[GlobalUtils.DB_TRANS_DETAIL_OR__IBAN] != null) {
-      iban = obj[GlobalUtils.DB_TRANS_DETAIL_OR__IBAN];
+      iban = obj[GlobalUtils.DB_TRANS_DETAIL_ORDER]
+          [GlobalUtils.DB_TRANS_DETAIL_OR__IBAN];
     } else {
-      iban = obj[GlobalUtils.DB_TRANS_DETAIL_OR_IBAN];
+      iban = obj[GlobalUtils.DB_TRANS_DETAIL_ORDER]
+          [GlobalUtils.DB_TRANS_DETAIL_OR_IBAN];
     }
   }
 }
@@ -606,10 +607,17 @@ class PaymentOption {
 class ShippingOption {
   String methodName;
   num deliveryFee;
+  BillingAddress shippingAddress;
 
   ShippingOption.toMap(dynamic obj) {
     methodName = obj[GlobalUtils.DB_TRANS_DETAIL_SHIPPING_METHOD];
     deliveryFee = obj[GlobalUtils.DB_TRANS_DETAIL_SHIPPING_FEE];
+    if (obj[GlobalUtils.DB_TRANS_DETAIL_SHIPPING_ADDRESS] != null) {
+
+      shippingAddress = BillingAddress.toMap(
+        obj[GlobalUtils.DB_TRANS_DETAIL_SHIPPING_ADDRESS],
+      );
+    }
   }
 }
 

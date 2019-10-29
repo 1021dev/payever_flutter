@@ -1,6 +1,8 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:payever/commons/views/custom_elements/appbar_avatar.dart';
+import 'package:payever/settings/views/settings_drawer.dart';
 import 'package:provider/provider.dart';
 
 import '../view_models/view_models.dart';
@@ -32,47 +34,47 @@ class _SettingsScreenState extends State<SettingsScreen> {
       builder: (BuildContext context, Orientation orientation) {
         return BackgroundBase(
           true,
-          appBar: CustomAppBar(
+          appBar: AppBar(
             title: Text("Settings"),
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ),
-          body: Center(
-            child: Padding(
-              padding: EdgeInsets.all(10),
-              child: SizedBox(
-                width: Measurements.width,
-                child: Card(
-                    elevation: 1,
-                    color: Colors.grey.withOpacity(0.2),
-                    shape: RoundedRectangleBorder(
-                      side: BorderSide(
-                          color: Colors.grey.withOpacity(0.2), width: 1.0),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.all(20),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Text(
-                            "Business Name:",
-                            style: TextStyle(
-                                fontSize: 24,
-                                color: Colors.grey.withOpacity(1)),
-                          ),
-                          Text(
-                            globalStateModel.currentBusiness != null
-                                ? globalStateModel.currentBusiness.name
-                                : "",
-                            style: TextStyle(fontSize: 20, color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    )),
-              ),
+            backgroundColor: Colors.transparent,
+            centerTitle: true,
+            elevation: 0,
+            leading: IconButton(
+              icon: Icon(Icons.close),
+              onPressed: () => Navigator.pop(context),
             ),
+          ),
+          body: Column(
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.all(15),
+                child: Row(
+                  // mainAxisAlignment: MainAxisAlignment.center, 
+                  children: <Widget>[
+                    AppBarAvatar(),
+                    SizedBox(width: 10,),
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        // Text(
+                        //   "Business Name:",
+                        //   style: TextStyle(
+                        //       fontSize: 24, color: Colors.grey.withOpacity(1)),
+                        // ),
+                        Text(
+                          globalStateModel.currentBusiness != null
+                              ? globalStateModel.currentBusiness.name
+                              : "",
+                          style: TextStyle(fontSize: 20, color: Colors.white),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Divider(height: 0,thickness: 1,),
+              SettingsDrawer(globalStateModel: globalStateModel,),
+            ],
           ),
         );
       },

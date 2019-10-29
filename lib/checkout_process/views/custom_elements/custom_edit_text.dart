@@ -14,7 +14,7 @@ class EmailTextField extends StatefulWidget {
   TextEditingController controller = TextEditingController();
   CheckoutProcessStateModel provider;
   bool top;
-  EmailTextField(this.notifier, this.top);
+  EmailTextField(this.notifier, this.top, {this.provider});
   bool error = false;
   @override
   _EmailTextFieldState createState() => _EmailTextFieldState();
@@ -25,9 +25,13 @@ class _EmailTextFieldState extends State<EmailTextField> {
   Color colorError = Colors.red;
   @override
   Widget build(BuildContext context) {
-    CheckoutProcessStateModel checkoutProcessStateModel =
-        Provider.of<CheckoutProcessStateModel>(context);
-
+    CheckoutProcessStateModel checkoutProcessStateModel;
+    if (widget.provider == null) {
+      checkoutProcessStateModel =
+          Provider.of<CheckoutProcessStateModel>(context);
+    } else {
+      checkoutProcessStateModel = widget.provider;
+    }
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: 10,

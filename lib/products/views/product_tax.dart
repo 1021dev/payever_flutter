@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-
-import '../utils/utils.dart';
-import 'new_product.dart';
+import 'package:payever/checkout_process/checkout_process.dart';
+import 'package:payever/checkout_process/view_models/view_models.dart';
+import '../../commons/views/custom_elements/custom_elements.dart';
+import 'package:provider/provider.dart';
 
 class ProductTaxRow extends StatefulWidget {
-  final NewProductScreenParts parts;
-
-  ProductTaxRow({@required this.parts});
-
+  ProductTaxRow();
   @override
   createState() => _ProductTaxRowState();
 }
@@ -15,6 +13,21 @@ class ProductTaxRow extends StatefulWidget {
 class _ProductTaxRowState extends State<ProductTaxRow> {
   @override
   Widget build(BuildContext context) {
+    GlobalStateModel globalProvider = Provider.of<GlobalStateModel>(context);
+    ProductStateModel productProvider = Provider.of<ProductStateModel>(context);
+    List<String> rates = List();
+    String selectedRate = "";
+    globalProvider.vatRates.forEach(
+      (rate) {
+        rates.add("${rate.description} - ${rate.rate} %");
+      },
+    );
+    if (globalProvider.vatRates.isNotEmpty) {
+      int index = globalProvider.vatRates.indexWhere(
+        (r) => r.rate == productProvider.editProduct.vatRate,
+      );
+      selectedRate = rates[index < 0 ? 0 : index];
+    }
     return Expanded(
       child: Container(
         child: Container(
@@ -23,22 +36,27 @@ class _ProductTaxRowState extends State<ProductTaxRow> {
             borderRadius: BorderRadius.circular(8),
           ),
           child: Container(
-              // padding:
-              //     EdgeInsets.symmetric(horizontal: Measurements.width * 0.025),
-              // alignment: Alignment.center,
-              // height:
-              //     Measurements.height * (widget.parts.isTablet ? 0.05 : 0.07),
-              child: PopupMenuButton(
-                padding: EdgeInsets.zero,
-                child: ListTile(
-                  title: Text(
-                    'Default taxes apply',
-                    // style: TextStyle(fontSize: AppStyle.fontSizeTabContent()),
-                  ),
-                ),
-                itemBuilder: (BuildContext context) =>
-                    <PopupMenuItem<String>>[],
-              )),
+            height: 59,
+            child: DropDownMenu(
+              customColor: false,
+              backgroundColor: Colors.transparent,
+              optionsList: rates,
+              placeHolderText: globalProvider.vatRates.isEmpty
+                  ? "Default taxes apply"
+                  : selectedRate,
+              onChangeSelection: (value, index) {
+                if (globalProvider.vatRates.isNotEmpty) {
+                  selectedRate = value;
+                  setState(
+                    () {
+                      productProvider.editProduct.vatRate =
+                          globalProvider.vatRates[index].rate;
+                    },
+                  );
+                }
+              },
+            ),
+          ),
         ),
       ),
     );

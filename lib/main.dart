@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:payever/pos/view_models/view_models.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
-
 
 import 'commons/view_models/view_models.dart';
 import 'commons/views/screens/screens.dart';
 import 'commons/utils/utils.dart';
 import 'commons/network/network.dart';
+import 'pos/network/pos_api.dart';
 
 void main() {
   Provider.debugCheckInvalidValueType = null;
@@ -27,6 +28,7 @@ ThemeData _buildPayeverTheme() {
   final ThemeData base = ThemeData.dark();
   return base.copyWith(
     splashColor: Colors.transparent,
+    highlightColor: Colors.transparent,
     primaryColor: const Color(0xFFFFFFFF),
     accentColor: const Color(0xFFFFFFFF),
     buttonColor: const Color(0xFFFFFFFF),
@@ -70,18 +72,19 @@ class _MyAppState extends State<MyApp> {
             builder: (BuildContext context) => PosCartStateModel()),
         ChangeNotifierProvider<ProductStateModel>(
             builder: (BuildContext context) => ProductStateModel()),
+        ChangeNotifierProvider<PosStateModel>(
+            builder: (BuildContext context) => PosStateModel(globalStateModel,PosApi())),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         debugShowMaterialGrid: false,
-        
         title: 'payever',
         theme: _payeverTheme,
         routes: {
 //            '/dashboard': (context) => DashboardMidScreen(wallpaper),
         },
         home: _loadCredentials.value
-            ? Center(child:CircularProgressIndicator())
+            ? Center(child: CircularProgressIndicator())
             : _haveCredentials ? DashboardMidScreen(wallpaper) : LoginScreen(),
       ),
     );

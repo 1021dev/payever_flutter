@@ -710,30 +710,37 @@ class _ProductCardState extends State<ProductCard> {
             ? 3
             : 1;
     for (int i = 0; i < long; i++) {
-      topSales.add(ProductItem(
+      topSales.add(
+        ProductItem(
           widget._parts.terminals[widget._parts.index.value].bestSales[i]
               .thumbnail,
           widget._parts.terminals[widget._parts.index.value].bestSales[i],
           size,
-          widget._parts._isTablet));
+          widget._parts._isTablet,
+        ),
+      );
     }
     return Container(
       padding: EdgeInsets.only(top: Measurements.width * 0.01),
       child: Row(
         children: <Widget>[
           Container(
-              width: Measurements.width * 0.3,
-              child: Text(
-                "${widget._parts.numberFilter(widget._parts.terminals[widget._parts.index.value].lastWeekAmount.toDouble(), false)} ${Measurements.currency(widget._parts.terminals[widget.index].lastWeek[0].currency)}",
-                style: TextStyle(fontSize: 20),
-              )),
+            width: Measurements.width * 0.3,
+            child: Text(
+              "${widget._parts.numberFilter(widget._parts.terminals[widget._parts.index.value].lastWeekAmount.toDouble(), false)} ${Measurements.currency(widget._parts.terminals[widget.index].lastWeek[0].currency)}",
+              style: TextStyle(
+                fontSize: 20,
+              ),
+            ),
+          ),
           Container(
             child: Expanded(
               child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: topSales),
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: topSales,
+              ),
             ),
           ),
         ],
@@ -820,9 +827,7 @@ class _SimplifyTerminalState extends State<SimplifyTerminal> {
           });
           noTerminals = _terminals.isEmpty;
           dashboardStateModel.setTerminalList(_terminals);
-          setState(() {
-
-          });
+          setState(() {});
         });
       } else {
         _terminals = dashboardStateModel.terminalList;
@@ -845,8 +850,7 @@ class _SimplifyTerminalState extends State<SimplifyTerminal> {
       widget._imageProvider,
       noTerminals
           ? NoItemsCard(
-              Text(Language.getWidgetStrings("widgets.pos.install-app")), () {
-            })
+              Text(Language.getWidgetStrings("widgets.pos.install-app")), () {})
           : _terminals.isNotEmpty
               ? _terminalList[0]
               : Center(child: CircularProgressIndicator()),
@@ -891,17 +895,15 @@ class SimpleTerminal extends StatelessWidget {
         onTap: () {
 //          Navigator.push(context, PageTransition(child:NativePosScreen(terminal:currentTerminal,business:Provider.of<GlobalStateModel>(context).currentBusiness),type:PageTransitionType.fade));
           Navigator.push(
-              context,
-              PageTransition(
-                  child: ChangeNotifierProvider<PosStateModel>(
-                    builder: (BuildContext context) =>
-                        PosStateModel(globalStateModel, PosApi()),
-                    child: PosProductsListScreen(
-                        terminal: currentTerminal,
-                        business: globalStateModel.currentBusiness),
-                  ),
-                  type: PageTransitionType.fade,
-                  duration: Duration(milliseconds: 50)));
+            context,
+            PageTransition(
+              child: PosProductsListScreen(
+                  terminal: currentTerminal,
+                  business: globalStateModel.currentBusiness),
+              type: PageTransitionType.fade,
+              duration: Duration(milliseconds: 50),
+            ),
+          );
         },
       ),
     );

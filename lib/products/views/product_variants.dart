@@ -4,7 +4,7 @@ import 'dart:ui';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/material.dart' as prefix0;
+
 import 'package:flutter/services.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -20,7 +20,6 @@ import '../../commons/views/custom_elements/custom_elements.dart';
 import '../models/models.dart';
 import '../network/network.dart';
 import '../utils/utils.dart';
-import 'product_inventory.dart';
 import 'new_product.dart';
 
 class ProductVariantsRow extends StatefulWidget {
@@ -229,7 +228,6 @@ class _VariantPopUpState extends State<VariantPopUp> {
           .then((obj) {
         InventoryModel inventory = InventoryModel.toMap(obj);
         _inventoryModel = inventory;
-        print(_inventoryModel);
         inv = inventory.stock;
         originalStock = inventory.stock;
         trackInv = inventory.isTrackable;
@@ -325,10 +323,10 @@ class _VariantPopUpState extends State<VariantPopUp> {
                           content: Text("Sku already exist"),
                         ));
                       }).catchError((onError) {
-                        print(onError);
+                        // print(onError);
                         currentVariant.images = variantImages;
                         widget.parts.product.variants.add(currentVariant);
-                        print("inventory Stock $amount");
+                        // print("inventory Stock $amount");
                         widget.parts.invManager.addInventory(Inventory(
                             hiddenIndex: 0,
                             newAmount: amount,
@@ -1054,7 +1052,9 @@ class _VariantPopUpState extends State<VariantPopUp> {
               child: TextFormField(
                 style: TextStyle(fontSize: AppStyle.fontSizeTabContent()),
                 inputFormatters: [
-                  WhitelistingTextInputFormatter(RegExp("[0-9.]"))
+                  WhitelistingTextInputFormatter(
+                    RegExp("[0-9.]"),
+                  )
                 ],
                 onFieldSubmitted: (qtt) {
                   inv = num.parse(qtt ?? "0");
@@ -1073,22 +1073,26 @@ class _VariantPopUpState extends State<VariantPopUp> {
                   prefixIcon: IconButton(
                     icon: Icon(Icons.remove),
                     onPressed: () {
-                      setState(() {
-                        if (num.parse(textEditingController.text) > 0)
-                          textEditingController.text =
-                              (num.parse(textEditingController.text) - 1)
-                                  .toString();
-                      });
+                      setState(
+                        () {
+                          if (num.parse(textEditingController.text) > 0)
+                            textEditingController.text =
+                                (num.parse(textEditingController.text) - 1)
+                                    .toString();
+                        },
+                      );
                     },
                   ),
                   suffixIcon: IconButton(
                     icon: Icon(Icons.add),
                     onPressed: () {
-                      setState(() {
-                        textEditingController.text =
-                            (num.parse(textEditingController.text) + 1)
-                                .toString();
-                      });
+                      setState(
+                        () {
+                          textEditingController.text =
+                              (num.parse(textEditingController.text) + 1)
+                                  .toString();
+                        },
+                      );
                     },
                   ),
                 ),
@@ -1705,6 +1709,7 @@ class _VariantEditorState extends State<VariantEditor> {
                 );
                 if (widget.onCreate) {
                   ProductsApi api = ProductsApi();
+                  
                   api
                       .checkSKU(
                     Provider.of<GlobalStateModel>(context).currentBusiness.id,
@@ -1722,8 +1727,7 @@ class _VariantEditorState extends State<VariantEditor> {
                   ).catchError(
                     (onError) {
                       productStateModel.addInventory(widget.inventory);
-                      productStateModel.editProduct.variants
-                          .add(widget.variant);
+                    productStateModel.editProduct.variants.add(widget.variant);
                       Navigator.pop(context);
                     },
                   );
@@ -2181,6 +2185,7 @@ class _OptionItemState extends State<OptionItem> {
           topRight: widget.top,
           bottomRight: widget.bot,
           error: errorV,
+          format: FieldType.all,
           controller: TextEditingController(text: widget.option?.value ?? ""),
           onChange: (String text) {
             widget.option.value = text;

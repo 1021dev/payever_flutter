@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:payever/checkout_process/checkout_process.dart';
 import 'package:payever/checkout_process/models/payment_option.dart';
 import 'package:payever/checkout_process/views/custom_elements/checkout_section_view.dart';
+import 'package:payever/checkout_process/views/section_order_manual.dart';
+import 'package:payever/checkout_process/views/section_order_tester.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../models/flow_object.dart';
 import '../views/views.dart';
 import '../../commons/models/models.dart';
@@ -16,7 +19,8 @@ class CheckoutProcessStateModel extends ChangeNotifier {
   String get addressDescription => _addressDescription;
   setAddressDescription(String address) => _addressDescription = address;
 
-  setAddressDescriptionAuto() => _addressDescription = "${_checkoutUser.street}, ${_checkoutUser.city}, ${_checkoutUser.country}";
+  setAddressDescriptionAuto() => _addressDescription =
+      "${_checkoutUser.street}, ${_checkoutUser.city}, ${_checkoutUser.country}";
 
   CheckoutStructure _checkoutStructure;
   CheckoutStructure get checkoutStructure => _checkoutStructure;
@@ -26,7 +30,8 @@ class CheckoutProcessStateModel extends ChangeNotifier {
 
   List<CheckoutPaymentOption> _paymentOption = List();
   List<CheckoutPaymentOption> get paymentOption => _paymentOption;
-  setPaymentOption(List<CheckoutPaymentOption> paymentOption) => _paymentOption = paymentOption ;
+  setPaymentOption(List<CheckoutPaymentOption> paymentOption) =>
+      _paymentOption = paymentOption;
 
   CheckoutUser _checkoutUser = CheckoutUser();
   CheckoutUser get checkoutUser => _checkoutUser;
@@ -51,13 +56,60 @@ class CheckoutProcessStateModel extends ChangeNotifier {
         Provider.of<DashboardStateModel>(context).activeTerminal.channelSet);
   }
 
+  ValueNotifier<String> _amount = ValueNotifier("");
+  ValueNotifier<String> get amount => _amount;
+  setAmount(String amount)=> _amount.value = amount;
+
+  ValueNotifier<String> _reference = ValueNotifier("");
+  ValueNotifier<String> get reference => _reference;
+  setReference(String ref)=> _reference.value = ref;
+
   StepperController stepperController;
 
   setTabController(StepperController _stepperController) =>
       stepperController = _stepperController;
 
+  Future<String> paypalLauncher({bool isEmail, String text})  async {
+    var _ = await CheckoutProcessApi().postCheckout(
+      flowObj["id"],
+      getchannelSet,
+    );
+    _ = await CheckoutProcessApi().patchCheckoutPaymentOption(
+      flowObj["id"],
+      13,
+    );
+    var paymentUrl = await CheckoutProcessApi().postCheckoutPayment(
+      flowObj["id"],
+      13,
+    );
+    _ = await CheckoutProcessApi().postStorageSimple(
+      flowObj,
+      true,
+      true,
+      text,
+      isEmail ? "email" : "sms",
+      DateTime.now()
+          .subtract(
+            Duration(
+              hours: 2,
+            ),
+          )
+          .add(
+            Duration(minutes: 1),
+          )
+          .toIso8601String(),
+      false,
+    );
+    // print(Env.payments + paymentUrl["redirect_url"] +
+    //                     "?access_token=${GlobalUtils.activeToken.accessToken}");
+    return Env.payments + paymentUrl["redirect_url"] +
+                        "?access_token=${GlobalUtils.activeToken.accessToken}";
+  }
+
   final Map<String, Widget> sectionMap = {
-    "order": CheckoutOrderSection(),
+    // "order": CheckoutOrderSection(),
+    "order": CheckoutOrderSectionTESTER(),
+    "order_manual": CheckoutOrderSectionManual(),
     "send_to_device": CheckoutS2DeviceSection(),
     "user": CheckoutAccountSectionStart(),
     "address": CheckoutShippingSectionStart(),
@@ -95,7 +147,9 @@ class CheckoutProcessStateModel extends ChangeNotifier {
             () {
               if (cartOK.value)
                 stepperController.setIndex(
-                    sectionIndexMap["order"] + 1, checkoutProcessStateModel);
+                  sectionIndexMap["order"] + 1,
+                  checkoutProcessStateModel,
+                );
             },
           );
         break;
@@ -105,8 +159,9 @@ class CheckoutProcessStateModel extends ChangeNotifier {
             () {
               if (sendToDeviceOK.value)
                 stepperController.setIndex(
-                    sectionIndexMap["send_to_device"] + 1,
-                    checkoutProcessStateModel);
+                  sectionIndexMap["send_to_device"] + 1,
+                  checkoutProcessStateModel,
+                );
             },
           );
         break;
@@ -116,7 +171,9 @@ class CheckoutProcessStateModel extends ChangeNotifier {
             () {
               if (userOK.value)
                 stepperController.setIndex(
-                    sectionIndexMap["user"] + 1, checkoutProcessStateModel);
+                  sectionIndexMap["user"] + 1,
+                  checkoutProcessStateModel,
+                );
             },
           );
         break;
@@ -126,7 +183,9 @@ class CheckoutProcessStateModel extends ChangeNotifier {
             () {
               if (addressOK.value)
                 stepperController.setIndex(
-                    sectionIndexMap["address"] + 1, checkoutProcessStateModel);
+                  sectionIndexMap["address"] + 1,
+                  checkoutProcessStateModel,
+                );
             },
           );
         break;
@@ -167,28 +226,25 @@ class CheckoutProcessStateModel extends ChangeNotifier {
         !phone.value;
   }
 
-
-
-
   final Map<String, Widget> paymentMap = {
     "paypal": PayPalPayment(),
     "nopayment": NoPayment(),
     "pos-santander-invoice-de": SantanderInvoiceDE(),
-    "sofort":Sofort(),
+    "sofort": Sofort(),
   };
 
   Map<String, int> paymentIndexMap = Map();
 
   ValueNotifier<String> paymentActionText = ValueNotifier("");
 
-  setPaymentActionText(int index){
+  setPaymentActionText(int index) {
     paymentActionText.value = actionsText[paymentOption[index].slug];
     print("Payment Action : $paymentActionText");
   }
 
-  final Map<String,String> actionsText ={
-    "paypal":Language.getCheckoutStrings("actions.redirect_to_paypal"),
-    "pos-santander-invoice-de":"pos santander",
-    "credit-card":"card",
+  final Map<String, String> actionsText = {
+    "paypal": Language.getCheckoutStrings("actions.redirect_to_paypal"),
+    "pos-santander-invoice-de": "pos santander",
+    "credit-card": "card",
   };
 }

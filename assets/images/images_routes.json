@@ -28,6 +28,7 @@
     "sofort":               "assets/images/soforticon.svg",
     "invoice":              "assets/images/cashicon.svg",
     "cash":                 "assets/images/cashicon.svg",
+    "credit_card":          "assets/images/cardsicon.svg",
     "paymill_creditcard":   "assets/images/paymillicon.svg",
     "paymill_directdebit":  "assets/images/paymillicon.svg",
     "paypal":               "assets/images/paypalicon.svg",

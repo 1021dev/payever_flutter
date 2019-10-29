@@ -1,3 +1,5 @@
+import 'package:payever/commons/models/products_ref.dart';
+
 import 'transaction.dart';
 import '../utils/utils.dart';
 
@@ -83,7 +85,6 @@ class Terminal {
   set name(String name) => _name = name;
 
   set logo(String logo) => _logo = logo;
-
 }
 
 class ChannelSet {
@@ -184,7 +185,7 @@ class Cart {
 
   dynamic cart;
   List<CartItem> items = List();
-  num total = 0;
+  num total = 0.0;
   String id;
 
   Cart.toMap(dynamic obj) {
@@ -244,17 +245,22 @@ class CartItem {
   String sku;
   String uuid;
   bool inStock = true;
+  List<Option>options = List();
+  bool variant;
 
-  CartItem(
-      {this.id,
-      this.sku,
-      this.price,
-      this.uuid,
-      this.quantity,
-      this.identifier,
-      this.image,
-      this.name,
-      this.vat});
+  CartItem({
+    this.id,
+    this.sku,
+    this.price,
+    this.uuid,
+    this.quantity,
+    this.identifier,
+    this.image,
+    this.name,
+    this.vat,
+    this.options,
+    this.variant,
+  });
 
   CartItem.toMap(dynamic obj) {
     id = obj[GlobalUtils.DB_POS_CART_CART_ID];

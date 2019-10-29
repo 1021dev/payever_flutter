@@ -48,14 +48,16 @@ class NetworkUtil {
   }
 
   Future<dynamic> delete(String url, {Map headers, body, encoding}) {
-    return http.delete(url, headers: headers).then((http.Response response) {
-      final String res = response.body;
-      final int statusCode = response.statusCode;
-      if (statusCode < 200 || statusCode >= 400 || json == null) {
-        throw Exception("Error while fetching data");
-      }
-      return _decoder.convert(res);
-    });
+    return http.delete(url, headers: headers).then(
+      (http.Response response) {
+        final String res = response.body;
+        final int statusCode = response.statusCode;
+        if (statusCode < 200 || statusCode >= 400 || json == null) {
+          throw Exception("Error while fetching data $res");
+        }
+        return _decoder.convert(res);
+      },
+    );
   }
 
   Future<dynamic> deleteWithBody(String url, {Map headers, body, encoding}) {
@@ -73,7 +75,7 @@ class NetworkUtil {
           final String res = response.body;
           final int statusCode = response.statusCode;
           if (statusCode < 200 || statusCode >= 400 || json == null) {
-            throw Exception("Error while fetching data");
+            throw Exception("Error while fetching data $res");
           }
           return _decoder.convert(res);
         });

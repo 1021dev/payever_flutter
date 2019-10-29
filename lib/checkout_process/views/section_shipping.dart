@@ -281,7 +281,10 @@ class _CheckoutShippingSectionState extends State<CheckoutShippingSection> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Container(
-                          child: (widget.checkoutProcessStateModel.checkoutUser?.country??null) == null
+                          child: (widget.checkoutProcessStateModel.checkoutUser
+                                          ?.country ??
+                                      null) ==
+                                  null
                               ? Container()
                               : Text(
                                   Language.getCheckoutStrings(
@@ -486,7 +489,7 @@ class CustomTextFieldForm extends StatefulWidget {
   bool borderRight;
   bool borderLeft;
   BorderRadius borderRadius;
-
+  bool numeric;
   CustomTextFieldForm(
     this.label,
     this.mandatory,
@@ -502,6 +505,7 @@ class CustomTextFieldForm extends StatefulWidget {
     this.borderLeft = true,
     this.isPhone = false,
     this.bot = true,
+    this.numeric = false,
   }) {
     controller = TextEditingController(text: init);
   }
@@ -572,12 +576,26 @@ class _CustomTextFieldFormState extends State<CustomTextFieldForm> {
       ),
       child: TextField(
         inputFormatters: <TextInputFormatter>[
-          widget.isPhone
-              ? WhitelistingTextInputFormatter.digitsOnly
-              : LengthLimitingTextInputFormatter(100),
+          widget.numeric
+              ? WhitelistingTextInputFormatter(
+                  RegExp(
+                    r"^\d{1,12}\.?\d{0,2}",
+                  ),
+                )
+              : widget.isPhone
+                  ? WhitelistingTextInputFormatter.digitsOnly
+                  : BlacklistingTextInputFormatter(
+                  RegExp(
+                    GlobalUtils.RX_emoji,
+                  ),
+                ),
           widget.isPhone
               ? phoneFormatter
-              : LengthLimitingTextInputFormatter(100),
+              : BlacklistingTextInputFormatter(
+                  RegExp(
+                    GlobalUtils.RX_emoji,
+                  ),
+                ),
         ],
         controller: widget.controller,
         decoration: InputDecoration(

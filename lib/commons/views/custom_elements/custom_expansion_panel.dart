@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 const double _kPanelHeaderCollapsedHeight = 25;
 const double _kPanelHeaderExpandedHeight = 25;
 
-
 class CustomExpansionPanelList extends StatelessWidget {
   const CustomExpansionPanelList(
       {Key key,
@@ -36,13 +35,6 @@ class CustomExpansionPanelList extends StatelessWidget {
         vertical: _kPanelHeaderExpandedHeight - _kPanelHeaderCollapsedHeight);
 
     for (int index = 0; index < children.length; index += 1) {
-//      if (_isChildExpanded(index) && index != 0 && !_isChildExpanded(index - 1))
-//        items.add(new Divider(
-//          key: new _SaltedKey<BuildContext, int>(context, index * 2 - 1),
-//          height: 5,
-//          color: Colors.transparent,
-//        ));
-
       final Widget header = Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -51,9 +43,9 @@ class CustomExpansionPanelList extends StatelessWidget {
             child: new AnimatedContainer(
               duration: animationDuration,
               curve: Curves.fastOutSlowIn,
-              margin: _isChildExpanded(index)
-                  ? kExpandedEdgeInsets
-                  : EdgeInsets.zero,
+              // margin: _isChildExpanded(index)
+              //     ? kExpandedEdgeInsets
+              //     : EdgeInsets.zero,
               child: new Container(
                 child: children[index].headerBuilder(
                   context,
@@ -63,7 +55,6 @@ class CustomExpansionPanelList extends StatelessWidget {
             ),
           ),
           Container(
-            // margin: const EdgeInsetsDirectional.only(end: 8),
             child: isWithCustomIcon
                 ? MyCustomExpandIcon(
                     color: iconColor,
@@ -74,7 +65,8 @@ class CustomExpansionPanelList extends StatelessWidget {
                         expansionCallback(index, isExpanded);
                     },
                   )
-                : ExpandIcon( color: iconColor,
+                : ExpandIcon(
+                    color: iconColor,
                     isExpanded: _isChildExpanded(index),
                     padding: const EdgeInsets.all(16.0),
                     onPressed: (bool isExpanded) {
@@ -86,22 +78,12 @@ class CustomExpansionPanelList extends StatelessWidget {
         ],
       );
 
-//      double _radiusValue = _isChildExpanded(index) ? 0 : 20;
       items.add(
         Container(
           key: _SaltedKey<BuildContext, int>(context, index * 2),
           child: Material(
             color: Colors.transparent,
             elevation: 0,
-//            borderRadius: new BorderRadius.all(new Radius.circular(_radiusValue)),
-//              decoration: i == 0
-//                    ? BoxDecoration(
-//                    color: Colors.white.withOpacity(0.1),
-//              borderRadius: index == 0 ? BorderRadius.only(
-//                        topLeft: Radius.circular(_radiusValue),
-//                        topRight: Radius.circular(_radiusValue))
-//                    : BorderRadius.only(topLeft: Radius.circular(0),
-//                  topRight: Radius.circular(0)),
             child: Column(
               children: <Widget>[
                 InkWell(
@@ -238,26 +220,6 @@ class _MyCustomExpandIconState extends State<MyCustomExpandIcon>
     if (widget.onPressed != null) widget.onPressed(widget.isExpanded);
   }
 
-//  Color get _iconColor {
-//    if (widget.isExpanded && widget.expandedColor != null) {
-//      return widget.expandedColor;
-//    }
-//
-//    if (widget.color != null) {
-//      return widget.color;
-//    }
-//
-//    switch(Theme.of(context).brightness) {
-//      case Brightness.light:
-//        return Colors.black54;
-//      case Brightness.dark:
-//        return Colors.white60;
-//    }
-//
-//    assert(false);
-//    return null;
-//  }
-
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasMaterial(context));
@@ -271,8 +233,6 @@ class _MyCustomExpandIconState extends State<MyCustomExpandIcon>
     return Semantics(
       onTapHint: widget.onPressed == null ? null : onTapHint,
       child: IconButton(
-        //padding: widget.padding,
-        //color: _iconColor,
         color: widget.color,
         disabledColor: widget.disabledColor,
         onPressed: widget.onPressed == null ? null : _handlePressed,

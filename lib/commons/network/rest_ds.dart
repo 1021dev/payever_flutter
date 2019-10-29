@@ -10,7 +10,6 @@ import '../utils/utils.dart';
 
 class RestDataSource {
   NetworkUtil _netUtil = NetworkUtil();
-
   static final envUrl = GlobalUtils.commerceOsUrl + "/env.json";
   static String authBaseUrl = Env.auth;
   static String baseUrl = Env.users;
@@ -27,8 +26,7 @@ class RestDataSource {
   static String wallpaperUrl = wallpaper + '/api/business/';
   static String wallpaperUrlPer = wallpaper + '/api/personal/wallpapers';
   static String wallpaperEnd = '/wallpapers';
-  static String wallpaperAll = wallpaper +'/api/products/wallpapers';
-
+  static String wallpaperAll = wallpaper + '/api/products/wallpapers';
 
   static String widgetsUrl = widgets + "/api/business/";
   static String widgetsUrlPer = widgets + "/api/personal/widget";
@@ -54,6 +52,9 @@ class RestDataSource {
   static String popularMonth = "/popular-month";
   static String prodLastSold = "/last-sold";
   static String productRandomEnd = "/random";
+
+  static String commonsBase = Env.commons;
+  static String commonsTaxs = commonsBase + "/api/tax/list/";
 
   static String posBase = Env.pos + "/api/";
   static String posBusiness = posBase + "business/";
@@ -88,8 +89,12 @@ class RestDataSource {
   static String subtractEnd = "/subtract";
 
   static String checkoutV1 = Env.checkoutPhp + "/api/rest/v1/checkout/flow";
+  static String checkoutV1Payment =
+      Env.checkoutPhp + "/api/rest/v1/checkout/payment";
+
   static String checkoutV3 = Env.checkoutPhp + "/api/rest/v3/checkout/flow/";
-  static String checkoutBEV1 = Env.checkout  + "/api/checkout/v1/flow";
+
+  static String checkoutBEV1 = Env.checkout + "/api/checkout/v1/flow";
 
   static String employees = Env.employees;
   static String newEmployee = authBaseUrl + "/api/employees/create/";
@@ -97,8 +102,6 @@ class RestDataSource {
   static String employeesList = authBaseUrl + "/api/employees/";
   static String employeeDetails = authBaseUrl + "/api/employees/";
   static String employeeGroups = authBaseUrl + "/api/employee-groups/";
-
-
 
   Future<dynamic> getEnv() {
     print("TAG - getEnv()");
@@ -297,8 +300,7 @@ class RestDataSource {
     });
   }
 
-  Future<dynamic> getTerminal(
-      String idBusiness, String token) {
+  Future<dynamic> getTerminal(String idBusiness, String token) {
     print("TAG - geTerminal()");
     var headers = {
       HttpHeaders.authorizationHeader: "Bearer $token",
@@ -495,9 +497,25 @@ class RestDataSource {
       HttpHeaders.contentTypeHeader: "application/json",
       HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
     };
-    return _netUtil.get(RestDataSource.wallpaperAll, headers: headers).then((dynamic res) {
+    return _netUtil
+        .get(RestDataSource.wallpaperAll, headers: headers)
+        .then((dynamic res) {
       return res;
     });
   }
 
+  Future<dynamic> getVats(String country) {
+    print("TAG - getVats()");
+    String token = GlobalUtils.activeToken.accessToken;
+    var headers = {
+      HttpHeaders.authorizationHeader: "Bearer $token",
+      HttpHeaders.contentTypeHeader: "application/json",
+      HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+    };
+    return _netUtil
+        .get(commonsTaxs + country, headers: headers)
+        .then((dynamic result) {
+      return result;
+    });
+  }
 }

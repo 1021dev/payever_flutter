@@ -69,84 +69,114 @@ class _DashboardMidScreenState extends State<DashboardMidScreen> {
     Business activeBusiness;
     var _token = !renew ? Token.map(token) : token;
     GlobalUtils.activeToken = _token;
-    SharedPreferences.getInstance().then((preferences) {
-      if (!renew)
-        GlobalUtils.activeToken.refreshToken =
-            preferences.getString(GlobalUtils.REFRESH_TOKEN);
-      preferences.setString(
-          GlobalUtils.TOKEN, GlobalUtils.activeToken.accessToken);
-      preferences.setString(
-          GlobalUtils.REFRESH_TOKEN, GlobalUtils.activeToken.refreshToken);
-      preferences.setString(GlobalUtils.LAST_OPEN, DateTime.now().toString());
-      RestDataSource()
-          .getUser(GlobalUtils.activeToken.accessToken, _formKey.currentContext)
-          .then((user) {
-        User tempUser = User.map(user);
-        if (tempUser.language != preferences.getString(GlobalUtils.LANGUAGE)) {
-          Language.language = tempUser.language;
-          Language(_formKey.currentContext);
-        }
-        Measurements.loadImages(_formKey.currentContext);
-      });
-
-      // RestDataSource().getVersion(GlobalUtils.ActiveToken.accessToken).then((list){
-      //   print("Version");
-      //   list.forEach((a){
-      //     print(a);
-      //   });
-      // });
-
-      RestDataSource()
-          .getWidgets(preferences.getString(GlobalUtils.BUSINESS),
-              GlobalUtils.activeToken.accessToken, _formKey.currentContext)
-          .then((obj) {
-        widgets.clear();
-        obj.forEach((item) {
-          widgets.add(AppWidget.map(item));
-        });
+    SharedPreferences.getInstance().then(
+      (preferences) {
+        if (!renew)
+          GlobalUtils.activeToken.refreshToken =
+              preferences.getString(GlobalUtils.REFRESH_TOKEN);
+        preferences.setString(
+            GlobalUtils.TOKEN, GlobalUtils.activeToken.accessToken);
+        preferences.setString(
+            GlobalUtils.REFRESH_TOKEN, GlobalUtils.activeToken.refreshToken);
+        preferences.setString(GlobalUtils.LAST_OPEN, DateTime.now().toString());
         RestDataSource()
-            .getBusinesses(
+            .getUser(
                 GlobalUtils.activeToken.accessToken, _formKey.currentContext)
-            .then((result) {
-          businesses.clear();
-          result.forEach((item) {
-            businesses.add(Business.map(item));
-          });
-          if (businesses != null) {
-            businesses.forEach((b) {
-              if (b.id == preferences.getString(GlobalUtils.BUSINESS)) {
-                activeBusiness = b;
-                globalStateModel.setCurrentBusiness(activeBusiness,
-                    notify: false);
-              }
-            });
-          }
+            .then(
+          (user) {
+            User tempUser = User.map(user);
+            if (tempUser.language !=
+                preferences.getString(GlobalUtils.LANGUAGE)) {
+              Language.language = tempUser.language;
+              Language(_formKey.currentContext);
+            }
+            Measurements.loadImages(_formKey.currentContext);
+          },
+        );
+
+        // RestDataSource().getVersion(GlobalUtils.ActiveToken.accessToken).then((list){
+        //   print("Version");
+        //   list.forEach((a){
+        //     print(a);
+        //   });
+        // });
+
+        RestDataSource()
+            .getWidgets(preferences.getString(GlobalUtils.BUSINESS),
+                GlobalUtils.activeToken.accessToken, _formKey.currentContext)
+            .then((obj) {
+          widgets.clear();
+          obj.forEach(
+            (item) {
+              widgets.add(AppWidget.map(item));
+            },
+          );
           RestDataSource()
-              .getWallpaper(activeBusiness.id,
+              .getBusinesses(
                   GlobalUtils.activeToken.accessToken, _formKey.currentContext)
-              .then((wall) {
-            String wallpaper = wall[GlobalUtils.CURRENT_WALLPAPER];
-            preferences.setString(
-                GlobalUtils.WALLPAPER, wallpaperBase + wallpaper);
-            globalStateModel.setCurrentWallpaper(wallpaperBase + wallpaper,
-                notify: false);
-            Navigator.pushReplacement(
-                _formKey.currentContext,
-                PageTransition(
+              .then((result) {
+            businesses.clear();
+            result.forEach(
+              (item) {
+                businesses.add(Business.map(item));
+              },
+            );
+            if (businesses != null) {
+              businesses.forEach(
+                (b) {
+                  if (b.id == preferences.getString(GlobalUtils.BUSINESS)) {
+                    activeBusiness = b;
+                    globalStateModel.setCurrentBusiness(
+                      activeBusiness,
+                      notify: false,
+                    );
+                  }
+                },
+              );
+            }
+            RestDataSource()
+                .getWallpaper(
+              activeBusiness.id,
+              GlobalUtils.activeToken.accessToken,
+              _formKey.currentContext,
+            )
+                .then(
+              (wall) {
+                String wallpaper = wall[GlobalUtils.CURRENT_WALLPAPER];
+                preferences.setString(
+                    GlobalUtils.WALLPAPER, wallpaperBase + wallpaper);
+                globalStateModel.setCurrentWallpaper(
+                  wallpaperBase + wallpaper,
+                  notify: false,
+                );
+                Navigator.pushReplacement(
+                  _formKey.currentContext,
+                  PageTransition(
                     child: DashboardScreen(
                       appWidgets: widgets,
                     ),
                     type: PageTransitionType.fade,
-                    duration: Duration(milliseconds: 200)));
+                    duration: Duration(
+                      milliseconds: 200,
+                    ),
+                  ),
+                );
+              },
+            );
           });
-        });
-      }).catchError((onError) {
-        Navigator.pushReplacement(
-            _formKey.currentContext,
-            PageTransition(
-                child: LoginScreen(), type: PageTransitionType.fade));
-      });
-    });
+        }).catchError(
+          (onError) {
+            Navigator.pushReplacement(
+              _formKey.currentContext,
+              PageTransition(
+                child: LoginScreen(),
+                type: PageTransitionType.fade,
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
   @override

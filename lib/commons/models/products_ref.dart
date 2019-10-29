@@ -3,7 +3,6 @@ import 'package:intl/intl.dart';
 import '../utils/utils.dart';
 
 class Products {
-  
   String _business;
   String _id;
   String _lastSale;
@@ -211,17 +210,19 @@ class ProductsModel {
       "barcode": this.barcode,
       "type": typeString(this.type),
       "active": this.active,
+      "vatRate": this.vatRate,
       "channelSets": encondeToJson(this.channelSets) ?? [],
       "categories": encondeToJson(this.categories) ?? [],
       "variants": encondeToJson(this.variants) ?? [],
       "shipping": this.shipping?.toJson(),
     };
   }
+
   Map<String, dynamic> toJsonWithID() {
     return {
       "businessUuid": this.businessUuid,
       "images": this.images,
-      "id":this.id,
+      "id": this.id,
       "title": this.title,
       "description": this.description,
       "onSales": this.onSales,
@@ -231,13 +232,15 @@ class ProductsModel {
       "barcode": this.barcode,
       "type": typeString(this.type),
       "active": this.active,
+      "vatRate": this.vatRate,
       "channelSets": encondeToJson(this.channelSets) ?? [],
       "categories": encondeToJson(this.categories) ?? [],
       "variants": encondeToJson(this.variants) ?? [],
-      "shipping": this.shipping?.toJson()??null,
+      "shipping": this.shipping?.toJson() ?? null,
     };
   }
-  String typeString(ProductTypeEnum _type){
+
+  String typeString(ProductTypeEnum _type) {
     switch (_type) {
       case ProductTypeEnum.physical:
         return "physical";
@@ -273,8 +276,9 @@ class ProductChannelSet {
 
   ProductChannelSet({this.id, this.name, this.type});
 
-  factory ProductChannelSet.fromChannel(dynamic obj,String type){
-    return ProductChannelSet(id: obj["channelSet"],name: obj["name"],type: type);
+  factory ProductChannelSet.fromChannel(dynamic obj, String type) {
+    return ProductChannelSet(
+        id: obj["channelSet"], name: obj["name"], type: type);
   }
 
   factory ProductChannelSet.fromMap(dynamic obj) {
@@ -361,6 +365,7 @@ class ProductVariantModel {
   String sku;
   String barcode;
   List<Option> options = List();
+  Map<String, String> optionMap = Map();
 
   ProductVariantModel({
     this.businessUuid,
@@ -375,6 +380,7 @@ class ProductVariantModel {
     this.price,
     this.salePrice,
     this.sku,
+    this.optionMap,
   });
 
   factory ProductVariantModel.fromMap(dynamic obj) {
@@ -387,8 +393,14 @@ class ProductVariantModel {
       _images.add(image);
     });
     List<Option> _options = List();
+    Map<String, String> _optionsMap = Map();
     obj["options"]?.forEach((option) {
       _options.add(Option.fromMap(option));
+      _optionsMap.addAll(
+        {
+          option["name"]: option["value"],
+        },
+      );
     });
     return ProductVariantModel(
       barcode: obj["barcode"],
@@ -403,6 +415,7 @@ class ProductVariantModel {
       price: obj["price"],
       salePrice: obj["salePrice"],
       sku: obj["sku"],
+      optionMap: _optionsMap,
     );
   }
   Map<String, dynamic> toJson() {
@@ -465,7 +478,6 @@ class ProductShippingInterface {
     return obj != null
         ? ProductShippingInterface(
             free: obj["free"],
-            general: obj["general"],
             height: obj["height"],
             length: obj["length"],
             weight: obj["weight"],
@@ -477,12 +489,34 @@ class ProductShippingInterface {
   Map<String, dynamic> toJson() {
     return {
       "free": this.free,
-      "general": this.general,
       "weight": this.weight,
       "width": this.width,
       "length": this.length,
       "height": this.height,
     };
+  }
+}
+
+class VatRate {
+  String country;
+  String description;
+  String id;
+  num rate;
+
+  VatRate._({
+    this.id,
+    this.country,
+    this.description,
+    this.rate,
+  });
+
+  factory VatRate.fromMap(dynamic obj) {
+    return VatRate._(
+      id: obj["id"],
+      country: obj["country"],
+      description: obj["description"],
+      rate: obj["rate"],
+    );
   }
 }
 

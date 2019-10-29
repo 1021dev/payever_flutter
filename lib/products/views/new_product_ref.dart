@@ -22,7 +22,6 @@ ValueNotifier<GraphQLClient> clientForNewProduct({
           inactivityTimeout: Duration(seconds: 30),
         ),
         url: uri);
-    print(webSocketLink);
     final AuthLink authLink = AuthLink(
       getToken: () => 'Bearer ${GlobalUtils.activeToken.accessToken}',
     );
@@ -71,6 +70,7 @@ class _ProductEditorState extends State<ProductEditor> {
           variants: List<ProductVariantModel>(),
           categories: List<ProductCategoryInterface>(),
           channelSets: List<ProductChannelSet>(),
+          vatRate: widget.global.vatRates.first.rate,
         ),
       );
     } else {
@@ -92,6 +92,7 @@ class _ProductEditorState extends State<ProductEditor> {
           barcode: widget.productsModel.barcode,
           sku: widget.productsModel.sku,
           id: widget.productsModel.id,
+          vatRate: widget.productsModel.vatRate,
         ),
       );
       ProductsApi()
@@ -180,7 +181,6 @@ class _ProductEditorState extends State<ProductEditor> {
               productProvider.formKey.currentState.save();
               try {
                 productProvider.formKey.currentState.validate();
-                print(productProvider.editProduct.toJson());
                 save(
                   widget.productsModel == null
                       ? productProvider.createQuery()
@@ -191,7 +191,10 @@ class _ProductEditorState extends State<ProductEditor> {
                 );
               } catch (e) {
                 print("error \n -> $e ");
-                Provider.of<GlobalStateModel>(context).launchCustomSnack(productProvider.formKey.currentContext, "msj",);
+                Provider.of<GlobalStateModel>(context).launchCustomSnack(
+                  productProvider.formKey.currentContext,
+                  "error message",
+                );
               }
             },
           ),
@@ -235,7 +238,10 @@ class _ProductEditorState extends State<ProductEditor> {
         return Dialog(
           backgroundColor: Colors.transparent,
           child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+            filter: ImageFilter.blur(
+              sigmaX: 2,
+              sigmaY: 2,
+            ),
             child: Container(
               color: Colors.transparent,
               height: 200,
@@ -249,8 +255,11 @@ class _ProductEditorState extends State<ProductEditor> {
                     },
                     document: query,
                   ),
-                  builder: (QueryResult result,
-                      {VoidCallback refetch, fetchMore: null}) {
+                  builder: (
+                    QueryResult result, {
+                    VoidCallback refetch,
+                    fetchMore: null,
+                  }) {
                     if (result.errors != null) {
                       print("Error = ${result.errors}");
                       return Column(

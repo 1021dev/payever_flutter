@@ -12,27 +12,27 @@ class Employees {
   final String createdAt;
   final String updatedAt;
   final int v;
-
-//  final List<EmployeePosition> position;
+  //  final List<EmployeePosition> position;
   final String position;
   final String idAgain;
   final int status;
 
-  Employees(
-      {this.roles,
-      this.groups,
-      this.id,
-      this.isVerified,
-      this.firstName,
-      this.lastName,
-      this.fullName,
-      this.email,
-      this.createdAt,
-      this.updatedAt,
-      this.v,
-      this.position,
-      this.idAgain,
-      this.status});
+  Employees({
+    this.roles,
+    this.groups,
+    this.id,
+    this.isVerified,
+    this.firstName,
+    this.lastName,
+    this.fullName,
+    this.email,
+    this.createdAt,
+    this.updatedAt,
+    this.v,
+    this.position,
+    this.idAgain,
+    this.status,
+  });
 
   factory Employees.fromMap(dynamic obj) {
     List<UserRoles> rolesDataList = List<UserRoles>();
@@ -54,7 +54,7 @@ class Employees {
       firstName: obj['first_name'],
       lastName: obj['last_name'],
       fullName: obj['fullName'],
-      position: obj['position'],
+      position: obj['positionType'],
       email: obj['email'],
       id: obj['_id'],
       status: obj['status'] ?? 1,
@@ -86,7 +86,7 @@ class UserRoles {
   UserRoles({this.permission, this.type});
 
   factory UserRoles.fromMap(role) {
-    print("role: $role");
+    // print("role: $role");
 
     List<UserPermissions> permissionsDataList = [];
     if (role['permissions'] != []) {

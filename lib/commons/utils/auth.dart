@@ -29,9 +29,11 @@ class AuthStateProvider {
   }
 
   Future<bool> notify(AuthState state) async {
-    _subscribers.forEach((AuthStateListener s) {
-      s.onAuthStateChanged(state);
-    });
+    _subscribers.forEach(
+      (AuthStateListener s) {
+        s.onAuthStateChanged(state);
+      },
+    );
 
     return true;
   }

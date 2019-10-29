@@ -61,7 +61,7 @@ class _LoginState extends State<Login>
     super.initState();
     SharedPreferences.getInstance().then((p) {
       _preferences = p;
-      print(_preferences);
+      // print(_preferences);
       String fingerPrint =
           "${Platform.operatingSystem}  ${Platform.operatingSystemVersion}";
       p.setString(GlobalUtils.FINGERPRINT, fingerPrint);

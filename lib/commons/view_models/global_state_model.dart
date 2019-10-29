@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import '../../commons/network/rest_ds.dart';
 import '../models/models.dart';
 
 class GlobalStateModel extends ChangeNotifier {
@@ -38,6 +38,7 @@ class GlobalStateModel extends ChangeNotifier {
 
   setCurrentBusiness(Business business, {bool notify}) {
     _currentBusiness = business;
+    setVatRates();
     if (notify ?? true) notifyListeners();
   }
 
@@ -47,15 +48,29 @@ class GlobalStateModel extends ChangeNotifier {
     _currentWallpaper = wallpaper;
     _currentBusiness = business;
     _appWidgets = appWidgets;
-
+    setVatRates();
     notifyListeners();
   }
 
   bool _isTablet;
   bool get isTablet => _isTablet;
   setIsTablet(bool isTablet) => _isTablet = isTablet;
+  List<VatRate> vatRates = List();
 
-  launchCustomSnack(BuildContext context,String msj,{double elevation = 0.0}) {
+  void setVatRates() {
+    List<VatRate> _vatRates = List();
+    RestDataSource()
+        .getVats(currentBusiness.companyAddress.country)
+        .then((rates) {
+      rates.forEach((rate) {
+        _vatRates.add(VatRate.fromMap(rate));
+      });
+      vatRates = _vatRates; 
+    });
+  }
+
+  launchCustomSnack(BuildContext context, String msj,
+      {double elevation = 0.0}) {
     Scaffold.of(context).showSnackBar(
       SnackBar(
         behavior: SnackBarBehavior.floating,

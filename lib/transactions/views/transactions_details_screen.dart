@@ -80,8 +80,6 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
         builder: (BuildContext context, Orientation orientation) {
           _isPortrait = Orientation.portrait == orientation;
 
-          print("_isPortrait: $_isPortrait");
-
           parts.isPortrait = Orientation.portrait == orientation;
           Measurements.height = (parts.isPortrait
               ? MediaQuery.of(context).size.height
@@ -173,14 +171,17 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
                   image: !havePicture
                       ? null
                       : DecorationImage(
-                          image: NetworkImage(parts
-                                  .currentTransaction.cart.items[0].thumbnail
-                                  .contains("https:")
-                              ? parts.currentTransaction.cart.items[0].thumbnail
-                              : Env.storage +
-                                  "/products/" +
-                                  parts.currentTransaction.cart.items[0]
-                                      .thumbnail)),
+                          image: NetworkImage(
+                            parts.currentTransaction.cart.items[0].thumbnail
+                                    .contains("https:")
+                                ? parts
+                                    .currentTransaction.cart.items[0].thumbnail
+                                : Env.storage +
+                                    "/products/" +
+                                    parts.currentTransaction.cart.items[0]
+                                        .thumbnail,
+                          ),
+                        ),
                 ),
                 child: havePicture
                     ? Container()
@@ -254,8 +255,6 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
     int orig = parts.currentTransaction.transaction.originalID == null ? 0 : 1;
     int length = ref + no + number + finance + pan + orig;
 
-    print("Length: $length");
-
     return Expanded(
       child: Container(
         padding: EdgeInsets.all(Measurements.width * 0.02),
@@ -281,25 +280,28 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
                             // height: Measurements.height *
                             //     getCustomNumber(0.015, 0.05),
                             child: RichText(
-                                maxLines: 2,
-                                text: TextSpan(
+                              maxLines: 2,
+                              text: TextSpan(
+                                style: TextStyle(
+                                  fontSize: AppStyle.fontSizeTabContent(),
+                                  color: Colors.white,
+                                ),
+                                children: [
+                                  TextSpan(
+                                    text:
+                                        '${Language.getTransactionStrings("details.order.payeverId")}: ',
                                     style: TextStyle(
-                                        fontSize: AppStyle.fontSizeTabContent(),
-                                        color: Colors.white),
-                                    children: [
-                                      TextSpan(
-                                          text:
-                                              '${Language.getTransactionStrings("details.order.payeverId")}: ',
-                                          style: TextStyle(
-                                              fontSize:
-                                                  AppStyle.fontSizeTabContent(),
-                                              color: Colors.white
-                                                  .withOpacity(0.6))),
-                                      TextSpan(
-                                        text:
-                                            '${parts.currentTransaction.transaction.originalID ?? parts.currentTransaction.transaction.uuid}',
-                                      ),
-                                    ])),
+                                      fontSize: AppStyle.fontSizeTabContent(),
+                                      color: Colors.white.withOpacity(0.6),
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text:
+                                        '${parts.currentTransaction.transaction.originalID ?? parts.currentTransaction.transaction.uuid}',
+                                  ),
+                                ],
+                              ),
+                            ),
                           )
                         : Container(),
                   ),
@@ -451,33 +453,173 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
   Widget shippingRowBody() {
     return Expanded(
       child: Container(
-        // height: Measurements.height * getCustomNumber(0.07, 0.08),
         decoration: BoxDecoration(
           shape: BoxShape.rectangle,
           borderRadius: BorderRadius.circular(12),
-          // color: Colors.black.withOpacity(0.3),
         ),
         padding: EdgeInsets.all(Measurements.width * 0.02),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Row(
+            parts.currentTransaction.shipping.methodName.isNotEmpty?Row(
               children: <Widget>[
                 Flexible(
                   child: Container(
-                      padding: EdgeInsets.all(5),
-                      alignment: Alignment.centerLeft,
-                      child: AutoSizeText(
-                          "Shipping method: ${Measurements.paymentTypeName(parts.currentTransaction.shipping?.methodName?.toUpperCase()??"")}",
+                    padding: EdgeInsets.all(5),
+                    alignment: Alignment.centerLeft,
+                    child: RichText(
+                      maxLines: 2,
+                      text: TextSpan(
                         style: TextStyle(
-                            fontSize: AppStyle.fontSizeTabContent(),
-                            color: Colors.white.withOpacity(0.7)),
-                      )),
+                          fontSize: AppStyle.fontSizeTabContent(),
+                          color: Colors.white,
+                        ),
+                        children: [
+                          TextSpan(
+                            text:
+                                '${Language.getTransactionStrings("details.shipping.carrier")}: ',
+                            style: TextStyle(
+                              fontSize: AppStyle.fontSizeTabContent(),
+                              color: Colors.white.withOpacity(0.6),
+                            ),
+                          ),
+                          TextSpan(
+                            text:
+                                '${parts.currentTransaction.shipping.methodName.toUpperCase()}',
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
               ],
-            ),
+            ):Container(),
+            parts.currentTransaction.shipping.shippingAddress == null
+                ? parts.currentTransaction.shipping.methodName == null
+                    ? Row(
+                        children: <Widget>[
+                          Container(
+                              padding: EdgeInsets.all(5),
+                              child: RichText(
+                                maxLines: 2,
+                                text: TextSpan(
+                                  style: TextStyle(
+                                      fontSize: AppStyle.fontSizeTabContent(),
+                                      color: Colors.white),
+                                  children: [
+                                    TextSpan(
+                                      text: Language.getTransactionStrings(
+                                        "details.shipping.same_as_billing",
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )),
+                        ],
+                      )
+                    : Container()
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Flexible(
+                            child: Container(
+                              padding: EdgeInsets.all(5),
+                              alignment: Alignment.centerLeft,
+                              child: RichText(
+                                maxLines: 2,
+                                text: TextSpan(
+                                  style: TextStyle(
+                                      fontSize: AppStyle.fontSizeTabContent(),
+                                      color: Colors.white),
+                                  children: [
+                                    TextSpan(
+                                      text:
+                                          '${Language.getTransactionStrings("details.billing.name")}: ',
+                                      style: TextStyle(
+                                        fontSize: AppStyle.fontSizeTabContent(),
+                                        color: Colors.white.withOpacity(0.6),
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text:
+                                          '${Measurements.salutation(parts.currentTransaction.shipping.shippingAddress.salutation)} ${parts.currentTransaction.shipping.shippingAddress.firstName} ${parts.currentTransaction.shipping.shippingAddress.lastName}',
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Flexible(
+                            child: Container(
+                              padding: EdgeInsets.all(5),
+                              alignment: Alignment.centerLeft,
+                              child: RichText(
+                                maxLines: 2,
+                                text: TextSpan(
+                                  style: TextStyle(
+                                      fontSize: AppStyle.fontSizeTabContent(),
+                                      color: Colors.white),
+                                  children: [
+                                    TextSpan(
+                                      text:
+                                          '${Language.getTransactionStrings("details.billing.email")}: ',
+                                      style: TextStyle(
+                                        fontSize: AppStyle.fontSizeTabContent(),
+                                        color: Colors.white.withOpacity(0.6),
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text:
+                                          '${parts.currentTransaction.shipping.shippingAddress.email}',
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Flexible(
+                            child: Container(
+                              padding: EdgeInsets.all(5),
+                              alignment: Alignment.centerLeft,
+                              child: RichText(
+                                maxLines: 2,
+                                text: TextSpan(
+                                  style: TextStyle(
+                                      fontSize: AppStyle.fontSizeTabContent(),
+                                      color: Colors.white),
+                                  children: [
+                                    TextSpan(
+                                      text:
+                                          '${Language.getTransactionStrings("details.billing.address")}: ',
+                                      style: TextStyle(
+                                        fontSize: AppStyle.fontSizeTabContent(),
+                                        color: Colors.white.withOpacity(0.6),
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text:
+                                          '${parts.currentTransaction.shipping.shippingAddress.street}, ${parts.currentTransaction.shipping.shippingAddress.zipCode} ${parts.currentTransaction.shipping.shippingAddress.city}, ${parts.currentTransaction.shipping.shippingAddress.countryName}',
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
           ],
         ),
       ),
@@ -519,13 +661,14 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
 //          ),
           Expanded(
             child: Text(
-                "${Measurements.salutation(parts.currentTransaction.billingAddress.salutation)} ${parts.currentTransaction.billingAddress.firstName} ${parts.currentTransaction.billingAddress.lastName} ",
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontSize: AppStyle.fontSizeTabContent(),
-                  color: Colors.white.withOpacity(0.6),
-                )),
+              "${Measurements.salutation(parts.currentTransaction.billingAddress.salutation)} ${parts.currentTransaction.billingAddress.firstName} ${parts.currentTransaction.billingAddress.lastName} ",
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: AppStyle.fontSizeTabContent(),
+                color: Colors.white.withOpacity(0.6),
+              ),
+            ),
           ),
         ],
       ),
@@ -552,23 +695,25 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
                     padding: EdgeInsets.all(5),
                     alignment: Alignment.centerLeft,
                     child: RichText(
-                        maxLines: 2,
-                        text: TextSpan(
-                            style: TextStyle(
-                                fontSize: AppStyle.fontSizeTabContent(),
-                                color: Colors.white),
-                            children: [
-                              TextSpan(
-                                  text:
-                                      '${Language.getTransactionStrings("details.billing.name")}: ',
-                                  style: TextStyle(
-                                      fontSize: AppStyle.fontSizeTabContent(),
-                                      color: Colors.white.withOpacity(0.6))),
-                              TextSpan(
-                                text:
-                                    '${Measurements.salutation(parts.currentTransaction.billingAddress.salutation)} ${parts.currentTransaction.billingAddress.firstName} ${parts.currentTransaction.billingAddress.lastName}',
-                              ),
-                            ])),
+                      maxLines: 2,
+                      text: TextSpan(
+                        style: TextStyle(
+                            fontSize: AppStyle.fontSizeTabContent(),
+                            color: Colors.white),
+                        children: [
+                          TextSpan(
+                              text:
+                                  '${Language.getTransactionStrings("details.billing.name")}: ',
+                              style: TextStyle(
+                                  fontSize: AppStyle.fontSizeTabContent(),
+                                  color: Colors.white.withOpacity(0.6))),
+                          TextSpan(
+                            text:
+                                '${Measurements.salutation(parts.currentTransaction.billingAddress.salutation)} ${parts.currentTransaction.billingAddress.firstName} ${parts.currentTransaction.billingAddress.lastName}',
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -580,23 +725,25 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
                     padding: EdgeInsets.all(5),
                     alignment: Alignment.centerLeft,
                     child: RichText(
-                        maxLines: 2,
-                        text: TextSpan(
-                            style: TextStyle(
-                                fontSize: AppStyle.fontSizeTabContent(),
-                                color: Colors.white),
-                            children: [
-                              TextSpan(
-                                  text:
-                                      '${Language.getTransactionStrings("details.billing.email")}: ',
-                                  style: TextStyle(
-                                      fontSize: AppStyle.fontSizeTabContent(),
-                                      color: Colors.white.withOpacity(0.6))),
-                              TextSpan(
-                                text:
-                                    '${parts.currentTransaction.billingAddress.email}',
-                              ),
-                            ])),
+                      maxLines: 2,
+                      text: TextSpan(
+                        style: TextStyle(
+                            fontSize: AppStyle.fontSizeTabContent(),
+                            color: Colors.white),
+                        children: [
+                          TextSpan(
+                              text:
+                                  '${Language.getTransactionStrings("details.billing.email")}: ',
+                              style: TextStyle(
+                                  fontSize: AppStyle.fontSizeTabContent(),
+                                  color: Colors.white.withOpacity(0.6))),
+                          TextSpan(
+                            text:
+                                '${parts.currentTransaction.billingAddress.email}',
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -608,23 +755,25 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
                     padding: EdgeInsets.all(5),
                     alignment: Alignment.centerLeft,
                     child: RichText(
-                        maxLines: 2,
-                        text: TextSpan(
-                            style: TextStyle(
-                                fontSize: AppStyle.fontSizeTabContent(),
-                                color: Colors.white),
-                            children: [
-                              TextSpan(
-                                  text:
-                                      '${Language.getTransactionStrings("details.billing.address")}: ',
-                                  style: TextStyle(
-                                      fontSize: AppStyle.fontSizeTabContent(),
-                                      color: Colors.white.withOpacity(0.6))),
-                              TextSpan(
-                                text:
-                                    '${parts.currentTransaction.billingAddress.street}, ${parts.currentTransaction.billingAddress.zipCode} ${parts.currentTransaction.billingAddress.city}, ${parts.currentTransaction.billingAddress.countryName}',
-                              ),
-                            ])),
+                      maxLines: 2,
+                      text: TextSpan(
+                        style: TextStyle(
+                            fontSize: AppStyle.fontSizeTabContent(),
+                            color: Colors.white),
+                        children: [
+                          TextSpan(
+                              text:
+                                  '${Language.getTransactionStrings("details.billing.address")}: ',
+                              style: TextStyle(
+                                  fontSize: AppStyle.fontSizeTabContent(),
+                                  color: Colors.white.withOpacity(0.6))),
+                          TextSpan(
+                            text:
+                                '${parts.currentTransaction.billingAddress.street}, ${parts.currentTransaction.billingAddress.zipCode} ${parts.currentTransaction.billingAddress.city}, ${parts.currentTransaction.billingAddress.countryName}',
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               ],

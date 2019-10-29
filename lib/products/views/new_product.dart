@@ -42,7 +42,7 @@ ValueNotifier<GraphQLClient> clientForNewProduct({
           inactivityTimeout: Duration(seconds: 30),
         ),
         url: uri);
-    print(webSocketLink);
+    // print(webSocketLink);
     final AuthLink authLink = AuthLink(
       getToken: () => 'Bearer ${GlobalUtils.activeToken.accessToken}',
     );
@@ -329,7 +329,6 @@ class _NewProductScreenState extends State<NewProductScreen> {
       parts: widget._parts,
     );
     tax = ProductTaxRow(
-      parts: widget._parts,
     );
     visibility = ProductVisibilityRow(
       parts: widget._parts,

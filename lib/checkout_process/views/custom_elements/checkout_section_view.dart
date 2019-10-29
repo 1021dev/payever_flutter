@@ -9,14 +9,17 @@ class CheckoutStepper extends StatelessWidget {
   final List<Widget> bodies;
   final List<String> headers;
   CheckoutProcessStateModel checkoutProcessStateModel;
-  CheckoutStepper({@required this.headers, @required this.bodies,this.checkoutProcessStateModel});
+  CheckoutStepper(
+      {@required this.headers,
+      @required this.bodies,
+      this.checkoutProcessStateModel});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<StepperController>(
       builder: (BuildContext context) {
         StepperController stepperController = StepperController();
-        stepperController.setIndex(0,checkoutProcessStateModel);
+        stepperController.setIndex(0, checkoutProcessStateModel);
         return stepperController;
       },
       child: Container(
@@ -43,8 +46,13 @@ class CheckoutSectionStep extends StatefulWidget {
   final String _headerTitle;
   final String headerMiddle;
   final VoidCallback action;
-  CheckoutSectionStep(this._headerTitle, this._body, this.index, this.action,
-      {this.headerMiddle = ""});
+  CheckoutSectionStep(
+    this._headerTitle,
+    this._body,
+    this.index,
+    this.action, {
+    this.headerMiddle = "",
+  });
   @override
   _CheckoutSectionStepState createState() => _CheckoutSectionStepState();
 }
@@ -65,7 +73,8 @@ class _CheckoutSectionStepState extends State<CheckoutSectionStep> {
     return Container(
       child: Column(
         children: <Widget>[
-          Header(widget._headerTitle, widget.index,checkoutProcessStateModel, mid: widget.headerMiddle),
+          Header(widget._headerTitle, widget.index, checkoutProcessStateModel,
+              mid: widget.headerMiddle),
           CustomBody(
             body: Body(
               widget._body,
@@ -90,8 +99,8 @@ class Header extends StatefulWidget {
   final String title;
   final String mid;
   CheckoutProcessStateModel checkoutProcessStateModel;
-  Header(this.title, this.index, this.checkoutProcessStateModel,{this.mid});
-  
+  Header(this.title, this.index, this.checkoutProcessStateModel, {this.mid});
+
   @override
   _HeaderState createState() => _HeaderState();
 }
@@ -114,8 +123,8 @@ class _HeaderState extends State<Header> {
               flex: 1,
               child: Text(
                 Language.getCheckoutStrings(
-                        "layout.panel.${widget.title}.title")
-                    .toUpperCase(),
+                  "layout.panel.${widget.title}.title",
+                ).toUpperCase(),
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: AppStyle.fontSizeCheckoutTitle(),
@@ -137,17 +146,21 @@ class _HeaderState extends State<Header> {
                       ),
                     ),
                   )
-                : (widget.index != controller.openIndex)?Expanded(
-                    flex: 2,
-                    child: Text(
-                      widget.checkoutProcessStateModel.getHeaderString(widget.title, widget.checkoutProcessStateModel.checkoutUser),
-                      style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: AppStyle.fontSizeCheckoutTitle(),
-                        color: AppStyle.colorCheckoutDivider(),
-                      ),
-                    ),
-                  ):Container(),
+                : (widget.index != controller.openIndex)
+                    ? Expanded(
+                        flex: 2,
+                        child: Text(
+                          widget.checkoutProcessStateModel.getHeaderString(
+                              widget.title,
+                              widget.checkoutProcessStateModel.checkoutUser),
+                          style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: AppStyle.fontSizeCheckoutTitle(),
+                            color: AppStyle.colorCheckoutDivider(),
+                          ),
+                        ),
+                      )
+                    : Container(),
             widget.index > controller.openIndex
                 ? Container(
                     width: 24,
@@ -161,7 +174,7 @@ class _HeaderState extends State<Header> {
       ),
       onTap: () {
         if (widget.index < controller.openIndex) {
-          controller.setIndex(widget.index,widget.checkoutProcessStateModel);
+          controller.setIndex(widget.index, widget.checkoutProcessStateModel);
         }
       },
     );
@@ -172,7 +185,11 @@ class Body extends StatefulWidget {
   final Widget _section;
   VoidCallback sectionAction;
   bool secondButtom = false;
-  Body(this._section, this.sectionAction, {this.secondButtom});
+  Body(
+    this._section,
+    this.sectionAction, {
+    this.secondButtom,
+  });
   @override
   _BodyState createState() => _BodyState();
 }
@@ -184,7 +201,9 @@ class _BodyState extends State<Body> {
       child: Column(
         children: <Widget>[
           Container(
-            padding: EdgeInsets.symmetric(vertical: 10),
+            padding: EdgeInsets.symmetric(
+              vertical: 10,
+            ),
             child: widget._section,
           ),
         ],
@@ -291,7 +310,9 @@ class _CustomBodyState extends State<CustomBody> {
         crossFadeState: widget.index == widget.openIndex
             ? CrossFadeState.showSecond
             : CrossFadeState.showFirst,
-        duration: Duration(milliseconds: 100),
+        duration: Duration(
+          milliseconds: 100,
+        ),
       ),
     );
   }
@@ -301,10 +322,10 @@ class StepperController extends ChangeNotifier {
   int _openIndex = 0;
   int get openIndex => _openIndex;
 
-  setIndex(int nopenIndex,CheckoutProcessStateModel checkoutProcessStateModel) {
+  setIndex(
+      int nopenIndex, CheckoutProcessStateModel checkoutProcessStateModel) {
     _openIndex = nopenIndex;
     notifyListeners();
-    if(openIndex>0)checkoutProcessStateModel.notifyListeners();
+    if (openIndex > 0) checkoutProcessStateModel.notifyListeners();
   }
-  
 }

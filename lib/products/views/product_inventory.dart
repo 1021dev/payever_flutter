@@ -19,14 +19,16 @@ class InventoryManagement {
     List<Inventory> _inventories = List();
     Inventory temp = Inventory(
         amount: null, barcode: null, sku: null, tracking: null, hiddenIndex: 0);
-    inventories.forEach((inv) {
-      print(inv.sku);
-      if (inv.sku != currentInv.sku) {
-        _inventories.add(inv);
-      } else {
-        temp.amount = inv.amount;
-      }
-    });
+    inventories.forEach(
+      (inv) {
+        print("SKU = ${inv.sku}");
+        if (inv.sku != currentInv.sku) {
+          _inventories.add(inv);
+        } else {
+          temp.amount = inv.amount;
+        }
+      },
+    );
     currentInv.amount = currentInv.amount ?? temp.amount ?? 0;
     _inventories.add(currentInv);
     inventories
@@ -47,77 +49,97 @@ class InventoryManagement {
 
   saveInventories(String businessID, BuildContext context,
       GlobalStateModel globalStateModel, bool isFromDashboardCard) {
-    inventories.forEach((inventory) {
-      num dif = (inventory.newAmount ?? 0) - (inventory.amount ?? 0);
-      print("num dif = (inventory.newAmount??0) - (inventory.amount??0)");
-      print("$dif = (${inventory.newAmount}) - (${inventory.amount})");
-      print(dif);
-      ProductsApi()
-          .checkSKU(
-        businessID,
-        GlobalUtils.activeToken.accessToken,
-        inventory.sku,
-      )
-          .then((onValue) async {
-        if (inventory.newAmount != null)
-          await ProductsApi()
-              .patchInventory(businessID, GlobalUtils.activeToken.accessToken,
-                  inventory.sku, inventory.barcode, inventory.tracking)
-              .then((_) async {
-            //if( dif != 0 && (inventory.newAmount != 0)){
-            if (dif != 0) {
-              dif > 0
-                  ? await add(dif, inventory.sku, businessID)
-                  : await sub(dif.abs(), inventory.sku, businessID);
-            }
-          });
-        if (inventories.last.sku == inventory.sku) {
-          Navigator.pop(context);
-          Navigator.pop(context);
-          if (!isFromDashboardCard) {
-            Navigator.pop(context);
-            Navigator.push(
-                context,
-                PageTransition(
-                    child: ProductScreen(
-                      wallpaper: globalStateModel.currentWallpaper,
-                      business: globalStateModel.currentBusiness,
-                      posCall: false,
-                    ),
-                    type: PageTransitionType.fade));
-          }
-        }
-      }).catchError((onError) {
-        if (onError.toString().contains("404")) {
-          ProductsApi()
-              .postInventory(businessID, GlobalUtils.activeToken.accessToken,
-                  inventory.sku, inventory.barcode, inventory.tracking)
-              .then((_) {
-            if (dif != 0 && (inventory.newAmount != 0)) {
-              dif > 0
-                  ? add(dif, inventory.sku, businessID)
-                  : sub(dif.abs(), inventory.sku, businessID);
-            }
+    inventories.forEach(
+      (inventory) {
+        num dif = (inventory.newAmount ?? 0) - (inventory.amount ?? 0);
+        print("num dif = (inventory.newAmount??0) - (inventory.amount??0)");
+        print("$dif = (${inventory.newAmount}) - (${inventory.amount})");
+        print(dif);
+        ProductsApi()
+            .checkSKU(
+          businessID,
+          GlobalUtils.activeToken.accessToken,
+          inventory.sku,
+        )
+            .then(
+          (onValue) async {
+            if (inventory.newAmount != null)
+              await ProductsApi()
+                  .patchInventory(
+                      businessID,
+                      GlobalUtils.activeToken.accessToken,
+                      inventory.sku,
+                      inventory.barcode,
+                      inventory.tracking)
+                  .then((_) async {
+                //if( dif != 0 && (inventory.newAmount != 0)){
+                if (dif != 0) {
+                  dif > 0
+                      ? await add(dif, inventory.sku, businessID)
+                      : await sub(dif.abs(), inventory.sku, businessID);
+                }
+              });
             if (inventories.last.sku == inventory.sku) {
               Navigator.pop(context);
               Navigator.pop(context);
               if (!isFromDashboardCard) {
                 Navigator.pop(context);
                 Navigator.push(
-                    context,
-                    PageTransition(
-                        child: ProductScreen(
-                          wallpaper: globalStateModel.currentWallpaper,
-                          business: globalStateModel.currentBusiness,
-                          posCall: false,
-                        ),
-                        type: PageTransitionType.fade));
+                  context,
+                  PageTransition(
+                    child: ProductScreen(
+                      wallpaper: globalStateModel.currentWallpaper,
+                      business: globalStateModel.currentBusiness,
+                      posCall: false,
+                    ),
+                    type: PageTransitionType.fade,
+                  ),
+                );
               }
             }
-          });
-        }
-      });
-    });
+          },
+        ).catchError(
+          (onError) {
+            if (onError.toString().contains("404")) {
+              ProductsApi()
+                  .postInventory(
+                      businessID,
+                      GlobalUtils.activeToken.accessToken,
+                      inventory.sku,
+                      inventory.barcode,
+                      inventory.tracking)
+                  .then(
+                (_) {
+                  if (dif != 0 && (inventory.newAmount != 0)) {
+                    dif > 0
+                        ? add(dif, inventory.sku, businessID)
+                        : sub(dif.abs(), inventory.sku, businessID);
+                  }
+                  if (inventories.last.sku == inventory.sku) {
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                    if (!isFromDashboardCard) {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        PageTransition(
+                          child: ProductScreen(
+                            wallpaper: globalStateModel.currentWallpaper,
+                            business: globalStateModel.currentBusiness,
+                            posCall: false,
+                          ),
+                          type: PageTransitionType.fade,
+                        ),
+                      );
+                    }
+                  }
+                },
+              );
+            }
+          },
+        );
+      },
+    );
   }
 
   Future add(num dif, String sku, String id) async {
@@ -205,9 +227,11 @@ class _ProductInventoryRowState extends State<ProductInventoryRow> {
                             horizontal: Measurements.width * 0.025),
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.05),
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(16))),
+                          color: Colors.white.withOpacity(0.05),
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(16),
+                          ),
+                        ),
                         width: Measurements.width * 0.4475,
                         height: Measurements.height *
                             (widget.parts.isTablet ? 0.05 : 0.07),

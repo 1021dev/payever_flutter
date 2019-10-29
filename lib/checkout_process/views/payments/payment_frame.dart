@@ -257,7 +257,6 @@ class PaymentSelection extends ChangeNotifier {
   int _openIndex = 0;
   int get openIndex => _openIndex;
   setIndex(int nopenIndex,CheckoutProcessStateModel checkoutProcessStateModel) {
-    print("setting index");
     _openIndex = nopenIndex;
     checkoutProcessStateModel.setPaymentActionText(_openIndex);
     notifyListeners();

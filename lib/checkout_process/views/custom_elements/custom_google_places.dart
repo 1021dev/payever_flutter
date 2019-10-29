@@ -200,7 +200,6 @@ class _LocationAutocompleteFieldState
         //   },
         // );
         widget.check.value = !widget.check.value;
-        print("p.types => ${p.types}");
         _effectiveController.text = p.description;
         if (widget.onChanged != null) {
           widget.onChanged(p);

@@ -187,19 +187,24 @@ class ProductsApi extends RestDataSource {
     };
     Dio dio = Dio();
     FormData formData = FormData();
-    formData.add("file",
-        UploadFileInfo(logo, logo.path.substring(logo.path.length - 6)));
-
+    formData.add(
+      "file",
+      UploadFileInfo(
+        logo,
+        logo.path.substring(logo.path.length - 6),
+        contentType: ContentType("image",logo.path.contains("png")?"png":"jpeg", charset: "utf-8"),
+      ),
+    );
     return dio
         .post(
-            RestDataSource.mediaBusiness +
-                business +
-                RestDataSource.mediaProductsEnd,
-            data: formData,
-            options: Options(
-                method: 'POST',
-                headers: headers,
-                responseType: ResponseType.json))
+      RestDataSource.mediaBusiness + business + RestDataSource.mediaProductsEnd,
+      data: formData,
+      options: Options(
+        method: 'POST',
+        headers: headers,
+        responseType: ResponseType.json,
+      ),
+    )
         .then((response) {
       return response.data;
     }).catchError((error) => print(error));

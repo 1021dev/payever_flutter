@@ -16,9 +16,9 @@ class VersionController{
       String version = packageInfo.version;
       
       getSupportedVersion().then((_version){
-        print("version:$version");
-        print("_version:${_version.minVersion}");
-        print("compare:${version.compareTo(_version.minVersion)}");
+        print("Current version:$version");
+        print("Min version:${_version.minVersion}");
+        // print("compare:${version.compareTo(_version.minVersion)}");
 
         if(version.compareTo(_version.minVersion)<0){
           showPopUp(context, _version);

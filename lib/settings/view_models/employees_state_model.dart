@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../view_models/view_models.dart';
@@ -34,8 +35,11 @@ class EmployeesStateModel extends ChangeNotifier with Validators {
   Stream<String> get position =>
       _positionController.stream.transform(validateField);
 
-  Stream<bool> get submitValid => Observable.combineLatest4(
-      firstName, lastName, email, position, (a, b, c, d) => true);
+  Stream<bool> get submitValid => Observable.combineLatest2(
+        email,
+        position,
+        (a, b) => true,
+      );
 
   Stream<String> get group => _groupController.stream.transform(validateField);
 
@@ -67,6 +71,45 @@ class EmployeesStateModel extends ChangeNotifier with Validators {
 
   List<String> get employeeListValue => _employeesSelectionListController.value;
 
+  Acl setAcls(Employees _currentEmployee, BusinessApps _app) {
+    print(_app.code);
+    Acl acl = Acl(create: false, read: false, update: false, delete: false);
+    _currentEmployee.roles.forEach(
+      (_role) {
+        _role.permission.forEach(
+          (_premission) {
+            if (_premission.businessId == globalStateModel.currentBusiness.id) {
+              Acl _acl = _premission.acls.firstWhere(
+                (_tempAcl) {
+                  return _tempAcl.microService == _app.code;
+                },
+              );
+              if (_acl != null) {
+                acl = _acl;
+              }
+            }
+          },
+        );
+      },
+    );
+    return acl;
+  }
+
+  int _employeeCount;
+  int get employeeCount => _employeeCount;
+  setEmployeeCount(int emp)  => _employeeCount = emp;
+  
+  int _businessCount;
+  int get businessCount => _businessCount;
+  setBusinessCount(int bus)  => _businessCount = bus;
+
+  bool fullAccess(BusinessApps _app) {
+    return (_app.allowedAcls.create ?? true) &&
+        (_app.allowedAcls.delete ?? true) &&
+        (_app.allowedAcls.read ?? true) &&
+        (_app.allowedAcls.update ?? true);
+  }
+
   clearEmployeeData() {
     _firstNameController.value = "";
     _lastNameController.value = "";
@@ -96,70 +139,96 @@ class EmployeesStateModel extends ChangeNotifier with Validators {
 
   void updateAclsList(
       String microservice, bool create, bool read, bool update, bool delete) {
-    aclsList.add(Acl.fromMap({
-      "microservice": microservice,
-      "create": create,
-      "read": read,
-      "update": update,
-      "delete": delete
-    }));
-    notifyListeners();
+    aclsList.add(
+      Acl.fromMap(
+        {
+          "microservice": microservice,
+          "create": create,
+          "read": read,
+          "update": update,
+          "delete": delete,
+        },
+      ),
+    );
+    print(">> updateAclsList()");
   }
 
   void updateBusinessApps(List<BusinessApps> businessApps) {
-//    _businessApps = [];
+    _businessApps.clear();
     _businessApps = businessApps;
-    notifyListeners();
+    print(">> updateBusinessApps()");
   }
 
   void updateBusinessAppPermissionCreate(int index, bool value) {
     businessApps[index].allowedAcls.create = value;
-    notifyListeners();
+    print(">> updateBusinessAppPermissionCreate()");
   }
 
   void updateBusinessAppPermissionRead(int index, bool value) {
     businessApps[index].allowedAcls.read = value;
-    notifyListeners();
+    print(">> updateBusinessAppPermissionRead()");
   }
 
   void updateBusinessAppPermissionUpdate(int index, bool value) {
     businessApps[index].allowedAcls.update = value;
-    notifyListeners();
+    print(">> updateBusinessAppPermissionUpdate()");
   }
 
   void updateBusinessAppPermissionDelete(int index, bool value) {
     businessApps[index].allowedAcls.delete = value;
-    notifyListeners();
+    print(">> updateBusinessAppPermissionDelete()");
   }
+
+  List<dynamic> _tempEmployees = List();
+  List get tempEmployees => _tempEmployees;
 
   ///API CALLS
   Future<dynamic> getAppsBusinessInfo() async {
     return api.getAppsBusiness(businessId, accessToken);
   }
 
-  Future<void> createNewEmployee(Object data) async {
+  Future<dynamic> createNewEmployee(Object data) async {
     return api.addEmployee(data, accessToken, businessId);
   }
 
-  Future<void> updateEmployee(Object data, String userId) async {
-    return api.updateEmployee(data, accessToken, businessId, userId);
+  Future<dynamic> updateEmployee(
+    Object data,
+    String userId,
+    String position,
+  ) async {
+    return api.updateEmployee(data, accessToken, businessId, userId, position);
   }
 
-  Future<void> addEmployeesToGroup(String groupId, Object data) async {
+  Future<void> addEmployeesToGroup(String groupId, List data) async {
     return api.addEmployeesToGroup(accessToken, businessId, groupId, data);
   }
 
   Future<void> deleteEmployeesFromGroup(String groupId, Object data) async {
-    return api.deleteEmployeesFromGroup(
-        accessToken, businessId, groupId, data);
+    return api.deleteEmployeesFromGroup(accessToken, businessId, groupId, data);
   }
 
-  Future<void> deleteEmployeeFromBusiness(String userId) async {
+  Future<void> deleteEmployeeFromBusiness(String userId, String groupId) async {
     return api.deleteEmployeeFromBusiness(accessToken, businessId, userId);
   }
 
   Future<void> createNewGroup(Object data) async {
     return api.addNewGroup(data, accessToken, businessId);
+  }
+
+  Future<void> patchGroup(Object data, String groupId) async {
+    return api.patchGroup(accessToken, businessId, groupId, data);
+  }
+
+  Future<void> getGroupCount(Object data, String name) async {
+    return api.getGroupCount(accessToken, businessId, name);
+  }
+
+  Future<dynamic> countGroups(String name) async {
+    return api.getGroupCount(accessToken, businessId, name);
+  }
+
+  Future<dynamic> countEmployee(String name) async {
+    return api.getEmployeeCount(accessToken, businessId, name);
   }
 
   Future<void> deleteGroup(String groupId) async {
@@ -169,5 +238,4 @@ class EmployeesStateModel extends ChangeNotifier with Validators {
   Future<dynamic> getEmployeesFromGroup(String groupId) async {
     return api.getBusinessEmployeesGroup(accessToken, businessId, groupId);
   }
-
 }

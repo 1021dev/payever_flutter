@@ -18,18 +18,17 @@ class SettingsApi extends RestDataSource {
       HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
     };
     return _netUtil
-        .post(RestDataSource.newEmployee + businessId,
+        .post(RestDataSource.newEmployee + businessId + "?invite=true",
             headers: headers, body: body)
         .then((dynamic result) {
       return result;
     });
   }
 
-  Future<dynamic> updateEmployee(
-      Object data, String token, String businessId, String userId) {
+  Future<dynamic> updateEmployee(Object data, String token, String businessId,
+      String userId, String position) {
     print("TAG - updateEmployee()");
-//    var body = jsonEncode(data);
-    var body = jsonEncode({"position": "Marketing"});
+    var body = jsonEncode({"position": "$position", "acls": data});
     var headers = {
       HttpHeaders.authorizationHeader: "Bearer $token",
       HttpHeaders.contentTypeHeader: "application/json",
@@ -38,15 +37,17 @@ class SettingsApi extends RestDataSource {
     return _netUtil
         .patch(RestDataSource.employeesList + businessId + "/" + userId,
             headers: headers, body: body)
-        .then((dynamic result) {
-      return result;
-    });
+        .then(
+      (dynamic result) {
+        return result;
+      },
+    );
   }
 
   Future<dynamic> addEmployeesToGroup(
       String token, String businessId, String groupId, Object data) {
     print("TAG - addEmployeesToGroup()");
-    var body = jsonEncode(data);
+    var body = jsonEncode({"employees": data});
     var headers = {
       HttpHeaders.authorizationHeader: "Bearer $token",
       HttpHeaders.contentTypeHeader: "application/json",
@@ -61,9 +62,11 @@ class SettingsApi extends RestDataSource {
                 "/employees",
             headers: headers,
             body: body)
-        .then((dynamic result) {
-      return result;
-    });
+        .then(
+      (dynamic result) {
+        return result;
+      },
+    );
   }
 
   Future<dynamic> deleteEmployeesFromGroup(
@@ -84,9 +87,11 @@ class SettingsApi extends RestDataSource {
                 "/employees",
             headers: headers,
             body: body)
-        .then((dynamic result) {
-      return result;
-    });
+        .then(
+      (dynamic result) {
+        return result;
+      },
+    );
   }
 
   Future<dynamic> deleteEmployeeFromBusiness(
@@ -98,15 +103,17 @@ class SettingsApi extends RestDataSource {
       HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
     };
     return _netUtil
-        .delete(RestDataSource.employeesList + businessId + "/" + userId,
-            headers: headers)
-        .then((dynamic result) {
-      return result;
-    });
+        .deleteWithBody(RestDataSource.employeesList + businessId + "/$userId",
+            headers: headers, body: "{}")
+        .then(
+      (dynamic result) {
+        return result;
+      },
+    );
   }
 
   Future<dynamic> getEmployeesList(
-      String id, String token, BuildContext context) {
+      String id, String token, BuildContext context, int page,String search) {
     print("TAG - getEmployeesList()");
 
     var headers = {
@@ -114,12 +121,14 @@ class SettingsApi extends RestDataSource {
       HttpHeaders.contentTypeHeader: "application/json",
       HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
     };
-
     return _netUtil
-        .get(RestDataSource.employeesList + id, headers: headers)
-        .then((dynamic result) {
-      return result;
-    });
+        .get(RestDataSource.employeesList + id + "?limit=30&page=$page&search=$search",
+            headers: headers)
+        .then(
+      (dynamic result) {
+        return result;
+      },
+    );
   }
 
   Future<dynamic> getEmployeeDetails(
@@ -156,16 +165,19 @@ class SettingsApi extends RestDataSource {
   }
 
   Future<dynamic> getBusinessEmployeesGroupsList(
-      String businessId, String token, BuildContext context) {
+      String businessId, String token, BuildContext context, int page,String search) {
     print("TAG - getBusinessEmployeesGroupsList()");
-
+    String _search = search.isNotEmpty?"&search=$search":"";
     var headers = {
       HttpHeaders.authorizationHeader: "Bearer $token",
       HttpHeaders.contentTypeHeader: "application/json",
       HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
     };
+
     return _netUtil
-        .get(RestDataSource.employeeGroups + businessId, headers: headers)
+        .get(
+            RestDataSource.employeeGroups + businessId + "?limit=30&page=$page$_search",
+            headers: headers)
         .then((dynamic result) {
       return result;
     });
@@ -182,6 +194,47 @@ class SettingsApi extends RestDataSource {
     };
     return _netUtil
         .get(RestDataSource.employeeGroups + businessId + "/" + groupId,
+            headers: headers)
+        .then((dynamic result) {
+      return result;
+    });
+  }
+
+  Future<dynamic> getGroupCount(String token, String businessId, String name) {
+    print("TAG - getGroupCount()");
+
+    var headers = {
+      HttpHeaders.authorizationHeader: "Bearer $token",
+      HttpHeaders.contentTypeHeader: "application/json",
+      HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+    };
+    return _netUtil
+        .get(
+            RestDataSource.employeeGroups +
+                businessId +
+                "/count?groupName=" +
+                name,
+            headers: headers)
+        .then((dynamic result) {
+      return result;
+    });
+  }
+
+  Future<dynamic> getEmployeeCount(
+      String token, String businessId, String name) {
+    print("TAG - getEmployeeCount()");
+
+    var headers = {
+      HttpHeaders.authorizationHeader: "Bearer $token",
+      HttpHeaders.contentTypeHeader: "application/json",
+      HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+    };
+    return _netUtil
+        .get(
+            RestDataSource.employeeDetails +
+                businessId +
+                "/count?email=" +
+                name,
             headers: headers)
         .then((dynamic result) {
       return result;
@@ -212,8 +265,33 @@ class SettingsApi extends RestDataSource {
       HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
     };
     return _netUtil
-        .delete(RestDataSource.employeeGroups + businessId + "/" + groupId,
-            headers: headers)
+        .deleteWithBody(
+      RestDataSource.employeeGroups + businessId + "/" + groupId,
+      headers: headers,
+      body: "{}",
+    )
+        .then(
+      (dynamic result) {
+        return result;
+      },
+    );
+  }
+
+  Future<dynamic> patchGroup(
+      String token, String businessId, String groupId, Object data) {
+    print("TAG - patchGroup()");
+    var headers = {
+      HttpHeaders.authorizationHeader: "Bearer $token",
+      HttpHeaders.contentTypeHeader: "application/json",
+      HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+    };
+    var body = jsonEncode(data);
+    return _netUtil
+        .patch(
+      RestDataSource.employeeGroups + businessId + "/" + groupId,
+      headers: headers,
+      body: body,
+    )
         .then((dynamic result) {
       return result;
     });

@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:payever/pos/network/pos_api.dart';
 
 import 'global_state_model.dart';
 import '../models/models.dart';
@@ -9,19 +10,20 @@ import '../network/network.dart';
 import '../utils/utils.dart';
 
 ValueNotifier<GraphQLClient> clientFor({
-  @required String uri,
+  // @required String uri,
   String subscriptionUri,
 }) {
-  Link link = HttpLink(uri: uri);
+  // Link link = HttpLink(uri: uri);
+  Link link = HttpLink(uri: Env.products + "/products");
   if (subscriptionUri != null) {
-    WebSocketLink webSocketLink = WebSocketLink(
-        config: SocketClientConfig(
-          autoReconnect: true,
-          inactivityTimeout: Duration(seconds: 30),
-        ),
-        url: uri);
-    print("webSocketLink: $webSocketLink");
-
+    // WebSocketLink webSocketLink = WebSocketLink(
+    //   config: SocketClientConfig(
+    //     autoReconnect: true,
+    //     inactivityTimeout: Duration(seconds: 30),
+    //   ),
+    // url: uri,
+    // );
+    // print("webSocketLink: $webSocketLink");
     final AuthLink authLink = AuthLink(
       getToken: () => 'Bearer ${GlobalUtils.activeToken.accessToken}',
     );
@@ -29,9 +31,9 @@ ValueNotifier<GraphQLClient> clientFor({
   }
   return ValueNotifier<GraphQLClient>(
     GraphQLClient(
-      cache: InMemoryCache(),
-      link: link,
-    ),
+        cache: InMemoryCache(),
+        // link: link,
+        link: HttpLink(uri: Env.products + "/products")),
   );
 }
 
@@ -105,9 +107,11 @@ class PosStateCommonsModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  final ValueNotifier<GraphQLClient> client = clientFor(
-    uri: Env.products + "/products",
-  );
+  // ValueNotifier<GraphQLClient> client = clientFor(
+  //   uri: Env.products + "/products",
+  // );
+  
+  ValueNotifier<GraphQLClient> createClient() => clientFor();
 
   Checkout currentCheckout;
   Color titleColor = Colors.black;
@@ -164,28 +168,32 @@ class PosStateCommonsModel extends ChangeNotifier {
     num qty,
     String sku,
     String uuid,
+    bool isVariant = false,
+    List<Option> options,
   }) {
-
-    print("shoppingCart: $shoppingCart");
-
+    // print("shoppingCart: $shoppingCart");
     int index = shoppingCart.items.indexWhere((test) => test.id == id);
     if (index < 0) {
-      shoppingCart.items.add(CartItem(
+      shoppingCart.items.add(
+        CartItem(
           id: id,
           sku: sku,
           price: price,
           name: name,
           quantity: qty,
           uuid: uuid,
-          image: image));
-          shoppingCart.total += price;
+          image: image,
+          variant: isVariant,
+          options: options,
+        ),
+      );
+      shoppingCart.total += price;
     } else {
-      if(shoppingCart.items[index].quantity<99){
+      if (shoppingCart.items[index].quantity < 99) {
         shoppingCart.items[index].quantity += qty;
         shoppingCart.total += price;
       }
     }
-    
     haveProducts = shoppingCart.items.isNotEmpty;
     notifyListeners();
   }
@@ -199,6 +207,15 @@ class PosStateCommonsModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  clear(){
+    updateIsLoading(true);
+    productList = List();
+  }
+
+  cleanCart() {
+    shoppingCart = Cart();
+  }
+
   updateQty({int index, num quantity}) {
     var add = quantity - shoppingCart.items[index].quantity;
     shoppingCart.items[index].quantity = quantity;
@@ -209,8 +226,36 @@ class PosStateCommonsModel extends ChangeNotifier {
 
   addProductListStock(List<InventoryModel> inventoryModelList) {
     for (var inv in inventoryModelList) {
-      productStock.addAll({"${inv.sku}": "${inv.stock.toString()}"});
+      productStock.addAll(
+        {
+          "${inv.sku}": "${inv.stock.toString()}",
+        },
+      );
     }
   }
 
+  Future<bool> checkInventories() async {
+    bool ok2Checkout = true;
+    for (var _item in shoppingCart.items) {
+      bool ok = await PosApi()
+          .getInventory(getBusiness.id,
+              GlobalUtils.activeToken.accessToken, _item.sku, null)
+          .then(
+        (inv) {
+          InventoryModel currentInv = InventoryModel.toMap(inv);
+          bool isOut = currentInv.isTrackable
+              ? (currentInv?.stock ?? 0) > _item.quantity
+              : true;
+          if (!isOut) {
+            ok2Checkout = false;
+            _item.inStock = false;
+          } else {
+            _item.inStock = true;
+          }
+          return ok2Checkout;
+        },
+      );
+    }
+    return ok2Checkout;
+  }
 }

@@ -57,7 +57,6 @@ class _OrderSectionState extends State<OrderSection> {
       widget.quantities.add(number);
     }
 
-    print("widget.parts.shoppingCart: ${widget.parts.shoppingCart}");
 
     return Column(
       children: <Widget>[
@@ -119,7 +118,6 @@ class _OrderSectionState extends State<OrderSection> {
                         )),
                       ),
                       onTap: () {
-                        print("click delete");
                         setState(() {
                           widget.parts.deleteProduct(index);
 
@@ -175,7 +173,6 @@ class _OrderSectionState extends State<OrderSection> {
                                 items: widget.quantities,
                                 onChanged: (value) {
                                   setState(() {
-                                    print(value);
                                     widget.parts.updateQty(
                                         index: index, quantity: value);
                                   });
@@ -307,7 +304,6 @@ class _OrderSectionState extends State<OrderSection> {
                 )),
             onTap: () {
               if (widget.parts.shoppingCart.items.isEmpty) {
-                print("block");
               } else {
                 if (!widget.checkStock.value) {
                   nextStep();

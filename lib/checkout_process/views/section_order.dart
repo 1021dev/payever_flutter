@@ -53,19 +53,25 @@ class _CheckoutOrderSectionState extends State<CheckoutOrderSection> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Expanded(
-                  child: Text(
-                Language.getCartStrings(
-                    "checkout_cart_edit.form.label.product"),
-                style: TextStyle(color: AppStyle.colorCheckoutDivider()),
-              )),
+                child: Text(
+                  Language.getCartStrings(
+                    "checkout_cart_edit.form.label.product",
+                  ),
+                  style: TextStyle(
+                    color: AppStyle.colorCheckoutDivider(),
+                  ),
+                ),
+              ),
               Container(
-                  alignment: Alignment.center,
-                  width: Measurements.width * 0.15,
-                  child: Text(
-                    Language.getCartStrings(
-                        "checkout_cart_edit.form.label.qty"),
-                    style: TextStyle(color: AppStyle.colorCheckoutDivider()),
-                  )),
+                alignment: Alignment.center,
+                width: Measurements.width * 0.15,
+                child: Text(
+                  Language.getCartStrings("checkout_cart_edit.form.label.qty"),
+                  style: TextStyle(
+                    color: AppStyle.colorCheckoutDivider(),
+                  ),
+                ),
+              ),
               Container(
                 alignment: Alignment.center,
                 width: Measurements.width * 0.2,
@@ -90,6 +96,34 @@ class _CheckoutOrderSectionState extends State<CheckoutOrderSection> {
           physics: NeverScrollableScrollPhysics(),
           itemCount: widget.parts.shoppingCart.items.length,
           itemBuilder: (BuildContext context, int index) {
+            List<Widget> _list = List();
+            if (widget.parts.shoppingCart.items[index].variant)
+              for (var _opt in widget.parts.shoppingCart.items[index].options) {
+                _list.add(
+                  RichText(
+                    text: TextSpan(
+                      style: TextStyle(color: Colors.white),
+                      children: [
+                        TextSpan(
+                          text: "${_opt.name}: ",
+                          style: TextStyle(
+                            color: AppStyle.colorCheckoutDivider(),
+                            fontSize: 12,
+                          ),
+                        ),
+                        TextSpan(
+                          text: "${_opt.value}",
+                          style: TextStyle(
+                            color: AppStyle.colorCheckoutDivider(),
+                            fontWeight: FontWeight.w600,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }
             return Column(
               children: <Widget>[
                 Container(
@@ -108,13 +142,14 @@ class _CheckoutOrderSectionState extends State<CheckoutOrderSection> {
                           )),
                         ),
                         onTap: () {
-                          print("click delete");
-                          setState(() {
-                            widget.parts.deleteProduct(index);
-                            if (widget.parts.shoppingCart.items.isEmpty) {
-                              cartStateModel.updateCart(false);
-                            }
-                          });
+                          setState(
+                            () {
+                              widget.parts.deleteProduct(index);
+                              if (widget.parts.shoppingCart.items.isEmpty) {
+                                cartStateModel.updateCart(false);
+                              }
+                            },
+                          );
                         },
                       ),
                       Container(
@@ -142,13 +177,44 @@ class _CheckoutOrderSectionState extends State<CheckoutOrderSection> {
                               ),
                       ),
                       Expanded(
-                        child: AutoSizeText(
-                          widget.parts.shoppingCart.items[index].name,
-                          style: TextStyle(
-                              color:
-                                  widget.parts.shoppingCart.items[index].inStock
-                                      ? AppStyle.colorCheckoutDivider()
-                                      : widget.textColorOUT),
+                        child: Column(
+                          children: <Widget>[
+                            Row(
+                              children: <Widget>[
+                                AutoSizeText(
+                                  widget.parts.shoppingCart.items[index].name,
+                                  style: TextStyle(
+                                    color: widget.parts.shoppingCart
+                                            .items[index].inStock
+                                        ? AppStyle.colorCheckoutDivider()
+                                        : widget.textColorOUT,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            widget.parts.shoppingCart.items[index].variant
+                                ? SizedBox(
+                                    height: 10,
+                                  )
+                                : Container(),
+                            Row(
+                              children: <Widget>[
+                                Expanded(
+                                  child: isTablet
+                                      ? Wrap(
+                                          spacing: 10.0,
+                                          children: _list,
+                                        )
+                                      : Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: _list,
+                                        ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
                       Row(
@@ -158,34 +224,36 @@ class _CheckoutOrderSectionState extends State<CheckoutOrderSection> {
                             child: Theme(
                               data: ThemeData.light(),
                               child: Container(
-                                  child: ButtonTheme(
-                                alignedDropdown: true,
-                                child: DropdownButton(
-                                  value: widget
-                                      .parts.shoppingCart.items[index].quantity,
-                                  items: widget.quantities,
-                                  onChanged: (value) {
-                                    setState(
-                                      () {
-                                        widget.parts.updateQty(
-                                            index: index, quantity: value);
-                                      },
-                                    );
-                                  },
+                                child: ButtonTheme(
+                                  alignedDropdown: true,
+                                  child: DropdownButton(
+                                    value: widget.parts.shoppingCart
+                                        .items[index].quantity,
+                                    items: widget.quantities,
+                                    onChanged: (value) {
+                                      setState(
+                                        () {
+                                          widget.parts.updateQty(
+                                              index: index, quantity: value);
+                                        },
+                                      );
+                                    },
+                                  ),
                                 ),
-                              )),
+                              ),
                             ),
                           ),
                           Container(
-                              alignment: Alignment.center,
-                              width: Measurements.width * 0.2,
-                              child: AutoSizeText(
-                                "${Measurements.currency(widget.parts.getBusiness.currency)}${widget.parts.f.format(widget.parts.shoppingCart.items[index].price)}",
-                                maxLines: 1,
-                                style: TextStyle(
-                                  color: AppStyle.colorCheckoutDivider(),
-                                ),
-                              )),
+                            alignment: Alignment.center,
+                            width: Measurements.width * 0.2,
+                            child: AutoSizeText(
+                              "${Measurements.currency(widget.parts.getBusiness.currency)}${widget.parts.f.format(widget.parts.shoppingCart.items[index].price)}",
+                              maxLines: 1,
+                              style: TextStyle(
+                                color: AppStyle.colorCheckoutDivider(),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ],
@@ -211,10 +279,12 @@ class _CheckoutOrderSectionState extends State<CheckoutOrderSection> {
                       children: <Widget>[
                         Container(
                           padding: EdgeInsets.symmetric(
-                              horizontal: Measurements.width * 0.01),
+                            horizontal: Measurements.width * 0.01,
+                          ),
                           child: Text(
                             Language.getCartStrings(
-                                "checkout_cart_edit.form.label.subtotal"),
+                              "checkout_cart_edit.form.label.subtotal",
+                            ),
                             style: TextStyle(
                               color: AppStyle.colorCheckoutDivider(),
                             ),
@@ -319,7 +389,9 @@ class _CheckoutOrderSectionState extends State<CheckoutOrderSection> {
                               .DB_CHECKOUT_P_P_O_PAYMENT_OPTIONS]
                           .forEach(
                         (pm) {
-                          checkoutProcessStateModel.paymentOption.add(CheckoutPaymentOption.toMap(pm));
+                          checkoutProcessStateModel.paymentOption.add(
+                            CheckoutPaymentOption.toMap(pm),
+                          );
                         },
                       );
                       setState(() => loading = false);
@@ -331,9 +403,12 @@ class _CheckoutOrderSectionState extends State<CheckoutOrderSection> {
                   if (!a) {
                     Scaffold.of(context).showSnackBar(
                       SnackBar(
+                        behavior: SnackBarBehavior.floating,
+                        backgroundColor: Color(0xff262726),
                         content: Text(
                           Language.getCartStrings(
                               "checkout_cart_edit.error.products_not_available"),
+                          style: TextStyle(color: Colors.white),
                         ),
                       ),
                     );
@@ -403,23 +478,26 @@ class _CheckoutOrderSectionState extends State<CheckoutOrderSection> {
       bool ok = await PosApi()
           .getInventory(widget.parts.getBusiness.id,
               GlobalUtils.activeToken.accessToken, _item.sku, context)
-          .then((inv) {
-        InventoryModel currentInv = InventoryModel.toMap(inv);
-        bool isOut = currentInv.isTrackable
-            // ? (currentInv.stock - (currentInv.reserved ?? 0)) > _item.quantity
-            ? (currentInv.stock) > _item.quantity
-            : true;
-        if (!isOut) {
-          ok2Checkout = false;
-          _item.inStock = false;
-        } else {
-          _item.inStock = true;
-        }
-        return ok2Checkout;
-      });
+          .then(
+        (inv) {
+          InventoryModel currentInv = InventoryModel.toMap(inv);
+          bool isOut = currentInv.isTrackable
+              // ? (currentInv.stock - (currentInv.reserved ?? 0)) > _item.quantity
+              ? (currentInv?.stock ?? 0) > _item.quantity
+              : true;
+          if (!isOut) {
+            ok2Checkout = false;
+            _item.inStock = false;
+          } else {
+            _item.inStock = true;
+          }
+          return ok2Checkout;
+        },
+      );
     }
-
-    setState(() => {});
+    setState(
+      () => {},
+    );
     return ok2Checkout;
   }
 }

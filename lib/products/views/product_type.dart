@@ -23,7 +23,6 @@ class _ButtonRowState extends State<ButtonRow> {
   @override
   void initState() {
     super.initState();
-    print(widget.parts.type);
     if (!widget.parts.editMode)
       widget.parts.type = ProductTypeEnum.physical;
     else {
@@ -45,20 +44,24 @@ class _ButtonRowState extends State<ButtonRow> {
               ? Colors.black.withOpacity(0.1)
               : Colors.white.withOpacity(0.2),
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  bottomLeft: Radius.circular(20))),
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              bottomLeft: Radius.circular(20),
+            ),
+          ),
           child: Text(
             Language.getProductStrings("category.type.service"),
             style: TextStyle(fontSize: AppStyle.fontSizeButtonTabSelect()),
           ),
           onPressed: () {
-            setState(() {
-              widget.parts.type = ProductTypeEnum.service;
-              service = true;
-              digital = false;
-              physical = false;
-            });
+            setState(
+              () {
+                widget.parts.type = ProductTypeEnum.service;
+                service = true;
+                digital = false;
+                physical = false;
+              },
+            );
           },
         ),
         Padding(

@@ -568,13 +568,17 @@ class SwitchParts {
         .getWallpaper(id, GlobalUtils.activeToken.accessToken, context)
         .then((obj) {
       wallpaperId = obj[GlobalUtils.CURRENT_WALLPAPER];
-      SharedPreferences.getInstance().then((p) {
-        preferences = p;
-        preferences.setString(
-            GlobalUtils.WALLPAPER, wallpaperBase + wallpaperId);
-        preferences.setString(GlobalUtils.BUSINESS, id);
-        print(id);
-      });
+      SharedPreferences.getInstance().then(
+        (p) {
+          preferences = p;
+          preferences.setString(
+            GlobalUtils.WALLPAPER,
+            wallpaperBase + wallpaperId,
+          );
+          preferences.setString(GlobalUtils.BUSINESS, id);
+          print(id);
+        },
+      );
     }).catchError((onError) {
       print("ERROR ---- $onError");
     });
