@@ -14,6 +14,13 @@ enum FieldType {
   sku,
 }
 
+/// ***
+/// 
+/// Custom made Textfield to keep the same style in the design of the products app
+/// 
+/// ***
+
+
 class CustomFormField extends StatelessWidget {
   final int flex;
 
@@ -40,7 +47,7 @@ class CustomFormField extends StatelessWidget {
 
   Map<FieldType, String> formaters = {
     FieldType.all: "[a-z A-Z 0-9 -- _ ]",
-    FieldType.numbers: "[0-9 .]",
+    FieldType.numbers: "[0-9].",
     FieldType.sku: "[a-z A-Z 0-9 -- _ ]",
   };
 

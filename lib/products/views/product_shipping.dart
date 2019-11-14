@@ -7,6 +7,9 @@ import 'package:provider/provider.dart';
 import '../utils/utils.dart';
 import 'custom_form_field.dart';
 import 'new_product.dart';
+/// ***
+/// Old and current implementation.
+/// ***
 
 class ProductShippingRow extends StatefulWidget {
   NewProductScreenParts parts;
@@ -411,10 +414,13 @@ class _ProductShippingRowState extends State<ProductShippingRow> {
   }
 }
 
-//^OLD VERSION
-//
-//
-//NEW VERSION ->
+/// ***
+/// ^ old implementation
+/// 
+/// HERE 
+/// 
+/// Current implementation
+/// ***
 
 class ShippingBody extends StatefulWidget {
   @override

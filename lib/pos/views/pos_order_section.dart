@@ -11,6 +11,14 @@ import '../models/models.dart';
 import '../utils/utils.dart';
 import 'webview_section.dart';
 
+/// ***
+/// 
+/// Unused class
+/// 
+/// Reason: move the order section to the Checkout.
+/// 
+/// ***
+
 class OrderSection extends StatefulWidget {
   final Color textColor = Colors.black.withOpacity(0.7);
   final Color textColorOUT = Colors.orangeAccent;

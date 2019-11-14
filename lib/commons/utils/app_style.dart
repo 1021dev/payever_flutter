@@ -72,7 +72,7 @@ class AppStyle {
 
   static double fontSizeCheckoutTitle() => 15;
 
-  static double fontSizeCheckoutButton() => 16;
+  static double fontSizeCheckoutButton() => 20;
 
   static double fontSizeCheckoutSuccessTitle() => 20;
 

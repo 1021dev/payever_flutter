@@ -41,6 +41,7 @@ class AppBarAvatar extends StatelessWidget {
     }
     return Theme(
       child: CircleAvatar(
+        backgroundColor: Colors.transparent,
         backgroundImage: noPicture ? MemoryImage(kTransparentImage) : image,
         child: _container,
       ),

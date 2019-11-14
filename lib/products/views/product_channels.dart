@@ -11,6 +11,10 @@ import '../network/network.dart';
 import '../utils/utils.dart';
 import 'new_product.dart';
 
+/// ***
+/// Old and current implementation.
+/// ***
+
 class ProductChannelsRow extends StatefulWidget {
   final NewProductScreenParts parts;
 
@@ -279,11 +283,16 @@ class _ProductChannelsRowState extends State<ProductChannelsRow> {
   }
 }
 
-//^OLD VERSION
-//
-//
-//
-// NEW VERSION ->
+/// ***
+/// ^ old implementation
+/// 
+/// HERE 
+/// 
+/// Take into consideration the fact that at the moment of developing there 
+/// are just two market placess (Shop or PoS)
+/// 
+/// Current implementation
+/// ***
 
 class ChannelsBoby extends StatelessWidget {
   @override

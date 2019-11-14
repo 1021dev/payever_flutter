@@ -111,9 +111,21 @@ class _CheckoutS2DeviceSectionState
                                 return Dialog(
                                     backgroundColor: Colors.transparent,
                                     child: CustomCheckoutPopUp(
+                                      action: () {
+                                        widget
+                                            .checkoutProcessStateModel
+                                            .posCartStateModel
+                                            .cartHasItems = false;
+                                        checkoutProcessStateModel.notify();
+                                      },
                                       icon: Icon(
                                         Icons.check_circle,
-                                        color: Colors.black,
+                                        // color: Colors.black,
+                                        color: Color(
+                                            Provider.of<GlobalStateModel>(
+                                                    context)
+                                                .currentBusiness
+                                                .secondary),
                                         size: 65,
                                       ),
                                       title: Language.getCheckoutSMSStrings(
@@ -138,9 +150,17 @@ class _CheckoutS2DeviceSectionState
               },
               color: continueStatus()
                   ? phoneSetUp(checkoutProcessStateModel)
-                      ? Colors.black.withOpacity(0.3)
-                      : Colors.black
-                  : Colors.black.withOpacity(0.3),
+                      ? Color(Provider.of<GlobalStateModel>(context)
+                              .currentBusiness
+                              .secondary)
+                          .withOpacity(0.3)
+                      : Color(Provider.of<GlobalStateModel>(context)
+                          .currentBusiness
+                          .secondary)
+                  : Color(Provider.of<GlobalStateModel>(context)
+                          .currentBusiness
+                          .secondary)
+                      .withOpacity(0.3),
               twoButtons: true,
               secondAction: () {
                 checkoutProcessStateModel
@@ -175,6 +195,15 @@ class _CheckoutS2DeviceSectionState
         (checkoutProcessStateModel.checkoutStructure.phoneNumber == null);
   }
 }
+
+/// ***
+///
+/// HERE
+///
+/// This implementation transform the section "send to device" into a
+/// popup that will be used to finish santander payments.
+///
+/// ***
 
 class CheckoutS2DeviceSectionPopUp extends StatefulWidget {
   final CheckoutProcessStateModel checkoutProcessStateModel;
@@ -256,15 +285,19 @@ class _CheckoutS2DeviceSectionPopUpState
                     !phoneSetUp(checkoutProcessStateModel)) {
                   setState(() => loading = true);
                   String url = "";
-                  // print("payment = ${widget.payment}");
-                  if (widget.payment == "Paypal") {
-                    url = await checkoutProcessStateModel.paypalLauncher(
+
+                  if (widget.payment.contains("santander")) {
+                    url = await checkoutProcessStateModel.paymentLauncher(
                       isEmail: phoneTextField.controller.text.isEmpty,
                       text: phoneTextField.controller.text,
+                      paymentIndex: checkoutProcessStateModel.paymentOption
+                          .where(
+                              (item) => item.payment_method == widget.payment)
+                          .first
+                          .id,
                     );
                   }
                   if (url.isNotEmpty) {
-                    // launch(url);
                     CheckoutProcessApi()
                         .postSendToDev(
                       urlGetter(url, checkoutProcessStateModel),
@@ -287,9 +320,17 @@ class _CheckoutS2DeviceSectionPopUpState
                             return Dialog(
                               backgroundColor: Colors.transparent,
                               child: CustomCheckoutPopUp(
+                                action: () {
+                                  widget.checkoutProcessStateModel
+                                      .posCartStateModel.cartHasItems = false;
+                                  widget.checkoutProcessStateModel.amount
+                                      .value = "";
+                                  widget.checkoutProcessStateModel.reference
+                                      .value = "";
+                                  checkoutProcessStateModel.notify();
+                                },
                                 icon: Icon(
                                   Icons.check_circle,
-                                  color: Colors.black,
                                   size: 65,
                                 ),
                                 title: Language.getCheckoutSMSStrings(
@@ -315,109 +356,23 @@ class _CheckoutS2DeviceSectionPopUpState
                   }
                 }
               },
-
-              // () {
-              //   if (continueStatus() &&
-              //       !loading &&
-              //       !phoneSetUp(checkoutProcessStateModel)) {
-              //     setState(() => loading = true);
-              //     CheckoutProcessApi()
-              //         .postCheckout(checkoutProcessStateModel.flowObj["id"],
-              //             checkoutProcessStateModel.getchannelSet)
-              //         .then(
-              //       (message) {
-              //         CheckoutProcessApi()
-              //             .patchCheckoutPaymentOption(
-              //                 checkoutProcessStateModel.flowObj["id"], 13)
-              //             .then((_) {
-              //           CheckoutProcessApi()
-              //               .postCheckoutPayment(
-              //                   checkoutProcessStateModel.flowObj["id"], 13)
-              //               .then((paymentUrl) {
-              //             CheckoutProcessApi()
-              //                 .postStorageSimple(
-              //               checkoutProcessStateModel.flowObj,
-              //               true,
-              //               true,
-              //               phoneTextField.controller.text,
-              //               phoneTextField.controller.text.isEmpty
-              //                   ? "email"
-              //                   : "sms",
-              //               DateTime.now()
-              //                   .subtract(
-              //                     Duration(
-              //                       hours: 2,
-              //                     ),
-              //                   )
-              //                   .add(
-              //                     Duration(minutes: 1),
-              //                   )
-              //                   .toIso8601String(),
-              //               false,
-              //             )
-              //                 .then(
-              //               (a) {
-              //                 String url = Env.payments + paymentUrl["redirect_url"] +"?access_token=${GlobalUtils.activeToken.accessToken}";
-              //                 launch(url);
-              //                 //     "/pay/restore-flow-from-code/" +
-              //                 //     a["id"];
-              //                 // CheckoutProcessApi()
-              //                 //     .postSendToDev(
-              //                 //   urlGetter(url, checkoutProcessStateModel),
-              //                 //   emailTextField.controller.text ?? "",
-              //                 //   "${checkoutProcessStateModel.checkoutStructure.name}",
-              //                 //   checkoutProcessStateModel.flowObj["id"],
-              //                 //   phoneTextField.controller.text.isNotEmpty
-              //                 //       ? checkoutProcessStateModel
-              //                 //               .checkoutStructure.phoneNumber ??
-              //                 //           ""
-              //                 //       : "",
-              //                 //   phoneTextField.controller.text ?? "",
-              //                 // )
-              //                 //     .then((_) {
-              //                 //   showDialog(
-              //                 //     context: context,
-              //                 //     barrierDismissible: false,
-              //                 //     builder: (context) {
-              //                 //       return Dialog(
-              //                 //         backgroundColor: Colors.transparent,
-              //                 //         child: CustomCheckoutPopUp(
-              //                 //           icon: Icon(
-              //                 //             Icons.check_circle,
-              //                 //             color: Colors.black,
-              //                 //             size: 65,
-              //                 //           ),
-              //                 //           title: Language.getCheckoutSMSStrings(
-              //                 //             "checkout_send_flow.finish.header",
-              //                 //           ),
-              //                 //           message: Language.getCheckoutSMSStrings(
-              //                 //             "checkout_send_flow.finish.caption",
-              //                 //           ),
-              //                 //         ),
-              //                 //       );
-              //                 //     },
-              //                 //   );
-              //                 // }).catchError((onError) {
-              //                 //   print(onError.toString());
-              //                 // });
-              //               },
-              //             );
-              //           });
-              //         });
-              //       },
-              //     ).catchError(
-              //       (onError) {
-              //         print(onError.toString());
-              //       },
-              //     );
-              //   } else {}
-              // },
-
               color: continueStatus()
                   ? phoneSetUp(checkoutProcessStateModel)
-                      ? Colors.black.withOpacity(0.3)
-                      : Colors.black
-                  : Colors.black.withOpacity(0.3),
+                      ? Color(
+                          Provider.of<GlobalStateModel>(context)
+                              .currentBusiness
+                              .secondary,
+                        ).withOpacity(0.3)
+                      : Color(
+                          Provider.of<GlobalStateModel>(context)
+                              .currentBusiness
+                              .secondary,
+                        )
+                  : Color(
+                      Provider.of<GlobalStateModel>(context)
+                          .currentBusiness
+                          .secondary,
+                    ).withOpacity(0.3),
             ),
           ],
         ),

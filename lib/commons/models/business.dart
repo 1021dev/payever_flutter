@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 import '../utils/utils.dart';
 
 class Business {
@@ -14,6 +16,8 @@ class Business {
   ContactDetails _contactDetails;
   String _primaryColor;
   String _secondaryColor;
+  String _primaryTransparency;
+  String _secondaryTransparency;
 
   Business.map(dynamic obj) {
     this._id = obj[GlobalUtils.DB_BUSINESS_ID];
@@ -24,8 +28,8 @@ class Business {
     this._active = obj[GlobalUtils.DB_BUSINESS_ACTIVE];
     this._currency = obj[GlobalUtils.DB_BUSINESS_CURRENCY];
     this._name = obj[GlobalUtils.DB_BUSINESS_NAME];
-    this._primaryColor = obj[GlobalUtils.DB_BUSINESS_PRIMARYCOLOR];
-    this._secondaryColor = obj[GlobalUtils.DB_BUSINESS_SECONDARYCOLOR];
+    // this._primaryColor = obj[GlobalUtils.DB_BUSINESS_PRIMARYCOLOR];
+    // this._secondaryColor = obj[GlobalUtils.DB_BUSINESS_SECONDARYCOLOR];
 
     this._companyAddress =
         CompanyAddress.map(obj[GlobalUtils.DB_BUSINESS_COMPANY_ADDRESS]);
@@ -34,6 +38,11 @@ class Business {
     this._contactDetails =
         ContactDetails.map(obj[GlobalUtils.DB_BUSINESS_CONTACT_DETAILS]);
   }
+  setPrimaryColor(String color) => _primaryColor = color;
+  setSecondaryColor(String color) => _secondaryColor = color;
+
+  setPrimaryTransparency(String color) => _primaryTransparency = color;
+  setSecondaryTransparency(String color) => _secondaryTransparency = color;
 
   String get id => _id;
 
@@ -52,8 +61,13 @@ class Business {
   String get name => _name;
 
   String get primaryColor => _primaryColor;
-  
   String get secondaryColor => _secondaryColor;
+
+  String get primaryTransparency => _primaryTransparency;
+  String get secondaryTransparency => _secondaryTransparency;
+
+  int get primary => int.tryParse("0x$primaryTransparency$primaryColor")??int.parse("0xffffffff");
+  int get secondary => int.tryParse("0x$secondaryTransparency$secondaryColor")??int.parse("0xff000000");
 
   CompanyAddress get companyAddress => _companyAddress;
 

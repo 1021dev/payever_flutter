@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:payever/checkout_process/utils/checkout_process_utils.dart';
 import 'package:payever/commons/views/custom_elements/appbar_avatar.dart';
 import 'package:provider/provider.dart';
 import '../views/custom_elements/custom_elements.dart';
@@ -41,7 +43,9 @@ class CheckOutScreen extends StatelessWidget {
 
 class CheckoutProcessScreen extends StatefulWidget {
   final bool manual;
-  const CheckoutProcessScreen({@required this.manual,});
+  const CheckoutProcessScreen({
+    @required this.manual,
+  });
 
   @override
   _CheckoutProcessScreenState createState() => _CheckoutProcessScreenState();
@@ -54,22 +58,44 @@ class _CheckoutProcessScreenState extends State<CheckoutProcessScreen> {
         Provider.of<CheckoutProcessStateModel>(context);
     return Scaffold(
       appBar: AppBar(
+        brightness: Brightness.light,
         centerTitle: true,
         title: AppBarAvatar(),
-        backgroundColor: Color(Provider.of<GlobalStateModel>(context).currentBusiness.primaryColor??0xffffffff),
-        actions: <Widget>[],
+        backgroundColor: Color(
+            Provider.of<GlobalStateModel>(context).currentBusiness.primary ??
+                0xffffffff),
+        actions: <Widget>[
+          widget.manual
+              ? Container()
+              : DeleteButton(
+                  checkoutProcessStateModel: checkoutProcessStateModel,
+                  action: () => setState(() {}),
+                ),
+        ],
         iconTheme: IconThemeData(color: Colors.black),
         leading: IconButton(
           icon: Icon(Icons.close),
-          onPressed: ()=>Navigator.of(context).pop(),
+          onPressed: () => Navigator.of(context).pop(),
         ),
       ),
       backgroundColor: Colors.white,
       body: CustomFutureBuilder(
         errorMessage: "",
-        future: CheckoutProcessApi().getCheckoutFlow(
-          checkoutProcessStateModel.getchannelSet,
-        ),
+        // future: CheckoutProcessApi().getCheckoutFlow(
+        //   checkoutProcessStateModel.getchannelSet,
+        // ),
+
+        /// ***
+        ///
+        /// The use of a Temporal Flow Obj is to get from the server 
+        /// the specific payments for PoS that the checkout uses
+        ///   (the stepper is for the checkout construction same as the web version does it but with  ==  "order" 
+        ///     to restrict it just to use the orden + the custombuttons).
+        /// 
+        /// ***
+        
+        future: checkoutProcessStateModel                           
+            .startCheckout(Provider.of<GlobalStateModel>(context)),
         onDataLoaded: (results) {
           CheckoutStructure checkoutStructure =
               CheckoutStructure.fromMap(results);
@@ -77,13 +103,22 @@ class _CheckoutProcessScreenState extends State<CheckoutProcessScreen> {
           List<String> headers = List();
           checkoutProcessStateModel.setcheckoutStructure(checkoutStructure);
           for (var i in checkoutStructure.sections) {
+            /// ***
+            /// to test just need to chage the commented 
+            /// if - checkout_screen.dart line 113
+            /// and  
+            /// the sectionMap - checkout_process_state_model.dart line 182
+            /// old implementation.
+
             // if (i.enabled ) {
             if (i.enabled && i.code == "order") {
               checkoutProcessStateModel.sectionIndexMap
                   .addAll({i.code: i.order});
               headers.add(i.code);
               if (i.code == "order" && widget.manual) {
-                bodies.add(checkoutProcessStateModel.sectionMap[i.code+"_manual"]);
+                bodies.add(
+                  checkoutProcessStateModel.sectionMap[i.code + "_manual"],
+                );
               } else {
                 bodies.add(checkoutProcessStateModel.sectionMap[i.code]);
               }
@@ -97,6 +132,72 @@ class _CheckoutProcessScreenState extends State<CheckoutProcessScreen> {
           return stepper;
         },
       ),
+    );
+  }
+
+  /// ***
+  /// 
+  /// The temporal flow is need because its the way to know 
+  /// which paymentes are enabled in the terminal.
+  /// 
+  /// ***
+
+  temporalFlow(channelSet, checkoutProcessStateModel) async {
+    var obj = await CheckoutProcessApi().createFlow(
+      null,
+      [],
+      channelSet,
+      Provider.of<GlobalStateModel>(context).currentBusiness.createdAt,
+      false,
+    );
+    checkoutProcessStateModel.paymentOption.clear();
+    obj[CheckoutProcessUtils.DB_CHECKOUT_P_P_O_PAYMENT_OPTIONS].forEach(
+      (pm) {
+        checkoutProcessStateModel.paymentOption.add(
+          CheckoutPaymentOption.toMap(pm),
+        );
+      },
+    );
+  }
+}
+
+class DeleteButton extends StatefulWidget {
+  final VoidCallback action;
+  final CheckoutProcessStateModel checkoutProcessStateModel;
+  const DeleteButton({Key key, this.action, this.checkoutProcessStateModel})
+      : super(key: key);
+
+  @override
+  _DeleteButtonState createState() => _DeleteButtonState();
+}
+
+class _DeleteButtonState extends State<DeleteButton> {
+  @override
+  void initState() {
+    super.initState();
+    widget.checkoutProcessStateModel.notifier
+        .addListener(() => setState(() {}));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: SvgPicture.asset(
+        "assets/images/trashicon.svg",
+        color: widget.checkoutProcessStateModel.posStateModel.haveProducts
+            ? Colors.black
+            : Colors.black45,
+        height: Measurements.height * 0.035,
+      ),
+      onPressed: () {
+        setState(() {
+          // widget.action();
+          widget.checkoutProcessStateModel.posStateModel.trashCart();
+          widget.checkoutProcessStateModel.posCartStateModel.cartHasItems =
+              false;
+          widget.checkoutProcessStateModel.notifyListeners();
+        });
+      },
     );
   }
 }

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:payever/checkout_process/utils/checkout_process_utils.dart';
 import 'package:payever/checkout_process/views/custom_elements/custom_elements.dart';
+import 'package:payever/commons/views/custom_elements/custom_keyboard.dart';
 import 'package:payever/commons/views/views.dart';
 import 'package:provider/provider.dart';
 
@@ -575,6 +577,8 @@ class _CustomTextFieldFormState extends State<CustomTextFieldForm> {
         ),
       ),
       child: TextField(
+        keyboardType:
+            widget.numeric ? NumberKeyboard.inputType : TextInputType.text,
         inputFormatters: <TextInputFormatter>[
           widget.numeric
               ? WhitelistingTextInputFormatter(
@@ -585,10 +589,173 @@ class _CustomTextFieldFormState extends State<CustomTextFieldForm> {
               : widget.isPhone
                   ? WhitelistingTextInputFormatter.digitsOnly
                   : BlacklistingTextInputFormatter(
+                      RegExp(
+                        GlobalUtils.RX_emoji,
+                      ),
+                    ),
+          widget.isPhone
+              ? phoneFormatter
+              : BlacklistingTextInputFormatter(
                   RegExp(
                     GlobalUtils.RX_emoji,
                   ),
                 ),
+        ],
+        controller: widget.controller,
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          labelText: !widget.error.value
+              ? widget.label
+              : widget.errorLabel ?? widget.label,
+          labelStyle: TextStyle(
+            fontSize: AppStyle.fontSizeCheckoutEditTextLabel(),
+            color: !widget.error.value
+                ? Colors.black.withOpacity(0.6)
+                : Colors.red,
+            fontWeight: AppStyle.fontWeightCheckoutEditTextLabel(),
+          ),
+        ),
+        style: TextStyle(
+          color: Colors.black,
+        ),
+        cursorColor: Colors.black,
+        cursorWidth: 1,
+        onChanged: (text) {
+          setState(
+            () {
+              widget.textValidation = widget.validator(text);
+            },
+          );
+        },
+      ),
+    );
+  }
+}
+
+class CashTextFieldForm extends StatefulWidget {
+  ValueNotifier<bool> error;
+  bool bot;
+  final String label;
+  final bool mandatory;
+  String errorLabel;
+  String init;
+  CheckoutProcessStateModel checkoutProcessStateModel;
+  bool Function(String) validator;
+  bool textValidation = false;
+  final bool isPhone;
+  bool borderTop;
+  bool borderBot;
+  bool borderRight;
+  bool borderLeft;
+  BorderRadius borderRadius;
+  bool numeric;
+
+  CashTextFieldForm(
+    this.label,
+    this.mandatory,
+    this.error,
+    this.checkoutProcessStateModel, {
+    this.init = "",
+    this.errorLabel,
+    this.validator,
+    this.borderRadius,
+    this.borderTop = true,
+    this.borderBot = true,
+    this.borderRight = true,
+    this.borderLeft = true,
+    this.isPhone = false,
+    this.bot = true,
+    this.numeric = false,
+  }) {
+    controller = TextEditingController(text: init);
+  }
+
+  TextEditingController controller;
+  bool get getError => error.value;
+
+  @override
+  _CashTextFieldFormState createState() => _CashTextFieldFormState();
+}
+
+class _CashTextFieldFormState extends State<CashTextFieldForm> {
+  Color colorOk = Colors.black.withOpacity(0.3);
+  Color colorError = Colors.red;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.error.addListener(
+      () {
+        setState(
+          () {},
+        );
+        if (widget.checkoutProcessStateModel != null)
+          widget.checkoutProcessStateModel.checkShipping();
+      },
+    );
+  }
+
+  NumberTextInputFormatter phoneFormatter = NumberTextInputFormatter();
+  @override
+  Widget build(BuildContext context) {
+    widget.error.value =
+        ((widget.controller?.text?.isEmpty ?? true) && widget.mandatory) ||
+            widget.textValidation;
+    Color colorOK = Colors.black;
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: 10,
+      ),
+      decoration: BoxDecoration(
+        borderRadius: widget.borderRadius,
+        border: Border(
+          top: BorderSide(
+            // color: !widget.error.value ? colorOk : colorError,
+            color: widget.borderTop
+                ? colorOK.withOpacity(0.3)
+                : colorOK.withOpacity(0.1),
+          ),
+          bottom: BorderSide(
+            // color: !widget.error.value ? colorOk : colorError,
+            color: widget.borderBot
+                ? colorOK.withOpacity(0.3)
+                : colorOK.withOpacity(0.1),
+          ),
+          left: BorderSide(
+            // color: !widget.error.value ? colorOk : colorError,
+            color: widget.borderLeft
+                ? colorOK.withOpacity(0.3)
+                : colorOK.withOpacity(0.1),
+          ),
+          right: BorderSide(
+            // color: !widget.error.value ? colorOk : colorError,
+            color: widget.borderRight
+                ? colorOK.withOpacity(0.3)
+                : colorOK.withOpacity(0.1),
+          ),
+        ),
+      ),
+      child: TextField(
+        showCursor: false,
+        autocorrect: false,
+        enableInteractiveSelection: true,
+        // keyboardType: widget.numeric?NumberKeyboard.inputType:TextInputType.text,
+        keyboardType: TextInputType.numberWithOptions(decimal: true),
+        inputFormatters: <TextInputFormatter>[
+          CurrencyInputFormatter(),
+          widget.numeric
+              ? WhitelistingTextInputFormatter(
+                  RegExp(
+                    r"^\d{1,12}\.?\d{0,2}",
+                  ),
+                )
+              : widget.isPhone
+                  ? WhitelistingTextInputFormatter.digitsOnly
+                  : BlacklistingTextInputFormatter(
+                      RegExp(
+                        GlobalUtils.RX_emoji,
+                      ),
+                    ),
           widget.isPhone
               ? phoneFormatter
               : BlacklistingTextInputFormatter(
@@ -664,6 +831,26 @@ class _ShippingButtonState extends State<ShippingButton> {
         }
       },
       color: widget.check.value ? Colors.black : Colors.black.withOpacity(0.3),
+    );
+  }
+}
+
+class CurrencyInputFormatter extends TextInputFormatter {
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    final StringBuffer newText = StringBuffer();
+
+    if (!newValue.text.endsWith(","))
+      newText.write(newValue.text);
+    else
+      newText.write(oldValue.text + ".");
+    print(newText.toString());
+
+    return TextEditingValue(
+      text: newText.toString(),
+      selection: TextSelection.collapsed(
+        offset: newText.length,
+      ),
     );
   }
 }

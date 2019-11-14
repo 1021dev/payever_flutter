@@ -9,7 +9,6 @@ import '../utils/utils.dart';
 class CheckoutProcessApi extends RestDataSource {
   NetworkUtil _netUtil = NetworkUtil();
   String token = GlobalUtils.activeToken.accessToken;
-  
 
   Future<dynamic> getCheckoutFlow(String channelSet) async {
     print("TAG - getCheckoutFlow()");
@@ -123,11 +122,13 @@ class CheckoutProcessApi extends RestDataSource {
         "expiresAt": expiration
       },
     );
+    print(body);
     var headers = {
       HttpHeaders.authorizationHeader: "Bearer $token",
       HttpHeaders.contentTypeHeader: "application/json",
       HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
     };
+    print(RestDataSource.storageUrl);
     return _netUtil
         .post(RestDataSource.storageUrl, headers: headers, body: body)
         .then(
@@ -168,7 +169,7 @@ class CheckoutProcessApi extends RestDataSource {
       "payment_option_id": paymentOption,
       "remember_me": false,
     });
-    print("TAG - postCheckout()");
+    print("TAG - postCheckoutPayement()");
     var headers = {
       HttpHeaders.authorizationHeader: "Bearer $token",
       HttpHeaders.contentTypeHeader: "application/json",
@@ -178,6 +179,7 @@ class CheckoutProcessApi extends RestDataSource {
         .post(RestDataSource.checkoutV1Payment, headers: headers, body: body)
         .then(
       (dynamic res) {
+        print(">> RES: $res");
         return res;
       },
     );
@@ -197,6 +199,8 @@ class CheckoutProcessApi extends RestDataSource {
       HttpHeaders.contentTypeHeader: "application/json",
       HttpHeaders.userAgentHeader: GlobalUtils.fingerprint,
     };
+    print("URL  : ${RestDataSource.checkoutV3 + "$id?_locale=${Language.language}"}");
+    print("body : $body");
     return _netUtil
         .patch(
       RestDataSource.checkoutV3 + "$id?_locale=${Language.language}",
@@ -242,6 +246,7 @@ class CheckoutProcessApi extends RestDataSource {
         },
       );
     }
+    print(body);
     var headers = {
       HttpHeaders.authorizationHeader: "Bearer $token",
       HttpHeaders.contentTypeHeader: "application/json",

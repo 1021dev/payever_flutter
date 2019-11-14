@@ -28,15 +28,16 @@ class _ProductVisibilityRowState extends State<ProductVisibilityRow> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Container(
-                padding: EdgeInsets.symmetric(
-                    horizontal: Measurements.width * 0.025),
-                alignment: Alignment.center,
-                height:
-                    Measurements.height * (widget.parts.isTablet ? 0.05 : 0.07),
-                child: Text(
-                  "Show this product",
-                  style: TextStyle(fontSize: AppStyle.fontSizeTabContent()),
-                )),
+              padding:
+                  EdgeInsets.symmetric(horizontal: Measurements.width * 0.025),
+              alignment: Alignment.center,
+              height:
+                  Measurements.height * (widget.parts.isTablet ? 0.05 : 0.07),
+              child: Text(
+                "Show this product",
+                style: TextStyle(fontSize: AppStyle.fontSizeTabContent()),
+              ),
+            ),
             Switch(
               activeColor: widget.parts.switchColor,
               value: widget.parts.enabled,
@@ -70,8 +71,10 @@ class _ProductVisibilityState extends State<ProductVisibility> {
       // topRight: true,
       text: "Show this product",
       value: Provider.of<ProductStateModel>(context).editProduct.active,
-      onChange: (bool _active){
-        setState(() => Provider.of<ProductStateModel>(context).editProduct.active = _active);
+      onChange: (bool _active) {
+        setState(() => Provider.of<ProductStateModel>(context)
+            .editProduct
+            .active = _active);
       },
     );
   }

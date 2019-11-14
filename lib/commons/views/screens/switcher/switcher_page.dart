@@ -11,6 +11,18 @@ import '../../../utils/utils.dart';
 import '../dashboard/dashboard_screen_ref.dart';
 import 'loader.dart';
 
+/// ***
+///
+/// This Screen can and should be refactor.
+///   reason for it:
+///   - bad widget construction.
+///   - bad widget modularization.
+///   - no code reuse.
+///
+/// Even that its not well implemented code wise its fully stable and behave as expected.
+///
+///  ***
+
 const double _heightFactorTablet = 0.05;
 const double _heightFactorPhone = 0.07;
 //const double _widthFactorTablet = 2.0;
@@ -310,16 +322,18 @@ class _SwitcherState extends State<Switcher> {
           parts._widgets.add(AppWidget.map(item));
         });
         Navigator.pushReplacement(
-            context,
-            PageTransition(
-                child: DashboardScreen(appWidgets: parts._widgets),
-                // child:DashboardScreen(
-                //   GlobalUtils.ActiveToken,
-                //   wallpaperId.isEmpty? NetworkImage(WALLPAPER_BASE + wallpaperId):AssetImage("images/loginHorizontalTablet.png"),
-                //   null,
-                //   parts._widgets,
-                //   parts._logUser),
-                type: PageTransitionType.fade));
+          context,
+          PageTransition(
+            child: DashboardScreen(appWidgets: parts._widgets),
+            // child:DashboardScreen(
+            //   GlobalUtils.ActiveToken,
+            //   wallpaperId.isEmpty? NetworkImage(WALLPAPER_BASE + wallpaperId):AssetImage("images/loginHorizontalTablet.png"),
+            //   null,
+            //   parts._widgets,
+            //   parts._logUser),
+            type: PageTransitionType.fade,
+          ),
+        );
       }).catchError((onError) {
         print("wigets $onError");
       });
@@ -449,9 +463,10 @@ class _SwitcherState extends State<Switcher> {
                                             height: Measurements.height * 0.08,
                                             width: Measurements.height * 0.08,
                                             decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color: Colors.black
-                                                    .withOpacity(0.2)),
+                                              shape: BoxShape.circle,
+                                              color:
+                                                  Colors.black.withOpacity(0.2),
+                                            ),
                                           ),
                                           Container(
                                             child: CircularProgressIndicator(),
@@ -461,30 +476,117 @@ class _SwitcherState extends State<Switcher> {
                                     : Container(),
                               ],
                             ),
-                            onTap: () {
-                              print("onIconSelect - business");
-                              setState(() => _loadBusiness = true);
-                              parts
-                                  .fetchWallpaper(parts._active.id, context)
-                                  .then((img) {
-                                parts
-                                    .getWidgets(parts._active.id, context)
-                                    .then((onValue) {
-                                  Provider.of<GlobalStateModel>(context)
-                                      .setCurrentBusiness(parts._active);
-                                  SharedPreferences.getInstance().then((p) {
-                                    Provider.of<GlobalStateModel>(context)
-                                        .setCurrentWallpaper(
-                                            p.getString(GlobalUtils.WALLPAPER));
-                                    Navigator.pushReplacement(
-                                        context,
-                                        PageTransition(
-                                            child: DashboardScreen(
-                                                appWidgets: parts._widgets),
-                                            type: PageTransitionType.fade));
-                                  });
-                                });
-                              });
+                            onTap: () async {
+                              var img = await parts.fetchWallpaper(
+                                  parts._active.id, context);
+                              var p = await SharedPreferences.getInstance();
+                              Provider.of<GlobalStateModel>(context)
+                                  .setCurrentWallpaper(
+                                      p.getString(GlobalUtils.WALLPAPER));
+                              Provider.of<GlobalStateModel>(context)
+                                  .setCurrentBusiness(parts._active);
+                              var business =
+                                  await RestDataSource().getBusinessPOS(
+                                GlobalUtils.activeToken.accessToken,
+                                parts._active.id,
+                              );
+                              var a = await parts.getWidgets(
+                                  parts._active.id, context);
+                              var primary =
+                                  business["primaryColor"] ?? "ffffff";
+                              var secondary =
+                                  business["secondaryColor"] ?? "000000";
+                              var primayTransparency =
+                                  business["primaryTransparency"] ?? "ff";
+                              var secondaryTransparency =
+                                  business["secondaryTransparency"] ?? "ff";
+                              if (primary != null)
+                                Provider.of<GlobalStateModel>(context)
+                                    .currentBusiness
+                                    .setPrimaryColor(primary);
+                              Provider.of<GlobalStateModel>(context)
+                                  .currentBusiness
+                                  .setPrimaryTransparency(primayTransparency);
+                              if (secondary != null)
+                                Provider.of<GlobalStateModel>(context)
+                                    .currentBusiness
+                                    .setSecondaryColor(
+                                      secondary,
+                                    );
+                              Provider.of<GlobalStateModel>(context)
+                                  .currentBusiness
+                                  .setSecondaryTransparency(
+                                    secondaryTransparency,
+                                  );
+                              Navigator.pushReplacement(
+                                context,
+                                PageTransition(
+                                  child: DashboardScreen(
+                                    appWidgets: parts._widgets,
+                                  ),
+                                  type: PageTransitionType.fade,
+                                ),
+                              );
+                              //   print("onIconSelect - business");
+                              //   setState(() => _loadBusiness = true);
+                              //   parts
+                              //       .fetchWallpaper(parts._active.id, context)
+                              //       .then((img) {
+                              //     parts
+                              //         .getWidgets(parts._active.id, context)
+                              //         .then((onValue) {
+                              //       Provider.of<GlobalStateModel>(context)
+                              //           .setCurrentBusiness(parts._active);
+                              //       RestDataSource()
+                              //           .getBusinessPOS(
+                              //         GlobalUtils.activeToken.accessToken,
+                              //         parts._active.id,
+                              //       )
+                              //           .then((business) {
+                              //         print(">>ONE");
+                              //         var primary =
+                              //             business["primaryColor"] ?? "ffffff";
+                              //         var secondary =
+                              //             business["secondaryColor"] ?? "000000";
+                              //         var primayTransparency = business["primaryTransparency"] ??"ff";
+                              //         var secondaryTransparency =business["secondaryTransparency"] ?? "ff";
+                              //         if (primary != null)
+                              //           Provider.of<GlobalStateModel>(context)
+                              //               .currentBusiness
+                              //               .setPrimaryColor(primary);
+                              //         Provider.of<GlobalStateModel>(context)
+                              //             .currentBusiness
+                              //             .setPrimaryTransparency(
+                              //                 primayTransparency);
+                              //         if (secondary != null)
+                              //           Provider.of<GlobalStateModel>(context)
+                              //               .currentBusiness
+                              //               .setSecondaryColor(
+                              //                 secondary,
+                              //               );
+                              //         Provider.of<GlobalStateModel>(context)
+                              //             .currentBusiness
+                              //             .setSecondaryTransparency(
+                              //               secondaryTransparency,
+                              //             );
+                              //         print(">>ONE");
+                              //         SharedPreferences.getInstance().then((p) {
+                              //           Provider.of<GlobalStateModel>(context)
+                              //               .setCurrentWallpaper(p.getString(
+                              //                   GlobalUtils.WALLPAPER));
+                              //           Navigator.pushReplacement(
+                              //             context,
+                              //             PageTransition(
+                              //               child: DashboardScreen(
+                              //                 appWidgets: parts._widgets,
+                              //               ),
+                              //               type: PageTransitionType.fade,
+                              //             ),
+                              //           );
+                              //         });
+                              //       });
+                              //     });
+                              //   });
                             },
                           ),
                           Padding(
@@ -564,6 +666,7 @@ class SwitchParts {
     String wallpaperId;
     SharedPreferences preferences;
     RestDataSource api = new RestDataSource();
+    bool e = false;
     await api
         .getWallpaper(id, GlobalUtils.activeToken.accessToken, context)
         .then((obj) {
@@ -581,8 +684,9 @@ class SwitchParts {
       );
     }).catchError((onError) {
       print("ERROR ---- $onError");
+      e = true;
     });
-    return wallpaperBase + wallpaperId;
+    return e ? null : wallpaperBase + wallpaperId;
   }
 
   Future<List<AppWidget>> getWidgets(String id, BuildContext context) async {

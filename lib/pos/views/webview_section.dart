@@ -6,6 +6,14 @@ import '../view_models/view_models.dart';
 import '../network/network.dart';
 import '../utils/utils.dart';
 
+/// ***
+/// 
+/// Unused class.
+/// 
+/// Reason: First try for a checkout with a native product grid.
+/// 
+/// ***
+
 class WebViewPayments extends StatefulWidget {
   final PosStateModel posStateModel;
   final String url;

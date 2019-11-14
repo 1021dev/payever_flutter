@@ -60,17 +60,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             onPressed: () => Navigator.pop(context),
           ),
           centerTitle: true,
-          // title: Text(
-          //   "Product details",
-          //   style: TextStyle(
-          //     color: Colors.black,
-          //   ),
-          // ),
           title: AppBarAvatar(),
-          backgroundColor: Color(Provider.of<GlobalStateModel>(context)
-                  .currentBusiness
-                  .primaryColor ??
-              0xffffffff),
+          backgroundColor: Color(
+              Provider.of<GlobalStateModel>(context).currentBusiness.primary ??
+                  0xFFFFFFFF),
           actions: <Widget>[
             IconButton(
               icon: Stack(
@@ -167,7 +160,6 @@ class _DetailedProductState extends State<DetailedProduct> {
         ),
         child: ListView(
           shrinkWrap: false,
-          // shrinkWrap: !Provider.of<GlobalStateModel>(context).isTablet,
           children: <Widget>[
             DetailsInfo(
               parts: widget.parts,
@@ -231,9 +223,7 @@ class _DetailsInfoState extends State<DetailsInfo> {
     haveVariants = widget.currentProduct.variants.isNotEmpty;
     currentVariant.addListener(
       () => setState(
-        () {
-          // print("setState on DetailsInfoState");
-        },
+        () {},
       ),
     );
     if (widget.currentProduct.variants != null) {
@@ -294,112 +284,118 @@ class _DetailsInfoState extends State<DetailsInfo> {
         loadingWidget: Column(
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
-            SizedBox(height: MediaQuery.of(context).size.height *0.4,),
-            Center(child: CircularProgressIndicator(backgroundColor: Colors.black,)),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.4,
+            ),
+            Center(
+              child: CircularProgressIndicator(
+                backgroundColor: Colors.black,
+              ),
+            ),
           ],
         ),
         onDataLoaded: (results) {
           Color color = Color(Provider.of<GlobalStateModel>(context)
                   .currentBusiness
-                  .secondaryColor ??
+                  .secondary ??
               0xff000000);
           return isTablet
-              ? Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children:[Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Expanded(
-                      child: Column(
-                        children: <Widget>[
-                          DetailImage(
-                            haveVariants: haveVariants,
-                            currentVariant: currentVariant,
-                            parts: posProvider,
-                            imagesBase: imagesBase,
-                            index: (widget.haveVariants &&
-                                    (widget
-                                        .currentProduct
-                                        .variants[currentVariant.value]
-                                        .images
-                                        .isNotEmpty))
-                                ? imagesBase.length
-                                : 0,
-                          ),
-                          Description(
-                            currentProduct: widget.currentProduct,
-                            currentVariant: currentVariant,
-                            haveVariants: haveVariants,
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      width: 30,
-                    ),
-                    Expanded(
-                      child: Container(
+              ? Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Expanded(
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
                           children: <Widget>[
-                            NameNPrice(
+                            DetailImage(
+                              haveVariants: haveVariants,
+                              currentVariant: currentVariant,
+                              parts: posProvider,
+                              imagesBase: imagesBase,
+                              index: (widget.haveVariants &&
+                                      (widget
+                                          .currentProduct
+                                          .variants[currentVariant.value]
+                                          .images
+                                          .isNotEmpty))
+                                  ? imagesBase.length
+                                  : 0,
+                            ),
+                            Description(
                               currentProduct: widget.currentProduct,
                               currentVariant: currentVariant,
+                              haveVariants: haveVariants,
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(bottom: 20),
-                              child: VariantSection(currentVariant),
-                            ),
-                            Container(
-                              alignment: Alignment.center,
-                              width: isTablet
-                                  ? Measurements.width * 0.8
-                                  : Measurements.width * 0.9,
-                              child: InkWell(
-                                child: Container(
-                                  width: Measurements.width *
-                                      (isTablet ? 0.35 : 0.8),
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: 15,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    color: results == 0
-                                        ? color.withOpacity(0.5)
-                                        : color,
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      Language.getCustomStrings(
-                                        "checkout_cart_add_to_cart",
-                                      ),
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                onTap: () => addProduct(
-                                  Provider.of<PosStateModel>(context),
-                                  results,
-                                ),
-                              ),
-                            ),
-                            isTablet
-                                ? Padding(
-                                    padding: EdgeInsets.only(
-                                      bottom: Measurements.height * 0.02,
-                                    ),
-                                  )
-                                : Container()
                           ],
                         ),
                       ),
-                    ),
-                  ],
-                )])
+                      SizedBox(
+                        width: 30,
+                      ),
+                      Expanded(
+                        child: Container(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              NameNPrice(
+                                currentProduct: widget.currentProduct,
+                                currentVariant: currentVariant,
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(bottom: 20),
+                                child: VariantSection(currentVariant),
+                              ),
+                              Container(
+                                alignment: Alignment.center,
+                                width: isTablet
+                                    ? Measurements.width * 0.8
+                                    : Measurements.width * 0.9,
+                                child: InkWell(
+                                  child: Container(
+                                    width: Measurements.width *
+                                        (isTablet ? 0.35 : 0.8),
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: 15,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      color: results == 0
+                                          ? color.withOpacity(0.5)
+                                          : color,
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        Language.getCustomStrings(
+                                          "checkout_cart_add_to_cart",
+                                        ),
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  onTap: () => addProduct(
+                                    Provider.of<PosStateModel>(context),
+                                    results,
+                                  ),
+                                ),
+                              ),
+                              isTablet
+                                  ? Padding(
+                                      padding: EdgeInsets.only(
+                                        bottom: Measurements.height * 0.02,
+                                      ),
+                                    )
+                                  : Container()
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                ])
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -439,7 +435,8 @@ class _DetailsInfoState extends State<DetailsInfo> {
                           ),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(8),
-                            color: results == 0 ? Colors.grey : Colors.black,
+                            color:
+                                results == 0 ? color.withOpacity(0.5) : color,
                           ),
                           child: Center(
                             child: Text(
@@ -757,6 +754,12 @@ class _StockTextState extends State<StockText> {
   }
 }
 
+/// ***
+/// 
+/// Widget that manage the image as a carousel and the previews.
+/// 
+/// ***
+
 class DetailImage extends StatefulWidget {
   final ValueNotifier<int> currentVariant;
 
@@ -827,22 +830,23 @@ class _DetailImageState extends State<DetailImage> {
     List<Widget> images = List();
     _images.forEach(
       (f) {
-        images.add(
-          Container(
-            height: isTablet
-                ? Measurements.width * 0.45
-                : Measurements.height * 0.4,
-            width: isTablet
-                ? Measurements.width * 0.45
-                : Measurements.height * 0.4,
-            child: CachedNetworkImage(
-              imageUrl: Env.storage + "/products/" + f,
-              placeholder: (context, url) => Container(),
-              errorWidget: (context, url, error) => Icon(Icons.error),
-              fit: BoxFit.contain,
+        if (f != null)
+          images.add(
+            Container(
+              height: isTablet
+                  ? Measurements.width * 0.45
+                  : Measurements.height * 0.4,
+              width: isTablet
+                  ? Measurements.width * 0.45
+                  : Measurements.height * 0.4,
+              child: CachedNetworkImage(
+                imageUrl: Env.storage + "/products/" + f,
+                placeholder: (context, url) => Container(),
+                errorWidget: (context, url, error) => Icon(Icons.error),
+                fit: BoxFit.contain,
+              ),
             ),
-          ),
-        );
+          );
       },
     );
 
@@ -889,6 +893,7 @@ class _DetailImageState extends State<DetailImage> {
               shrinkWrap: true,
               itemCount: _images.length,
               itemBuilder: (BuildContext context, int index) {
+                if (_images[index] == null) return Container();
                 return InkWell(
                   child: Padding(
                     padding: EdgeInsets.all(2.0),
@@ -897,23 +902,19 @@ class _DetailImageState extends State<DetailImage> {
                       height: Measurements.height * 0.1,
                       width: Measurements.height * 0.1,
                       decoration: BoxDecoration(
+                        /// ***
+                        /// used to display the line that indicate which image is picked
                         border: Border(
                             // bottom: BorderSide(color: index == imageIndex? Colors.grey:Colors.white ,width: 2)
                             ),
-                        // image: DecorationImage(
-                        //   image: NetworkImage(
-                        //     Env.storage +
-                        //         "/products/" +
-                        //         _images[index] +
-                        //         "-thumbnail",
-                        //   ),
-                        // ),
                       ),
                       child: CachedNetworkImage(
                         // child: Image.network(
                         imageUrl: Env.storage +
                             "/products/" +
-                            _images[index], //add +"-thumbnail"
+                            /// ***
+                            /// use of thumbnail to gain speed by fetching smaller sized images
+                            _images[index], // +"-thumbnail"
                         placeholder: (context, url) => Container(),
                         errorWidget: (context, url, error) => Icon(
                           Icons.error,

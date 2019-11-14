@@ -1,10 +1,23 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-//import 'package:url_launcher/url_launcher.dart';
-
-//import '../../../models/models.dart';
 import '../../../utils/utils.dart';
 import '../../custom_elements/dashboard_card_content.dart';
+
+/// ***
+/// 
+/// Ref means refactored but didnt change naming.
+/// this will be the cavas for the dasboard cards 
+/// it just contain the location for each component(header,body,...)
+/// and bodies use the templates to mimic to a point the apple "widgets"(the cards on the search section)
+/// 
+/// TIP: AVOID at all cost the use of Backdrop filters. One element that consumes GPU usage in big ammounts.
+///     therefore the more cards there are to render the more the cost on resources it will face.
+///     (The overview is the screen that uses the most resources from them all).
+///      
+///  At the moment of implementation there was no other way to simulate the frosted glass effect. big compromise
+///   on performance.
+/// 
+/// ***
 
 class DashboardCardRef extends StatefulWidget {
   final String appName;
@@ -30,14 +43,6 @@ class _DashboardCardRefState extends State<DashboardCardRef>
   dynamic handler;
   num pad = 0.02;
   bool isSingleActionButton;
-
-//  _launchURL(String url) async {
-//    if (await canLaunch(url)) {
-//      await launch(url);
-//    } else {
-//      throw 'Could not launch $url';
-//    }
-//  }
 
   @override
   void initState() {
@@ -165,130 +170,4 @@ class _DashboardCardRefState extends State<DashboardCardRef>
       _open = !_open;
     });
   }
-// Widget singleActionButtonWidget(BuildContext context, bool _isTablet) {
-//   return InkWell(
-//     radius:
-//     _isTablet ? Measurements.height * 0.02 : Measurements.width * 0.07,
-//     child: Container(
-//         padding: EdgeInsets.symmetric(horizontal: Measurements.width * 0.02),
-//         decoration: BoxDecoration(
-//           shape: BoxShape.rectangle,
-//           color: Colors.grey.withOpacity(0.3),
-//           borderRadius: BorderRadius.circular(15),
-//         ),
-//         height: _isTablet
-//             ? Measurements.height * 0.02
-//             : Measurements.width * 0.07,
-//         child: Center(
-//           child:
-//               Container(
-//             alignment: Alignment.center,
-//                  child:Text(Language.getConnectStrings("actions.open"))
-//           ),
-//         )),
-//     onTap: () {
-//       setState(() {
-//         widget.handler.loadScreen(context, _isLoading);
-//       });
-//     },
-//   );
-// }
-
-// Widget actionButtonsWidget(BuildContext context, bool _isTablet, bool isActive) {
-//   return isActive
-//       ? InkWell(
-//         key: Key("${widget.appName}.card.open"),
-//     radius: _isTablet
-//         ? Measurements.height * 0.02
-//         : Measurements.width * 0.07,
-//     child: Container(
-//         padding:
-//         EdgeInsets.symmetric(horizontal: Measurements.width * 0.02),
-//         decoration: BoxDecoration(
-//           shape: BoxShape.rectangle,
-//           color: Colors.grey.withOpacity(0.3),
-//           borderRadius: BorderRadius.circular(15),
-//         ),
-//         height: _isTablet
-//             ? Measurements.height * 0.02
-//             : Measurements.width * 0.07,
-//         child: Center(
-//           child:
-//           // _isLoading.value
-//           //     ? Container(
-//           //     constraints: BoxConstraints(
-//           //       maxWidth: _isTablet
-//           //           ? Measurements.height * 0.01
-//           //           : Measurements.width * 0.04,
-//           //       maxHeight: _isTablet
-//           //           ? Measurements.height * 0.01
-//           //           : Measurements.width * 0.04,
-//           //     ),
-//           //     child: CircularProgressIndicator(
-//           //       strokeWidth: 2,
-//           //     ))
-//           //     :
-//                Container(
-//             alignment: Alignment.center,
-//             child:Text(Language.getConnectStrings("actions.open"))
-
-//           ),
-//         )),
-//     onTap: () {
-//       setState(() {
-
-//         // _isLoading.value = true;
-//         widget.handler.loadScreen(context, _isLoading);
-//       });
-//     },
-//   )
-//       : Container(
-//       child: InkWell(
-//         child: Container(
-//             height: _isTablet
-//                 ? Measurements.height * 0.02
-//                 : Measurements.width * 0.07,
-//             child: Container(
-//                 width: 100,
-//                 decoration: BoxDecoration(
-//                   shape: BoxShape.rectangle,
-//                   color: Colors.grey.withOpacity(0.3),
-//                   borderRadius: BorderRadius.circular(15),
-//                 ),
-//                 child: Row(
-//                   mainAxisSize: MainAxisSize.max,
-//                   mainAxisAlignment: MainAxisAlignment.center,
-//                   children: <Widget>[
-//                     SvgPicture.asset(
-//                       "images/launchIcon.svg",
-//                       height:
-//                       Measurements.width * (_isTablet ? 0.015 : 0.03),
-//                       color: Colors.white.withOpacity(0.7),
-//                     ),
-//                     Padding(
-//                       padding:
-//                       EdgeInsets.only(left: Measurements.width * 0.008),
-//                     ),
-//                     Text(
-//                       "Learn more",
-//                       style: TextStyle(
-//                           color: Colors.white.withOpacity(0.7)
-//                           ),
-//                     ),
-//                   ],
-//                 ))),
-//         onTap: () {
-//           setState(() {
-//             isActive
-//                 ? widget.handler.loadScreen(context, _isLoading)
-//                 : _launchURL(widget.handler.learnMore());
-//           });
-//         },
-//       ));
-// }
 }
-
-// abstract class CardContract{
-//   void loadScreen(BuildContext context,ValueNotifier state);
-//   String learnMore();
-// }

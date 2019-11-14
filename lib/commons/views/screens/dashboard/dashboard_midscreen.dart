@@ -16,6 +16,22 @@ import '../login/login.dart';
 import '../switcher/switcher.dart';
 import 'dashboard_screen_ref.dart';
 
+/// ***
+///
+/// Midscreen (or Splashscreen)
+/// Just to load all resources after been logged in
+///  - Stating with the env.json to create the urls for each api
+///  - Check the version having a min and current
+///     - the min version give the oportunity to lock the app and force a mandatory update(Extreme case) for those versions
+///       that have big changes in the core data (model,restructuring,...). ** should be avoid **
+///  - the Token verificatiton is made by storing the last login and after the token expiration the validation for the date
+///    will be made, in case the app was opened at least once before the expiration an automatic login will run.
+///    if not the user will be redirect to the login screen.
+///  - if any call get an 401(auth issue) then it will be also redirect to login. that in case of password change while outside
+///    the app.
+///
+/// ***
+
 class DashboardMidScreen extends StatefulWidget {
   final String wallpaper;
 
@@ -56,6 +72,8 @@ class _DashboardMidScreenState extends State<DashboardMidScreen> {
         default:
           break;
       }
+    } else {
+      _redirectUser();
     }
   }
 
@@ -94,13 +112,6 @@ class _DashboardMidScreenState extends State<DashboardMidScreen> {
           },
         );
 
-        // RestDataSource().getVersion(GlobalUtils.ActiveToken.accessToken).then((list){
-        //   print("Version");
-        //   list.forEach((a){
-        //     print(a);
-        //   });
-        // });
-
         RestDataSource()
             .getWidgets(preferences.getString(GlobalUtils.BUSINESS),
                 GlobalUtils.activeToken.accessToken, _formKey.currentContext)
@@ -111,37 +122,59 @@ class _DashboardMidScreenState extends State<DashboardMidScreen> {
               widgets.add(AppWidget.map(item));
             },
           );
+
           RestDataSource()
               .getBusinesses(
                   GlobalUtils.activeToken.accessToken, _formKey.currentContext)
-              .then((result) {
-            businesses.clear();
-            result.forEach(
-              (item) {
-                businesses.add(Business.map(item));
-              },
-            );
-            if (businesses != null) {
-              businesses.forEach(
-                (b) {
-                  if (b.id == preferences.getString(GlobalUtils.BUSINESS)) {
-                    activeBusiness = b;
-                    globalStateModel.setCurrentBusiness(
-                      activeBusiness,
-                      notify: false,
-                    );
-                  }
+              .then(
+            (result) async {
+              businesses.clear();
+              result.forEach(
+                (item) {
+                  businesses.add(Business.map(item));
                 },
               );
-            }
-            RestDataSource()
-                .getWallpaper(
-              activeBusiness.id,
-              GlobalUtils.activeToken.accessToken,
-              _formKey.currentContext,
-            )
-                .then(
-              (wall) {
+              if (businesses != null) {
+                businesses.forEach(
+                  (b) {
+                    if (b.id == preferences.getString(GlobalUtils.BUSINESS)) {
+                      activeBusiness = b;
+                      globalStateModel.setCurrentBusiness(
+                        activeBusiness,
+                        notify: false,
+                      );
+                    }
+                  },
+                );
+              }
+              try {
+                var business = await RestDataSource().getBusinessPOS(
+                    GlobalUtils.activeToken.accessToken, activeBusiness.id);
+                var primary = business["primaryColor"] ?? "ffffff";
+                var secondary = business["secondaryColor"] ?? "000000";
+                var primayTransparency =
+                    business["primaryTransparency"] ?? "ff";
+                var secondaryTransparency =
+                    business["secondaryTransparency"] ?? "ff";
+                if (primary != null)
+                  globalStateModel.currentBusiness.setPrimaryColor(primary);
+                globalStateModel.currentBusiness
+                    .setPrimaryTransparency(primayTransparency);
+                if (secondary != null)
+                  globalStateModel.currentBusiness.setSecondaryColor(
+                    secondary,
+                  );
+                globalStateModel.currentBusiness.setSecondaryTransparency(
+                  secondaryTransparency,
+                );
+              } catch (e) {}
+
+              try {
+                var wall = await RestDataSource().getWallpaper(
+                  activeBusiness.id,
+                  GlobalUtils.activeToken.accessToken,
+                  _formKey.currentContext,
+                );
                 String wallpaper = wall[GlobalUtils.CURRENT_WALLPAPER];
                 preferences.setString(
                     GlobalUtils.WALLPAPER, wallpaperBase + wallpaper);
@@ -149,21 +182,28 @@ class _DashboardMidScreenState extends State<DashboardMidScreen> {
                   wallpaperBase + wallpaper,
                   notify: false,
                 );
-                Navigator.pushReplacement(
-                  _formKey.currentContext,
-                  PageTransition(
-                    child: DashboardScreen(
-                      appWidgets: widgets,
-                    ),
-                    type: PageTransitionType.fade,
-                    duration: Duration(
-                      milliseconds: 200,
-                    ),
-                  ),
+              } catch (e) {
+                
+                globalStateModel.setCurrentWallpaper(
+                  globalStateModel.defaultCustomWallpaper,
+                  notify: false,
                 );
-              },
-            );
-          });
+              }
+              //
+              Navigator.pushReplacement(
+                _formKey.currentContext,
+                PageTransition(
+                  child: DashboardScreen(
+                    appWidgets: widgets,
+                  ),
+                  type: PageTransitionType.fade,
+                  duration: Duration(
+                    milliseconds: 200,
+                  ),
+                ),
+              );
+            },
+          );
         }).catchError(
           (onError) {
             Navigator.pushReplacement(
@@ -283,6 +323,13 @@ class _DashboardMidScreenState extends State<DashboardMidScreen> {
         }
       }
     } else {
+      /// ***
+      ///
+      /// Here if the Token is not longer valid then if the app was opened somewehere in the last 720 hours = 30 days
+      /// then the app will make a new login to keep using the app as usual
+      ///
+      ///  ***
+
       if (DateTime.now()
               .difference(
                   DateTime.parse(preferences.getString(GlobalUtils.LAST_OPEN)))

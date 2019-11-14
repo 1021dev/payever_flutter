@@ -17,6 +17,12 @@ import 'product_details.dart';
 import 'webview_section.dart';
 import 'pos_cart.dart';
 
+/// ***
+///
+/// Product Grid/List for the PoS
+///
+/// ***
+
 class PosProductsListScreen extends StatefulWidget {
   final Terminal terminal;
   final Business business;
@@ -76,10 +82,9 @@ class _PosProductsListScreenState extends State<PosProductsListScreen> {
             Navigator.pop(context);
           },
         ),
-        backgroundColor: Color(Provider.of<GlobalStateModel>(context)
-                .currentBusiness
-                .primaryColor ??
-            0xFFFFFFFF),
+        backgroundColor: Color(
+            Provider.of<GlobalStateModel>(context).currentBusiness.primary ??
+                0xFFFFFFFF),
         centerTitle: true,
         // title: Container(
         //   child: Text(
@@ -153,7 +158,6 @@ class _PosProductsListScreenState extends State<PosProductsListScreen> {
                       ),
                     ),
                     onDataLoaded: (results) {
-//          posStateModel.updateIsLoading(true);
                       return posStateModel.isLoading
                           ? PosProductsLoader(
                               posStateModel,
@@ -266,7 +270,7 @@ class _PosBodyState extends State<PosBody> {
                   decoration: BoxDecoration(
                     color: Color(Provider.of<GlobalStateModel>(context)
                             .currentBusiness
-                            .secondaryColor ??
+                            .secondary ??
                         0xFF000000),
                     borderRadius: BorderRadius.circular(6),
                   ),
@@ -274,7 +278,7 @@ class _PosBodyState extends State<PosBody> {
                     padding: EdgeInsets.symmetric(vertical: 15),
                     child: Center(
                       child: Text(
-                        Language.getCustomStrings("checkout_cart_type_amount"),
+                        "${Language.getCustomStrings("checkout_cart_type_amount")}",
                         style: TextStyle(
                           fontSize: 15,
                           color: Colors.white,
@@ -424,15 +428,16 @@ class _ProductItemState extends State<ProductItem> {
                           height: Measurements.width * (isTablet ? 0.3 : 0.8),
                           width: Measurements.width * (isTablet ? 0.3 : 0.8),
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(6),
+                            // borderRadius: BorderRadius.circular(6),
                             image: DecorationImage(
-                                // image: CachedNetworkImageProvider(
-                                image: NetworkImage(
-                                  Env.storage +
-                                      "/products/" +
-                                      widget.currentProduct.images[0],
-                                ),
-                                fit: BoxFit.contain),
+                              // image: CachedNetworkImageProvider(
+                              image: NetworkImage(
+                                Env.storage +
+                                    "/products/" +
+                                    widget.currentProduct.images[0],
+                              ),
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                 ],
@@ -505,13 +510,19 @@ class _ProductItemState extends State<ProductItem> {
               ),
 
               /// *** Check ***
-              /// Comment for the A cool Socjcolored bullets in the product item
+              /// 
+              /// colored bullets in the product item
               /// needs to be fix to adapt the color value coming from the Backend
+              /// (to simulate apple's accesories listing)
+              /// 
+              /// ***
+
               // Container(
               //   child: ColorDisplay(
               //     currentProduct: widget.currentProduct,
               //   ),
               // ),
+
               Padding(
                 padding: EdgeInsets.all(isTablet ? 0.0 : 20.0),
               ),

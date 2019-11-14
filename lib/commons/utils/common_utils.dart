@@ -24,6 +24,13 @@ class Styles {
 class Measurements {
   static double height;
   static double width;
+
+
+  /// ***
+  /// 
+  /// keeps the same idea that the language structure but its for the icon mangagement
+  ///  
+  /// ***
   static dynamic iconsRoutes;
 
   static void loadImages(context) {
@@ -288,6 +295,7 @@ class GlobalUtils {
       "staging1": "Test1234!",
       "staging2": "12345678",
       "staging3": "santander123",
+      "staging4": "Payever123!",
       "test1": "P@ssword123",
       "test2": "Payever123!",
       "test3": "Test1234!",
@@ -299,6 +307,7 @@ class GlobalUtils {
       "staging1": "rob@top.com",
       "staging2": "service@payever.de",
       "staging3": "santander@payever.de",
+      "staging4": "testcases@payever.de",
       "test1": "payever.automation@gmail.com",
       "test2": "testcases@payever.de",
       "test3": "rob@top.com",
@@ -310,14 +319,23 @@ class GlobalUtils {
       "staging1": "https://commerceos.staging.devpayever.com",
       "staging2": "https://commerceos.staging.devpayever.com",
       "staging3": "https://commerceos.staging.devpayever.com",
+      "staging4": "https://commerceos.staging.devpayever.com",
       "test1": "https://commerceos.test.devpayever.com",
       "test2": "https://commerceos.test.devpayever.com",
       "test3": "https://commerceos.test.devpayever.com",
     },
   };
 
+  /// ***
+  ///
+  /// The map could grow if needed but it contain all the accounts needed to test in the 
+  /// 3 envs. In order to use a different account the field - currentEnv - will need to be change 
+  /// to any of the "key values" of the map.
+  ///
+  /// ***
+
   //URLS
-  static String currentEnv = "test3";
+  static String currentEnv = "staging1";
   static String pass = envVariables["password"][currentEnv];
   static String mail = envVariables["email"][currentEnv];
   static String commerceOsUrl = envVariables["url"][currentEnv];
@@ -774,8 +792,10 @@ class GlobalUtils {
   static const String APP_WID_LAST_DATE = "date";
   static const String APP_WID_LAST_AMOUNT = "amount";
 
+  //regex for emoji - used in blacklist
   static const String RX_emoji =
       r"(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])";
+
 
   static void clearCredentials() {
     SharedPreferences.getInstance().then((p) {

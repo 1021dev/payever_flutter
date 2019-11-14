@@ -92,9 +92,9 @@ class AvatarDescriptionCardOnButton extends StatelessWidget {
               Text(
                 "$_title",
                 style: TextStyle(
-                    fontSize:
-                        AppStyle.fontSizeDashboardAvatarDescriptionTitle(),
-                    fontWeight: FontWeight.bold),
+                  fontSize: AppStyle.fontSizeDashboardAvatarDescriptionTitle(),
+                  fontWeight: FontWeight.bold,
+                ),
               ),
 //              Text(
 //                "$_detail",
@@ -124,7 +124,8 @@ class TitleAmountCardItem extends StatelessWidget {
     return Container(
       height: (AppStyle.dashboardCardContentHeight() / 2) - 1,
       padding: EdgeInsets.symmetric(
-          horizontal: AppStyle.dashboardCardContentPadding() * 1.5),
+        horizontal: AppStyle.dashboardCardContentPadding() * 1.5,
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
@@ -203,30 +204,33 @@ class ItemsCardNButtons extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Container(width: 20,child: Image(image: item.icon,)),
-                  SizedBox(width: 10),
-                   Measurements.width > 600 ?
                   Container(
-                    child: Text(
-                      item.title,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: AppStyle.fontSizeDashboardTitle(),
-                        fontWeight: FontWeight.bold),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    )
-                  ):
-                  Expanded(
-                      child: Text(
-                    item.title,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: AppStyle.fontSizeDashboardTitle(),
-                      fontWeight: FontWeight.bold),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  )),
+                      width: 20,
+                      child: Image(
+                        image: item.icon,
+                      )),
+                  SizedBox(width: 10),
+                  Measurements.width > 600
+                      ? Container(
+                          child: Text(
+                          item.title,
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: AppStyle.fontSizeDashboardTitle(),
+                              fontWeight: FontWeight.bold),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ))
+                      : Expanded(
+                          child: Text(
+                          item.title,
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: AppStyle.fontSizeDashboardTitle(),
+                              fontWeight: FontWeight.bold),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        )),
                 ],
               )),
               onTap: item.action,
@@ -234,14 +238,16 @@ class ItemsCardNButtons extends StatelessWidget {
           ),
         ),
       ));
-      if(lock){
-        itemsDataList.add(SizedBox(width: 10,));
+      if (lock) {
+        itemsDataList.add(SizedBox(
+          width: 10,
+        ));
         lock = !lock;
       }
     }
 
     return Container(
-      padding: EdgeInsets.symmetric(horizontal:10),
+      padding: EdgeInsets.symmetric(horizontal: 10),
       child: Column(
         children: <Widget>[
           Expanded(

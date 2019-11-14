@@ -34,8 +34,15 @@ class _CheckoutOrderSectionTESTERState
   CheckoutProcessStateModel checkoutProcessStateModel;
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     checkoutProcessStateModel = Provider.of<CheckoutProcessStateModel>(context);
+    checkoutProcessStateModel.notifier.addListener(() => setState(() {}));
     PosCartStateModel cartStateModel =
         checkoutProcessStateModel.posCartStateModel;
     widget.parts = checkoutProcessStateModel.posStateModel;
@@ -155,6 +162,7 @@ class _CheckoutOrderSectionTESTERState
                           setState(
                             () {
                               widget.parts.deleteProduct(index);
+                              checkoutProcessStateModel.notify();
                               if (widget.parts.shoppingCart.items.isEmpty) {
                                 cartStateModel.updateCart(false);
                               }
@@ -390,7 +398,7 @@ class _CheckoutOrderSectionTESTERState
     List<String> payments = ["Cash", "Paypal", "Credit Card"];
     bool _loading = false;
     Color color = Color(
-        Provider.of<GlobalStateModel>(context).currentBusiness.secondaryColor ??
+        Provider.of<GlobalStateModel>(context).currentBusiness.secondary ??
             0xFF00ff00);
     payments.forEach(
       (_paymethod) {
@@ -447,6 +455,9 @@ class _CheckoutOrderSectionTESTERState
                       },
                     );
                     if (!a) {
+                      setState(
+                        () => loading[_paymethod] = false,
+                      );
                       Scaffold.of(context).showSnackBar(
                         SnackBar(
                           behavior: SnackBarBehavior.floating,

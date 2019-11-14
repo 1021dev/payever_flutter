@@ -11,6 +11,14 @@ import '../network/network.dart';
 import '../models/models.dart';
 import '../utils/utils.dart';
 
+/// ***
+/// 
+/// Unused class
+/// 
+/// Reason: First try for pos a webview for the entire app. 
+/// 
+/// ***
+
 class POSScreen extends StatefulWidget {
   final Terminal _terminal;
 
@@ -70,44 +78,47 @@ class _POSScreenState extends State<POSScreen> {
           ),
         ),
         Scaffold(
-            backgroundColor: Colors.transparent,
-            appBar: AppBar(
-              leading: InkWell(
-                radius: 20,
-                child: Icon(IconData(58829, fontFamily: 'MaterialIcons')),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-              elevation: 0,
-              iconTheme: IconThemeData(color: Colors.black),
-              backgroundColor:
-                  index.value == 0 ? Colors.white : Colors.transparent,
-              title: Text(
-                widget._terminal.name,
-                style: TextStyle(color: Colors.black),
-              ),
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            leading: InkWell(
+              radius: 20,
+              child: Icon(IconData(58829, fontFamily: 'MaterialIcons')),
+              onTap: () {
+                Navigator.pop(context);
+              },
             ),
-            body: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 25, sigmaY: 40),
-                child: _isLoading
-                    ? Center(
-                        child: CircularProgressIndicator(),
-                      )
-                    : Stack(
-                        alignment: Alignment.center,
-                        children: <Widget>[
-                          _currentBody,
-                          Center(
-                              child: _terminalLoading.value
-                                  ? Container(
-                                      height: Measurements.width * 0.1,
-                                      width: Measurements.width * 0.1,
-                                      child: CircularProgressIndicator(
-                                          backgroundColor: Colors.black))
-                                  : Container()),
-                        ],
-                      ))),
+            elevation: 0,
+            iconTheme: IconThemeData(color: Colors.black),
+            backgroundColor:
+                index.value == 0 ? Colors.white : Colors.transparent,
+            title: Text(
+              widget._terminal.name,
+              style: TextStyle(color: Colors.black),
+            ),
+          ),
+          body: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 25, sigmaY: 40),
+            child: _isLoading
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : Stack(
+                    alignment: Alignment.center,
+                    children: <Widget>[
+                      _currentBody,
+                      Center(
+                        child: _terminalLoading.value
+                            ? Container(
+                                height: Measurements.width * 0.1,
+                                width: Measurements.width * 0.1,
+                                child: CircularProgressIndicator(
+                                    backgroundColor: Colors.black))
+                            : Container(),
+                      ),
+                    ],
+                  ),
+          ),
+        ),
       ],
     );
   }

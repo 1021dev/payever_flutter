@@ -135,16 +135,19 @@ class _CheckoutOrderSectionState extends State<CheckoutOrderSection> {
                           width: Measurements.width * 0.05,
                           height: Measurements.height * 0.1,
                           child: Center(
-                              child: SvgPicture.asset(
-                            "assets/images/xsinacircle.svg",
-                            width:
-                                Measurements.width * (isTablet ? 0.02 : 0.04),
-                          )),
+                            child: SvgPicture.asset(
+                              "assets/images/xsinacircle.svg",
+                              width:
+                                  Measurements.width * (isTablet ? 0.02 : 0.04),
+                            ),
+                          ),
                         ),
                         onTap: () {
                           setState(
                             () {
                               widget.parts.deleteProduct(index);
+
+                              checkoutProcessStateModel.notify();
                               if (widget.parts.shoppingCart.items.isEmpty) {
                                 cartStateModel.updateCart(false);
                               }
@@ -372,6 +375,7 @@ class _CheckoutOrderSectionState extends State<CheckoutOrderSection> {
               });
               await checkInventories().then(
                 (a) {
+                  print("1234");
                   CheckoutProcessApi()
                       .createFlow(
                           widget.parts.shoppingCart.total,

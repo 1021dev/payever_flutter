@@ -60,18 +60,28 @@ class DashboardStateModel extends ChangeNotifier with Validators {
   setTutorials(List<Tutorial> tutorials) => _tutorials = tutorials;
 
   List<Widget> _activeWid = List();
+
   String uiKit = Env.commerceOs + "/assets/ui-kit/icons-png/";
+
+  /// ***
+  ///
+  ///  Manually setting the cards that will be display on the overview section
+  ///  in the dashboard(Primary section)
+  ///
+  /// ***
 
   Future<List<Widget>> loadWidgetCards() async {
     for (int i = 0; i < _currentWidgets.length; i++) {
       var wid = _currentWidgets[i];
       switch (wid.type) {
         case "transactions":
-          _activeWid.add(TransactionCard(
-            wid.type,
-            NetworkImage(uiKit + wid.icon),
-            false,
-          ));
+          _activeWid.add(
+            TransactionCard(
+              wid.type,
+              NetworkImage(uiKit + wid.icon),
+              false,
+            ),
+          );
           break;
         case "pos":
           _activeWid
@@ -137,11 +147,16 @@ class DashboardStateModel extends ChangeNotifier with Validators {
   }
 
   Future<List<WallpaperCategory>> getWallpaper() =>
-      RestDataSource().getWallpapers().then((wallpapers) {
-        List<WallpaperCategory> _list = List();
-        wallpapers.forEach((cat) {
-          _list.add(WallpaperCategory.map(cat));
-        });
-        return _list;
+      RestDataSource().getWallpapers().then(
+        (wallpapers) {
+          print(wallpapers);
+          List<WallpaperCategory> _list = List();
+          wallpapers.forEach((cat) {
+            _list.add(WallpaperCategory.map(cat));
+          });
+          return _list;
+        },
+      ).catchError((onError){
+        print(onError);
       });
 }

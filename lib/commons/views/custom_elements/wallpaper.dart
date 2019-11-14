@@ -5,6 +5,14 @@ import 'package:provider/provider.dart';
 import '../../utils/utils.dart';
 import '../../view_models/view_models.dart';
 
+
+/// ***
+/// 
+/// This Custom Widget is the one in charge of the wallpaper and managing if its going to take a blur or plain image.
+/// its fully custom so it can be able to build the base ui as needed for any case.
+/// 
+/// ***
+
 class BackgroundBase extends StatefulWidget {
   final bool _isBlur;
   final Widget body, endDrawer, bottomNav;

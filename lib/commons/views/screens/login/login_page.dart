@@ -45,6 +45,14 @@ class _LoginState extends State<Login>
   String _password, _username;
   LoginScreenPresenter _presenter;
 
+  /// ***
+  ///
+  /// The main reason to have 4 video players is to keep the same timing even
+  /// the orientation changes.
+  ///
+  /// ***
+
+
   // VideoPlayerController _controller;
   // VideoPlayerController pl;
   // VideoPlayerController pp;
@@ -61,7 +69,14 @@ class _LoginState extends State<Login>
     super.initState();
     SharedPreferences.getInstance().then((p) {
       _preferences = p;
-      // print(_preferences);
+      
+      /// ***
+      ///
+      /// The fingerprint needed for auth service 
+      ///
+      /// ***
+
+
       String fingerPrint =
           "${Platform.operatingSystem}  ${Platform.operatingSystemVersion}";
       p.setString(GlobalUtils.FINGERPRINT, fingerPrint);
@@ -436,8 +451,6 @@ class _LoginState extends State<Login>
 
   @override
   void onAuthStateChanged(AuthState state) {
-    print("state");
-    print(state);
     if (state == AuthState.LOGGED_IN) {
       //VersionController().checkVersion(context, (){
       Navigator.pushReplacement(

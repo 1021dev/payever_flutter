@@ -22,6 +22,10 @@ import '../network/network.dart';
 import '../utils/utils.dart';
 import 'new_product.dart';
 
+/// ***
+/// Old and current implementation.
+/// ***
+
 class ProductVariantsRow extends StatefulWidget {
   final NewProductScreenParts parts;
 
@@ -299,11 +303,6 @@ class _VariantPopUpState extends State<VariantPopUp> {
                     child: Text(Language.getProductStrings("save"))),
                 onTap: () {
                   fKey.currentState.validate();
-
-//                  if(!nameError) {
-//                    print("currentVariant.titleData: ${currentVariant.title}");
-//                  }
-
                   if (!(priceError ||
                           skuError ||
                           descriptionError ||
@@ -627,9 +626,6 @@ class _VariantPopUpState extends State<VariantPopUp> {
                           onSaved: (name) {
                             currentVariant.title = name;
                             currentVariant.onSales = onSale;
-
-                            print(
-                                "currentVariant.titleOnSaved: ${currentVariant.title}");
                           },
                           validator: (value) {
                             if (value.isEmpty) {
@@ -684,9 +680,6 @@ class _VariantPopUpState extends State<VariantPopUp> {
                           onSaved: (name) {
                             currentVariant.title = name;
                             currentVariant.onSales = onSale;
-
-                            print(
-                                "currentVariant.titleOnSaved: ${currentVariant.title}");
                           },
                           validator: (value) {
                             if (value.isEmpty) {
@@ -744,7 +737,6 @@ class _VariantPopUpState extends State<VariantPopUp> {
                   ),
                   onTap: () {
                     addOptionValueToList();
-                    print("new option added");
                   },
                 ),
               ),
@@ -1060,7 +1052,6 @@ class _VariantPopUpState extends State<VariantPopUp> {
                   inv = num.parse(qtt ?? "0");
                 },
                 onSaved: (value) {
-                  print("value =  $value");
                   amount = num.parse(value);
                 },
                 textAlign: TextAlign.center,
@@ -1266,7 +1257,10 @@ class _VariantImageSelectorState extends State<VariantImageSelector> {
                       borderRadius: BorderRadius.circular(16),
                       image: DecorationImage(
                         image: NetworkImage(
-                          Env.storage + "/products/" + currentImage,
+                          Env.storage +
+                                  "/products/" +
+                                  (currentImage == null ? "" : currentImage) ??
+                              "",
                         ),
                         fit: BoxFit.contain,
                       ),
@@ -1297,8 +1291,14 @@ class _VariantImageSelectorState extends State<VariantImageSelector> {
                                         image: DecorationImage(
                                           image: NetworkImage(
                                             Env.storage +
-                                                "/products/" +
-                                                productProvider.images[index],
+                                                    "/products/" +
+                                                    (productProvider.images[
+                                                                index] ==
+                                                            null
+                                                        ? ""
+                                                        : productProvider
+                                                            .images[index]) ??
+                                                "",
                                           ),
                                         ),
                                         color: Colors.white,
@@ -1378,6 +1378,14 @@ class _VariantImageSelectorState extends State<VariantImageSelector> {
           );
   }
 }
+
+/// ***
+/// ^ old implementation
+///
+/// HERE
+///
+/// Current implementation
+/// ***
 
 class VariantBody extends StatefulWidget {
   @override
@@ -1487,6 +1495,7 @@ class Variant extends StatelessWidget {
         ),
       );
     }
+
     return Slidable(
       key: Key(variant.id),
       controller: slidableController,
@@ -1507,7 +1516,12 @@ class Variant extends StatelessWidget {
                     image: DecorationImage(
                       image: (variant.images?.isNotEmpty ?? false)
                           ? NetworkImage(
-                              Env.storage + "/products/" + variant.images[0],
+                              Env.storage +
+                                      "/products/" +
+                                      (variant.images[0] == null
+                                          ? ""
+                                          : variant.images[0]) ??
+                                  "",
                             )
                           : MemoryImage(kTransparentImage),
                     ),
@@ -1709,7 +1723,7 @@ class _VariantEditorState extends State<VariantEditor> {
                 );
                 if (widget.onCreate) {
                   ProductsApi api = ProductsApi();
-                  
+
                   api
                       .checkSKU(
                     Provider.of<GlobalStateModel>(context).currentBusiness.id,
@@ -1727,7 +1741,8 @@ class _VariantEditorState extends State<VariantEditor> {
                   ).catchError(
                     (onError) {
                       productStateModel.addInventory(widget.inventory);
-                    productStateModel.editProduct.variants.add(widget.variant);
+                      productStateModel.editProduct.variants
+                          .add(widget.variant);
                       Navigator.pop(context);
                     },
                   );
@@ -2030,8 +2045,6 @@ class _SalesRowState extends State<SalesRow> {
               () {
                 salePriceError = (text?.isEmpty ?? true) &&
                     (widget.variant?.onSales ?? false);
-                print("sale");
-                print(salePriceError);
               },
             );
             return salePriceError ? salePriceError : null;

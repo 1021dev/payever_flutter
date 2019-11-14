@@ -8,6 +8,14 @@ import '../network/network.dart';
 import '../utils/utils.dart';
 import 'webview_section.dart';
 
+/// ***
+/// 
+/// Unused class.
+/// 
+/// Reason: send to device nomved to checkout.
+/// 
+/// ***
+
 class SendToDevice extends StatefulWidget {
   final PosStateModel parts;
   final int index;

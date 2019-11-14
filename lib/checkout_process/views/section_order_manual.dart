@@ -1,5 +1,6 @@
 // CheckoutOrderSectionTESTER
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cool_ui/cool_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/checkout_process/checkout_process.dart';
 import 'package:payever/checkout_process/utils/checkout_process_utils.dart';
@@ -31,6 +32,7 @@ class _CheckoutOrderSectionManualState
   @override
   Widget build(BuildContext context) {
     checkoutProcessStateModel = Provider.of<CheckoutProcessStateModel>(context);
+    checkoutProcessStateModel.notifier.addListener(() => setState(() {}));
     PosCartStateModel cartStateModel =
         checkoutProcessStateModel.posCartStateModel;
     widget.parts = checkoutProcessStateModel.posStateModel;
@@ -40,15 +42,24 @@ class _CheckoutOrderSectionManualState
         : MediaQuery.of(context).size.height > 600;
     widget.quantities.clear();
 
-    for (int i = 1; i < 100; i++) {
-      final number = DropdownMenuItem(
-        value: i,
-        child: Text("$i"),
-      );
-      widget.quantities.add(number);
-    }
+    // for (int i = 1; i < 100; i++) {
+    //   final number = DropdownMenuItem(
+    //     value: i,
+    //     child: Text("$i"),
+    //   );
+    //   widget.quantities.add(number);
+    // }
+
     return Column(
       children: <Widget>[
+        // KeyboardMediaQuery(
+        //   child: Builder(
+        //     builder: (context) {
+        //       CoolKeyboard.init(context);
+        //       return EnterAmount();
+        //     },
+        //   ),
+        // ),
         EnterAmount(),
         Totals(
           parts: widget.parts,
@@ -64,8 +75,6 @@ class _CheckoutOrderSectionManualState
       ],
     );
   }
-
-
 
   Future<bool> nextStep() {
     bool ok2Checkout = true;
@@ -235,7 +244,7 @@ class _TotalsState extends State<Totals> {
                       alignment: Alignment.center,
                       width: Measurements.width * 0.2,
                       child: AutoSizeText(
-                        "${Measurements.currency(widget.parts.getBusiness.currency)}${widget.parts.f.format(num.tryParse(widget.checkoutProcessStateModel.amount.value)  ?? 0) ?? ""}",
+                        "${Measurements.currency(widget.parts.getBusiness.currency)}${widget.parts.f.format(num.tryParse(widget.checkoutProcessStateModel.amount.value) ?? 0) ?? ""}",
                         maxLines: 1,
                         style: TextStyle(
                           color: AppStyle.colorCheckoutDivider(),

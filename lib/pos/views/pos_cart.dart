@@ -5,6 +5,14 @@ import '../view_models/view_models.dart';
 import '../utils/utils.dart';
 import 'pos_order_section.dart';
 
+
+/// ***
+/// 
+/// Unused class
+///  
+/// Reason: redesing of the PoS
+/// 
+/// ***
 class POSCart extends StatefulWidget {
   final PosStateModel parts;
 
@@ -62,7 +70,6 @@ class _CartBodyState extends State<CartBody> {
   @override
   void initState() {
     super.initState();
-//    widget.parts.openSection.addListener(listener);
     for (int i = 1; i < 100; i++) {
       final number = new DropdownMenuItem(
         value: i,
@@ -80,18 +87,6 @@ class _CartBodyState extends State<CartBody> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Container(
-        // child: ListView.builder(
-        //   //itemCount: widget.parts.currentCheckout.sections.length,
-        //   itemCount: 2,
-        //   itemBuilder: (BuildContext context, int index) {
-        //     print(widget.parts.currentCheckout.sections[index].code);
-        //     if(widget.parts.currentCheckout.sections[index].code == "order"){
-        //       return SectionWidget(index: index,currentSection: sectionPicker(widget.parts.currentCheckout.sections[index].code,index),title: widget.parts.currentCheckout.sections[index].code.replaceAll("_", " ").toUpperCase(), parts: widget.parts,);
-        //     }else{
-        //       return Container();
-        //     }
-        //   },
-        // ),
         child: ListView(
           children: <Widget>[
             SectionWidget(

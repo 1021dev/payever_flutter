@@ -20,9 +20,7 @@ bool _isTablet;
 class EmployeesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return EmployeesTabsScreen(
-      
-    );
+    return EmployeesTabsScreen();
   }
 }
 
@@ -50,13 +48,15 @@ class _EmployeesTabsScreenState extends State<EmployeesTabsScreen>
     setState(
       () {
         widget.controller.text = "";
+        search.value = "";
+        searchGroup.value = "";
         _currentIndex = tabController.index;
       },
     );
   }
 
-    ValueNotifier<String> search = ValueNotifier("");
-    ValueNotifier<String> searchGroup = ValueNotifier("");
+  ValueNotifier<String> search = ValueNotifier("");
+  ValueNotifier<String> searchGroup = ValueNotifier("");
 
   @override
   Widget build(BuildContext context) {

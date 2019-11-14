@@ -4,6 +4,15 @@ import '../../commons/utils/translations.dart';
 import '../models/models.dart';
 import '../views/views.dart';
 
+
+
+ /// ***
+ /// 
+ /// Construction of the widget that manage the product section
+ /// it will handle the new/update product sections.
+ /// 
+ /// ***
+
 class ProductSections {
   List<Widget> _headers = List();
   List<Widget> _bodies = List();

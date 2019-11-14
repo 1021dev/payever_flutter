@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:payever/commons/views/custom_elements/custom_keyboard.dart';
 import 'package:payever/pos/view_models/view_models.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
@@ -12,6 +13,7 @@ import 'pos/network/pos_api.dart';
 
 void main() {
   Provider.debugCheckInvalidValueType = null;
+  NumberKeyboard.register();
   runApp(PayeverApp());
 }
 

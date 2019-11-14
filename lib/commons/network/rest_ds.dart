@@ -300,6 +300,35 @@ class RestDataSource {
     });
   }
 
+  Future<dynamic> getBusinessPOS(String token, String id) {
+    print("TAG - getBusinesPOS()");
+    var headers = {
+      HttpHeaders.authorizationHeader: "Bearer $token",
+      HttpHeaders.contentTypeHeader: "application/json",
+      HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+    };
+    return _netUtil.get(posBase + id, headers: headers).then(
+      (dynamic res) {
+        return res;
+      },
+    );
+  }
+
+  Future<dynamic> patchBusinessPOS(String token, String id,Object body) {
+    print("TAG - patchBusinesPOS()");
+    String _body = json.encode(body);
+    var headers = {
+      HttpHeaders.authorizationHeader: "Bearer $token",
+      HttpHeaders.contentTypeHeader: "application/json",
+      HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+    };
+    return _netUtil.patch(posBase + id, headers: headers,body: _body).then(
+      (dynamic res) {
+        return res;
+      },
+    );
+  }
+
   Future<dynamic> getTerminal(String idBusiness, String token) {
     print("TAG - geTerminal()");
     var headers = {
@@ -497,6 +526,7 @@ class RestDataSource {
       HttpHeaders.contentTypeHeader: "application/json",
       HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
     };
+    print(RestDataSource.wallpaperAll);
     return _netUtil
         .get(RestDataSource.wallpaperAll, headers: headers)
         .then((dynamic res) {

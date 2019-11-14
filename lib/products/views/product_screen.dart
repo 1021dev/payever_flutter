@@ -232,6 +232,13 @@ class _ProductScreenState extends State<ProductScreen> {
           child: BackgroundBase(
             true,
             appBar: _appBar,
+            /// *** 
+            ///
+            /// read products/README.md 
+            /// 
+            /// The current widget is in charge of fetching the next amount of products
+            ///
+            /// ***
             bottomNav: Container(
               height: widget._parts.loadMore.value
                   ? Measurements.height * 0.0001

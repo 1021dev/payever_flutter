@@ -12,7 +12,6 @@ class Section {
     enabled = obj[GlobalUtils.DB_CHECKOUT_SECTIONS_ENABLED];
     fixed = obj[GlobalUtils.DB_CHECKOUT_SECTIONS_FIXED];
     order = obj[GlobalUtils.DB_CHECKOUT_SECTIONS_ORDER];
-    print("Section $code enabled $enabled");
     var _excludedChannels = obj[GlobalUtils.DB_CHECKOUT_SECTIONS_EXCLUDED];
     if (_excludedChannels.isNotEmpty) {
       _excludedChannels.forEach((channel) {

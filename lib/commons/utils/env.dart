@@ -1,5 +1,13 @@
 import 'utils.dart';
 
+/// ***
+/// 
+/// Its a class full of static fields to manage the environment api call
+/// reason for it: 
+///   resource is consume in all the different Modules.
+/// 
+/// ***
+
 class Env {
   static String storage;
   static String users;

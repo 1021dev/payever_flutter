@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:payever/checkout_process/checkout_process.dart';
+import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/custom_elements.dart';
 import 'package:flutter_hsvcolor_picker/flutter_hsvcolor_picker.dart';
 import 'package:provider/provider.dart';
@@ -25,7 +26,7 @@ class ThemeScreen extends StatelessWidget {
           PickerTile(
               isPrimary: true,
               title: "Primary color",
-              initialColor: globalStateModel.currentBusiness.primaryColor),
+              initialColor: globalStateModel.currentBusiness.primary),
           Divider(
             height: 0,
             thickness: 1,
@@ -33,7 +34,7 @@ class ThemeScreen extends StatelessWidget {
           PickerTile(
               isPrimary: false,
               title: "Secondary color",
-              initialColor: globalStateModel.currentBusiness.primaryColor),
+              initialColor: globalStateModel.currentBusiness.secondary),
           Divider(
             height: 0,
             thickness: 1,
@@ -47,7 +48,7 @@ class ThemeScreen extends StatelessWidget {
 class PickerTile extends StatefulWidget {
   final bool isPrimary;
   final String title;
-  final String initialColor;
+  final int initialColor;
   const PickerTile({Key key, this.isPrimary, this.title, this.initialColor})
       : super(key: key);
 
@@ -59,11 +60,9 @@ class _PickerTileState extends State<PickerTile> {
   Color _color;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
-    if (widget.initialColor != null)
-      _color = Color(Hex.stringToInt(widget.initialColor));
+    if (widget.initialColor != null) _color = Color(widget.initialColor);
   }
 
   @override
@@ -79,14 +78,15 @@ class _PickerTileState extends State<PickerTile> {
           ),
           onPressed: () => _showDialog(
               context: context,
-              function: (a) => setState(() => _color = a),
+              function: (a) => setState(() => _color = Color(a)),
+              // function: (a) => setState(() => _color = a),
               title: widget.title),
         ),
         title: Text(widget.title),
       ),
       onTap: () => _showDialog(
         context: context,
-        function: (a) => setState(() => _color = a),
+        function: (a) => setState(() => _color = Color(a)),
         title: widget.title,
       ),
     );
@@ -94,13 +94,15 @@ class _PickerTileState extends State<PickerTile> {
 
   _showDialog({
     BuildContext context,
-    Function(Color) function,
+    Function(int) function,
     int color,
     String title = "",
   }) {
     showDialog(
       context: context,
       builder: (context) {
+        GlobalStateModel globalStateModel =
+            Provider.of<GlobalStateModel>(context);
         return Dialog(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           child: Column(
@@ -113,11 +115,46 @@ class _PickerTileState extends State<PickerTile> {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 10),
                 child: SwatchesPicker(
-                  // color: Color(0xff000000),
                   onChanged: (Color value) {
-                    function(value);
                     String color = Hex.colorToString(value);
-                    print(color);
+
+                    var _color = Hex.stringToInt(
+                        "${value.alpha.toRadixString(16)}$color");
+
+                    /// ***
+                    /// 
+                    /// The theming is just for PoS customization
+                    /// the color is separated into color hex and 
+                    /// transparency hex so if needed the web front
+                    /// end could be able to use them.
+                    /// 
+                    /// ***
+                    
+                    
+                    if (widget.isPrimary) {
+                      globalStateModel.currentBusiness.setPrimaryColor(color);
+                      globalStateModel.currentBusiness
+                          .setPrimaryTransparency(value.alpha.toRadixString(16));
+                    } else {
+                      globalStateModel.currentBusiness.setSecondaryColor(color);
+                      globalStateModel.currentBusiness.setSecondaryTransparency(value.alpha.toRadixString(16));
+                    }
+                    Object data = {
+                      "primaryColor":
+                          "${globalStateModel.currentBusiness.primaryColor}",
+                      "secondaryColor":
+                          "${globalStateModel.currentBusiness.secondaryColor}",
+                      "primaryTransparency":
+                          "${globalStateModel.currentBusiness.primaryTransparency}",
+                      "secondaryTransparency":
+                          "${globalStateModel.currentBusiness.secondaryTransparency}",
+                    };
+                    RestDataSource().patchBusinessPOS(
+                      GlobalUtils.activeToken.accessToken,
+                      globalStateModel.currentBusiness.id,
+                      data,
+                    );
+                    function(_color);
                     Navigator.pop(context);
                   },
                 ),

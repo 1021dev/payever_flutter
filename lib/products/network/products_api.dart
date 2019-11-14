@@ -157,9 +157,11 @@ class ProductsApi extends RestDataSource {
                 RestDataSource.skuMid +
                 sku,
             headers: headers)
-        .then((dynamic res) {
-      return res;
-    });
+        .then(
+      (dynamic res) {
+        return res;
+      },
+    );
   }
 
   Future<dynamic> getShop(
@@ -178,6 +180,13 @@ class ProductsApi extends RestDataSource {
     });
   }
 
+  /// ***
+  ///
+  /// The use of the Dio just for this http call
+  /// its beacause the way to send files with it
+  ///
+  /// ***
+
   Future<dynamic> postImage(File logo, String business, String token) async {
     print("TAG - postImage()");
     var headers = {
@@ -192,7 +201,9 @@ class ProductsApi extends RestDataSource {
       UploadFileInfo(
         logo,
         logo.path.substring(logo.path.length - 6),
-        contentType: ContentType("image",logo.path.contains("png")?"png":"jpeg", charset: "utf-8"),
+        contentType: ContentType(
+            "image", logo.path.contains("png") ? "png" : "jpeg",
+            charset: "utf-8"),
       ),
     );
     return dio

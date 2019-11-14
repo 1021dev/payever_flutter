@@ -2,6 +2,14 @@ import 'package:flutter/material.dart';
 import '../../commons/network/rest_ds.dart';
 import '../models/models.dart';
 
+/// ***
+///
+/// The aim for this provider is that it will contain the data that ALL
+/// services uses and can be instance at any moment inside the apps.
+///
+/// _currentBusiness been the one thats going to be use most of the time
+///
+/// ***
 class GlobalStateModel extends ChangeNotifier {
   String _currentWallpaper;
   String _currentWallpaperBlur;
@@ -27,7 +35,11 @@ class GlobalStateModel extends ChangeNotifier {
 
   setCurrentWallpaper(String wallpaper, {bool notify}) {
     _currentWallpaper = wallpaper;
-    setCurrentWallpaperBlur(wallpaper + "-blurred", notify: false);
+    if (wallpaper != _defaultCustomWallpaper) {
+      setCurrentWallpaperBlur(wallpaper + "-blurred", notify: false);
+    } else {
+      setCurrentWallpaperBlur(_defaultCustomWallpaperBlur);
+    }
     if (notify ?? true) notifyListeners();
   }
 
@@ -59,14 +71,14 @@ class GlobalStateModel extends ChangeNotifier {
 
   void setVatRates() {
     List<VatRate> _vatRates = List();
-    RestDataSource()
-        .getVats(currentBusiness.companyAddress.country)
-        .then((rates) {
-      rates.forEach((rate) {
-        _vatRates.add(VatRate.fromMap(rate));
-      });
-      vatRates = _vatRates; 
-    });
+    RestDataSource().getVats(currentBusiness.companyAddress.country).then(
+      (rates) {
+        rates.forEach((rate) {
+          _vatRates.add(VatRate.fromMap(rate));
+        });
+        vatRates = _vatRates;
+      },
+    );
   }
 
   launchCustomSnack(BuildContext context, String msj,

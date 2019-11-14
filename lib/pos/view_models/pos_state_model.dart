@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:payever/commons/network/rest_ds.dart';
+import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/products/views/views.dart';
 import '../views/custom_elements/custom_elements.dart';
 
@@ -20,6 +21,24 @@ class PosStateModel extends PosStateCommonsModel {
   PosStateModel(this.globalStateModel, this.posApi) : super(globalStateModel);
 
   Future<void> loadPosProductsList(Terminal terminal) async {
+    var _business = await RestDataSource().getBusinessPOS(
+        GlobalUtils.activeToken.accessToken,
+        globalStateModel.currentBusiness.id);
+
+    var primary = _business["primaryColor"] ?? "ffffff";
+    var secondary = _business["secondaryColor"] ?? "000000";
+    var primayTransparency = _business["primaryTransparency"] ?? "ff";
+    var secondaryTransparency = _business["secondaryTransparency"] ?? "ff";
+    if (primary != null)
+      globalStateModel.currentBusiness.setPrimaryColor(primary);
+    globalStateModel.currentBusiness.setPrimaryTransparency(primayTransparency);
+    if (secondary != null)
+      globalStateModel.currentBusiness.setSecondaryColor(
+        secondary,
+      );
+    globalStateModel.currentBusiness.setSecondaryTransparency(
+      secondaryTransparency,
+    );
     try {
 //      var inventories = await getAllInventory();
 //      List<InventoryModel> inventoryModelList = List<InventoryModel>();
@@ -31,6 +50,10 @@ class PosStateModel extends PosStateCommonsModel {
 //
 //      addProductListStock(inventoryModelList);
 
+
+      /// ***
+      /// second check if the terminal exist even though terminals are loaded on dashboard load.
+      ///   - just in case of a click thats faster and the actual api response.
       if (terminal == null) {
         List<Terminal> _terminals = List();
         List<ChannelSet> _chSets = List();
@@ -44,6 +67,8 @@ class PosStateModel extends PosStateCommonsModel {
         });
 
         currentTerminal = _terminals.firstWhere((term) => term.active);
+
+        //
 
         // var checkout = await getCheckout(currentTerminal.channelSet);
         // currentCheckout = Checkout.toMap(checkout);
@@ -123,6 +148,8 @@ class PosStateModel extends PosStateCommonsModel {
     );
   }
 
+  
+
   void setSelectedValues(ProductVariantModel variant) {
     selectedValue.clear();
     variant.options.forEach(
@@ -137,6 +164,28 @@ class PosStateModel extends PosStateCommonsModel {
   }
 
   Map<String, List<String>> values = Map();
+
+  /// ***
+  /// 
+  /// Currently the first variant is picked for the mapping of the structure.
+  /// After creating the map with the variants options and values
+  /// the selection is moved to be the first variant.
+  ///   NOTE: the variant options should be fetch and not used from the object
+  ///         so it uses the order gived by the user.
+  /// 
+  /// After a new selection is made the entire layout need to be check if the displayed values
+  /// are still valid for the option and values under.
+  /// for example:
+  ///   - in the case of a 3 options variant after filling the map
+  ///     the upper option is selected and with it the next level-option is fix for the 
+  ///     available values for it. The same will happend on the second option selected it
+  ///     will have efect on the last option values.
+  /// 
+  /// In case of an option selection and the lower options doesnt contain valid values or extra ones
+  /// it refresh the values to avoid the case of a non-existing variant
+  /// 
+  /// ***
+
 
   int setValue(String name, String value) {
     selectedValue[name] = value;
@@ -174,6 +223,7 @@ class PosStateModel extends PosStateCommonsModel {
     return _index < 0 ? 0 : _index;
   }
 
+ 
   void fixSelection(String name) {
     if (name.isEmpty) return;
     int index = getOptionIndex(name);
@@ -333,6 +383,19 @@ class PosStateModel extends PosStateCommonsModel {
   //     },
   //   );
   // }
+
+
+  /// ***
+  /// 
+  /// - This method will not be used in must of the time but the case could exist for the reason that
+  /// the data base supports the creation of options for single variants
+  /// therefore breaking the main definition of the map so this will make 
+  /// sure that if one option is needed then it will be placed just for it.
+  ///  
+  /// - Thats why the model should be fetch from server and not build.
+  /// 
+  /// ***
+
 
   check4Options(int _varIndex) {
     List<Option> extras = List();

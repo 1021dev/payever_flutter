@@ -51,6 +51,13 @@ class DashboardOverview extends StatelessWidget {
             ""
           ));
           break;
+        case "connect":
+          _activeWid.add(ProductsSoldCard(
+            wid.type,
+            NetworkImage(uiKit + wid.icon),
+            ""
+          ));
+          break;
        case "settings":
          _activeWid.add(SettingsCardInfo(
            wid.type,
@@ -58,14 +65,6 @@ class DashboardOverview extends StatelessWidget {
            ""
          ));
           break;
-//        case "connect":
-//          _activeWid.add(DashboardCard_ref(
-//              wid.type,
-//              NetworkImage(UI_KIT + wid.icon),
-//              Center(child: Text("test"),),
-//              body: ListView(shrinkWrap: true,children: <Widget>[Center(child: Text("test"),),Center(child: Text("test"),),Center(child: Text("test"),),],),
-//              ));
-//          break;
         default:
       }
     }

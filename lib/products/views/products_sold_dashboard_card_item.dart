@@ -301,13 +301,15 @@ class _ProductsSoldCardItemState extends State<ProductsSoldCardItem> {
 
   _goToProducts(GlobalStateModel globalStateModel, BuildContext context) {
     Navigator.push(
-        context,
-        PageTransition(
-            child: ProductScreen(
-              business: globalStateModel.currentBusiness,
-              wallpaper: globalStateModel.currentWallpaper,
-              posCall: false,
-            ),
-            type: PageTransitionType.fade));
+      context,
+      PageTransition(
+        child: ProductScreen(
+          business: globalStateModel.currentBusiness,
+          wallpaper: globalStateModel.currentWallpaper,
+          posCall: false,
+        ),
+        type: PageTransitionType.fade,
+      ),
+    );
   }
 }

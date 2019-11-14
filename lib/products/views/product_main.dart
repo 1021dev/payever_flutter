@@ -12,6 +12,10 @@ import '../utils/utils.dart';
 import 'custom_form_field.dart';
 import 'new_product.dart';
 
+/// ***
+/// Old and current implementation.
+/// ***
+
 class ProductMainRow extends StatefulWidget {
   NewProductScreenParts parts;
   bool onSale;
@@ -393,14 +397,17 @@ class _ProductMainRowState extends State<ProductMainRow> {
                 Expanded(
                   child: Container(
                     padding: EdgeInsets.symmetric(
-                        horizontal: Measurements.width * 0.025),
+                      horizontal: Measurements.width * 0.025,
+                    ),
                     alignment: Alignment.center,
                     color: Colors.white.withOpacity(0.05),
                     width: Measurements.width * 0.4475,
                     height: Measurements.height *
                         (widget.parts.isTablet ? 0.05 : 0.07),
                     child: TextFormField(
-                      style: TextStyle(fontSize: AppStyle.fontSizeTabContent()),
+                      style: TextStyle(
+                        fontSize: AppStyle.fontSizeTabContent(),
+                      ),
                       initialValue: widget.parts.editMode
                           ? widget.parts.product.salePrice == null
                               ? ""
@@ -508,10 +515,13 @@ class _ProductMainRowState extends State<ProductMainRow> {
   }
 }
 
-/* ^OLD VERSION
-
-    NEW VERSION->
-*/
+/// ***
+/// ^ old implementation
+///
+/// HERE
+///
+/// Current implementation
+/// ***
 
 class MainBody extends StatefulWidget {
   @override

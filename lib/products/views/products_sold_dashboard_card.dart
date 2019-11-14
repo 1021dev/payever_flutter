@@ -18,7 +18,6 @@ class ProductsSoldCard extends StatelessWidget {
   Widget build(BuildContext context) {
     GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context);
 
-    
     return DashboardCardRef(
       _appName,
       _imageProvider,
@@ -29,14 +28,16 @@ class ProductsSoldCard extends StatelessWidget {
           child: ProductsSoldCardItem(),
           onTap: () {
             Navigator.push(
-                context,
-                PageTransition(
-                    child: ProductScreen(
-                      business: globalStateModel.currentBusiness,
-                      wallpaper: globalStateModel.currentWallpaper,
-                      posCall: false,
-                    ),
-                    type: PageTransitionType.fade));
+              context,
+              PageTransition(
+                child: ProductScreen(
+                  business: globalStateModel.currentBusiness,
+                  wallpaper: globalStateModel.currentWallpaper,
+                  posCall: false,
+                ),
+                type: PageTransitionType.fade,
+              ),
+            );
           },
         ),
       ),

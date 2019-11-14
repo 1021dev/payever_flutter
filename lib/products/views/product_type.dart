@@ -5,6 +5,10 @@ import '../products.dart';
 import '../utils/utils.dart';
 import 'new_product.dart';
 
+/// ***
+/// Old and current implementation.
+/// ***
+
 class ButtonRow extends StatefulWidget {
   final ValueNotifier openedRow;
   final NewProductScreenParts parts;
@@ -120,6 +124,14 @@ class _ButtonRowState extends State<ButtonRow> {
     );
   }
 }
+
+/// ***
+/// ^ old implementation
+/// 
+/// HERE 
+/// 
+/// Current implementation
+/// ***
 
 class TypeBody extends StatefulWidget {
   @override

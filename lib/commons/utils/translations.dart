@@ -129,6 +129,15 @@ class Language {
     });
   }
 
+  /// ***
+  /// 
+  /// Each service contain their own set of strings
+  /// just like the web version has them.
+  /// the json will be stored on memory as a temporal 
+  /// map that can be access from any module.
+  /// 
+  /// ***
+
   static dynamic widgetStrings = Map();
   static dynamic connectStrings = Map();
   static dynamic productStrings = Map();

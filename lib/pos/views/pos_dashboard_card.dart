@@ -24,6 +24,14 @@ import '../view_models/pos_state_model.dart';
 import '../network/network.dart';
 import 'pos_products_list_screen.dart';
 
+
+/// ***
+/// 
+/// Old Implementation of the pos card.
+///   - current implementation under.
+/// 
+/// ***
+
 class POSCard extends StatefulWidget {
   final String _appName;
   final ImageProvider _imageProvider;
@@ -783,6 +791,16 @@ class ProductItem extends StatelessWidget {
   }
 }
 
+/// ***
+/// 
+/// ^ Up old implementation 
+/// 
+/// HERE
+/// 
+/// From here the current one
+/// 
+/// ***
+
 class SimplifyTerminal extends StatefulWidget {
   final String _appName;
   final ImageProvider _imageProvider;
@@ -869,9 +887,6 @@ class _SimplifyTerminalState extends State<SimplifyTerminal> {
 
 class SimpleTerminal extends StatelessWidget {
   final Terminal currentTerminal;
-
-//  bool active;
-
   SimpleTerminal(this.currentTerminal);
 
   @override
@@ -893,13 +908,13 @@ class SimpleTerminal extends StatelessWidget {
               currentTerminal.logo != null ? null : currentTerminal.name,
         ),
         onTap: () {
-//          Navigator.push(context, PageTransition(child:NativePosScreen(terminal:currentTerminal,business:Provider.of<GlobalStateModel>(context).currentBusiness),type:PageTransitionType.fade));
           Navigator.push(
             context,
             PageTransition(
               child: PosProductsListScreen(
-                  terminal: currentTerminal,
-                  business: globalStateModel.currentBusiness),
+                terminal: currentTerminal,
+                business: globalStateModel.currentBusiness,
+              ),
               type: PageTransitionType.fade,
               duration: Duration(milliseconds: 50),
             ),

@@ -66,7 +66,7 @@ class PosStateCommonsModel extends ChangeNotifier {
   bool smsEnabled = false;
   String shoppingCartID = "";
   String url;
-
+  
   bool isTablet;
   bool isPortrait;
 
@@ -210,10 +210,18 @@ class PosStateCommonsModel extends ChangeNotifier {
   clear(){
     updateIsLoading(true);
     productList = List();
+    
   }
 
   cleanCart() {
+    updateIsLoading(true);
     shoppingCart = Cart();
+  }
+  trashCart(){
+    shoppingCart.total = 0;
+    shoppingCart.items.clear();
+    haveProducts = shoppingCart.items.isNotEmpty;
+    notifyListeners();
   }
 
   updateQty({int index, num quantity}) {

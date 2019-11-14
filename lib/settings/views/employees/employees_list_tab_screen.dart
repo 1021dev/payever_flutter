@@ -17,7 +17,7 @@ import 'employee_details_screen.dart';
 
 class EmployeesListTabScreen extends StatefulWidget {
   final EmployeesStateModel employeesStateModel;
-  final  ValueNotifier<String> search;
+  final ValueNotifier<String> search;
 
   EmployeesListTabScreen(
       {@required this.employeesStateModel, @required this.search});
@@ -32,20 +32,16 @@ class _EmployeesListTabScreenState extends State<EmployeesListTabScreen> {
   @override
   void initState() {
     super.initState();
-    // widget.search.notifyListeners();
     widget.search.addListener(listener);
   }
 
   listener() {
-    setState(() {
-      print("Search: ${widget.search.value}");
-    });
+    setState(() {});
   }
 
   @override
   void dispose() {
     super.dispose();
-    // widget.search.dispose();
   }
 
   Future<List<Employees>> fetchEmployeesList(
@@ -56,7 +52,7 @@ class _EmployeesListTabScreenState extends State<EmployeesListTabScreen> {
     List<Employees> employeesList = List<Employees>();
 
     SettingsApi api = SettingsApi();
-    print("searching for = ${widget.search.value}");
+
     await api
         .getEmployeesList(
       globalStateModel.currentBusiness.id,
@@ -73,7 +69,6 @@ class _EmployeesListTabScreenState extends State<EmployeesListTabScreen> {
       return employeesList;
     }).catchError(
       (onError) {
-        print("Error loading employees: $onError");
         if (onError.toString().contains("401")) {
           GlobalUtils.clearCredentials();
           Navigator.pushReplacement(
@@ -161,7 +156,6 @@ class _EmployeesCollapsingListState extends State<EmployeesCollapsingList> {
             GlobalUtils.activeToken.accessToken, context, page, widget.search)
         .then((employeesData) {
       for (var employee in employeesData["data"]) {
-        // print("Employee: ${employee["roles"]}");
         employeesList.add(Employees.fromMap(employee));
       }
       employeesStateModel.setEmployeeCount(employeesData["count"]);
@@ -169,8 +163,6 @@ class _EmployeesCollapsingListState extends State<EmployeesCollapsingList> {
       return employeesList;
     }).catchError(
       (onError) {
-        print("Error loading employees: $onError");
-
         if (onError.toString().contains("401")) {
           GlobalUtils.clearCredentials();
           Navigator.pushReplacement(
@@ -191,7 +183,7 @@ class _EmployeesCollapsingListState extends State<EmployeesCollapsingList> {
   void initState() {
     super.initState();
     controller = new ScrollController()..addListener(_scrollListener);
-    totalPages = (widget.employeesStateModel.employeeCount / 30).ceil();
+    totalPages = ((widget.employeesStateModel?.employeeCount ?? 0) / 30).ceil();
   }
 
   void _scrollListener() async {

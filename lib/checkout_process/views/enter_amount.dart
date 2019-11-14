@@ -10,7 +10,7 @@ class EnterAmount extends StatelessWidget {
         Provider.of<CheckoutProcessStateModel>(context);
     return Column(
       children: <Widget>[
-        CustomTextFieldForm(
+        CashTextFieldForm(
           "amount",
           true,
           ValueNotifier(true),
@@ -19,7 +19,7 @@ class EnterAmount extends StatelessWidget {
             topLeft: Radius.circular(8),
             topRight: Radius.circular(8),
           ),
-          init: provider.amount.value ?? "",
+          init: provider.amount.value ?? "0",
           validator: (text) {
             provider.setAmount(
                 text,

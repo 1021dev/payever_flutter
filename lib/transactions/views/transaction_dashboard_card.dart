@@ -74,13 +74,14 @@ class TransactionCard extends StatelessWidget {
     GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context);
     _currentBusiness = globalStateModel.currentBusiness;
     return DashboardCard(
-        _appName,
-        _imageProvider,
-        MainTransactionCard(_isBusiness),
-        TransactionSecCard(),
-        TransactionNavigation(),
-        true,
-        false);
+      _appName,
+      _imageProvider,
+      MainTransactionCard(_isBusiness),
+      TransactionSecCard(),
+      TransactionNavigation(),
+      true,
+      false,
+    );
   }
 }
 
@@ -586,6 +587,14 @@ class TransactionNavigation implements CardContract {
   }
 }
 
+/// ***
+/// ^ old implementation
+///
+/// HERE
+///
+/// Current implementation
+/// ***
+
 class SimplifyTransactions extends StatefulWidget {
   final String _appName;
   final ImageProvider _imageProvider;
@@ -615,9 +624,11 @@ class _SimplifyTransactionsState extends State<SimplifyTransactions> {
           .getMonths(globalStateModel.currentBusiness.id,
               GlobalUtils.activeToken.accessToken, context)
           .then((months) {
-        months.forEach((month) {
-          lastYear.add(Month.map(month));
-        });
+        months.forEach(
+          (month) {
+            lastYear.add(Month.map(month));
+          },
+        );
         dashboardStateModel.setLastYear(lastYear);
       }).then((_) {
         RestDataSource()
@@ -658,19 +669,6 @@ class _SimplifyTransactionsState extends State<SimplifyTransactions> {
             ),
       defPad: false,
     );
-
-    //  return DashboardCard_ref(
-    //   widget._appName,
-    //   widget._imageProvider,
-    //   CustomFutureBuilder(
-    //     errorMessage: "",
-    //     future: dashboardStateModel.getDaily(globalStateModel.currentBusiness),
-    //     onDataLoaded: (results) {
-    //       return Head(lastMonth: dashboardStateModel.lastMonth,lastYear: dashboardStateModel.lastYear,);
-    //     },
-    //   ),
-    //   body:Body(lastMonth: dashboardStateModel.lastMonth,total: dashboardStateModel.total,monthlySum: dashboardStateModel.monthlySum,),
-    //   );
   }
 
   fetchDaily() async {
@@ -718,11 +716,12 @@ class _HeadState extends State<Head> {
       ),
       onTap: () {
         Navigator.push(
-            context,
-            PageTransition(
-              child: TransactionScreenInit(),
-              type: PageTransitionType.fade,
-            ));
+          context,
+          PageTransition(
+            child: TransactionScreenInit(),
+            type: PageTransitionType.fade,
+          ),
+        );
       },
     );
   }
@@ -812,11 +811,12 @@ class _BodyState extends State<Body> {
       ),
       onTap: () {
         Navigator.push(
-            context,
-            PageTransition(
-              child: TransactionScreenInit(),
-              type: PageTransitionType.fade,
-            ));
+          context,
+          PageTransition(
+            child: TransactionScreenInit(),
+            type: PageTransitionType.fade,
+          ),
+        );
       },
     );
   }

@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:payever/checkout_process/view_models/checkout_process_state_model.dart';
+import 'package:payever/commons/view_models/pos_cart_state_model.dart';
 import 'package:payever/pos/utils/utils.dart';
+import 'package:payever/pos/view_models/pos_state_model.dart';
+import 'package:provider/provider.dart';
 
 class CustomCheckoutPopUp extends StatelessWidget {
   final Widget icon;
   final String title;
   final String message;
-  CustomCheckoutPopUp({this.icon, this.title = "", this.message = ""});
+  final VoidCallback action;
+  CustomCheckoutPopUp({this.icon, this.title = "", this.message = "",this.action});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -72,6 +77,8 @@ class CustomCheckoutPopUp extends StatelessWidget {
                       ),
                     ),
                     onTap: () {
+                        Provider.of<PosStateModel>(context).trashCart();
+                        action();
                         Navigator.pop(context);
                         Navigator.pop(context);
                       },

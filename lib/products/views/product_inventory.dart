@@ -422,9 +422,13 @@ class _ProductInventoryRowState extends State<ProductInventoryRow> {
   }
 }
 
-//
-//
-//
+/// ***
+/// ^ old implementation
+/// 
+/// HERE 
+/// 
+/// Current implementation
+/// ***
 
 class InventoryBody extends StatefulWidget {
   @override

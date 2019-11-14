@@ -17,12 +17,7 @@ class VariantSection extends StatefulWidget {
 class _VariantSectionState extends State<VariantSection> {
   int extra = 0;
   refresh(int i) {
-    // setState(
-    //   () {
-    //     print("setState on Variant Selection");
     extra = i;
-    //   },
-    // );
   }
 
   @override
@@ -100,16 +95,10 @@ class _VariantPickerState extends State<VariantPicker> {
       values: values,
       value: value,
       onChangeSelection: (value, _index, name) {
-        // print(widget.posProvider.optionName);
-        // print(name);
-        // print(widget.posProvider.optionName.contains(name));
         if (widget.posProvider.optionName.contains(name)) {
           widget.currentVariant.value =
               widget.posProvider.setValue(name, value);
         } else {
-          // print("here");
-          // print(name);
-          // print(value);
           widget.posProvider.getVariantValues();
           List a = widget.posProvider.selectedProduct.variants
               .where(
@@ -134,11 +123,35 @@ class _VariantPickerState extends State<VariantPicker> {
         );
       },
     );
+
+    /// ***
+    ///
+    /// The different types of pickers were implemented taking into consideration the way that different
+    /// shop Systems manage the selection of the options for specific fields
+    ///
+    /// eg.
+    ///
+    ///   PickturePicker -> Zalando. Vertical rectangular pictures.
+    ///   ColorPicker    -> Apple accesories. Circular dots.
+    ///   PatternPicker  -> __ . Circular dots with a picture. thought for some texture or pattern.
+    ///   SquarePicker   -> Apple hardware. Square with rounded corners
+    ///   OptionDropDown -> just a normal dropdown
+    ///
+    /// ***
+
     switch (name) {
       case "Color":
         // return PicturePicker(
         // return ColorPicker(
-          return SquarePicker(
+        return SquarePicker(
+          // return PatternPicker(
+          currentValues,
+        );
+        break;
+      case "color":
+        // return PicturePicker(
+        // return ColorPicker(
+        return SquarePicker(
           // return PatternPicker(
           currentValues,
         );

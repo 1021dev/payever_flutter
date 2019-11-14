@@ -101,6 +101,13 @@ class ProductStateModel extends ChangeNotifier {
     });
   }
 
+
+/// ***
+/// 
+/// The use of new and old amount is to know if the value change on update.
+/// 
+/// ***
+  
   saveInventories(BuildContext context, GlobalStateModel globalStateModel,
       bool isFromDashboardCard) {
     List<Inventory> _inventories = List();
@@ -191,6 +198,8 @@ class ProductStateModel extends ChangeNotifier {
                             globalStateModel.currentBusiness.id);
                   }
                   if (_inventories.last.sku == inventory.sku) {
+                    /// ***
+                    /// it pops 2 or 3 times and push ones to launch a new podructs screen fetching all changes
                     Navigator.pop(context);
                     Navigator.pop(context);
                     if (!isFromDashboardCard) {
@@ -227,6 +236,17 @@ class ProductStateModel extends ChangeNotifier {
     );
     editProduct.categories = categories;
   }
+
+  /// ***
+  /// 
+  /// THIS IS A HARDCODED MOCKING AND SHOULD BE FETCH AND NOT HARDCODED
+  /// 
+  /// The category option will give the structure to the options 
+  /// (and "values" not yet implemented web at the moment of this explanation) 
+  /// so the variants keep the same options and same values
+  /// 
+  /// ***
+
 
   Map<String, List<String>> categoryOptions = {
     "Fashion": ["Color", "Size", "Material"],

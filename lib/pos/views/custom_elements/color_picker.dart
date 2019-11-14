@@ -129,6 +129,14 @@ class ColorItem extends StatelessWidget {
     );
   }
 }
+/// ***
+/// 
+/// customColor needs to be DELETED and the actual value of the color
+/// needs to be fetch as part of the (option-value) variant itself.
+/// 
+///  - So it will need a little retouch on the implementation.
+/// 
+/// ***
 
 Map<String, Color> customColors = {
   "Red": Color.fromRGBO(255, 59, 48, 1),

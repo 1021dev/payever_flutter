@@ -92,7 +92,7 @@ class _EmailTextFieldState extends State<EmailTextField> {
               },
             );
             return null;
-          } else if (!(email.contains("@") && email.contains("."))) {
+          } else if (!RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(email)) {
             setState(
               () {
                 widget.notifier.value = ButtonStage.error;

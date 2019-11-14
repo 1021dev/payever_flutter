@@ -30,6 +30,15 @@ import 'product_type.dart';
 import 'product_variants.dart';
 import 'product_visibility.dart';
 
+
+/// ***
+/// 
+/// Class unused.
+/// 
+/// Reason: Refactored but never deleted.
+/// 
+/// ***
+
 ValueNotifier<GraphQLClient> clientForNewProduct({
   @required String uri,
   String subscriptionUri,

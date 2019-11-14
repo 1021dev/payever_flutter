@@ -34,7 +34,6 @@ class _EmployeesGroupsListTabScreenState
   @override
   void initState() {
     super.initState();
-    print("init groups");
   }
 
   listener() {
@@ -57,7 +56,6 @@ class _EmployeesGroupsListTabScreenState
         List<BusinessEmployeesGroups>();
 
     SettingsApi api = SettingsApi();
-print("searching for = ${widget.search.value}");
     var businessEmployeesGroups = await api
         .getBusinessEmployeesGroupsList(
             globalStateModel.currentBusiness.id,

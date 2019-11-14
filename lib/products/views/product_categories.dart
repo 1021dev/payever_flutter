@@ -8,6 +8,10 @@ import '../models/models.dart';
 import '../utils/utils.dart';
 import 'new_product.dart';
 
+/// ***
+/// Old and current implementation.
+/// ***
+
 class ProductCategoryRow extends StatefulWidget {
   final NewProductScreenParts parts;
 
@@ -178,6 +182,14 @@ class _ProductCategoryRowState extends State<ProductCategoryRow> {
     );
   }
 }
+
+/// ***
+/// ^ old implementation
+/// 
+/// HERE 
+/// 
+/// Current implementation
+/// ***
 
 class CategoryBody extends StatelessWidget {
   @override

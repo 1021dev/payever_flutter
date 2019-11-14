@@ -28,6 +28,12 @@ class DashboardApps extends StatefulWidget {
 class _DashboardAppsState extends State<DashboardApps> {
   DashboardStateModel dashboardStateModel;
 
+  /// ***
+  ///
+  /// Manual List for the apps on the app section in the dashboard.
+  ///
+  /// ***
+
   List<String> _availableApps = [
     "transactions",
     "pos",
@@ -81,12 +87,16 @@ class AppView extends StatefulWidget {
 class _AppViewState extends State<AppView> {
   bool _isLoading = false;
   GlobalStateModel globalStateModel;
+
+  ///
+  /// Could be replace to load local assets that are already imported.
+  ///
+
   String uiKit = Env.commerceOs + "/assets/ui-kit/icons-png/";
   DashboardStateModel dashboardStateModel;
 
   @override
   Widget build(BuildContext context) {
-    // print(_isLoading);
     globalStateModel = Provider.of<GlobalStateModel>(context);
     dashboardStateModel = Provider.of<DashboardStateModel>(context);
     return Column(
@@ -220,16 +230,7 @@ class _AppViewState extends State<AppView> {
     Navigator.push(
       context,
       PageTransition(
-        /// *** to settings drawer
-         child: SettingsScreen(),
-        /// ***
-        /// Directly to the Employee screen
-        // child: ChangeNotifierProvider<EmployeesStateModel>(
-        //   builder: (BuildContext context) =>
-        //       EmployeesStateModel(globalStateModel, SettingsApi()),
-        //   child: EmployeesScreen(),
-        // ),
-        // child: EmployeesScreen(),
+        child: SettingsScreen(),
         type: PageTransitionType.fade,
       ),
     );
