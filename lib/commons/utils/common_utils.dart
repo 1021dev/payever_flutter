@@ -773,6 +773,8 @@ class GlobalUtils {
   static const String ENV_APP_REGISTRY = "appRegistry";
   static const String ENV_PAYMENTS = "payments";
   static const String ENV_COMMONS = "common";
+  static const String ENV_CONNECT = "connect";
+  static const String ENV_PLUGINS = "plugins";
 
   // dashboard_
   static const String CURRENT_WALLPAPER = "currentWallpaper";

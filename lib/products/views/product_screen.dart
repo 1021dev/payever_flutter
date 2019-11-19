@@ -232,10 +232,11 @@ class _ProductScreenState extends State<ProductScreen> {
           child: BackgroundBase(
             true,
             appBar: _appBar,
-            /// *** 
+
+            /// ***
             ///
-            /// read products/README.md 
-            /// 
+            /// read products/README.md
+            ///
             /// The current widget is in charge of fetching the next amount of products
             ///
             /// ***
@@ -673,11 +674,12 @@ class _ProductItemState extends State<ProductItem> {
                           ? (widget.parts.isPortrait ? 0.3 : 0.3)
                           : 0.9),
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(12),
-                        topRight: Radius.circular(12),
-                      ),
-                      color: Colors.black.withOpacity(0.3)),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(12),
+                      topRight: Radius.circular(12),
+                    ),
+                    color: Colors.black.withOpacity(0.3),
+                  ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,

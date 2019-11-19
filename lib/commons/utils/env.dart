@@ -31,6 +31,8 @@ class Env {
   static String appRegistry;
   static String payments;
   static String commons;
+  static String connect;
+  static String plugins;
 
   Env.map(dynamic obj) {
     Env.users = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_USER];
@@ -57,5 +59,7 @@ class Env {
     Env.appRegistry = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_APP_REGISTRY];
     Env.payments = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_PAYMENTS];
     Env.commons = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_COMMONS];
+    Env.connect = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_CONNECT];
+    Env.plugins = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_PLUGINS];
   }
 }

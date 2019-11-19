@@ -77,7 +77,7 @@ class NetworkUtil {
           if (statusCode < 200 || statusCode >= 400 || json == null) {
             throw Exception("Error while fetching data $res");
           }
-          return _decoder.convert(res);
+          return res == "" ? "" : _decoder.convert(res);
         });
       });
     } finally {

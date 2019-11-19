@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../../view_models/view_models.dart';
 import '../../../utils/utils.dart';
 
+import '../../../../connect/views/connect_dashboard_card.dart';
 import '../tutorials/tutorial_card.dart';
 import '../../../../transactions/views/transaction_dashboard_card.dart';
 import '../../../../products/views/products_sold_dashboard_card.dart';
@@ -52,7 +53,7 @@ class DashboardOverview extends StatelessWidget {
           ));
           break;
         case "connect":
-          _activeWid.add(ProductsSoldCard(
+          _activeWid.add(ConnectCard(
             wid.type,
             NetworkImage(uiKit + wid.icon),
             ""

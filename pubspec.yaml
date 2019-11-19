@@ -61,6 +61,7 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/images/connecticon/
     - assets/translations/widget_app/
     - assets/translations/countries/
     - assets/translations/connect_app/
@@ -74,6 +75,8 @@ flutter:
     - assets/translations/custom/
     - assets/translations/checkout/
     - assets/translations/checkout/sms/
+    - assets/translations/connect/app/
+    - assets/translations/connect/integrations/
     - assets/videos/
 
 #    fonts:

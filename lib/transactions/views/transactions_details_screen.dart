@@ -942,7 +942,7 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
                         children: [
                           TextSpan(
                               text:
-                                  "${DateFormat.d("en_US").add_MMM().add_y().format(time)} ${DateFormat.Hm("en_US").format(time.add(Duration(hours: 2)))}  ",
+                                  "${DateFormat.d("en_US").add_MMM().add_y().format(time)} ${DateFormat.Hm("en_US").format(time.add(Duration(hours: 1)))}  ",
                               style: TextStyle(
                                   fontSize: AppStyle.fontSizeTabContent(),
                                   color: Colors.white.withOpacity(0.6))),

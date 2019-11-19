@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:payever/connect/connect.dart';
 import 'package:payever/settings/settings.dart';
 import 'package:provider/provider.dart';
 
@@ -38,6 +39,7 @@ class _DashboardAppsState extends State<DashboardApps> {
     "transactions",
     "pos",
     "products",
+    "connect",
     "settings",
   ];
 
@@ -142,6 +144,12 @@ class _AppViewState extends State<AppView> {
                   _isLoading = false;
                 });
                 break;
+              case "connect":
+                loadConnect();
+                setState(() {
+                  _isLoading = false;
+                });
+                break;
               case "settings":
                 loadSettings();
                 setState(() {
@@ -179,15 +187,30 @@ class _AppViewState extends State<AppView> {
 
   void loadProducts() {
     Navigator.push(
-        context,
-        PageTransition(
-            child: ProductScreen(
-              business: globalStateModel.currentBusiness,
-              wallpaper: globalStateModel.currentWallpaper,
-              posCall: false,
-            ),
-            type: PageTransitionType.fade,
-            duration: Duration(milliseconds: 50)));
+      context,
+      PageTransition(
+        child: ProductScreen(
+          business: globalStateModel.currentBusiness,
+          wallpaper: globalStateModel.currentWallpaper,
+          posCall: false,
+        ),
+        type: PageTransitionType.fade,
+        duration: Duration(milliseconds: 50),
+      ),
+    );
+  }
+
+  void loadConnect() {
+    Navigator.push(
+      context,
+      PageTransition(
+        child: ConnectScreenInit(
+          globalStateModel: globalStateModel,
+        ),
+        type: PageTransitionType.fade,
+        duration: Duration(milliseconds: 50),
+      ),
+    );
   }
 
   Future<void> loadPOS() {
@@ -196,13 +219,6 @@ class _AppViewState extends State<AppView> {
         _isLoading = false;
       },
     );
-//    return Navigator.push(
-//        context,
-//        PageTransition(
-//            child: NativePosScreen(
-//                terminal: dashboardStateModel.activeTerminal,
-//                business: globalStateModel.currentBusiness),
-//            type: PageTransitionType.fade,duration: Duration(milliseconds: 50)));
 
     return Navigator.push(
       context,

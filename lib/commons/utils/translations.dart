@@ -101,6 +101,20 @@ class Language {
     }).catchError((onError) {
       print(onError);
     });
+    DefaultAssetBundle.of(context)
+        .loadString("assets/translations/connect/app/$language.json", cache: false)
+        .then((value) {
+      connectAppStrings = JsonDecoder().convert(value);
+    }).catchError((onError) {
+      print(onError);
+    });
+    DefaultAssetBundle.of(context)
+        .loadString("assets/translations/connect/integrations/$language.json", cache: false)
+        .then((value) {
+      connectIntegrationStrings = JsonDecoder().convert(value);
+    }).catchError((onError) {
+      print(onError);
+    });
 
     DefaultAssetBundle.of(context)
         .loadString("assets/translations/countries/de_name_xx.json",
@@ -152,6 +166,9 @@ class Language {
   static dynamic checkoutSMSStrings = Map();
   static dynamic countriesFullStrings = Map();
   static dynamic countriesShortStrings = Map();
+  static dynamic connectAppStrings = Map();
+  static dynamic connectIntegrationStrings = Map();
+
 
   static String getWidgetStrings(String tag) => widgetStrings[tag] ?? tag;
 
@@ -178,6 +195,10 @@ class Language {
   static String getSettingsStrings(String tag) => settingsStrings[tag] ?? tag;
 
   static String getCheckoutStrings(String tag) => checkoutStrings[tag] ?? tag;
+  
+  static String getConnectAppStrings(String tag) => connectAppStrings[tag] ?? tag;
+
+  static String getConnectIntegrationsStrings(String tag) => connectIntegrationStrings[tag] ?? tag;
 
   static String getCheckoutSMSStrings(String tag) =>
       checkoutSMSStrings[tag] ?? tag;
@@ -201,4 +222,7 @@ class Language {
   static setLanguage(String current) {
     language = current;
   }
+
+
+
 }

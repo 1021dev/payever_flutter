@@ -19,25 +19,32 @@ class CustomFutureBuilder<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<T>(
-        future: future,
-        builder: (BuildContext context, AsyncSnapshot<T> snapshot) {
-          if (snapshot.hasData) {
-            return onDataLoaded(snapshot.data);
-          }
-          if (snapshot.hasError) {
-            return Center(child: Text(errorMessage));
+      future: future,
+      builder: (BuildContext context, AsyncSnapshot<T> snapshot) {
+        if (snapshot.hasData) {
+          return onDataLoaded(snapshot.data);
+        }
+        if (snapshot.hasError) {
+          print(">> Error ${snapshot.error ?? "null data"}");
+          return Center(
+            child: Text(
+              errorMessage ?? "",
+            ),
+          );
 //            return Center(child: Text(snapshot.error.toString()));
-          }
+        }
 
-          return loadingWidget != null
-              ? loadingWidget
-              : Center(
-                  child: Padding(
+        return loadingWidget != null
+            ? loadingWidget
+            : Center(
+                child: Padding(
                   padding: EdgeInsets.all(10),
                   child: CircularProgressIndicator(
                     backgroundColor: color,
                   ),
-                ));
-        });
+                ),
+              );
+      },
+    );
   }
 }
