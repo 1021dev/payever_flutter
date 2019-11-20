@@ -84,7 +84,8 @@ class IntegrationItem extends StatelessWidget {
           onTap: () {
             /// ***
             ///
-            /// Implementation to be define web version still in process
+            /// Implementation to be define web version still in process for the overall
+            /// plugin Appstore look like
             ///
             /// ***
           },
@@ -215,7 +216,6 @@ class _TitleState extends State<Title> {
                           var a = await Provider.of<ConnectStateModel>(context)
                               .installIntegration(
                                   widget.integration.integration.name);
-                          print(a);
                           widget.integration.installed = a["installed"];
                         } catch (e) {
                           print(e);
@@ -250,7 +250,6 @@ class _TitleState extends State<Title> {
                                                 context)
                                             .uninstallIntegration(widget
                                                 .integration.integration.name);
-                                    print(a);
                                     widget.integration.installed =
                                         a["installed"];
                                   } catch (e) {
@@ -289,20 +288,6 @@ class _TitleState extends State<Title> {
                                 ),
                               ],
                             ),
-                            // InkWell(
-                            //   child: Container(
-                            //     decoration: BoxDecoration(
-                            //       color: Colors.white.withOpacity(0.2),
-                            //       borderRadius: BorderRadius.circular(30),
-                            //     ),
-                            //     padding: EdgeInsets.symmetric(
-                            //       vertical: 7.5,
-                            //       horizontal: 7.5,
-                            //     ),
-                            //     child: Icon(Icons.more_horiz),
-                            //   ),
-                            //   onTap: () {},
-                            // ),
                           ],
                         ),
                       ],
@@ -348,6 +333,11 @@ class IntegrationScreen extends StatelessWidget {
             integration.integration.displayOptions.title,
           ),
         ),
+        actions: <Widget>[
+          Provider.of<ConnectStateModel>(context)
+                  .actionsWidgets[integration.integration.name] ??
+              Container(),
+        ],
       ),
       body: Provider.of<ConnectStateModel>(context)
           .integrationWidgets[integration.integration.name],
@@ -500,15 +490,22 @@ class IntegrationDetails extends StatelessWidget {
                       alignment: Alignment.centerLeft,
                       child: AutoSizeText(
                         Language.getConnectAppStrings(
-                            "installation.labels.app_support"),
-                        style: TextStyle(color: Colors.blue),
+                            "integration_full_page.app.support"),
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontSize: 12,
+                        ),
                         maxLines: 1,
                         minFontSize: 8,
                       ),
                     ),
                     onTap: () async {
-                      _launchURL(Language.getConnectAppStrings(integration
-                          .integration.installationOptions.appSupport));
+                      _launchURL(
+                        Language.getConnectAppStrings(
+                          integration
+                              .integration.installationOptions.appSupport,
+                        ),
+                      );
                     },
                   ),
                 ),
@@ -518,7 +515,8 @@ class IntegrationDetails extends StatelessWidget {
                       // alignment: Alignment.center,
                       child: AutoSizeText(
                         Language.getConnectAppStrings(
-                            "installation.labels.pricing"),
+                          "installation.labels.pricing",
+                        ),
                         style: TextStyle(fontSize: 12, color: Colors.blue),
                         maxLines: 1,
                         minFontSize: 8,

@@ -477,6 +477,8 @@ class _SwitcherState extends State<Switcher> {
                               ],
                             ),
                             onTap: () async {
+                              setState(() => _loadBusiness = true);
+
                               var img = await parts.fetchWallpaper(
                                   parts._active.id, context);
                               var p = await SharedPreferences.getInstance();
@@ -528,7 +530,6 @@ class _SwitcherState extends State<Switcher> {
                                 ),
                               );
                               //   print("onIconSelect - business");
-                              //   setState(() => _loadBusiness = true);
                               //   parts
                               //       .fetchWallpaper(parts._active.id, context)
                               //       .then((img) {

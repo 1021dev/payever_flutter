@@ -14,6 +14,9 @@ class ApiIntegration extends StatefulWidget {
 class _ApiIntegrationState extends State<ApiIntegration> {
   @override
   Widget build(BuildContext context) {
+    Provider.of<ConnectStateModel>(context)
+        .apiIntegrationNotifier
+        .addListener(() => setState(() {}));
     return CustomFutureBuilder(
       color: Colors.transparent,
       future: Provider.of<ConnectStateModel>(context).apiKeys(),
@@ -26,25 +29,31 @@ class _ApiIntegrationState extends State<ApiIntegration> {
           (_key) {
             ApiKeys currentKey = ApiKeys.fromMap(_key);
             _apiKey.add(currentKey);
-            _body.add(ApiKeyDetails(
-              apiKeys: currentKey,
-              deleteAction: () async {
-                await Provider.of<ConnectStateModel>(context)
-                    .deleteKey(currentKey.id);
-                setState(() {});
-              },
-            ));
-            _headers.add(Text(currentKey.name));
+            _body.add(
+              ApiKeyDetails(
+                apiKeys: currentKey,
+                deleteAction: () async {
+                  await Provider.of<ConnectStateModel>(context)
+                      .deleteKey(currentKey.id);
+                  setState(
+                    () {},
+                  );
+                },
+              ),
+            );
+            _headers.add(
+              Text(currentKey.name),
+            );
           },
         );
-        _body.add(AddRow(
-          actionAdd: (name) {
-            Provider.of<ConnectStateModel>(context).addKey(name).then((_) {
-              setState(() {});
-            });
-          },
-        ));
-        _headers.add(Text(Language.getConnectAppStrings("actions.add")));
+        // _body.add(AddRow(
+        //   actionAdd: (name) {
+        //     Provider.of<ConnectStateModel>(context).addKey(name).then((_) {
+        //       setState(() {});
+        //     });
+        //   },
+        // ));
+        // _headers.add(Text(Language.getConnectAppStrings("actions.add")));
 
         return SafeArea(
           child: ListView(
@@ -78,6 +87,7 @@ class ApiKeyDetails extends StatefulWidget {
 
 class _ApiKeyDetailsState extends State<ApiKeyDetails> {
   bool _loading = false;
+
   @override
   Widget build(BuildContext context) {
     DateTime time = DateTime.parse(widget.apiKeys.createdAt);
@@ -137,7 +147,7 @@ class _ApiKeyDetailsState extends State<ApiKeyDetails> {
   }
 
   Widget _line(String title, String value, {bool click = true}) {
-    return GestureDetector(
+    return InkWell(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10.0),
         child: Row(
@@ -166,7 +176,7 @@ class _ApiKeyDetailsState extends State<ApiKeyDetails> {
         ),
       ),
       onLongPress: () {
-        if(click){
+        if (click) {
           Clipboard.setData(
             ClipboardData(
               text: value,
@@ -216,7 +226,8 @@ class AddRow extends StatefulWidget {
 class _AddRowState extends State<AddRow> {
   @override
   Widget build(BuildContext context) {
-    return Expanded(
+    return Container(
+      height: 120,
       child: Column(
         children: <Widget>[
           Row(
@@ -263,9 +274,10 @@ class _AddRowState extends State<AddRow> {
               child: Text(
                 Language.getConnectAppStrings("actions.create"),
                 style: TextStyle(
-                    color: widget._controller.text.isNotEmpty
-                        ? Colors.white
-                        : Colors.white.withOpacity(0.5)),
+                  color: widget._controller.text.isNotEmpty
+                      ? Colors.white
+                      : Colors.white.withOpacity(0.5),
+                ),
               ),
             ),
             onTap: () {
@@ -275,6 +287,41 @@ class _AddRowState extends State<AddRow> {
           )
         ],
       ),
+    );
+  }
+}
+
+class AddApiCredentials extends StatelessWidget {
+  ConnectStateModel _connectStateModel;
+  @override
+  Widget build(BuildContext context) {
+    _connectStateModel = Provider.of<ConnectStateModel>(context);
+    return IconButton(
+      icon: Icon(Icons.add),
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return Dialog(
+              backgroundColor: Color(0xff262726).withOpacity(0.8),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: AddRow(
+                actionAdd: (name) {
+                  _connectStateModel.addKey(name).then(
+                    (_) {
+                      Navigator.pop(context);
+                      _connectStateModel.apiIntegrationNotifier.value =
+                          !_connectStateModel.apiIntegrationNotifier.value;
+                    },
+                  );
+                },
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }

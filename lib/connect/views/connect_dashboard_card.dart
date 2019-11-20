@@ -37,13 +37,15 @@ class ConnectCardRow extends StatelessWidget {
       future: Provider.of<ConnectStateModel>(context).getRandomIntegrations(),
       onDataLoaded: (result) {
         List<Widget> _integrations = List();
-        result.forEach((_int) {
-          _integrations.add(
-            ConnectCardItem(
-              integration: ConnectIntegration.fromMap(_int),
-            ),
-          );
-        });
+        result.forEach(
+          (_int) {
+            _integrations.add(
+              ConnectCardItem(
+                integration: ConnectIntegration.fromMap(_int),
+              ),
+            );
+          },
+        );
         if (_integrations.length > 4) {
           _integrations = _integrations.sublist(0, 4);
         }

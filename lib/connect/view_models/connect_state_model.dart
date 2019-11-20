@@ -107,9 +107,17 @@ class ConnectStateModel extends ChangeNotifier {
     "#payment-method-cash-2": "assets/images/connecticon/wiretransfer.svg"
   };
 
+
+  ValueNotifier<bool> apiIntegrationNotifier = ValueNotifier(false);
+  
   Map<String, Widget> integrationWidgets = {
     "api": ApiIntegration(),
   };
+
+  Map<String, Widget> actionsWidgets = {
+    "api": AddApiCredentials(),
+  };
+  
   String icon(String tag) {
     return iconRoute[tag];
   }

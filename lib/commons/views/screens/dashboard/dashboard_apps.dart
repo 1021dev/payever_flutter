@@ -60,17 +60,23 @@ class _DashboardAppsState extends State<DashboardApps> {
     return SafeArea(
       child: Padding(
         padding: EdgeInsets.only(top: 25),
-        child: ListView(
-          physics: NeverScrollableScrollPhysics(),
-          children: <Widget>[
-            Wrap(
-              direction: Axis.horizontal,
-              alignment: WrapAlignment.spaceEvenly,
-              runSpacing: Measurements.height * 0.04,
-              spacing: Measurements.width * 0.05,
-              children: _apps,
-            ),
-          ],
+        // child: ListView(
+        //   physics: NeverScrollableScrollPhysics(),
+        //   children: <Widget>[
+        //     Wrap(
+        //       direction: Axis.horizontal,
+        //       alignment: WrapAlignment.start,
+
+        //       runSpacing: Measurements.height * 0.04,
+        //       spacing: Measurements.width * 0.05,
+        //       children: _apps,
+        //     ),
+        //   ],
+        // ),
+        child: GridView(
+          gridDelegate:
+              SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4),
+          children: _apps,
         ),
       ),
     );
@@ -90,9 +96,11 @@ class _AppViewState extends State<AppView> {
   bool _isLoading = false;
   GlobalStateModel globalStateModel;
 
-  ///
+  /// *** 
+  /// 
   /// Could be replace to load local assets that are already imported.
-  ///
+  /// 
+  /// ***
 
   String uiKit = Env.commerceOs + "/assets/ui-kit/icons-png/";
   DashboardStateModel dashboardStateModel;
@@ -109,18 +117,19 @@ class _AppViewState extends State<AppView> {
           child: Column(
             children: <Widget>[
               Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    color: Colors.white.withOpacity(0.15),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color: Colors.white.withOpacity(0.15),
+                ),
+                padding: EdgeInsets.all(20),
+                child: Container(
+                  width: 30,
+                  height: 30,
+                  child: CachedNetworkImage(
+                    imageUrl: uiKit + widget._currentApp.icon,
                   ),
-                  padding: EdgeInsets.all(20),
-                  child: Container(
-                    width: 30,
-                    height: 30,
-                    child: CachedNetworkImage(
-                      imageUrl: uiKit + widget._currentApp.icon,
-                    ),
-                  )),
+                ),
+              ),
             ],
           ),
           onTap: () {

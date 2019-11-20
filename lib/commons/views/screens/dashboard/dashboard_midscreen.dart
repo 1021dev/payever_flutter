@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:core';
 import 'dart:convert';
 
@@ -70,6 +71,7 @@ class _DashboardMidScreenState extends State<DashboardMidScreen> {
           return _redirectUser();
           break;
         default:
+          return _redirectUser();
           break;
       }
     } else {
@@ -95,7 +97,9 @@ class _DashboardMidScreenState extends State<DashboardMidScreen> {
         preferences.setString(
             GlobalUtils.TOKEN, GlobalUtils.activeToken.accessToken);
         preferences.setString(
-            GlobalUtils.REFRESH_TOKEN, GlobalUtils.activeToken.refreshToken);
+          GlobalUtils.REFRESH_TOKEN,
+          GlobalUtils.activeToken.refreshToken,
+        );
         preferences.setString(GlobalUtils.LAST_OPEN, DateTime.now().toString());
         RestDataSource()
             .getUser(
@@ -183,7 +187,6 @@ class _DashboardMidScreenState extends State<DashboardMidScreen> {
                   notify: false,
                 );
               } catch (e) {
-                
                 globalStateModel.setCurrentWallpaper(
                   globalStateModel.defaultCustomWallpaper,
                   notify: false,
@@ -283,13 +286,19 @@ class _DashboardMidScreenState extends State<DashboardMidScreen> {
   Future<dynamic> loadData() async {
     RestDataSource api = RestDataSource();
     var preferences = await SharedPreferences.getInstance();
-    preferences = preferences;
     //  var environment = await api.getEnv();
     // Env.map(environment);
+    try {
+      var a = Measurements.parseJwt(
+          preferences.getString(GlobalUtils.REFRESH_TOKEN))["exp"];
+    } catch (e) {
+      _redirectUser();
+    }
     if (DateTime.now()
             .difference(DateTime.fromMillisecondsSinceEpoch(
-                Measurements.parseJwt(preferences
-                        .getString(GlobalUtils.REFRESH_TOKEN))["exp"] *
+                Measurements.parseJwt(
+                        preferences.getString(GlobalUtils.REFRESH_TOKEN) ??
+                            "")["exp"] *
                     1000))
             .inHours <
         0) {
@@ -323,6 +332,7 @@ class _DashboardMidScreenState extends State<DashboardMidScreen> {
         }
       }
     } else {
+      
       /// ***
       ///
       /// Here if the Token is not longer valid then if the app was opened somewehere in the last 720 hours = 30 days

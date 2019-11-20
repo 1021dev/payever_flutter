@@ -335,7 +335,7 @@ class GlobalUtils {
   /// ***
 
   //URLS
-  static String currentEnv = "staging1";
+  static String currentEnv = "release";
   static String pass = envVariables["password"][currentEnv];
   static String mail = envVariables["email"][currentEnv];
   static String commerceOsUrl = envVariables["url"][currentEnv];

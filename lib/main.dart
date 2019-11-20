@@ -75,16 +75,14 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider<ProductStateModel>(
             builder: (BuildContext context) => ProductStateModel()),
         ChangeNotifierProvider<PosStateModel>(
-            builder: (BuildContext context) => PosStateModel(globalStateModel,PosApi())),
+            builder: (BuildContext context) =>
+                PosStateModel(globalStateModel, PosApi())),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         debugShowMaterialGrid: false,
         title: 'payever',
         theme: _payeverTheme,
-        routes: {
-//            '/dashboard': (context) => DashboardMidScreen(wallpaper),
-        },
         home: _loadCredentials.value
             ? Center(child: CircularProgressIndicator())
             : _haveCredentials ? DashboardMidScreen(wallpaper) : LoginScreen(),
@@ -97,6 +95,11 @@ class _MyAppState extends State<MyApp> {
     wallpaper = preferences.getString(GlobalUtils.WALLPAPER) ?? "";
     String bus = preferences.getString(GlobalUtils.BUSINESS) ?? "";
     String rfToken = preferences.getString(GlobalUtils.REFRESH_TOKEN) ?? "";
+    try {
+      Measurements.parseJwt(rfToken);
+    } catch (e) {
+      rfToken = "";
+    }
     GlobalUtils.fingerprint =
         preferences.getString(GlobalUtils.FINGERPRINT) ?? "";
     _loadCredentials.value = false;
