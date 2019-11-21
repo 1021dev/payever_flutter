@@ -15,9 +15,9 @@ class GlobalStateModel extends ChangeNotifier {
   String _currentWallpaperBlur;
 
   String _defaultCustomWallpaper =
-      "https://payevertest.azureedge.net/images/commerseos-background.jpg";
+      "https://payever.azureedge.net/images/commerseos-background.jpg";
   String _defaultCustomWallpaperBlur =
-      "https://payevertest.azureedge.net/images/commerseos-background-blurred.jpg";
+      "https://payever.azureedge.net/images/commerseos-background-blurred.jpg";
 
   Business _currentBusiness;
   List<AppWidget> _appWidgets;

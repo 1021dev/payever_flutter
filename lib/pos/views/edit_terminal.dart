@@ -47,9 +47,6 @@ class _EditTerminalState extends State<EditTerminal> {
       builder: (BuildContext context, Orientation orientation) {
         _isPortrait = Orientation.portrait == orientation;
         _isTablet = Measurements.width < 600 ? false : true;
-
-        print("_isPortrait: $_isPortrait");
-
         return Stack(children: <Widget>[
           Positioned(
             height: MediaQuery.of(context).size.height,

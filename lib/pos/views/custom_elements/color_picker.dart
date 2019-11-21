@@ -4,6 +4,15 @@ import 'package:payever/pos/view_models/view_models.dart';
 import 'package:provider/provider.dart';
 import '../variant_picker.dart';
 
+
+/// ***
+/// 
+/// For the use of this picker the use of the hex in backend its needed.
+///   - Flutter works with opacity in the first two values of the color hex code
+///     therefor the use of an extra FF for the opacity is needed.
+/// 
+/// ***
+
 class ColorPicker extends StatefulWidget {
   PickerValues pv;
   ColorPicker(

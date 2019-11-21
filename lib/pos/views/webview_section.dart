@@ -54,8 +54,6 @@ class _WebViewPaymentsState extends State<WebViewPayments> {
               obj["id"] +
               "?noHeaderOnLoading=true";
         });
-
-        print("paymentUrl: $paymentUrl");
       });
     else
       paymentUrl = widget.url;

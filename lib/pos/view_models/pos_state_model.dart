@@ -387,7 +387,7 @@ class PosStateModel extends PosStateCommonsModel {
 
   /// ***
   /// 
-  /// - This method will not be used in must of the time but the case could exist for the reason that
+  /// - This method will not be used in most of the time but the case could exist for the reason that
   /// the data base supports the creation of options for single variants
   /// therefore breaking the main definition of the map so this will make 
   /// sure that if one option is needed then it will be placed just for it.
