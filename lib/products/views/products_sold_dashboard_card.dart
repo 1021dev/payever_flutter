@@ -159,7 +159,7 @@ class _ProductsSoldCardItemState extends State<ProductsSoldCardItem> {
                     ),
                     builder: (QueryResult result,
                         {VoidCallback refetch, fetchMore: null}) {
-                      if (result.errors != null) {
+                      if (result.exception != null) {
                         // print(result.errors);
                         // return Center(
                         //   child: Text("Error"),

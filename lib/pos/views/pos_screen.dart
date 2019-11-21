@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+//import 'package:webview_flutter/webview_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../view_models/view_models.dart';
@@ -32,21 +32,21 @@ class _POSScreenState extends State<POSScreen> {
   Widget _currentBody;
   bool _isLoading = false;
   ValueNotifier index = ValueNotifier(0);
-  WebView _view;
+  //WebView _view;
   var _terminalLoading = ValueNotifier(true);
 
   createWebViewForTerminal(Terminal _terminal) {
-    _view = WebView(
-      onPageFinished: (s) {
-        _terminalLoading.value = false;
-      },
-      key: UniqueKey(),
-      javascriptMode: JavascriptMode.unrestricted,
-      initialUrl: Env.builder +
-          "/pos/" +
-          _terminal.id +
-          "/products?enableMerchantMode=true",
-    );
+    // _view = WebView(
+    //   onPageFinished: (s) {
+    //     _terminalLoading.value = false;
+    //   },
+    //   key: UniqueKey(),
+    //   javascriptMode: JavascriptMode.unrestricted,
+    //   initialUrl: Env.builder +
+    //       "/pos/" +
+    //       _terminal.id +
+    //       "/products?enableMerchantMode=true",
+    // );
   }
 
   @override
@@ -158,7 +158,7 @@ class _POSScreenState extends State<POSScreen> {
 //  }
 
   void loadTerminal() {
-    changeFragment(_view);
+    // changeFragment(_view);
   }
 
   void listener() {

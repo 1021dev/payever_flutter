@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+// import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 
 import '../view_models/view_models.dart';
 import '../network/network.dart';
 import '../utils/utils.dart';
 
 /// ***
-/// 
+///
 /// Unused class.
-/// 
+///
 /// Reason: First try for a checkout with a native product grid.
-/// 
+///
 /// ***
 
 class WebViewPayments extends StatefulWidget {
@@ -62,32 +62,33 @@ class _WebViewPaymentsState extends State<WebViewPayments> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          brightness: Brightness.light,
-          leading: IconButton(
-            icon: Icon(
-              Icons.close,
-              color: Colors.black,
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          centerTitle: true,
-          title: SvgPicture.asset(
-            "assets/images/payeverlogoandname.svg",
+      appBar: AppBar(
+        brightness: Brightness.light,
+        leading: IconButton(
+          icon: Icon(
+            Icons.close,
             color: Colors.black,
           ),
-          backgroundColor: Colors.white,
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
-        body: paymentUrl == null
-            ? Container(color: Colors.white)
-            : WebviewScaffold(
-                initialChild: Container(
-                  color: Colors.white,
-                ),
-                url: paymentUrl,
-                withJavascript: true,
-              ));
+        centerTitle: true,
+        title: SvgPicture.asset(
+          "assets/images/payeverlogoandname.svg",
+          color: Colors.black,
+        ),
+        backgroundColor: Colors.white,
+      ),
+      // body: paymentUrl == null
+      //     ? Container(color: Colors.white)
+      //     : WebviewScaffold(
+      //         initialChild: Container(
+      //           color: Colors.white,
+      //         ),
+      //         url: paymentUrl,
+      //         withJavascript: true,
+      //       ),
+    );
   }
 }

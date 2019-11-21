@@ -260,8 +260,8 @@ class _ProductEditorState extends State<ProductEditor> {
                     VoidCallback refetch,
                     fetchMore: null,
                   }) {
-                    if (result.errors != null) {
-                      print("Error = ${result.errors}");
+                    if (result.exception != null) {
+                      print("Error = ${result.exception}");
                       return Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
