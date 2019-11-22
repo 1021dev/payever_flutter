@@ -230,7 +230,10 @@ class PosApi extends RestDataSource {
     print("TAG - postStorage()");
     var body = jsonEncode({
       "data": {
-        "flow": {"channel_set_id": channel, "cart": cart},
+        "flow": {
+          "channel_set_id": channel,
+          "cart": cart,
+        },
         "force_no_header": true,
         "force_no_send_to_device": sms,
         "force_no_order": order,

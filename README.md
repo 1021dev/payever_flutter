@@ -23,4 +23,6 @@
 - Integration with a Flutter CI/CD:
     - https://www.bitrise.io/
     - https://codemagic.io/start/
-    
+
+-last version app.aab
+-android key inside lib payeverkey.jks

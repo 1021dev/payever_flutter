@@ -1,8 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/checkout_process/utils/checkout_process_utils.dart';
 import 'package:payever/commons/views/custom_elements/appbar_avatar.dart';
+import 'package:payever/pos/network/pos_api.dart';
 import 'package:provider/provider.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import '../views/custom_elements/custom_elements.dart';
 import '../../commons/views/custom_elements/custom_elements.dart';
 import '../view_models/view_models.dart';
@@ -65,6 +68,7 @@ class _CheckoutProcessScreenState extends State<CheckoutProcessScreen> {
             Provider.of<GlobalStateModel>(context).currentBusiness.primary ??
                 0xffffffff),
         actions: <Widget>[
+          QrButton(manual: widget.manual),
           widget.manual
               ? Container()
               : DeleteButton(
@@ -87,14 +91,14 @@ class _CheckoutProcessScreenState extends State<CheckoutProcessScreen> {
 
         /// ***
         ///
-        /// The use of a Temporal Flow Obj is to get from the server 
+        /// The use of a Temporal Flow Obj is to get from the server
         /// the specific payments for PoS that the checkout uses
-        ///   (the stepper is for the checkout construction same as the web version does it but with  ==  "order" 
+        ///   (the stepper is for the checkout construction same as the web version does it but with  ==  "order"
         ///     to restrict it just to use the orden + the custombuttons).
-        /// 
+        ///
         /// ***
-        
-        future: checkoutProcessStateModel                           
+
+        future: checkoutProcessStateModel
             .startCheckout(Provider.of<GlobalStateModel>(context)),
         onDataLoaded: (results) {
           CheckoutStructure checkoutStructure =
@@ -104,9 +108,9 @@ class _CheckoutProcessScreenState extends State<CheckoutProcessScreen> {
           checkoutProcessStateModel.setcheckoutStructure(checkoutStructure);
           for (var i in checkoutStructure.sections) {
             /// ***
-            /// to test just need to chage the commented 
+            /// to test just need to chage the commented
             /// if - checkout_screen.dart line 113
-            /// and  
+            /// and
             /// the sectionMap - checkout_process_state_model.dart line 182
             /// old implementation.
 
@@ -136,10 +140,10 @@ class _CheckoutProcessScreenState extends State<CheckoutProcessScreen> {
   }
 
   /// ***
-  /// 
-  /// The temporal flow is need because its the way to know 
+  ///
+  /// The temporal flow is need because its the way to know
   /// which paymentes are enabled in the terminal.
-  /// 
+  ///
   /// ***
 
   temporalFlow(channelSet, checkoutProcessStateModel) async {
@@ -182,6 +186,7 @@ class _DeleteButtonState extends State<DeleteButton> {
   @override
   Widget build(BuildContext context) {
     return IconButton(
+      padding: EdgeInsets.all(15),
       icon: SvgPicture.asset(
         "assets/images/trashicon.svg",
         color: widget.checkoutProcessStateModel.posStateModel.haveProducts
@@ -199,5 +204,80 @@ class _DeleteButtonState extends State<DeleteButton> {
         });
       },
     );
+  }
+}
+
+class QrButton extends StatefulWidget {
+  final bool manual;
+
+  const QrButton({Key key, this.manual}) : super(key: key);
+
+  @override
+  _QrButtonState createState() => _QrButtonState();
+}
+
+class _QrButtonState extends State<QrButton> {
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: SvgPicture.asset(
+        "assets/images/qr.svg",
+        color: Colors.black,
+      ),
+      padding: EdgeInsets.all(15),
+      onPressed: () async {
+        String _url = await generateQr(widget.manual);
+        showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (context) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              backgroundColor: Colors.white,
+              child: Container(
+                padding: EdgeInsets.all(10),
+                child: QrImage(
+                  backgroundColor: Colors.transparent,
+                  data: _url,
+                  version: 9,
+                  gapless: false,
+                  size: 300,
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Future<String> generateQr(bool manual) async {
+    String paymentUrl;
+    var obj = await PosApi().postStorageSimple(
+        GlobalUtils.activeToken.accessToken,
+        manual
+            ? []
+            : Cart.items2MapSimple(
+                Provider.of<CheckoutProcessStateModel>(context)
+                    .posStateModel
+                    .shoppingCart
+                    .items),
+        null,
+        false,
+        true,
+        "widget.phone.replaceAll(" "," ")",
+        DateTime.now()
+            .subtract(Duration(hours: 1))
+            .add(Duration(minutes: 1))
+            .toIso8601String(),
+        Provider.of<CheckoutProcessStateModel>(context).getchannelSet,
+        true);
+    paymentUrl = Env.wrapper +
+        "/pay/restore-flow-from-code/" +
+        obj["id"] +
+        "?noHeaderOnLoading=true";
+    return paymentUrl;
   }
 }
