@@ -607,8 +607,8 @@ class _PosProductsLoaderState extends State<PosProductsLoader> {
               ),
               builder: (QueryResult result,
                   {VoidCallback refetch, fetchMore: null}) {
-                if (result.exception != null) {
-                  (result.exception);
+                if (result.errors != null) {
+                  (result.errors);
                   return Center(
                     child: Text("Error while fetching data"),
                   );

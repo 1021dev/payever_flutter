@@ -98,8 +98,8 @@ class _ProductCategoryRowState extends State<ProductCategoryRow> {
                   QueryOptions(variables: <String, dynamic>{}, document: doc),
               builder: (QueryResult result,
                   {VoidCallback refetch, fetchMore: null}) {
-                if (result.exception != null) {
-                  print(result.exception);
+                if (result.errors != null) {
+                  print(result.errors);
                   return Center(
                     child: Text("Error loading"),
                   );
@@ -218,8 +218,8 @@ class CategoryBody extends StatelessWidget {
           VoidCallback refetch,
           fetchMore: null,
         }) {
-          if (result.exception != null) {
-            print(result.exception);
+          if (result.errors != null) {
+            print(result.errors);
             return Center(
               child: Text("Error loading"),
             );

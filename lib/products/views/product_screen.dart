@@ -558,8 +558,8 @@ class _ProductLoaderState extends State<ProductLoader> {
               variables: <String, dynamic>{}, document: widget.initialDocument),
           builder: (QueryResult result,
               {VoidCallback refetch, fetchMore: null}) {
-            if (result.exception != null) {
-              print(result.exception);
+            if (result.errors != null) {
+              print(result.errors);
               return Center(
                 child: Text(
                   "Error while fetching data",
@@ -965,8 +965,8 @@ class _ProductItemState extends State<ProductItem> {
                                           builder: (QueryResult result,
                                               {VoidCallback refetch,
                                               fetchMore: null}) {
-                                            if (result.exception != null) {
-                                              print(result.exception);
+                                            if (result.errors != null) {
+                                              print(result.errors);
                                               return Center(
                                                 child: Column(
                                                   mainAxisAlignment:
@@ -979,7 +979,7 @@ class _ProductItemState extends State<ProductItem> {
                                                     IconButton(
                                                       icon: Icon(Icons.close),
                                                       onPressed: () {
-                                                        if (result.exception
+                                                        if (result.errors
                                                             .toString()
                                                             .contains("401")) {
                                                           GlobalUtils
