@@ -145,7 +145,7 @@ class CheckoutProcessStateModel extends ChangeNotifier {
       flowObj["id"],
       paymentIndex,
     );
-    print(">> ${a["storage"]}");
+    // print(">> ${a["storage"]}");
     // var paymentUrl = await CheckoutProcessApi().postCheckoutPayment(
     //   flowObj["id"],
     //   paymentIndex,
@@ -168,8 +168,9 @@ class CheckoutProcessStateModel extends ChangeNotifier {
           )
           .toIso8601String(),
       false,
+      noheader: true,
     );
-  
+
     // print(Env.payments + paymentUrl["redirect_url"] +
     //                     "?access_token=${GlobalUtils.activeToken.accessToken}");
 

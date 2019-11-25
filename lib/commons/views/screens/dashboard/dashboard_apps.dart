@@ -96,10 +96,10 @@ class _AppViewState extends State<AppView> {
   bool _isLoading = false;
   GlobalStateModel globalStateModel;
 
-  /// *** 
-  /// 
+  /// ***
+  ///
   /// Could be replace to load local assets that are already imported.
-  /// 
+  ///
   /// ***
 
   String uiKit = Env.commerceOs + "/assets/ui-kit/icons-png/";
@@ -232,13 +232,16 @@ class _AppViewState extends State<AppView> {
     return Navigator.push(
       context,
       PageTransition(
-        child: ChangeNotifierProvider<PosStateModel>(
-          builder: (BuildContext context) =>
-              PosStateModel(globalStateModel, PosApi()),
-          child: PosProductsListScreen(
-              terminal: dashboardStateModel.activeTerminal,
-              business: globalStateModel.currentBusiness),
-        ),
+        // child: ChangeNotifierProvider<PosStateModel>(
+        //   builder: (BuildContext context) =>
+        //       PosStateModel(globalStateModel, PosApi()),
+        //   child: PosProductsListScreen(
+        //       terminal: dashboardStateModel.activeTerminal,
+        //       business: globalStateModel.currentBusiness),
+        // ),#
+        child: PosProductsListScreen(
+            terminal: dashboardStateModel.activeTerminal,
+            business: globalStateModel.currentBusiness),
         type: PageTransitionType.fade,
         duration: Duration(
           milliseconds: 50,

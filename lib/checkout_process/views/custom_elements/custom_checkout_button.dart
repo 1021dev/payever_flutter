@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:payever/checkout_process/checkout_process.dart';
 import 'package:payever/checkout_process/models/payment_option.dart';
 import 'package:payever/checkout_process/network/checkout_process_api.dart';
@@ -7,13 +9,17 @@ import 'package:payever/checkout_process/utils/checkout_process_utils.dart';
 import 'package:payever/checkout_process/view_models/checkout_process_state_model.dart';
 import 'package:payever/checkout_process/views/payments/cash.dart';
 import 'package:payever/checkout_process/views/section_send_to_device.dart';
+import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/models/pos.dart';
 import 'package:payever/commons/utils/app_style.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/utils/utils.dart';
 import 'package:payever/commons/view_models/view_models.dart';
+import 'package:payever/commons/views/custom_elements/appbar_avatar.dart';
 import 'package:payever/pos/view_models/pos_state_model.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class CustomCheckoutButton extends StatelessWidget {
   final VoidCallback _action;
@@ -132,10 +138,10 @@ class ButtonArray extends StatefulWidget {
 class _ButtonArrayState extends State<ButtonArray> {
   Map<String, bool> loading = Map();
   Map<String, bool> enabled = Map();
-  num minSantander;
-  num maxSantander;
-  num minCash;
-  num maxCash;
+  // num minSantander;
+  // num maxSantander;
+  // num minCash;
+  // num maxCash;
 
   List<CustomCheckoutButtonWrapItem> customButtons = List();
 
@@ -188,25 +194,26 @@ class _ButtonArrayState extends State<ButtonArray> {
                 widget.checkoutProcessStateModel.reference.value.isNotEmpty;
         if (payment.slug.contains("santander") ||
             payment.slug.contains("cash")) {
-          if (customButtons
-                  .where((b) => b.title.contains("Santander"))
-                  .isEmpty ||
-              payment.slug.contains("cash")) {
-            if (minCash == null || minSantander == null) {
-              payments.forEach(
-                (p) {
-                  if (p.slug.contains("santander")) {
-                    minSantander =
-                        (minSantander ?? 101) < p.min ? minSantander : p.min;
-                    maxSantander =
-                        (maxSantander ?? 0) > p.max ? maxSantander : p.max;
-                  } else {
-                    minCash = p.min;
-                    maxCash = p.max;
-                  }
-                },
-              );
-            }
+          if (true) {
+            // if (customButtons
+            //         .where((b) => b.title.contains("Santander"))
+            //         .isEmpty ||
+            //     payment.slug.contains("cash")) {
+            // if (minCash == null || minSantander == null) {
+            //   payments.forEach(
+            //     (p) {
+            //       if (p.slug.contains("santander")) {
+            //         minSantander =
+            //             (minSantander ?? 101) < p.min ? minSantander : p.min;
+            //         maxSantander =
+            //             (maxSantander ?? 0) > p.max ? maxSantander : p.max;
+            //       } else {
+            //         minCash = p.min;
+            //         maxCash = p.max;
+            //       }
+            //     },
+            //   );
+            // }
             customButtons.add(
               CustomCheckoutButtonWrapItem(
                 loading[_payment],
@@ -221,15 +228,17 @@ class _ButtonArrayState extends State<ButtonArray> {
                           widget.manual,
                           widget.posStateModel.shoppingCart.items.isNotEmpty,
                           amountNref,
-                          payment.slug.contains("cash")
-                              ? minCash
-                              : minSantander,
+                          payment.min,
+                          // payment.slug.contains("cash")
+                          //     ? minCash
+                          //     : minSantander,
                           num.tryParse(
                               widget.checkoutProcessStateModel.amount.value),
                           widget.posStateModel.shoppingCart.total,
-                          payment.slug.contains("cash")
-                              ? maxCash
-                              : maxSantander) ||
+                          // payment.slug.contains("cash")
+                          //     ? maxCash
+                          //     : maxSantander,
+                          payment.max) ||
                       _loading ||
                       loading[_payment]) return;
 
@@ -284,77 +293,115 @@ class _ButtonArrayState extends State<ButtonArray> {
                           widget.checkoutProcessStateModel.reference.value,
                     )
                         .then(
-                      (fObj) {
+                      (fObj) async {
                         widget.checkoutProcessStateModel.flowObj = fObj;
+
+                        if (_payment.contains("cash")) {
+                          showDialog(
+                            context: context,
+                            barrierDismissible: true,
+                            builder: (context) {
+                              return Dialog(
+                                backgroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: Container(
+                                  height: 350,
+                                  width: Provider.of<GlobalStateModel>(context)
+                                          .isTablet
+                                      ? 400
+                                      : double.infinity,
+                                  padding: EdgeInsets.symmetric(horizontal: 15),
+                                  child: CashPayment(
+                                    manual: widget.manual,
+                                    checkoutProcessStateModel:
+                                        widget.checkoutProcessStateModel,
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        } else {
+                          ///
+                          ///
+                          String url = await widget.checkoutProcessStateModel
+                              .paymentLauncher(
+                            isEmail: true,
+                            text: "",
+                            paymentIndex: widget
+                                .checkoutProcessStateModel.paymentOption
+                                .where(
+                                    (item) => item.payment_method == _payment)
+                                .first
+                                .id,
+                          );
+                          // launch(url);
+                          Navigator.push(
+                            context,
+                            PageTransition(
+                              child: Scaffold(
+                                appBar: AppBar(
+                                  backgroundColor: Colors.white,
+                                  leading: IconButton(
+                                    color: Colors.black,
+                                    icon: Icon(Icons.close),
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(),
+                                  ),
+                                  title: AppBarAvatar(),
+                                ),
+                                body: WebView(
+                                  javascriptMode: JavascriptMode.unrestricted,
+                                  initialUrl: url,
+                                ),
+                              ),
+                              type: PageTransitionType.fade,
+                              duration: Duration(milliseconds: 100),
+                            ),
+                          );
+                          // showDialog(
+                          //   context: context,
+                          //   barrierDismissible: true,
+                          //   builder: (context) {
+                          //     return Dialog(
+                          //       backgroundColor: Colors.white,
+                          //       shape: RoundedRectangleBorder(
+                          //         borderRadius: BorderRadius.circular(16),
+                          //       ),
+                          //       child: Provider.of<GlobalStateModel>(context)
+                          //               .isTablet
+                          //           ? Container(
+                          //               height: 350,
+                          //               width: 400,
+                          //               padding:
+                          //                   EdgeInsets.symmetric(horizontal: 15),
+                          //               child: CheckoutS2DeviceSectionPopUp(
+                          //                 checkoutProcessStateModel:
+                          //                     widget.checkoutProcessStateModel,
+                          //                 payment: _payment,
+                          //               ),
+                          //             )
+                          //           : Container(
+                          //               height: 350,
+                          //               padding: EdgeInsets.symmetric(
+                          //                 horizontal: 15,
+                          //               ),
+                          //               child: CheckoutS2DeviceSectionPopUp(
+                          //                 checkoutProcessStateModel:
+                          //                     widget.checkoutProcessStateModel,
+                          //                 payment: _payment,
+                          //               ),
+                          //             ),
+                          //     );
+                          //   },
+                          // );
+                        }
                         setState(
                           () => loading[_payment] = false,
                         );
                       },
                     );
-                    if (_payment.contains("cash")) {
-                      showDialog(
-                        context: context,
-                        barrierDismissible: true,
-                        builder: (context) {
-                          return Dialog(
-                            backgroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: Container(
-                              height: 350,
-                              width: Provider.of<GlobalStateModel>(context)
-                                      .isTablet
-                                  ? 400
-                                  : double.infinity,
-                              padding: EdgeInsets.symmetric(horizontal: 15),
-                              child: CashPayment(
-                                manual: widget.manual,
-                                checkoutProcessStateModel:
-                                    widget.checkoutProcessStateModel,
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    } else {
-                      showDialog(
-                        context: context,
-                        barrierDismissible: true,
-                        builder: (context) {
-                          return Dialog(
-                            backgroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: Provider.of<GlobalStateModel>(context)
-                                    .isTablet
-                                ? Container(
-                                    height: 350,
-                                    width: 400,
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 15),
-                                    child: CheckoutS2DeviceSectionPopUp(
-                                      checkoutProcessStateModel:
-                                          widget.checkoutProcessStateModel,
-                                      payment: _payment,
-                                    ),
-                                  )
-                                : Container(
-                                    height: 350,
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 15,
-                                    ),
-                                    child: CheckoutS2DeviceSectionPopUp(
-                                      checkoutProcessStateModel:
-                                          widget.checkoutProcessStateModel,
-                                      payment: _payment,
-                                    ),
-                                  ),
-                          );
-                        },
-                      );
-                    }
                   }
                 },
                 payment: true,
@@ -362,25 +409,31 @@ class _ButtonArrayState extends State<ButtonArray> {
                         widget.manual,
                         widget.posStateModel.shoppingCart.items.isNotEmpty,
                         amountNref,
-                        payment.slug.contains("cash") ? minCash : minSantander,
+                        payment.min,
+                        // payment.slug.contains("cash") ? minCash : minSantander,
                         num.tryParse(
                             widget.checkoutProcessStateModel.amount.value),
                         widget.posStateModel.shoppingCart.total,
-                        payment.slug.contains("cash") ? maxCash : maxSantander)
+                        // payment.slug.contains("cash") ? maxCash : maxSantander)
+                        payment.max)
                     ? 4
                     : 0,
-                title: _payment.contains("cash") ? "Cash" : "Santander",
-                // title: Language.getCheckoutStrings("payment_methods.$_payment"),
+                // title: _payment.contains("cash") ? "Cash" : "Santander",
+                title: _payment.contains("cash")
+                    ? "Cash"
+                    : Language.getCheckoutStrings("payment_methods.$_payment"),
                 // title: _payment,
                 color: rules(
-                        widget.manual,
-                        widget.posStateModel.shoppingCart.items.isNotEmpty,
-                        amountNref,
-                        payment.slug.contains("cash") ? minCash : minSantander,
-                        num.tryParse(
-                            widget.checkoutProcessStateModel.amount.value),
-                        widget.posStateModel.shoppingCart.total,
-                        payment.slug.contains("cash") ? maxCash : maxSantander)
+                  widget.manual,
+                  widget.posStateModel.shoppingCart.items.isNotEmpty,
+                  amountNref,
+                  payment.min,
+                  // payment.slug.contains("cash") ? minCash : minSantander,
+                  num.tryParse(widget.checkoutProcessStateModel.amount.value),
+                  widget.posStateModel.shoppingCart.total,
+                  // payment.slug.contains("cash") ? maxCash : maxSantander)
+                  payment.max,
+                )
                     ? color
                     : color.withOpacity(0.4),
               ),
@@ -470,6 +523,7 @@ class CustomCheckoutButtonWrapItem extends StatelessWidget {
                           fontWeight: FontWeight.w800,
                           color: Colors.white,
                         ),
+                        maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       )
                     ],

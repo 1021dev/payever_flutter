@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -97,6 +98,8 @@ class CheckoutProcessApi extends RestDataSource {
         },
       );
     }
+    print(body);
+    print(RestDataSource.checkoutV1);
     return _netUtil
         .post(RestDataSource.checkoutV1, headers: headers, body: body)
         .then(
@@ -107,13 +110,13 @@ class CheckoutProcessApi extends RestDataSource {
   }
 
   Future<dynamic> postStorageSimple(dynamic flow, bool order, bool code,
-      String phone, String source, String expiration, bool sms) {
+      String phone, String source, String expiration, bool sms,{bool noheader = false}) {
     print("TAG - postStorage()");
     var body = jsonEncode(
       {
         "data": {
           "flow": flow,
-          "force_no_header": false,
+          "force_no_header": noheader,
           "force_no_order": order,
           "generate_payment_code": code,
           "phone_number": phone,

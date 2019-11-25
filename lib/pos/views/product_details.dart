@@ -352,8 +352,8 @@ class _DetailsInfoState extends State<DetailsInfo> {
                                     : Measurements.width * 0.9,
                                 child: InkWell(
                                   child: Container(
-                                    width: Measurements.width *
-                                        (isTablet ? 0.35 : 0.8),
+                                    // width: Measurements.width *
+                                    //     (isTablet ? 0.35 : 0.8),
                                     padding: EdgeInsets.symmetric(
                                       vertical: 15,
                                     ),
@@ -429,7 +429,7 @@ class _DetailsInfoState extends State<DetailsInfo> {
                           : Measurements.width * 0.9,
                       child: InkWell(
                         child: Container(
-                          width: Measurements.width * (isTablet ? 0.35 : 0.8),
+                          // width: Measurements.width * (isTablet ? 0.35 : 0.8),
                           padding: EdgeInsets.symmetric(
                             vertical: 15,
                           ),
@@ -665,11 +665,12 @@ class _NameNPriceState extends State<NameNPrice> {
       children: <Widget>[
         Row(
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 25),
-              child: Container(
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 25),
                 child: Text(
                   "${widget.currentProduct.title}",
+                  maxLines: 2,
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 25,
@@ -836,9 +837,9 @@ class _DetailImageState extends State<DetailImage> {
               height: isTablet
                   ? Measurements.width * 0.45
                   : Measurements.height * 0.4,
-              width: isTablet
-                  ? Measurements.width * 0.45
-                  : Measurements.height * 0.4,
+              // width: isTablet
+              //     ? Measurements.width * 0.45
+              //     : Measurements.height * 0.4,
               child: CachedNetworkImage(
                 imageUrl: Env.storage + "/products/" + f,
                 placeholder: (context, url) => Container(),
@@ -875,18 +876,19 @@ class _DetailImageState extends State<DetailImage> {
         children: <Widget>[
           Container(
             padding: EdgeInsets.only(bottom: 10, top: 10),
-            height: isTablet
-                ? Measurements.width * 0.45
-                : Measurements.height * 0.4,
-            width: isTablet
-                ? Measurements.width * 0.45
-                : Measurements.height * 0.4,
+            // height: isTablet
+            //     ? Measurements.width * 0.45
+            //     : Measurements.height * 0.4,
+            // width: isTablet
+            //     ? Measurements.width * 0.45
+            //     : Measurements.height * 0.4,
             child: customCarouselSlider,
           ),
           Container(
-            width: isTablet
-                ? Measurements.width * 0.45
-                : Measurements.height * 0.4,
+            alignment: Alignment.centerLeft,
+            // width: isTablet
+            //     ? Measurements.width * 0.45
+            //     : Measurements.height * 0.4,
             height: Measurements.height * 0.1,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
@@ -898,7 +900,7 @@ class _DetailImageState extends State<DetailImage> {
                   child: Padding(
                     padding: EdgeInsets.all(2.0),
                     child: Container(
-                      padding: EdgeInsets.all(2.0),
+                      // padding: EdgeInsets.all(2.0),
                       height: Measurements.height * 0.1,
                       width: Measurements.height * 0.1,
                       decoration: BoxDecoration(

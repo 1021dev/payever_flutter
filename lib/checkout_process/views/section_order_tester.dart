@@ -199,14 +199,16 @@ class _CheckoutOrderSectionTESTERState
                           children: <Widget>[
                             Row(
                               children: <Widget>[
-                                AutoSizeText(
-                                  widget.parts.shoppingCart.items[index].name,
-                                  style: TextStyle(
-                                    color: widget.parts.shoppingCart
-                                            .items[index].inStock
-                                        ? AppStyle.colorCheckoutDivider()
-                                        : widget.textColorOUT,
-                                    fontSize: 15,
+                                Expanded(
+                                  child: AutoSizeText(
+                                    widget.parts.shoppingCart.items[index].name,
+                                    style: TextStyle(
+                                      color: widget.parts.shoppingCart
+                                              .items[index].inStock
+                                          ? AppStyle.colorCheckoutDivider()
+                                          : widget.textColorOUT,
+                                      fontSize: 15,
+                                    ),
                                   ),
                                 ),
                               ],
