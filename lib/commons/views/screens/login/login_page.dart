@@ -390,38 +390,38 @@ class _LoginState extends State<Login>
                                     : _heightFactorPhone)) /
                             2),
                   ),
-                  Container(
-                    width: Measurements.width /
-                        (_isTablet ? _widthFactorTablet : _widthFactorPhone),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Container(
-                          child: Row(
-                            children: <Widget>[
-                              Text("Don't have a payever account? "),
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: Measurements.width * 0.02),
-                                child: Center(
-                                  child: InkWell(
-                                    child: Text(
-                                      "Sign up for free",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    onTap: () {
-                                      _launchURL(GlobalUtils.SIGN_UP);
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
+                  // Container(
+                  //   width: Measurements.width /
+                  //       (_isTablet ? _widthFactorTablet : _widthFactorPhone),
+                  //   child: Row(
+                  //     mainAxisAlignment: MainAxisAlignment.center,
+                  //     children: <Widget>[
+                  //       Container(
+                  //         child: Row(
+                  //           children: <Widget>[
+                  //             Text("Don't have a payever account? "),
+                  //             Container(
+                  //               padding: EdgeInsets.symmetric(
+                  //                   vertical: Measurements.width * 0.02),
+                  //               child: Center(
+                  //                 child: InkWell(
+                  //                   child: Text(
+                  //                     "Sign up for free",
+                  //                     style: TextStyle(
+                  //                         fontWeight: FontWeight.bold),
+                  //                   ),
+                  //                   onTap: () {
+                  //                     _launchURL(GlobalUtils.SIGN_UP);
+                  //                   },
+                  //                 ),
+                  //               ),
+                  //             ),
+                  //           ],
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // )
                 ],
               ),
             ],
