@@ -167,7 +167,7 @@ class CollapsingList extends StatelessWidget {
                             PageTransition(
                               child: ProxyProvider<EmployeesApi,
                                   EmployeesStateModel>(
-                                builder: (context, api, employeesState) =>
+                                update: (context, api, employeesState) =>
                                     EmployeesStateModel(globalStateModel, api),
                                 child:
                                     EmployeesGroupsDetailsScreen(_currentGroup),

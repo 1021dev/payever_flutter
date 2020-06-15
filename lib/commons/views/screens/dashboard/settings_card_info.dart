@@ -68,7 +68,7 @@ class _SettingsCardInfoState extends State<SettingsCardInfo> {
     Navigator.push(
         context,
         PageTransition(
-          child: ChangeNotifierProvider<DashboardStateModel>(builder: (BuildContext context) {
+          child: ChangeNotifierProvider<DashboardStateModel>(create: (BuildContext context) {
             return DashboardStateModel();
           },
          child: WallpaperScreen(),), type: PageTransitionType.fade));

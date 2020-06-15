@@ -72,7 +72,7 @@ class _EmployeesScreenState extends State<EmployeesScreen>
                           PageTransition(
                             child: ProxyProvider<EmployeesApi,
                                 EmployeesStateModel>(
-                              builder: (context, api, employeesState) =>
+                              update: (context, api, employeesState) =>
                                   EmployeesStateModel(globalStateModel, api),
                               child: AddEmployeeScreen(),
                             ),
@@ -84,7 +84,7 @@ class _EmployeesScreenState extends State<EmployeesScreen>
                           PageTransition(
                             child: ProxyProvider<EmployeesApi,
                                 EmployeesStateModel>(
-                              builder: (context, api, employeesState) =>
+                              update: (context, api, employeesState) =>
                                   EmployeesStateModel(globalStateModel, api),
                               child: AddGroupScreen(),
                             ),
@@ -164,13 +164,13 @@ class _EmployeesScreenState extends State<EmployeesScreen>
                     children: <Widget>[
 //                                EmployeesListTabScreen(),
                       ProxyProvider<EmployeesApi, EmployeesStateModel>(
-                        builder: (context, api, employeesState) =>
+                        update: (context, api, employeesState) =>
                             EmployeesStateModel(globalStateModel, api),
                         child: EmployeesListTabScreen(),
                       ),
 //                                EmployeesGroupsListTabScreen(),
                       ProxyProvider<EmployeesApi, EmployeesStateModel>(
-                        builder: (context, api, employeesState) =>
+                        update: (context, api, employeesState) =>
                             EmployeesStateModel(globalStateModel, api),
                         child: EmployeesGroupsListTabScreen(),
                       )

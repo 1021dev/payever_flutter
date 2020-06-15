@@ -24,7 +24,7 @@ class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<DashboardStateModel>(
-      builder: (BuildContext context) {
+      create: (BuildContext context) {
         DashboardStateModel dashboardStateModel = DashboardStateModel();
         dashboardStateModel.setCurrentWidget(appWidgets);
         return dashboardStateModel;

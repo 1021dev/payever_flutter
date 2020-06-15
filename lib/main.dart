@@ -64,11 +64,11 @@ class _MyAppState extends State<MyApp> {
         Provider.value(value: globalStateModel),
         Provider.value(value: RestDataSource()),
         ChangeNotifierProvider<GlobalStateModel>(
-            builder: (BuildContext context) => globalStateModel),
+            create: (BuildContext context) => globalStateModel),
         ChangeNotifierProvider<PosCartStateModel>(
-            builder: (BuildContext context) => PosCartStateModel()),
+            create: (BuildContext context) => PosCartStateModel()),
         ChangeNotifierProvider<ProductStateModel>(
-            builder: (BuildContext context) => ProductStateModel()),
+            create: (BuildContext context) => ProductStateModel()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -78,7 +78,7 @@ class _MyAppState extends State<MyApp> {
 //            '/dashboard': (context) => DashboardMidScreen(wallpaper),
         },
         home: _loadCredentials.value
-            ? Center(child:CircularProgressIndicator())
+            ? Center(child: CircularProgressIndicator())
             : _haveCredentials ? DashboardMidScreen(wallpaper) : LoginScreen(),
       ),
     );
