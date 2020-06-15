@@ -556,8 +556,8 @@ class _PosProductsLoaderState extends State<PosProductsLoader> {
               options: QueryOptions(
                   variables: <String, dynamic>{}, document: queryDocument),
               builder: (QueryResult result, {refetch, FetchMore fetchMore}) {
-                if (result.errors != null) {
-                  print(result.errors);
+                if (result.exception != null) {
+                  print(result.exception);
                   return Center(child: Text("Error while fetching data"));
                 }
                 if (result.loading) {

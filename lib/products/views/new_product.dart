@@ -505,7 +505,7 @@ class _NewProductScreenState extends State<NewProductScreen> {
                         options: QueryOptions(
                             variables: <String, dynamic>{}, document: doc),
                         builder: (QueryResult result, {refetch, FetchMore fetchMore}) {
-                          if (result.errors != null) {
+                          if (result.exception != null) {
                             return Column(
                               children: <Widget>[
                                 Text("Error while creating/updating a product"),

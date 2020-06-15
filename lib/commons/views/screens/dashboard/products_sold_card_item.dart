@@ -155,7 +155,7 @@ class _ProductsSoldCardItemState extends State<ProductsSoldCardItem> {
                       variables: <String, dynamic>{},
                       document: getInitialDocument(resultData.uuid)),
                   builder: (QueryResult result, {refetch, FetchMore fetchMore}) {
-                    if (result.errors != null) {
+                    if (result.exception != null) {
                       return Center(
                         child: Text("Error"),
                       );

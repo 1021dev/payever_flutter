@@ -23,9 +23,9 @@ dependencies:
   url_launcher: ^5.1.0
   #webview_flutter: ^0.3.10+3
   video_player: 0.10.1+5
-  cached_network_image: ^1.1.0
+  cached_network_image: ^2.2.0+1
   device_info: ^0.4.0+2
-  graphql_flutter: ^2.0.0
+  graphql_flutter: ^3.0.1
   uuid: ^2.0.2
   flutter_masked_text: ^0.8.0
   autocomplete_textfield: ^1.7.3
@@ -38,7 +38,7 @@ dependencies:
   dio: ^3.0.9
   image_picker: ^0.6.0+17
   provider: ^3.0.0+1
-  rxdart: ^0.22.1
+  rxdart: ^0.24.1
   oktoast: ^2.2.0
   package_info: ^0.4.0+6
   flutter_html: ^0.10.4

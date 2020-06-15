@@ -91,8 +91,8 @@ class _ProductCategoryRowState extends State<ProductCategoryRow> {
               options:
                   QueryOptions(variables: <String, dynamic>{}, document: doc),
               builder: (QueryResult result, {refetch, FetchMore fetchMore}) {
-                if (result.errors != null) {
-                  print(result.errors);
+                if (result.exception != null) {
+                  print(result.exception);
                   return Center(
                     child: Text("Error loading"),
                   );

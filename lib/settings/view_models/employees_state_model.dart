@@ -34,7 +34,7 @@ class EmployeesStateModel extends ChangeNotifier with Validators {
   Stream<String> get position =>
       _positionController.stream.transform(validateField);
 
-  Stream<bool> get submitValid => Observable.combineLatest4(
+  Stream<bool> get submitValid => Rx.combineLatest4(
       firstName, lastName, email, position, (a, b, c, d) => true);
 
   Stream<String> get group => _groupController.stream.transform(validateField);
