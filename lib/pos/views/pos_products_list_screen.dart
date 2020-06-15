@@ -555,7 +555,7 @@ class _PosProductsLoaderState extends State<PosProductsLoader> {
             child: Query(
               options: QueryOptions(
                   variables: <String, dynamic>{}, document: queryDocument),
-              builder: (QueryResult result, {VoidCallback refetch}) {
+              builder: (QueryResult result, {refetch, FetchMore fetchMore}) {
                 if (result.errors != null) {
                   print(result.errors);
                   return Center(child: Text("Error while fetching data"));

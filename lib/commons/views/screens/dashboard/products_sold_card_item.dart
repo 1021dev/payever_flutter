@@ -154,7 +154,7 @@ class _ProductsSoldCardItemState extends State<ProductsSoldCardItem> {
                   options: QueryOptions(
                       variables: <String, dynamic>{},
                       document: getInitialDocument(resultData.uuid)),
-                  builder: (QueryResult result, {VoidCallback refetch}) {
+                  builder: (QueryResult result, {refetch, FetchMore fetchMore}) {
                     if (result.errors != null) {
                       return Center(
                         child: Text("Error"),
