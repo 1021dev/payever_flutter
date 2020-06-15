@@ -3,6 +3,7 @@ import '../utils/utils.dart';
 class Business {
   String _id;
   bool _active;
+  bool _hidden;
   String _createdAt;
   String _updatedAt;
   String _currency;
@@ -20,6 +21,7 @@ class Business {
     this._email = obj[GlobalUtils.DB_BUSINESS_EMAIL];
     this._logo = obj[GlobalUtils.DB_BUSINESS_LOGO];
     this._active = obj[GlobalUtils.DB_BUSINESS_ACTIVE];
+    this._hidden = obj[GlobalUtils.DB_BUSINESS_HIDDEN];
     this._currency = obj[GlobalUtils.DB_BUSINESS_CURRENCY];
     this._name = obj[GlobalUtils.DB_BUSINESS_NAME];
 
@@ -43,6 +45,8 @@ class Business {
 
   bool get active => _active;
 
+  bool get hidden => _hidden;
+
   String get currency => _currency;
 
   String get name => _name;
@@ -62,6 +66,7 @@ class Business {
     map[GlobalUtils.DB_BUSINESS_EMAIL] = _email;
     map[GlobalUtils.DB_BUSINESS_LOGO] = _logo;
     map[GlobalUtils.DB_BUSINESS_ACTIVE] = _active;
+    map[GlobalUtils.DB_BUSINESS_HIDDEN] = _hidden;
     map[GlobalUtils.DB_BUSINESS_CURRENCY] = _currency;
     map[GlobalUtils.DB_BUSINESS_NAME] = _name;
 
