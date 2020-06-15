@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:payever/commons/models/fetchwallpaper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 
@@ -470,7 +471,7 @@ class _SwitcherState extends State<Switcher> {
                                 parts
                                     .getWidgets(parts._active.id, context)
                                     .then((onValue) {
-                                  Provider.of<GlobalStateModel>(context)
+                                  Provider.of<GlobalStateModel>(context, listen: false)
                                       .setCurrentBusiness(parts._active);
                                   SharedPreferences.getInstance().then((p) {
                                     Provider.of<GlobalStateModel>(context)
@@ -561,24 +562,25 @@ class SwitchParts {
   List<AppWidget> _widgets = List();
 
   Future<String> fetchWallpaper(String id, BuildContext context) async {
-    String wallpaperId;
+    FetchWallpaper fetchWallpaper;
     SharedPreferences preferences;
     RestDataSource api = new RestDataSource();
     await api
         .getWallpaper(id, GlobalUtils.activeToken.accessToken, context)
-        .then((obj) {
-      wallpaperId = obj[GlobalUtils.CURRENT_WALLPAPER];
+        .then((dynamic obj) {
+      print("fetchWallpaper obj - $obj");
+      fetchWallpaper = FetchWallpaper.map(obj);
       SharedPreferences.getInstance().then((p) {
         preferences = p;
         preferences.setString(
-            GlobalUtils.WALLPAPER, wallpaperBase + wallpaperId);
+            GlobalUtils.WALLPAPER, wallpaperBase + fetchWallpaper.currentWallpaper.id);
         preferences.setString(GlobalUtils.BUSINESS, id);
         print(id);
       });
     }).catchError((onError) {
       print("ERROR ---- $onError");
     });
-    return wallpaperBase + wallpaperId;
+    return wallpaperBase + fetchWallpaper.currentWallpaper.id;
   }
 
   Future<List<AppWidget>> getWidgets(String id, BuildContext context) async {

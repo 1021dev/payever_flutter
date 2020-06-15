@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:payever/commons/models/fetchwallpaper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 
@@ -124,11 +125,11 @@ class _DashboardMidScreenState extends State<DashboardMidScreen> {
           RestDataSource()
               .getWallpaper(activeBusiness.id,
                   GlobalUtils.activeToken.accessToken, _formKey.currentContext)
-              .then((wall) {
-            String wallpaper = wall[GlobalUtils.CURRENT_WALLPAPER];
+              .then((dynamic wall) {
+            FetchWallpaper fetchWallpaper = FetchWallpaper.map(wall);
             preferences.setString(
-                GlobalUtils.WALLPAPER, wallpaperBase + wallpaper);
-            globalStateModel.setCurrentWallpaper(wallpaperBase + wallpaper,
+                GlobalUtils.WALLPAPER, wallpaperBase + fetchWallpaper.currentWallpaper.id);
+            globalStateModel.setCurrentWallpaper(wallpaperBase + fetchWallpaper.currentWallpaper.id,
                 notify: false);
             Navigator.pushReplacement(
                 _formKey.currentContext,
