@@ -904,7 +904,7 @@ class SimpleTerminal extends StatelessWidget {
               context,
               PageTransition(
                   child: ChangeNotifierProvider<PosStateModel>(
-                    builder: (BuildContext context) =>
+                    create: (BuildContext context) =>
                         PosStateModel(globalStateModel, PosApi()),
                     child: PosProductsListScreen(
                         terminal: currentTerminal,

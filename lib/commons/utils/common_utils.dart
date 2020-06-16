@@ -297,8 +297,8 @@ class GlobalUtils {
   //static String  mail= "service@payever.de";//staging 2
 
   //static const String COMMERCE_OS_URL = "https://commerceos.test.devpayever.com";//test
-  // static const String COMMERCE_OS_URL = "https://commerceos.staging.devpayever.com";//staging
-  static const String COMMERCE_OS_URL = "https://commerceos.payever.org"; //live
+   static const String COMMERCE_OS_URL = "https://commerceos.staging.devpayever.com";//staging
+//  static const String COMMERCE_OS_URL = "https://commerceos.payever.org"; //live
 
   static const String POS_URL = "https://getpayever.com/pos";
 
@@ -698,7 +698,7 @@ class GlobalUtils {
   static const String DB_VERSION_CURRENT_VERSION = "currentVersion";
   static const String DB_VERSION_MIN_VERSION = "minVersion";
   static const String DB_VERSION_PLAY_STORE = "playStoreUrl";
-  	
+
   static const String DB_SETTINGS_WALLPAPER_INDUSTRIES    ="industries";
   static const String DB_SETTINGS_WALLPAPER_CODE          ="code";
   static const String DB_SETTINGS_WALLPAPER_WALLPAPERS    ="wallpapers";
@@ -730,6 +730,21 @@ class GlobalUtils {
 
   // dashboard_
   static const String CURRENT_WALLPAPER = "currentWallpaper";
+
+  // fetch wallpaper
+  static const String DB_BUSINESS_WALLPAPER_ID = "_id";
+  static const String DB_BUSINESS_WALLPAPER_BUSINESS = "business";
+  static const String DB_BUSINESS_WALLPAPER_V = "__v";
+  static const String DB_BUSINESS_WALLPAPER_CREATED_AT = "createdAt";
+  static const String DB_BUSINESS_WALLPAPER_INDUSTRY = "industry";
+  static const String DB_BUSINESS_WALLPAPER_PRODUCT = "product";
+  static const String DB_BUSINESS_WALLPAPER_TYPE = "type";
+  static const String DB_BUSINESS_WALLPAPER_UPDATED_AT = "updatedAt";
+  // fetch wallpaper current
+  static const String DB_BUSINESS_CURRENT_WALLPAPER = "currentWallpaper";
+  static const String DB_BUSINESS_CURRENT_WALLPAPER_THEME = "theme";
+  static const String DB_BUSINESS_CURRENT_WALLPAPER_ID = "_id";
+  static const String DB_BUSINESS_CURRENT_WALLPAPER_WALLPAPER = "wallpaper";
 
   // AppWidget_
   static const String APP_WID = "widgets";

@@ -196,7 +196,8 @@ class _LoginState extends State<Login>
                                     ? _widthFactorTablet
                                     : _widthFactorPhone) *
                                 2),
-                        child: Image.asset("assets/images/logo-payever-white.png")),
+                        child: Image.asset(
+                            "assets/images/logo-payever-white.png")),
                   ),
                   Padding(
                     padding: EdgeInsets.only(
@@ -228,7 +229,8 @@ class _LoginState extends State<Login>
                                 borderRadius: BorderRadius.only(
                                     topLeft: Radius.circular(8.0),
                                     topRight: Radius.circular(8.0))),
-                            child: Column(
+                            child: SingleChildScrollView(
+                                child: Column(
                               children: <Widget>[
                                 Padding(
                                   padding: EdgeInsets.only(
@@ -242,7 +244,6 @@ class _LoginState extends State<Login>
                                       if (!value.contains('@')) {
                                         return 'Enter valid email address';
                                       }
-
                                     },
                                     decoration: new InputDecoration(
                                       labelText: "Email",
@@ -262,7 +263,7 @@ class _LoginState extends State<Login>
                                   ),
                                 ),
                               ],
-                            ),
+                            )),
                           ),
                         ),
                         Container(
@@ -280,7 +281,8 @@ class _LoginState extends State<Login>
                               color: Colors.black.withOpacity(0.5),
                               shape: BoxShape.rectangle,
                             ),
-                            child: Column(
+                            child: SingleChildScrollView(
+                                child: Column(
                               children: <Widget>[
                                 Container(
                                   child: Stack(
@@ -296,7 +298,6 @@ class _LoginState extends State<Login>
                                             if (value.isEmpty) {
                                               return 'Password is required';
                                             }
-
                                           },
                                           decoration: new InputDecoration(
                                             labelText: "Password",
@@ -332,7 +333,7 @@ class _LoginState extends State<Login>
                                   ),
                                 ),
                               ],
-                            ),
+                            )),
                           ),
                         ),
                       ],

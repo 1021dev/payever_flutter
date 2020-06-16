@@ -90,9 +90,9 @@ class _ProductCategoryRowState extends State<ProductCategoryRow> {
               key: widget.parts.qKey,
               options:
                   QueryOptions(variables: <String, dynamic>{}, document: doc),
-              builder: (QueryResult result, {VoidCallback refetch}) {
-                if (result.errors != null) {
-                  print(result.errors);
+              builder: (QueryResult result, {refetch, FetchMore fetchMore}) {
+                if (result.exception != null) {
+                  print(result.exception);
                   return Center(
                     child: Text("Error loading"),
                   );

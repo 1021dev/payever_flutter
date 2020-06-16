@@ -26,7 +26,7 @@ class TransactionScreenInit extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<TransactionStateModel>(
-      builder: (BuildContext context) {
+      create: (BuildContext context) {
         return dashboardStateModel;
       },
       child: TransactionScreen(),
@@ -319,7 +319,6 @@ class _CustomListState extends State<CustomList> {
 
   @override
   Widget build(BuildContext context) {
-
     return ListView.builder(
       key: GlobalKeys.transactionList,
       shrinkWrap: true,
@@ -675,7 +674,11 @@ class TabletTableRow extends StatelessWidget {
                       width: Measurements.width * (_isPortrait ? 0.13 : 0.15),
                       child: !isHeader
                           ? Measurements.statusWidget(currentTransaction.status)
-                          : Text(Language.getTransactionStrings("form.filter.labels.status"),style: TextStyle(fontSize: AppStyle.fontSizeListRow())),
+                          : Text(
+                              Language.getTransactionStrings(
+                                  "form.filter.labels.status"),
+                              style: TextStyle(
+                                  fontSize: AppStyle.fontSizeListRow())),
                     ),
                   ),
                 ],

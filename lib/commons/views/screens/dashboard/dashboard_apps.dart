@@ -189,7 +189,7 @@ class _AppViewState extends State<AppView> {
         context,
         PageTransition(
             child: ChangeNotifierProvider<PosStateModel>(
-              builder: (BuildContext context) =>
+              create: (BuildContext context) =>
                   PosStateModel(globalStateModel, PosApi()),
               child: PosProductsListScreen(
                   terminal: dashboardStateModel.activeTerminal,

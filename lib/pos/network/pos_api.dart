@@ -348,9 +348,14 @@ class PosApi extends RestDataSource {
       HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
     };
     Dio dio = Dio();
-    FormData formData = FormData();
-    formData.add("file",
-        UploadFileInfo(logo, logo.path.substring(logo.path.length - 6)));
+    String fileName = logo.path.split('/').last;
+    FormData formData = FormData.fromMap({
+      "file": await MultipartFile.fromFile(
+        logo.path,
+        filename: fileName,
+      ),
+    });
+
     return dio
         .post(
             RestDataSource.mediaBusiness +
