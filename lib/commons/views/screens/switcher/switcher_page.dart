@@ -344,86 +344,88 @@ class _SwitcherState extends State<Switcher> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Container(
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Text("Personal"),
-                    Padding(
-                      padding: EdgeInsets.only(
-                          top: (Measurements.height *
-                                  (_isTablet
-                                      ? _heightFactorTablet
-                                      : _heightFactorPhone)) /
-                              3),
-                    ),
-                    InkWell(
-                      highlightColor: Colors.transparent,
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: <Widget>[
-                          CustomCircleAvatar(
-                              parts._logUser.logo != null
-                                  ? parts._logUser.logo
-                                  : "user",
-                              parts._logUser.firstName),
-                          _loadPersonal
-                              ? Stack(
-                                  alignment: Alignment.center,
-                                  children: <Widget>[
-                                    Container(
-                                      height: Measurements.height * 0.08,
-                                      width: Measurements.height * 0.08,
-                                      decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: Colors.black.withOpacity(0.2)),
-                                    ),
-                                    Container(
-                                      child: CircularProgressIndicator(),
-                                    )
-                                  ],
-                                )
-                              : Container(),
-                        ],
-                      ),
-                      onTap: () {
-                        print("onIconSelect - personal");
-                        setState(() => _loadPersonal = true);
-                        goPersonalDashDummy();
-                      },
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                          top: (Measurements.height *
-                                  (_isTablet
-                                      ? _heightFactorTablet
-                                      : _heightFactorPhone)) /
-                              3),
-                    ),
-                    InkWell(
-                      highlightColor: Colors.transparent,
-                      child: Container(
-                        height: 48,
-                        alignment: Alignment.center,
-                        child: Text(parts._logUser.firstName),
-                      ),
-                      onTap: () {
-                        print("onTextSelect - personal");
-                        setState(() => _loadPersonal = true);
-                        goPersonalDashDummy();
-                      },
-                    ),
-                  ],
-                ),
-              ),
+//              Container(
+//                child: Column(
+//                  mainAxisSize: MainAxisSize.max,
+//                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                  children: <Widget>[
+//                    Text("Personal"),
+//                    Padding(
+//                      padding: EdgeInsets.only(
+//                          top: (Measurements.height *
+//                                  (_isTablet
+//                                      ? _heightFactorTablet
+//                                      : _heightFactorPhone)) /
+//                              3),
+//                    ),
+//                    InkWell(
+//                      highlightColor: Colors.transparent,
+//                      child: Stack(
+//                        alignment: Alignment.center,
+//                        children: <Widget>[
+//                          CustomCircleAvatar(
+//                              parts._logUser.logo != null
+//                                  ? parts._logUser.logo
+//                                  : "user",
+//                              parts._logUser.firstName),
+//                          _loadPersonal
+//                              ? Stack(
+//                                  alignment: Alignment.center,
+//                                  children: <Widget>[
+//                                    Container(
+//                                      height: Measurements.height * 0.08,
+//                                      width: Measurements.height * 0.08,
+//                                      decoration: BoxDecoration(
+//                                          shape: BoxShape.circle,
+//                                          color: Colors.black.withOpacity(0.2)),
+//                                    ),
+//                                    Container(
+//                                      child: CircularProgressIndicator(),
+//                                    )
+//                                  ],
+//                                )
+//                              : Container(),
+//                        ],
+//                      ),
+//                      onTap: () {
+//                        print("onIconSelect - personal");
+//                        setState(() => _loadPersonal = true);
+//                        goPersonalDashDummy();
+//                      },
+//                    ),
+//                    Padding(
+//                      padding: EdgeInsets.only(
+//                          top: (Measurements.height *
+//                                  (_isTablet
+//                                      ? _heightFactorTablet
+//                                      : _heightFactorPhone)) /
+//                              3),
+//                    ),
+//                    InkWell(
+//                      highlightColor: Colors.transparent,
+//                      child: Container(
+//                        height: 48,
+//                        alignment: Alignment.center,
+//                        child: Text(parts._logUser.firstName),
+//                      ),
+//                      onTap: () {
+//                        print("onTextSelect - personal");
+//                        setState(() => _loadPersonal = true);
+//                        goPersonalDashDummy();
+//                      },
+//                    ),
+//                  ],
+//                ),
+//              ),
               parts.businesses != null
                   ? Container(
-                      padding: EdgeInsets.only(
-                          left: (Measurements.width * (_isTablet ? 0.2 : 0.2))),
+//                      padding: EdgeInsets.only(
+//                          left: (Measurements.width * (_isTablet ? 0.2 : 0.2))),
                       child: Column(
                         children: <Widget>[
-                          Text("Business"),
+                          Text("BUSINESS", style: TextStyle(
+                            color: Colors.white.withAlpha(200)
+                          ),),
                           Padding(
                             padding: EdgeInsets.only(
                                 top: (Measurements.height *
