@@ -16,23 +16,23 @@ import 'settings_card.dart';
 
 bool _isTablet;
 
-class DashboardScreen extends StatelessWidget {
-  final appWidgets;
-
-  DashboardScreen({this.appWidgets});
-
-  @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider<DashboardStateModel>(
-      create: (BuildContext context) {
-        DashboardStateModel dashboardStateModel = DashboardStateModel();
-        dashboardStateModel.setCurrentWidget(appWidgets);
-        return dashboardStateModel;
-      },
-      child: DashboardScreenWidget(),
-    );
-  }
-}
+//class DashboardScreen extends StatelessWidget {
+//  final appWidgets;
+//
+//  DashboardScreen({this.appWidgets});
+//
+//  @override
+//  Widget build(BuildContext context) {
+//    return ChangeNotifierProvider<DashboardStateModel>(
+//      create: (BuildContext context) {
+//        DashboardStateModel dashboardStateModel = DashboardStateModel();
+//        dashboardStateModel.setCurrentWidget(appWidgets);
+//        return dashboardStateModel;
+//      },
+//      child: DashboardScreenWidget(),
+//    );
+//  }
+//}
 
 class DashboardScreenWidget extends StatefulWidget {
   @override

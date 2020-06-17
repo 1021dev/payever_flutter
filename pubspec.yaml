@@ -42,6 +42,7 @@ dependencies:
   oktoast: ^2.2.0
   package_info: ^0.4.0+6
   flutter_html: ^1.0.0
+  blurrycontainer: ^0.0.1
 
 
 dev_dependencies:
