@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/BlurEffectView.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/DashboardBusinessAppsView.dart';
+import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/DashboardShopView.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/DashboardTransactionsView.dart';
 import 'package:provider/provider.dart';
 
@@ -139,6 +140,7 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget> {
                       SizedBox(height: 8),
                       DashboardBusinessAppsView(appWidgets: widget.appWidgets),
                       SizedBox(height: 8),
+                      DashboardShopView(),
                     ],
                   ),
                 )
