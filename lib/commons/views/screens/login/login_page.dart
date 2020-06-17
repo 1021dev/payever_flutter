@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -38,6 +39,7 @@ class _LoginState extends State<Login>
   SharedPreferences _preferences;
   BuildContext _ctx;
   bool _isLoading = false;
+  bool _isInvalidInformation = false;
 
   String _password, _username;
   LoginScreenPresenter _presenter;
@@ -168,248 +170,284 @@ class _LoginState extends State<Login>
     return Container(
       child: Stack(
         children: <Widget>[
-          Positioned(
+          Container(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
-            top: 0.0,
-            child: Image.asset(
-              "assets/images/loginverticaltablet.png",
-              fit: BoxFit.cover,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: NetworkImage("https://payever.azureedge.net/images/commerceos-background.jpg"),
+                fit: BoxFit.cover
+              )
             ),
-            // child: Container(
-            // child: VideoPlayer( _isTablet?_isPortrait?tp:tl:_isPortrait?pp:pl) ),
           ),
-          ListView(
-            children: <Widget>[
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height /
-                            (!_isPortrait && !_isTablet ? 5 : 4)),
+          Positioned(
+            top: (MediaQuery.of(context).size.height - 387) / 2,
+            left: 7,
+            width: MediaQuery.of(context).size.width - 14,
+            child: ClipRect(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+                child: Container(
+                  padding: EdgeInsets.fromLTRB(12, 55, 12, 55),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: Color.fromRGBO(0, 0, 0, 0.4)
                   ),
-                  Center(
-                    child: Container(
-                        width: Measurements.width /
-                            ((_isTablet
+                  child: Column(
+                    children: <Widget>[
+                      Center(
+                        child: Container(
+                            width: Measurements.width /
+                                ((_isTablet
                                     ? _widthFactorTablet
                                     : _widthFactorPhone) *
-                                2),
-                        child: Image.asset(
-                            "assets/images/logo-payever-white.png")),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                        top: (Measurements.height *
+                                    2),
+                            child: Image.asset(
+                                "assets/images/logo-payever-white.png")),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            top: (Measurements.height *
                                 (_isTablet
                                     ? _heightFactorTablet
                                     : _heightFactorPhone)) /
-                            1.5),
-                  ),
-                  Form(
-                    key: formKey,
-                    child: Center(
-                        child: Column(
-                      children: <Widget>[
-                        Container(
-                          padding: EdgeInsets.only(top: 1.0),
-                          width: Measurements.width /
-                              (_isTablet
-                                  ? _widthFactorTablet
-                                  : _widthFactorPhone),
-                          height: Measurements.height *
-                              (_isTablet
-                                  ? _heightFactorTablet
-                                  : _heightFactorPhone),
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: Colors.black.withOpacity(0.5),
-                                shape: BoxShape.rectangle,
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(8.0),
-                                    topRight: Radius.circular(8.0))),
-                            child: SingleChildScrollView(
-                                child: Column(
-                              children: <Widget>[
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      left: _paddingText, right: _paddingText),
-                                  child: TextFormField(
-                                    onSaved: (val) => _username = val,
-                                    validator: (value) {
-                                      if (value.isEmpty) {
-                                        return 'Username or email is required!';
-                                      }
-                                      if (!value.contains('@')) {
-                                        return 'Enter valid email address';
-                                      }
-                                    },
-                                    decoration: new InputDecoration(
-                                      labelText: "Email",
-                                      border: InputBorder.none,
-                                      contentPadding: _isTablet
-                                          ? EdgeInsets.all(
-                                              Measurements.height * 0.007)
-                                          : null,
-                                    ),
-                                    style: TextStyle(
-                                        fontSize: Measurements.height *
-                                            (_isTablet
-                                                ? (_heightFactorTablet / 3)
-                                                : (_heightFactorTablet / 3))),
-                                    keyboardType: TextInputType.emailAddress,
-                                    initialValue: email,
-                                  ),
-                                ),
-                              ],
-                            )),
-                          ),
+                                1.5),
+                      ),
+                       if (_isInvalidInformation) Container(
+                        padding: EdgeInsets.fromLTRB(15, 10, 8, 10),
+                        decoration: BoxDecoration(
+                          color: Color(0xffff644e),
+                          borderRadius: BorderRadius.circular(6),
                         ),
-                        Container(
-                          padding: EdgeInsets.only(top: 1),
-                          width: Measurements.width /
-                              (_isTablet
-                                  ? _widthFactorTablet
-                                  : _widthFactorPhone),
-                          height: Measurements.height *
-                              (_isTablet
-                                  ? _heightFactorTablet
-                                  : _heightFactorPhone),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(0.5),
-                              shape: BoxShape.rectangle,
+                        child: Row(
+                          children: [
+                            Icon(
+                                Icons.warning, color: Colors.white,
                             ),
-                            child: SingleChildScrollView(
-                                child: Column(
-                              children: <Widget>[
-                                Container(
-                                  child: Stack(
-                                    alignment: Alignment.centerRight,
-                                    children: <Widget>[
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: _paddingText,
-                                            right: _paddingText),
-                                        child: TextFormField(
-                                          onSaved: (val) => _password = val,
-                                          validator: (value) {
-                                            if (value.isEmpty) {
-                                              return 'Password is required';
-                                            }
-                                          },
-                                          decoration: new InputDecoration(
-                                            labelText: "Password",
-                                            border: InputBorder.none,
-                                            contentPadding: _isTablet
-                                                ? EdgeInsets.all(
-                                                    Measurements.height * 0.007)
-                                                : null,
-                                          ),
-                                          obscureText: true,
-                                          style: TextStyle(
-                                              fontSize: Measurements.height *
-                                                  (_heightFactorTablet / 3)),
-                                          initialValue: password,
-                                        ),
-                                      ),
-                                      Container(
-                                        padding: EdgeInsets.only(
-                                            right: Measurements.width * 0.02),
-                                        child: InkWell(
-                                          child: Text(
-                                            "Forgot your password?",
-                                            style: TextStyle(
-                                                decoration:
-                                                    TextDecoration.underline),
-                                          ),
-                                          onTap: () {
-                                            _launchURL(GlobalUtils.FORGOT_PASS);
-                                          },
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            )),
-                          ),
-                        ),
-                      ],
-                    )),
-                  ),
-                  Center(
-                      child: Container(
-                    padding: EdgeInsets.only(top: 1),
-                    width: Measurements.width /
-                        (_isTablet ? _widthFactorTablet : _widthFactorPhone),
-                    height: Measurements.height *
-                        (_isTablet ? _heightFactorTablet : _heightFactorPhone),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.6),
-                          shape: BoxShape.rectangle,
-                          borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(8.0),
-                              bottomRight: Radius.circular(8.0))),
-                      child: !_isLoading
-                          ? InkWell(
-                              key: GlobalKeys.loginButton,
-                              child: Center(child: Text("Login")),
-                              onTap: () {
-                                print("login");
-                                _submit();
-                              },
-                            )
-                          : Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                    ),
-                  )),
-                  Padding(
-                    padding: EdgeInsets.only(
-                        top: (Measurements.height *
-                                (_isTablet
-                                    ? _heightFactorTablet
-                                    : _heightFactorPhone)) /
-                            2),
-                  ),
-                  Container(
-                    width: Measurements.width /
-                        (_isTablet ? _widthFactorTablet : _widthFactorPhone),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Container(
-                          child: Row(
-                            children: <Widget>[
-                              Text("Don't have a payever account? "),
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: Measurements.width * 0.02),
-                                child: Center(
-                                  child: InkWell(
-                                    child: Text(
-                                      "Sign up for free",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    onTap: () {
-                                      _launchURL(GlobalUtils.SIGN_UP);
-                                    },
-                                  ),
+                            SizedBox(width: 5,),
+                            Flexible(
+                              child: Text(
+                                "Your account information was entered incorrectly.",
+                                softWrap: true,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14
                                 ),
                               ),
-                            ],
-                          ),
+                            )
+                          ],
                         ),
-                      ],
-                    ),
-                  )
-                ],
+                      ),
+                      if (_isInvalidInformation) SizedBox(height: 6,),
+                      Form(
+                        key: formKey,
+                        child: Center(
+                            child: Column(
+                              children: <Widget>[
+                                Container(
+                                  padding: EdgeInsets.only(top: 1.0),
+                                  width: Measurements.width /
+                                      (_isTablet
+                                          ? _widthFactorTablet
+                                          : _widthFactorPhone),
+                                  height: 55,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        color: Colors.black.withOpacity(0.25),
+                                        shape: BoxShape.rectangle,
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(8.0),
+                                            topRight: Radius.circular(8.0))),
+                                    child: SingleChildScrollView(
+                                        child: Column(
+                                          children: <Widget>[
+                                            Padding(
+                                              padding: EdgeInsets.only(
+                                                  left: _paddingText, right: _paddingText),
+                                              child: TextFormField(
+                                                onSaved: (val) => _username = val,
+                                                onChanged: (val) {
+                                                  setState(() {
+                                                    _isInvalidInformation = false;
+                                                  });
+                                                },
+                                                validator: (value) {
+                                                  if (value.isEmpty) {
+                                                    return 'Username or email is required!';
+                                                  }
+                                                  if (!value.contains('@')) {
+                                                    return 'Enter valid email address';
+                                                  }
+                                                },
+                                                decoration: new InputDecoration(
+                                                  labelText: "Email",
+                                                  border: InputBorder.none,
+                                                  contentPadding: _isTablet
+                                                      ? EdgeInsets.all(
+                                                      Measurements.height * 0.007)
+                                                      : null,
+                                                ),
+                                                style: TextStyle(
+                                                    fontSize: 16),
+                                                keyboardType: TextInputType.emailAddress,
+                                                initialValue: email,
+                                              ),
+                                            ),
+                                          ],
+                                        )),
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.only(top: 1),
+                                  width: Measurements.width /
+                                      (_isTablet
+                                          ? _widthFactorTablet
+                                          : _widthFactorPhone),
+                                  height: 55,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.black.withOpacity(0.25),
+                                      shape: BoxShape.rectangle,
+                                    ),
+                                    child: SingleChildScrollView(
+                                        child: Column(
+                                          children: <Widget>[
+                                            Container(
+                                              child: Stack(
+                                                alignment: Alignment.centerRight,
+                                                children: <Widget>[
+                                                  Padding(
+                                                    padding: const EdgeInsets.only(
+                                                        left: _paddingText,
+                                                        right: _paddingText),
+                                                    child: TextFormField(
+                                                      onSaved: (val) => _password = val,
+                                                      onChanged: (val) {
+                                                        setState(() {
+                                                          _isInvalidInformation = false;
+                                                        });
+                                                      },
+                                                      validator: (value) {
+                                                        if (value.isEmpty) {
+                                                          return 'Password is required';
+                                                        }
+                                                      },
+                                                      decoration: new InputDecoration(
+                                                        labelText: "Password",
+                                                        border: InputBorder.none,
+                                                        contentPadding: _isTablet
+                                                            ? EdgeInsets.all(
+                                                            Measurements.height * 0.007)
+                                                            : null,
+                                                      ),
+                                                      obscureText: true,
+                                                      style: TextStyle(
+                                                          fontSize: 16),
+                                                      initialValue: password,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        )),
+                                  ),
+                                ),
+                              ],
+                            )),
+                      ),
+                      Center(
+                          child: Container(
+                            padding: EdgeInsets.only(top: 1),
+                            width: Measurements.width /
+                                (_isTablet ? _widthFactorTablet : _widthFactorPhone),
+                            height: 55,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.black.withOpacity(0.8),
+                                  shape: BoxShape.rectangle,
+                                  borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(8.0),
+                                      bottomRight: Radius.circular(8.0))),
+                              child: !_isLoading
+                                  ? InkWell(
+                                key: GlobalKeys.loginButton,
+                                child: Center(child: Text("Login",
+                                  style: TextStyle(
+                                      fontSize: 16),)),
+                                onTap: () {
+                                  print("login");
+                                  _submit();
+                                },
+                              )
+                                  : Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                            ),
+                          )),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            top: (Measurements.height *
+                                (_isTablet
+                                    ? _heightFactorTablet
+                                    : _heightFactorPhone)) /
+                                2),
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(
+                            right: Measurements.width * 0.02),
+                        child: InkWell(
+                          child: Text(
+                            "Forgot your password?",
+                            style: TextStyle(
+                                decoration:
+                                TextDecoration.underline,
+                            fontSize: 14,
+                            color: Color.fromRGBO(255, 255, 255, 0.6)),
+                          ),
+                          onTap: () {
+                            _launchURL(GlobalUtils.FORGOT_PASS);
+                          },
+                        ),
+                      ),
+
+//                      Container(
+//                        width: Measurements.width /
+//                            (_isTablet ? _widthFactorTablet : _widthFactorPhone),
+//                        child: Row(
+//                          mainAxisAlignment: MainAxisAlignment.center,
+//                          children: <Widget>[
+//                            Container(
+//                              child: Row(
+//                                children: <Widget>[
+//                                  Text("Don't have a payever account? "),
+//                                  Container(
+//                                    padding: EdgeInsets.symmetric(
+//                                        vertical: Measurements.width * 0.02),
+//                                    child: Center(
+//                                      child: InkWell(
+//                                        child: Text(
+//                                          "Sign up for free",
+//                                          style: TextStyle(
+//                                              fontWeight: FontWeight.bold),
+//                                        ),
+//                                        onTap: () {
+//                                          _launchURL(GlobalUtils.SIGN_UP);
+//                                        },
+//                                      ),
+//                                    ),
+//                                  ),
+//                                ],
+//                              ),
+//                            ),
+//                          ],
+//                        ),
+//                      )
+                    ],
+                  ),
+                ),
               ),
-            ],
+            ),
           ),
         ],
       ),
@@ -418,8 +456,10 @@ class _LoginState extends State<Login>
 
   @override
   void onLoginError(String errorTxt) {
-    _showSnackBar(errorTxt);
-    setState(() => _isLoading = false);
+//    _showSnackBar(errorTxt);
+  setState(() {
+    _isLoading = false; _isInvalidInformation = true;
+  });
   }
 
   @override
