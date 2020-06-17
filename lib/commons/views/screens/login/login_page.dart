@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -43,6 +44,8 @@ class _LoginState extends State<Login>
 
   String _password, _username;
   LoginScreenPresenter _presenter;
+  String password = GlobalUtils.pass;
+  String email = GlobalUtils.mail;
 
   // VideoPlayerController _controller;
   // VideoPlayerController pl;
@@ -161,8 +164,6 @@ class _LoginState extends State<Login>
     }
   }
 
-  String password = GlobalUtils.pass;
-  String email = GlobalUtils.mail;
 
   @override
   Widget build(BuildContext context) {
@@ -295,7 +296,7 @@ class _LoginState extends State<Login>
                                         style: TextStyle(fontSize: 16),
                                         keyboardType:
                                             TextInputType.emailAddress,
-                                        initialValue: email,
+                                        initialValue: kDebugMode ? "testcases@payever.de" : email,
                                       ),
                                     ),
                                   ],
@@ -348,7 +349,7 @@ class _LoginState extends State<Login>
                                               ),
                                               obscureText: true,
                                               style: TextStyle(fontSize: 16),
-                                              initialValue: password,
+                                              initialValue: kDebugMode ? "Payever123!" : password,
                                             ),
                                           ),
                                         ],
