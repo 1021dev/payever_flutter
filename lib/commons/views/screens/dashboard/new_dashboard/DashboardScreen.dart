@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/BlurEffectView.dart';
+import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/DashboardBusinessAppsView.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/DashboardTransactionsView.dart';
 import 'package:provider/provider.dart';
 
@@ -12,7 +13,7 @@ class DashboardScreen extends StatelessWidget {
   DashboardScreen({this.appWidgets});
   @override
   Widget build(BuildContext context) {
-    return DashboardScreenWidget();
+    return DashboardScreenWidget(appWidgets: appWidgets,);
 //    return ChangeNotifierProvider<DashboardStateModel>(
 //      create: (BuildContext context) {
 //        DashboardStateModel dashboardStateModel = DashboardStateModel();
@@ -25,6 +26,9 @@ class DashboardScreen extends StatelessWidget {
 }
 
 class DashboardScreenWidget extends StatefulWidget {
+  final appWidgets;
+
+  DashboardScreenWidget({this.appWidgets});
   @override
   _DashboardScreenWidgetState createState() => _DashboardScreenWidgetState();
 }
@@ -132,6 +136,9 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget> {
                       ),
                       SizedBox(height: 8),
                       DashboardTransactionsView(),
+                      SizedBox(height: 8),
+                      DashboardBusinessAppsView(appWidgets: widget.appWidgets),
+                      SizedBox(height: 8),
                     ],
                   ),
                 )
