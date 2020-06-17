@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/BlurEffectView.dart';
+import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/DashboardAdvertisingView.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/DashboardBusinessAppsView.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/DashboardAppDetailCell.dart';
+import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/DashboardStudioView.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/DashboardTransactionsView.dart';
 import 'package:provider/provider.dart';
 
@@ -172,6 +174,10 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget> {
                         description: "Start sending 14 days personal offers for free",
                         hasSetup: false,
                       ),
+                      SizedBox(height: 8),
+                      DashboardStudioView(),
+                      SizedBox(height: 8),
+                      DashboardAdvertisingView(),
                       SizedBox(height: 8),
                       DashboardAppDetailCell(
                         url: Env.commerceOs +
