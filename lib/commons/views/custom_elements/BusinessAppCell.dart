@@ -39,6 +39,7 @@ class BusinessAppCell extends StatelessWidget {
               ),
             ],
           ),
+          SizedBox(height: 2),
           Text(
             _currentApp.title,
             style: TextStyle(
