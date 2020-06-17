@@ -2,10 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/BlurEffectView.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/DashboardBusinessAppsView.dart';
-import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/DashboardShopView.dart';
+import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/DashboardAppDetailCell.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/DashboardTransactionsView.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../utils/env.dart';
 import '../../../../view_models/dashboard_state_model.dart';
 
 class DashboardScreen extends StatelessWidget {
@@ -140,7 +141,45 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget> {
                       SizedBox(height: 8),
                       DashboardBusinessAppsView(appWidgets: widget.appWidgets),
                       SizedBox(height: 8),
-                      DashboardShopView(),
+                      DashboardAppDetailCell(
+                        url: Env.commerceOs +
+                            "/assets/ui-kit/icons-png/icon-commerceos-store-64.png",
+                        name: "Shop",
+                        description: "Start selling online 14 days for free",
+                        hasSetup: true,
+                      ),
+                      SizedBox(height: 8),
+                      DashboardAppDetailCell(
+                        url: Env.commerceOs +
+                            "/assets/ui-kit/icons-png/icon-commerceos-pos-64.png",
+                        name: "Point of Sale",
+                        description: "Start accepting payments locally 14 days for free",
+                        hasSetup: false,
+                      ),
+                      SizedBox(height: 8),
+                      DashboardAppDetailCell(
+                        url: Env.commerceOs +
+                            "/assets/ui-kit/icons-png/icon-commerceos-checkout-64.png",
+                        name: "Checkout",
+                        description: "Start creating your first checkout",
+                        hasSetup: false,
+                      ),
+                      SizedBox(height: 8),
+                      DashboardAppDetailCell(
+                        url: Env.commerceOs +
+                            "/assets/ui-kit/icons-png/icon-commerceos-marketing-64.png",
+                        name: "Mail",
+                        description: "Start sending 14 days personal offers for free",
+                        hasSetup: false,
+                      ),
+                      SizedBox(height: 8),
+                      DashboardAppDetailCell(
+                        url: Env.commerceOs +
+                            "/assets/ui-kit/icons-png/icon-commerceos-customers-64.png",
+                        name: "Contacts",
+                        description: "Start managing your customers 14 days for free",
+                        hasSetup: false,
+                      ),
                     ],
                   ),
                 )
