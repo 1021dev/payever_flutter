@@ -479,7 +479,7 @@ class _SwitcherState extends State<Switcher> {
                                   Provider.of<GlobalStateModel>(context, listen: false)
                                       .setCurrentBusiness(parts._active);
                                   SharedPreferences.getInstance().then((p) {
-                                    Provider.of<GlobalStateModel>(context)
+                                    Provider.of<GlobalStateModel>(context, listen: false)
                                         .setCurrentWallpaper(
                                             p.getString(GlobalUtils.WALLPAPER));
                                     Navigator.pushReplacement(
