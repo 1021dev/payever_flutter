@@ -62,7 +62,7 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                             child: Center(
                               child: Text("Open",
                                 style: TextStyle(
-                                    fontSize: 8,
+                                    fontSize: 10,
                                     color: Colors.white
                                 ),
                               ),
@@ -75,7 +75,7 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                           width: 40,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
-                              color: Colors.white.withAlpha(30)
+                              color: Colors.white10
                           ),
                           child: Row(
                             children: [
@@ -84,7 +84,7 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                                 child: Center(
                                   child: Text("2",
                                     style: TextStyle(
-                                        fontSize: 8,
+                                        fontSize: 10,
                                         color: Colors.white
                                     ),
                                   ),
@@ -98,10 +98,20 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                                       isExpanded = !isExpanded;
                                     });
                                   },
-                                  child: Icon(
-                                    isExpanded ? Icons.cancel : Icons.add_circle,
-                                    color: Colors.black.withAlpha(80),
-                                    size: 21,
+                                  child: Container(
+                                    width: 21,
+                                    height: 21,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10.5),
+                                        color: Colors.black45
+                                    ),
+                                    child: Center(
+                                      child: Icon(
+                                        isExpanded ? Icons.clear : Icons.add,
+                                        color: Colors.white,
+                                        size: 12,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
@@ -221,7 +231,7 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                   borderRadius: BorderRadius.only(bottomLeft: Radius.circular(6), bottomRight: Radius.circular(6)),
                   color: Colors.black38
               ),
-              child: ListView.builder(itemBuilder: _itemBuilderDDetails, itemCount: 2,),
+              child: ListView.builder(itemBuilder: _itemBuilderDDetails, itemCount: 2,physics: NeverScrollableScrollPhysics(),),
             )
         ],
       ),

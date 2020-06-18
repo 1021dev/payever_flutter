@@ -63,7 +63,7 @@ class _DashboardBusinessAppsViewState extends State<DashboardBusinessAppsView> {
                     child: Center(
                       child: Text("Edit",
                         style: TextStyle(
-                            fontSize: 8,
+                            fontSize: 10,
                             color: Colors.white
                         ),
                       ),

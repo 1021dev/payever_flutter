@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/commons/utils/env.dart';
+import 'package:payever/commons/views/custom_elements/DashboardOptionCell.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/BlurEffectView.dart';
 
 import '../../../../../../products/models/models.dart';
@@ -62,7 +63,7 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                               child: Center(
                                 child: Text("Open",
                                   style: TextStyle(
-                                      fontSize: 8,
+                                      fontSize: 10,
                                       color: Colors.white
                                   ),
                                 ),
@@ -75,7 +76,7 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                             width: 40,
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
-                                color: Colors.white.withAlpha(30)
+                                color: Colors.white10
                             ),
                             child: Row(
                               children: [
@@ -84,7 +85,7 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                                   child: Center(
                                     child: Text("1",
                                       style: TextStyle(
-                                          fontSize: 8,
+                                          fontSize: 10,
                                           color: Colors.white
                                       ),
                                     ),
@@ -98,10 +99,20 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                                         isExpanded = !isExpanded;
                                       });
                                     },
-                                    child: Icon(
-                                      isExpanded ? Icons.cancel : Icons.add_circle,
-                                      color: Colors.black.withAlpha(80),
-                                      size: 21,
+                                    child: Container(
+                                      width: 21,
+                                      height: 21,
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(10.5),
+                                          color: Colors.black45
+                                      ),
+                                      child: Center(
+                                        child: Icon(
+                                          isExpanded ? Icons.clear : Icons.add,
+                                          color: Colors.white,
+                                          size: 12,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -147,76 +158,22 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                 ],
               ),
             ),
-            if (isExpanded) Container(
-              padding: EdgeInsets.fromLTRB(12, 12, 12, 12),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(6), bottomRight: Radius.circular(6)),
-                  color: Colors.black38
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: 4,
-                        height: 4,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(2),
-                            color: Colors.white
-                        ),
-                      ),
-                      SizedBox(width: 12),
-                      Text(
-                        "Get a quick tour around transactions",
-                        softWrap: true,
-                        style: TextStyle(
-                            color: Colors.white, fontSize: 12),
-                      ),
-                      SizedBox(width: 12),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      InkWell(
-                        onTap: () {
+            if (isExpanded)
+              Container(
+                height: 50.0 * 1,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(6), bottomRight: Radius.circular(6)),
+                    color: Colors.black38
+                ),
+                child: ListView.builder(itemBuilder: _itemBuilderDDetails, itemCount: 1,physics: NeverScrollableScrollPhysics(),),
+              )
 
-                        },
-                        child: Container(
-                          height: 20,
-                          width: 40,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.black.withAlpha(100)
-                          ),
-                          child: Center(
-                            child: Text("Open",
-                              style: TextStyle(
-                                  fontSize: 8,
-                                  color: Colors.white
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 4),
-                      InkWell(
-                        onTap: () {
-
-                        },
-                        child: Icon(
-                          Icons.cancel,
-                          color: Colors.white10,
-                          size: 21,
-                        ),
-                      )
-                    ],
-                  )
-                ],
-              ),
-            )
           ],
         ),
     );
   }
+  Widget _itemBuilderDDetails(BuildContext context, int index) {
+    return DashboardOptionCell();
+  }
+
 }

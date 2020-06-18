@@ -50,7 +50,7 @@ class DashboardSettingsView extends StatelessWidget {
                     child: Center(
                       child: Text("Open",
                         style: TextStyle(
-                            fontSize: 8,
+                            fontSize: 10,
                             color: Colors.white
                         ),
                       ),
