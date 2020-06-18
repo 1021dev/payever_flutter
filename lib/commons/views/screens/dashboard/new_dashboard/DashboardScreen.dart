@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/BlurEffectView.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/DashboardAdvertisingView.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/DashboardBusinessAppsView.dart';
@@ -13,7 +15,10 @@ import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/D
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/DashboardStudioView.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/DashboardTransactionsView.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/DashboardTutorialView.dart';
+import 'package:payever/commons/views/screens/login/login_page.dart';
+import 'package:payever/commons/views/screens/switcher/switcher_page.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../utils/env.dart';
 import '../../../../view_models/dashboard_state_model.dart';
@@ -24,15 +29,15 @@ class DashboardScreen extends StatelessWidget {
   DashboardScreen({this.appWidgets});
   @override
   Widget build(BuildContext context) {
-    return DashboardScreenWidget(appWidgets: appWidgets,);
-//    return ChangeNotifierProvider<DashboardStateModel>(
-//      create: (BuildContext context) {
-//        DashboardStateModel dashboardStateModel = DashboardStateModel();
-//        dashboardStateModel.setCurrentWidget(appWidgets);
-//        return dashboardStateModel;
-//      },
-//      child: DashboardScreenWidget(),
-//    );
+//    return DashboardScreenWidget(appWidgets: appWidgets,);
+    return ChangeNotifierProvider<DashboardStateModel>(
+      create: (BuildContext context) {
+        DashboardStateModel dashboardStateModel = DashboardStateModel();
+        dashboardStateModel.setCurrentWidget(appWidgets);
+        return dashboardStateModel;
+      },
+      child: DashboardScreenWidget(appWidgets: appWidgets),
+    );
   }
 }
 
@@ -50,6 +55,32 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget> {
   Widget build(BuildContext context) {
     return DashboardMenuView(
       innerDrawerKey: _innerDrawerKey,
+      onLogout: () {
+        SharedPreferences.getInstance().then((p) {
+          p.setString(GlobalUtils.BUSINESS, "");
+          p.setString(GlobalUtils.EMAIL, "");
+          p.setString(GlobalUtils.PASSWORD, "");
+          p.setString(GlobalUtils.DEVICE_ID, "");
+          p.setString(GlobalUtils.DB_TOKEN_ACC, "");
+          p.setString(GlobalUtils.DB_TOKEN_RFS, "");
+        });
+        Navigator.pushReplacement(
+            context,
+            PageTransition(
+                child: LoginScreen(), type: PageTransitionType.fade));
+      },
+      onSwitchBusiness: () {
+        Navigator.pushReplacement(
+            context,
+            PageTransition(
+                child: SwitcherScreen(), type: PageTransitionType.fade));
+      },
+      onPersonalInfo: () {
+
+      },
+      onAddBusiness: () {
+
+      },
       scaffold: Scaffold(
         body: SafeArea(
           top: true,
