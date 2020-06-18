@@ -15,11 +15,11 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
   @override
   Widget build(BuildContext context) {
     return BlurEffectView(
-      padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
+      padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
       child: Column(
         children: [
           Container(
-            padding: EdgeInsets.fromLTRB(12, 0, 12, 0),
+            padding: EdgeInsets.fromLTRB(14, 0, 14, 0),
             child: Column(
               children: [
                 Row(
@@ -28,8 +28,8 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                     Row(
                       children: [
                         Container(
-                          width: 20,
-                          height: 20,
+                          width: 16,
+                          height: 16,
                           decoration: BoxDecoration(
                               image: DecorationImage(
                                   image: NetworkImage(Env.commerceOs +

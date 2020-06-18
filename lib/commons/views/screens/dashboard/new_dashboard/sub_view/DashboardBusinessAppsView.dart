@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:payever/commons/utils/env.dart';
 import 'package:payever/commons/views/custom_elements/BusinessAppCell.dart';
 
 import '../../../../../models/app_widget.dart';
@@ -19,7 +20,7 @@ class _DashboardBusinessAppsViewState extends State<DashboardBusinessAppsView> {
   Widget build(BuildContext context) {
     print(widget.appWidgets.length);
     return BlurEffectView(
-      padding: EdgeInsets.fromLTRB(12, 8, 12, 0),
+      padding: EdgeInsets.fromLTRB(14, 12, 14, 0),
       child: Container(
         height: 28 + (widget.appWidgets.length / 4).ceilToDouble() * 82,
         child: Column(
@@ -29,8 +30,15 @@ class _DashboardBusinessAppsViewState extends State<DashboardBusinessAppsView> {
               children: [
                 Row(
                   children: [
-                    SvgPicture.asset("assets/images/dashboardicon.svg",
-                        color: Colors.white, height: 18),
+                    Container(
+                      width: 20,
+                      height: 20,
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                              image: NetworkImage(Env.commerceOs +
+                                  "/assets/ui-kit/icons-png/icon-commerceos-applications-64.png"),
+                              fit: BoxFit.fitWidth)),
+                    ),
                     SizedBox(width: 8,),
                     Text(
                       "BUSINESS APPS",

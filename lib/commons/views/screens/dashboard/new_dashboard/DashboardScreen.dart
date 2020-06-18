@@ -6,6 +6,7 @@ import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/D
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/DashboardAppDetailCell.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/DashboardConnectView.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/DashboardProductsView.dart';
+import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/DashboardSettingsView.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/DashboardStudioView.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/DashboardTransactionsView.dart';
 import 'package:provider/provider.dart';
@@ -192,6 +193,8 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget> {
                       DashboardProductsView(),
                       SizedBox(height: 8),
                       DashboardConnectView(),
+                      SizedBox(height: 8),
+                      DashboardSettingsView(),
 
 
                       SizedBox(height: 40),

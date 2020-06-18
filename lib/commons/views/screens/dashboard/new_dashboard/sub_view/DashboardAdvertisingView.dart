@@ -8,14 +8,14 @@ class DashboardAdvertisingView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlurEffectView(
-      padding: EdgeInsets.fromLTRB(12, 8, 12, 12),
+      padding: EdgeInsets.fromLTRB(14, 12, 14, 14),
       child: Column(
         children: [
           Row(
             children: [
               Container(
-                width: 20,
-                height: 20,
+                width: 16,
+                height: 16,
                 decoration: BoxDecoration(
                     image: DecorationImage(
                         image: NetworkImage(Env.commerceOs +

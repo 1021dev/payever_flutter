@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:payever/commons/utils/env.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/BlurEffectView.dart';
 
 import '../../../../../../products/models/models.dart';
@@ -14,11 +15,11 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
   @override
   Widget build(BuildContext context) {
     return BlurEffectView(
-        padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
+        padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
         child: Column(
           children: [
             Container(
-              padding: EdgeInsets.fromLTRB(12, 0, 12, 0),
+              padding: EdgeInsets.fromLTRB(14, 0, 14, 0),
               child: Column(
                 children: [
                   Row(
@@ -26,10 +27,14 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                     children: [
                       Row(
                         children: [
-                          Icon(
-                            Icons.check,
-                            color: Colors.white,
-                            size: 16,
+                          Container(
+                            width: 16,
+                            height: 16,
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    image: NetworkImage(Env.commerceOs +
+                                        "/assets/ui-kit/icons-png/icon-commerceos-transactions-64.png"),
+                                    fit: BoxFit.fitWidth)),
                           ),
                           SizedBox(width: 8,),
                           Text(
