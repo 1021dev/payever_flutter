@@ -1,22 +1,15 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:payever/commons/utils/env.dart';
 
-import '../../models/app_widget.dart';
-import '../../utils/env.dart';
-import '../../utils/translations.dart';
-
-class BusinessAppCell extends StatelessWidget {
-  final AppWidget _currentApp;
-
-  BusinessAppCell(this._currentApp);
-
-  String uiKit = Env.commerceOs + "/assets/ui-kit/icons-png/";
+class ProductCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    print(_currentApp.icon);
     return Container(
+      width: 100,
+      padding: EdgeInsets.fromLTRB(4, 0, 46, 0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Stack(
             alignment: AlignmentDirectional.center,
@@ -30,22 +23,35 @@ class BusinessAppCell extends StatelessWidget {
                 ),
               ),
               Container(
-                width: 30,
-                height: 30,
+                width: 50,
+                height: 50,
                 decoration: BoxDecoration(
                     image: DecorationImage(
-                        image: NetworkImage(
-                            uiKit + _currentApp.icon),
+                        image: NetworkImage(Env.commerceOs +
+                            "/assets/ui-kit/icons-png/icon-commerceos-ad-64.png"),
                         fit: BoxFit.fitWidth)),
               ),
             ],
           ),
           SizedBox(height: 2),
           Text(
-            _currentApp.title,
+            "Durable Iron Happy Continue",
+            softWrap: true,
+            maxLines: 2,
             style: TextStyle(
-              fontSize: 10,
-              color: Colors.white
+                fontSize: 10,
+                color: Colors.white,
+              fontWeight: FontWeight.bold
+            ),
+          ),
+          SizedBox(height: 2),
+          Text(
+            "738,66 \$",
+            softWrap: true,
+            textAlign: TextAlign.start,
+            style: TextStyle(
+                fontSize: 8,
+                color: Colors.white,
             ),
           )
         ],

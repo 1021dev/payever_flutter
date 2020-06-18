@@ -4,6 +4,7 @@ import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/B
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/DashboardAdvertisingView.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/DashboardBusinessAppsView.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/DashboardAppDetailCell.dart';
+import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/DashboardProductsView.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/DashboardStudioView.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/DashboardTransactionsView.dart';
 import 'package:provider/provider.dart';
@@ -186,6 +187,11 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget> {
                         description: "Start managing your customers 14 days for free",
                         hasSetup: false,
                       ),
+                      SizedBox(height: 8),
+                      DashboardProductsView(),
+
+
+                      SizedBox(height: 40),
                     ],
                   ),
                 )
