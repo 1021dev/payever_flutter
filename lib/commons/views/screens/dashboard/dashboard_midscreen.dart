@@ -15,7 +15,7 @@ import '../../../view_models/view_models.dart';
 import '../../custom_elements/custom_elements.dart';
 import '../login/login.dart';
 import '../switcher/switcher.dart';
-import 'dashboard_screen_ref.dart';
+//import 'dashboard_screen_ref.dart';
 import 'new_dashboard/DashboardScreen.dart';
 
 class DashboardMidScreen extends StatefulWidget {

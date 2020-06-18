@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/commons/models/fetchwallpaper.dart';
-import 'package:payever/commons/views/screens/dashboard/new_dashboard/DashboardScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 
@@ -10,8 +9,11 @@ import '../../../view_models/view_models.dart';
 import '../../../models/models.dart';
 import '../../../network/network.dart';
 import '../../../utils/utils.dart';
-import '../dashboard/dashboard_screen_ref.dart';
 import 'loader.dart';
+
+
+import 'package:payever/commons/views/screens/dashboard/new_dashboard/DashboardScreen.dart';
+//import '../dashboard/dashboard_screen_ref.dart';
 
 const double _heightFactorTablet = 0.05;
 const double _heightFactorPhone = 0.07;
