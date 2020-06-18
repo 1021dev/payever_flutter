@@ -11,7 +11,7 @@ class DashboardOptionCell extends StatelessWidget {
           color: Colors.white12,
         ),
         Container(
-          height: 50,
+          height: 49,
           padding: EdgeInsets.fromLTRB(12, 0, 12, 0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -47,27 +47,37 @@ class DashboardOptionCell extends StatelessWidget {
                       width: 40,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          color: Colors.black.withAlpha(100)
+                          color: Colors.white12
                       ),
                       child: Center(
                         child: Text("Open",
                           style: TextStyle(
-                              fontSize: 8,
+                              fontSize: 10,
                               color: Colors.white
                           ),
                         ),
                       ),
                     ),
                   ),
-                  SizedBox(width: 4),
+                  SizedBox(width: 8),
                   InkWell(
                     onTap: () {
 
                     },
-                    child: Icon(
-                      Icons.cancel,
-                      color: Colors.white10,
-                      size: 21,
+                    child: Container(
+                      width: 21,
+                      height: 21,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.5),
+                          color: Colors.white12
+                      ),
+                      child: Center(
+                        child: Icon(
+                          Icons.clear,
+                          color: Colors.white.withAlpha(200),
+                          size: 12,
+                        ),
+                      ),
                     ),
                   )
                 ],
