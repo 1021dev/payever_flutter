@@ -297,7 +297,8 @@ class GlobalUtils {
   //static String  mail= "service@payever.de";//staging 2
 
   //static const String COMMERCE_OS_URL = "https://commerceos.test.devpayever.com";//test
-   static const String COMMERCE_OS_URL = "https://commerceos.staging.devpayever.com";//staging
+//   static const String COMMERCE_OS_URL = "https://commerceos.staging.devpayever.com";//staging
+  static const String COMMERCE_OS_URL = "https://commerceos.staging.devpayever.com";//staging
 //  static const String COMMERCE_OS_URL = "https://commerceos.payever.org"; //live
 
   static const String POS_URL = "https://getpayever.com/pos";
