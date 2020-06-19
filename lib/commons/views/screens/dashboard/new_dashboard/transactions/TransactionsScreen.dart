@@ -1,14 +1,19 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/commons/views/custom_elements/Dashboard/TransactionListCell.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/BlurEffectView.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/TopBarView.dart';
+import 'package:payever/commons/views/screens/dashboard/new_dashboard/transactions/SortContentView.dart';
+import 'package:payever/commons/views/screens/dashboard/new_dashboard/transactions/model/Enums.dart';
 import 'package:payever/settings/views/employees/expandable_component.dart';
+
 class TransactionsScreen extends StatefulWidget {
   @override
   _TransactionsScreenState createState() => _TransactionsScreenState();
 }
 
 class _TransactionsScreenState extends State<TransactionsScreen> {
+  SortType curSortType = SortType.date;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,17 +45,19 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                     children: [
                       Row(
                         children: [
-                          SizedBox(width: 8,),
+                          SizedBox(
+                            width: 8,
+                          ),
                           InkWell(
-                            onTap: () {
-
-                            },
+                            onTap: () {},
                             child: Icon(
                               Icons.search,
                               size: 20,
                             ),
                           ),
-                          SizedBox(width: 16,),
+                          SizedBox(
+                            width: 16,
+                          ),
                           InkWell(
                             onTap: () {
 
@@ -66,14 +73,29 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                         children: [
                           InkWell(
                             onTap: () {
-
+                              showCupertinoModalPopup(
+                                  context: context,
+                                  builder: (builder) {
+                                    return SortContentView(
+                                      selectedIndex: curSortType ,
+                                      onSelected: (val) {
+                                        print(val);
+                                        Navigator.pop(context);
+                                        setState(() {
+                                          curSortType = val;
+                                        });
+                                      },
+                                    );
+                                  });
                             },
                             child: Icon(
                               Icons.sort,
                               size: 20,
                             ),
                           ),
-                          SizedBox(width: 6,),
+                          SizedBox(
+                            width: 6,
+                          ),
                         ],
                       )
                     ],
@@ -84,16 +106,17 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                   color: Colors.black45,
                   child: Row(
                     children: [
-                      SizedBox(width: 16,),
+                      SizedBox(
+                        width: 16,
+                      ),
                       Expanded(
                         flex: 1,
                         child: Text(
                           "Channel",
                           style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.white70,
-                            fontWeight: FontWeight.bold
-                          ),
+                              fontSize: 12,
+                              color: Colors.white70,
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
                       Expanded(
@@ -103,8 +126,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                           style: TextStyle(
                               fontSize: 12,
                               color: Colors.white70,
-                              fontWeight: FontWeight.bold
-                          ),
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
                       Expanded(
@@ -114,8 +136,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                           style: TextStyle(
                               fontSize: 12,
                               color: Colors.white70,
-                              fontWeight: FontWeight.bold
-                          ),
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
                       Expanded(
@@ -125,15 +146,17 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                           style: TextStyle(
                               fontSize: 12,
                               color: Colors.white70,
-                              fontWeight: FontWeight.bold
-                          ),
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
                     ],
                   ),
                 ),
                 Expanded(
-                  child: ListView.builder(itemBuilder: _itemBuilder, itemCount: 15,),
+                  child: ListView.builder(
+                    itemBuilder: _itemBuilder,
+                    itemCount: 15,
+                  ),
                 ),
                 Container(
                   height: 50,
@@ -154,10 +177,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       ),
     );
   }
+
   Widget _itemBuilder(BuildContext context, int index) {
-    return TransactionListCell(
-    );
+    return TransactionListCell();
   }
-
 }
-
