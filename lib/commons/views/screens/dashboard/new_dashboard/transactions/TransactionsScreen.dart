@@ -71,9 +71,14 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                                     );
                                   });
                             },
-                            child: Icon(
-                              Icons.filter_list,
-                              size: 20,
+                            child: Container(
+                              width: 30,
+                              height: 30,
+                              alignment: Alignment.center,
+                              child: Icon(
+                                Icons.filter_list,
+                                size: 20,
+                              ),
                             ),
                           ),
                         ],

@@ -1,33 +1,44 @@
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/commons/commons.dart';
+import 'package:payever/commons/views/screens/dashboard/new_dashboard/transactions/sub_view/FilterRangeContentView.dart';
 
 import 'model/Enums.dart';
 
-class FilterContentView extends StatelessWidget {
-  final InputEventCallback<SortType> onSelected;
-  BuildContext context;
+class FilterContentView extends StatefulWidget {
+  final InputEventCallback<FilterType> onSelected;
   FilterContentView({this.onSelected});
+  @override
+  _FilterContentViewState createState() => _FilterContentViewState();
+}
 
+class _FilterContentViewState extends State<FilterContentView> {
   void showMeDialog(BuildContext context, FilterType filterType) {
+//    String selectedFilterItem = "Is";
+    String filtername = getFilterNameByType(filterType);
     showDialog(
         context: context,
-        builder: (BuildContext context){
+        builder: (BuildContext context) {
           return AlertDialog(
+            title: Text(
+              'Filter by: $filtername',
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+            ),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10)),
             ),
-            content: Container(
-               child: Text("Dialog Content"),
+            content: FilterRangeContentView(
+              onSelected: (value) {
+                Navigator.pop(context);
+                widget.onSelected(value);
+              }
             ),
           );
-        }
-    );
+        });
   }
-
   @override
   Widget build(BuildContext context) {
-    this.context = context;
+
     return Container(
         height: MediaQuery.of(context).size.height - 145,
         color: Colors.transparent, //could change this to Color(0xFF737373),
@@ -45,7 +56,9 @@ class FilterContentView extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      SizedBox(width: 16,),
+                      SizedBox(
+                        width: 16,
+                      ),
                       Text(
                         'Filter by:',
                         style: TextStyle(
@@ -170,17 +183,104 @@ class FilterContentView extends StatelessWidget {
                             showMeDialog(context, FilterType.seller_email);
                           },
                         ),
-
                       ],
                     ),
                   )
                 ],
-              )
-          ),
-
-        )
-    );
+              )),
+        ));
   }
 
+  String getFilterNameByType(FilterType type) {
+    String typeString = "Id";
+    switch (type) {
+      case FilterType.id:
+        {
+          typeString = "Id";
+        }
+        break;
+      case FilterType.reference:
+        {
+          typeString = "Reference";
+        }
+        break;
+      case FilterType.date:
+        {
+          typeString = "Date";
+        }
+        break;
+      case FilterType.payment_type:
+        {
+          typeString = "Payment Type";
+        }
+        break;
+      case FilterType.status:
+        {
+          typeString = "Status";
+        }
+        break;
+      case FilterType.specific_status:
+        {
+          typeString = "Specific Status";
+        }
+        break;
+      case FilterType.channel:
+        {
+          typeString = "Channel";
+        }
+        break;
+      case FilterType.amount:
+        {
+          typeString = "Amount";
+        }
+        break;
+      case FilterType.total:
+        {
+          typeString = "Total";
+        }
+        break;
+      case FilterType.currency:
+        {
+          typeString = "Currency";
+        }
+        break;
+      case FilterType.customer_name:
+        {
+          typeString = "Customer name";
+        }
+        break;
+      case FilterType.customer_email:
+        {
+          typeString = "Customer email";
+        }
+        break;
+      case FilterType.merchant_name:
+        {
+          typeString = "Merchant name";
+        }
+        break;
+      case FilterType.merchant_email:
+        {
+          typeString = "Merchant email";
+        }
+        break;
+      case FilterType.seller_name:
+        {
+          typeString = "Seller name";
+        }
+        break;
+      case FilterType.seller_email:
+        {
+          typeString = "Seller email";
+        }
+        break;
+      default:
+        {
+          typeString = "Id";
+        }
+        break;
+    }
+    return typeString;
+  }
 
 }
