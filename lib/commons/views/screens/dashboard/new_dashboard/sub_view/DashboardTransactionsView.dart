@@ -7,6 +7,9 @@ import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/B
 import '../../../../../../products/models/models.dart';
 
 class DashboardTransactionsView extends StatefulWidget {
+  final VoidCallback onOpen;
+
+  DashboardTransactionsView({this.onOpen});
   @override
   _DashboardTransactionsViewState createState() => _DashboardTransactionsViewState();
 }
@@ -50,9 +53,7 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                       Row(
                         children: [
                           InkWell(
-                            onTap: () {
-
-                            },
+                            onTap: widget.onOpen,
                             child: Container(
                               height: 20,
                               width: 40,

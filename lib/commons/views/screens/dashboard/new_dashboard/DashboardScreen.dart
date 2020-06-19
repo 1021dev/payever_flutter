@@ -15,6 +15,7 @@ import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/D
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/DashboardStudioView.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/DashboardTransactionsView.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/DashboardTutorialView.dart';
+import 'package:payever/commons/views/screens/dashboard/new_dashboard/transactions/TransactionsScreen.dart';
 import 'package:payever/commons/views/screens/login/login_page.dart';
 import 'package:payever/commons/views/screens/switcher/switcher_page.dart';
 import 'package:provider/provider.dart';
@@ -109,7 +110,7 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget> {
                         children: [
                           Row(
                             children: [
-                              SizedBox(width: 4,),
+                              SizedBox(width: 8,),
                               SvgPicture.asset("assets/images/payeverlogo.svg",
                                   color: Colors.white, height: 15),
                               SizedBox(width: 6,),
@@ -237,7 +238,15 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget> {
                             ),
                           ),
                           SizedBox(height: 8),
-                          DashboardTransactionsView(),
+                          DashboardTransactionsView(
+                            onOpen: () {
+                              Navigator.pushReplacement(
+                                  context,
+                                  PageTransition(
+                                      child: TransactionsScreen(),
+                                      type: PageTransitionType.fade));
+                            },
+                          ),
                           SizedBox(height: 8),
                           DashboardBusinessAppsView(appWidgets: widget.appWidgets),
                           SizedBox(height: 8),
