@@ -82,6 +82,7 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget> {
 
       },
       scaffold: Scaffold(
+        resizeToAvoidBottomPadding: false,
         body: SafeArea(
           top: true,
           child: Stack(

@@ -581,6 +581,7 @@ class LoginScreen extends StatelessWidget {
     return Scaffold(
       key: scaffoldKey,
       body: Login(),
+      resizeToAvoidBottomPadding: false,
     );
   }
 }
