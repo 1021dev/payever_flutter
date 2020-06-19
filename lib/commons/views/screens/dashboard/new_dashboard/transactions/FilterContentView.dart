@@ -14,8 +14,12 @@ class FilterContentView extends StatelessWidget {
         context: context,
         builder: (BuildContext context){
           return AlertDialog(
-            title: Text("Alert Dialog"),
-            content: Text("Dialog Content"),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+            ),
+            content: Container(
+               child: Text("Dialog Content"),
+            ),
           );
         }
     );
