@@ -20,7 +20,7 @@ class DashboardMenuView extends StatelessWidget {
       key: innerDrawerKey,
       rightAnimationType: InnerDrawerAnimation.quadratic,
       onTapClose: true,
-      rightOffset: 0,
+      rightOffset: 0.4,
       swipe: false,
       colorTransitionChild: Colors.transparent,
       colorTransitionScaffold: Colors.black.withAlpha(50),
