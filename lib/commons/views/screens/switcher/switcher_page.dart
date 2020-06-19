@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/commons/models/fetchwallpaper.dart';
+import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/BlurEffectView.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 
@@ -75,13 +76,27 @@ class _SwitcherScreenState extends State<SwitcherScreen>
       children: <Widget>[
         Positioned(
           height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
+          width: MediaQuery.of(context).size.width + 200,
+          left: -50,
           top: 0.0,
-          child: Image.asset(
-            "assets/images/loginverticaltablet.png",
-            fit: BoxFit.cover,
+          child: Container(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width + 200,
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: NetworkImage(
+                        "https://payever.azureedge.net/images/commerceos-background.jpg"),
+                    fit: BoxFit.cover)),
+            child: BlurEffectView(
+              blur: 5,
+              radius: 0,
+              child: Container(
+                color: Colors.black.withAlpha(50),
+              ),
+            ),
           ),
         ),
+
         Scaffold(
           backgroundColor: Colors.transparent,
           body: AnimatedOpacity(
