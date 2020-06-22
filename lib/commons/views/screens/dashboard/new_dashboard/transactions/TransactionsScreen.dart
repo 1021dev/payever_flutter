@@ -37,7 +37,12 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             ),
             Column(
               children: [
-                TopBarView(),
+                TopBarView(
+                  title: 'Transactions',
+                  onTapClose: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
                 Container(
                   height: 50,
                   color: Colors.black38,

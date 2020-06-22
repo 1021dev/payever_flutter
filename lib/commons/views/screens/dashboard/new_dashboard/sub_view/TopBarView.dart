@@ -3,6 +3,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class TopBarView extends StatelessWidget {
+
+  final String title;
+  final String iconUrl;
+  final Function onTapClose;
+  final Function onTapMenu;
+  final Function onTapAlert;
+  final Function onTapSearch;
+  final Function onTapProfile;
+
+  const TopBarView({
+    Key key,
+    this.title = '',
+    this.iconUrl,
+    this.onTapClose,
+    this.onTapMenu,
+    this.onTapAlert,
+    this.onTapSearch,
+    this.onTapProfile,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -17,7 +37,7 @@ class TopBarView extends StatelessWidget {
               SvgPicture.asset("assets/images/payeverlogo.svg",
                   color: Colors.white, height: 24),
               SizedBox(width: 6,),
-              Text("Business", style: TextStyle(
+              Text(this.title, style: TextStyle(
                   color: Colors.white,
                   fontSize: 16,
                   fontWeight: FontWeight.bold
@@ -27,9 +47,7 @@ class TopBarView extends StatelessWidget {
           Row(
             children: [
               InkWell(
-                onTap: () {
-
-                },
+                onTap: onTapProfile,
                 child: Icon(
                   Icons.person_pin,
                   color: Colors.white,
@@ -38,9 +56,7 @@ class TopBarView extends StatelessWidget {
               ),
               SizedBox(width: 6,),
               InkWell(
-                onTap: () {
-
-                },
+                onTap: onTapSearch,
                 child: Icon(
                   Icons.search,
                   color: Colors.white,
@@ -49,9 +65,7 @@ class TopBarView extends StatelessWidget {
               ),
               SizedBox(width: 6,),
               InkWell(
-                onTap: () {
-
-                },
+                onTap: onTapAlert,
                 child: Icon(
                   Icons.notifications,
                   color: Colors.white,
@@ -60,9 +74,7 @@ class TopBarView extends StatelessWidget {
               ),
               SizedBox(width: 6,),
               InkWell(
-                onTap: () {
-
-                },
+                onTap: onTapMenu,
                 child: Icon(
                   Icons.menu,
                   color: Colors.white,
@@ -71,9 +83,7 @@ class TopBarView extends StatelessWidget {
               ),
               SizedBox(width: 6,),
               InkWell(
-                onTap: () {
-
-                },
+                onTap: onTapClose,
                 child: Icon(
                   Icons.close,
                   color: Colors.white,

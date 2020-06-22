@@ -240,7 +240,7 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget> {
                           SizedBox(height: 8),
                           DashboardTransactionsView(
                             onOpen: () {
-                              Navigator.pushReplacement(
+                              Navigator.push(
                                   context,
                                   PageTransition(
                                       child: TransactionsScreen(),
