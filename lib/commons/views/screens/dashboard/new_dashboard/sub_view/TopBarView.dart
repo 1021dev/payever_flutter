@@ -15,11 +15,11 @@ class TopBarView extends StatelessWidget {
             children: [
               SizedBox(width: 8,),
               SvgPicture.asset("assets/images/payeverlogo.svg",
-                  color: Colors.white, height: 15),
+                  color: Colors.white, height: 24),
               SizedBox(width: 6,),
               Text("Business", style: TextStyle(
                   color: Colors.white,
-                  fontSize: 12,
+                  fontSize: 16,
                   fontWeight: FontWeight.bold
               ),)
             ],
@@ -33,10 +33,10 @@ class TopBarView extends StatelessWidget {
                 child: Icon(
                   Icons.person_pin,
                   color: Colors.white,
-                  size: 15,
+                  size: 32,
                 ),
               ),
-              SizedBox(width: 8,),
+              SizedBox(width: 6,),
               InkWell(
                 onTap: () {
 
@@ -44,10 +44,10 @@ class TopBarView extends StatelessWidget {
                 child: Icon(
                   Icons.search,
                   color: Colors.white,
-                  size: 15,
+                  size: 32,
                 ),
               ),
-              SizedBox(width: 8,),
+              SizedBox(width: 6,),
               InkWell(
                 onTap: () {
 
@@ -55,10 +55,10 @@ class TopBarView extends StatelessWidget {
                 child: Icon(
                   Icons.notifications,
                   color: Colors.white,
-                  size: 15,
+                  size: 32,
                 ),
               ),
-              SizedBox(width: 8,),
+              SizedBox(width: 6,),
               InkWell(
                 onTap: () {
 
@@ -66,10 +66,10 @@ class TopBarView extends StatelessWidget {
                 child: Icon(
                   Icons.menu,
                   color: Colors.white,
-                  size: 15,
+                  size: 32,
                 ),
               ),
-              SizedBox(width: 8,),
+              SizedBox(width: 6,),
               InkWell(
                 onTap: () {
 
@@ -77,7 +77,7 @@ class TopBarView extends StatelessWidget {
                 child: Icon(
                   Icons.close,
                   color: Colors.white,
-                  size: 15,
+                  size: 32,
                 ),
               ),
               SizedBox(width: 6,),
