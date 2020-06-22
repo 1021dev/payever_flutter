@@ -623,7 +623,7 @@ class _SimplifyTransactionsState extends State<SimplifyTransactions> {
       }).then((_) {
         RestDataSource()
             .getTransactionList(globalStateModel.currentBusiness.id,
-                GlobalUtils.activeToken.accessToken, "", context)
+                GlobalUtils.activeToken.accessToken, "")
             .then((_total) {
           dashboardStateModel.setTotal(
               Transaction.toMap(_total).paginationData.amount?.toDouble() ??

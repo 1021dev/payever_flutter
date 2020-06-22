@@ -81,7 +81,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
             _currentBusiness.id,
             GlobalUtils.activeToken.accessToken,
             "?orderBy=created_at&direction=desc&limit=50&query=$search&page=1&currency=${_currentBusiness.currency}",
-            context)
+            )
         .then((obj) {
       data = TransactionScreenData(obj);
       if (init) isLoading.value = false;
@@ -432,8 +432,7 @@ class _CustomListState extends State<CustomList> {
             .getTransactionList(
                 widget.currentBusiness.id,
                 GlobalUtils.activeToken.accessToken,
-                "?orderBy=created_at&direction=desc&limit=50&query=${widget.search}&page=$page&currency=${widget.currentBusiness.currency}",
-                context)
+                "?orderBy=created_at&direction=desc&limit=50&query=${widget.search}&page=$page&currency=${widget.currentBusiness.currency}",)
             .then((transaction) {
           List<Collection> temp = Transaction.toMap(transaction).collection;
           if (temp.isNotEmpty) {
@@ -635,8 +634,7 @@ class PhoneTableRow extends StatelessWidget {
                     .getTransactionDetail(
                         globalStateModel.currentBusiness.id,
                         GlobalUtils.activeToken.accessToken,
-                        currentTransaction.uuid,
-                        context)
+                        currentTransaction.uuid)
                     .then((obj) {
                   var td = TransactionDetails.toMap(obj);
                   Navigator.pop(context);
@@ -830,7 +828,7 @@ class TabletTableRow extends StatelessWidget {
                         globalStateModel.currentBusiness.id,
                         GlobalUtils.activeToken.accessToken,
                         currentTransaction.uuid,
-                        context)
+                        )
                     .then((obj) {
                   var td = TransactionDetails.toMap(obj);
                   Navigator.pop(context);

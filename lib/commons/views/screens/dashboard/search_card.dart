@@ -80,8 +80,7 @@ class _SearchCardState extends State<SearchCard> {
         .getTransactionList(
             widget.id,
             GlobalUtils.activeToken.accessToken,
-            "?limit=8&query=${widget.search.value}&orderBy=created_at&direction=desc",
-            context)
+            "?limit=8&query=${widget.search.value}&orderBy=created_at&direction=desc",)
         .then((result) {
       print(result);
       _list = List();

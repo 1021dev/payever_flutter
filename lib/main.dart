@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:payever/blocs/payever_bloc_delegate.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 
@@ -9,6 +11,7 @@ import 'commons/utils/utils.dart';
 import 'commons/network/network.dart';
 
 void main() {
+  BlocSupervisor.delegate = PayeverBlocDelegate();
   Provider.debugCheckInvalidValueType = null;
   runApp(PayeverApp());
 }

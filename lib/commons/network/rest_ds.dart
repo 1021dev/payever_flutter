@@ -176,8 +176,8 @@ class RestDataSource {
   }
 
   Future<dynamic> getTransactionList(
-      String id, String token, String query, BuildContext context) {
-    print("TAG - getTransactionList()");
+      String id, String token, String query) {
+    print("TAG - getTransactionList() $token");
     var headers = {
       HttpHeaders.authorizationHeader: "Bearer $token",
       HttpHeaders.contentTypeHeader: "application/json",

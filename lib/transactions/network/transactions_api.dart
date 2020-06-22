@@ -9,7 +9,7 @@ class TransactionsApi extends RestDataSource {
   NetworkUtil _netUtil = NetworkUtil();
 
   Future<dynamic> getTransactionDetail(
-      String idBusiness, String token, String idTrans, BuildContext context) {
+      String idBusiness, String token, String idTrans) {
     print("TAG - getTransactionDetail()");
     var headers = {
       HttpHeaders.authorizationHeader: "Bearer $token",
