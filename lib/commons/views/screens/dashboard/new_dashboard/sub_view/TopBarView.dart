@@ -34,8 +34,8 @@ class TopBarView extends StatelessWidget {
           Row(
             children: [
               SizedBox(width: 8,),
-              SvgPicture.asset("assets/images/payeverlogo.svg",
-                  color: Colors.white, height: 24),
+              SvgPicture.asset("assets/images/transactions.svg",
+                  color: Colors.white, height: 16, width: 24,),
               SizedBox(width: 6,),
               Text(this.title, style: TextStyle(
                   color: Colors.white,
@@ -51,7 +51,7 @@ class TopBarView extends StatelessWidget {
                 child: Icon(
                   Icons.person_pin,
                   color: Colors.white,
-                  size: 32,
+                  size: 24,
                 ),
               ),
               SizedBox(width: 6,),
@@ -60,7 +60,7 @@ class TopBarView extends StatelessWidget {
                 child: Icon(
                   Icons.search,
                   color: Colors.white,
-                  size: 32,
+                  size: 24,
                 ),
               ),
               SizedBox(width: 6,),
@@ -69,7 +69,7 @@ class TopBarView extends StatelessWidget {
                 child: Icon(
                   Icons.notifications,
                   color: Colors.white,
-                  size: 32,
+                  size: 24,
                 ),
               ),
               SizedBox(width: 6,),
@@ -78,7 +78,7 @@ class TopBarView extends StatelessWidget {
                 child: Icon(
                   Icons.menu,
                   color: Colors.white,
-                  size: 32,
+                  size: 24,
                 ),
               ),
               SizedBox(width: 6,),
@@ -87,7 +87,7 @@ class TopBarView extends StatelessWidget {
                 child: Icon(
                   Icons.close,
                   color: Colors.white,
-                  size: 32,
+                  size: 24,
                 ),
               ),
               SizedBox(width: 6,),

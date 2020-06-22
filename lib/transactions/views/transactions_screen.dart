@@ -12,6 +12,7 @@ import 'package:payever/commons/views/screens/dashboard/new_dashboard/transactio
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/transactions/SortContentView.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/transactions/export_content_view.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/transactions/model/Enums.dart';
+import 'package:payever/commons/views/screens/dashboard/new_dashboard/transactions/sub_view/search_text_content_view.dart';
 import 'package:provider/provider.dart';
 
 import '../utils/utils.dart';
@@ -55,8 +56,8 @@ class _TransactionScreenState extends State<TransactionScreen> {
 
   bool _pos;
   bool initQueryNotEmpty = false;
-  ValueNotifier<String> searching = ValueNotifier("");
-  String search = "";
+  ValueNotifier<String> searching = ValueNotifier('');
+  String search = '';
   bool init = true;
   String wallpaper;
 
@@ -180,7 +181,26 @@ class _TransactionScreenState extends State<TransactionScreen> {
                             width: 12,
                           ),
                           InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                                      ),
+                                      content: SearchTextContentView(
+                                        searchText: search,
+                                        onSelected: (value) {
+                                          Navigator.pop(context);
+                                          setState(() {
+                                            search = value;
+                                          });
+                                        }
+                                      ),
+                                    );
+                                  });
+                            },
                             child: Icon(
                               Icons.search,
                               size: 24,
