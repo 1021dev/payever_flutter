@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_tags/flutter_tags.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:intl/intl.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/BlurEffectView.dart';
@@ -26,6 +27,13 @@ import 'transactions_details_screen.dart';
 
 bool _isPortrait;
 bool _isTablet;
+final GlobalKey<TagsState> _tagStateKey = GlobalKey<TagsState>();
+// Allows you to get a list of all the ItemTags
+_getAllItem(){
+  List<Item> lst = _tagStateKey.currentState?.getAllItem;
+  if(lst!=null)
+    lst.where((a) => a.active==true).forEach( ( a) => print(a.title));
+}
 
 class TransactionScreenInit extends StatelessWidget {
   final TransactionStateModel dashboardStateModel = TransactionStateModel();
@@ -66,6 +74,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
   @override
   void initState() {
     super.initState();
+    _filterItems = [];
     isLoading.addListener(listener);
     isLoadingSearch.addListener(listener);
     searching.addListener(listener);
@@ -88,6 +97,9 @@ class _TransactionScreenState extends State<TransactionScreen> {
   bool noTransactions = false;
 
   TransactionStateModel transactionsStateModel;
+
+  List _filterItems;
+  int _searchTagIndex = -1;
 
   fetchTransactions({String search, bool init}) {
     TransactionsApi api = TransactionsApi();
@@ -182,24 +194,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                           ),
                           InkWell(
                             onTap: () {
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                                      ),
-                                      content: SearchTextContentView(
-                                        searchText: search,
-                                        onSelected: (value) {
-                                          Navigator.pop(context);
-                                          setState(() {
-                                            search = value;
-                                          });
-                                        }
-                                      ),
-                                    );
-                                  });
+                              showSearchTextDialog();
                             },
                             child: Icon(
                               Icons.search,
@@ -290,6 +285,48 @@ class _TransactionScreenState extends State<TransactionScreen> {
                     ],
                   ),
                 ),
+                _filterItems.length > 0 ?
+                  Container(
+                    width: Device.width,
+                    child: Tags(
+                      key: _tagStateKey,
+                      itemCount: _filterItems.length,
+                      alignment: WrapAlignment.start,
+                      horizontalScroll: true,
+                      itemBuilder: (int index) {
+                        return ItemTags(
+                          key: Key('filterItme$index'),
+                          index: index,
+                          title: _filterItems[index],
+                          color: Colors.white12,
+                          activeColor: Colors.white12,
+                          textActiveColor: Colors.white,
+                          textColor: Colors.white,
+                          elevation: 0,
+                          padding: EdgeInsets.only(
+                            left: 16, top: 8, bottom: 8, right: 16,
+                          ),
+                          removeButton: ItemTagsRemoveButton(
+                            backgroundColor: Colors.transparent,
+                            onRemoved: () {
+                              setState(() {
+                                if (index == _searchTagIndex) {
+                                  _searchTagIndex = -1;
+                                  searching.value = '';
+                                  search = '';
+                                }
+                                _filterItems.removeAt(index);
+                              });
+                              return true;
+                            }
+                          ),
+                          onPressed: (item) {
+                            showSearchTextDialog();
+                          },
+                        );
+                      },
+                    ),
+                  ): Container(height: 0,),
                 Container(
                   height: 35,
                   color: Colors.black45,
@@ -373,6 +410,42 @@ class _TransactionScreenState extends State<TransactionScreen> {
         ),
       ),
     );
+  }
+
+  void showSearchTextDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+            ),
+            content: SearchTextContentView(
+                searchText: search,
+                onSelected: (value) {
+                  Navigator.pop(context);
+                  setState(() {
+                    searching.value = value;
+                    search = value;
+                    if (searching.value.length > 0) {
+                      if (_searchTagIndex > -1) {
+                        _filterItems.replaceRange(_searchTagIndex, _searchTagIndex, ['Search is: ${searching.value}']);
+                      } else {
+                        _filterItems.add('Search is: ${searching.value}');
+                        _searchTagIndex = _filterItems.length;
+                      }
+                    } else {
+                      if (_searchTagIndex > -1) {
+                        _filterItems.removeAt(_searchTagIndex);
+                        _searchTagIndex = -1;
+                      }
+                    }
+                  });
+                }
+            ),
+          );
+        });
+
   }
 }
 
