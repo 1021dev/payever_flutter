@@ -3,16 +3,14 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:intl/intl.dart';
-import 'package:payever/blocs/bloc.dart';
-import 'package:payever/commons/views/custom_elements/Dashboard/TransactionListCell.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/BlurEffectView.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/TopBarView.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/transactions/FilterContentView.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/transactions/SortContentView.dart';
+import 'package:payever/commons/views/screens/dashboard/new_dashboard/transactions/export_content_view.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/transactions/model/Enums.dart';
 import 'package:provider/provider.dart';
 
@@ -21,7 +19,6 @@ import '../view_models/view_models.dart';
 import '../network/network.dart';
 import '../../commons/view_models/view_models.dart';
 import '../../commons/models/models.dart';
-import '../../commons/views/custom_elements/custom_elements.dart';
 import '../../commons/views/screens/login/login.dart';
 import '../../commons/views/screens/dashboard/transaction_card.dart';
 import 'transactions_details_screen.dart';
@@ -44,63 +41,43 @@ class TransactionScreenInit extends StatelessWidget {
 }
 
 class TransactionScreen extends StatefulWidget {
+
   @override
   createState() => _TransactionScreenState();
 }
 
 class _TransactionScreenState extends State<TransactionScreen> {
-//  ValueNotifier<bool> isLoading = ValueNotifier(true);
-//  ValueNotifier<bool> isLoadingSearch = ValueNotifier(true);
-//  TransactionScreenData data;
-//
-//  Business _currentBusiness;
+  ValueNotifier<bool> isLoading = ValueNotifier(true);
+  ValueNotifier<bool> isLoadingSearch = ValueNotifier(true);
+  TransactionScreenData data;
 
-//  bool _pos;
+  Business _currentBusiness;
+
+  bool _pos;
   bool initQueryNotEmpty = false;
-//  ValueNotifier<String> searching = ValueNotifier("");
+  ValueNotifier<String> searching = ValueNotifier("");
   String search = "";
   bool init = true;
   String wallpaper;
 
   SortType curSortType = SortType.date;
 
-  TransactionsScreenBloc screenBloc = TransactionsScreenBloc();
-
   @override
   void initState() {
     super.initState();
-//    isLoading.addListener(listener);
-//    isLoadingSearch.addListener(listener);
-//    searching.addListener(listener);
+    isLoading.addListener(listener);
+    isLoadingSearch.addListener(listener);
+    searching.addListener(listener);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   listener() {
     setState(() {});
   }
-
-//  fetchTransactions({String search, bool init}) {
-//    TransactionsApi api = TransactionsApi();
-//    api
-//        .getTransactionList(
-//            _currentBusiness.id,
-//            GlobalUtils.activeToken.accessToken,
-//            "?orderBy=created_at&direction=desc&limit=50&query=$search&page=1&currency=${_currentBusiness.currency}",
-//            )
-//        .then((obj) {
-//      data = TransactionScreenData(obj);
-//      if (init) isLoading.value = false;
-//      isLoadingSearch.value = false;
-//    }).catchError((onError) {
-//      if (onError.toString().contains("401")) {
-//        GlobalUtils.clearCredentials();
-//        Navigator.pushReplacement(
-//            context,
-//            PageTransition(
-//                child: LoginScreen(), type: PageTransitionType.fade));
-//      }
-//      print(onError.toString());
-//    });
-//  }
 
   num _quantity;
 
@@ -109,19 +86,40 @@ class _TransactionScreenState extends State<TransactionScreen> {
   var f = NumberFormat("###,###,##0.00", "en_US");
   bool noTransactions = false;
 
-//  bool isLoading = false;
-
   TransactionStateModel transactionsStateModel;
+
+  fetchTransactions({String search, bool init}) {
+    TransactionsApi api = TransactionsApi();
+    api
+        .getTransactionList(
+      _currentBusiness.id,
+      GlobalUtils.activeToken.accessToken,
+      "?orderBy=created_at&direction=desc&limit=50&query=$search&page=1&currency=${_currentBusiness.currency}",
+    )
+        .then((obj) {
+      data = TransactionScreenData(obj);
+      if (init) isLoading.value = false;
+      isLoadingSearch.value = false;
+    }).catchError((onError) {
+      if (onError.toString().contains("401")) {
+        GlobalUtils.clearCredentials();
+        Navigator.pushReplacement(
+            context,
+            PageTransition(
+                child: LoginScreen(), type: PageTransitionType.fade));
+      }
+      print(onError.toString());
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context);
     transactionsStateModel = Provider.of<TransactionStateModel>(context);
-//    _currentBusiness = globalStateModel.currentBusiness;
+    _currentBusiness = globalStateModel.currentBusiness;
     wallpaper = globalStateModel.currentWallpaper;
-    screenBloc.add(TransactionsScreenInitEvent(globalStateModel.currentBusiness));
 
-//    fetchTransactions(init: init, search: transactionsStateModel.searchField);
+    fetchTransactions(init: init, search: transactionsStateModel.searchField);
     init = false;
     _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
     Measurements.height = (_isPortrait
@@ -131,279 +129,229 @@ class _TransactionScreenState extends State<TransactionScreen> {
         ? MediaQuery.of(context).size.width
         : MediaQuery.of(context).size.height);
     _isTablet = Measurements.width < 600 ? false : true;
-//    return BackgroundBase(true,
-//        appBar: AppBar(
-//          elevation: 0,
-//          title: !noTransactions
-//              ? AutoSizeText(
-//                  Language.getTransactionStrings("total_orders.heading")
-//                      .toString()
-//                      .replaceFirst("{{total_count}}", "${_quantity ?? 0}")
-//                      .replaceFirst("{{total_sum}}",
-//                          "${_currency ?? "€"}${f.format(_totalAmount ?? 0)}"),
-//                  overflow: TextOverflow.fade,
-//                  maxLines: 1,
-//                  style: TextStyle(fontSize: AppStyle.fontSizeAppBar()),
-//                )
-//              : Container(),
-//          centerTitle: true,
-//          backgroundColor: Colors.transparent,
-//          leading: InkWell(
-//            radius: 20,
-//            child: Icon(IconData(58829, fontFamily: 'MaterialIcons')),
-//            onTap: () {
-//              Navigator.pop(context);
-//            },
-//          ),
-//        ),
-//        body: Column(
-//          children: <Widget>[
-//            isLoading.value
-//                ? Container()
-//                : Container(
-//                    padding: EdgeInsets.only(
-//                        bottom: Measurements.height * 0.02,
-//                        left: Measurements.width * (_isTablet ? 0.01 : 0.05),
-//                        right: Measurements.width * (_isTablet ? 0.01 : 0.05)),
-//                    child: Container(
-//                      decoration: BoxDecoration(
-//                        color: Colors.black.withOpacity(0.2),
-//                        borderRadius: BorderRadius.circular(12),
-//                      ),
-//                      padding: EdgeInsets.only(
-//                          left:
-//                              Measurements.width * (_isTablet ? 0.01 : 0.025)),
-//                      child: TextFormField(
-//                        decoration: InputDecoration(
-//                            hintText: "Search",
-//                            border: InputBorder.none,
-//                            icon: Container(
-//                                child: SvgPicture.asset(
-//                              "assets/images/searchicon.svg",
-//                              height: Measurements.height * 0.0175,
-//                              color: Colors.white,
-//                            ))),
-//                        onFieldSubmitted: (search) {
-//                          transactionsStateModel.setSearchField(search);
-//                          isLoadingSearch.value = true;
-//                          data.transaction.collection.clear();
-//                          fetchTransactions(init: false, search: search);
-//                        },
-//                      ),
-//                    ),
-//                  ),
-//            isLoadingSearch.value || isLoading.value
-//                ? Expanded(
-//                    child: Center(
-//                    child: CircularProgressIndicator(),
-//                  ))
-//                : Expanded(
-//                    child: CustomList(_currentBusiness, search,
-//                        data.transaction.collection, data)),
-//          ],
-//        ));
-    return BlocBuilder<TransactionsScreenBloc, TransactionsScreenState> (
-      bloc: screenBloc,
-      builder: (BuildContext context, TransactionsScreenState state) {
 
-        if (state.data != null) {
-          _quantity = state.isSearchLoading
-              ? 0
-              : state.data.transaction.paginationData.total ?? 0;
-          _currency = state.data.currency(globalStateModel.currentBusiness.currency);
-          _totalAmount = state.isSearchLoading
-              ? 0
-              : state.data.transaction.paginationData.amount ?? 0;
-        } else {
-//          return Scaffold();
-        }
+    if (data != null) {
+      _quantity = isLoadingSearch.value
+          ? 0
+          : data.transaction.paginationData.total ?? 0;
+      _currency = data.currency(globalStateModel.currentBusiness.currency);
+      _totalAmount = isLoadingSearch.value
+          ? 0
+          : data.transaction.paginationData.amount ?? 0;
+    }
 
-        return Scaffold(
-          resizeToAvoidBottomPadding: false,
-          body: SafeArea(
-            top: true,
-            child: Stack(
-              alignment: AlignmentDirectional.bottomStart,
+    return Scaffold(
+      backgroundColor: Colors.black,
+      resizeToAvoidBottomPadding: false,
+      body: SafeArea(
+        top: true,
+        child: Stack(
+          alignment: AlignmentDirectional.bottomStart,
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: NetworkImage(
+                          "https://payever.azureedge.net/images/commerceos-background.jpg"),
+                      fit: BoxFit.cover)),
+              child: BlurEffectView(
+                radius: 0,
+              ),
+            ),
+            Column(
               children: [
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: NetworkImage(
-                              "https://payever.azureedge.net/images/commerceos-background.jpg"),
-                          fit: BoxFit.cover)),
-                  child: BlurEffectView(
-                    radius: 0,
-                  ),
+                TopBarView(
+                  iconUrl: 'assets/images/transactions.svg',
+                  title: 'Transactions',
+                  onTapClose: () {
+                    Navigator.of(context).pop();
+                  },
                 ),
-                Column(
-                  children: [
-                    TopBarView(
-                      title: 'Transactions',
-                      onTapClose: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                    Container(
-                      height: 50,
-                      color: Colors.black38,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                Container(
+                  height: 50,
+                  color: Colors.black38,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
                         children: [
-                          Row(
-                            children: [
-                              SizedBox(
-                                width: 8,
-                              ),
-                              InkWell(
-                                onTap: () {},
-                                child: Icon(
-                                  Icons.search,
-                                  size: 20,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 16,
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  showCupertinoModalPopup(
-                                      context: context,
-                                      builder: (builder) {
-                                        return FilterContentView(
-                                          onSelected: (val) {
-                                            Navigator.pop(context);
-                                          },
-                                        );
-                                      });
-                                },
-                                child: Container(
-                                  width: 30,
-                                  height: 30,
-                                  alignment: Alignment.center,
-                                  child: Icon(
-                                    Icons.filter_list,
-                                    size: 20,
-                                  ),
-                                ),
-                              ),
-                            ],
+                          SizedBox(
+                            width: 12,
                           ),
-                          Row(
-                            children: [
-                              InkWell(
-                                onTap: () {
-                                  showCupertinoModalPopup(
-                                      context: context,
-                                      builder: (builder) {
-                                        return SortContentView(
-                                          selectedIndex: curSortType ,
-                                          onSelected: (val) {
-                                            Navigator.pop(context);
-                                            setState(() {
-                                              curSortType = val;
-                                            });
-                                          },
-                                        );
-                                      });
-                                },
-                                child: Icon(
-                                  Icons.sort,
-                                  size: 20,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 6,
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                    Container(
-                      height: 35,
-                      color: Colors.black45,
-                      child: Row(
-                        children: [
+                          InkWell(
+                            onTap: () {},
+                            child: Icon(
+                              Icons.search,
+                              size: 24,
+                            ),
+                          ),
                           SizedBox(
                             width: 16,
                           ),
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              "Channel",
-                              style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.white70,
-                                  fontWeight: FontWeight.bold),
+                          InkWell(
+                            onTap: () {
+                              showCupertinoModalPopup(
+                                  context: context,
+                                  builder: (builder) {
+                                    return FilterContentView(
+                                      onSelected: (val) {
+                                        Navigator.pop(context);
+                                      },
+                                    );
+                                  });
+                            },
+                            child: Container(
+                              width: 30,
+                              height: 30,
+                              alignment: Alignment.center,
+                              child: Icon(
+                                Icons.filter_list,
+                                size: 24,
+                              ),
                             ),
                           ),
-                          Expanded(
-                            flex: 1,
+                          FlatButton(
+                            onPressed: () {
+                              showGeneralDialog(
+                                barrierLabel: 'Export',
+                                barrierDismissible: true,
+                                barrierColor: Colors.black.withOpacity(0.5),
+                                transitionDuration: Duration(milliseconds: 350),
+                                context: context,
+                                pageBuilder: (context, anim1, anim2) {
+                                  return Align(
+                                    alignment: Alignment.bottomCenter,
+                                    child: ExportContentView(
+                                      onSelectType: (index) {},
+                                    ),
+                                  );
+                                }
+                              );
+                            },
                             child: Text(
-                              "Type",
+                              'Export',
                               style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.white70,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          Expanded(
-                            flex: 2,
-                            child: Text(
-                              "Customer name",
-                              style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.white70,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          Expanded(
-                            flex: 2,
-                            child: Text(
-                              "Total",
-                              style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.white70,
-                                  fontWeight: FontWeight.bold),
+                                color: Colors.white,
+                                fontSize: 16,
+                              ),
                             ),
                           ),
                         ],
                       ),
-                    ),
-                    Expanded(
-                      child: state.isLoading || state.isSearchLoading ?
-                      Center(
-                        child: CircularProgressIndicator(),
-                      ): CustomList(state.currentBusiness, search,
-                          state.data.transaction.collection, state.data),
-                    ),
-                    Container(
-                      height: 50,
-                      color: Colors.black87,
-                      alignment: Alignment.center,
-                      child: !noTransactions ? AutoSizeText(
-                        Language.getTransactionStrings("total_orders.heading")
-                            .toString()
-                            .replaceFirst("{{total_count}}", "${_quantity ?? 0}")
-                            .replaceFirst("{{total_sum}}",
-                            "${_currency ?? "€"}${f.format(_totalAmount ?? 0)}"),
-                        overflow: TextOverflow.fade,
-                        maxLines: 1,
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white70,
+                      Row(
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              showCupertinoModalPopup(
+                                  context: context,
+                                  builder: (builder) {
+                                    return SortContentView(
+                                      selectedIndex: curSortType ,
+                                      onSelected: (val) {
+                                        Navigator.pop(context);
+                                        setState(() {
+                                          curSortType = val;
+                                        });
+                                      },
+                                    );
+                                  });
+                            },
+                            child: Icon(
+                              Icons.sort,
+                              size: 24,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 24,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  height: 35,
+                  color: Colors.black45,
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 16,
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          "Channel",
+                          style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.white70,
+                              fontWeight: FontWeight.bold),
                         ),
-                      )
-                          : Container(),
-                    )
-                  ],
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          "Type",
+                          style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.white70,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          "Customer name",
+                          style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.white70,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          "Total",
+                          style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.white70,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: isLoading.value || isLoadingSearch.value ?
+                  Center(
+                    child: CircularProgressIndicator(),
+                  ): CustomList(_currentBusiness, search,
+                      data != null ? data.transaction.collection : [], data),
+                ),
+                Container(
+                  height: 50,
+                  color: Colors.black87,
+                  alignment: Alignment.center,
+                  child: !noTransactions ? AutoSizeText(
+                    Language.getTransactionStrings("total_orders.heading")
+                        .toString()
+                        .replaceFirst("{{total_count}}", "${_quantity ?? 0}")
+                        .replaceFirst("{{total_sum}}",
+                        "${_currency ?? "€"}${f.format(_totalAmount ?? 0)}"),
+                    overflow: TextOverflow.fade,
+                    maxLines: 1,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white70,
+                    ),
+                  )
+                      : Container(),
                 )
               ],
-            ),
-          ),
-        );
-      },
+            )
+          ],
+        ),
+      ),
     );
   }
 }
@@ -466,13 +414,13 @@ class _CustomListState extends State<CustomList> {
       key: GlobalKeys.transactionList,
 //      shrinkWrap: true,
       controller: controller,
-      itemCount: widget.collection.length + 1,
+      itemCount: widget.collection.length,
       itemBuilder: (BuildContext context, int index) {
-        if (index == 0)
-          return _isTablet
-              ? TabletTableRow(null, true, null)
-              : PhoneTableRow(null, true, null);
-        index = index - 1;
+//        if (index == 0)
+//          return _isTablet
+//              ? TabletTableRow(null, true, null)
+//              : PhoneTableRow(null, true, null);
+//        index = index - 1;
         Key itemKey = Key('transaction.list.transaction_$index');
 
         return Container(
