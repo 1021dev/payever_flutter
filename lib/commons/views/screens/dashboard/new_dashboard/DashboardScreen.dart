@@ -18,6 +18,7 @@ import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/D
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/transactions/TransactionsScreen.dart';
 import 'package:payever/commons/views/screens/login/login_page.dart';
 import 'package:payever/commons/views/screens/switcher/switcher_page.dart';
+import 'package:payever/transactions/transactions.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -243,7 +244,7 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget> {
                               Navigator.push(
                                   context,
                                   PageTransition(
-                                      child: TransactionsScreen(),
+                                      child: TransactionScreenInit(),
                                       type: PageTransitionType.fade));
                             },
                           ),

@@ -1,10 +1,17 @@
 import 'dart:ui';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:intl/intl.dart';
+import 'package:payever/commons/views/custom_elements/Dashboard/TransactionListCell.dart';
+import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/BlurEffectView.dart';
+import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/TopBarView.dart';
+import 'package:payever/commons/views/screens/dashboard/new_dashboard/transactions/FilterContentView.dart';
+import 'package:payever/commons/views/screens/dashboard/new_dashboard/transactions/SortContentView.dart';
+import 'package:payever/commons/views/screens/dashboard/new_dashboard/transactions/model/Enums.dart';
 import 'package:provider/provider.dart';
 
 import '../utils/utils.dart';
@@ -52,6 +59,8 @@ class _TransactionScreenState extends State<TransactionScreen> {
   String search = "";
   bool init = true;
   String wallpaper;
+
+  SortType curSortType = SortType.date;
 
   @override
   void initState() {
@@ -126,141 +135,262 @@ class _TransactionScreenState extends State<TransactionScreen> {
           ? 0
           : data.transaction.paginationData.amount ?? 0;
     }
-    return BackgroundBase(true,
-        appBar: AppBar(
-          elevation: 0,
-          title: !noTransactions
-              ? AutoSizeText(
-                  Language.getTransactionStrings("total_orders.heading")
-                      .toString()
-                      .replaceFirst("{{total_count}}", "${_quantity ?? 0}")
-                      .replaceFirst("{{total_sum}}",
-                          "${_currency ?? "€"}${f.format(_totalAmount ?? 0)}"),
-                  overflow: TextOverflow.fade,
-                  maxLines: 1,
-                  style: TextStyle(fontSize: AppStyle.fontSizeAppBar()),
-                )
-              : Container(),
-          centerTitle: true,
-          backgroundColor: Colors.transparent,
-          leading: InkWell(
-            radius: 20,
-            child: Icon(IconData(58829, fontFamily: 'MaterialIcons')),
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ),
-        ),
-        body: Column(
-          children: <Widget>[
-            isLoading.value
-                ? Container()
-                : Container(
-                    padding: EdgeInsets.only(
-                        bottom: Measurements.height * 0.02,
-                        left: Measurements.width * (_isTablet ? 0.01 : 0.05),
-                        right: Measurements.width * (_isTablet ? 0.01 : 0.05)),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(12),
+//    return BackgroundBase(true,
+//        appBar: AppBar(
+//          elevation: 0,
+//          title: !noTransactions
+//              ? AutoSizeText(
+//                  Language.getTransactionStrings("total_orders.heading")
+//                      .toString()
+//                      .replaceFirst("{{total_count}}", "${_quantity ?? 0}")
+//                      .replaceFirst("{{total_sum}}",
+//                          "${_currency ?? "€"}${f.format(_totalAmount ?? 0)}"),
+//                  overflow: TextOverflow.fade,
+//                  maxLines: 1,
+//                  style: TextStyle(fontSize: AppStyle.fontSizeAppBar()),
+//                )
+//              : Container(),
+//          centerTitle: true,
+//          backgroundColor: Colors.transparent,
+//          leading: InkWell(
+//            radius: 20,
+//            child: Icon(IconData(58829, fontFamily: 'MaterialIcons')),
+//            onTap: () {
+//              Navigator.pop(context);
+//            },
+//          ),
+//        ),
+//        body: Column(
+//          children: <Widget>[
+//            isLoading.value
+//                ? Container()
+//                : Container(
+//                    padding: EdgeInsets.only(
+//                        bottom: Measurements.height * 0.02,
+//                        left: Measurements.width * (_isTablet ? 0.01 : 0.05),
+//                        right: Measurements.width * (_isTablet ? 0.01 : 0.05)),
+//                    child: Container(
+//                      decoration: BoxDecoration(
+//                        color: Colors.black.withOpacity(0.2),
+//                        borderRadius: BorderRadius.circular(12),
+//                      ),
+//                      padding: EdgeInsets.only(
+//                          left:
+//                              Measurements.width * (_isTablet ? 0.01 : 0.025)),
+//                      child: TextFormField(
+//                        decoration: InputDecoration(
+//                            hintText: "Search",
+//                            border: InputBorder.none,
+//                            icon: Container(
+//                                child: SvgPicture.asset(
+//                              "assets/images/searchicon.svg",
+//                              height: Measurements.height * 0.0175,
+//                              color: Colors.white,
+//                            ))),
+//                        onFieldSubmitted: (search) {
+//                          transactionsStateModel.setSearchField(search);
+//                          isLoadingSearch.value = true;
+//                          data.transaction.collection.clear();
+//                          fetchTransactions(init: false, search: search);
+//                        },
+//                      ),
+//                    ),
+//                  ),
+//            isLoadingSearch.value || isLoading.value
+//                ? Expanded(
+//                    child: Center(
+//                    child: CircularProgressIndicator(),
+//                  ))
+//                : Expanded(
+//                    child: CustomList(_currentBusiness, search,
+//                        data.transaction.collection, data)),
+//          ],
+//        ));
+    return Scaffold(
+      resizeToAvoidBottomPadding: false,
+      body: SafeArea(
+        top: true,
+        child: Stack(
+          alignment: AlignmentDirectional.bottomStart,
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: NetworkImage(
+                          "https://payever.azureedge.net/images/commerceos-background.jpg"),
+                      fit: BoxFit.cover)),
+              child: BlurEffectView(
+                radius: 0,
+              ),
+            ),
+            Column(
+              children: [
+                TopBarView(
+                  title: 'Transactions',
+                  onTapClose: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                Container(
+                  height: 50,
+                  color: Colors.black38,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: 8,
+                          ),
+                          InkWell(
+                            onTap: () {},
+                            child: Icon(
+                              Icons.search,
+                              size: 20,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 16,
+                          ),
+                          InkWell(
+                            onTap: () {
+                              showCupertinoModalPopup(
+                                  context: context,
+                                  builder: (builder) {
+                                    return FilterContentView(
+                                      onSelected: (val) {
+                                        Navigator.pop(context);
+                                      },
+                                    );
+                                  });
+                            },
+                            child: Container(
+                              width: 30,
+                              height: 30,
+                              alignment: Alignment.center,
+                              child: Icon(
+                                Icons.filter_list,
+                                size: 20,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      padding: EdgeInsets.only(
-                          left:
-                              Measurements.width * (_isTablet ? 0.01 : 0.025)),
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                            hintText: "Search",
-                            border: InputBorder.none,
-                            icon: Container(
-                                child: SvgPicture.asset(
-                              "assets/images/searchicon.svg",
-                              height: Measurements.height * 0.0175,
-                              color: Colors.white,
-                            ))),
-                        onFieldSubmitted: (search) {
-                          transactionsStateModel.setSearchField(search);
-                          isLoadingSearch.value = true;
-                          data.transaction.collection.clear();
-                          fetchTransactions(init: false, search: search);
-                        },
-                      ),
-                    ),
+                      Row(
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              showCupertinoModalPopup(
+                                  context: context,
+                                  builder: (builder) {
+                                    return SortContentView(
+                                      selectedIndex: curSortType ,
+                                      onSelected: (val) {
+                                        Navigator.pop(context);
+                                        setState(() {
+                                          curSortType = val;
+                                        });
+                                      },
+                                    );
+                                  });
+                            },
+                            child: Icon(
+                              Icons.sort,
+                              size: 20,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 6,
+                          ),
+                        ],
+                      )
+                    ],
                   ),
-            isLoadingSearch.value || isLoading.value
-                ? Expanded(
-                    child: Center(
+                ),
+                Container(
+                  height: 35,
+                  color: Colors.black45,
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 16,
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          "Channel",
+                          style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.white70,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          "Type",
+                          style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.white70,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          "Customer name",
+                          style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.white70,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          "Total",
+                          style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.white70,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: isLoadingSearch.value || isLoading.value ?
+                  Center(
                     child: CircularProgressIndicator(),
-                  ))
-                : Expanded(
-                    child: CustomList(_currentBusiness, search,
-                        data.transaction.collection, data)),
+                  ): CustomList(_currentBusiness, search,
+                        data.transaction.collection, data),
+                ),
+                Container(
+                  height: 50,
+                  color: Colors.black87,
+                  alignment: Alignment.center,
+                  child: !noTransactions ? AutoSizeText(
+                      Language.getTransactionStrings("total_orders.heading")
+                          .toString()
+                          .replaceFirst("{{total_count}}", "${_quantity ?? 0}")
+                          .replaceFirst("{{total_sum}}",
+                              "${_currency ?? "€"}${f.format(_totalAmount ?? 0)}"),
+                      overflow: TextOverflow.fade,
+                      maxLines: 1,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white70,
+                      ),
+                    )
+                  : Container(),
+                )
+              ],
+            )
           ],
-        ));
-    // return Stack(
-    //   children: <Widget>[
-    //     Positioned(
-    //       height: MediaQuery.of(context).size.height,
-    //       width: MediaQuery.of(context).size.width,
-    //       top: 0.0,
-    //       child: CachedNetworkImage(
-    //         imageUrl: widget.wallpaper,
-    //         placeholder: (context, url) =>  Container(),
-    //         errorWidget: (context, url, error) => Icon(Icons.error),
-    //         fit: BoxFit.cover,
-    //       )
-    //     ),
-    //     BackdropFilter(
-    //       filter: ImageFilter.blur(sigmaX: 25,sigmaY: 25),
-    //       child: Container(
-    //         child: Scaffold(
-    //           backgroundColor: Colors.black.withOpacity(0.2),
-    //           appBar: AppBar(
-    //             elevation: 0,
-    //             title: !noTransactions ?AutoSizeText(Language.getTransactionStrings("total_orders.heading").toString().replaceFirst("{{total_count}}", "${_quantity??0}").replaceFirst("{{total_sum}}", "${_currency??"€"}${f.format(_totalAmount??0)}"),overflow: TextOverflow.fade,maxLines: 1,):Container(),
-    //             centerTitle: true,
-    //             backgroundColor: Colors.transparent,
-    //             leading:
-    //             InkWell(radius: 20,child: Icon(IconData(58829, fontFamily: 'MaterialIcons')),
-    //             onTap: (){
-    //               Navigator.pop(context);
-    //               },
-    //             ),
-    //           ),
-    //           body:
-    //             Column(
-    //               children: <Widget>[
-    //                 widget.isLoading.value?Container(): Container(
-    //                       padding: EdgeInsets.only(bottom: Measurements.height * 0.02,left: Measurements.width* (_isTablet?0.01:0.05),right: Measurements.width* (_isTablet?0.01:0.05)),
-    //                       child: Container(
-    //                         decoration: BoxDecoration(
-    //                           color: Colors.black.withOpacity(0.2),
-    //                           borderRadius: BorderRadius.circular(12),
-    //                           ),
-    //                         padding:EdgeInsets.only(left: Measurements.width* (_isTablet?0.01:0.025)),
-    //                         child: TextFormField(
-    //                           decoration: InputDecoration(
-    //                             hintText: "Search",
-    //                             border: InputBorder.none,
-    //                             icon: Container(child:SvgPicture.asset("assets/images/searchIcon.svg",height: Measurements.height * 0.0175,color:Colors.white,))
-    //                           ),
-    //                           onFieldSubmitted: (search){
-    //                             widget.search = search;
-    //                             widget.isLoadingSearch.value = true;
-    //                             widget.data.transaction.collection.clear();
-    //                             fetchTransactions(init: false,search: search);
-    //                           },
-    //                         ),
-    //                       ),
-    //                     ),
-    //                 widget.isLoadingSearch.value||widget.isLoading.value? Expanded(child:Center(child:CircularProgressIndicator(),)) : Expanded(child:CustomList(widget._currentBusiness,widget.search,widget.data.transaction.collection,widget.data)),
-    //               ],
-    //             )
-    //         ),
-    //       )
-    //     )
-    //   ],
-    // );
+        ),
+      ),
+    );
   }
 }
 
@@ -321,7 +451,7 @@ class _CustomListState extends State<CustomList> {
   Widget build(BuildContext context) {
     return ListView.builder(
       key: GlobalKeys.transactionList,
-      shrinkWrap: true,
+//      shrinkWrap: true,
       controller: controller,
       itemCount: widget.collection.length + 1,
       itemBuilder: (BuildContext context, int index) {
