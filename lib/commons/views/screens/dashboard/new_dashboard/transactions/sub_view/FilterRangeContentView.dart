@@ -1,20 +1,28 @@
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/material.dart';
+import 'package:payever/commons/views/screens/dashboard/new_dashboard/transactions/FilterContentView.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/transactions/model/Enums.dart';
 
 class FilterRangeContentView extends StatefulWidget {
-  final InputEventCallback<FilterType> onSelected;
-  FilterRangeContentView({this.onSelected});
+  final FilterType type;
+  final InputEventCallback<FilterItem> onSelected;
+  FilterRangeContentView({this.type, this.onSelected});
 
   @override
   _FilterRangeContentViewState createState() => _FilterRangeContentViewState();
 }
 
 class _FilterRangeContentViewState extends State<FilterRangeContentView> {
-  String filterRangeItem = "Is";
 
+  String filterConditionName = '';
+  int _selectedConditionIndex = 0;
+  TextEditingController filterValueController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    List<FilterCondition> conditions = filterConditionsByFilterType(widget.type);
+    if (filterConditionName == '') {
+      filterConditionName = getFilterConditionNameByCondition(conditions[0]);
+    }
     return Container(
         height: 173,
         child: Container(
@@ -32,16 +40,25 @@ class _FilterRangeContentViewState extends State<FilterRangeContentView> {
                       height: 60,
                       child: DropdownButton<String>(
                         underline: Container(),
-                        value: filterRangeItem,
-                        items: <String>['Is', 'Is not', 'Starts with', 'Ends with'].map((String value) {
+                        value: filterConditionName,
+                        items: conditions.map((FilterCondition value) {
                           return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value, style: TextStyle(color: Colors.white70)),
+                            value: getFilterConditionNameByCondition(value),
+                            child: Text(
+                              getFilterConditionNameByCondition(value),
+                              style: TextStyle(color: Colors.white70),
+                            ),
                           );
                         }).toList(),
                         onChanged: (value) {
                           setState(() {
-                            filterRangeItem = value;
+                            filterConditionName = value;
+                            for (int i = 0; i < conditions.length; i++) {
+                              String cName = getFilterConditionNameByCondition(conditions[i]);
+                              if (cName == value) {
+                                _selectedConditionIndex = i;
+                              }
+                            }
                           });
                         },
                       ),
@@ -54,9 +71,10 @@ class _FilterRangeContentViewState extends State<FilterRangeContentView> {
                       height: 60,
                       padding: EdgeInsets.fromLTRB(20, 0, 10, 0),
                       child:  TextField(
+                        controller: filterValueController,
                         decoration: InputDecoration(
                             border: InputBorder.none,
-                            hintText: "Range"
+                            hintText: hintTextByFilter(widget.type),
                         ),
                         style: TextStyle(
                             fontSize: 14,
@@ -71,7 +89,15 @@ class _FilterRangeContentViewState extends State<FilterRangeContentView> {
                 alignment: Alignment.bottomRight,
                 child: InkWell(
                   onTap: () {
-                    widget.onSelected(FilterType.id);
+                    if (filterValueController.text.length == 0) {
+                      widget.onSelected(null);
+                    } else {
+                      widget.onSelected( FilterItem(
+                        type: widget.type,
+                        condition: conditions[_selectedConditionIndex],
+                        value: filterValueController.text,
+                      ));
+                    }
                   },
                   child: Container(
                     width: 60,

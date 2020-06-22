@@ -35,6 +35,11 @@ _getAllItem(){
     lst.where((a) => a.active==true).forEach( ( a) => print(a.title));
 }
 
+class TagItemModel {
+  String title;
+  FilterType type;
+}
+
 class TransactionScreenInit extends StatelessWidget {
   final TransactionStateModel dashboardStateModel = TransactionStateModel();
 
@@ -70,6 +75,8 @@ class _TransactionScreenState extends State<TransactionScreen> {
   String wallpaper;
 
   SortType curSortType = SortType.date;
+
+  List<FilterType> filterTypes = [];
 
   @override
   void initState() {
@@ -152,6 +159,13 @@ class _TransactionScreenState extends State<TransactionScreen> {
           ? 0
           : data.transaction.paginationData.amount ?? 0;
     }
+
+    if (filterTypes.length > 0) {
+      for (int i = 0; i < filterTypes.length; i++) {
+        String filterString = ' start with: ${filterTypes[i]}';
+      }
+    }
+
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -288,14 +302,16 @@ class _TransactionScreenState extends State<TransactionScreen> {
                 _filterItems.length > 0 ?
                   Container(
                     width: Device.width,
+                    padding: EdgeInsets.only(
+                      left: 16, right: 16,
+                    ),
                     child: Tags(
                       key: _tagStateKey,
                       itemCount: _filterItems.length,
                       alignment: WrapAlignment.start,
-                      horizontalScroll: true,
                       itemBuilder: (int index) {
                         return ItemTags(
-                          key: Key('filterItme$index'),
+                          key: Key('filterItem$index'),
                           index: index,
                           title: _filterItems[index],
                           color: Colors.white12,
@@ -429,7 +445,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                     search = value;
                     if (searching.value.length > 0) {
                       if (_searchTagIndex > -1) {
-                        _filterItems.replaceRange(_searchTagIndex, _searchTagIndex, ['Search is: ${searching.value}']);
+                        _filterItems[_searchTagIndex] = 'Search is: ${searching.value}';
                       } else {
                         _filterItems.add('Search is: ${searching.value}');
                         _searchTagIndex = _filterItems.length;

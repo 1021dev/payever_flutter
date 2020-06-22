@@ -67,7 +67,8 @@ class _SearchTextContentViewState extends State<SearchTextContentView> {
                     width: 60,
                     height: 36,
                     alignment: Alignment.bottomCenter,
-                    child: Text('Add'),
+                    child: Text(
+                        widget.searchText.length > 0 ? 'Update': 'Add'),
                   ),
                 ),
               ),

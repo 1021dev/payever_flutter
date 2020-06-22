@@ -6,7 +6,7 @@ import 'package:payever/commons/views/screens/dashboard/new_dashboard/transactio
 import 'model/Enums.dart';
 
 class FilterContentView extends StatefulWidget {
-  final InputEventCallback<FilterType> onSelected;
+  final InputEventCallback<FilterItem> onSelected;
   FilterContentView({this.onSelected});
   @override
   _FilterContentViewState createState() => _FilterContentViewState();
@@ -28,6 +28,7 @@ class _FilterContentViewState extends State<FilterContentView> {
               borderRadius: BorderRadius.all(Radius.circular(10)),
             ),
             content: FilterRangeContentView(
+              type: filterType,
               onSelected: (value) {
                 Navigator.pop(context);
                 widget.onSelected(value);
@@ -190,97 +191,16 @@ class _FilterContentViewState extends State<FilterContentView> {
               )),
         ));
   }
+}
 
-  String getFilterNameByType(FilterType type) {
-    String typeString = "Id";
-    switch (type) {
-      case FilterType.id:
-        {
-          typeString = "Id";
-        }
-        break;
-      case FilterType.reference:
-        {
-          typeString = "Reference";
-        }
-        break;
-      case FilterType.date:
-        {
-          typeString = "Date";
-        }
-        break;
-      case FilterType.payment_type:
-        {
-          typeString = "Payment Type";
-        }
-        break;
-      case FilterType.status:
-        {
-          typeString = "Status";
-        }
-        break;
-      case FilterType.specific_status:
-        {
-          typeString = "Specific Status";
-        }
-        break;
-      case FilterType.channel:
-        {
-          typeString = "Channel";
-        }
-        break;
-      case FilterType.amount:
-        {
-          typeString = "Amount";
-        }
-        break;
-      case FilterType.total:
-        {
-          typeString = "Total";
-        }
-        break;
-      case FilterType.currency:
-        {
-          typeString = "Currency";
-        }
-        break;
-      case FilterType.customer_name:
-        {
-          typeString = "Customer name";
-        }
-        break;
-      case FilterType.customer_email:
-        {
-          typeString = "Customer email";
-        }
-        break;
-      case FilterType.merchant_name:
-        {
-          typeString = "Merchant name";
-        }
-        break;
-      case FilterType.merchant_email:
-        {
-          typeString = "Merchant email";
-        }
-        break;
-      case FilterType.seller_name:
-        {
-          typeString = "Seller name";
-        }
-        break;
-      case FilterType.seller_email:
-        {
-          typeString = "Seller email";
-        }
-        break;
-      default:
-        {
-          typeString = "Id";
-        }
-        break;
-    }
-    return typeString;
-  }
+class FilterItem {
+  final FilterType type;
+  final FilterCondition condition;
+  final String value;
 
+  FilterItem({
+    this.type,
+    this.condition,
+    this.value,
+  });
 }
