@@ -12,35 +12,38 @@ class TransactionsScreenBloc extends Bloc<TransactionsScreenEvent, TransactionsS
 
   @override
   Stream<TransactionsScreenState> mapEventToState(TransactionsScreenEvent event) async* {
-    if (event is TransactionScreenInitEvent) {
-      yield* _init();
+    if (event is TransactionsScreenInitEvent) {
+      yield state.copyWith(currentBusiness: event.currentBusiness);
+
+      yield* fetchTransactions('', 'created_at', true, false);
+    } else if (event is FetchTransactionsEvent) {
+      yield* fetchTransactions(event.searchText, 'created_at', false, true);
     }
   }
 
   Stream<TransactionsScreenState> _init() async* {
-
+    fetchTransactions('', 'created_at', true, false);
   }
 
-  Stream<TransactionsScreenState> fetchTransactions({String search, bool init}) {
+  Stream<TransactionsScreenState> fetchTransactions(String search, String sortBy, bool init, bool isSearching) async* {
+    yield state.copyWith(isLoading: init, isSearchLoading: isSearching);
     TransactionsApi api = TransactionsApi();
-    api.getTransactionList(
-        state.currentBusiness.id,
-        GlobalUtils.activeToken.accessToken,
-        "?orderBy=created_at&direction=desc&limit=50&query=$search&page=1&currency=${state.currentBusiness.currency}",)
-        .then((obj) {
+    try {
+      var obj = await api.getTransactionList(
+          state.currentBusiness.id,
+          GlobalUtils.activeToken.accessToken,
+          '?orderBy=$sortBy&direction=desc&limit=50&query=$search&page=1&currency=${state.currentBusiness.currency}'
+      );
       TransactionScreenData data = TransactionScreenData(obj);
-//      if (init) isLoading.value = false;
-//      isLoadingSearch.value = false;
-    }).catchError((onError) {
-//      if (onError.toString().contains("401")) {
-//        GlobalUtils.clearCredentials();
-//        Navigator.pushReplacement(
-//            context,
-//            PageTransition(
-//                child: LoginScreen(), type: PageTransitionType.fade));
-//      }
+      yield state.copyWith(isLoading: false, isSearchLoading: false, data: data);
+    } catch (error){
       print(onError.toString());
-    });
+      if (onError.toString().contains('401')) {
+        GlobalUtils.clearCredentials();
+        yield TransactionsScreenFailure(error: 'logout');
+      }
+      yield state.copyWith(isLoading: false, isSearchLoading: false,);
+    }
   }
 
 }

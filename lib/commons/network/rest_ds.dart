@@ -176,7 +176,7 @@ class RestDataSource {
   }
 
   Future<dynamic> getTransactionList(
-      String id, String token, String query) {
+      String id, String token, String query) async {
     print("TAG - getTransactionList() $token");
     var headers = {
       HttpHeaders.authorizationHeader: "Bearer $token",
