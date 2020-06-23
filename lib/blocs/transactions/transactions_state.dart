@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:payever/commons/commons.dart';
+import 'package:payever/transactions/views/filter_content_view.dart';
 
 class TransactionsScreenState {
   final bool isLoading;
@@ -7,6 +8,9 @@ class TransactionsScreenState {
   final String searchText;
   final TransactionScreenData data;
   final Business currentBusiness;
+  final List<FilterItem> filterTypes;
+  final String curSortType;
+  final int page;
 
   TransactionsScreenState({
     this.isLoading = true,
@@ -14,6 +18,9 @@ class TransactionsScreenState {
     this.searchText = '',
     this.data,
     this.currentBusiness,
+    this.curSortType = 'date',
+    this.filterTypes = const [],
+    this.page = 1,
   });
 
   List<Object> get props => [
@@ -22,6 +29,9 @@ class TransactionsScreenState {
     this.searchText,
     this.data,
     this.currentBusiness,
+    this.curSortType,
+    this.filterTypes,
+    this.page,
   ];
 
   TransactionsScreenState copyWith({
@@ -30,6 +40,9 @@ class TransactionsScreenState {
     String searchText,
     TransactionScreenData data,
     Business currentBusiness,
+    List<FilterItem> filterTypes,
+    String curSortType,
+    int page,
   }) {
     return TransactionsScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -37,6 +50,9 @@ class TransactionsScreenState {
       searchText: searchText ?? this.searchText,
       data: data ?? this.data,
       currentBusiness: currentBusiness ?? this.currentBusiness,
+      filterTypes: filterTypes ?? this.filterTypes,
+      curSortType: curSortType ?? this.curSortType,
+      page: page ?? this.page,
     );
   }
 }

@@ -3,10 +3,12 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_tags/flutter_tags.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:intl/intl.dart';
+import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/BlurEffectView.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/TopBarView.dart';
 import 'package:payever/transactions/models/enums.dart';
@@ -42,125 +44,56 @@ class TagItemModel {
 }
 
 class TransactionScreenInit extends StatelessWidget {
-  final TransactionStateModel transactionStateModel = TransactionStateModel();
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<TransactionStateModel>(
-      create: (BuildContext context) {
-        return transactionStateModel;
-      },
-      child: TransactionScreen(),
-    );
+    GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context);
+    Business _currentBusiness = globalStateModel.currentBusiness;
+    String wallpaper = globalStateModel.currentWallpaper;
+
+    return TransactionScreen(business: _currentBusiness, wallPaper: wallpaper,);
   }
 }
 
 class TransactionScreen extends StatefulWidget {
+
+  Business business;
+  String wallPaper;
+
+  TransactionScreen({
+    this.business,
+    this.wallPaper,
+  });
 
   @override
   createState() => _TransactionScreenState();
 }
 
 class _TransactionScreenState extends State<TransactionScreen> {
-  ValueNotifier<bool> isLoading = ValueNotifier(true);
-  ValueNotifier<bool> isLoadingSearch = ValueNotifier(true);
-  TransactionScreenData data;
-
-  Business _currentBusiness;
-
-  bool _pos;
-  bool initQueryNotEmpty = false;
-  ValueNotifier<String> searching = ValueNotifier('');
-  String search = '';
-  bool init = true;
+  TransactionsScreenBloc screenBloc = TransactionsScreenBloc();
   String wallpaper;
-
-  String curSortType = 'date';
-
-  List<FilterItem> filterTypes = [];
   num _quantity;
   String _currency;
   num _totalAmount;
   var f = NumberFormat('###,###,##0.00', 'en_US');
   bool noTransactions = false;
-  TransactionStateModel transactionsStateModel;
   List<TagItemModel> _filterItems;
   int _searchTagIndex = -1;
 
   @override
   void initState() {
     super.initState();
-    _filterItems = [];
-    isLoading.addListener(listener);
-    isLoadingSearch.addListener(listener);
-    searching.addListener(listener);
+    screenBloc.add(TransactionsScreenInitEvent(widget.business));
   }
 
   @override
   void dispose() {
+    screenBloc.close();
     super.dispose();
-  }
-
-  listener() {
-    setState(() {});
-  }
-
-  fetchTransactions({TransactionStateModel model, bool init, int page}) {
-    TransactionsApi api = TransactionsApi();
-    String queryString = '';
-    String sortQuery = '';
-    if (model.sortType == 'date') {
-      sortQuery = 'orderBy=created_at&direction=desc&';
-    } else if (model.sortType == 'total_high') {
-      sortQuery = 'orderBy=total&direction=desc&';
-    } else if (model.sortType == 'total_low') {
-      sortQuery = 'orderBy=total&direction=asc&';
-    } else if (model.sortType == 'customer_name') {
-      sortQuery = 'orderBy=customer_name&direction=asc&';
-    }
-    queryString = '?${sortQuery}limit=50&query=${model.searchField}&page=$page&currency=${_currentBusiness.currency}';
-    if (model.filterTypes.length > 0) {
-      for (int i = 0; i < model.filterTypes.length; i++) {
-        FilterItem item = model.filterTypes[i];
-        String filterType = item.type;
-        String filterCondition = item.condition;
-        String filterValue = item.value;
-        String filterConditionString = 'filters[$filterType][0][condition]';
-        String filterValueString = 'filters[$filterType][0][value]';
-        String queryTemp = '&$filterConditionString=$filterCondition&$filterValueString=$filterValue';
-        queryString = '$queryString$queryTemp';
-      }
-    }
-
-    api.getTransactionList(
-      _currentBusiness.id,
-      GlobalUtils.activeToken.accessToken,
-      queryString,
-    ).then((obj) {
-      data = TransactionScreenData(obj);
-      if (init) isLoading.value = false;
-      isLoadingSearch.value = false;
-    }).catchError((onError) {
-      if (onError.toString().contains('401')) {
-        GlobalUtils.clearCredentials();
-        Navigator.pushReplacement(
-            context,
-            PageTransition(
-                child: LoginScreen(), type: PageTransitionType.fade));
-      }
-      print(onError.toString());
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context);
-    transactionsStateModel = Provider.of<TransactionStateModel>(context);
-    _currentBusiness = globalStateModel.currentBusiness;
-    wallpaper = globalStateModel.currentWallpaper;
-
-    fetchTransactions(init: init, model: transactionsStateModel, page: 1);
-    init = false;
     _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
     Measurements.height = (_isPortrait
         ? MediaQuery.of(context).size.height
@@ -170,319 +103,333 @@ class _TransactionScreenState extends State<TransactionScreen> {
         : MediaQuery.of(context).size.height);
     _isTablet = Measurements.width < 600 ? false : true;
 
-    if (data != null) {
-      _quantity = isLoadingSearch.value
-          ? 0
-          : data.transaction.paginationData.total ?? 0;
-      _currency = data.currency(globalStateModel.currentBusiness.currency);
-      _totalAmount = isLoadingSearch.value
-          ? 0
-          : data.transaction.paginationData.amount ?? 0;
-    }
+    return BlocListener(
+      bloc: screenBloc,
+      listener: (BuildContext context, TransactionsScreenState state) async {
+      },
+      child: BlocBuilder<TransactionsScreenBloc, TransactionsScreenState>(
+        bloc: screenBloc,
+        builder: (BuildContext context, state) {
+          if (state.data != null) {
+            _quantity = state.data.transaction.paginationData.total ?? 0;
+            _currency = state.data.currency(widget.business.currency);
+            _totalAmount = state.data.transaction.paginationData.amount ?? 0;
+          } else {
+            _quantity = 0;
+            _currency = '';
+            _totalAmount = 0;
+          }
 
-    _filterItems = [];
-    if (filterTypes.length > 0) {
-      for (int i = 0; i < filterTypes.length; i++) {
-        String filterString = '${filter_labels[filterTypes[i].type]} ${filter_conditions[filterTypes[i].condition]}: ${filterTypes[i].disPlayName}';
-        TagItemModel item = TagItemModel(title: filterString, type: filterTypes[i].type);
-        _filterItems.add(item);
-      }
-    }
-    if (search.length > 0) {
-      _filterItems.add(TagItemModel(title: 'Search is: $search', type: null));
-      _searchTagIndex = _filterItems.length - 1;
-    }
-
-    return Scaffold(
-      backgroundColor: Colors.black,
-      resizeToAvoidBottomPadding: false,
-      body: SafeArea(
-        top: true,
-        child: Stack(
-          alignment: AlignmentDirectional.bottomStart,
-          children: [
-            Container(
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: NetworkImage(
-                          'https://payever.azureedge.net/images/commerceos-background.jpg'),
-                      fit: BoxFit.cover)),
-              child: BlurEffectView(
-                radius: 0,
+          _filterItems = [];
+          if (state.filterTypes.length > 0) {
+            for (int i = 0; i < state.filterTypes.length; i++) {
+              String filterString = '${filter_labels[state.filterTypes[i].type]} ${filter_conditions[state.filterTypes[i].condition]}: ${state.filterTypes[i].disPlayName}';
+              TagItemModel item = TagItemModel(title: filterString, type: state.filterTypes[i].type);
+              _filterItems.add(item);
+            }
+          }
+          if (state.searchText.length > 0) {
+            _filterItems.add(TagItemModel(title: 'Search is: ${state.searchText}', type: null));
+            _searchTagIndex = _filterItems.length - 1;
+          }
+          return  Scaffold(
+            backgroundColor: Colors.black,
+            resizeToAvoidBottomPadding: false,
+            body: SafeArea(
+              top: true,
+              child: Stack(
+                alignment: AlignmentDirectional.bottomStart,
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: NetworkImage(
+                                'https://payever.azureedge.net/images/commerceos-background.jpg'),
+                            fit: BoxFit.cover)),
+                    child: BlurEffectView(
+                      radius: 0,
+                    ),
+                  ),
+                  Column(
+                    children: [
+                      TopBarView(
+                        iconUrl: 'assets/images/transactions.svg',
+                        title: 'Transactions',
+                        onTapClose: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      Container(
+                        height: 50,
+                        color: Colors.black38,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                SizedBox(
+                                  width: 12,
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    showSearchTextDialog(state);
+                                  },
+                                  child: Icon(
+                                    Icons.search,
+                                    size: 24,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 16,
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    showCupertinoModalPopup(
+                                        context: context,
+                                        builder: (builder) {
+                                          return FilterContentView(
+                                            onSelected: (FilterItem val) {
+                                              Navigator.pop(context);
+                                                List<FilterItem> filterTypes = [];
+                                                filterTypes.addAll(state.filterTypes);
+                                                if (val != null) {
+                                                  if (filterTypes.length > 0) {
+                                                    int isExist = filterTypes.indexWhere((element) => element.type == val.type);
+                                                    if (isExist > -1) {
+                                                      filterTypes[isExist] = val;
+                                                    } else {
+                                                      filterTypes.add(val);
+                                                    }
+                                                  } else {
+                                                    filterTypes.add(val);
+                                                  }
+                                                } else {
+                                                  if (filterTypes.length > 0) {
+                                                    int isExist = filterTypes.indexWhere((element) => element.type == val.type);
+                                                    if (isExist != null) {
+                                                      filterTypes.removeAt(isExist);
+                                                    }
+                                                  }
+                                                }
+                                                screenBloc.add(
+                                                    UpdateFilterTypes(filterTypes: filterTypes)
+                                                );
+                                            },
+                                          );
+                                        });
+                                  },
+                                  child: Container(
+                                    width: 30,
+                                    height: 30,
+                                    alignment: Alignment.center,
+                                    child: Icon(
+                                      Icons.filter_list,
+                                      size: 24,
+                                    ),
+                                  ),
+                                ),
+                                FlatButton(
+                                  onPressed: () {
+                                    showGeneralDialog(
+                                        barrierLabel: 'Export',
+                                        barrierDismissible: true,
+                                        barrierColor: Colors.black.withOpacity(0.5),
+                                        transitionDuration: Duration(milliseconds: 350),
+                                        context: context,
+                                        pageBuilder: (context, anim1, anim2) {
+                                          return Align(
+                                            alignment: Alignment.bottomCenter,
+                                            child: ExportContentView(
+                                              onSelectType: (index) {},
+                                            ),
+                                          );
+                                        }
+                                    );
+                                  },
+                                  child: Text(
+                                    'Export',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    showCupertinoModalPopup(
+                                        context: context,
+                                        builder: (builder) {
+                                          return SortContentView(
+                                            selectedIndex: state.curSortType ,
+                                            onSelected: (val) {
+                                              Navigator.pop(context);
+                                              screenBloc.add(
+                                                  UpdateSortType(sortType: val)
+                                              );
+                                            },
+                                          );
+                                        });
+                                  },
+                                  child: Icon(
+                                    Icons.sort,
+                                    size: 24,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 24,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      _filterItems.length > 0 ?
+                      Container(
+                        width: Device.width,
+                        padding: EdgeInsets.only(
+                          left: 16, right: 16, top: 8, bottom: 8,
+                        ),
+                        child: Tags(
+                          key: _tagStateKey,
+                          itemCount: _filterItems.length,
+                          alignment: WrapAlignment.start,
+                          spacing: 4,
+                          runSpacing: 8,
+                          itemBuilder: (int index) {
+                            return ItemTags(
+                              key: Key('filterItem$index'),
+                              index: index,
+                              title: _filterItems[index].title,
+                              color: Colors.white12,
+                              activeColor: Colors.white12,
+                              textActiveColor: Colors.white,
+                              textColor: Colors.white,
+                              elevation: 0,
+                              padding: EdgeInsets.only(
+                                left: 16, top: 8, bottom: 8, right: 16,
+                              ),
+                              removeButton: ItemTagsRemoveButton(
+                                  backgroundColor: Colors.transparent,
+                                  onRemoved: () {
+                                    if (index == _searchTagIndex) {
+                                      _searchTagIndex = -1;
+                                      screenBloc.add(
+                                          UpdateSearchText(searchText: '')
+                                      );
+                                    } else {
+                                      List<FilterItem> filterTypes = [];
+                                      filterTypes.addAll(state.filterTypes);
+                                      filterTypes.removeAt(index);
+                                      screenBloc.add(
+                                          UpdateFilterTypes(filterTypes: filterTypes)
+                                      );
+                                    }
+                                    return true;
+                                  }
+                              ),
+                              onPressed: (item) {
+                                showSearchTextDialog(state);
+                              },
+                            );
+                          },
+                        ),
+                      ): Container(height: 0,),
+                      Container(
+                        height: 35,
+                        color: Colors.black45,
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              width: 16,
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: Text(
+                                'Channel',
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.white70,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: Text(
+                                'Type',
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.white70,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 2,
+                              child: Text(
+                                'Customer name',
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.white70,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 2,
+                              child: Text(
+                                'Total',
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.white70,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: state.isLoading ?
+                          Center(
+                            child: CircularProgressIndicator(),
+                          ): CustomList(state.currentBusiness,
+                              state.data != null ? state.data.transaction.collection : [], state.data, state),
+                      ),
+                      Container(
+                        height: 50,
+                        color: Colors.black87,
+                        alignment: Alignment.center,
+                        child: !noTransactions ? AutoSizeText(
+                          Language.getTransactionStrings('total_orders.heading')
+                              .toString()
+                              .replaceFirst('{{total_count}}', '${_quantity ?? 0}')
+                              .replaceFirst('{{total_sum}}',
+                              '${_currency ?? '€'}${f.format(_totalAmount ?? 0)}'),
+                          overflow: TextOverflow.fade,
+                          maxLines: 1,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white70,
+                          ),
+                        )
+                            : Container(),
+                      )
+                    ],
+                  )
+                ],
               ),
             ),
-            Column(
-              children: [
-                TopBarView(
-                  iconUrl: 'assets/images/transactions.svg',
-                  title: 'Transactions',
-                  onTapClose: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-                Container(
-                  height: 50,
-                  color: Colors.black38,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: 12,
-                          ),
-                          InkWell(
-                            onTap: () {
-                              showSearchTextDialog();
-                            },
-                            child: Icon(
-                              Icons.search,
-                              size: 24,
-                            ),
-                          ),
-                          SizedBox(
-                            width: 16,
-                          ),
-                          InkWell(
-                            onTap: () {
-                              showCupertinoModalPopup(
-                                  context: context,
-                                  builder: (builder) {
-                                    return FilterContentView(
-                                      onSelected: (FilterItem val) {
-                                        Navigator.pop(context);
-                                        setState(() {
-                                          if (val != null) {
-                                            if (filterTypes.length > 0) {
-                                              int isExist = filterTypes.indexWhere((element) => element.type == val.type);
-                                              if (isExist > -1) {
-                                                filterTypes[isExist] = val;
-                                              } else {
-                                                filterTypes.add(val);
-                                              }
-                                            } else {
-                                              filterTypes.add(val);
-                                            }
-                                          } else {
-                                            if (filterTypes.length > 0) {
-                                              int isExist = filterTypes.indexWhere((element) => element.type == val.type);
-                                              if (isExist != null) {
-                                                filterTypes.removeAt(isExist);
-                                              }
-                                            }
-                                          }
-                                          transactionsStateModel.setFilterTypes(filterTypes);
-                                        });
-                                      },
-                                    );
-                                  });
-                            },
-                            child: Container(
-                              width: 30,
-                              height: 30,
-                              alignment: Alignment.center,
-                              child: Icon(
-                                Icons.filter_list,
-                                size: 24,
-                              ),
-                            ),
-                          ),
-                          FlatButton(
-                            onPressed: () {
-                              showGeneralDialog(
-                                barrierLabel: 'Export',
-                                barrierDismissible: true,
-                                barrierColor: Colors.black.withOpacity(0.5),
-                                transitionDuration: Duration(milliseconds: 350),
-                                context: context,
-                                pageBuilder: (context, anim1, anim2) {
-                                  return Align(
-                                    alignment: Alignment.bottomCenter,
-                                    child: ExportContentView(
-                                      onSelectType: (index) {},
-                                    ),
-                                  );
-                                }
-                              );
-                            },
-                            child: Text(
-                              'Export',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              showCupertinoModalPopup(
-                                  context: context,
-                                  builder: (builder) {
-                                    return SortContentView(
-                                      selectedIndex: curSortType ,
-                                      onSelected: (val) {
-                                        Navigator.pop(context);
-                                        setState(() {
-                                          curSortType = val;
-                                          transactionsStateModel.setSortType(curSortType);
-                                        });
-                                      },
-                                    );
-                                  });
-                            },
-                            child: Icon(
-                              Icons.sort,
-                              size: 24,
-                            ),
-                          ),
-                          SizedBox(
-                            width: 24,
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                _filterItems.length > 0 ?
-                  Container(
-                    width: Device.width,
-                    padding: EdgeInsets.only(
-                      left: 16, right: 16, top: 8, bottom: 8,
-                    ),
-                    child: Tags(
-                      key: _tagStateKey,
-                      itemCount: _filterItems.length,
-                      alignment: WrapAlignment.start,
-                      spacing: 4,
-                      runSpacing: 8,
-                      itemBuilder: (int index) {
-                        return ItemTags(
-                          key: Key('filterItem$index'),
-                          index: index,
-                          title: _filterItems[index].title,
-                          color: Colors.white12,
-                          activeColor: Colors.white12,
-                          textActiveColor: Colors.white,
-                          textColor: Colors.white,
-                          elevation: 0,
-                          padding: EdgeInsets.only(
-                            left: 16, top: 8, bottom: 8, right: 16,
-                          ),
-                          removeButton: ItemTagsRemoveButton(
-                            backgroundColor: Colors.transparent,
-                            onRemoved: () {
-                              setState(() {
-                                if (index == _searchTagIndex) {
-                                  _searchTagIndex = -1;
-                                  searching.value = '';
-                                  search = '';
-                                  transactionsStateModel.setSearchField(search);
-                                } else {
-                                  filterTypes.removeAt(index);
-                                  transactionsStateModel.setFilterTypes(filterTypes);
-                                }
-                             });
-                              return true;
-                            }
-                          ),
-                          onPressed: (item) {
-                            showSearchTextDialog();
-                          },
-                        );
-                      },
-                    ),
-                  ): Container(height: 0,),
-                Container(
-                  height: 35,
-                  color: Colors.black45,
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 16,
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Text(
-                          'Channel',
-                          style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.white70,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Text(
-                          'Type',
-                          style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.white70,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: Text(
-                          'Customer name',
-                          style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.white70,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: Text(
-                          'Total',
-                          style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.white70,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: isLoading.value || isLoadingSearch.value ?
-                  Center(
-                    child: CircularProgressIndicator(),
-                  ): CustomList(_currentBusiness,
-                      data != null ? data.transaction.collection : [], data, transactionsStateModel),
-                ),
-                Container(
-                  height: 50,
-                  color: Colors.black87,
-                  alignment: Alignment.center,
-                  child: !noTransactions ? AutoSizeText(
-                    Language.getTransactionStrings('total_orders.heading')
-                        .toString()
-                        .replaceFirst('{{total_count}}', '${_quantity ?? 0}')
-                        .replaceFirst('{{total_sum}}',
-                        '${_currency ?? '€'}${f.format(_totalAmount ?? 0)}'),
-                    overflow: TextOverflow.fade,
-                    maxLines: 1,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white70,
-                    ),
-                  )
-                      : Container(),
-                )
-              ],
-            )
-          ],
-        ),
+          );
+
+        },
       ),
     );
-  }
 
-  void showSearchTextDialog() {
+ }
+
+  void showSearchTextDialog(TransactionsScreenState state) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -491,14 +438,12 @@ class _TransactionScreenState extends State<TransactionScreen> {
               borderRadius: BorderRadius.all(Radius.circular(10)),
             ),
             content: SearchTextContentView(
-                searchText: search,
+                searchText: state.searchText,
                 onSelected: (value) {
                   Navigator.pop(context);
-                  setState(() {
-                    searching.value = value;
-                    search = value;
-                    transactionsStateModel.setSearchField(search);
-                  });
+                  screenBloc.add(
+                    UpdateSearchText(searchText: value)
+                  );
                 }
             ),
           );
@@ -511,8 +456,8 @@ class CustomList extends StatefulWidget {
   final Business currentBusiness;
   final List<Collection> collection;
   final TransactionScreenData data;
-  final TransactionStateModel transactionStateModel;
-  CustomList(this.currentBusiness, this.collection, this.data, this.transactionStateModel);
+  final TransactionsScreenState screenState;
+  CustomList(this.currentBusiness, this.collection, this.data, this.screenState);
 
   @override
   _CustomListState createState() => _CustomListState();
@@ -544,19 +489,19 @@ class _CustomListState extends State<CustomList> {
         TransactionsApi api = TransactionsApi();
         String queryString = '';
         String sortQuery = '';
-        if (widget.transactionStateModel.sortType == 'date') {
+        if (widget.screenState.curSortType == 'date') {
           sortQuery = 'orderBy=created_at&direction=desc&';
-        } else if (widget.transactionStateModel.sortType == 'total_high') {
+        } else if (widget.screenState.curSortType == 'total_high') {
           sortQuery = 'orderBy=total&direction=desc&';
-        } else if (widget.transactionStateModel.sortType == 'total_low') {
+        } else if (widget.screenState.curSortType == 'total_low') {
           sortQuery = 'orderBy=total&direction=asc&';
-        } else if (widget.transactionStateModel.sortType == 'customer_name') {
+        } else if (widget.screenState.curSortType == 'customer_name') {
           sortQuery = 'orderBy=customer_name&direction=asc&';
         }
-        queryString = '?${sortQuery}limit=50&query=${widget.transactionStateModel.searchField}&page=$page&currency=${widget.currentBusiness.currency}';
-        if (widget.transactionStateModel.filterTypes.length > 0) {
-          for (int i = 0; i < widget.transactionStateModel.filterTypes.length; i++) {
-            FilterItem item = widget.transactionStateModel.filterTypes[i];
+        queryString = '?${sortQuery}limit=50&query=${widget.screenState.searchText}&page=$page&currency=${widget.currentBusiness.currency}';
+        if (widget.screenState.filterTypes.length > 0) {
+          for (int i = 0; i < widget.screenState.filterTypes.length; i++) {
+            FilterItem item = widget.screenState.filterTypes[i];
             String filterType = item.type;
             String filterCondition = item.condition;
             String filterValue = item.value;
@@ -567,7 +512,7 @@ class _CustomListState extends State<CustomList> {
           }
         }
 
-        TransactionsApi().getTransactionList(
+        api.getTransactionList(
                 widget.currentBusiness.id,
                 GlobalUtils.activeToken.accessToken,
                 queryString,
