@@ -12,9 +12,9 @@ class FilterContentView extends StatefulWidget {
 }
 
 class _FilterContentViewState extends State<FilterContentView> {
-  void showMeDialog(BuildContext context, FilterType filterType) {
+  void showMeDialog(BuildContext context, String filterType) {
 //    String selectedFilterItem = "Is";
-    String filtername = getFilterNameByType(filterType);
+    String filtername = filter_labels[filterType];
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -69,121 +69,17 @@ class _FilterContentViewState extends State<FilterContentView> {
                     ],
                   ),
                   Expanded(
-                    child: ListView(
-                      children: [
-                        ListTile(
-                          title: Text('Id'),
+                    child: ListView.separated(
+                      itemCount: filter_labels.keys.toList().length,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          title: Text(filter_labels[filter_labels.keys.toList()[index]]),
                           trailing: Icon(Icons.keyboard_arrow_right),
                           onTap: () {
-                            showMeDialog(context, FilterType.id);
+                            showMeDialog(context, filter_labels.keys.toList()[index]);
                           },
-                        ),
-                        ListTile(
-                          title: Text('Reference'),
-                          trailing: Icon(Icons.keyboard_arrow_right),
-                          onTap: () {
-                            showMeDialog(context, FilterType.reference);
-                          },
-                        ),
-                        ListTile(
-                          title: Text('Date'),
-                          trailing: Icon(Icons.keyboard_arrow_right),
-                          onTap: () {
-                            showMeDialog(context, FilterType.date);
-                          },
-                        ),
-                        ListTile(
-                          title: Text('Payment type'),
-                          trailing: Icon(Icons.keyboard_arrow_right),
-                          onTap: () {
-                            showMeDialog(context, FilterType.payment_type);
-                          },
-                        ),
-                        ListTile(
-                          title: Text('Status'),
-                          trailing: Icon(Icons.keyboard_arrow_right),
-                          onTap: () {
-                            showMeDialog(context, FilterType.status);
-                          },
-                        ),
-                        ListTile(
-                          title: Text('Specific status'),
-                          trailing: Icon(Icons.keyboard_arrow_right),
-                          onTap: () {
-                            showMeDialog(context, FilterType.specific_status);
-                          },
-                        ),
-                        ListTile(
-                          title: Text('Channel'),
-                          trailing: Icon(Icons.keyboard_arrow_right),
-                          onTap: () {
-                            showMeDialog(context, FilterType.channel);
-                          },
-                        ),
-                        ListTile(
-                          title: Text('Amount'),
-                          trailing: Icon(Icons.keyboard_arrow_right),
-                          onTap: () {
-                            showMeDialog(context, FilterType.amount);
-                          },
-                        ),
-                        ListTile(
-                          title: Text('Total'),
-                          trailing: Icon(Icons.keyboard_arrow_right),
-                          onTap: () {
-                            showMeDialog(context, FilterType.total);
-                          },
-                        ),
-                        ListTile(
-                          title: Text('Currency'),
-                          trailing: Icon(Icons.keyboard_arrow_right),
-                          onTap: () {
-                            showMeDialog(context, FilterType.currency);
-                          },
-                        ),
-                        ListTile(
-                          title: Text('Customer name'),
-                          trailing: Icon(Icons.keyboard_arrow_right),
-                          onTap: () {
-                            showMeDialog(context, FilterType.customer_name);
-                          },
-                        ),
-                        ListTile(
-                          title: Text('Customer email'),
-                          trailing: Icon(Icons.keyboard_arrow_right),
-                          onTap: () {
-                            showMeDialog(context, FilterType.customer_email);
-                          },
-                        ),
-                        ListTile(
-                          title: Text('Merchant name'),
-                          trailing: Icon(Icons.keyboard_arrow_right),
-                          onTap: () {
-                            showMeDialog(context, FilterType.merchant_name);
-                          },
-                        ),
-                        ListTile(
-                          title: Text('Merchant email'),
-                          trailing: Icon(Icons.keyboard_arrow_right),
-                          onTap: () {
-                            showMeDialog(context, FilterType.merchant_email);
-                          },
-                        ),
-                        ListTile(
-                          title: Text('Seller name'),
-                          trailing: Icon(Icons.keyboard_arrow_right),
-                          onTap: () {
-                            showMeDialog(context, FilterType.seller_name);
-                          },
-                        ),
-                        ListTile(
-                          title: Text('Seller email'),
-                          trailing: Icon(Icons.keyboard_arrow_right),
-                          onTap: () {
-                            showMeDialog(context, FilterType.seller_email);
-                          },
-                        ),
-                      ],
+                        );
+                      },
                     ),
                   )
                 ],
@@ -193,8 +89,8 @@ class _FilterContentViewState extends State<FilterContentView> {
 }
 
 class FilterItem {
-  final FilterType type;
-  final FilterCondition condition;
+  final String type;
+  final String condition;
   final String value;
 
   FilterItem({

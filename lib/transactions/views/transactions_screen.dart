@@ -37,18 +37,18 @@ _getAllItem(){
 
 class TagItemModel {
   String title;
-  FilterType type;
+  String type;
   TagItemModel({this.title = '', this.type});
 }
 
 class TransactionScreenInit extends StatelessWidget {
-  final TransactionStateModel dashboardStateModel = TransactionStateModel();
+  final TransactionStateModel transactionStateModel = TransactionStateModel();
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<TransactionStateModel>(
       create: (BuildContext context) {
-        return dashboardStateModel;
+        return transactionStateModel;
       },
       child: TransactionScreen(),
     );
@@ -75,7 +75,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
   bool init = true;
   String wallpaper;
 
-  SortType curSortType = SortType.date;
+  String curSortType = sort_transactions.keys.toList().first;
 
   List<FilterItem> filterTypes = [];
   num _quantity;
@@ -105,13 +105,13 @@ class _TransactionScreenState extends State<TransactionScreen> {
     setState(() {});
   }
 
-  fetchTransactions({String search, bool init}) {
+  fetchTransactions({TransactionStateModel model, bool init}) {
     TransactionsApi api = TransactionsApi();
     api
         .getTransactionList(
       _currentBusiness.id,
       GlobalUtils.activeToken.accessToken,
-      "?orderBy=created_at&direction=desc&limit=50&query=$search&page=1&currency=${_currentBusiness.currency}",
+      "?orderBy=${model.sortType}&direction=desc&limit=50&query=${model.searchField}&page=1&currency=${_currentBusiness.currency}",
     )
         .then((obj) {
       data = TransactionScreenData(obj);
@@ -136,7 +136,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
     _currentBusiness = globalStateModel.currentBusiness;
     wallpaper = globalStateModel.currentWallpaper;
 
-    fetchTransactions(init: init, search: transactionsStateModel.searchField);
+    fetchTransactions(init: init, model: transactionsStateModel);
     init = false;
     _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
     Measurements.height = (_isPortrait
@@ -160,7 +160,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
     _filterItems = [];
     if (filterTypes.length > 0) {
       for (int i = 0; i < filterTypes.length; i++) {
-        String filterString = '${getFilterNameByType(filterTypes[i].type)} ${getFilterConditionNameByCondition(filterTypes[i].condition)}: ${filterTypes[i].value}';
+        String filterString = '${filter_labels[filterTypes[i].type]} ${filter_conditions[filterTypes[i].condition]}: ${filterTypes[i].value}';
         TagItemModel item = TagItemModel(title: filterString, type: filterTypes[i].type);
         _filterItems.add(item);
       }

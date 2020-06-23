@@ -13,7 +13,7 @@ class TransactionsScreen extends StatefulWidget {
 }
 
 class _TransactionsScreenState extends State<TransactionsScreen> {
-  SortType curSortType = SortType.date;
+  String curSortType = '';
   @override
   Widget build(BuildContext context) {
     return Scaffold(

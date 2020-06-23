@@ -1,455 +1,295 @@
-enum SortType {
-  name,
-  highTotal,
-  lowTotal,
-  date
-}
+Map<String, String> sort_transactions = {
+'total_high': 'Total high',
+'total_low': 'Total low',
+'customer_name': 'Customer Name',
+'date': 'Date',
+};
 
-enum FilterType {
-  id,
-  reference,
-  date,
-  payment_type,
-  status,
-  specific_status,
-  channel,
-  amount,
-  total,
-  currency,
-  customer_name,
-  customer_email,
-  merchant_name,
-  merchant_email,
-  seller_name,
-  seller_email
-}
-/*
-  CreatedAt = 'created_at',
-  Status = 'status',
-  SpecificStatus = 'specific_status',
-  Channel = 'channel',
-  Store = 'store',
-  Amount= 'amount',
-  Total = 'total',
-  Currency = 'currency',
-  CustomerName = 'customer_name',
-  CustomerEmail = 'customer_email',
-  MerchantName = 'merchant_name',
-  MerchantEmail = 'merchant_email',
-  SellerName = 'seller_name',
-  SellerEmail = 'seller_email',
-  Type = 'type',
-  OriginalId = 'original_id',
-  Reference = 'reference',
+Map<String, String> filter_labels = {
+  'amount': 'Amount',
+  'channel': 'Channel',
+  'currency': 'Currency',
+  'original_id': 'Id',
+  'reference': 'Reference',
+  'total': 'Total',
+  'type': 'Payment type',
+  'customer_name': 'Customer name',
+  'customer_email': 'Customer email',
+  'merchant_email': 'Merchant email',
+  'merchant_name': 'Merchant name',
+  'seller_email': 'Seller email',
+  'seller_name': 'Seller name',
+  'created_at': 'Date',
+  'status': 'Status',
+  'specific_status': 'Specific status',
+  'channel_set_uuid': 'Channel set id',
+};
 
- */
-enum FilterCondition {
-  con_is,
-  con_isIn,
-  con_isNot,
-  con_isNotIn,
-  con_isDate,
-  con_isNotDate,
-  con_startsWith,
-  con_endsWith,
-  con_contains,
-  con_doesNotContain,
-// DynamicTypes:
-  con_greaterThan,
-  con_lessThan,
-  con_between,
-  con_afterDate,
-  con_beforeDate,
-  con_betweenDates,
-}
+Map<String, String> filter_conditions = {
+  'is': 'Is',
+  'isNot': 'Is not',
+  'startsWith': 'Starts with',
+  'endsWith': 'Ends with',
+  'contains': 'Contains',
+  'doesNotContain': 'Does not contain',
+  'greaterThan': 'Greater than',
+  'lessThan': 'Less than',
+  'between': 'Between',
+  'isDate': 'Is',
+  'isNotDate': 'Is not',
+  'afterDate': 'After',
+  'beforeDate': 'Before',
+  'betweenDates': 'Between'
+};
 
-String getFilterNameByType(FilterType type) {
-  String typeString = "Id";
+Map<String, String> payment_type_options = {
+  'sofort': 'SOFORT Banking',
+  'invoice': 'Invoice',
+  'cash': 'Wire Transfer',
+  'paymill_creditcard': 'Paymill Credit Card',
+  'paymill_directdebit': 'Direct Debit',
+  'paypal': 'PayPal',
+  'stripe': 'Credit Card',
+  'santander_installment': 'Santander Installments',
+  'santander_pos_installment': 'POS Santander Installments',
+  'santander_installment_no': 'Santander Installments Norway',
+  'santander_pos_installment_no': 'POS Santander Installments Norway',
+  'santander_invoice_no': 'Santander Invoice Norway',
+  'santander_pos_invoice_no': 'POS Santander Invoice Norway',
+  'santander_installment_dk': 'Santander Installments Denmark',
+  'santander_installment_se': 'Santander Installments Sweden',
+  'payex_faktura': 'PayEx Invoice',
+  'santander_ccp_installment': 'Santander DE Comfort card plus',
+  'payex_creditcard': 'PayEx Credit Card',
+  'stripe_directdebit': 'Stripe DirectDebit',
+  'santander_invoice_de': 'Santander DE Invoice',
+  'santander_pos_invoice_de': 'POS Santander DE Invoice',
+  'santander_pos_installment_se': 'POS Santander Installments Sweden',
+  'santander_factoring_de': 'Santander Factoring',
+  'santander_pos_factoring_de': 'POS Santander Factoring',
+  'instant_payment': 'Instant Payment'
+};
+
+Map<String, String> specific_status_options = {
+  'STATUS_NEW': 'New',
+  'STATUS_IN_PROCESS': 'In progress',
+  'STATUS_ACCEPTED': 'Accepted',
+  'STATUS_PAID': 'Paid',
+  'STATUS_DECLINED': 'Declined',
+  'STATUS_REFUNDED': 'Refunded',
+  'STATUS_FAILED': 'Failed',
+  'STATUS_CANCELLED': 'Cancelled',
+  'STATUS_INVOICE_CANCELLATION': 'Cancelled',
+  'STATUS_INVOICE_INCOLLECTION': 'Collection',
+  'STATUS_INVOICE_LATEPAYMENT': 'Late payment',
+  'STATUS_INVOICE_REMINDER': 'Reminder',
+  'STATUS_SANTANDER_IN_PROGRESS': 'In progress',
+  'STATUS_SANTANDER_IN_PROCESS': 'In process',
+  'STATUS_SANTANDER_DECLINED': 'Declined',
+  'STATUS_SANTANDER_APPROVED': 'Approved',
+  'STATUS_SANTANDER_APPROVED_WITH_REQUIREMENTS': 'Approved with requirements',
+  'STATUS_SANTANDER_DEFERRED': 'Deferred',
+  'STATUS_SANTANDER_CANCELLED': 'Cancelled',
+  'STATUS_SANTANDER_AUTOMATIC_DECLINE': 'Automatically declined',
+  'STATUS_SANTANDER_IN_DECISION': 'In decision',
+  'STATUS_SANTANDER_DECISION_NEXT_WORKING_DAY': 'Decision in the next working day',
+  'STATUS_SANTANDER_IN_CANCELLATION': 'In cancellation',
+  'STATUS_SANTANDER_ACCOUNT_OPENED': 'Account opened',
+  'STATUS_SANTANDER_CANCELLED_ANOTHER': 'Cancelled',
+  'STATUS_SANTANDER_SHOP_TEMPORARY_APPROVED': 'Temporarily approved',
+};
+Map<String, String> filter_channel_options = {
+  'shopify': 'Shopify',
+  'facebook': 'Facebook',
+  'finance_express': 'Finance express',
+  'store': 'Store',
+  'wooCommerce': 'WooCommerce',
+  'magento': 'Magento',
+  'marketing': 'Marketing',
+  'pos': 'PoS',
+  'shopware': 'Shopware',
+  'debitoor': 'Debitoor',
+  'link': 'Link',
+  'e-conomic': 'E-conomic',
+  'jtl': 'JTL',
+  'oxid': 'OXID',
+  'weebly': 'Weebly',
+  'plentymarkets': 'Plentymarkets',
+  'advertising': 'Advertising',
+  'offer': 'Offer',
+  'dandomain': 'DanDomain',
+  'presta': 'PrestaShop',
+  'xt_commerce': 'xt:Commerce',
+  'overlay': 'Overlay'
+};
+Map<String, String> filter_status_options = {
+  'STATUS_NEW': 'New',
+  'STATUS_IN_PROCESS': 'In progress',
+  'STATUS_ACCEPTED': 'Accepted',
+  'STATUS_PAID': 'Paid',
+  'STATUS_DECLINED': 'Declined',
+  'STATUS_REFUNDED': 'Refunded',
+  'STATUS_FAILED': 'Failed',
+  'STATUS_CANCELLED': 'Cancelled'
+};
+
+String hintTextByFilter(String type) {
   switch (type) {
-    case FilterType.id:
-      {
-        typeString = "Id";
-      }
-      break;
-    case FilterType.reference:
-      {
-        typeString = "Reference";
-      }
-      break;
-    case FilterType.date:
-      {
-        typeString = "Date";
-      }
-      break;
-    case FilterType.payment_type:
-      {
-        typeString = "Payment Type";
-      }
-      break;
-    case FilterType.status:
-      {
-        typeString = "Status";
-      }
-      break;
-    case FilterType.specific_status:
-      {
-        typeString = "Specific Status";
-      }
-      break;
-    case FilterType.channel:
-      {
-        typeString = "Channel";
-      }
-      break;
-    case FilterType.amount:
-      {
-        typeString = "Amount";
-      }
-      break;
-    case FilterType.total:
-      {
-        typeString = "Total";
-      }
-      break;
-    case FilterType.currency:
-      {
-        typeString = "Currency";
-      }
-      break;
-    case FilterType.customer_name:
-      {
-        typeString = "Customer name";
-      }
-      break;
-    case FilterType.customer_email:
-      {
-        typeString = "Customer email";
-      }
-      break;
-    case FilterType.merchant_name:
-      {
-        typeString = "Merchant name";
-      }
-      break;
-    case FilterType.merchant_email:
-      {
-        typeString = "Merchant email";
-      }
-      break;
-    case FilterType.seller_name:
-      {
-        typeString = "Seller name";
-      }
-      break;
-    case FilterType.seller_email:
-      {
-        typeString = "Seller email";
-      }
-      break;
-    default:
-      {
-        typeString = "Id";
-      }
-      break;
-  }
-  return typeString;
-}
-
-String getFilterConditionNameByCondition(FilterCondition condition) {
-  switch(condition) {
-    case FilterCondition.con_is:
-      return 'is';
-    case FilterCondition.con_isIn:
-      return 'isIn';
-    case FilterCondition.con_isNot:
-      return 'isNot';
-    case FilterCondition.con_isNotIn:
-      return 'isNotIn';
-    case FilterCondition.con_isDate:
-      return 'isDate';
-    case FilterCondition.con_isNotDate:
-      return 'isNotDate';
-    case FilterCondition.con_startsWith:
-      return 'startsWith';
-    case FilterCondition.con_endsWith:
-      return 'endsWith';
-    case FilterCondition.con_contains:
-      return 'contains';
-    case FilterCondition.con_doesNotContain:
-      return 'doesNotContain';
-    case FilterCondition.con_greaterThan:
-      return 'greaterThan';
-    case FilterCondition.con_lessThan:
-      return 'lessThan';
-    case FilterCondition.con_between:
-      return 'between';
-    case FilterCondition.con_afterDate:
-      return 'afterDate';
-    case FilterCondition.con_beforeDate:
-      return 'beforeDate';
-    case FilterCondition.con_betweenDates:
-      return 'betweenDates';
-    default:
-      return '';
-
-  }
-}
-/*
-Is = 'is',
-IsIn = 'isIn',
-IsNot = 'isNot',
-IsNotIn = 'isNotIn',
-IsDate = 'isDate',
-IsNotDate = 'isNotDate',
-StartsWith = 'startsWith',
-EndsWith = 'endsWith',
-Contains = 'contains',
-DoesNotContain = 'doesNotContain',
-// DynamicTypes:
-GreaterThan = 'greaterThan',
-LessThan = 'lessThan',
-Between = 'between',
-AfterDate = 'afterDate',
-BeforeDate = 'beforeDate',
-BetweenDates = 'betweenDates'
-*/
-
-String hintTextByFilter(FilterType type) {
-  switch (type) {
-    case FilterType.id:
-      return 'Search';
-    case FilterType.reference:
-      return 'Search';
-    case FilterType.date:
+    case 'created_at':
       return 'Date';
-    case FilterType.payment_type:
+    case 'type':
       return 'Option';
-    case FilterType.status:
+    case 'status':
       return 'Option';
-    case FilterType.specific_status:
+    case 'specific_status':
       return 'Option';
-    case FilterType.channel:
+    case 'channel':
       return 'Option';
-    case FilterType.amount:
-      return 'Search';
-    case FilterType.total:
-      return 'Search';
-    case FilterType.currency:
+    case 'currency':
       return 'Option';
-    case FilterType.customer_name:
-      return 'Search';
-    case FilterType.customer_email:
-      return 'Search';
-    case FilterType.merchant_name:
-      return 'Search';
-    case FilterType.merchant_email:
-      return 'Search';
-    case FilterType.seller_name:
-      return 'Search';
-    case FilterType.seller_email:
-      return 'Search';
     default:
       return 'Search';
   }
 }
 
-List<FilterCondition> filterConditionsByFilterType(FilterType type) {
+Map<String, String> filterConditionsByFilterType(String type) {
   switch (type) {
-    case FilterType.id:
-      return [
-        FilterCondition.con_is,
-        FilterCondition.con_isNot,
-        FilterCondition.con_startsWith,
-        FilterCondition.con_endsWith,
-        FilterCondition.con_contains,
-        FilterCondition.con_doesNotContain,
-      ];
-    case FilterType.reference:
-      return [
-        FilterCondition.con_is,
-        FilterCondition.con_isNot,
-        FilterCondition.con_startsWith,
-        FilterCondition.con_endsWith,
-        FilterCondition.con_contains,
-        FilterCondition.con_doesNotContain,
-      ];
-    case FilterType.date:
-      return [
-        FilterCondition.con_isDate,
-        FilterCondition.con_isNotDate,
-        FilterCondition.con_afterDate,
-        FilterCondition.con_beforeDate,
-        FilterCondition.con_doesNotContain,
-      ];
-    case FilterType.payment_type:
-      return [
-        FilterCondition.con_is,
-        FilterCondition.con_isNot,
-      ];
-    case FilterType.status:
-      return [
-        FilterCondition.con_is,
-        FilterCondition.con_isNot,
-      ];
-    case FilterType.specific_status:
-      return [
-        FilterCondition.con_is,
-        FilterCondition.con_isNot,
-      ];
-    case FilterType.channel:
-      return [
-        FilterCondition.con_is,
-        FilterCondition.con_isNot,
-      ];
-    case FilterType.amount:
-      return [
-        FilterCondition.con_is,
-        FilterCondition.con_isNot,
-        FilterCondition.con_greaterThan,
-        FilterCondition.con_lessThan,
-        FilterCondition.con_between,
-      ];
-    case FilterType.total:
-      return [
-        FilterCondition.con_is,
-        FilterCondition.con_isNot,
-        FilterCondition.con_greaterThan,
-        FilterCondition.con_lessThan,
-        FilterCondition.con_between,
-      ];
-    case FilterType.currency:
-      return [
-        FilterCondition.con_is,
-        FilterCondition.con_isNot,
-      ];
-    case FilterType.customer_name:
-      return [
-        FilterCondition.con_is,
-        FilterCondition.con_isNot,
-        FilterCondition.con_startsWith,
-        FilterCondition.con_endsWith,
-        FilterCondition.con_contains,
-        FilterCondition.con_doesNotContain,
-      ];
-    case FilterType.customer_email:
-      return [
-        FilterCondition.con_is,
-        FilterCondition.con_isNot,
-        FilterCondition.con_startsWith,
-        FilterCondition.con_endsWith,
-        FilterCondition.con_contains,
-        FilterCondition.con_doesNotContain,
-      ];
-    case FilterType.merchant_name:
-      return [
-        FilterCondition.con_is,
-        FilterCondition.con_isNot,
-        FilterCondition.con_startsWith,
-        FilterCondition.con_endsWith,
-        FilterCondition.con_contains,
-        FilterCondition.con_doesNotContain,
-      ];
-    case FilterType.merchant_email:
-      return [
-        FilterCondition.con_is,
-        FilterCondition.con_isNot,
-        FilterCondition.con_startsWith,
-        FilterCondition.con_endsWith,
-        FilterCondition.con_contains,
-        FilterCondition.con_doesNotContain,
-      ];
-    case FilterType.seller_name:
-      return [
-        FilterCondition.con_is,
-        FilterCondition.con_isNot,
-        FilterCondition.con_startsWith,
-        FilterCondition.con_endsWith,
-        FilterCondition.con_contains,
-        FilterCondition.con_doesNotContain,
-      ];
-    case FilterType.seller_email:
-      return [
-        FilterCondition.con_is,
-        FilterCondition.con_isNot,
-        FilterCondition.con_startsWith,
-        FilterCondition.con_endsWith,
-        FilterCondition.con_contains,
-        FilterCondition.con_doesNotContain,
-      ];
+    case 'original_id':
+      return {
+        'is': 'Is',
+        'isNot': 'Is not',
+        'startsWith': 'Starts with',
+        'endsWith': 'Ends with',
+        'contains': 'Contains',
+        'doesNotContain': 'Does not contain'
+      };
+    case 'reference':
+      return {
+        'is': 'Is',
+        'isNot': 'Is not',
+        'startsWith': 'Starts with',
+        'endsWith': 'Ends with',
+        'contains': 'Contains',
+        'doesNotContain': 'Does not contain'
+      };
+    case 'created_at':
+      return {
+        'isDate': 'Is',
+        'isNotDate': 'Is not',
+        'afterDate': 'After',
+        'beforeDate': 'Before',
+        'betweenDates': 'Between'
+      };
+    case 'type':
+      return {
+        'is': 'Is',
+        'isNot': 'Is not',
+      };
+    case 'status':
+      return {
+        'is': 'Is',
+        'isNot': 'Is not',
+      };
+    case 'specific_status':
+      return {
+        'is': 'Is',
+        'isNot': 'Is not',
+      };
+    case 'channel':
+      return {
+        'is': 'Is',
+        'isNot': 'Is not',
+      };
+    case 'amount':
+      return {
+        'is': 'Is',
+        'isNot': 'Is not',
+        'greaterThan': 'Greater than',
+        'lessThan': 'Less than',
+        'between': 'Between',
+      };
+    case 'total':
+      return {
+        'is': 'Is',
+        'isNot': 'Is not',
+        'greaterThan': 'Greater than',
+        'lessThan': 'Less than',
+        'between': 'Between',
+      };
+    case 'currency':
+      return {
+        'is': 'Is',
+        'isNot': 'Is not',
+      };
+    case 'customer_name':
+      return {
+        'is': 'Is',
+        'isNot': 'Is not',
+        'startsWith': 'Starts with',
+        'endsWith': 'Ends with',
+        'contains': 'Contains',
+        'doesNotContain': 'Does not contain'
+      };
+    case 'customer_email':
+      return {
+        'is': 'Is',
+        'isNot': 'Is not',
+        'startsWith': 'Starts with',
+        'endsWith': 'Ends with',
+        'contains': 'Contains',
+        'doesNotContain': 'Does not contain'
+      };
+    case 'merchant_email':
+      return {
+        'is': 'Is',
+        'isNot': 'Is not',
+        'startsWith': 'Starts with',
+        'endsWith': 'Ends with',
+        'contains': 'Contains',
+        'doesNotContain': 'Does not contain'
+      };
+    case 'merchant_name':
+      return {
+        'is': 'Is',
+        'isNot': 'Is not',
+        'startsWith': 'Starts with',
+        'endsWith': 'Ends with',
+        'contains': 'Contains',
+        'doesNotContain': 'Does not contain'
+      };
+    case 'seller_email':
+      return {
+        'is': 'Is',
+        'isNot': 'Is not',
+        'startsWith': 'Starts with',
+        'endsWith': 'Ends with',
+        'contains': 'Contains',
+        'doesNotContain': 'Does not contain'
+      };
+    case 'seller_name':
+      return {
+        'is': 'Is',
+        'isNot': 'Is not',
+        'startsWith': 'Starts with',
+        'endsWith': 'Ends with',
+        'contains': 'Contains',
+        'doesNotContain': 'Does not contain'
+      };
     default:
-      return [];
+      return {};
   }
 }
 
-List<String> getOptionsByFilterType(FilterType type) {
-  switch (type) {
-    case FilterType.payment_type:
-      return [];
-    case FilterType.status:
-      return [
-        'Accepted',
-        'Failed',
-        'New',
-        'In progress',
-        'Declined',
-        'Refunded',
-        'Cancelled',
-        'Paid',
-      ];
-    case FilterType.specific_status:
-      return [
-        'New',
-        'In progress',
-        'Accepted',
-        'Paid',
-        'Declined',
-        'Refunded',
-        'Failed',
-        'Cancelled',
-        'Collection',
-        'Late payment',
-        'Reminder',
-        'In Progress',
-        'In process',
-        'Declined',
-        'Approved',
-        'Approved with requirements',
-        'Deferred',
-        'Cancelled',
-        'Automatically declined',
-        'In decision',
-        'Decision in the next working day',
-        'In cancellation',
-        'Account opened',
-        'Cancelled',
-        'Temporarily approved',
-      ];
-    case FilterType.channel:
-      return [
-        'Shopify',
-        'Facebook',
-        'Finance express',
-        'Shop',
-        'WooCommerce',
-        'Magento',
-        'Marketing',
-        'PoS',
-        'Shopware',
-        'Debitoor',
-        'Link',
-        'E-conomic',
-        'JTL',
-        'OXID',
-        'Weebly',
-        'Plentymarkets',
-        'Advertising',
-        'Offer',
-        'DanDomain',
-        'PrestaShop',
-        'xtCommerce',
-        'Overlay',
-      ];
-    default:
-      return [];
+Map<String, String> getOptionsByFilterType(String type) {
+  switch(type) {
+    case 'payment_type':
+      return payment_type_options;
+    case 'status':
+      return filter_status_options;
+    case 'specific_status':
+      return specific_status_options;
+    case 'channel':
+      return filter_channel_options;
   }
+  return {};
 }

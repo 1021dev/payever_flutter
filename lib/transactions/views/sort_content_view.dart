@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:payever/transactions/models/enums.dart';
 
 class SortContentView extends StatelessWidget {
-  final SortType selectedIndex;
+  final String selectedIndex;
   final Function onSelected;
 
   SortContentView({this.selectedIndex, this.onSelected});
@@ -44,14 +44,14 @@ class SortContentView extends StatelessWidget {
                   ),
                   InkWell(
                     onTap: (){
-                      onSelected(SortType.name);
+                      onSelected(sort_transactions.keys.toList()[0]);
                     },
                     child: Row(
                       children: [
                         Container(
                           width: 24,
                           alignment: Alignment.center,
-                          child: selectedIndex != SortType.name ? Container() : Icon(
+                          child: selectedIndex != sort_transactions.keys.toList()[0] ? Container() : Icon(
                             Icons.check,
                             color: Color(0xFFAAAAAA),
                           ),
@@ -75,14 +75,14 @@ class SortContentView extends StatelessWidget {
                   ),
                   InkWell(
                       onTap: (){
-                        onSelected(SortType.highTotal);
+                        onSelected(sort_transactions.keys.toList()[1]);
                       },
                       child: Row(
                         children: [
                           Container(
                             alignment: Alignment.center,
                             width: 24,
-                            child: selectedIndex != SortType.highTotal ? Container() : Icon(
+                            child: selectedIndex != sort_transactions.keys.toList()[1] ? Container() : Icon(
                               Icons.check,
                               color: Color(0xFFAAAAAA),
                             ),
@@ -106,14 +106,14 @@ class SortContentView extends StatelessWidget {
                   ),
                   InkWell(
                       onTap: (){
-                        onSelected(SortType.lowTotal);
+                        onSelected(sort_transactions.keys.toList()[2]);
                       },
                       child: Row(
                         children: [
                           Container(
                             width: 24,
                             alignment: Alignment.center,
-                            child: selectedIndex != SortType.lowTotal ? Container() : Icon(
+                            child: selectedIndex != sort_transactions.keys.toList()[2] ? Container() : Icon(
                               Icons.check,
                               color: Color(0xFFAAAAAA),
                             ),
@@ -137,14 +137,14 @@ class SortContentView extends StatelessWidget {
                   ),
                   InkWell(
                       onTap: (){
-                        onSelected(SortType.date);
+                        onSelected(sort_transactions.keys.toList()[3]);
                       },
                       child: Row(
                         children: [
                           Container(
                             width: 24,
                             alignment: Alignment.center,
-                            child: selectedIndex != SortType.date ? Container() : Icon(
+                            child: selectedIndex != sort_transactions.keys.toList()[3] ? Container() : Icon(
                               Icons.check,
                               color: Color(0xFFAAAAAA),
                             ),

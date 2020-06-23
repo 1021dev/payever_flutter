@@ -8,7 +8,7 @@ import 'package:payever/transactions/models/enums.dart';
 import 'package:payever/transactions/views/filter_content_view.dart';
 
 class FilterRangeContentView extends StatefulWidget {
-  final FilterType type;
+  final String type;
   final Function onSelected;
   FilterRangeContentView({this.type, this.onSelected});
 
@@ -27,12 +27,22 @@ class _FilterRangeContentViewState extends State<FilterRangeContentView> {
 
   @override
   Widget build(BuildContext context) {
-    List<FilterCondition> conditions = filterConditionsByFilterType(widget.type);
+    Map<String, String> conditions = filterConditionsByFilterType(widget.type);
+    Map<String, String> options = getOptionsByFilterType(widget.type);
     if (filterConditionName == '') {
-      filterConditionName = getFilterConditionNameByCondition(conditions[0]);
+      filterConditionName = conditions[conditions.keys.first];
     }
     if (selectedDate != null) {
       filterValueController.text = formatDate(selectedDate, [mm, '/', dd, '/', yyyy]);
+    }
+    int dropdown = 2;
+    if (widget.type == 'currency') {
+      dropdown = 0;
+    } else if (widget.type == 'status' ||
+      widget.type == 'specific_status' ||
+      widget.type == 'channel' ||
+      widget.type == 'type') {
+      dropdown = 1;
     }
     return Container(
         height: 173,
@@ -53,11 +63,11 @@ class _FilterRangeContentViewState extends State<FilterRangeContentView> {
                         isExpanded: true,
                         underline: Container(),
                         value: filterConditionName,
-                        items: conditions.map((FilterCondition value) {
+                        items: conditions.keys.map((String value) {
                           return DropdownMenuItem<String>(
-                            value: getFilterConditionNameByCondition(value),
+                            value: value,
                             child: Text(
-                              getFilterConditionNameByCondition(value),
+                              conditions[value],
                               style: TextStyle(color: Colors.white70),
                             ),
                           );
@@ -65,8 +75,8 @@ class _FilterRangeContentViewState extends State<FilterRangeContentView> {
                         onChanged: (value) {
                           setState(() {
                             filterConditionName = value;
-                            for (int i = 0; i < conditions.length; i++) {
-                              String cName = getFilterConditionNameByCondition(conditions[i]);
+                            for (int i = 0; i < conditions.keys.toList().length; i++) {
+                              String cName = conditions.keys.toList()[i];
                               if (cName == value) {
                                 _selectedConditionIndex = i;
                               }
@@ -79,45 +89,73 @@ class _FilterRangeContentViewState extends State<FilterRangeContentView> {
                       height: 1,
                       color: Colors.white10,
                     ),
-                    widget.type == FilterType.currency ?
-
+                    dropdown == 0 ?
                       Container(
                         height: 60,
                         padding: EdgeInsets.fromLTRB(20, 0, 10, 0),
                         child: new FutureBuilder(
-                            future: DefaultAssetBundle.of(context).loadString('assets/json/currency.json'),
-                            builder: (context, snapshot) {
-                              List<Currency> currencies = parseJosn(snapshot.data.toString());
-                              return currencies.isNotEmpty ?
-                                DropdownButton<String>(
-                                  isExpanded: true,
-                                  underline: Container(),
-                                  itemHeight: 60,
-                                  hint: Text(
-                                    'Option',
+                          future: DefaultAssetBundle.of(context).loadString('assets/json/currency.json'),
+                          builder: (context, snapshot) {
+                            List<Currency> currencies = parseJosn(snapshot.data.toString());
+                            return currencies.isNotEmpty ?
+                            DropdownButton<String>(
+                              isExpanded: true,
+                              underline: Container(),
+                              itemHeight: 60,
+                              hint: Text(
+                                'Option',
+                                style: TextStyle(color: Colors.white70),
+                              ),
+                              value: selectedCurrency != null ? selectedCurrency.name : null,
+                              items: currencies.map((Currency value) {
+                                return DropdownMenuItem<String>(
+                                  value: value.name,
+                                  child: Text(
+                                    value.name,
                                     style: TextStyle(color: Colors.white70),
                                   ),
-                                  value: selectedCurrency != null ? selectedCurrency.name : null,
-                                  items: currencies.map((Currency value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value.name,
-                                      child: Text(
-                                        value.name,
-                                        style: TextStyle(color: Colors.white70),
-                                      ),
-                                    );
-                                  }).toList(),
-                                  onChanged: (value) {
-                                    setState(() {
-                                      int index = currencies.indexWhere((element) => element.name == value);
-                                      selectedCurrency = currencies[index];
-                                    });
-                                  },
-                                ): Container(child: CircularProgressIndicator(),);
-                            },
+                                );
+                              }).toList(),
+                              onChanged: (value) {
+                                setState(() {
+                                  int index = currencies.indexWhere((element) => element.name == value);
+                                  selectedCurrency = currencies[index];
+                                });
+                              },
+                            ): Container(child: CircularProgressIndicator(),);
+                          },
                         ),
                       ) : Container(),
-                    widget.type != FilterType.currency ? Container(
+                    dropdown == 1 ?
+                      Container(
+                        height: 60,
+                        padding: EdgeInsets.fromLTRB(20, 0, 10, 0),
+                        child: DropdownButton<String>(
+                          isExpanded: true,
+                          underline: Container(),
+                          itemHeight: 60,
+                          hint: Text(
+                            'Option',
+                            style: TextStyle(color: Colors.white70),
+                          ),
+                          value: selectedOptions,
+                          items: options.keys.map((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(
+                                options[value],
+                                style: TextStyle(color: Colors.white70),
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              selectedOptions = value;
+                            });
+                          },
+                        ),
+                      ) : Container(),
+                    dropdown == 2 ? Container(
                       height: 60,
                       padding: EdgeInsets.fromLTRB(20, 0, 10, 0),
                       child: Row(
@@ -135,7 +173,7 @@ class _FilterRangeContentViewState extends State<FilterRangeContentView> {
                               ),
                             ),
                           ),
-                          widget.type == FilterType.date ? IconButton(
+                          widget.type == 'created_at' ? IconButton(
                             icon: Icon(Icons.calendar_today),
                             onPressed: () async {
                               final DateTime picked = await showDatePicker(
@@ -162,7 +200,7 @@ class _FilterRangeContentViewState extends State<FilterRangeContentView> {
                 alignment: Alignment.bottomRight,
                 child: InkWell(
                   onTap: () {
-                    if (widget.type == FilterType.currency) {
+                    if (widget.type == 'currency') {
                       if (selectedCurrency == null) {
                         widget.onSelected(null);
                       } else {
@@ -174,7 +212,7 @@ class _FilterRangeContentViewState extends State<FilterRangeContentView> {
                           ),
                         );
                       }
-                    } else if (widget.type == FilterType.date) {
+                    } else if (widget.type == 'created_at') {
                       if (selectedDate == null) {
                         widget.onSelected(null);
                       } else {
@@ -186,10 +224,10 @@ class _FilterRangeContentViewState extends State<FilterRangeContentView> {
                           ),
                         );
                       }
-                    } else if (widget.type == FilterType.status ||
-                        widget.type == FilterType.specific_status ||
-                        widget.type == FilterType.channel ||
-                        widget.type == FilterType.payment_type) {
+                    } else if (widget.type == 'status' ||
+                        widget.type == 'specific_status' ||
+                        widget.type == 'channel' ||
+                        widget.type == 'payment_type') {
                       if (selectedOptions == null) {
                         widget.onSelected(null);
                       } else {
