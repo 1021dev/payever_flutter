@@ -77,7 +77,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
 
   SortType curSortType = SortType.date;
 
-  List<FilterType> filterTypes = [];
+  List<FilterItem> filterTypes = [];
   num _quantity;
   String _currency;
   num _totalAmount;
@@ -157,10 +157,17 @@ class _TransactionScreenState extends State<TransactionScreen> {
           : data.transaction.paginationData.amount ?? 0;
     }
 
+    _filterItems = [];
     if (filterTypes.length > 0) {
       for (int i = 0; i < filterTypes.length; i++) {
-        String filterString = ' start with: ${filterTypes[i]}';
+        String filterString = '${getFilterNameByType(filterTypes[i].type)} ${getFilterConditionNameByCondition(filterTypes[i].condition)}: ${filterTypes[i].value}';
+        TagItemModel item = TagItemModel(title: filterString, type: filterTypes[i].type);
+        _filterItems.add(item);
       }
+    }
+    if (search.length > 0) {
+      _filterItems.add(TagItemModel(title: 'Search is: $search', type: null));
+      _searchTagIndex = _filterItems.length - 1;
     }
 
 
@@ -221,8 +228,31 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                   context: context,
                                   builder: (builder) {
                                     return FilterContentView(
-                                      onSelected: (val) {
+                                      onSelected: (FilterItem val) {
                                         Navigator.pop(context);
+
+                                        setState(() {
+                                          if (val != null) {
+                                            print('filterType: ${filterTypes.length} => CurrentValue: ${val.value}');
+                                            if (filterTypes.length > 0) {
+                                              int isExist = filterTypes.indexWhere((element) => element.type == val.type);
+                                              if (isExist > -1) {
+                                                filterTypes[isExist] = val;
+                                              } else {
+                                                filterTypes.add(val);
+                                              }
+                                            } else {
+                                              filterTypes.add(val);
+                                            }
+                                          } else {
+                                            if (filterTypes.length > 0) {
+                                              int isExist = filterTypes.indexWhere((element) => element.type == val.type);
+                                              if (isExist != null) {
+                                                filterTypes.removeAt(isExist);
+                                              }
+                                            }
+                                          }
+                                        });
                                       },
                                     );
                                   });
@@ -306,6 +336,8 @@ class _TransactionScreenState extends State<TransactionScreen> {
                       key: _tagStateKey,
                       itemCount: _filterItems.length,
                       alignment: WrapAlignment.start,
+                      spacing: 4,
+                      runSpacing: 8,
                       itemBuilder: (int index) {
                         return ItemTags(
                           key: Key('filterItem$index'),
@@ -327,9 +359,10 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                   _searchTagIndex = -1;
                                   searching.value = '';
                                   search = '';
+                                } else {
+                                  filterTypes.removeAt(index);
                                 }
-                                _filterItems.removeAt(index);
-                              });
+                             });
                               return true;
                             }
                           ),
@@ -440,26 +473,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
                   setState(() {
                     searching.value = value;
                     search = value;
-                    if (searching.value.length > 0) {
-                      if (_filterItems.length > 0) {
-                        TagItemModel model = _filterItems[_filterItems.length - 1];
-                        if (model.title.contains('Search is')) {
-                          model.title = 'Search is: $value';
-                          _filterItems[_filterItems.length - 1] = model;
-                        } else {
-                          _filterItems.add(TagItemModel(title: 'Search is: $value', type: null));
-                        }
-                      } else {
-                        _filterItems.add(TagItemModel(title: 'Search is: $value', type: null));
-                      }
-                    } else {
-                      if (_filterItems.length > 0) {
-                        TagItemModel model = _filterItems[_filterItems.length - 1];
-                        if (model.title.contains('Search is')) {
-                          _filterItems.removeAt(_filterItems.length - 1);
-                        }
-                      }
-                    }
                   });
                 }
             ),

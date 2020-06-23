@@ -38,7 +38,9 @@ class _FilterRangeContentViewState extends State<FilterRangeContentView> {
                   children: [
                     Container(
                       height: 60,
+                      padding: EdgeInsets.only(left: 16, right: 16),
                       child: DropdownButton<String>(
+                        isExpanded: true,
                         underline: Container(),
                         value: filterConditionName,
                         items: conditions.map((FilterCondition value) {
