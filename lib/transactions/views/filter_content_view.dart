@@ -5,7 +5,7 @@ import 'package:payever/transactions/models/enums.dart';
 import 'sub_view/flter_range_content_view.dart';
 
 class FilterContentView extends StatefulWidget {
-  final InputEventCallback<FilterItem> onSelected;
+  final Function onSelected;
   FilterContentView({this.onSelected});
   @override
   _FilterContentViewState createState() => _FilterContentViewState();

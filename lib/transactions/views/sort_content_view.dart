@@ -4,7 +4,7 @@ import 'package:payever/transactions/models/enums.dart';
 
 class SortContentView extends StatelessWidget {
   final SortType selectedIndex;
-  final InputEventCallback<SortType> onSelected;
+  final Function onSelected;
 
   SortContentView({this.selectedIndex, this.onSelected});
 

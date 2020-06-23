@@ -5,7 +5,7 @@ import 'package:payever/transactions/views/filter_content_view.dart';
 
 class FilterRangeContentView extends StatefulWidget {
   final FilterType type;
-  final InputEventCallback<FilterItem> onSelected;
+  final Function onSelected;
   FilterRangeContentView({this.type, this.onSelected});
 
   @override

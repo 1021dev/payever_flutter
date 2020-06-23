@@ -38,6 +38,7 @@ _getAllItem(){
 class TagItemModel {
   String title;
   FilterType type;
+  TagItemModel({this.title = '', this.type});
 }
 
 class TransactionScreenInit extends StatelessWidget {
@@ -77,6 +78,14 @@ class _TransactionScreenState extends State<TransactionScreen> {
   SortType curSortType = SortType.date;
 
   List<FilterType> filterTypes = [];
+  num _quantity;
+  String _currency;
+  num _totalAmount;
+  var f = NumberFormat("###,###,##0.00", "en_US");
+  bool noTransactions = false;
+  TransactionStateModel transactionsStateModel;
+  List<TagItemModel> _filterItems;
+  int _searchTagIndex = -1;
 
   @override
   void initState() {
@@ -95,18 +104,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
   listener() {
     setState(() {});
   }
-
-  num _quantity;
-
-  String _currency;
-  num _totalAmount;
-  var f = NumberFormat("###,###,##0.00", "en_US");
-  bool noTransactions = false;
-
-  TransactionStateModel transactionsStateModel;
-
-  List _filterItems;
-  int _searchTagIndex = -1;
 
   fetchTransactions({String search, bool init}) {
     TransactionsApi api = TransactionsApi();
@@ -313,7 +310,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                         return ItemTags(
                           key: Key('filterItem$index'),
                           index: index,
-                          title: _filterItems[index],
+                          title: _filterItems[index].title,
                           color: Colors.white12,
                           activeColor: Colors.white12,
                           textActiveColor: Colors.white,
@@ -444,16 +441,23 @@ class _TransactionScreenState extends State<TransactionScreen> {
                     searching.value = value;
                     search = value;
                     if (searching.value.length > 0) {
-                      if (_searchTagIndex > -1) {
-                        _filterItems[_searchTagIndex] = 'Search is: ${searching.value}';
+                      if (_filterItems.length > 0) {
+                        TagItemModel model = _filterItems[_filterItems.length - 1];
+                        if (model.title.contains('Search is')) {
+                          model.title = 'Search is: $value';
+                          _filterItems[_filterItems.length - 1] = model;
+                        } else {
+                          _filterItems.add(TagItemModel(title: 'Search is: $value', type: null));
+                        }
                       } else {
-                        _filterItems.add('Search is: ${searching.value}');
-                        _searchTagIndex = _filterItems.length;
+                        _filterItems.add(TagItemModel(title: 'Search is: $value', type: null));
                       }
                     } else {
-                      if (_searchTagIndex > -1) {
-                        _filterItems.removeAt(_searchTagIndex);
-                        _searchTagIndex = -1;
+                      if (_filterItems.length > 0) {
+                        TagItemModel model = _filterItems[_filterItems.length - 1];
+                        if (model.title.contains('Search is')) {
+                          _filterItems.removeAt(_filterItems.length - 1);
+                        }
                       }
                     }
                   });

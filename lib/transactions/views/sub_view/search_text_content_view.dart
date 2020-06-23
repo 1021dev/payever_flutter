@@ -2,7 +2,7 @@ import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/material.dart';
 
 class SearchTextContentView extends StatefulWidget {
-  final InputEventCallback<String> onSelected;
+  final Function onSelected;
   final String searchText;
   SearchTextContentView({this.searchText, this.onSelected});
 
@@ -12,11 +12,16 @@ class SearchTextContentView extends StatefulWidget {
 
 class _SearchTextContentViewState extends State<SearchTextContentView> {
 
+  @override
+  void initState() {
+    super.initState();
+    searchTextController.text = widget.searchText;
+  }
+
   TextEditingController searchTextController = TextEditingController();
   FocusNode searchFocus = FocusNode();
   @override
   Widget build(BuildContext context) {
-    searchTextController.text = widget.searchText;
     return Container(
         height: 120,
         child: Container(
