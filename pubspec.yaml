@@ -74,6 +74,7 @@ flutter:
     - assets/translations/cart_app/
     - assets/translations/custom/
     - assets/videos/
+    - assets/json/currency.json
 
 #    fonts:
 #      - family: Helvetica Neue

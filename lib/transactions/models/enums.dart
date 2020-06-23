@@ -449,14 +449,6 @@ List<String> getOptionsByFilterType(FilterType type) {
         'xtCommerce',
         'Overlay',
       ];
-    case FilterType.currency:
-      return [
-        'UAE Dirham',
-        'Afghani',
-        'Lek',
-        'Armenian Dram',
-        'Netherlands Antillean Guider'
-      ];
     default:
       return [];
   }

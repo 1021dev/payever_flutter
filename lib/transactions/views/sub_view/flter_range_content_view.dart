@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
+import 'package:payever/transactions/models/currency.dart';
 import 'package:payever/transactions/models/enums.dart';
 import 'package:payever/transactions/views/filter_content_view.dart';
 
@@ -19,6 +22,9 @@ class _FilterRangeContentViewState extends State<FilterRangeContentView> {
   String filterConditionName = '';
   int _selectedConditionIndex = 0;
   TextEditingController filterValueController = TextEditingController();
+  Currency selectedCurrency;
+  String selectedOptions;
+
   @override
   Widget build(BuildContext context) {
     List<FilterCondition> conditions = filterConditionsByFilterType(widget.type);
@@ -73,7 +79,45 @@ class _FilterRangeContentViewState extends State<FilterRangeContentView> {
                       height: 1,
                       color: Colors.white10,
                     ),
-                    Container(
+                    widget.type == FilterType.currency ?
+
+                      Container(
+                        height: 60,
+                        padding: EdgeInsets.fromLTRB(20, 0, 10, 0),
+                        child: new FutureBuilder(
+                            future: DefaultAssetBundle.of(context).loadString('assets/json/currency.json'),
+                            builder: (context, snapshot) {
+                              List<Currency> currencies = parseJosn(snapshot.data.toString());
+                              return currencies.isNotEmpty ?
+                                DropdownButton<String>(
+                                  isExpanded: true,
+                                  underline: Container(),
+                                  itemHeight: 60,
+                                  hint: Text(
+                                    'Option',
+                                    style: TextStyle(color: Colors.white70),
+                                  ),
+                                  value: selectedCurrency != null ? selectedCurrency.name : null,
+                                  items: currencies.map((Currency value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value.name,
+                                      child: Text(
+                                        value.name,
+                                        style: TextStyle(color: Colors.white70),
+                                      ),
+                                    );
+                                  }).toList(),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      int index = currencies.indexWhere((element) => element.name == value);
+                                      selectedCurrency = currencies[index];
+                                    });
+                                  },
+                                ): Container(child: CircularProgressIndicator(),);
+                            },
+                        ),
+                      ) : Container(),
+                    widget.type != FilterType.currency ? Container(
                       height: 60,
                       padding: EdgeInsets.fromLTRB(20, 0, 10, 0),
                       child: Row(
@@ -110,7 +154,7 @@ class _FilterRangeContentViewState extends State<FilterRangeContentView> {
                         ],
 
                       ),
-                    )
+                    ): Container(),
                   ],
                 ),
               ),
@@ -118,20 +162,63 @@ class _FilterRangeContentViewState extends State<FilterRangeContentView> {
                 alignment: Alignment.bottomRight,
                 child: InkWell(
                   onTap: () {
-                    if (filterValueController.text.length == 0) {
-                      widget.onSelected(null);
+                    if (widget.type == FilterType.currency) {
+                      if (selectedCurrency == null) {
+                        widget.onSelected(null);
+                      } else {
+                        widget.onSelected(
+                          FilterItem(
+                            type: widget.type,
+                            condition: conditions[_selectedConditionIndex],
+                            value: selectedCurrency.name,
+                          ),
+                        );
+                      }
+                    } else if (widget.type == FilterType.date) {
+                      if (selectedDate == null) {
+                        widget.onSelected(null);
+                      } else {
+                        widget.onSelected(
+                          FilterItem(
+                            type: widget.type,
+                            condition: conditions[_selectedConditionIndex],
+                            value: filterValueController.text,
+                          ),
+                        );
+                      }
+                    } else if (widget.type == FilterType.status ||
+                        widget.type == FilterType.specific_status ||
+                        widget.type == FilterType.channel ||
+                        widget.type == FilterType.payment_type) {
+                      if (selectedOptions == null) {
+                        widget.onSelected(null);
+                      } else {
+                        widget.onSelected(
+                          FilterItem(
+                            type: widget.type,
+                            condition: conditions[_selectedConditionIndex],
+                            value: selectedOptions,
+                          ),
+                        );
+                      }
                     } else {
-                      widget.onSelected( FilterItem(
-                        type: widget.type,
-                        condition: conditions[_selectedConditionIndex],
-                        value: filterValueController.text,
-                      ));
+                      if (filterValueController.text.length == 0) {
+                        widget.onSelected(null);
+                      } else {
+                        widget.onSelected(
+                          FilterItem(
+                            type: widget.type,
+                            condition: conditions[_selectedConditionIndex],
+                            value: filterValueController.text,
+                          ),
+                        );
+                      }
                     }
                   },
                   child: Container(
                     width: 60,
                     height: 40,
-                    alignment: Alignment.bottomCenter,
+                    alignment: Alignment.center,
                     child: Text('Apply'),
                   ),
                 ),
@@ -140,4 +227,13 @@ class _FilterRangeContentViewState extends State<FilterRangeContentView> {
           ),
         ));
   }
+
+  List<Currency> parseJosn(String response) {
+    if(response==null){
+      return [];
+    }
+    final parsed = json.decode(response.toString()).cast<Map<String, dynamic>>();
+    return parsed.map<Currency>((json) => new Currency.fromJson(json)).toList();
+  }
+
 }
