@@ -1,4 +1,5 @@
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
+import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/transactions/models/enums.dart';
 import 'package:payever/transactions/views/filter_content_view.dart';
@@ -14,6 +15,7 @@ class FilterRangeContentView extends StatefulWidget {
 
 class _FilterRangeContentViewState extends State<FilterRangeContentView> {
 
+  DateTime selectedDate;
   String filterConditionName = '';
   int _selectedConditionIndex = 0;
   TextEditingController filterValueController = TextEditingController();
@@ -22,6 +24,9 @@ class _FilterRangeContentViewState extends State<FilterRangeContentView> {
     List<FilterCondition> conditions = filterConditionsByFilterType(widget.type);
     if (filterConditionName == '') {
       filterConditionName = getFilterConditionNameByCondition(conditions[0]);
+    }
+    if (selectedDate != null) {
+      filterValueController.text = formatDate(selectedDate, [mm, '/', dd, '/', yyyy]);
     }
     return Container(
         height: 173,
@@ -37,7 +42,6 @@ class _FilterRangeContentViewState extends State<FilterRangeContentView> {
                 child: Column(
                   children: [
                     Container(
-                      height: 60,
                       padding: EdgeInsets.only(left: 16, right: 16),
                       child: DropdownButton<String>(
                         isExpanded: true,
@@ -72,16 +76,39 @@ class _FilterRangeContentViewState extends State<FilterRangeContentView> {
                     Container(
                       height: 60,
                       padding: EdgeInsets.fromLTRB(20, 0, 10, 0),
-                      child:  TextField(
-                        controller: filterValueController,
-                        decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: hintTextByFilter(widget.type),
-                        ),
-                        style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.white
-                        ),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: TextField(
+                              controller: filterValueController,
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText: hintTextByFilter(widget.type),
+                              ),
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.white
+                              ),
+                            ),
+                          ),
+                          widget.type == FilterType.date ? IconButton(
+                            icon: Icon(Icons.calendar_today),
+                            onPressed: () async {
+                              final DateTime picked = await showDatePicker(
+                                context: context,
+                                initialDate: selectedDate != null ? selectedDate: DateTime.now(),
+                                firstDate: DateTime(2000, 1),
+                                lastDate: DateTime(2030, 12),
+                              );
+                              if (picked != null && picked != selectedDate) {
+                                setState(() {
+                                  selectedDate = picked;
+                                });
+                              }
+                            },
+                          ): Container(),
+                        ],
+
                       ),
                     )
                   ],

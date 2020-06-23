@@ -279,7 +279,6 @@ List<FilterCondition> filterConditionsByFilterType(FilterType type) {
         FilterCondition.con_isNotDate,
         FilterCondition.con_afterDate,
         FilterCondition.con_beforeDate,
-        FilterCondition.con_beforeDate,
         FilterCondition.con_doesNotContain,
       ];
     case FilterType.payment_type:
@@ -376,6 +375,87 @@ List<FilterCondition> filterConditionsByFilterType(FilterType type) {
         FilterCondition.con_endsWith,
         FilterCondition.con_contains,
         FilterCondition.con_doesNotContain,
+      ];
+    default:
+      return [];
+  }
+}
+
+List<String> getOptionsByFilterType(FilterType type) {
+  switch (type) {
+    case FilterType.payment_type:
+      return [];
+    case FilterType.status:
+      return [
+        'Accepted',
+        'Failed',
+        'New',
+        'In progress',
+        'Declined',
+        'Refunded',
+        'Cancelled',
+        'Paid',
+      ];
+    case FilterType.specific_status:
+      return [
+        'New',
+        'In progress',
+        'Accepted',
+        'Paid',
+        'Declined',
+        'Refunded',
+        'Failed',
+        'Cancelled',
+        'Collection',
+        'Late payment',
+        'Reminder',
+        'In Progress',
+        'In process',
+        'Declined',
+        'Approved',
+        'Approved with requirements',
+        'Deferred',
+        'Cancelled',
+        'Automatically declined',
+        'In decision',
+        'Decision in the next working day',
+        'In cancellation',
+        'Account opened',
+        'Cancelled',
+        'Temporarily approved',
+      ];
+    case FilterType.channel:
+      return [
+        'Shopify',
+        'Facebook',
+        'Finance express',
+        'Shop',
+        'WooCommerce',
+        'Magento',
+        'Marketing',
+        'PoS',
+        'Shopware',
+        'Debitoor',
+        'Link',
+        'E-conomic',
+        'JTL',
+        'OXID',
+        'Weebly',
+        'Plentymarkets',
+        'Advertising',
+        'Offer',
+        'DanDomain',
+        'PrestaShop',
+        'xtCommerce',
+        'Overlay',
+      ];
+    case FilterType.currency:
+      return [
+        'UAE Dirham',
+        'Afghani',
+        'Lek',
+        'Armenian Dram',
+        'Netherlands Antillean Guider'
       ];
     default:
       return [];
