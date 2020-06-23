@@ -15,7 +15,6 @@ import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/D
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/DashboardStudioView.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/DashboardTransactionsView.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/DashboardTutorialView.dart';
-import 'package:payever/commons/views/screens/dashboard/new_dashboard/transactions/TransactionsScreen.dart';
 import 'package:payever/commons/views/screens/login/login_page.dart';
 import 'package:payever/commons/views/screens/switcher/switcher_page.dart';
 import 'package:payever/transactions/transactions.dart';

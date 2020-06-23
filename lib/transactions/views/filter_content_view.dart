@@ -1,9 +1,8 @@
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/material.dart';
-import 'package:payever/commons/commons.dart';
-import 'package:payever/commons/views/screens/dashboard/new_dashboard/transactions/sub_view/FilterRangeContentView.dart';
+import 'package:payever/transactions/models/enums.dart';
 
-import 'model/Enums.dart';
+import 'sub_view/flter_range_content_view.dart';
 
 class FilterContentView extends StatefulWidget {
   final InputEventCallback<FilterItem> onSelected;

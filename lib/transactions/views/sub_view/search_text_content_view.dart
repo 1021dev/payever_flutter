@@ -1,6 +1,5 @@
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/material.dart';
-import 'package:payever/commons/views/screens/dashboard/new_dashboard/transactions/model/Enums.dart';
 
 class SearchTextContentView extends StatefulWidget {
   final InputEventCallback<String> onSelected;

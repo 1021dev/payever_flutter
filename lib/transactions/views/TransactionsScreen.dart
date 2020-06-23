@@ -3,10 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:payever/commons/views/custom_elements/Dashboard/TransactionListCell.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/BlurEffectView.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/TopBarView.dart';
-import 'package:payever/commons/views/screens/dashboard/new_dashboard/transactions/FilterContentView.dart';
-import 'package:payever/commons/views/screens/dashboard/new_dashboard/transactions/SortContentView.dart';
-import 'package:payever/commons/views/screens/dashboard/new_dashboard/transactions/model/Enums.dart';
-import 'package:payever/settings/views/employees/expandable_component.dart';
+import 'package:payever/transactions/models/enums.dart';
+import 'package:payever/transactions/views/filter_content_view.dart';
+import 'package:payever/transactions/views/sort_content_view.dart';
 
 class TransactionsScreen extends StatefulWidget {
   @override

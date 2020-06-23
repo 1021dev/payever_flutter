@@ -1,8 +1,6 @@
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/material.dart';
-import 'package:payever/commons/commons.dart';
-
-import 'model/Enums.dart';
+import 'package:payever/transactions/models/enums.dart';
 
 class SortContentView extends StatelessWidget {
   final SortType selectedIndex;

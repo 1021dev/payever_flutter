@@ -9,11 +9,10 @@ import 'package:page_transition/page_transition.dart';
 import 'package:intl/intl.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/BlurEffectView.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/TopBarView.dart';
-import 'package:payever/commons/views/screens/dashboard/new_dashboard/transactions/FilterContentView.dart';
-import 'package:payever/commons/views/screens/dashboard/new_dashboard/transactions/SortContentView.dart';
-import 'package:payever/commons/views/screens/dashboard/new_dashboard/transactions/export_content_view.dart';
-import 'package:payever/commons/views/screens/dashboard/new_dashboard/transactions/model/Enums.dart';
-import 'package:payever/commons/views/screens/dashboard/new_dashboard/transactions/sub_view/search_text_content_view.dart';
+import 'package:payever/transactions/models/enums.dart';
+import 'package:payever/transactions/views/filter_content_view.dart';
+import 'package:payever/transactions/views/sort_content_view.dart';
+import 'package:payever/transactions/views/export_content_view.dart';
 import 'package:provider/provider.dart';
 
 import '../utils/utils.dart';
@@ -23,6 +22,7 @@ import '../../commons/view_models/view_models.dart';
 import '../../commons/models/models.dart';
 import '../../commons/views/screens/login/login.dart';
 import '../../commons/views/screens/dashboard/transaction_card.dart';
+import 'sub_view/search_text_content_view.dart';
 import 'transactions_details_screen.dart';
 
 bool _isPortrait;
@@ -303,7 +303,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                   Container(
                     width: Device.width,
                     padding: EdgeInsets.only(
-                      left: 16, right: 16,
+                      left: 16, right: 16, top: 8, bottom: 8,
                     ),
                     child: Tags(
                       key: _tagStateKey,
