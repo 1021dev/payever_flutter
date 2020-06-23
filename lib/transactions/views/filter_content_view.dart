@@ -15,6 +15,7 @@ class _FilterContentViewState extends State<FilterContentView> {
   void showMeDialog(BuildContext context, String filterType) {
 //    String selectedFilterItem = "Is";
     String filtername = filter_labels[filterType];
+    debugPrint('FilterTypeName => $filterType');
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -70,6 +71,9 @@ class _FilterContentViewState extends State<FilterContentView> {
                   ),
                   Expanded(
                     child: ListView.separated(
+                      separatorBuilder: (context, index) {
+                        return Divider(height: 0, thickness: 0, color: Colors.transparent,);
+                      },
                       itemCount: filter_labels.keys.toList().length,
                       itemBuilder: (context, index) {
                         return ListTile(
@@ -92,10 +96,12 @@ class FilterItem {
   final String type;
   final String condition;
   final String value;
+  final String disPlayName;
 
   FilterItem({
     this.type,
     this.condition,
     this.value,
+    this.disPlayName,
   });
 }

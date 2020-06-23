@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/transactions/models/currency.dart';
@@ -20,7 +19,6 @@ class _FilterRangeContentViewState extends State<FilterRangeContentView> {
 
   DateTime selectedDate;
   String filterConditionName = '';
-  int _selectedConditionIndex = 0;
   TextEditingController filterValueController = TextEditingController();
   Currency selectedCurrency;
   String selectedOptions;
@@ -28,12 +26,13 @@ class _FilterRangeContentViewState extends State<FilterRangeContentView> {
   @override
   Widget build(BuildContext context) {
     Map<String, String> conditions = filterConditionsByFilterType(widget.type);
+    debugPrint('conditions => $conditions');
     Map<String, String> options = getOptionsByFilterType(widget.type);
     if (filterConditionName == '') {
-      filterConditionName = conditions[conditions.keys.first];
+      filterConditionName = conditions.keys.toList().first;
     }
     if (selectedDate != null) {
-      filterValueController.text = formatDate(selectedDate, [mm, '/', dd, '/', yyyy]);
+      filterValueController.text = formatDate(selectedDate, [m, '/', d, '/', yy]);
     }
     int dropdown = 2;
     if (widget.type == 'currency') {
@@ -62,7 +61,7 @@ class _FilterRangeContentViewState extends State<FilterRangeContentView> {
                       child: DropdownButton<String>(
                         isExpanded: true,
                         underline: Container(),
-                        value: filterConditionName,
+                        value: filterConditionName != '' ? filterConditionName: null,
                         items: conditions.keys.map((String value) {
                           return DropdownMenuItem<String>(
                             value: value,
@@ -75,12 +74,6 @@ class _FilterRangeContentViewState extends State<FilterRangeContentView> {
                         onChanged: (value) {
                           setState(() {
                             filterConditionName = value;
-                            for (int i = 0; i < conditions.keys.toList().length; i++) {
-                              String cName = conditions.keys.toList()[i];
-                              if (cName == value) {
-                                _selectedConditionIndex = i;
-                              }
-                            }
                           });
                         },
                       ),
@@ -207,8 +200,9 @@ class _FilterRangeContentViewState extends State<FilterRangeContentView> {
                         widget.onSelected(
                           FilterItem(
                             type: widget.type,
-                            condition: conditions[_selectedConditionIndex],
-                            value: selectedCurrency.name,
+                            condition: filterConditionName,
+                            value: selectedCurrency.code,
+                            disPlayName: selectedCurrency.name,
                           ),
                         );
                       }
@@ -219,8 +213,9 @@ class _FilterRangeContentViewState extends State<FilterRangeContentView> {
                         widget.onSelected(
                           FilterItem(
                             type: widget.type,
-                            condition: conditions[_selectedConditionIndex],
-                            value: filterValueController.text,
+                            condition: filterConditionName,
+                            value: formatDate(selectedDate, [yyyy, '-', mm, '-', dd]),
+                            disPlayName: filterValueController.text,
                           ),
                         );
                       }
@@ -234,8 +229,9 @@ class _FilterRangeContentViewState extends State<FilterRangeContentView> {
                         widget.onSelected(
                           FilterItem(
                             type: widget.type,
-                            condition: conditions[_selectedConditionIndex],
+                            condition: filterConditionName,
                             value: selectedOptions,
+                            disPlayName: options[selectedOptions],
                           ),
                         );
                       }
@@ -246,8 +242,9 @@ class _FilterRangeContentViewState extends State<FilterRangeContentView> {
                         widget.onSelected(
                           FilterItem(
                             type: widget.type,
-                            condition: conditions[_selectedConditionIndex],
+                            condition: filterConditionName,
                             value: filterValueController.text,
+                            disPlayName: filterValueController.text,
                           ),
                         );
                       }

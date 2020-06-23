@@ -22,7 +22,6 @@ Map<String, String> filter_labels = {
   'created_at': 'Date',
   'status': 'Status',
   'specific_status': 'Specific status',
-  'channel_set_uuid': 'Channel set id',
 };
 
 Map<String, String> filter_conditions = {
@@ -282,7 +281,7 @@ Map<String, String> filterConditionsByFilterType(String type) {
 
 Map<String, String> getOptionsByFilterType(String type) {
   switch(type) {
-    case 'payment_type':
+    case 'type':
       return payment_type_options;
     case 'status':
       return filter_status_options;
@@ -292,4 +291,24 @@ Map<String, String> getOptionsByFilterType(String type) {
       return filter_channel_options;
   }
   return {};
+}
+
+String getOptionString(String key) {
+  String temp = payment_type_options.keys.toList().firstWhere((element) => element == key);
+  if (temp != null) {
+    return temp;
+  }
+  temp = filter_status_options.keys.toList().firstWhere((element) => element == key);
+  if (temp != null) {
+    return temp;
+  }
+  temp = specific_status_options.keys.toList().firstWhere((element) => element == key);
+  if (temp != null) {
+    return temp;
+  }
+  temp = filter_channel_options.keys.toList().firstWhere((element) => element == key);
+  if (temp != null) {
+    return temp;
+  }
+  return null;
 }

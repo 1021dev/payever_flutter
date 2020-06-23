@@ -75,13 +75,13 @@ class _TransactionScreenState extends State<TransactionScreen> {
   bool init = true;
   String wallpaper;
 
-  String curSortType = sort_transactions.keys.toList().first;
+  String curSortType = 'date';
 
   List<FilterItem> filterTypes = [];
   num _quantity;
   String _currency;
   num _totalAmount;
-  var f = NumberFormat("###,###,##0.00", "en_US");
+  var f = NumberFormat('###,###,##0.00', 'en_US');
   bool noTransactions = false;
   TransactionStateModel transactionsStateModel;
   List<TagItemModel> _filterItems;
@@ -105,20 +105,43 @@ class _TransactionScreenState extends State<TransactionScreen> {
     setState(() {});
   }
 
-  fetchTransactions({TransactionStateModel model, bool init}) {
+  fetchTransactions({TransactionStateModel model, bool init, int page}) {
     TransactionsApi api = TransactionsApi();
-    api
-        .getTransactionList(
+    String queryString = '';
+    String sortQuery = '';
+    if (model.sortType == 'date') {
+      sortQuery = 'orderBy=created_at&direction=desc&';
+    } else if (model.sortType == 'total_high') {
+      sortQuery = 'orderBy=total&direction=desc&';
+    } else if (model.sortType == 'total_low') {
+      sortQuery = 'orderBy=total&direction=asc&';
+    } else if (model.sortType == 'customer_name') {
+      sortQuery = 'orderBy=customer_name&direction=asc&';
+    }
+    queryString = '?${sortQuery}limit=50&query=${model.searchField}&page=$page&currency=${_currentBusiness.currency}';
+    if (model.filterTypes.length > 0) {
+      for (int i = 0; i < model.filterTypes.length; i++) {
+        FilterItem item = model.filterTypes[i];
+        String filterType = item.type;
+        String filterCondition = item.condition;
+        String filterValue = item.value;
+        String filterConditionString = 'filters[$filterType][0][condition]';
+        String filterValueString = 'filters[$filterType][0][value]';
+        String queryTemp = '&$filterConditionString=$filterCondition&$filterValueString=$filterValue';
+        queryString = '$queryString$queryTemp';
+      }
+    }
+
+    api.getTransactionList(
       _currentBusiness.id,
       GlobalUtils.activeToken.accessToken,
-      "?orderBy=${model.sortType}&direction=desc&limit=50&query=${model.searchField}&page=1&currency=${_currentBusiness.currency}",
-    )
-        .then((obj) {
+      queryString,
+    ).then((obj) {
       data = TransactionScreenData(obj);
       if (init) isLoading.value = false;
       isLoadingSearch.value = false;
     }).catchError((onError) {
-      if (onError.toString().contains("401")) {
+      if (onError.toString().contains('401')) {
         GlobalUtils.clearCredentials();
         Navigator.pushReplacement(
             context,
@@ -136,7 +159,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
     _currentBusiness = globalStateModel.currentBusiness;
     wallpaper = globalStateModel.currentWallpaper;
 
-    fetchTransactions(init: init, model: transactionsStateModel);
+    fetchTransactions(init: init, model: transactionsStateModel, page: 1);
     init = false;
     _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
     Measurements.height = (_isPortrait
@@ -160,7 +183,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
     _filterItems = [];
     if (filterTypes.length > 0) {
       for (int i = 0; i < filterTypes.length; i++) {
-        String filterString = '${filter_labels[filterTypes[i].type]} ${filter_conditions[filterTypes[i].condition]}: ${filterTypes[i].value}';
+        String filterString = '${filter_labels[filterTypes[i].type]} ${filter_conditions[filterTypes[i].condition]}: ${filterTypes[i].disPlayName}';
         TagItemModel item = TagItemModel(title: filterString, type: filterTypes[i].type);
         _filterItems.add(item);
       }
@@ -169,7 +192,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
       _filterItems.add(TagItemModel(title: 'Search is: $search', type: null));
       _searchTagIndex = _filterItems.length - 1;
     }
-
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -184,7 +206,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
               decoration: BoxDecoration(
                   image: DecorationImage(
                       image: NetworkImage(
-                          "https://payever.azureedge.net/images/commerceos-background.jpg"),
+                          'https://payever.azureedge.net/images/commerceos-background.jpg'),
                       fit: BoxFit.cover)),
               child: BlurEffectView(
                 radius: 0,
@@ -230,10 +252,8 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                     return FilterContentView(
                                       onSelected: (FilterItem val) {
                                         Navigator.pop(context);
-
                                         setState(() {
                                           if (val != null) {
-                                            print('filterType: ${filterTypes.length} => CurrentValue: ${val.value}');
                                             if (filterTypes.length > 0) {
                                               int isExist = filterTypes.indexWhere((element) => element.type == val.type);
                                               if (isExist > -1) {
@@ -252,6 +272,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                               }
                                             }
                                           }
+                                          transactionsStateModel.setFilterTypes(filterTypes);
                                         });
                                       },
                                     );
@@ -308,6 +329,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                         Navigator.pop(context);
                                         setState(() {
                                           curSortType = val;
+                                          transactionsStateModel.setSortType(curSortType);
                                         });
                                       },
                                     );
@@ -359,8 +381,10 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                   _searchTagIndex = -1;
                                   searching.value = '';
                                   search = '';
+                                  transactionsStateModel.setSearchField(search);
                                 } else {
                                   filterTypes.removeAt(index);
+                                  transactionsStateModel.setFilterTypes(filterTypes);
                                 }
                              });
                               return true;
@@ -384,7 +408,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                       Expanded(
                         flex: 1,
                         child: Text(
-                          "Channel",
+                          'Channel',
                           style: TextStyle(
                               fontSize: 12,
                               color: Colors.white70,
@@ -394,7 +418,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                       Expanded(
                         flex: 1,
                         child: Text(
-                          "Type",
+                          'Type',
                           style: TextStyle(
                               fontSize: 12,
                               color: Colors.white70,
@@ -404,7 +428,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                       Expanded(
                         flex: 2,
                         child: Text(
-                          "Customer name",
+                          'Customer name',
                           style: TextStyle(
                               fontSize: 12,
                               color: Colors.white70,
@@ -414,7 +438,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                       Expanded(
                         flex: 2,
                         child: Text(
-                          "Total",
+                          'Total',
                           style: TextStyle(
                               fontSize: 12,
                               color: Colors.white70,
@@ -428,19 +452,19 @@ class _TransactionScreenState extends State<TransactionScreen> {
                   child: isLoading.value || isLoadingSearch.value ?
                   Center(
                     child: CircularProgressIndicator(),
-                  ): CustomList(_currentBusiness, search,
-                      data != null ? data.transaction.collection : [], data),
+                  ): CustomList(_currentBusiness,
+                      data != null ? data.transaction.collection : [], data, transactionsStateModel),
                 ),
                 Container(
                   height: 50,
                   color: Colors.black87,
                   alignment: Alignment.center,
                   child: !noTransactions ? AutoSizeText(
-                    Language.getTransactionStrings("total_orders.heading")
+                    Language.getTransactionStrings('total_orders.heading')
                         .toString()
-                        .replaceFirst("{{total_count}}", "${_quantity ?? 0}")
-                        .replaceFirst("{{total_sum}}",
-                        "${_currency ?? "€"}${f.format(_totalAmount ?? 0)}"),
+                        .replaceFirst('{{total_count}}', '${_quantity ?? 0}')
+                        .replaceFirst('{{total_sum}}',
+                        '${_currency ?? '€'}${f.format(_totalAmount ?? 0)}'),
                     overflow: TextOverflow.fade,
                     maxLines: 1,
                     style: TextStyle(
@@ -473,6 +497,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                   setState(() {
                     searching.value = value;
                     search = value;
+                    transactionsStateModel.setSearchField(search);
                   });
                 }
             ),
@@ -484,11 +509,10 @@ class _TransactionScreenState extends State<TransactionScreen> {
 
 class CustomList extends StatefulWidget {
   final Business currentBusiness;
-  final String search;
   final List<Collection> collection;
   final TransactionScreenData data;
-
-  CustomList(this.currentBusiness, this.search, this.collection, this.data);
+  final TransactionStateModel transactionStateModel;
+  CustomList(this.currentBusiness, this.collection, this.data, this.transactionStateModel);
 
   @override
   _CustomListState createState() => _CustomListState();
@@ -516,19 +540,45 @@ class _CustomListState extends State<CustomList> {
           isLoading.value = true;
         });
         page++;
-        TransactionsApi()
-            .getTransactionList(
+
+        TransactionsApi api = TransactionsApi();
+        String queryString = '';
+        String sortQuery = '';
+        if (widget.transactionStateModel.sortType == 'date') {
+          sortQuery = 'orderBy=created_at&direction=desc&';
+        } else if (widget.transactionStateModel.sortType == 'total_high') {
+          sortQuery = 'orderBy=total&direction=desc&';
+        } else if (widget.transactionStateModel.sortType == 'total_low') {
+          sortQuery = 'orderBy=total&direction=asc&';
+        } else if (widget.transactionStateModel.sortType == 'customer_name') {
+          sortQuery = 'orderBy=customer_name&direction=asc&';
+        }
+        queryString = '?${sortQuery}limit=50&query=${widget.transactionStateModel.searchField}&page=$page&currency=${widget.currentBusiness.currency}';
+        if (widget.transactionStateModel.filterTypes.length > 0) {
+          for (int i = 0; i < widget.transactionStateModel.filterTypes.length; i++) {
+            FilterItem item = widget.transactionStateModel.filterTypes[i];
+            String filterType = item.type;
+            String filterCondition = item.condition;
+            String filterValue = item.value;
+            String filterConditionString = 'filters[$filterType][0][condition]';
+            String filterValueString = 'filters[$filterType][0][value]';
+            String queryTemp = '&$filterConditionString=$filterCondition&$filterValueString=$filterValue';
+            queryString = '$queryString$queryTemp';
+          }
+        }
+
+        TransactionsApi().getTransactionList(
                 widget.currentBusiness.id,
                 GlobalUtils.activeToken.accessToken,
-                "?orderBy=created_at&direction=desc&limit=50&query=${widget.search}&page=$page&currency=${widget.currentBusiness.currency}",)
-            .then((transaction) {
-          List<Collection> temp = Transaction.toMap(transaction).collection;
-          if (temp.isNotEmpty) {
-            setState(() {
-              isLoading.value = false;
-              widget.collection.addAll(temp);
-            });
-          }
+                queryString,
+        ).then((transaction) {
+            List<Collection> temp = Transaction.toMap(transaction).collection;
+            if (temp.isNotEmpty) {
+              setState(() {
+                isLoading.value = false;
+                widget.collection.addAll(temp);
+              });
+            }
         });
       }
     }
@@ -566,7 +616,7 @@ class PhoneTableRow extends StatelessWidget {
 
   PhoneTableRow(this.currentTransaction, this.isHeader, this.data);
 
-  final f = NumberFormat("###,###.00", "en_US");
+  final f = NumberFormat('###,###.00', 'en_US');
 
   @override
   Widget build(BuildContext context) {
@@ -598,7 +648,7 @@ class PhoneTableRow extends StatelessWidget {
                           : Container(
                               child: Text(
                               Language.getTransactionStrings(
-                                  "form.filter.labels.channel"),
+                                  'form.filter.labels.channel'),
                               style: TextStyle(
                                   fontSize: AppStyle.fontSizeListRow()),
                             )),
@@ -615,7 +665,7 @@ class PhoneTableRow extends StatelessWidget {
                           : Container(
                               child: Text(
                                   Language.getTransactionStrings(
-                                      "form.filter.labels.type"),
+                                      'form.filter.labels.type'),
                                   style: TextStyle(
                                       fontSize: AppStyle.fontSizeListRow())),
                             ),
@@ -632,7 +682,7 @@ class PhoneTableRow extends StatelessWidget {
                             )
                           : Text(
                               Language.getTransactionStrings(
-                                  "form.filter.labels.customer_name"),
+                                  'form.filter.labels.customer_name'),
                               style: TextStyle(
                                   fontSize: AppStyle.fontSizeListRow())),
                     ),
@@ -642,13 +692,13 @@ class PhoneTableRow extends StatelessWidget {
                     child: Container(
                       child: !isHeader
                           ? Text(
-                              "${Measurements.currency(currentTransaction.currency)}${f.format(currentTransaction.total)}",
+                              '${Measurements.currency(currentTransaction.currency)}${f.format(currentTransaction.total)}',
                               style: TextStyle(
                                   fontSize: AppStyle.fontSizeListRow()),
                             )
                           : Text(
                               Language.getTransactionStrings(
-                                  "form.filter.labels.total"),
+                                  'form.filter.labels.total'),
                               style: TextStyle(
                                   fontSize: AppStyle.fontSizeListRow())),
                     ),
@@ -659,12 +709,12 @@ class PhoneTableRow extends StatelessWidget {
                         ? Container(
                             child: !isHeader
                                 ? Text(
-                                    "${DateFormat.d("en_US").add_MMMM().add_y().format(time)} ${DateFormat.Hm("en_US").format(time.add(Duration(hours: 2)))}",
+                                    '${DateFormat.d('en_US').add_MMMM().add_y().format(time)} ${DateFormat.Hm('en_US').format(time.add(Duration(hours: 2)))}',
                                     style: TextStyle(
                                         fontSize: AppStyle.fontSizeListRow()))
                                 : Text(
                                     Language.getTransactionStrings(
-                                        "form.filter.labels.created_at"),
+                                        'form.filter.labels.created_at'),
                                     style: TextStyle(
                                         fontSize: AppStyle.fontSizeListRow())),
                           )
@@ -681,7 +731,7 @@ class PhoneTableRow extends StatelessWidget {
                                     currentTransaction.status)
                                 : AutoSizeText(
                                     Language.getTransactionStrings(
-                                        "form.filter.labels.status"),
+                                        'form.filter.labels.status'),
                                     style: TextStyle(
                                         fontSize: AppStyle.fontSizeListRow())),
                           )
@@ -732,7 +782,7 @@ class PhoneTableRow extends StatelessWidget {
                           child: TransactionDetailsScreen(td),
                           type: PageTransitionType.fade));
                 }).catchError((onError) {
-                  if (onError.toString().contains("401")) {
+                  if (onError.toString().contains('401')) {
                     GlobalUtils.clearCredentials();
                     Navigator.pushReplacement(
                         context,
@@ -766,7 +816,7 @@ class TabletTableRow extends StatelessWidget {
 
   TabletTableRow(this.currentTransaction, this.isHeader, this.data);
 
-  final f = NumberFormat("###,##0.00", "en_US");
+  final f = NumberFormat('###,##0.00', 'en_US');
 
   @override
   Widget build(BuildContext context) {
@@ -799,7 +849,7 @@ class TabletTableRow extends StatelessWidget {
                           : Container(
                               child: AutoSizeText(
                               Language.getTransactionStrings(
-                                  "form.filter.labels.channel"),
+                                  'form.filter.labels.channel'),
                               style: TextStyle(
                                   fontSize: AppStyle.fontSizeListRow()),
                             )),
@@ -817,7 +867,7 @@ class TabletTableRow extends StatelessWidget {
                           : Container(
                               child: AutoSizeText(
                                   Language.getTransactionStrings(
-                                      "form.filter.labels.type"),
+                                      'form.filter.labels.type'),
                                   style: TextStyle(
                                       fontSize: AppStyle.fontSizeListRow()))),
                     ),
@@ -826,12 +876,12 @@ class TabletTableRow extends StatelessWidget {
                     flex: 12,
                     child: Container(
                       child: !isHeader
-                          ? AutoSizeText("#${currentTransaction.originalId}",
+                          ? AutoSizeText('#${currentTransaction.originalId}',
                               style: TextStyle(
                                   fontSize: AppStyle.fontSizeListRow()))
                           : AutoSizeText(
                               Language.getTransactionStrings(
-                                  "form.filter.labels.original_id"),
+                                  'form.filter.labels.original_id'),
                               maxLines: 1,
                               textAlign: TextAlign.left,
                               style: TextStyle(
@@ -847,7 +897,7 @@ class TabletTableRow extends StatelessWidget {
                                   fontSize: AppStyle.fontSizeListRow()))
                           : AutoSizeText(
                               Language.getTransactionStrings(
-                                  "form.filter.labels.customer_name"),
+                                  'form.filter.labels.customer_name'),
                               maxLines: 1,
                               style: TextStyle(
                                   fontSize: AppStyle.fontSizeListRow())),
@@ -858,12 +908,12 @@ class TabletTableRow extends StatelessWidget {
                     child: Container(
                       child: !isHeader
                           ? AutoSizeText(
-                              "${Measurements.currency(currentTransaction.currency)}${f.format(currentTransaction.total)}",
+                              '${Measurements.currency(currentTransaction.currency)}${f.format(currentTransaction.total)}',
                               style: TextStyle(
                                   fontSize: AppStyle.fontSizeListRow()))
                           : AutoSizeText(
                               Language.getTransactionStrings(
-                                  "form.filter.labels.total"),
+                                  'form.filter.labels.total'),
                               maxLines: 1,
                               style: TextStyle(
                                   fontSize: AppStyle.fontSizeListRow())),
@@ -874,12 +924,12 @@ class TabletTableRow extends StatelessWidget {
                     child: Container(
                       child: !isHeader
                           ? AutoSizeText(
-                              "${DateFormat.d("en_US").add_MMMM().add_y().format(time)} ${DateFormat.Hm("en_US").format(time.add(Duration(hours: 2)))}",
+                              '${DateFormat.d('en_US').add_MMMM().add_y().format(time)} ${DateFormat.Hm('en_US').format(time.add(Duration(hours: 2)))}',
                               style: TextStyle(
                                   fontSize: AppStyle.fontSizeListRow()))
                           : Text(
                               Language.getTransactionStrings(
-                                  "form.filter.labels.created_at"),
+                                  'form.filter.labels.created_at'),
                               style: TextStyle(
                                   fontSize: AppStyle.fontSizeListRow())),
                     ),
@@ -892,7 +942,7 @@ class TabletTableRow extends StatelessWidget {
                           ? Measurements.statusWidget(currentTransaction.status)
                           : Text(
                               Language.getTransactionStrings(
-                                  "form.filter.labels.status"),
+                                  'form.filter.labels.status'),
                               style: TextStyle(
                                   fontSize: AppStyle.fontSizeListRow())),
                     ),
