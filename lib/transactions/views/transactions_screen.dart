@@ -9,6 +9,7 @@ import 'package:flutter_tags/flutter_tags.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:intl/intl.dart';
 import 'package:payever/blocs/bloc.dart';
+import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/BlurEffectView.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/TopBarView.dart';
 import 'package:payever/transactions/models/enums.dart';
@@ -137,34 +138,118 @@ class _TransactionScreenState extends State<TransactionScreen> {
             _filterItems.add(TagItemModel(title: 'Search is: ${state.searchText}', type: null));
             _searchTagIndex = _filterItems.length - 1;
           }
-          return  Scaffold(
+          return Scaffold(
             backgroundColor: Colors.black,
             resizeToAvoidBottomPadding: false,
-            body: SafeArea(
-              top: true,
-              child: Stack(
-                alignment: AlignmentDirectional.bottomStart,
-                children: [
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: NetworkImage(
-                                'https://payever.azureedge.net/images/commerceos-background.jpg'),
-                            fit: BoxFit.cover)),
-                    child: BlurEffectView(
-                      radius: 0,
-                    ),
+            appBar: AppBar(
+              centerTitle: false,
+              elevation: 0,
+              automaticallyImplyLeading: false,
+              backgroundColor: Colors.black,
+              title: Text('Transactions'),
+              leading: Container(
+                child: Center(
+                  child: Container(
+                    child: SvgPicture.asset(
+                      'assets/images/transactions.svg',
+                      color: Colors.white,
+                      height: 16,
+                      width: 24,
+                    )
                   ),
-                  Column(
+                ),
+              ),
+              actions: <Widget>[
+                IconButton(
+                  constraints: BoxConstraints(
+                      maxHeight: 32,
+                      maxWidth: 32,
+                      minHeight: 32,
+                      minWidth: 32
+                  ),
+                  icon: Icon(
+                    Icons.person_pin,
+                    color: Colors.white,
+                    size: 24,
+                  ),
+                  onPressed: () {
+
+                  },
+                ),
+                IconButton(
+                  constraints: BoxConstraints(
+                      maxHeight: 32,
+                      maxWidth: 32,
+                      minHeight: 32,
+                      minWidth: 32
+                  ),
+                  icon: Icon(
+                    Icons.search,
+                    color: Colors.white,
+                    size: 24,
+                  ),
+                  onPressed: () {
+
+                  },
+                ),
+                IconButton(
+                  constraints: BoxConstraints(
+                      maxHeight: 32,
+                      maxWidth: 32,
+                      minHeight: 32,
+                      minWidth: 32
+                  ),
+                  icon: Icon(
+                    Icons.notifications,
+                    color: Colors.white,
+                    size: 24,
+                  ),
+                  onPressed: () {
+
+                  },
+                ),
+                IconButton(
+                  constraints: BoxConstraints(
+                      maxHeight: 32,
+                      maxWidth: 32,
+                      minHeight: 32,
+                      minWidth: 32
+                  ),
+                  icon: Icon(
+                    Icons.menu,
+                    color: Colors.white,
+                    size: 24,
+                  ),
+                  onPressed: () {
+
+                  },
+                ),
+                IconButton(
+                  constraints: BoxConstraints(
+                      maxHeight: 32,
+                      maxWidth: 32,
+                      minHeight: 32,
+                      minWidth: 32
+                  ),
+                  icon: Icon(
+                    Icons.close,
+                    color: Colors.white,
+                    size: 24,
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                Padding(
+                  padding: EdgeInsets.only(right: 8),
+                ),
+              ],
+            ),
+            body: SafeArea(
+              child: BackgroundBase(
+                true,
+                  body: Column(
                     children: [
-                      TopBarView(
-                        iconUrl: 'assets/images/transactions.svg',
-                        title: 'Transactions',
-                        onTapClose: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
                       Container(
                         height: 50,
                         color: Colors.black38,
@@ -196,30 +281,30 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                           return FilterContentView(
                                             onSelected: (FilterItem val) {
                                               Navigator.pop(context);
-                                                List<FilterItem> filterTypes = [];
-                                                filterTypes.addAll(state.filterTypes);
-                                                if (val != null) {
-                                                  if (filterTypes.length > 0) {
-                                                    int isExist = filterTypes.indexWhere((element) => element.type == val.type);
-                                                    if (isExist > -1) {
-                                                      filterTypes[isExist] = val;
-                                                    } else {
-                                                      filterTypes.add(val);
-                                                    }
+                                              List<FilterItem> filterTypes = [];
+                                              filterTypes.addAll(state.filterTypes);
+                                              if (val != null) {
+                                                if (filterTypes.length > 0) {
+                                                  int isExist = filterTypes.indexWhere((element) => element.type == val.type);
+                                                  if (isExist > -1) {
+                                                    filterTypes[isExist] = val;
                                                   } else {
                                                     filterTypes.add(val);
                                                   }
                                                 } else {
-                                                  if (filterTypes.length > 0) {
-                                                    int isExist = filterTypes.indexWhere((element) => element.type == val.type);
-                                                    if (isExist != null) {
-                                                      filterTypes.removeAt(isExist);
-                                                    }
+                                                  filterTypes.add(val);
+                                                }
+                                              } else {
+                                                if (filterTypes.length > 0) {
+                                                  int isExist = filterTypes.indexWhere((element) => element.type == val.type);
+                                                  if (isExist != null) {
+                                                    filterTypes.removeAt(isExist);
                                                   }
                                                 }
-                                                screenBloc.add(
-                                                    UpdateFilterTypes(filterTypes: filterTypes)
-                                                );
+                                              }
+                                              screenBloc.add(
+                                                  UpdateFilterTypes(filterTypes: filterTypes)
+                                              );
                                             },
                                           );
                                         });
@@ -397,9 +482,9 @@ class _TransactionScreenState extends State<TransactionScreen> {
                       ),
                       Expanded(
                         child: state.isLoading ?
-                          Center(
-                            child: CircularProgressIndicator(),
-                          ): (state.data.transaction.collection.length > 0 ? CustomList(widget.globalStateModel,
+                        Center(
+                          child: CircularProgressIndicator(),
+                        ): (state.data.transaction.collection.length > 0 ? CustomList(widget.globalStateModel,
                             state.data != null ? state.data.transaction.collection : [],
                             state.data,
                             state):
@@ -434,12 +519,10 @@ class _TransactionScreenState extends State<TransactionScreen> {
                             : Container(),
                       )
                     ],
-                  )
-                ],
+                  ),
               ),
             ),
           );
-
         },
       ),
     );

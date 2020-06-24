@@ -139,6 +139,11 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
                     return ListView(
                       children: <Widget>[
                         highlightHeaderRow(),
+                        Divider(
+                          height: 0,
+                          thickness: 0.5,
+                          color: Colors.black38,
+                        ),
                         productRowsList,
                         totalPriceRow(),
                       ],
