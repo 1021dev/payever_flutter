@@ -61,7 +61,7 @@ class SortContentView extends StatelessWidget {
                           height: 30,
                           alignment: Alignment.centerLeft,
                           child: Text(
-                              'Customer Name',
+                              sort_transactions[sort_transactions.keys.toList()[0]],
                               style: TextStyle(
                                 color: Color(0xFFAAAAAA)
                               ),
@@ -92,7 +92,7 @@ class SortContentView extends StatelessWidget {
                             height: 30,
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              'Total high',
+                              sort_transactions[sort_transactions.keys.toList()[1]],
                               style: TextStyle(
                                   color: Color(0xFFAAAAAA)
                               ),
@@ -123,7 +123,7 @@ class SortContentView extends StatelessWidget {
                             height: 30,
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              'Total low',
+                              sort_transactions[sort_transactions.keys.toList()[2]],
                               style: TextStyle(
                                   color: Color(0xFFAAAAAA)
                               ),
@@ -154,7 +154,7 @@ class SortContentView extends StatelessWidget {
                             height: 30,
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              'Date',
+                              sort_transactions[sort_transactions.keys.toList()[3]],
                               style: TextStyle(
                                   color: Color(0xFFAAAAAA)
                               ),
