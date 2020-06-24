@@ -44,9 +44,11 @@ class DashboardMenuView extends StatelessWidget {
                 Container(
                   height: 44,
                   alignment: Alignment.centerRight,
-                  child: FlatButton(
+                  padding: EdgeInsets.only(top: 8),
+                  child: MaterialButton(
                     shape: CircleBorder(),
-                    padding: EdgeInsets.all(0),
+                    minWidth: 0,
+                    padding: EdgeInsets.all(8),
                     child: Icon(
                       Icons.close,
                       color: Colors.white,
@@ -73,7 +75,7 @@ class DashboardMenuView extends StatelessWidget {
                         Text(
                           "Switch Business",
                           style: TextStyle(
-                              fontSize: 12,
+                              fontSize: 14,
                               color: Colors.white
                           ),
                         )
@@ -105,7 +107,7 @@ class DashboardMenuView extends StatelessWidget {
                         Text(
                           "Personal Information",
                           style: TextStyle(
-                              fontSize: 12,
+                              fontSize: 14,
                               color: Colors.white
                           ),
                         )
@@ -137,7 +139,7 @@ class DashboardMenuView extends StatelessWidget {
                         Text(
                           "Add Business",
                           style: TextStyle(
-                              fontSize: 12,
+                              fontSize: 14,
                               color: Colors.white
                           ),
                         )
@@ -167,7 +169,7 @@ class DashboardMenuView extends StatelessWidget {
                         Text(
                           "Log Out",
                           style: TextStyle(
-                              fontSize: 12,
+                              fontSize: 14,
                               color: Colors.white
                           ),
                         )
@@ -199,7 +201,7 @@ class DashboardMenuView extends StatelessWidget {
                         Text(
                           "Contact",
                           style: TextStyle(
-                              fontSize: 12,
+                              fontSize: 14,
                               color: Colors.white
                           ),
                         )
@@ -233,7 +235,7 @@ class DashboardMenuView extends StatelessWidget {
                         Text(
                           "Feedback",
                           style: TextStyle(
-                              fontSize: 12,
+                              fontSize: 14,
                               color: Colors.white
                           ),
                         )
