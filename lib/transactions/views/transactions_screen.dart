@@ -394,8 +394,20 @@ class _TransactionScreenState extends State<TransactionScreen> {
                         child: state.isLoading ?
                           Center(
                             child: CircularProgressIndicator(),
-                          ): CustomList(state.currentBusiness,
-                              state.data != null ? state.data.transaction.collection : [], state.data, state),
+                          ): (state.data.transaction.collection.length > 0 ? CustomList(state.currentBusiness,
+                            state.data != null ? state.data.transaction.collection : [],
+                            state.data,
+                            state):
+                        Center(
+                          child: Text(
+                            'The list is empty',
+                            style: TextStyle(
+                              color: Colors.white70,
+                              fontSize: 24,
+                              fontWeight: FontWeight.w200,
+                            ),
+                          ),
+                        )),
                       ),
                       Container(
                         height: 50,
