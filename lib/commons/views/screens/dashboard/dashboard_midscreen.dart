@@ -129,17 +129,17 @@ class _DashboardMidScreenState extends State<DashboardMidScreen> {
               .then((dynamic wall) {
             FetchWallpaper fetchWallpaper = FetchWallpaper.map(wall);
             preferences.setString(
-                GlobalUtils.WALLPAPER, wallpaperBase + fetchWallpaper.currentWallpaper.id);
-            globalStateModel.setCurrentWallpaper(wallpaperBase + fetchWallpaper.currentWallpaper.id,
+                GlobalUtils.WALLPAPER, wallpaperBase + fetchWallpaper.currentWallpaper.wallpaper);
+            globalStateModel.setCurrentWallpaper(wallpaperBase + fetchWallpaper.currentWallpaper.wallpaper,
                 notify: false);
-            Navigator.pushReplacement(
-                _formKey.currentContext,
-                PageTransition(
-                    child: DashboardScreen(
-                      appWidgets: widgets,
-                    ),
-                    type: PageTransitionType.fade,
-                    duration: Duration(milliseconds: 200)));
+              Navigator.pushReplacement(
+                  _formKey.currentContext,
+                  PageTransition(
+                      child: DashboardScreen(
+                        appWidgets: widgets,
+                      ),
+                      type: PageTransitionType.fade,
+                      duration: Duration(milliseconds: 200)));
           });
         });
       }).catchError((onError) {

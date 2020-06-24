@@ -48,21 +48,17 @@ class TransactionScreenInit extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context);
-    Business _currentBusiness = globalStateModel.currentBusiness;
-    String wallpaper = globalStateModel.currentWallpaper;
 
-    return TransactionScreen(business: _currentBusiness, wallPaper: wallpaper,);
+    return TransactionScreen(globalStateModel: globalStateModel,);
   }
 }
 
 class TransactionScreen extends StatefulWidget {
 
-  Business business;
-  String wallPaper;
+  GlobalStateModel globalStateModel;
 
   TransactionScreen({
-    this.business,
-    this.wallPaper,
+    this.globalStateModel,
   });
 
   @override
@@ -83,7 +79,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
   @override
   void initState() {
     super.initState();
-    screenBloc.add(TransactionsScreenInitEvent(widget.business));
+    screenBloc.add(TransactionsScreenInitEvent(widget.globalStateModel.currentBusiness));
   }
 
   @override
@@ -112,7 +108,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
         builder: (BuildContext context, state) {
           if (state.data != null) {
             _quantity = state.data.transaction.paginationData.total ?? 0;
-            _currency = state.data.currency(widget.business.currency);
+            _currency = state.data.currency(widget.globalStateModel.currentBusiness.currency);
             _totalAmount = state.data.transaction.paginationData.amount ?? 0;
           } else {
             _quantity = 0;
@@ -394,7 +390,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                         child: state.isLoading ?
                           Center(
                             child: CircularProgressIndicator(),
-                          ): (state.data.transaction.collection.length > 0 ? CustomList(state.currentBusiness,
+                          ): (state.data.transaction.collection.length > 0 ? CustomList(widget.globalStateModel,
                             state.data != null ? state.data.transaction.collection : [],
                             state.data,
                             state):
@@ -465,11 +461,11 @@ class _TransactionScreenState extends State<TransactionScreen> {
 }
 
 class CustomList extends StatefulWidget {
-  final Business currentBusiness;
+  final GlobalStateModel globalStateModel;
   final List<Collection> collection;
   final TransactionScreenData data;
   final TransactionsScreenState screenState;
-  CustomList(this.currentBusiness, this.collection, this.data, this.screenState);
+  CustomList(this.globalStateModel, this.collection, this.data, this.screenState);
 
   @override
   _CustomListState createState() => _CustomListState();
@@ -510,7 +506,7 @@ class _CustomListState extends State<CustomList> {
         } else if (widget.screenState.curSortType == 'customer_name') {
           sortQuery = 'orderBy=customer_name&direction=asc&';
         }
-        queryString = '?${sortQuery}limit=50&query=${widget.screenState.searchText}&page=$page&currency=${widget.currentBusiness.currency}';
+        queryString = '?${sortQuery}limit=50&query=${widget.screenState.searchText}&page=$page&currency=${widget.globalStateModel.currentBusiness.currency}';
         if (widget.screenState.filterTypes.length > 0) {
           for (int i = 0; i < widget.screenState.filterTypes.length; i++) {
             FilterItem item = widget.screenState.filterTypes[i];
@@ -525,7 +521,7 @@ class _CustomListState extends State<CustomList> {
         }
 
         api.getTransactionList(
-                widget.currentBusiness.id,
+                widget.globalStateModel.currentBusiness.id,
                 GlobalUtils.activeToken.accessToken,
                 queryString,
         ).then((transaction) {
@@ -559,8 +555,19 @@ class _CustomListState extends State<CustomList> {
         return Container(
             key: itemKey,
             child: _isTablet
-                ? TabletTableRow(widget.collection[index], false, widget.data)
-                : PhoneTableRow(widget.collection[index], false, widget.data));
+                ? TabletTableRow(
+              globalStateModel: widget.globalStateModel,
+              currentTransaction: widget.collection[index],
+              data: widget.data,
+              isHeader: false,
+            )
+                : PhoneTableRow(
+                  globalStateModel: widget.globalStateModel,
+                  currentTransaction: widget.collection[index],
+                  data: widget.data,
+                  isHeader: false,
+                  ),
+        );
       },
     );
   }
@@ -569,9 +576,15 @@ class _CustomListState extends State<CustomList> {
 class PhoneTableRow extends StatelessWidget {
   final Collection currentTransaction;
   final TransactionScreenData data;
+  final GlobalStateModel globalStateModel;
   final bool isHeader;
 
-  PhoneTableRow(this.currentTransaction, this.isHeader, this.data);
+  PhoneTableRow({
+    this.globalStateModel,
+    this.currentTransaction,
+    this.isHeader,
+    this.data,
+  });
 
   final f = NumberFormat('###,###.00', 'en_US');
 
@@ -719,8 +732,6 @@ class PhoneTableRow extends StatelessWidget {
       onTap: () {
         if (!isHeader) {
           TransactionsApi api = TransactionsApi();
-          GlobalStateModel globalStateModel =
-              Provider.of<GlobalStateModel>(context);
           showDialog(
               context: context,
               barrierDismissible: false,
@@ -769,15 +780,20 @@ class PhoneTableRow extends StatelessWidget {
 class TabletTableRow extends StatelessWidget {
   final Collection currentTransaction;
   final TransactionScreenData data;
+  final GlobalStateModel globalStateModel;
   final bool isHeader;
 
-  TabletTableRow(this.currentTransaction, this.isHeader, this.data);
+  TabletTableRow({
+    this.globalStateModel,
+    this.currentTransaction,
+    this.isHeader,
+    this.data,
+  });
 
   final f = NumberFormat('###,##0.00', 'en_US');
 
   @override
   Widget build(BuildContext context) {
-    GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context);
 
     DateTime time;
     if (currentTransaction != null)

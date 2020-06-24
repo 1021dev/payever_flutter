@@ -593,7 +593,7 @@ class SwitchParts {
       SharedPreferences.getInstance().then((p) {
         preferences = p;
         preferences.setString(
-            GlobalUtils.WALLPAPER, wallpaperBase + fetchWallpaper.currentWallpaper.id);
+            GlobalUtils.WALLPAPER, wallpaperBase + fetchWallpaper.currentWallpaper.wallpaper);
         preferences.setString(GlobalUtils.BUSINESS, id);
         print(id);
       });
