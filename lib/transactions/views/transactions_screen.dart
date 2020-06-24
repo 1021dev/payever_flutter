@@ -144,18 +144,32 @@ class _TransactionScreenState extends State<TransactionScreen> {
               elevation: 0,
               automaticallyImplyLeading: false,
               backgroundColor: Colors.black87,
-              title: Text('Transactions'),
-              leading: Container(
-                child: Center(
-                  child: Container(
-                    child: SvgPicture.asset(
-                      'assets/images/transactions.svg',
-                      color: Colors.white,
-                      height: 16,
-                      width: 24,
-                    )
+              title: Row(
+                children: <Widget>[
+                  Container(
+                    child: Center(
+                      child: Container(
+                          child: SvgPicture.asset(
+                            'assets/images/transactions.svg',
+                            color: Colors.white,
+                            height: 16,
+                            width: 24,
+                          )
+                      ),
+                    ),
                   ),
-                ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 8),
+                  ),
+                  Text(
+                    'Transactions',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
               ),
               actions: <Widget>[
                 IconButton(

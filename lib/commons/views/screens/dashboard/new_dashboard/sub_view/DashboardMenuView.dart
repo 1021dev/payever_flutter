@@ -11,8 +11,17 @@ class DashboardMenuView extends StatelessWidget {
   final VoidCallback onPersonalInfo;
   final VoidCallback onAddBusiness;
   final VoidCallback onLogout;
+  final VoidCallback onClose;
 
-  DashboardMenuView({this.scaffold, this.innerDrawerKey, this.onSwitchBusiness, this.onAddBusiness, this.onPersonalInfo, this.onLogout});
+  DashboardMenuView({
+    this.scaffold,
+    this.innerDrawerKey,
+    this.onSwitchBusiness,
+    this.onAddBusiness,
+    this.onPersonalInfo,
+    this.onLogout,
+    this.onClose,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,17 +34,31 @@ class DashboardMenuView extends StatelessWidget {
       colorTransitionChild: Colors.transparent,
       colorTransitionScaffold: Colors.black.withAlpha(50),
       rightChild: Scaffold(
+        backgroundColor: Colors.black,
         body: SafeArea(
           top: true,
           child: Container(
             color: Colors.black,
             child: Column(
               children: [
-                SizedBox(height: 30,),
+                Container(
+                  height: 44,
+                  alignment: Alignment.centerRight,
+                  child: FlatButton(
+                    shape: CircleBorder(),
+                    padding: EdgeInsets.all(0),
+                    child: Icon(
+                      Icons.close,
+                      color: Colors.white,
+                      size: 24,
+                    ),
+                    onPressed: onClose,
+                  ),
+                ),
                 InkWell(
                   onTap: onSwitchBusiness,
                   child: Container(
-                    height: 40,
+                    height: 50,
                     child: Row(
                       children: [
                         SizedBox(width: 8,),
@@ -65,7 +88,7 @@ class DashboardMenuView extends StatelessWidget {
                 InkWell(
                   onTap: onPersonalInfo,
                   child: Container(
-                    height: 40,
+                    height: 50,
                     child: Row(
                       children: [
                         SizedBox(width: 8,),
@@ -97,7 +120,7 @@ class DashboardMenuView extends StatelessWidget {
                 InkWell(
                   onTap: onAddBusiness,
                   child: Container(
-                    height: 40,
+                    height: 50,
                     child: Row(
                       children: [
                         SizedBox(width: 8,),
@@ -129,7 +152,7 @@ class DashboardMenuView extends StatelessWidget {
                 InkWell(
                   onTap: onLogout,
                   child: Container(
-                    height: 40,
+                    height: 50,
                     child: Row(
                       children: [
                         SizedBox(width: 8,),
@@ -161,7 +184,7 @@ class DashboardMenuView extends StatelessWidget {
                     _sendMail("service@payever.de", "Contact payever", "");
                   },
                   child: Container(
-                    height: 40,
+                    height: 50,
                     child: Row(
                       children: [
                         SizedBox(width: 8,),
@@ -195,7 +218,7 @@ class DashboardMenuView extends StatelessWidget {
 
                   },
                   child: Container(
-                    height: 40,
+                    height: 50,
                     child: Row(
                       children: [
                         SizedBox(width: 8,),

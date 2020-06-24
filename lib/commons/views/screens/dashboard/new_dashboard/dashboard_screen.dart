@@ -83,6 +83,9 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget> {
       onAddBusiness: () {
 
       },
+      onClose: () {
+        _innerDrawerKey.currentState.toggle();
+      },
       scaffold: Scaffold(
         backgroundColor: Colors.black87,
         resizeToAvoidBottomPadding: false,
@@ -91,18 +94,32 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget> {
           elevation: 0,
           automaticallyImplyLeading: false,
           backgroundColor: Colors.black87,
-          title: Text('Business'),
-          leading: Container(
-            child: Center(
-              child: Container(
-                  child: SvgPicture.asset(
-                    'assets/images/payeverlogo.svg',
-                    color: Colors.white,
-                    height: 16,
-                    width: 24,
-                  )
+          title: Row(
+            children: <Widget>[
+              Container(
+                child: Center(
+                  child: Container(
+                      child: SvgPicture.asset(
+                        'assets/images/payeverlogo.svg',
+                        color: Colors.white,
+                        height: 16,
+                        width: 24,
+                      )
+                  ),
+                ),
               ),
-            ),
+              Padding(
+                padding: EdgeInsets.only(left: 8),
+              ),
+              Text(
+                'Business',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
           ),
           actions: <Widget>[
             IconButton(
