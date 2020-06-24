@@ -102,6 +102,15 @@ class _TransactionScreenState extends State<TransactionScreen> {
     return BlocListener(
       bloc: screenBloc,
       listener: (BuildContext context, TransactionsScreenState state) async {
+        if (state is TransactionsScreenFailure) {
+          Navigator.pushReplacement(
+            context,
+            PageTransition(
+              child: LoginScreen(),
+              type: PageTransitionType.fade,
+            ),
+          );
+        }
       },
       child: BlocBuilder<TransactionsScreenBloc, TransactionsScreenState>(
         bloc: screenBloc,
@@ -731,46 +740,16 @@ class PhoneTableRow extends StatelessWidget {
       ),
       onTap: () {
         if (!isHeader) {
-          TransactionsApi api = TransactionsApi();
-          showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (BuildContext context) {
-                api
-                    .getTransactionDetail(
-                        globalStateModel.currentBusiness.id,
-                        GlobalUtils.activeToken.accessToken,
-                        currentTransaction.uuid)
-                    .then((obj) {
-                  var td = TransactionDetails.toMap(obj);
-                  Navigator.pop(context);
-                  Navigator.push(
-                      context,
-                      PageTransition(
-                          child: TransactionDetailsScreen(td),
-                          type: PageTransitionType.fade));
-                }).catchError((onError) {
-                  if (onError.toString().contains('401')) {
-                    GlobalUtils.clearCredentials();
-                    Navigator.pushReplacement(
-                        context,
-                        PageTransition(
-                            child: LoginScreen(),
-                            type: PageTransitionType.fade));
-                  } else {
-                    Navigator.pop(context);
-                    print(onError);
-                  }
-                });
-                return Container(
-                  child: Dialog(
-                    backgroundColor: Colors.transparent,
-                    child: Center(
-                      child: Container(child: CircularProgressIndicator()),
-                    ),
-                  ),
-                );
-              });
+          Navigator.push(
+            context,
+            PageTransition(
+              child: TransactionDetailsScreen(
+                businessId: globalStateModel.currentBusiness.id,
+                transactionId: currentTransaction.uuid,
+              ),
+              type: PageTransitionType.fade,
+            ),
+          );
         }
       },
     );
@@ -944,10 +923,15 @@ class TabletTableRow extends StatelessWidget {
                   var td = TransactionDetails.toMap(obj);
                   Navigator.pop(context);
                   Navigator.push(
-                      context,
-                      PageTransition(
-                          child: TransactionDetailsScreen(td),
-                          type: PageTransitionType.fade));
+                    context,
+                    PageTransition(
+                      child: TransactionDetailsScreen(
+                        businessId: globalStateModel.currentBusiness.id,
+                        transactionId: currentTransaction.uuid,
+                      ),
+                      type: PageTransitionType.fade,
+                    ),
+                  );
                 }).catchError((onError) {
                   Navigator.pop(context);
                   print(onError);

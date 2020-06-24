@@ -2,8 +2,12 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:payever/blocs/transaction_detail/transaction_detail.dart';
+import 'package:payever/commons/views/screens/login/login_page.dart';
 
 import '../utils/utils.dart';
 import '../../commons/models/models.dart';
@@ -22,10 +26,13 @@ class ScreenParts {
 }
 
 class TransactionDetailsScreen extends StatefulWidget {
-  final TransactionDetails currentTransaction;
+  final String businessId;
+  final String transactionId;
 
-  TransactionDetailsScreen(this.currentTransaction);
-
+  TransactionDetailsScreen({
+    this.businessId,
+    this.transactionId,
+  });
   @override
   _TransactionDetailsState createState() => _TransactionDetailsState();
 }
@@ -35,65 +42,54 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
 
   bool _isTablet = false;
   bool _isPortrait = true;
+  TransactionDetailScreenBloc screenBloc = TransactionDetailScreenBloc();
 
   @override
   void initState() {
+    screenBloc.add(TransactionDetailScreenInitEvent(
+      businessId: widget.businessId,
+      transactionId: widget.transactionId,
+    ));
     super.initState();
-    parts.currentTransaction = widget.currentTransaction;
+  }
+
+  @override
+  void dispose() {
+    screenBloc.close();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    CustomExpansionTile productRowsList = CustomExpansionTile(
-      scrollable: false,
-      isWithCustomIcon: true,
-      addBorderRadius: true,
-      headerColor: Colors.transparent,
-      widgetsTitleList: <Widget>[
-        orderRowHeader(),
-        shippingRowHeader(),
-        billingRowHeader(),
-        paymentRoWHeader(),
-        timeLineRowHeader(),
-      ],
-      widgetsBodyList: <Widget>[
-        orderRowBody(),
-        shippingRowBody(),
-        billingRowBody(),
-        paymentRowBody(),
-        timeLineRowBody(),
-      ],
-    );
-
-    return BackgroundBase(
-      true,
-      appBar: CustomAppBar(
-        title: Text(
-          Language.getTransactionStrings("actions.details"),
-          style: TextStyle(fontSize: AppStyle.fontSizeAppBar()),
-        ),
-        onTap: () {
-          Navigator.pop(context);
-        },
-      ),
-      body: OrientationBuilder(
-        builder: (BuildContext context, Orientation orientation) {
-          _isPortrait = Orientation.portrait == orientation;
-
-          print("_isPortrait: $_isPortrait");
-
-          parts.isPortrait = Orientation.portrait == orientation;
-          Measurements.height = (parts.isPortrait
-              ? MediaQuery.of(context).size.height
-              : MediaQuery.of(context).size.width);
-          Measurements.width = (parts.isPortrait
-              ? MediaQuery.of(context).size.width
-              : MediaQuery.of(context).size.height);
-          _isTablet = Measurements.width < 600 ? false : true;
-          parts.padding = EdgeInsets.symmetric(
-              horizontal: Measurements.width * 0.05,
-              vertical: Measurements.height * 0.01);
-
+    return BlocListener(
+      bloc: screenBloc,
+      listener: (BuildContext context, TransactionDetailScreenState state) async {
+        if (state is TransactionDetailScreenFailure) {
+          Navigator.pushReplacement(
+            context,
+            PageTransition(
+              child: LoginScreen(),
+              type: PageTransitionType.fade,
+            ),
+          );
+        }
+      },
+      child: BlocBuilder<TransactionDetailScreenBloc, TransactionDetailScreenState>(
+        bloc: screenBloc,
+        builder: (BuildContext context, state) {
+          return BackgroundBase(
+            true,
+            appBar: CustomAppBar(
+              title: Text(
+                Language.getTransactionStrings("actions.details"),
+                style: TextStyle(fontSize: AppStyle.fontSizeAppBar()),
+              ),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            body: OrientationBuilder(
+              builder: (BuildContext context, Orientation orientation) {
 //          return RpgLayoutBuilder(
 //            builder: (context, layout) =>
 //            layout == RpgLayout.slim ?  Column(
@@ -103,13 +99,58 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
 //              ],
 //            ) : Container(),
 //          );
+                if (state.data != null ){
+                  parts.currentTransaction = state.data;
 
-          return ListView(
-            children: <Widget>[
-              highlightHeaderRow(),
-              productRowsList,
-              totalPriceRow()
-            ],
+                  _isPortrait = Orientation.portrait == orientation;
+
+                  print("_isPortrait: $_isPortrait");
+
+                  parts.isPortrait = Orientation.portrait == orientation;
+                  Measurements.height = (parts.isPortrait
+                      ? MediaQuery.of(context).size.height
+                      : MediaQuery.of(context).size.width);
+                  Measurements.width = (parts.isPortrait
+                      ? MediaQuery.of(context).size.width
+                      : MediaQuery.of(context).size.height);
+                  _isTablet = Measurements.width < 600 ? false : true;
+                  parts.padding = EdgeInsets.symmetric(
+                      horizontal: Measurements.width * 0.05,
+                      vertical: Measurements.height * 0.01);
+                  CustomExpansionTile productRowsList = CustomExpansionTile(
+                    scrollable: false,
+                    isWithCustomIcon: true,
+                    addBorderRadius: true,
+                    headerColor: Colors.transparent,
+                    widgetsTitleList: <Widget>[
+                      orderRowHeader(),
+                      shippingRowHeader(),
+                      billingRowHeader(),
+                      paymentRoWHeader(),
+                      timeLineRowHeader(),
+                    ],
+                    widgetsBodyList: <Widget>[
+                      orderRowBody(),
+                      shippingRowBody(),
+                      billingRowBody(),
+                      paymentRowBody(),
+                      timeLineRowBody(),
+                    ],
+                  );
+                  return ListView(
+                    children: <Widget>[
+                      highlightHeaderRow(),
+                      productRowsList,
+                      totalPriceRow(),
+                    ],
+                  );
+                } else {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              },
+            ),
           );
         },
       ),
