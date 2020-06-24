@@ -239,7 +239,6 @@ class RestDataSource {
     return _netUtil
         .get(wallpaperUrl + id + wallpaperEnd, headers: headers)
         .then((dynamic result) {
-      print('WallPapers => $result');
       return result;
     });
   }

@@ -45,15 +45,15 @@ class TransactionsScreenBloc extends Bloc<TransactionsScreenEvent, TransactionsS
     } else if (sortType == 'customer_name') {
       sortQuery = 'orderBy=customer_name&direction=asc&';
     }
-    queryString = '?${sortQuery}limit=50&query=${search}&page=$page&currency=${state.currentBusiness.currency}';
+    queryString = '?${sortQuery}limit=50&query=$search&page=$page&currency=${state.currentBusiness.currency}';
     if (filterTypes.length > 0) {
       for (int i = 0; i < filterTypes.length; i++) {
         FilterItem item = filterTypes[i];
         String filterType = item.type;
         String filterCondition = item.condition;
         String filterValue = item.value;
-        String filterConditionString = 'filters[$filterType][0][condition]';
-        String filterValueString = 'filters[$filterType][0][value]';
+        String filterConditionString = 'filters[$filterType][$i][condition]';
+        String filterValueString = 'filters[$filterType][$i][value]';
         String queryTemp = '&$filterConditionString=$filterCondition&$filterValueString=$filterValue';
         queryString = '$queryString$queryTemp';
       }
@@ -62,7 +62,6 @@ class TransactionsScreenBloc extends Bloc<TransactionsScreenEvent, TransactionsS
       dynamic obj = await api.getTransactionList(state.currentBusiness.id, GlobalUtils.activeToken.accessToken, queryString);
       TransactionScreenData data = TransactionScreenData(obj);
       yield state.copyWith(isLoading: false, isSearchLoading: false, data: data);
-      debugPrint('Transactions Data => $obj');
 
     } catch (error) {
       if (error.toString().contains('401')) {

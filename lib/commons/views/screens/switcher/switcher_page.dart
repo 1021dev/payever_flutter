@@ -588,7 +588,6 @@ class SwitchParts {
     await api
         .getWallpaper(id, GlobalUtils.activeToken.accessToken, context)
         .then((dynamic obj) {
-      print("fetchWallpaper obj - $obj");
       fetchWallpaper = FetchWallpaper.map(obj);
       SharedPreferences.getInstance().then((p) {
         preferences = p;

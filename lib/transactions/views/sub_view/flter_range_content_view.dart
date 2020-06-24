@@ -222,7 +222,7 @@ class _FilterRangeContentViewState extends State<FilterRangeContentView> {
                     } else if (widget.type == 'status' ||
                         widget.type == 'specific_status' ||
                         widget.type == 'channel' ||
-                        widget.type == 'payment_type') {
+                        widget.type == 'type') {
                       if (selectedOptions == null) {
                         widget.onSelected(null);
                       } else {

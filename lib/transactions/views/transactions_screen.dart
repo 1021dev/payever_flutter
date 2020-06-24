@@ -434,9 +434,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                     return true;
                                   }
                               ),
-                              onPressed: (item) {
-                                showSearchTextDialog(state);
-                              },
                             );
                           },
                         ),
@@ -617,8 +614,8 @@ class _CustomListState extends State<CustomList> {
             String filterType = item.type;
             String filterCondition = item.condition;
             String filterValue = item.value;
-            String filterConditionString = 'filters[$filterType][0][condition]';
-            String filterValueString = 'filters[$filterType][0][value]';
+            String filterConditionString = 'filters[$filterType][$i][condition]';
+            String filterValueString = 'filters[$filterType][$i][value]';
             String queryTemp = '&$filterConditionString=$filterCondition&$filterValueString=$filterValue';
             queryString = '$queryString$queryTemp';
           }
