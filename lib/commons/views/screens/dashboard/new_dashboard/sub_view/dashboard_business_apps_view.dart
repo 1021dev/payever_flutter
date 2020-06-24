@@ -5,7 +5,7 @@ import 'package:payever/commons/utils/env.dart';
 import 'package:payever/commons/views/custom_elements/BusinessAppCell.dart';
 
 import '../../../../../models/app_widget.dart';
-import 'BlurEffectView.dart';
+import 'blur_effect_view.dart';
 
 class DashboardBusinessAppsView extends StatefulWidget {
   final List<AppWidget> appWidgets;

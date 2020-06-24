@@ -2,16 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/commons/utils/env.dart';
 import 'package:payever/commons/views/custom_elements/DashboardOptionCell.dart';
-import 'package:payever/commons/views/custom_elements/ProductCell.dart';
 
-import 'BlurEffectView.dart';
+import 'blur_effect_view.dart';
 
-class DashboardProductsView extends StatefulWidget {
+class DashboardConnectView extends StatefulWidget {
   @override
-  _DashboardProductsViewState createState() => _DashboardProductsViewState();
+  _DashboardConnectViewState createState() => _DashboardConnectViewState();
 }
 
-class _DashboardProductsViewState extends State<DashboardProductsView> {
+class _DashboardConnectViewState extends State<DashboardConnectView> {
   bool isExpanded = false;
   @override
   Widget build(BuildContext context) {
@@ -34,12 +33,12 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
                           decoration: BoxDecoration(
                               image: DecorationImage(
                                   image: NetworkImage(Env.commerceOs +
-                                      "/assets/ui-kit/icons-png/icon-commerceos-products-64.png"),
+                                      "/assets/ui-kit/icons-png/icon-commerceos-connect-64.png"),
                                   fit: BoxFit.fitWidth)),
                         ),
                         SizedBox(width: 8,),
                         Text(
-                          "PRODUCTS",
+                          "CONNECT",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 12,
@@ -124,10 +123,104 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
                   ],
                 ),
                 SizedBox(height: 8),
-                Container(
-                  height: 120,
-                  child: ListView.builder(itemBuilder: _itemBuilder, itemCount: 3, scrollDirection: Axis.horizontal,),
-                )
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Top rated",
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.white.withAlpha(150)
+                            ),
+                          ),
+                          SizedBox(height: 4),
+                          Row(
+                            children: [
+                              Container(
+                                width: 35,
+                                height: 35,
+                                padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                          image: NetworkImage(Env.commerceOs +
+                                              "/assets/ui-kit/icons-png/icon-commerceos-store-64.png"),
+                                          fit: BoxFit.fitWidth)),
+                                ),
+                              ),
+                              Container(
+                                width: 35,
+                                height: 35,
+                                padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                          image: NetworkImage(Env.commerceOs +
+                                              "/assets/ui-kit/icons-png/icon-commerceos-store-64.png"),
+                                          fit: BoxFit.fitWidth)),
+                                ),
+                              ),
+                              Container(
+                                width: 35,
+                                height: 35,
+                                padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                          image: NetworkImage(Env.commerceOs +
+                                              "/assets/ui-kit/icons-png/icon-commerceos-store-64.png"),
+                                          fit: BoxFit.fitWidth)),
+                                ),
+                              ),
+                              Container(
+                                width: 35,
+                                height: 35,
+                                padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                          image: NetworkImage(Env.commerceOs +
+                                              "/assets/ui-kit/icons-png/icon-commerceos-store-64.png"),
+                                          fit: BoxFit.fitWidth)),
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Container(
+                        child: InkWell(
+                          onTap: () {
+
+                          },
+                          child: Container(
+                            height: 50,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(6),
+                                color: Colors.black26
+                            ),
+                            child: Center(
+                              child: Text(
+                                "Connect",
+                                softWrap: true,
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 16),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                SizedBox(height: 12),
               ],
             ),
           ),
@@ -144,11 +237,7 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
       ),
     );
   }
-  Widget _itemBuilder(BuildContext context, int index) {
-    return ProductCell();
-  }
   Widget _itemBuilderDDetails(BuildContext context, int index) {
     return DashboardOptionCell();
   }
-
 }

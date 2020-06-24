@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/commons/utils/env.dart';
 
-import 'BlurEffectView.dart';
+import 'blur_effect_view.dart';
 
 class DashboardSettingsView extends StatelessWidget {
   @override

@@ -260,275 +260,275 @@ class _TransactionScreenState extends State<TransactionScreen> {
             body: SafeArea(
               child: BackgroundBase(
                 true,
-                  body: Column(
-                    children: [
-                      Container(
-                        height: 50,
-                        color: Colors.black38,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                SizedBox(
-                                  width: 12,
+                body: Column(
+                  children: [
+                    Container(
+                      height: 50,
+                      color: Colors.black38,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              SizedBox(
+                                width: 12,
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  showSearchTextDialog(state);
+                                },
+                                child: Icon(
+                                  Icons.search,
+                                  size: 24,
                                 ),
-                                InkWell(
-                                  onTap: () {
-                                    showSearchTextDialog(state);
-                                  },
-                                  child: Icon(
-                                    Icons.search,
-                                    size: 24,
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 16,
-                                ),
-                                InkWell(
-                                  onTap: () {
-                                    showCupertinoModalPopup(
-                                        context: context,
-                                        builder: (builder) {
-                                          return FilterContentView(
-                                            onSelected: (FilterItem val) {
-                                              Navigator.pop(context);
-                                              List<FilterItem> filterTypes = [];
-                                              filterTypes.addAll(state.filterTypes);
-                                              if (val != null) {
-                                                if (filterTypes.length > 0) {
-                                                  int isExist = filterTypes.indexWhere((element) => element.type == val.type);
-                                                  if (isExist > -1) {
-                                                    filterTypes[isExist] = val;
-                                                  } else {
-                                                    filterTypes.add(val);
-                                                  }
+                              ),
+                              SizedBox(
+                                width: 16,
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  showCupertinoModalPopup(
+                                      context: context,
+                                      builder: (builder) {
+                                        return FilterContentView(
+                                          onSelected: (FilterItem val) {
+                                            Navigator.pop(context);
+                                            List<FilterItem> filterTypes = [];
+                                            filterTypes.addAll(state.filterTypes);
+                                            if (val != null) {
+                                              if (filterTypes.length > 0) {
+                                                int isExist = filterTypes.indexWhere((element) => element.type == val.type);
+                                                if (isExist > -1) {
+                                                  filterTypes[isExist] = val;
                                                 } else {
                                                   filterTypes.add(val);
                                                 }
                                               } else {
-                                                if (filterTypes.length > 0) {
-                                                  int isExist = filterTypes.indexWhere((element) => element.type == val.type);
-                                                  if (isExist != null) {
-                                                    filterTypes.removeAt(isExist);
-                                                  }
+                                                filterTypes.add(val);
+                                              }
+                                            } else {
+                                              if (filterTypes.length > 0) {
+                                                int isExist = filterTypes.indexWhere((element) => element.type == val.type);
+                                                if (isExist != null) {
+                                                  filterTypes.removeAt(isExist);
                                                 }
                                               }
-                                              screenBloc.add(
-                                                  UpdateFilterTypes(filterTypes: filterTypes)
-                                              );
-                                            },
-                                          );
-                                        });
-                                  },
-                                  child: Container(
-                                    width: 30,
-                                    height: 30,
-                                    alignment: Alignment.center,
-                                    child: Icon(
-                                      Icons.filter_list,
-                                      size: 24,
-                                    ),
-                                  ),
-                                ),
-                                FlatButton(
-                                  onPressed: () {
-                                    showGeneralDialog(
-                                        barrierLabel: 'Export',
-                                        barrierDismissible: true,
-                                        barrierColor: Colors.black.withOpacity(0.5),
-                                        transitionDuration: Duration(milliseconds: 350),
-                                        context: context,
-                                        pageBuilder: (context, anim1, anim2) {
-                                          return Align(
-                                            alignment: Alignment.bottomCenter,
-                                            child: ExportContentView(
-                                              onSelectType: (index) {},
-                                            ),
-                                          );
-                                        }
-                                    );
-                                  },
-                                  child: Text(
-                                    'Export',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                InkWell(
-                                  onTap: () {
-                                    showCupertinoModalPopup(
-                                        context: context,
-                                        builder: (builder) {
-                                          return SortContentView(
-                                            selectedIndex: state.curSortType ,
-                                            onSelected: (val) {
-                                              Navigator.pop(context);
-                                              screenBloc.add(
-                                                  UpdateSortType(sortType: val)
-                                              );
-                                            },
-                                          );
-                                        });
-                                  },
+                                            }
+                                            screenBloc.add(
+                                                UpdateFilterTypes(filterTypes: filterTypes)
+                                            );
+                                          },
+                                        );
+                                      });
+                                },
+                                child: Container(
+                                  width: 30,
+                                  height: 30,
+                                  alignment: Alignment.center,
                                   child: Icon(
-                                    Icons.sort,
+                                    Icons.filter_list,
                                     size: 24,
                                   ),
                                 ),
-                                SizedBox(
-                                  width: 24,
+                              ),
+                              FlatButton(
+                                onPressed: () {
+                                  showGeneralDialog(
+                                      barrierLabel: 'Export',
+                                      barrierDismissible: true,
+                                      barrierColor: Colors.black.withOpacity(0.5),
+                                      transitionDuration: Duration(milliseconds: 350),
+                                      context: context,
+                                      pageBuilder: (context, anim1, anim2) {
+                                        return Align(
+                                          alignment: Alignment.bottomCenter,
+                                          child: ExportContentView(
+                                            onSelectType: (index) {},
+                                          ),
+                                        );
+                                      }
+                                  );
+                                },
+                                child: Text(
+                                  'Export',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                  ),
                                 ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      _filterItems.length > 0 ?
-                      Container(
-                        width: Device.width,
-                        padding: EdgeInsets.only(
-                          left: 16, right: 16, top: 8, bottom: 8,
-                        ),
-                        child: Tags(
-                          key: _tagStateKey,
-                          itemCount: _filterItems.length,
-                          alignment: WrapAlignment.start,
-                          spacing: 4,
-                          runSpacing: 8,
-                          itemBuilder: (int index) {
-                            return ItemTags(
-                              key: Key('filterItem$index'),
-                              index: index,
-                              title: _filterItems[index].title,
-                              color: Colors.white12,
-                              activeColor: Colors.white12,
-                              textActiveColor: Colors.white,
-                              textColor: Colors.white,
-                              elevation: 0,
-                              padding: EdgeInsets.only(
-                                left: 16, top: 8, bottom: 8, right: 16,
                               ),
-                              removeButton: ItemTagsRemoveButton(
-                                  backgroundColor: Colors.transparent,
-                                  onRemoved: () {
-                                    if (index == _searchTagIndex) {
-                                      _searchTagIndex = -1;
-                                      screenBloc.add(
-                                          UpdateSearchText(searchText: '')
-                                      );
-                                    } else {
-                                      List<FilterItem> filterTypes = [];
-                                      filterTypes.addAll(state.filterTypes);
-                                      filterTypes.removeAt(index);
-                                      screenBloc.add(
-                                          UpdateFilterTypes(filterTypes: filterTypes)
-                                      );
-                                    }
-                                    return true;
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  showCupertinoModalPopup(
+                                      context: context,
+                                      builder: (builder) {
+                                        return SortContentView(
+                                          selectedIndex: state.curSortType ,
+                                          onSelected: (val) {
+                                            Navigator.pop(context);
+                                            screenBloc.add(
+                                                UpdateSortType(sortType: val)
+                                            );
+                                          },
+                                        );
+                                      });
+                                },
+                                child: Icon(
+                                  Icons.sort,
+                                  size: 24,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 24,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    _filterItems.length > 0 ?
+                    Container(
+                      width: Device.width,
+                      padding: EdgeInsets.only(
+                        left: 16, right: 16, top: 8, bottom: 8,
+                      ),
+                      child: Tags(
+                        key: _tagStateKey,
+                        itemCount: _filterItems.length,
+                        alignment: WrapAlignment.start,
+                        spacing: 4,
+                        runSpacing: 8,
+                        itemBuilder: (int index) {
+                          return ItemTags(
+                            key: Key('filterItem$index'),
+                            index: index,
+                            title: _filterItems[index].title,
+                            color: Colors.white12,
+                            activeColor: Colors.white12,
+                            textActiveColor: Colors.white,
+                            textColor: Colors.white,
+                            elevation: 0,
+                            padding: EdgeInsets.only(
+                              left: 16, top: 8, bottom: 8, right: 16,
+                            ),
+                            removeButton: ItemTagsRemoveButton(
+                                backgroundColor: Colors.transparent,
+                                onRemoved: () {
+                                  if (index == _searchTagIndex) {
+                                    _searchTagIndex = -1;
+                                    screenBloc.add(
+                                        UpdateSearchText(searchText: '')
+                                    );
+                                  } else {
+                                    List<FilterItem> filterTypes = [];
+                                    filterTypes.addAll(state.filterTypes);
+                                    filterTypes.removeAt(index);
+                                    screenBloc.add(
+                                        UpdateFilterTypes(filterTypes: filterTypes)
+                                    );
                                   }
-                              ),
-                            );
-                          },
-                        ),
-                      ): Container(height: 0,),
-                      Container(
-                        height: 35,
-                        color: Colors.black45,
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              width: 16,
+                                  return true;
+                                }
                             ),
-                            Expanded(
-                              flex: 1,
-                              child: Text(
-                                'Channel',
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.white70,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 1,
-                              child: Text(
-                                'Type',
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.white70,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 2,
-                              child: Text(
-                                'Customer name',
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.white70,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 2,
-                              child: Text(
-                                'Total',
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.white70,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ],
-                        ),
+                          );
+                        },
                       ),
-                      Expanded(
-                        child: state.isLoading ?
-                        Center(
-                          child: CircularProgressIndicator(),
-                        ): (state.data.transaction.collection.length > 0 ? CustomList(widget.globalStateModel,
-                            state.data != null ? state.data.transaction.collection : [],
-                            state.data,
-                            state):
-                        Center(
-                          child: Text(
-                            'The list is empty',
-                            style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: 24,
-                              fontWeight: FontWeight.w200,
+                    ): Container(height: 0,),
+                    Container(
+                      height: 35,
+                      color: Colors.black45,
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: 16,
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: Text(
+                              'Channel',
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.white70,
+                                  fontWeight: FontWeight.bold),
                             ),
                           ),
-                        )),
+                          Expanded(
+                            flex: 1,
+                            child: Text(
+                              'Type',
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.white70,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 2,
+                            child: Text(
+                              'Customer name',
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.white70,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 2,
+                            child: Text(
+                              'Total',
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.white70,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ],
                       ),
-                      Container(
-                        height: 50,
-                        color: Colors.black87,
-                        alignment: Alignment.center,
-                        child: !noTransactions ? AutoSizeText(
-                          Language.getTransactionStrings('total_orders.heading')
-                              .toString()
-                              .replaceFirst('{{total_count}}', '${_quantity ?? 0}')
-                              .replaceFirst('{{total_sum}}',
-                              '${_currency ?? '€'}${f.format(_totalAmount ?? 0)}'),
-                          overflow: TextOverflow.fade,
-                          maxLines: 1,
+                    ),
+                    Expanded(
+                      child: state.isLoading ?
+                      Center(
+                        child: CircularProgressIndicator(),
+                      ): (state.data.transaction.collection.length > 0 ? CustomList(widget.globalStateModel,
+                          state.data != null ? state.data.transaction.collection : [],
+                          state.data,
+                          state):
+                      Center(
+                        child: Text(
+                          'The list is empty',
                           style: TextStyle(
-                            fontSize: 16,
                             color: Colors.white70,
+                            fontSize: 24,
+                            fontWeight: FontWeight.w200,
                           ),
-                        )
-                            : Container(),
+                        ),
+                      )),
+                    ),
+                    Container(
+                      height: 50,
+                      color: Colors.black87,
+                      alignment: Alignment.center,
+                      child: !noTransactions ? AutoSizeText(
+                        Language.getTransactionStrings('total_orders.heading')
+                            .toString()
+                            .replaceFirst('{{total_count}}', '${_quantity ?? 0}')
+                            .replaceFirst('{{total_sum}}',
+                            '${_currency ?? '€'}${f.format(_totalAmount ?? 0)}'),
+                        overflow: TextOverflow.fade,
+                        maxLines: 1,
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white70,
+                        ),
                       )
-                    ],
-                  ),
+                          : Container(),
+                    )
+                  ],
+                ),
               ),
             ),
           );
@@ -536,28 +536,28 @@ class _TransactionScreenState extends State<TransactionScreen> {
       ),
     );
 
- }
+  }
 
   void showSearchTextDialog(TransactionsScreenState state) {
     showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-            ),
-            content: SearchTextContentView(
-                searchText: state.searchText,
-                onSelected: (value) {
-                  Navigator.pop(context);
-                  screenBloc.add(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+          ),
+          content: SearchTextContentView(
+              searchText: state.searchText,
+              onSelected: (value) {
+                Navigator.pop(context);
+                screenBloc.add(
                     UpdateSearchText(searchText: value)
-                  );
-                }
-            ),
-          );
-        });
-
+                );
+              }
+          ),
+        );
+      },
+    );
   }
 }
 
@@ -622,17 +622,17 @@ class _CustomListState extends State<CustomList> {
         }
 
         api.getTransactionList(
-                widget.globalStateModel.currentBusiness.id,
-                GlobalUtils.activeToken.accessToken,
-                queryString,
+          widget.globalStateModel.currentBusiness.id,
+          GlobalUtils.activeToken.accessToken,
+          queryString,
         ).then((transaction) {
-            List<Collection> temp = Transaction.toMap(transaction).collection;
-            if (temp.isNotEmpty) {
-              setState(() {
-                isLoading.value = false;
-                widget.collection.addAll(temp);
-              });
-            }
+          List<Collection> temp = Transaction.toMap(transaction).collection;
+          if (temp.isNotEmpty) {
+            setState(() {
+              isLoading.value = false;
+              widget.collection.addAll(temp);
+            });
+          }
         });
       }
     }
@@ -654,20 +654,20 @@ class _CustomListState extends State<CustomList> {
         Key itemKey = Key('transaction.list.transaction_$index');
 
         return Container(
-            key: itemKey,
-            child: _isTablet
-                ? TabletTableRow(
-              globalStateModel: widget.globalStateModel,
-              currentTransaction: widget.collection[index],
-              data: widget.data,
-              isHeader: false,
-            )
-                : PhoneTableRow(
-                  globalStateModel: widget.globalStateModel,
-                  currentTransaction: widget.collection[index],
-                  data: widget.data,
-                  isHeader: false,
-                  ),
+          key: itemKey,
+          child: _isTablet
+              ? TabletTableRow(
+            globalStateModel: widget.globalStateModel,
+            currentTransaction: widget.collection[index],
+            data: widget.data,
+            isHeader: false,
+          )
+              : PhoneTableRow(
+            globalStateModel: widget.globalStateModel,
+            currentTransaction: widget.collection[index],
+            data: widget.data,
+            isHeader: false,
+          ),
         );
       },
     );
@@ -715,14 +715,14 @@ class PhoneTableRow extends StatelessWidget {
                       alignment: Alignment.centerLeft,
                       child: !isHeader
                           ? TransactionScreenParts.channelIcon(
-                              currentTransaction.channel)
+                          currentTransaction.channel)
                           : Container(
-                              child: Text(
-                              Language.getTransactionStrings(
-                                  'form.filter.labels.channel'),
-                              style: TextStyle(
-                                  fontSize: AppStyle.fontSizeListRow()),
-                            )),
+                          child: Text(
+                            Language.getTransactionStrings(
+                                'form.filter.labels.channel'),
+                            style: TextStyle(
+                                fontSize: AppStyle.fontSizeListRow()),
+                          )),
                     ),
                   ),
                   Expanded(
@@ -732,14 +732,14 @@ class PhoneTableRow extends StatelessWidget {
                       alignment: Alignment.centerLeft,
                       child: !isHeader
                           ? TransactionScreenParts.paymentType(
-                              currentTransaction.type)
+                          currentTransaction.type)
                           : Container(
-                              child: Text(
-                                  Language.getTransactionStrings(
-                                      'form.filter.labels.type'),
-                                  style: TextStyle(
-                                      fontSize: AppStyle.fontSizeListRow())),
-                            ),
+                        child: Text(
+                            Language.getTransactionStrings(
+                                'form.filter.labels.type'),
+                            style: TextStyle(
+                                fontSize: AppStyle.fontSizeListRow())),
+                      ),
                     ),
                   ),
                   Expanded(
@@ -747,15 +747,15 @@ class PhoneTableRow extends StatelessWidget {
                     child: Container(
                       child: !isHeader
                           ? Text(
-                              currentTransaction.customerName,
-                              style: TextStyle(
-                                  fontSize: AppStyle.fontSizeListRow()),
-                            )
+                        currentTransaction.customerName,
+                        style: TextStyle(
+                            fontSize: AppStyle.fontSizeListRow()),
+                      )
                           : Text(
-                              Language.getTransactionStrings(
-                                  'form.filter.labels.customer_name'),
-                              style: TextStyle(
-                                  fontSize: AppStyle.fontSizeListRow())),
+                          Language.getTransactionStrings(
+                              'form.filter.labels.customer_name'),
+                          style: TextStyle(
+                              fontSize: AppStyle.fontSizeListRow())),
                     ),
                   ),
                   Expanded(
@@ -763,49 +763,49 @@ class PhoneTableRow extends StatelessWidget {
                     child: Container(
                       child: !isHeader
                           ? Text(
-                              '${Measurements.currency(currentTransaction.currency)}${f.format(currentTransaction.total)}',
-                              style: TextStyle(
-                                  fontSize: AppStyle.fontSizeListRow()),
-                            )
+                        '${Measurements.currency(currentTransaction.currency)}${f.format(currentTransaction.total)}',
+                        style: TextStyle(
+                            fontSize: AppStyle.fontSizeListRow()),
+                      )
                           : Text(
-                              Language.getTransactionStrings(
-                                  'form.filter.labels.total'),
-                              style: TextStyle(
-                                  fontSize: AppStyle.fontSizeListRow())),
+                          Language.getTransactionStrings(
+                              'form.filter.labels.total'),
+                          style: TextStyle(
+                              fontSize: AppStyle.fontSizeListRow())),
                     ),
                   ),
                   Expanded(
                     flex: _isPortrait ? 0 : 4,
                     child: !_isPortrait
                         ? Container(
-                            child: !isHeader
-                                ? Text(
-                                    '${DateFormat.d('en_US').add_MMMM().add_y().format(time)} ${DateFormat.Hm('en_US').format(time.add(Duration(hours: 2)))}',
-                                    style: TextStyle(
-                                        fontSize: AppStyle.fontSizeListRow()))
-                                : Text(
-                                    Language.getTransactionStrings(
-                                        'form.filter.labels.created_at'),
-                                    style: TextStyle(
-                                        fontSize: AppStyle.fontSizeListRow())),
-                          )
+                      child: !isHeader
+                          ? Text(
+                          '${DateFormat.d('en_US').add_MMMM().add_y().format(time)} ${DateFormat.Hm('en_US').format(time.add(Duration(hours: 2)))}',
+                          style: TextStyle(
+                              fontSize: AppStyle.fontSizeListRow()))
+                          : Text(
+                          Language.getTransactionStrings(
+                              'form.filter.labels.created_at'),
+                          style: TextStyle(
+                              fontSize: AppStyle.fontSizeListRow())),
+                    )
                         : Container(),
                   ),
                   Expanded(
                     flex: _isPortrait ? 0 : 3,
                     child: !_isPortrait
                         ? Container(
-                            width: Measurements.width *
-                                (_isPortrait ? 0.20 : 0.24),
-                            child: !isHeader
-                                ? Measurements.statusWidget(
-                                    currentTransaction.status)
-                                : AutoSizeText(
-                                    Language.getTransactionStrings(
-                                        'form.filter.labels.status'),
-                                    style: TextStyle(
-                                        fontSize: AppStyle.fontSizeListRow())),
-                          )
+                      width: Measurements.width *
+                          (_isPortrait ? 0.20 : 0.24),
+                      child: !isHeader
+                          ? Measurements.statusWidget(
+                          currentTransaction.status)
+                          : AutoSizeText(
+                          Language.getTransactionStrings(
+                              'form.filter.labels.status'),
+                          style: TextStyle(
+                              fontSize: AppStyle.fontSizeListRow())),
+                    )
                         : Container(),
                   ),
                   Expanded(
@@ -813,15 +813,15 @@ class PhoneTableRow extends StatelessWidget {
                     child: !_isPortrait
                         ? Container()
                         : Container(
-                            width: Measurements.width * 0.02,
-                            child: !isHeader
-                                ? Icon(
-                                    IconData(58849,
-                                        fontFamily: 'MaterialIcons'),
-                                    size: Measurements.width * 0.04,
-                                  )
-                                : Container(),
-                          ),
+                      width: Measurements.width * 0.02,
+                      child: !isHeader
+                          ? Icon(
+                        IconData(58849,
+                            fontFamily: 'MaterialIcons'),
+                        size: Measurements.width * 0.04,
+                      )
+                          : Container(),
+                    ),
                   ),
                 ],
               ),
@@ -887,16 +887,16 @@ class TabletTableRow extends StatelessWidget {
                       child: !isHeader
                           ? Container(
 //                          alignment: _isPortrait ? Alignment.centerLeft : Alignment.center,
-                              alignment: Alignment.center,
-                              child: TransactionScreenParts.channelIcon(
-                                  currentTransaction.channel))
+                          alignment: Alignment.center,
+                          child: TransactionScreenParts.channelIcon(
+                              currentTransaction.channel))
                           : Container(
-                              child: AutoSizeText(
-                              Language.getTransactionStrings(
-                                  'form.filter.labels.channel'),
-                              style: TextStyle(
-                                  fontSize: AppStyle.fontSizeListRow()),
-                            )),
+                          child: AutoSizeText(
+                            Language.getTransactionStrings(
+                                'form.filter.labels.channel'),
+                            style: TextStyle(
+                                fontSize: AppStyle.fontSizeListRow()),
+                          )),
                     ),
                   ),
                   Expanded(
@@ -905,15 +905,15 @@ class TabletTableRow extends StatelessWidget {
                       alignment: Alignment.center,
                       child: !isHeader
                           ? Container(
-                              alignment: Alignment.center,
-                              child: TransactionScreenParts.paymentType(
-                                  currentTransaction.type))
+                          alignment: Alignment.center,
+                          child: TransactionScreenParts.paymentType(
+                              currentTransaction.type))
                           : Container(
-                              child: AutoSizeText(
-                                  Language.getTransactionStrings(
-                                      'form.filter.labels.type'),
-                                  style: TextStyle(
-                                      fontSize: AppStyle.fontSizeListRow()))),
+                          child: AutoSizeText(
+                              Language.getTransactionStrings(
+                                  'form.filter.labels.type'),
+                              style: TextStyle(
+                                  fontSize: AppStyle.fontSizeListRow()))),
                     ),
                   ),
                   Expanded(
@@ -921,15 +921,15 @@ class TabletTableRow extends StatelessWidget {
                     child: Container(
                       child: !isHeader
                           ? AutoSizeText('#${currentTransaction.originalId}',
-                              style: TextStyle(
-                                  fontSize: AppStyle.fontSizeListRow()))
+                          style: TextStyle(
+                              fontSize: AppStyle.fontSizeListRow()))
                           : AutoSizeText(
-                              Language.getTransactionStrings(
-                                  'form.filter.labels.original_id'),
-                              maxLines: 1,
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                  fontSize: AppStyle.fontSizeListRow())),
+                          Language.getTransactionStrings(
+                              'form.filter.labels.original_id'),
+                          maxLines: 1,
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                              fontSize: AppStyle.fontSizeListRow())),
                     ),
                   ),
                   Expanded(
@@ -937,14 +937,14 @@ class TabletTableRow extends StatelessWidget {
                     child: Container(
                       child: !isHeader
                           ? AutoSizeText(currentTransaction.customerName,
-                              style: TextStyle(
-                                  fontSize: AppStyle.fontSizeListRow()))
+                          style: TextStyle(
+                              fontSize: AppStyle.fontSizeListRow()))
                           : AutoSizeText(
-                              Language.getTransactionStrings(
-                                  'form.filter.labels.customer_name'),
-                              maxLines: 1,
-                              style: TextStyle(
-                                  fontSize: AppStyle.fontSizeListRow())),
+                          Language.getTransactionStrings(
+                              'form.filter.labels.customer_name'),
+                          maxLines: 1,
+                          style: TextStyle(
+                              fontSize: AppStyle.fontSizeListRow())),
                     ),
                   ),
                   Expanded(
@@ -952,15 +952,15 @@ class TabletTableRow extends StatelessWidget {
                     child: Container(
                       child: !isHeader
                           ? AutoSizeText(
-                              '${Measurements.currency(currentTransaction.currency)}${f.format(currentTransaction.total)}',
-                              style: TextStyle(
-                                  fontSize: AppStyle.fontSizeListRow()))
+                          '${Measurements.currency(currentTransaction.currency)}${f.format(currentTransaction.total)}',
+                          style: TextStyle(
+                              fontSize: AppStyle.fontSizeListRow()))
                           : AutoSizeText(
-                              Language.getTransactionStrings(
-                                  'form.filter.labels.total'),
-                              maxLines: 1,
-                              style: TextStyle(
-                                  fontSize: AppStyle.fontSizeListRow())),
+                          Language.getTransactionStrings(
+                              'form.filter.labels.total'),
+                          maxLines: 1,
+                          style: TextStyle(
+                              fontSize: AppStyle.fontSizeListRow())),
                     ),
                   ),
                   Expanded(
@@ -968,14 +968,14 @@ class TabletTableRow extends StatelessWidget {
                     child: Container(
                       child: !isHeader
                           ? AutoSizeText(
-                              '${DateFormat.d('en_US').add_MMMM().add_y().format(time)} ${DateFormat.Hm('en_US').format(time.add(Duration(hours: 2)))}',
-                              style: TextStyle(
-                                  fontSize: AppStyle.fontSizeListRow()))
+                          '${DateFormat.d('en_US').add_MMMM().add_y().format(time)} ${DateFormat.Hm('en_US').format(time.add(Duration(hours: 2)))}',
+                          style: TextStyle(
+                              fontSize: AppStyle.fontSizeListRow()))
                           : Text(
-                              Language.getTransactionStrings(
-                                  'form.filter.labels.created_at'),
-                              style: TextStyle(
-                                  fontSize: AppStyle.fontSizeListRow())),
+                          Language.getTransactionStrings(
+                              'form.filter.labels.created_at'),
+                          style: TextStyle(
+                              fontSize: AppStyle.fontSizeListRow())),
                     ),
                   ),
                   Expanded(
@@ -985,10 +985,10 @@ class TabletTableRow extends StatelessWidget {
                       child: !isHeader
                           ? Measurements.statusWidget(currentTransaction.status)
                           : Text(
-                              Language.getTransactionStrings(
-                                  'form.filter.labels.status'),
-                              style: TextStyle(
-                                  fontSize: AppStyle.fontSizeListRow())),
+                          Language.getTransactionStrings(
+                              'form.filter.labels.status'),
+                          style: TextStyle(
+                              fontSize: AppStyle.fontSizeListRow())),
                     ),
                   ),
                 ],

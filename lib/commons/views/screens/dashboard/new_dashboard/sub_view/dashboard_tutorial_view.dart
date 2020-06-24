@@ -4,7 +4,7 @@ import 'package:payever/commons/models/app_widget.dart';
 import 'package:payever/commons/utils/env.dart';
 import 'package:payever/commons/views/custom_elements/TutorialCell.dart';
 
-import 'BlurEffectView.dart';
+import 'blur_effect_view.dart';
 
 class DashboardTutorialView extends StatefulWidget {
   final List<AppWidget> appWidgets;
