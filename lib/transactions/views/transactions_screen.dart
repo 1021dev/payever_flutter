@@ -10,8 +10,6 @@ import 'package:page_transition/page_transition.dart';
 import 'package:intl/intl.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
-import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/BlurEffectView.dart';
-import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/TopBarView.dart';
 import 'package:payever/transactions/models/enums.dart';
 import 'package:payever/transactions/views/filter_content_view.dart';
 import 'package:payever/transactions/views/sort_content_view.dart';
@@ -145,7 +143,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
               centerTitle: false,
               elevation: 0,
               automaticallyImplyLeading: false,
-              backgroundColor: Colors.black,
+              backgroundColor: Colors.black87,
               title: Text('Transactions'),
               leading: Container(
                 child: Center(
@@ -241,7 +239,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                   },
                 ),
                 Padding(
-                  padding: EdgeInsets.only(right: 8),
+                  padding: EdgeInsets.only(right: 16),
                 ),
               ],
             ),
@@ -991,46 +989,16 @@ class TabletTableRow extends StatelessWidget {
       ),
       onTap: () {
         if (!isHeader) {
-          TransactionsApi api = TransactionsApi();
-          showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (BuildContext context) {
-                api
-                    .getTransactionDetail(
-                        globalStateModel.currentBusiness.id,
-                        GlobalUtils.activeToken.accessToken,
-                        currentTransaction.uuid,
-                        )
-                    .then((obj) {
-                  var td = TransactionDetails.toMap(obj);
-                  Navigator.pop(context);
-                  Navigator.push(
-                    context,
-                    PageTransition(
-                      child: TransactionDetailsScreen(
-                        businessId: globalStateModel.currentBusiness.id,
-                        transactionId: currentTransaction.uuid,
-                      ),
-                      type: PageTransitionType.fade,
-                    ),
-                  );
-                }).catchError((onError) {
-                  Navigator.pop(context);
-                  print(onError);
-                });
-                return BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                  child: Container(
-                    child: Dialog(
-                      backgroundColor: Colors.transparent,
-                      child: Center(
-                        child: Container(child: CircularProgressIndicator()),
-                      ),
-                    ),
-                  ),
-                );
-              });
+          Navigator.push(
+            context,
+            PageTransition(
+              child: TransactionDetailsScreen(
+                businessId: globalStateModel.currentBusiness.id,
+                transactionId: currentTransaction.uuid,
+              ),
+              type: PageTransitionType.fade,
+            ),
+          );
         }
       },
     );

@@ -13,7 +13,7 @@ import '../../../utils/utils.dart';
 import 'loader.dart';
 
 
-import 'package:payever/commons/views/screens/dashboard/new_dashboard/DashboardScreen.dart';
+import 'package:payever/commons/views/screens/dashboard/new_dashboard/dashboard_screen.dart';
 //import '../dashboard/dashboard_screen_ref.dart';
 
 const double _heightFactorTablet = 0.05;

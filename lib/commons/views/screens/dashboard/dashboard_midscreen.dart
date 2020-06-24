@@ -16,7 +16,7 @@ import '../../custom_elements/custom_elements.dart';
 import '../login/login.dart';
 import '../switcher/switcher.dart';
 //import 'dashboard_screen_ref.dart';
-import 'new_dashboard/DashboardScreen.dart';
+import 'new_dashboard/dashboard_screen.dart';
 
 class DashboardMidScreen extends StatefulWidget {
   final String wallpaper;

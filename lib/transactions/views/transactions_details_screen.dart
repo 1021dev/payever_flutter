@@ -87,13 +87,23 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
               automaticallyImplyLeading: false,
               actions: <Widget>[
                 IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
+                  constraints: BoxConstraints(
+                    maxHeight: 32,
+                    maxWidth: 32,
+                    minHeight: 32,
+                    minWidth: 32,
+                  ),
                   icon: Icon(
                     Icons.close,
                     color: Colors.white,
+                    size: 24,
                   ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                Padding(
+                  padding: EdgeInsets.only(right: 16),
                 )
               ],
             ),

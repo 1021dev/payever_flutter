@@ -9,8 +9,13 @@ import 'BlurEffectView.dart';
 
 class DashboardBusinessAppsView extends StatefulWidget {
   final List<AppWidget> appWidgets;
-
-  DashboardBusinessAppsView({this.appWidgets});
+  final Function onTapEdit;
+  final Function onTapWidget;
+  DashboardBusinessAppsView({
+    this.appWidgets,
+    this.onTapEdit,
+    this.onTapWidget,
+  });
   @override
   _DashboardBusinessAppsViewState createState() => _DashboardBusinessAppsViewState();
 }
@@ -22,7 +27,7 @@ class _DashboardBusinessAppsViewState extends State<DashboardBusinessAppsView> {
     return BlurEffectView(
       padding: EdgeInsets.fromLTRB(14, 12, 14, 0),
       child: Container(
-        height: 28 + (widget.appWidgets.length / 4).ceilToDouble() * 82,
+        height: 44 + (widget.appWidgets.length / 4).ceilToDouble() * 82,
         child: Column(
           children: [
             Row(
@@ -50,9 +55,7 @@ class _DashboardBusinessAppsViewState extends State<DashboardBusinessAppsView> {
                   ],
                 ),
                 InkWell(
-                  onTap: () {
-
-                  },
+                  onTap: widget.onTapEdit,
                   child: Container(
                     height: 20,
                     width: 40,
@@ -72,13 +75,24 @@ class _DashboardBusinessAppsViewState extends State<DashboardBusinessAppsView> {
                 ),
               ],
             ),
-            SizedBox(height: 8),
+            Padding(
+              padding: EdgeInsets.only(top: 8),
+            ),
             if (widget.appWidgets != null) Expanded(
-              child: GridView.count(crossAxisCount: 4,
-                children: widget.appWidgets.map((e) => BusinessAppCell(e)).toList(),
+              child: GridView.count(
+                crossAxisCount: 4,
+                children: widget.appWidgets.map((e) => BusinessAppCell(
+                  onTap: (){
+                    widget.onTapWidget(e);
+                  },
+                  currentApp: e,
+                )).toList(),
                 physics: NeverScrollableScrollPhysics(),
               ),
-            )
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 16),
+            ),
           ],
         ),
       ),
