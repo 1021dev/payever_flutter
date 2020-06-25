@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 import 'jsonable.dart';
 
-enum RestCallType { get, post, formPost, put, delete }
+enum RestCallType { get, post, formPost, put, delete, patch}
 
 class BaseClient {
   Dio _dio = Dio();
@@ -82,6 +82,19 @@ class BaseClient {
     return _requestTypeless(
       path,
       RestCallType.get,
+      queryParameters: queryParameters,
+      headers: headers,
+    );
+  }
+
+  Future<Response> patch(
+      String path, {
+        Map<String, dynamic> queryParameters,
+        Map<String, dynamic> headers,
+      }) async {
+    return _requestTypeless(
+      path,
+      RestCallType.patch,
       queryParameters: queryParameters,
       headers: headers,
     );
@@ -311,6 +324,16 @@ class BaseClient {
           response = await _dio.delete(
             path,
             queryParameters: queryParameters,
+            options: Options(
+              headers: headers,
+              followRedirects: false,
+            ),
+          );
+        } else if (callType == RestCallType.patch) {
+          response = await _dio.patch(
+            path,
+            queryParameters: queryParameters,
+            data: data,
             options: Options(
               headers: headers,
               followRedirects: false,

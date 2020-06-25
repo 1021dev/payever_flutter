@@ -162,5 +162,391 @@ class ApiService {
     }
   }
 
+  Future<dynamic> refreshToken(String token, String finger) async {
+    try {
+      print("$TAG - refreshToken()");
+      dynamic response = await _client.getTypeless(
+          refreshUrl,
+          headers: {
+            HttpHeaders.authorizationHeader: "Bearer $token",
+            HttpHeaders.contentTypeHeader: "application/json",
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> login(String username, String password, String finger) async {
+    try {
+      print("$TAG - login()");
+      dynamic response = await _client.post(
+          loginUrl,
+          body: {
+            'email': username,
+            'plainPassword': password,
+          },
+          headers: {
+            HttpHeaders.contentTypeHeader: "application/json",
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          },
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getDays(String id, String token) async {
+    try {
+      print("$TAG - getDays()");
+      dynamic response = await _client.getTypeless(
+          transactionsUrl + id + days,
+          headers: {
+            HttpHeaders.authorizationHeader: "Bearer $token",
+            HttpHeaders.contentTypeHeader: "application/json",
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getMonths(String id, String token,) async {
+    try {
+      print("$TAG - getMonths()");
+      dynamic response = await _client.getTypeless(
+          transactionsUrl + id + months,
+          headers: {
+            HttpHeaders.authorizationHeader: "Bearer $token",
+            HttpHeaders.contentTypeHeader: "application/json",
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getTransactionList(
+      String id, String token, String query) async {
+    try {
+      print("$TAG - getTransactionList()");
+      dynamic response = await _client.getTypeless(
+          transactionWidUrl + id + transactionWidEnd,
+          headers: {
+            HttpHeaders.authorizationHeader: "Bearer $token",
+            HttpHeaders.contentTypeHeader: "application/json",
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+
+  Future<dynamic> getWidgets(String id, String token) async {
+    try {
+      print("$TAG - getWidgets()");
+      dynamic response = await _client.getTypeless(
+          widgetsUrl + id + widgetsEnd,
+          headers: {
+            HttpHeaders.authorizationHeader: "Bearer $token",
+            HttpHeaders.contentTypeHeader: "application/json",
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getWidgetsPersonal(String token) async {
+    try {
+      print("$TAG - getWidgetsPersonal()");
+      dynamic response = await _client.getTypeless(
+          widgetsUrlPer,
+          headers: {
+            HttpHeaders.authorizationHeader: "Bearer $token",
+            HttpHeaders.contentTypeHeader: "application/json",
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getWallpaper(String id, String token,) async {
+    try {
+      print("$TAG - getWallpaper()");
+      dynamic response = await _client.getTypeless(
+          wallpaperUrl + id + wallpaperEnd,
+          headers: {
+            HttpHeaders.authorizationHeader: "Bearer $token",
+            HttpHeaders.contentTypeHeader: "application/json",
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getWallpaperPersonal(String token,) async {
+    try {
+      print("$TAG - getWallpaperPersonal()");
+      dynamic response = await _client.getTypeless(
+          wallpaperUrlPer,
+          headers: {
+            HttpHeaders.authorizationHeader: "Bearer $token",
+            HttpHeaders.contentTypeHeader: "application/json",
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getMonthsPersonal(String token,) async {
+    try {
+      print("$TAG - getMonthsPersonal()");
+      dynamic response = await _client.getTypeless(
+          transactionsUrlPer + 'last-monthly',
+          headers: {
+            HttpHeaders.authorizationHeader: "Bearer $token",
+            HttpHeaders.contentTypeHeader: "application/json",
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getDaysPersonal(String token,) async {
+    try {
+      print("$TAG - getDaysPersonal()");
+      dynamic response = await _client.getTypeless(
+          transactionsUrlPer + 'last-daily',
+          headers: {
+            HttpHeaders.authorizationHeader: "Bearer $token",
+            HttpHeaders.contentTypeHeader: "application/json",
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getTerminal(String idBusiness, String token) async {
+    try {
+      print("$TAG - geTerminal()");
+      dynamic response = await _client.getTypeless(
+          posBusiness + idBusiness + posTerminalEnd,
+          headers: {
+            HttpHeaders.authorizationHeader: "Bearer $token",
+            HttpHeaders.contentTypeHeader: "application/json",
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getChannelSet(String idBusiness, String token) async {
+    try {
+      print("$TAG - getChannelSet()");
+      dynamic response = await _client.getTypeless(
+          checkoutBusiness + idBusiness + endChannelSet,
+          headers: {
+            HttpHeaders.authorizationHeader: "Bearer $token",
+            HttpHeaders.contentTypeHeader: "application/json",
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getCheckoutIntegration(String idBusiness, String checkoutID, String token) async {
+    try {
+      print("$TAG - getCheckoutIntegration()");
+      dynamic response = await _client.getTypeless(
+          checkoutBusiness +
+              idBusiness +
+              checkout +
+              checkoutID +
+              endIntegration,
+          headers: {
+            HttpHeaders.authorizationHeader: "Bearer $token",
+            HttpHeaders.contentTypeHeader: "application/json",
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getLastWeek(String idBusiness, String channel, String token) async {
+    try {
+      print("$TAG - getLastWeek()");
+      dynamic response = await _client.getTypeless(
+          transactionsUrl + idBusiness + widgetsChannelSet + channel + days,
+          headers: {
+            HttpHeaders.authorizationHeader: "Bearer $token",
+            HttpHeaders.contentTypeHeader: "application/json",
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getPopularWeek(String idBusiness, String channel, String token) async {
+    try {
+      print("$TAG - getPopularWeek()");
+      dynamic response = await _client.getTypeless(
+          productsUrl +
+              idBusiness +
+              widgetsChannelSet +
+              channel +
+              popularWeek,
+          headers: {
+            HttpHeaders.authorizationHeader: "Bearer $token",
+            HttpHeaders.contentTypeHeader: "application/json",
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getProductsPopularWeek(String idBusiness, String token) async {
+    try {
+      print("$TAG - getProductsPopularWeek()");
+      dynamic response = await _client.getTypeless(
+          productsUrl + idBusiness + popularWeek,
+          headers: {
+            HttpHeaders.authorizationHeader: "Bearer $token",
+            HttpHeaders.contentTypeHeader: "application/json",
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getProductsPopularMonth(String idBusiness, String token) async {
+    try {
+      print("$TAG - getProductsPopularMonth()");
+      dynamic response = await _client.getTypeless(
+          productsUrl + idBusiness + popularMonth,
+          headers: {
+            HttpHeaders.authorizationHeader: "Bearer $token",
+            HttpHeaders.contentTypeHeader: "application/json",
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getProductLastSold(String idBusiness, String token) async {
+    try {
+      print("$TAG - getProductLastSold()");
+      dynamic response = await _client.getTypeless(
+          productsUrl + idBusiness + prodLastSold,
+          headers: {
+            HttpHeaders.authorizationHeader: "Bearer $token",
+            HttpHeaders.contentTypeHeader: "application/json",
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> deleteTransactionList(String id, String token, String query) async {
+    try {
+      print("$TAG - deleteTransactionList()");
+      dynamic response = await _client.deleteTypeless(
+          transactionWidUrl + id + transactionWidEnd,
+          headers: {
+            HttpHeaders.authorizationHeader: "Bearer $token",
+            HttpHeaders.contentTypeHeader: "application/json",
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getTutorials(String token, String id) async {
+    try {
+      print("$TAG - getTutorials()");
+      dynamic response = await _client.deleteTypeless(
+          widgetsUrl + id + "/widget-tutorial",
+          headers: {
+            HttpHeaders.authorizationHeader: "Bearer $token",
+            HttpHeaders.contentTypeHeader: "application/json",
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> patchTutorials(String token, String id, String video) async {
+    try {
+      print("$TAG - patchTutorials()");
+      dynamic response = await _client.getTypeless(
+          widgetsUrl + id + "/widget-tutorial/$video/watched",
+          headers: {
+            HttpHeaders.authorizationHeader: "Bearer $token",
+            HttpHeaders.contentTypeHeader: "application/json",
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
 
 }

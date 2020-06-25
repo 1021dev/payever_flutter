@@ -825,3 +825,6 @@ class GlobalUtils {
     return positions;
   }
 }
+
+String imageBase = Env.storage + '/images/';
+String wallpaperBase = Env.storage + '/wallpapers/';

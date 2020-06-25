@@ -27,9 +27,6 @@ bool _isPortrait = true;
 
 SwitchParts parts = SwitchParts();
 
-String imageBase = Env.storage + '/images/';
-String wallpaperBase = Env.storage + '/wallpapers/';
-
 class SwitcherScreen extends StatefulWidget {
   SwitcherScreen();
 
