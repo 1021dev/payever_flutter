@@ -207,10 +207,10 @@ class _GridItemsState extends State<GridItems> {
           });
           parts.fetchWallpaper(widget.business.id, context).then((img) {
             parts.getWidgets(widget.business.id, context).then((onValue) {
-              Provider.of<GlobalStateModel>(context)
+              Provider.of<GlobalStateModel>(context,listen: false)
                   .setCurrentBusiness(widget.business);
               SharedPreferences.getInstance().then((p) {
-                Provider.of<GlobalStateModel>(context)
+                Provider.of<GlobalStateModel>(context,listen: false)
                     .setCurrentWallpaper(p.getString(GlobalUtils.WALLPAPER));
 
                 Navigator.pushReplacement(

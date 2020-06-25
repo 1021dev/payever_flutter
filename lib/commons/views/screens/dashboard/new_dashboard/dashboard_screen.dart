@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/blur_effect_view.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/dashboard_advertising_view.dart';
@@ -27,8 +28,9 @@ import '../../../views.dart';
 
 class DashboardScreen extends StatelessWidget {
   final appWidgets;
+  final DashboardScreenBloc screenBloc;
 
-  DashboardScreen({this.appWidgets});
+  DashboardScreen({this.appWidgets, this.screenBloc,});
   @override
   Widget build(BuildContext context) {
 //    return DashboardScreenWidget(appWidgets: appWidgets,);
