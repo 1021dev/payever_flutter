@@ -19,9 +19,11 @@ class DashboardScreenState {
   final List<Day> lastMonth;
   final List<Tutorial> tutorials;
   final List<Widget> activeWid;
+  final bool isInitialScreen;
 
   DashboardScreenState({
     this.isLoading = true,
+    this.isInitialScreen = true,
     this.businessWidgets = const [],
     this.businesses = const [],
     this.currentWidgets = const [],
@@ -56,10 +58,12 @@ class DashboardScreenState {
     this.lastMonth,
     this.tutorials,
     this.activeWid,
+    this.isInitialScreen,
   ];
 
   DashboardScreenState copyWith({
     bool isLoading,
+    bool isInitialScreen,
     List<BusinessApps> businessWidgets,
     List<AppWidget> currentWidgets,
     List<Business> businesses,
@@ -78,6 +82,7 @@ class DashboardScreenState {
   }) {
     return DashboardScreenState(
       isLoading: isLoading ?? this.isLoading,
+      isInitialScreen: isInitialScreen ?? this.isInitialScreen,
       businessWidgets: businessWidgets ?? this.businessWidgets,
       currentWidgets: currentWidgets ?? this.currentWidgets,
       businesses: businesses ?? this.businesses,
@@ -99,7 +104,10 @@ class DashboardScreenState {
 
 class DashboardScreenSuccess extends DashboardScreenState {}
 
-class DashboardScreenInitialFetchSuccess extends DashboardScreenState {}
+class DashboardScreenInitialFetchSuccess extends DashboardScreenState {
+  List<AppWidget> widgetApps;
+  DashboardScreenInitialFetchSuccess({this.widgetApps}) : super();
+}
 
 class DashboardScreenLogout extends DashboardScreenState {}
 class DashboardScreenSwitch extends DashboardScreenState {}

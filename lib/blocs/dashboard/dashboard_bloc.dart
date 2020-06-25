@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:package_info/package_info.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/blocs/dashboard/dashboard.dart';
 import 'package:payever/commons/commons.dart';
@@ -13,7 +14,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 
 class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenState> {
-  DashboardScreenBloc();
+  bool isInitial;
+  DashboardScreenBloc({this.isInitial = true});
   ApiService api = ApiService();
   String uiKit = '${Env.commerceOs}/assets/ui-kit/icons-png/';
 
@@ -23,12 +25,30 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
   @override
   Stream<DashboardScreenState> mapEventToState(DashboardScreenEvent event) async* {
     if (event is DashboardScreenInitEvent) {
-      yield* _fetchInitialData();
+      yield* _checkVersion();
     }
   }
 
-  Stream<DashboardScreenState> _loadUserData() async* {
-    var dataLoaded = await loadData();
+  Stream<DashboardScreenState> _checkVersion() async* {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    String version = packageInfo.version;
+    var environment = await api.getEnv();
+    Env.map(environment);
+    var v = await api.getVersion();
+    Version vv = Version.map(v);
+    print("version:$version");
+    print("_version:${vv.minVersion}");
+    print("compare:${version.compareTo(vv.minVersion)}");
+
+    if(version.compareTo(vv.minVersion)<0){
+//          showPopUp(context, _version);
+      print('Not Supported Version');
+    }else{
+      yield* loadData();
+    }
+  }
+
+  Stream<DashboardScreenState> _loadUserData(var dataLoaded) async* {
     if (dataLoaded != null) {
       var data = json.decode(dataLoaded);
       var responseMsg = data['responseMsg'];
@@ -51,7 +71,7 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
     }
   }
 
-  Future<dynamic> loadData() async {
+  Stream<DashboardScreenState> loadData() async* {
     var preferences = await SharedPreferences.getInstance();
     //  var environment = await api.getEnv();
     // Env.map(environment);
@@ -63,27 +83,41 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
           preferences.getString(GlobalUtils.FINGERPRINT),
         );
         if (refreshToken != null) {
-          return json.encode({
-            'responseMsg': 'refreshToken',
-            'token': refreshToken,
-            'renew': false,
-          });
+          yield* _loadUserData(
+              json.encode(
+                  {
+                    'responseMsg': 'refreshToken',
+                    'token': refreshToken,
+                    'renew': false,
+                  }
+              )
+          );
         } else {
-          return json.encode({
-            'responseMsg': 'error',
-            'token': '',
-            'renew': false,
-          });
+          yield* _loadUserData(
+              json.encode(
+                  {
+                    'responseMsg': 'error',
+                    'token': '',
+                    'renew': false,
+                  }
+              )
+          )
+          ;
         }
       } catch (e) {
+        print('Refresh Token Error = > $e');
         if (e.toString().contains('SocketException')) {
-          return _loadUserData();
+          yield* _loadUserData(null);
         } else {
-          return json.encode({
-            'responseMsg': 'goToLogin',
-            'token': '',
-            'renew': false,
-          });
+          yield* _loadUserData(
+              json.encode(
+                  {
+                    'responseMsg': 'goToLogin',
+                    'token': '',
+                    'renew': false,
+                  }
+              )
+          );
         }
       }
     } else {
@@ -96,27 +130,39 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
               preferences.getString(GlobalUtils.fingerprint),
           );
           if (refreshTokenLogin != null) {
-            return json.encode({
-              'responseMsg': 'refreshTokenLogin',
-              'token': refreshTokenLogin,
-              'renew': false,
-            });
+            yield* _loadUserData(
+                json.encode(
+                    {
+                      'responseMsg': 'refreshTokenLogin',
+                      'token': refreshTokenLogin,
+                      'renew': false,
+                    }
+                )
+            );
           } else {
-            return json.encode({
-              'responseMsg': 'error',
-              'token': '',
-              'renew': false,
-            });
+            yield* _loadUserData(
+                json.encode(
+                    {
+                      'responseMsg': 'error',
+                      'token': '',
+                      'renew': false,
+                    }
+                )
+            );
           }
         } catch (e) {
           if (e.toString().contains('SocketException')) {
-            return _loadUserData();
+            yield* _loadUserData(null);
           } else {
-            return json.encode({
-              'responseMsg': 'goToLogin',
-              'token': '',
-              'renew': false,
-            });
+            yield* _loadUserData(
+                json.encode(
+                    {
+                      'responseMsg': 'goToLogin',
+                      'token': '',
+                      'renew': false,
+                    }
+                )
+            );
           }
         }
       }
@@ -124,20 +170,18 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
   }
 
   Stream<DashboardScreenState> _fetchInitialDataRenew(dynamic token, bool renew) async* {
-  }
-  Stream<DashboardScreenState> _fetchInitialData() async* {
     List<BusinessApps> businessWidgets = [];
     List<AppWidget> widgetApps = [];
     List<Business> businesses = [];
     Business activeBusiness;
     FetchWallpaper fetchWallpaper;
 
-//    var _token = !renew ? Token.map(token) : token;
-//    GlobalUtils.activeToken = _token;
+    var _token = !renew ? Token.map(token) : token;
+    GlobalUtils.activeToken = _token;
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-//    if (!renew) {
-//      GlobalUtils.activeToken.refreshToken = sharedPreferences.getString(GlobalUtils.REFRESH_TOKEN);
-//    }
+    if (!renew) {
+      GlobalUtils.activeToken.refreshToken = sharedPreferences.getString(GlobalUtils.REFRESH_TOKEN);
+    }
     sharedPreferences.setString(GlobalUtils.TOKEN, GlobalUtils.activeToken.accessToken);
     sharedPreferences.setString(GlobalUtils.REFRESH_TOKEN, GlobalUtils.activeToken.refreshToken);
     sharedPreferences.setString(GlobalUtils.LAST_OPEN, DateTime.now().toString());
@@ -201,9 +245,12 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
       currentWidgets: widgetApps,
       activeBusiness: activeBusiness,
       businessWidgets: businessWidgets,
-//      wallpaper: fetchWallpaper,
-//      currentWallpaper: fetchWallpaper.currentWallpaper,
+      wallpaper: fetchWallpaper,
+      currentWallpaper: fetchWallpaper != null ? fetchWallpaper.currentWallpaper: null,
     );
+    if (isInitial) {
+      yield DashboardScreenInitialFetchSuccess(widgetApps: widgetApps);
+    }
   }
 
   Future<List<Widget>> loadWidgetCards(List<AppWidget> currentWidgets) async {

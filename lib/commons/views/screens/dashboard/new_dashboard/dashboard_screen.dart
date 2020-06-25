@@ -29,9 +29,8 @@ import '../../../views.dart';
 
 class DashboardScreen extends StatefulWidget {
   final appWidgets;
-  final DashboardScreenBloc screenBloc;
 
-  DashboardScreen({this.appWidgets, this.screenBloc,});
+  DashboardScreen({this.appWidgets});
 //  @override
 //  Widget build(BuildContext context) {
 ////    return DashboardScreenWidget(appWidgets: appWidgets,);
@@ -57,15 +56,18 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   final GlobalKey<InnerDrawerState> _innerDrawerKey = GlobalKey<InnerDrawerState>();
   DashboardScreenBloc screenBloc;
+
   @override
   void initState() {
-//    if (widget.screenBloc != null) {
-//      screenBloc = widget.screenBloc;
-//    } else {
-      screenBloc = DashboardScreenBloc();
-      screenBloc.add(DashboardScreenInitEvent());
-//    }
+    screenBloc = DashboardScreenBloc(isInitial: false);
+    screenBloc.add(DashboardScreenInitEvent());
     super.initState();
+  }
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    screenBloc.close();
+    super.dispose();
   }
   @override
   Widget build(BuildContext context) {

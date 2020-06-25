@@ -142,7 +142,10 @@ class RestDataSource {
       HttpHeaders.contentTypeHeader: "application/json",
       HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
     };
+    print('Refresh Headers => $headers');
+
     return _netUtil.get(refreshUrl, headers: headers).then((dynamic res) {
+      print('Refresh Token => $res');
       return res;
     });
   }

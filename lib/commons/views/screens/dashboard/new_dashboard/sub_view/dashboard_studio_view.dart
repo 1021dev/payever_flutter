@@ -13,15 +13,15 @@ class DashboardStudioView extends StatelessWidget {
         children: [
           Row(
             children: [
-              Container(
-                width: 16,
-                height: 16,
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: NetworkImage(Env.commerceOs +
-                            "/assets/ui-kit/icons-png/icon-commerceos-studio-64.png"),
-                        fit: BoxFit.fitWidth)),
-              ),
+//              Container(
+//                width: 16,
+//                height: 16,
+//                decoration: BoxDecoration(
+//                    image: DecorationImage(
+//                        image: NetworkImage(Env.commerceOs +
+//                            "/assets/ui-kit/icons-png/icon-commerceos-studio-64.png"),
+//                        fit: BoxFit.fitWidth)),
+//              ),
               SizedBox(width: 8,),
               Text(
                 "STUDIO",

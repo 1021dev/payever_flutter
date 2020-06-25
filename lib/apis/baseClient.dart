@@ -270,10 +270,8 @@ class BaseClient {
         Map<String, dynamic> headers,
         dynamic data,
       }) async {
-    bool reAuthRequired = false;
     Response response;
 
-    do {
       if (headers == null) {
         headers = {};
       }
@@ -340,8 +338,13 @@ class BaseClient {
             ),
           );
         }
+        print('Response => ${response.data}');
+        print('Response Status Code => ${response.statusCode}');
+        return response.data;
+
       } on DioError catch (e) {
         debugPrint('Dio error: $e');
+        return e;
 //        if (e.response.statusCode == 403) {
 //          bool reAuthResult = await _authService.reAuth();
 //          if (reAuthResult) {
@@ -356,8 +359,5 @@ class BaseClient {
 //          rethrow;
 //        }
       }
-      reAuthRequired = false;
-    } while (reAuthRequired);
-    return response.data;
   }
 }

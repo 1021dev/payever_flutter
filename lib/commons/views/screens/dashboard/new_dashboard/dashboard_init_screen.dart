@@ -5,11 +5,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
+import 'package:payever/commons/utils/common_utils.dart';
+import 'package:payever/commons/utils/translations.dart';
+import 'package:payever/commons/views/screens/login/login_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../utils/utils.dart';
-import '../login/login.dart';
-import 'new_dashboard/dashboard_screen.dart';
+import 'dashboard_screen.dart';
 
 class DashboardInitScreen extends StatefulWidget {
   final String wallpaper;

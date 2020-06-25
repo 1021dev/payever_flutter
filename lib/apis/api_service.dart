@@ -111,6 +111,22 @@ class ApiService {
     }
   }
 
+  Future<dynamic> getVersion() async {
+    try {
+      print('$TAG - getVersion()');
+      dynamic response = await _client.getTypeless(
+          '${appRegistryUrl}mobile-settings',
+          headers: {
+            HttpHeaders.contentTypeHeader: "application/json",
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (error) {
+      return Future.error(error);
+    }
+  }
+
   Future<dynamic> getBusinesses(String token) async {
     try {
       print('$TAG - getBusinesses()');
@@ -173,7 +189,7 @@ class ApiService {
             HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
           }
       );
-      return response.data;
+      return response;
     } catch (e) {
       return Future.error(e);
     }
