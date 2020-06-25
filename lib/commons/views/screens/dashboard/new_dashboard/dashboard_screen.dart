@@ -213,7 +213,7 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget> {
         body: SafeArea(
           top: true,
           child: BackgroundBase(
-            true,
+            false,
             body: Column(
               children: [
                 Expanded(
@@ -258,27 +258,30 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget> {
                       SizedBox(height: 30),
                       BlurEffectView(
                         padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.search,
-                              color: Colors.white,
-                              size: 20,
-                            ),
-                            SizedBox(width: 8),
-                            Expanded(
-                              child: TextField(
-                                decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    hintText: "Search"
-                                ),
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.white
-                                ),
+                        child: Container(
+                          height: 36,
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.search,
+                                color: Colors.white,
+                                size: 20,
                               ),
-                            )
-                          ],
+                              SizedBox(width: 8),
+                              Expanded(
+                                child: TextField(
+                                  decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      hintText: "Search"
+                                  ),
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.white
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                       SizedBox(height: 8),

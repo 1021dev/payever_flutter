@@ -260,7 +260,10 @@ class _TransactionScreenState extends State<TransactionScreen> {
             body: SafeArea(
               child: BackgroundBase(
                 true,
-                body: Column(
+                body: state.isLoading ?
+                Center(
+                  child: CircularProgressIndicator(),
+                ): Column(
                   children: [
                     Container(
                       height: 50,
@@ -275,6 +278,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                               ),
                               InkWell(
                                 onTap: () {
+                                  if (state.isSearchLoading) return;
                                   showSearchTextDialog(state);
                                 },
                                 child: Icon(
@@ -287,6 +291,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                               ),
                               InkWell(
                                 onTap: () {
+                                  if (state.isSearchLoading) return;
                                   showCupertinoModalPopup(
                                       context: context,
                                       builder: (builder) {
@@ -333,6 +338,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                               ),
                               FlatButton(
                                 onPressed: () {
+                                  if (state.isSearchLoading) return;
                                   showGeneralDialog(
                                       barrierLabel: 'Export',
                                       barrierDismissible: true,
@@ -363,6 +369,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                             children: [
                               InkWell(
                                 onTap: () {
+                                  if (state.isSearchLoading) return;
                                   showCupertinoModalPopup(
                                       context: context,
                                       builder: (builder) {
@@ -490,10 +497,9 @@ class _TransactionScreenState extends State<TransactionScreen> {
                       ),
                     ),
                     Expanded(
-                      child: state.isLoading ?
-                      Center(
+                      child: state.isSearchLoading ? Center(
                         child: CircularProgressIndicator(),
-                      ): (state.data.transaction.collection.length > 0 ? CustomList(widget.globalStateModel,
+                      ) : (state.data.transaction.collection.length > 0 ? CustomList(widget.globalStateModel,
                           state.data != null ? state.data.transaction.collection : [],
                           state.data,
                           state):

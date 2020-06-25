@@ -16,24 +16,23 @@ class TransactionsScreenBloc extends Bloc<TransactionsScreenEvent, TransactionsS
   @override
   Stream<TransactionsScreenState> mapEventToState(TransactionsScreenEvent event) async* {
     if (event is TransactionsScreenInitEvent) {
-      yield state.copyWith(currentBusiness: event.currentBusiness, page: 1);
+      yield state.copyWith(currentBusiness: event.currentBusiness, page: 1, isLoading: true);
       yield* fetchTransactions('', 'date', [], 1);
     } else if (event is FetchTransactionsEvent) {
       yield* fetchTransactions(event.searchText, event.sortBy, event.filterBy, event.page);
     } else if (event is UpdateSearchText) {
-      yield state.copyWith(searchText: event.searchText, page: 1);
+      yield state.copyWith(searchText: event.searchText, page: 1, isSearchLoading: true);
       yield* fetchTransactions(state.searchText, state.curSortType, state.filterTypes, state.page);
     } else if (event is UpdateFilterTypes) {
-      yield state.copyWith(filterTypes: event.filterTypes, page: 1);
+      yield state.copyWith(filterTypes: event.filterTypes, page: 1, isSearchLoading: true);
       yield* fetchTransactions(state.searchText, state.curSortType, state.filterTypes, state.page);
     } else if (event is UpdateSortType) {
-      yield state.copyWith(curSortType: event.sortType, page: 1);
+      yield state.copyWith(curSortType: event.sortType, page: 1, isSearchLoading: true);
       yield* fetchTransactions(state.searchText, state.curSortType, state.filterTypes, state.page);
     }
   }
 
   Stream<TransactionsScreenState> fetchTransactions(String search, String sortType, List<FilterItem> filterTypes, int page) async* {
-    yield state.copyWith(isLoading: true);
     String queryString = '';
     String sortQuery = 'orderBy=created_at&direction=desc&';
     if (sortType == 'date') {
@@ -67,34 +66,10 @@ class TransactionsScreenBloc extends Bloc<TransactionsScreenEvent, TransactionsS
       if (error.toString().contains('401')) {
         GlobalUtils.clearCredentials();
         yield TransactionsScreenFailure(error: error.toString());
-//        Navigator.pushReplacement(
-//            context,
-//            PageTransition(
-//                child: LoginScreen(), type: PageTransitionType.fade));
       }
       yield state.copyWith(isLoading: false, isSearchLoading: false);
       print(onError.toString());
     }
-//    api.getTransactionList(
-//      state.currentBusiness.id,
-//      GlobalUtils.activeToken.accessToken,
-//      queryString,
-//    ).then((obj) async* {
-//      TransactionScreenData data = TransactionScreenData(obj);
-//      yield state.copyWith(isLoading: false, isSearchLoading: false, data: data);
-//      debugPrint('Transactions Data => $obj');
-//    }).catchError((onError) async* {
-//      if (onError.toString().contains('401')) {
-//        GlobalUtils.clearCredentials();
-//        yield TransactionsScreenFailure(error: onError.toString());
-////        Navigator.pushReplacement(
-////            context,
-////            PageTransition(
-////                child: LoginScreen(), type: PageTransitionType.fade));
-//      }
-//      yield state.copyWith(isLoading: false, isSearchLoading: false);
-//      print(onError.toString());
-//    });
   }
 
 }

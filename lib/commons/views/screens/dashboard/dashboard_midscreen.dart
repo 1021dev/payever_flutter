@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/models/fetchwallpaper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
@@ -35,6 +36,19 @@ class _DashboardMidScreenState extends State<DashboardMidScreen> {
   List<Business> businesses = List();
 
   final _formKey = GlobalKey();
+  DashboardScreenBloc screenBloc = DashboardScreenBloc();
+
+  @override
+  void initState() {
+    screenBloc.add(DashboardScreenInitEvent());
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    screenBloc.close();
+    super.dispose();
+  }
 
   void _loadUserData() async {
     var dataLoaded = await loadData();
@@ -42,17 +56,17 @@ class _DashboardMidScreenState extends State<DashboardMidScreen> {
       var data = json.decode(dataLoaded);
       var responseMsg = data['responseMsg'];
       switch (responseMsg) {
-        case "refreshToken":
+        case 'refreshToken':
           return _fetchUserData(data['token'], false);
           break;
-        case "refreshTokenLogin":
+        case 'refreshTokenLogin':
           return _fetchUserData(data['token'], true);
           break;
-        case "error":
+        case 'error':
           return Future.delayed(Duration(milliseconds: 1500))
               .then((_) => _loadUserData());
           break;
-        case "goToLogin":
+        case 'goToLogin':
           return _redirectUser();
           break;
         default:
@@ -92,7 +106,7 @@ class _DashboardMidScreenState extends State<DashboardMidScreen> {
       });
 
       // RestDataSource().getVersion(GlobalUtils.ActiveToken.accessToken).then((list){
-      //   print("Version");
+      //   print('Version');
       //   list.forEach((a){
       //     print(a);
       //   });
@@ -162,7 +176,7 @@ class _DashboardMidScreenState extends State<DashboardMidScreen> {
       });
     });
     Locale myLocale = Localizations.localeOf(context);
-    print("Language - ${myLocale.languageCode}");
+    print('Language - ${myLocale.languageCode}');
     bool _isPortrait =
         Orientation.portrait == MediaQuery.of(context).orientation;
     Measurements.height = (_isPortrait
@@ -221,7 +235,7 @@ class _DashboardMidScreenState extends State<DashboardMidScreen> {
     if (DateTime.now()
             .difference(DateTime.fromMillisecondsSinceEpoch(
                 Measurements.parseJwt(preferences
-                        .getString(GlobalUtils.REFRESH_TOKEN))["exp"] *
+                        .getString(GlobalUtils.REFRESH_TOKEN))['exp'] *
                     1000))
             .inHours <
         0) {
@@ -232,25 +246,25 @@ class _DashboardMidScreenState extends State<DashboardMidScreen> {
             _formKey.currentContext);
         if (refreshToken != null) {
           return json.encode({
-            "responseMsg": "refreshToken",
-            "token": refreshToken,
-            "renew": false,
+            'responseMsg': 'refreshToken',
+            'token': refreshToken,
+            'renew': false,
           });
         } else {
           return json.encode({
-            "responseMsg": "error",
-            "token": "",
-            "renew": false,
+            'responseMsg': 'error',
+            'token': '',
+            'renew': false,
           });
         }
       } catch (e) {
-        if (e.toString().contains("SocketException")) {
+        if (e.toString().contains('SocketException')) {
           return _loadUserData();
         } else {
           return json.encode({
-            "responseMsg": "goToLogin",
-            "token": "",
-            "renew": false,
+            'responseMsg': 'goToLogin',
+            'token': '',
+            'renew': false,
           });
         }
       }
@@ -267,25 +281,25 @@ class _DashboardMidScreenState extends State<DashboardMidScreen> {
               preferences.getString(GlobalUtils.fingerprint));
           if (refreshTokenLogin != null) {
             return json.encode({
-              "responseMsg": "refreshTokenLogin",
-              "token": refreshTokenLogin,
-              "renew": false,
+              'responseMsg': 'refreshTokenLogin',
+              'token': refreshTokenLogin,
+              'renew': false,
             });
           } else {
             return json.encode({
-              "responseMsg": "error",
-              "token": "",
-              "renew": false,
+              'responseMsg': 'error',
+              'token': '',
+              'renew': false,
             });
           }
         } catch (e) {
-          if (e.toString().contains("SocketException")) {
+          if (e.toString().contains('SocketException')) {
             return _loadUserData();
           } else {
             return json.encode({
-              "responseMsg": "goToLogin",
-              "token": "",
-              "renew": false,
+              'responseMsg': 'goToLogin',
+              'token': '',
+              'renew': false,
             });
           }
         }

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:payever/apis/baseClient.dart';
+import 'package:payever/commons/network/rest_ds.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/env.dart';
 
@@ -109,5 +110,57 @@ class ApiService {
       return Future.error(error);
     }
   }
+
+  Future<dynamic> getBusinesses(String token) async {
+    try {
+      print("$TAG - getBusinesses()");
+      dynamic response = await _client.getTypeless(
+          businessUrl,
+          headers: {
+            HttpHeaders.authorizationHeader: "Bearer $token",
+            HttpHeaders.contentTypeHeader: "application/json",
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getBusinessApps(String businessId, String accessToken) async {
+    try {
+      print("$TAG - getBusinessApps()");
+      dynamic response = await _client.getTypeless(
+        RestDataSource.businessApps + businessId,
+        headers: {
+          HttpHeaders.authorizationHeader: "Bearer $accessToken",
+          HttpHeaders.contentTypeHeader: "application/json",
+          HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+        }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getUser(String token) async {
+    try {
+      print("TAG - getUser()");
+      dynamic response = await _client.getTypeless(
+          userUrl,
+          headers: {
+            HttpHeaders.authorizationHeader: "Bearer $token",
+            HttpHeaders.contentTypeHeader: "application/json",
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
 
 }
