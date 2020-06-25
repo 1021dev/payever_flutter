@@ -14,8 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 
 class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenState> {
-  bool isInitial;
-  DashboardScreenBloc({this.isInitial = true});
+  DashboardScreenBloc();
   ApiService api = ApiService();
   String uiKit = '${Env.commerceOs}/assets/ui-kit/icons-png/';
 
@@ -221,7 +220,7 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
       sharedPreferences.setString(
           GlobalUtils.WALLPAPER, wallpaperBase + fetchWallpaper.currentWallpaper.wallpaper);
       // TODO :// set CurrentWallPapaer
-//      globalStateModel.setCurrentWallpaper(wallpaperBase + fetchWallpaper.currentWallpaper.wallpaper, notify: false);
+//      GlobalStateModel.setCurrentWallpaper(wallpaperBase + fetchWallpaper.currentWallpaper.wallpaper, notify: false);
       dynamic widgetAppsObj = await api.getWidgets(
         sharedPreferences.getString(GlobalUtils.BUSINESS),
         accessToken,
@@ -240,7 +239,9 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
         businessWidgets.add(BusinessApps.fromMap(item));
       });
     }
-    yield state.copyWith(isLoading: false,
+    yield state.copyWith(
+      isInitialScreen: false,
+      isLoading: false,
       businesses: businesses,
       currentWidgets: widgetApps,
       activeBusiness: activeBusiness,
@@ -248,9 +249,6 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
       wallpaper: fetchWallpaper,
       currentWallpaper: fetchWallpaper != null ? fetchWallpaper.currentWallpaper: null,
     );
-    if (isInitial) {
-      yield DashboardScreenInitialFetchSuccess(widgetApps: widgetApps);
-    }
   }
 
   Future<List<Widget>> loadWidgetCards(List<AppWidget> currentWidgets) async {

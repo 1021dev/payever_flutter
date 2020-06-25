@@ -22,7 +22,7 @@ class DashboardScreenState {
   final bool isInitialScreen;
 
   DashboardScreenState({
-    this.isLoading = true,
+    this.isLoading = false,
     this.isInitialScreen = true,
     this.businessWidgets = const [],
     this.businesses = const [],

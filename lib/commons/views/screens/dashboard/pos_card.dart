@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:payever/commons/views/screens/dashboard/settings_card.dart';
 import 'package:provider/provider.dart';
 
 import '../../../models/models.dart';
@@ -21,9 +22,9 @@ import '../../../../pos/view_models/pos_state_model.dart';
 import '../../../../pos/network/network.dart';
 import '../../../../pos/views/pos_products_list_screen.dart';
 
-import 'dashboard_screen_ref.dart';
 import 'dashboard_card.dart';
 import 'dashboard_card_ref.dart';
+import 'products_sold_card.dart';
 
 class POSCard extends StatefulWidget {
   final String _appName;
@@ -916,4 +917,27 @@ class SimpleTerminal extends StatelessWidget {
       ),
     );
   }
+}
+
+class CardParts {
+  static bool _isTablet = false;
+  static bool _isPortrait = true;
+
+  static Widget _transactionCard;
+  static List<Widget> _activeWid = List();
+  static POSCard _posCard;
+  static ProductsSoldCard _productsCard;
+  static SettingsCard _settingsCard;
+  static String uiKit = Env.commerceOs + "/assets/ui-kit/icons-png/";
+
+  static double _appBarSize;
+
+  static Token _currentToken;
+  static String wallpaper;
+  static Business _currentBusiness;
+  static User _currentUser;
+  static Terminal currentTerminal;
+  static List<AppWidget> _currentWidgets;
+  static bool _isBusiness;
+  static List<int> indexes = List();
 }

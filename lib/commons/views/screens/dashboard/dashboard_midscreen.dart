@@ -150,7 +150,6 @@ class _DashboardMidScreenState extends State<DashboardMidScreen> {
                   _formKey.currentContext,
                   PageTransition(
                       child: DashboardScreen(
-                        appWidgets: widgets,
                       ),
                       type: PageTransitionType.fade,
                       duration: Duration(milliseconds: 200)));
