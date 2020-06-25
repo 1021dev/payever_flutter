@@ -9,7 +9,7 @@ class BlurEffectView extends StatelessWidget {
   final double blur;
   final EdgeInsetsGeometry padding;
 
-  BlurEffectView({this.child, this.radius = 6, this.blur = 15, this.padding = EdgeInsets.zero});
+  BlurEffectView({this.child, this.radius = 13, this.blur = 15, this.padding = EdgeInsets.zero});
 
   @override
   Widget build(BuildContext context) {

@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:payever/commons/commons.dart';
 
 import '../../models/app_widget.dart';
 import '../../utils/env.dart';
@@ -15,10 +16,9 @@ class BusinessAppCell extends StatelessWidget {
     this.onTap
   });
 
-  String uiKit = Env.commerceOs + "/assets/ui-kit/icons-png/";
+  String uiKit = 'https://payeverstage.azureedge.net/icons-png/';
   @override
   Widget build(BuildContext context) {
-    print(currentApp.icon);
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -41,14 +41,14 @@ class BusinessAppCell extends StatelessWidget {
                   decoration: BoxDecoration(
                       image: DecorationImage(
                           image: NetworkImage(
-                              uiKit + currentApp.icon),
+                              '$uiKit${currentApp.icon}'),
                           fit: BoxFit.fitWidth)),
                 ),
               ],
             ),
             SizedBox(height: 2),
             Text(
-              currentApp.title,
+              currentApp.title ?? '',
               style: TextStyle(
                   fontSize: 10,
                   color: Colors.white

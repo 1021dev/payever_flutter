@@ -1,16 +1,24 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:payever/commons/commons.dart';
+import 'package:payever/commons/models/app_widget.dart';
 import 'package:payever/commons/utils/env.dart';
 import 'package:payever/commons/views/custom_elements/DashboardOptionCell.dart';
 
 import 'blur_effect_view.dart';
 
 class DashboardConnectView extends StatefulWidget {
+  final BusinessApps appWidget;
+
+  DashboardConnectView({
+    this.appWidget,
+  });
   @override
   _DashboardConnectViewState createState() => _DashboardConnectViewState();
 }
 
 class _DashboardConnectViewState extends State<DashboardConnectView> {
+  String uiKit = 'https://payeverstage.azureedge.net/icons-png/icons-apps-white/icon-apps-white-';
   bool isExpanded = false;
   @override
   Widget build(BuildContext context) {
@@ -32,13 +40,12 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                           height: 16,
                           decoration: BoxDecoration(
                               image: DecorationImage(
-                                  image: NetworkImage(Env.commerceOs +
-                                      "/assets/ui-kit/icons-png/icon-commerceos-connect-64.png"),
+                                  image: NetworkImage('$uiKit${widget.appWidget.code}.png'),
                                   fit: BoxFit.fitWidth)),
                         ),
                         SizedBox(width: 8,),
                         Text(
-                          "CONNECT",
+                          Language.getTransactionStrings(widget.appWidget.dashboardInfo.title),
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 12,

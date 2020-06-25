@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/env.dart';
 import 'package:payever/commons/views/custom_elements/BusinessAppCell.dart';
 
@@ -8,11 +9,13 @@ import '../../../../../models/app_widget.dart';
 import 'blur_effect_view.dart';
 
 class DashboardBusinessAppsView extends StatefulWidget {
-  final List<AppWidget> appWidgets;
+  final List<AppWidget> businessApps;
+  final BusinessApps appWidget;
   final Function onTapEdit;
   final Function onTapWidget;
   DashboardBusinessAppsView({
-    this.appWidgets,
+    this.businessApps,
+    this.appWidget,
     this.onTapEdit,
     this.onTapWidget,
   });
@@ -21,13 +24,13 @@ class DashboardBusinessAppsView extends StatefulWidget {
 }
 
 class _DashboardBusinessAppsViewState extends State<DashboardBusinessAppsView> {
+  String uiKit = 'https://payeverstage.azureedge.net/icons-png/icons-apps-white/icon-apps-white-';
   @override
   Widget build(BuildContext context) {
-    print(widget.appWidgets.length);
     return BlurEffectView(
       padding: EdgeInsets.fromLTRB(14, 12, 14, 0),
       child: Container(
-        height: 44 + (widget.appWidgets.length / 4).ceilToDouble() * 82,
+        height: 44 + (widget.businessApps.length / 4).ceilToDouble() * 82,
         child: Column(
           children: [
             Row(
@@ -40,13 +43,12 @@ class _DashboardBusinessAppsViewState extends State<DashboardBusinessAppsView> {
                       height: 20,
                       decoration: BoxDecoration(
                           image: DecorationImage(
-                              image: NetworkImage(Env.commerceOs +
-                                  "/assets/ui-kit/icons-png/icon-commerceos-applications-64.png"),
+                              image: NetworkImage('$uiKit${widget.appWidget.code}.png'),
                               fit: BoxFit.fitWidth)),
                     ),
                     SizedBox(width: 8,),
                     Text(
-                      "BUSINESS APPS",
+                      Language.getTransactionStrings(widget.appWidget.dashboardInfo.title),
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 12,
@@ -78,10 +80,10 @@ class _DashboardBusinessAppsViewState extends State<DashboardBusinessAppsView> {
             Padding(
               padding: EdgeInsets.only(top: 8),
             ),
-            if (widget.appWidgets != null) Expanded(
+            if (widget.businessApps != null) Expanded(
               child: GridView.count(
                 crossAxisCount: 4,
-                children: widget.appWidgets.map((e) => BusinessAppCell(
+                children: widget.businessApps.map((e) => BusinessAppCell(
                   onTap: (){
                     widget.onTapWidget(e);
                   },

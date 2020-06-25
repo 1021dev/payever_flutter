@@ -37,3 +37,4 @@ class AppWidget {
     this._help = obj[GlobalUtils.APP_WID_HELP];
   }
 }
+

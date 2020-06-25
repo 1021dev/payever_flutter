@@ -1,16 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/blur_effect_view.dart';
 
 import '../../../../../utils/env.dart';
 
-class DashboardAppDetailCell extends StatelessWidget {
-  final String url;
-  final String name;
-  final String description;
-  final bool hasSetup;
+class DashboardAppDetailCell extends StatefulWidget {
+  final BusinessApps appWidget;
+  DashboardAppDetailCell({
+    this.appWidget,
+  });
+  @override
+  _DashboardAppDetailCellState createState() => _DashboardAppDetailCellState();
+}
 
-  DashboardAppDetailCell({this.url, this.name, this.description, this.hasSetup});
+class _DashboardAppDetailCellState extends State<DashboardAppDetailCell> {
+  String uiKit = 'https://payeverstage.azureedge.net/icons-png/icons-apps-white/icon-apps-white-';
+
   @override
   Widget build(BuildContext context) {
     return BlurEffectView(
@@ -26,12 +32,12 @@ class DashboardAppDetailCell extends StatelessWidget {
                   height: 40,
                   decoration: BoxDecoration(
                       image: DecorationImage(
-                          image: NetworkImage(url),
+                          image: NetworkImage('$uiKit${widget.appWidget.code}.png'),
                           fit: BoxFit.fitWidth)),
                 ),
                 SizedBox(height: 8),
                 Text(
-                  name,
+                  Language.getTransactionStrings(widget.appWidget.dashboardInfo.title),
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -40,7 +46,7 @@ class DashboardAppDetailCell extends StatelessWidget {
                 ),
                 SizedBox(height: 4),
                 Text(
-                  description,
+                  widget.appWidget.id,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 10,
@@ -66,7 +72,7 @@ class DashboardAppDetailCell extends StatelessWidget {
                     },
                     child: Center(
                       child: Text(
-                        !hasSetup ? "Get started" : "Continue setup process",
+                        !widget.appWidget.installed ? "Get started" : "Continue setup process",
                         softWrap: true,
                         style: TextStyle(
                             color: Colors.white, fontSize: 12),
@@ -74,11 +80,11 @@ class DashboardAppDetailCell extends StatelessWidget {
                     ),
                   ),
                 ),
-                if (!hasSetup) Container(
+                if (!widget.appWidget.installed) Container(
                   width: 1,
                   color: Colors.white12,
                 ),
-                if (!hasSetup) Expanded(
+                if (!widget.appWidget.installed) Expanded(
                   flex: 1,
                   child: InkWell(
                     onTap: () {

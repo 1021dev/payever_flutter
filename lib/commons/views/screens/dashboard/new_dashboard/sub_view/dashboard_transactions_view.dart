@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/commons/utils/env.dart';
+import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/views/custom_elements/DashboardOptionCell.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/blur_effect_view.dart';
 
@@ -8,14 +9,16 @@ import '../../../../../../products/models/models.dart';
 
 class DashboardTransactionsView extends StatefulWidget {
   final VoidCallback onOpen;
+  final BusinessApps appWidget;
 
-  DashboardTransactionsView({this.onOpen});
+  DashboardTransactionsView({this.onOpen, this.appWidget});
   @override
   _DashboardTransactionsViewState createState() => _DashboardTransactionsViewState();
 }
 
 class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
   bool isExpanded = false;
+  String uiKit = 'https://payeverstage.azureedge.net/icons-png/icons-apps-white/icon-apps-white-';
   @override
   Widget build(BuildContext context) {
     return BlurEffectView(
@@ -36,13 +39,12 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                             height: 16,
                             decoration: BoxDecoration(
                                 image: DecorationImage(
-                                    image: NetworkImage(Env.commerceOs +
-                                        "/assets/ui-kit/icons-png/icon-commerceos-transactions-64.png"),
+                                    image: NetworkImage('$uiKit${widget.appWidget.code}.png'),
                                     fit: BoxFit.fitWidth)),
                           ),
                           SizedBox(width: 8,),
                           Text(
-                            "TRANSACTIONS",
+                            Language.getTransactionStrings(widget.appWidget.dashboardInfo.title),
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 12,

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/models/app_widget.dart';
 import 'package:payever/commons/utils/env.dart';
 import 'package:payever/commons/views/custom_elements/TutorialCell.dart';
@@ -8,13 +9,14 @@ import 'blur_effect_view.dart';
 
 class DashboardTutorialView extends StatefulWidget {
   final List<AppWidget> appWidgets;
-
-  DashboardTutorialView({this.appWidgets});
+  final BusinessApps appWidget;
+  DashboardTutorialView({this.appWidgets, this.appWidget});
   @override
   _DashboardTutorialViewState createState() => _DashboardTutorialViewState();
 }
 
 class _DashboardTutorialViewState extends State<DashboardTutorialView> {
+  String uiKit = 'https://payeverstage.azureedge.net/icons-png/icons-apps-white/icon-apps-white-';
   bool isExpanded = false;
   @override
   Widget build(BuildContext context) {
@@ -36,13 +38,12 @@ class _DashboardTutorialViewState extends State<DashboardTutorialView> {
                           height: 16,
                           decoration: BoxDecoration(
                               image: DecorationImage(
-                                  image: NetworkImage(Env.commerceOs +
-                                      "/assets/ui-kit/icons-png/icon-commerceos-tutorial-40.png"),
+                                  image: NetworkImage('$uiKit${widget.appWidget.code}.png'),
                                   fit: BoxFit.fitWidth)),
                         ),
                         SizedBox(width: 8,),
                         Text(
-                          "TUTORIAL",
+                          Language.getTransactionStrings(widget.appWidget.dashboardInfo.title),
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 12,

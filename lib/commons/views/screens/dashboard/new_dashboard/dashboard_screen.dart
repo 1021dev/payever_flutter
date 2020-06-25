@@ -31,24 +31,7 @@ class DashboardScreen extends StatefulWidget {
   final String wallpaper;
 
   DashboardScreen({this.wallpaper});
-//  @override
-//  Widget build(BuildContext context) {
-////    return DashboardScreenWidget(appWidgets: appWidgets,);
-//    return ChangeNotifierProvider<DashboardStateModel>(
-//      create: (BuildContext context) {
-//        DashboardStateModel dashboardStateModel = DashboardStateModel();
-//        dashboardStateModel.setCurrentWidget(appWidgets);
-//        return dashboardStateModel;
-//      },
-//      child: DashboardScreenWidget(appWidgets: appWidgets),
-//    );
-//  }
-//}
-//
-//class DashboardScreenWidget extends StatefulWidget {
-//  final appWidgets;
 
-//  DashboardScreenWidget({this.appWidgets});
   @override
   _DashboardScreenState createState() => _DashboardScreenState();
 }
@@ -203,6 +186,144 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _body(DashboardScreenState state) {
+    List<BusinessApps> widgets = [];
+    if (state.currentWidgets.length > 0) {
+      widgets.addAll(state.businessWidgets);//.where((element) => element.order != null));
+      widgets.sort((w1, w2) {
+        if (w1.order == null) {
+          return 1;
+        }
+        if (w2.order == null) {
+          return 1;
+        }
+        return w1.order.compareTo(w2.order);
+      });
+    }
+    List<Widget> dashboardWidgets = [];
+    dashboardWidgets.add(_headerView(state));
+    dashboardWidgets.add(_searchBar(state));
+    for (int i = 0; i < widgets.length; i++) {
+      BusinessApps appWidget = widgets[i];
+      if (appWidget.code == null) {
+
+      } else if (appWidget.code == 'transactions') {
+        dashboardWidgets.add(
+            DashboardTransactionsView(
+              appWidget: appWidget,
+              onOpen: () {
+                Provider.of<GlobalStateModel>(context,listen: false)
+                    .setCurrentBusiness(state.activeBusiness);
+                Provider.of<GlobalStateModel>(context,listen: false)
+                    .setCurrentWallpaper(state.curWall);
+                Navigator.push(
+                  context,
+                  PageTransition(
+                    child: TransactionScreenInit(),
+                    type: PageTransitionType.fade,
+                  ),
+                );
+              },
+            )
+        );
+      } else if (appWidget.code == 'apps') {
+        dashboardWidgets.add(
+            DashboardBusinessAppsView(
+              businessApps: state.currentWidgets,
+              onTapEdit: () {},
+              appWidget: appWidget,
+              onTapWidget: (AppWidget aw) {
+                if (aw.title.toLowerCase().contains('transactions')) {
+                  Provider.of<GlobalStateModel>(context,listen: false)
+                      .setCurrentBusiness(state.activeBusiness);
+                  Provider.of<GlobalStateModel>(context,listen: false)
+                      .setCurrentWallpaper(state.curWall);
+                  Navigator.push(
+                    context,
+                    PageTransition(
+                      child: TransactionScreenInit(),
+                      type: PageTransitionType.fade,
+                    ),
+                  );
+                }
+              },
+            )
+        );
+      } else if (appWidget.code == 'shop') {
+        dashboardWidgets.add(
+            DashboardAppDetailCell(
+              appWidget: appWidget,
+            )
+        );
+      } else if (appWidget.code == 'shipping') {
+        dashboardWidgets.add(
+            DashboardAppDetailCell(
+              appWidget: appWidget,
+            )
+        );
+      } else if (appWidget.code == 'pos') {
+        dashboardWidgets.add(
+            DashboardAppDetailCell(
+              appWidget: appWidget,
+            )
+        );
+      } else if (appWidget.code == 'checkout') {
+        dashboardWidgets.add(
+            DashboardAppDetailCell(
+              appWidget: appWidget,
+            )
+        );
+      } else if (appWidget.code == 'marketing') {
+        dashboardWidgets.add(
+            DashboardAppDetailCell(
+              appWidget: appWidget,
+            )
+        );
+      } else if (appWidget.code == 'studio') {
+        dashboardWidgets.add(
+            DashboardStudioView(
+              appWidget: appWidget,
+            )
+        );
+      } else if (appWidget.code == 'ads') {
+        dashboardWidgets.add(
+            DashboardAdvertisingView(
+              appWidget: appWidget,
+            )
+        );
+      } else if (appWidget.code == 'contacts') {
+        dashboardWidgets.add(
+            DashboardAppDetailCell(
+              appWidget: appWidget,
+            )
+        );
+      } else if (appWidget.code == 'products') {
+        dashboardWidgets.add(
+            DashboardProductsView(
+              appWidget: appWidget,
+            )
+        );
+      } else if (appWidget.code == 'connect') {
+        dashboardWidgets.add(
+            DashboardConnectView(
+              appWidget: appWidget,
+            )
+        );
+      } else if (appWidget.code == 'settings') {
+        dashboardWidgets.add(
+            DashboardSettingsView(
+              appWidget: appWidget,
+            )
+        );
+      } else if (appWidget.code == 'tutorial') {
+        dashboardWidgets.add(
+            DashboardTutorialView(
+              appWidgets: state.currentWidgets,
+              appWidget: appWidget,
+            )
+        );
+      }
+    }
+
     return Scaffold(
       backgroundColor: Colors.black87,
       resizeToAvoidBottomPadding: false,
@@ -234,164 +355,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
           body: Column(
             children: [
               Expanded(
-                child: ListView(
+                child: ListView.separated(
                   padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
-                  children: [
-                    Column(
-                      children: [
-                        SizedBox(height: 60),
-                        Text(
-                          'Welcome Riti,',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 26,
-                              fontWeight: FontWeight.bold,
-                              shadows: [
-                                Shadow(
-                                    offset: Offset(1.0, 1.0),
-                                    blurRadius: 3,
-                                    color: Colors.black.withAlpha(50)
-                                )
-                              ]
-                          ),
-                        ),
-                        SizedBox(height: 4),
-                        Text(
-                          'grow your business',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              shadows: [
-                                Shadow(
-                                    offset: Offset(1.0, 1.0),
-                                    blurRadius: 3,
-                                    color: Colors.black.withAlpha(50)
-                                )
-                              ]
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 30),
-                    BlurEffectView(
-                      padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
-                      child: Container(
-                        height: 36,
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.search,
-                              color: Colors.white,
-                              size: 20,
-                            ),
-                            SizedBox(width: 8),
-                            Expanded(
-                              child: TextField(
-                                decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    hintText: 'Search'
-                                ),
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.white
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    DashboardTransactionsView(
-                      onOpen: () {
-                        Provider.of<GlobalStateModel>(context,listen: false)
-                            .setCurrentBusiness(state.activeBusiness);
-                        Provider.of<GlobalStateModel>(context,listen: false)
-                            .setCurrentWallpaper(state.curWall);
-
-                        Navigator.push(
-                            context,
-                            PageTransition(
-                                child: TransactionScreenInit(),
-                                type: PageTransitionType.fade));
-                      },
-                    ),
-                    SizedBox(height: 8),
-                    DashboardBusinessAppsView(
-                      appWidgets: state.currentWidgets,
-                      onTapEdit: () {
-
-                      },
-                      onTapWidget: (AppWidget aw) {
-                        if (aw.title.toLowerCase().contains('transactions')) {
-                          Provider.of<GlobalStateModel>(context,listen: false)
-                              .setCurrentBusiness(state.activeBusiness);
-                          Provider.of<GlobalStateModel>(context,listen: false)
-                              .setCurrentWallpaper(state.curWall);
-                          Navigator.push(
-                            context,
-                            PageTransition(
-                              child: TransactionScreenInit(),
-                              type: PageTransitionType.fade,
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                    SizedBox(height: 8),
-                    DashboardAppDetailCell(
-                      url: Env.commerceOs +
-                          '/assets/ui-kit/icons-png/icon-commerceos-store-64.png',
-                      name: 'Shop',
-                      description: 'Start selling online 14 days for free',
-                      hasSetup: true,
-                    ),
-                    SizedBox(height: 8),
-                    DashboardAppDetailCell(
-                      url: Env.commerceOs +
-                          '/assets/ui-kit/icons-png/icon-commerceos-pos-64.png',
-                      name: 'Point of Sale',
-                      description: 'Start accepting payments locally 14 days for free',
-                      hasSetup: false,
-                    ),
-                    SizedBox(height: 8),
-                    DashboardAppDetailCell(
-                      url: Env.commerceOs +
-                          '/assets/ui-kit/icons-png/icon-commerceos-checkout-64.png',
-                      name: 'Checkout',
-                      description: 'Start creating your first checkout',
-                      hasSetup: false,
-                    ),
-                    SizedBox(height: 8),
-                    DashboardAppDetailCell(
-                      url: Env.commerceOs +
-                          '/assets/ui-kit/icons-png/icon-commerceos-marketing-64.png',
-                      name: 'Mail',
-                      description: 'Start sending 14 days personal offers for free',
-                      hasSetup: false,
-                    ),
-                    SizedBox(height: 8),
-                    DashboardStudioView(),
-                    SizedBox(height: 8),
-                    DashboardAdvertisingView(),
-                    SizedBox(height: 8),
-                    DashboardAppDetailCell(
-                      url: Env.commerceOs +
-                          '/assets/ui-kit/icons-png/icon-commerceos-customers-64.png',
-                      name: 'Contacts',
-                      description: 'Start managing your customers 14 days for free',
-                      hasSetup: false,
-                    ),
-                    SizedBox(height: 8),
-                    DashboardProductsView(),
-                    SizedBox(height: 8),
-                    DashboardConnectView(),
-                    SizedBox(height: 8),
-                    DashboardSettingsView(),
-                    SizedBox(height: 8),
-                    DashboardTutorialView(appWidgets: state.currentWidgets),
-                    SizedBox(height: 40),
-                  ],
+                  itemCount: dashboardWidgets.length,
+                  itemBuilder: (context, index) {
+                    return dashboardWidgets[index];
+                  },
+                  separatorBuilder: (context, index) {
+                    return Divider(
+                      height: 8,
+                      thickness: 8,
+                      color: Colors.transparent,
+                    );
+                  },
                 ),
               )
             ],
@@ -401,6 +377,75 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
+  Widget _headerView(DashboardScreenState state) {
+    return Column(
+      children: [
+        SizedBox(height: 60),
+        Text(
+          'Welcome ${state.user.firstName},',
+          style: TextStyle(
+              color: Colors.white,
+              fontSize: 26,
+              fontWeight: FontWeight.bold,
+              shadows: [
+                Shadow(
+                    offset: Offset(1.0, 1.0),
+                    blurRadius: 3,
+                    color: Colors.black.withAlpha(50)
+                )
+              ]
+          ),
+        ),
+        SizedBox(height: 4),
+        Text(
+          'grow your business',
+          style: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              shadows: [
+                Shadow(
+                    offset: Offset(1.0, 1.0),
+                    blurRadius: 3,
+                    color: Colors.black.withAlpha(50)
+                )
+              ]
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _searchBar(DashboardScreenState state) {
+    return BlurEffectView(
+      radius: 13,
+      padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
+      child: Container(
+        height: 36,
+        child: Row(
+          children: [
+            Icon(
+              Icons.search,
+              color: Colors.white,
+              size: 20,
+            ),
+            SizedBox(width: 8),
+            Expanded(
+              child: TextField(
+                decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: 'Search'
+                ),
+                style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.white
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
   Widget _appBar(DashboardScreenState state) {
     return AppBar(
       centerTitle: false,
