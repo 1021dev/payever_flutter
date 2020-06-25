@@ -73,7 +73,7 @@ class _DashboardInitScreenState extends State<DashboardInitScreen> {
               _formKey.currentContext,
               PageTransition(
                   child: DashboardScreen(
-                    appWidgets: state.widgetApps,
+                    appWidgets: state.currentWidgets,
                   ),
                   type: PageTransitionType.fade,
                   duration: Duration(milliseconds: 200)));

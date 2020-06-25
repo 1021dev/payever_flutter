@@ -74,7 +74,7 @@ class BaseClient {
     return models;
   }
 
-  Future<Response> getTypeless(
+  Future<dynamic> getTypeless(
       String path, {
         Map<String, dynamic> queryParameters,
         Map<String, dynamic> headers,
@@ -342,7 +342,7 @@ class BaseClient {
         }
       } on DioError catch (e) {
         debugPrint('Dio error: $e');
-        if (e.response.statusCode == 403) {
+//        if (e.response.statusCode == 403) {
 //          bool reAuthResult = await _authService.reAuth();
 //          if (reAuthResult) {
 //            reAuthRequired = true;
@@ -351,13 +351,13 @@ class BaseClient {
 //            // TODO: throw error? (that app caches and sends you back to login?)
 //            reAuthRequired = false;
 //          }
-        } else {
-          // allow all non-auth errors to bubble up to callers
-          rethrow;
-        }
+//        } else {
+//          // allow all non-auth errors to bubble up to callers
+//          rethrow;
+//        }
       }
       reAuthRequired = false;
     } while (reAuthRequired);
-    return response;
+    return response.data;
   }
 }

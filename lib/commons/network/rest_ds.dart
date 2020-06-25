@@ -218,7 +218,7 @@ class RestDataSource {
   }
 
   Future<dynamic> getWidgetsPersonal(String token, BuildContext context) {
-    print("TAG - getEnv()");
+    print("TAG - getWidgetsPersonal()");
     var headers = {
       HttpHeaders.authorizationHeader: "Bearer $token",
       HttpHeaders.contentTypeHeader: "application/json",
@@ -257,7 +257,7 @@ class RestDataSource {
   }
 
   Future<dynamic> getMonthsPersonal(String token, BuildContext context) {
-    print("TAG - getEnv()");
+    print("TAG - getMonthsPersonal()");
     var headers = {
       HttpHeaders.authorizationHeader: "Bearer $token",
       HttpHeaders.contentTypeHeader: "application/json",
@@ -271,7 +271,7 @@ class RestDataSource {
   }
 
   Future<dynamic> getDaysPersonal(String token, BuildContext context) {
-    print("TAG - getEnv()");
+    print("TAG - getDaysPersonal()");
     var headers = {
       HttpHeaders.authorizationHeader: "Bearer $token",
       HttpHeaders.contentTypeHeader: "application/json",

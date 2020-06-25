@@ -4,8 +4,10 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/blocs/dashboard/dashboard.dart';
+import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/models/fetchwallpaper.dart';
 import 'package:payever/commons/network/rest_ds.dart';
+import 'package:payever/settings/network/employees_api.dart';
 import 'package:payever/transactions/transactions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -13,6 +15,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenState> {
   DashboardScreenBloc();
   ApiService api = ApiService();
+  String uiKit = '${Env.commerceOs}/assets/ui-kit/icons-png/';
 
   @override
   DashboardScreenState get initialState => DashboardScreenState();
@@ -20,7 +23,7 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
   @override
   Stream<DashboardScreenState> mapEventToState(DashboardScreenEvent event) async* {
     if (event is DashboardScreenInitEvent) {
-      yield* _loadUserData();
+      yield* _fetchInitialData();
     }
   }
 
@@ -31,10 +34,10 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
       var responseMsg = data['responseMsg'];
       switch (responseMsg) {
         case 'refreshToken':
-          yield* _fetchInitialData(data['token'], false);
+          yield* _fetchInitialDataRenew(data['token'], false);
           break;
         case 'refreshTokenLogin':
-          yield* _fetchInitialData(data['token'], true);
+          yield* _fetchInitialDataRenew(data['token'], true);
           break;
         case 'error':
           Future.delayed(Duration(milliseconds: 1500)).then((value) async => loadData());
@@ -120,19 +123,21 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
     }
   }
 
-  Stream<DashboardScreenState> _fetchInitialData(dynamic token, bool renew) async* {
+  Stream<DashboardScreenState> _fetchInitialDataRenew(dynamic token, bool renew) async* {
+  }
+  Stream<DashboardScreenState> _fetchInitialData() async* {
     List<BusinessApps> businessWidgets = [];
     List<AppWidget> widgetApps = [];
     List<Business> businesses = [];
     Business activeBusiness;
     FetchWallpaper fetchWallpaper;
 
-    var _token = !renew ? Token.map(token) : token;
-    GlobalUtils.activeToken = _token;
+//    var _token = !renew ? Token.map(token) : token;
+//    GlobalUtils.activeToken = _token;
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    if (!renew) {
-      GlobalUtils.activeToken.refreshToken = sharedPreferences.getString(GlobalUtils.REFRESH_TOKEN);
-    }
+//    if (!renew) {
+//      GlobalUtils.activeToken.refreshToken = sharedPreferences.getString(GlobalUtils.REFRESH_TOKEN);
+//    }
     sharedPreferences.setString(GlobalUtils.TOKEN, GlobalUtils.activeToken.accessToken);
     sharedPreferences.setString(GlobalUtils.REFRESH_TOKEN, GlobalUtils.activeToken.refreshToken);
     sharedPreferences.setString(GlobalUtils.LAST_OPEN, DateTime.now().toString());
@@ -150,7 +155,7 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
     // TODO:// Measurements.loadImages
 //    Measurements.loadImages(_formKey.currentContext);
 
-    dynamic businessObj = await api.getBusinesses(token);
+    dynamic businessObj = await api.getBusinesses(accessToken);
     businesses.clear();
     businessObj.forEach((item) {
       businesses.add(Business.map(item));
@@ -181,7 +186,6 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
       widgetAppsObj.forEach((item) {
         widgetApps.add(AppWidget.map(item));
       });
-      yield state.copyWith(widgetApps: widgetApps);
 
       dynamic businessAppsObj = await api.getBusinessApps(
         sharedPreferences.getString(GlobalUtils.BUSINESS),
@@ -194,12 +198,99 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
     }
     yield state.copyWith(isLoading: false,
       businesses: businesses,
-      widgetApps: widgetApps,
+      currentWidgets: widgetApps,
       activeBusiness: activeBusiness,
       businessWidgets: businessWidgets,
-      wallpaper: fetchWallpaper,
-      currentWallpaper: fetchWallpaper.currentWallpaper,
+//      wallpaper: fetchWallpaper,
+//      currentWallpaper: fetchWallpaper.currentWallpaper,
     );
-
   }
+
+  Future<List<Widget>> loadWidgetCards(List<AppWidget> currentWidgets) async {
+    List<Widget> activeWid = [];
+    for (int i = 0; i < currentWidgets.length; i++) {
+      var wid = currentWidgets[i];
+      switch (wid.type) {
+        case "transactions":
+          activeWid.add(TransactionCard(
+            wid.type,
+            NetworkImage(uiKit + wid.icon),
+            false,
+          ));
+          break;
+        case "pos":
+          activeWid
+              .add(POSCard(wid.type, NetworkImage(uiKit + wid.icon), wid.help));
+          break;
+        case "products":
+          activeWid.add(
+              ProductsSoldCard(wid.type, NetworkImage(uiKit + wid.icon), wid.help));
+          break;
+        case "settings":
+          activeWid.add(
+              SettingsCard(wid.type, NetworkImage(uiKit + wid.icon), wid.help));
+          break;
+        default:
+      }
+    }
+    return activeWid;
+  }
+
+  Future<dynamic> fetchDaily(Business currentBusiness) {
+    return api
+        .getDays(currentBusiness.id, GlobalUtils.activeToken.accessToken);
+  }
+
+  Future<dynamic> fetchMonthly(Business currentBusiness) {
+    return api.getMonths(
+        currentBusiness.id, GlobalUtils.activeToken.accessToken);
+  }
+
+  Future<dynamic> fetchTotal(Business currentBusiness) {
+    return api.getTransactionList(
+        currentBusiness.id, GlobalUtils.activeToken.accessToken, '');
+  }
+
+  Future<dynamic> getDaily(Business currentBusiness) async {
+    List<Day> lastMonth = [];
+    var days = await fetchDaily(currentBusiness);
+    days.forEach((day) {
+      lastMonth.add(Day.map(day));
+    });
+    state.copyWith(lastMonth: lastMonth);
+    return getMonthly(currentBusiness);
+  }
+
+  Future<dynamic> getMonthly(Business currentBusiness) async {
+    List<Month> lastYear = [];
+    List<double> monthlySum = [];
+    var months = await fetchMonthly(currentBusiness);
+    months.forEach((month) {
+      lastYear.add(Month.map(month));
+    });
+    num sum;
+    for (int i = (lastYear.length - 1); i >= 0; i--) {
+      sum += lastYear[i].amount;
+      monthlySum.add(sum);
+    }
+
+    state.copyWith(lastYear: lastYear, monthlySum: monthlySum);
+    return getTotal(currentBusiness);
+  }
+
+  Future<dynamic> getTotal(Business currentBusiness) async {
+    var _total = await fetchTotal(currentBusiness);
+    state.copyWith(total: Transaction.toMap(_total).paginationData.amount.toDouble());
+    return _total;
+  }
+
+
+  Future<List<WallpaperCategory>> getWallpaper() => EmployeesApi().getWallpapers()
+      .then((wallpapers){
+    List<WallpaperCategory> _list = List();
+    wallpapers.forEach((cat){
+      _list.add(WallpaperCategory.map(cat));
+    });
+    return _list;
+  });
 }
