@@ -10,13 +10,17 @@ class BackgroundBase extends StatefulWidget {
   final Widget body, endDrawer, bottomNav;
   final AppBar appBar;
   final Key currentKey;
+  final String wallPaper;
 
   BackgroundBase(this._isBlur,
       {this.body,
       this.endDrawer,
       this.bottomNav,
       this.appBar,
-      this.currentKey});
+      this.currentKey,
+      this.wallPaper,
+      }
+      );
 
   @override
   _BackgroundBaseState createState() => _BackgroundBaseState();
@@ -39,8 +43,8 @@ class _BackgroundBaseState extends State<BackgroundBase> {
             child: Container(
               child: CachedNetworkImage(
                 imageUrl: widget._isBlur
-                    ? globalStateModel.currentWallpaperBlur
-                    : globalStateModel.currentWallpaper,
+                    ? widget.wallPaper != null ? '${widget.wallPaper}-blurred': globalStateModel.currentWallpaperBlur
+                    : widget.wallPaper != null ? widget.wallPaper: globalStateModel.currentWallpaper,
                 placeholder: (context, url) => Container(),
                 errorWidget: (context, url, error) => Icon(Icons.error),
                 fit: BoxFit.cover,

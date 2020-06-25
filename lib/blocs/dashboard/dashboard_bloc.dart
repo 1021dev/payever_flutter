@@ -174,6 +174,8 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
     List<Business> businesses = [];
     Business activeBusiness;
     FetchWallpaper fetchWallpaper;
+    String language;
+    String currentWallpaper;
 
     var _token = !renew ? Token.map(token) : token;
     GlobalUtils.activeToken = _token;
@@ -191,12 +193,9 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
 
     yield state.copyWith(user: tempUser);
     if (tempUser.language != sharedPreferences.getString(GlobalUtils.LANGUAGE)) {
-      Language.language = tempUser.language;
+      language = tempUser.language;
       // TODO:// setLanguage
-//      Language(_formKey.currentContext);
     }
-    // TODO:// Measurements.loadImages
-//    Measurements.loadImages(_formKey.currentContext);
 
     dynamic businessObj = await api.getBusinesses(accessToken);
     businesses.clear();
@@ -207,9 +206,6 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
       businesses.forEach((b) {
         if (b.id == sharedPreferences.getString(GlobalUtils.BUSINESS)) {
           activeBusiness = b;
-          // TODO:// SetCurrentBusiness
-//          globalStateModel.setCurrentBusiness(activeBusiness,
-//              notify: false);
         }
       });
     }
@@ -219,8 +215,7 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
       FetchWallpaper fetchWallpaper = FetchWallpaper.map(wallpaperObj);
       sharedPreferences.setString(
           GlobalUtils.WALLPAPER, wallpaperBase + fetchWallpaper.currentWallpaper.wallpaper);
-      // TODO :// set CurrentWallPapaer
-//      GlobalStateModel.setCurrentWallpaper(wallpaperBase + fetchWallpaper.currentWallpaper.wallpaper, notify: false);
+      currentWallpaper = '$wallpaperBase${fetchWallpaper.currentWallpaper.wallpaper}';
       dynamic widgetAppsObj = await api.getWidgets(
         sharedPreferences.getString(GlobalUtils.BUSINESS),
         accessToken,
@@ -248,6 +243,8 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
       businessWidgets: businessWidgets,
       wallpaper: fetchWallpaper,
       currentWallpaper: fetchWallpaper != null ? fetchWallpaper.currentWallpaper: null,
+      curWall: currentWallpaper,
+      language: language,
     );
   }
 

@@ -21,6 +21,7 @@ import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/d
 import 'package:payever/commons/views/screens/login/login_page.dart';
 import 'package:payever/commons/views/screens/switcher/switcher_page.dart';
 import 'package:payever/transactions/transactions.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../utils/env.dart';
@@ -57,7 +58,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   DashboardScreenBloc screenBloc;
   bool isTablet = false;
+  bool isLoaded = false;
 
+  GlobalStateModel globalStateModel;
   @override
   void initState() {
     screenBloc = DashboardScreenBloc();
@@ -74,6 +77,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    globalStateModel = Provider.of<GlobalStateModel>(context);
     SharedPreferences.getInstance().then((p) {
       Language.language = p.getString(GlobalUtils.LANGUAGE);
       Language(context);
@@ -93,6 +97,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ? MediaQuery.of(context).size.width
         : MediaQuery.of(context).size.height);
     isTablet = MediaQuery.of(context).size.width > 600;
+    Measurements.loadImages(context);
 
     return BlocListener(
       bloc: screenBloc,
@@ -158,6 +163,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _showMain(DashboardScreenState state) {
+    if (state.language != null) {
+      Language.language = state.language;
+      Language(formKey.currentContext);
+    }
     return DashboardMenuView(
       innerDrawerKey: _innerDrawerKey,
       onLogout: () {
@@ -221,6 +230,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         top: true,
         child: BackgroundBase(
           false,
+          wallPaper: state.curWall,
           body: Column(
             children: [
               Expanded(
@@ -294,6 +304,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     SizedBox(height: 8),
                     DashboardTransactionsView(
                       onOpen: () {
+                        Provider.of<GlobalStateModel>(context,listen: false)
+                            .setCurrentBusiness(state.activeBusiness);
+                        Provider.of<GlobalStateModel>(context,listen: false)
+                            .setCurrentWallpaper(state.curWall);
+
                         Navigator.push(
                             context,
                             PageTransition(
@@ -309,6 +324,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       },
                       onTapWidget: (AppWidget aw) {
                         if (aw.title.toLowerCase().contains('transactions')) {
+                          Provider.of<GlobalStateModel>(context,listen: false)
+                              .setCurrentBusiness(state.activeBusiness);
+                          Provider.of<GlobalStateModel>(context,listen: false)
+                              .setCurrentWallpaper(state.curWall);
                           Navigator.push(
                             context,
                             PageTransition(

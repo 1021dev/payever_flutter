@@ -20,6 +20,8 @@ class DashboardScreenState {
   final List<Tutorial> tutorials;
   final List<Widget> activeWid;
   final bool isInitialScreen;
+  final String language;
+  final String curWall;
 
   DashboardScreenState({
     this.isLoading = false,
@@ -39,6 +41,8 @@ class DashboardScreenState {
     this.lastMonth = const [],
     this.tutorials = const [],
     this.activeWid = const [],
+    this.language,
+    this.curWall,
   });
 
   List<Object> get props => [
@@ -59,6 +63,8 @@ class DashboardScreenState {
     this.tutorials,
     this.activeWid,
     this.isInitialScreen,
+    this.language,
+    this.curWall,
   ];
 
   DashboardScreenState copyWith({
@@ -79,6 +85,8 @@ class DashboardScreenState {
     List<Day> lastMonth,
     List<Tutorial> tutorials,
     List<Widget> activeWid,
+    String language,
+    String curWall,
   }) {
     return DashboardScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -98,6 +106,8 @@ class DashboardScreenState {
       lastMonth: lastMonth ?? this.lastMonth,
       tutorials: tutorials ?? this.tutorials,
       activeWid: activeWid ?? this.activeWid,
+      language: language ?? this.language,
+      curWall: curWall ?? this.curWall,
     );
   }
 }
