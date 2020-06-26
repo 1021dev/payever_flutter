@@ -37,6 +37,7 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+  String uiKit = '${Env.commerceOs}/assets/ui-kit/icons-png/';
   final GlobalKey<InnerDrawerState> _innerDrawerKey = GlobalKey<InnerDrawerState>();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   DashboardScreenBloc screenBloc;
@@ -202,52 +203,92 @@ class _DashboardScreenState extends State<DashboardScreen> {
     List<Widget> dashboardWidgets = [];
     dashboardWidgets.add(_headerView(state));
     dashboardWidgets.add(_searchBar(state));
+    BusinessApps transactionApp = widgets.where((element) => element.code == 'transactions').first;
+    dashboardWidgets.add(
+        DashboardTransactionsView(
+          appWidget: transactionApp,
+          onOpen: () {
+            Provider.of<GlobalStateModel>(context,listen: false)
+                .setCurrentBusiness(state.activeBusiness);
+            Provider.of<GlobalStateModel>(context,listen: false)
+                .setCurrentWallpaper(state.curWall);
+            Navigator.push(
+              context,
+              PageTransition(
+                child: TransactionScreenInit(),
+                type: PageTransitionType.fade,
+              ),
+            );
+          },
+        )
+    );
+    dashboardWidgets.add(
+        DashboardBusinessAppsView(
+          businessApps: state.currentWidgets,
+          onTapEdit: () {},
+          onTapWidget: (AppWidget aw) {
+            if (aw.title.toLowerCase().contains('transactions')) {
+              Provider.of<GlobalStateModel>(context,listen: false)
+                  .setCurrentBusiness(state.activeBusiness);
+              Provider.of<GlobalStateModel>(context,listen: false)
+                  .setCurrentWallpaper(state.curWall);
+              Navigator.push(
+                context,
+                PageTransition(
+                  child: TransactionScreenInit(),
+                  type: PageTransitionType.fade,
+                ),
+              );
+            }
+          },
+        )
+    );
+    BusinessApps shopApp = widgets.where((element) => element.code == 'shop').first;
+    dashboardWidgets.add(
+        DashboardAppDetailCell(
+          appWidget: shopApp,
+        )
+    );
+
+    BusinessApps posApp = widgets.where((element) => element.code == 'pos').first;
+    dashboardWidgets.add(
+//        DashboardAppDetailCell(
+//          appWidget: posApp,
+//        )
+        POSCard('pos', NetworkImage(uiKit + posApp.dashboardInfo.icon), posApp.url)
+    );
+
+    BusinessApps checkoutApp = widgets.where((element) => element.code == 'checkout').first;
+    dashboardWidgets.add(
+        DashboardAppDetailCell(
+          appWidget: checkoutApp,
+        )
+    );
+
+    BusinessApps marketingApp = widgets.where((element) => element.code == 'marketing').first;
+    dashboardWidgets.add(
+        DashboardAppDetailCell(
+          appWidget: marketingApp,
+        )
+    );
+
+    BusinessApps settingsApp = widgets.where((element) => element.code == 'settings').first;
+    dashboardWidgets.add(
+        DashboardSettingsView(
+          appWidget: settingsApp,
+        )
+    );
+
+    BusinessApps tutorialApp = widgets.where((element) => element.code == 'tutorial').first;
+    dashboardWidgets.add(
+        DashboardTutorialView(
+          appWidget: tutorialApp,
+        )
+    );
+
     for (int i = 0; i < widgets.length; i++) {
       BusinessApps appWidget = widgets[i];
       if (appWidget.code == null) {
-
-      } else if (appWidget.code == 'transactions') {
-        dashboardWidgets.add(
-            DashboardTransactionsView(
-              appWidget: appWidget,
-              onOpen: () {
-                Provider.of<GlobalStateModel>(context,listen: false)
-                    .setCurrentBusiness(state.activeBusiness);
-                Provider.of<GlobalStateModel>(context,listen: false)
-                    .setCurrentWallpaper(state.curWall);
-                Navigator.push(
-                  context,
-                  PageTransition(
-                    child: TransactionScreenInit(),
-                    type: PageTransitionType.fade,
-                  ),
-                );
-              },
-            )
-        );
-      } else if (appWidget.code == 'apps') {
-        dashboardWidgets.add(
-            DashboardBusinessAppsView(
-              businessApps: state.currentWidgets,
-              onTapEdit: () {},
-              appWidget: appWidget,
-              onTapWidget: (AppWidget aw) {
-                if (aw.title.toLowerCase().contains('transactions')) {
-                  Provider.of<GlobalStateModel>(context,listen: false)
-                      .setCurrentBusiness(state.activeBusiness);
-                  Provider.of<GlobalStateModel>(context,listen: false)
-                      .setCurrentWallpaper(state.curWall);
-                  Navigator.push(
-                    context,
-                    PageTransition(
-                      child: TransactionScreenInit(),
-                      type: PageTransitionType.fade,
-                    ),
-                  );
-                }
-              },
-            )
-        );
       } else if (appWidget.code == 'shop') {
         dashboardWidgets.add(
             DashboardAppDetailCell(
@@ -262,9 +303,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
         );
       } else if (appWidget.code == 'pos') {
         dashboardWidgets.add(
-            DashboardAppDetailCell(
-              appWidget: appWidget,
-            )
+//            DashboardAppDetailCell(
+//              appWidget: appWidget,
+//            )
+            POSCard('pos', NetworkImage(uiKit + appWidget.dashboardInfo.icon), appWidget.url)
         );
       } else if (appWidget.code == 'checkout') {
         dashboardWidgets.add(

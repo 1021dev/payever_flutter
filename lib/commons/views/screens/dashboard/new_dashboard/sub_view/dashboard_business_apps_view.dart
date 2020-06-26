@@ -10,12 +10,10 @@ import 'blur_effect_view.dart';
 
 class DashboardBusinessAppsView extends StatefulWidget {
   final List<AppWidget> businessApps;
-  final BusinessApps appWidget;
   final Function onTapEdit;
   final Function onTapWidget;
   DashboardBusinessAppsView({
     this.businessApps,
-    this.appWidget,
     this.onTapEdit,
     this.onTapWidget,
   });
@@ -43,12 +41,12 @@ class _DashboardBusinessAppsViewState extends State<DashboardBusinessAppsView> {
                       height: 20,
                       decoration: BoxDecoration(
                           image: DecorationImage(
-                              image: NetworkImage('$uiKit${widget.appWidget.code}.png'),
+                              image: NetworkImage('https://payeverstage.azureedge.net/icons-png/icons-apps-white/icon-apps-white-apps.png'),
                               fit: BoxFit.fitWidth)),
                     ),
                     SizedBox(width: 8,),
                     Text(
-                      Language.getTransactionStrings(widget.appWidget.dashboardInfo.title),
+                      'BUSINESS APPS',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 12,
