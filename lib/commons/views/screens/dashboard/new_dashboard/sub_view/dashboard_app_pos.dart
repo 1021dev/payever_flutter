@@ -6,11 +6,13 @@ import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/b
 class DashboardAppPosView extends StatefulWidget {
   final AppWidget appWidget;
   final List<Terminal> terminals;
+  final Terminal activeTerminal;
   final bool isLoading;
   DashboardAppPosView({
     this.appWidget,
     this.terminals = const [],
     this.isLoading = true,
+    this.activeTerminal,
   });
   @override
   _DashboardAppPosViewState createState() => _DashboardAppPosViewState();
@@ -23,11 +25,9 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
   @override
   Widget build(BuildContext context) {
     List<Terminal> terminals = widget.terminals;
-    Terminal defaultTerminal;
     String avatarName = '';
-    if (terminals.length > 0) {
-      defaultTerminal = terminals.where((element) => element.active).toList().first;
-      String name = defaultTerminal.name;
+    if (widget.activeTerminal != null) {
+      String name = widget.activeTerminal.name;
       String firstCharacter = name.substring(0, 0).toUpperCase();
       String lastCharacter = name.substring(name.length - 1, name.length -1).toUpperCase();
       avatarName = '$firstCharacter$lastCharacter';
@@ -99,14 +99,14 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
               Expanded(
                 child: Row(
                   children: <Widget>[
-                    defaultTerminal.logo != null ?
+                    widget.activeTerminal.logo != null ?
                     Container(
                       width: 50,
                       height: 50,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         image: DecorationImage(
-                          image: NetworkImage(defaultTerminal.logo),
+                          image: NetworkImage(widget.activeTerminal.logo),
                           fit: BoxFit.cover,
                         )
                       ),
@@ -126,7 +126,7 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                       padding: EdgeInsets.only(left: 8),
                     ),
                     Text(
-                      defaultTerminal.name,
+                      widget.activeTerminal.name,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 24,

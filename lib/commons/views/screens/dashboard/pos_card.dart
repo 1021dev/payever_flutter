@@ -56,8 +56,7 @@ class _POSCardState extends State<POSCard> {
 
   fetchData() {
     RestDataSource api = RestDataSource();
-    api
-        .getTerminal(_business.id, GlobalUtils.activeToken.accessToken, context)
+    api.getTerminal(_business.id, GlobalUtils.activeToken.accessToken, context)
         .then((terminals) {
       terminals.forEach((terminal) {
         _parts._terminals.add(Terminal.toMap(terminal));
@@ -67,8 +66,7 @@ class _POSCardState extends State<POSCard> {
         _parts._mainCardLoading.value = false;
       }
     }).then((_) {
-      api
-          .getChannelSet(
+      api.getChannelSet(
               _business.id, GlobalUtils.activeToken.accessToken, context)
           .then((channelSets) {
         channelSets.forEach((channelSet) {

@@ -246,36 +246,53 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
       curWall: currentWallpaper,
       language: language,
     );
+    yield* fetchPOSCard(activeBusiness, accessToken);
   }
 
-  Future<List<Widget>> loadWidgetCards(List<AppWidget> currentWidgets) async {
-    List<Widget> activeWid = [];
-    for (int i = 0; i < currentWidgets.length; i++) {
-      var wid = currentWidgets[i];
-      switch (wid.type) {
-        case "transactions":
-          activeWid.add(TransactionCard(
-            wid.type,
-            NetworkImage(uiKit + wid.icon),
-            false,
-          ));
-          break;
-        case "pos":
-          activeWid
-              .add(POSCard(wid.type, NetworkImage(uiKit + wid.icon), wid.help));
-          break;
-        case "products":
-          activeWid.add(
-              ProductsSoldCard(wid.type, NetworkImage(uiKit + wid.icon), wid.help));
-          break;
-        case "settings":
-          activeWid.add(
-              SettingsCard(wid.type, NetworkImage(uiKit + wid.icon), wid.help));
-          break;
-        default:
-      }
-    }
-    return activeWid;
+  Stream<DashboardScreenState> fetchPOSCard(Business activeBusiness, String token) async* {
+    yield state.copyWith(isPosLoading: true);
+    List<Terminal> terminals = [];
+    List<ChannelSet> channelSets = [];
+    dynamic terminalsObj = await api.getTerminal(activeBusiness.id, token);
+    terminals.forEach((terminal) {
+      terminalsObj._terminals.add(Terminal.toMap(terminal));
+    });
+//    if (terminals.isEmpty) {
+//      _parts._noTerminals = true;
+//      _parts._mainCardLoading.value = false;
+//    }
+    dynamic channelsObj = await api.getChannelSet(activeBusiness.id, token);
+    channelsObj.forEach((channelSet) {
+      channelSets.add(ChannelSet.toMap(channelSet));
+    });
+
+    terminals.forEach((terminal) async {
+      channelSets.forEach((channelSet) async {
+        if (terminal.channelSet == channelSet.id) {
+          dynamic paymentObj = await api.getCheckoutIntegration(activeBusiness.id, channelSet.checkout, token);
+          paymentObj.forEach((pm) {
+            terminal.paymentMethods.add(pm);
+          });
+
+          dynamic daysObj = await api.getLastWeek(activeBusiness.id, channelSet.id, token);
+          int length = daysObj.length - 1;
+          for (int i = length; i > length - 7; i--) {
+            terminal.lastWeekAmount += Day.map(daysObj[i]).amount;
+          }
+          daysObj.forEach((day) {
+            terminal.lastWeek.add(Day.map(day));
+          });
+
+          dynamic productsObj = await api.getPopularWeek(activeBusiness.id, channelSet.id, token);
+          productsObj.forEach((product) {
+            terminal.bestSales.add(Product.toMap(product));
+          });
+        }
+      });
+    });
+
+    Terminal activeTerminal = terminals.where((element) => element.active).toList().first;
+    yield state.copyWith(activeTerminal: activeTerminal, terminalList: terminals, isPosLoading: false);
   }
 
   Future<dynamic> fetchDaily(Business currentBusiness) {

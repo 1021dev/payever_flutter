@@ -4,6 +4,8 @@ import 'package:payever/commons/models/fetchwallpaper.dart';
 
 class DashboardScreenState {
   final bool isLoading;
+  final bool isInitialScreen;
+  final bool isPosLoading;
   final List<BusinessApps> businessWidgets;
   final List<Business> businesses;
   final Business activeBusiness;
@@ -19,13 +21,13 @@ class DashboardScreenState {
   final List<Day> lastMonth;
   final List<Tutorial> tutorials;
   final List<Widget> activeWid;
-  final bool isInitialScreen;
   final String language;
   final String curWall;
 
   DashboardScreenState({
     this.isLoading = false,
     this.isInitialScreen = true,
+    this.isPosLoading = true,
     this.businessWidgets = const [],
     this.businesses = const [],
     this.currentWidgets = const [],
@@ -48,6 +50,7 @@ class DashboardScreenState {
   List<Object> get props => [
     this.isLoading,
     this.businessWidgets,
+    this.isPosLoading,
     this.businesses,
     this.currentWidgets,
     this.activeBusiness,
@@ -70,6 +73,7 @@ class DashboardScreenState {
   DashboardScreenState copyWith({
     bool isLoading,
     bool isInitialScreen,
+    bool isPosLoading,
     List<BusinessApps> businessWidgets,
     List<AppWidget> currentWidgets,
     List<Business> businesses,
@@ -91,6 +95,7 @@ class DashboardScreenState {
     return DashboardScreenState(
       isLoading: isLoading ?? this.isLoading,
       isInitialScreen: isInitialScreen ?? this.isInitialScreen,
+      isPosLoading: isPosLoading ?? this.isPosLoading,
       businessWidgets: businessWidgets ?? this.businessWidgets,
       currentWidgets: currentWidgets ?? this.currentWidgets,
       businesses: businesses ?? this.businesses,

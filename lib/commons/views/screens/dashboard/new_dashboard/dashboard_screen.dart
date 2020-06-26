@@ -263,7 +263,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
       } else if (appWidget.type == 'pos') {
         dashboardWidgets.add(
             DashboardAppPosView(
+              isLoading: state.isPosLoading,
               appWidget: appWidget,
+              terminals: state.terminalList,
             )
 //            POSCard('pos', NetworkImage(uiKit + appWidget.icon), appWidget.help)
         );
