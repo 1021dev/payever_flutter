@@ -55,3 +55,15 @@ class PosTopButton extends StatelessWidget {
     return makeContent;
   }
 }
+
+class OverflowMenuItem {
+  final String title;
+  final Color textColor;
+  final VoidCallback onTap;
+
+  OverflowMenuItem({
+    this.title,
+    this.textColor = Colors.black,
+    this.onTap,
+  });
+}

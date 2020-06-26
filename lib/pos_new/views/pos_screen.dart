@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -63,6 +64,29 @@ class _PosScreenState extends State<PosScreen> {
   PosScreenBloc screenBloc = PosScreenBloc();
   String wallpaper;
   int selectedIndex = 0;
+
+  List<OverflowMenuItem> appBarPopUpActions(BuildContext context, PosScreenState state) {
+    return [
+      OverflowMenuItem(
+        title: 'Switch terminal',
+        onTap: () async {
+
+        },
+      ),
+      OverflowMenuItem(
+        title: 'Add new terminal',
+        onTap: () async {
+
+        },
+      ),
+      OverflowMenuItem(
+        title: 'Edit',
+        onTap: () async {
+
+        },
+      ),
+    ];
+  }
 
   @override
   void initState() {
@@ -332,11 +356,29 @@ class _PosScreenState extends State<PosScreen> {
             onTap: () {
             },
           ),
-          PosTopButton(
-            title: '...',
-            selectedIndex: selectedIndex,
-            index: 4,
-            onTap: () {
+          PopupMenuButton<OverflowMenuItem>(
+            icon: Icon(Icons.more_horiz),
+            offset: Offset(0, 100),
+            onSelected: (OverflowMenuItem item) => item.onTap,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            color: Colors.black87,
+            itemBuilder: (BuildContext context) {
+              return appBarPopUpActions(context, state)
+                  .map((OverflowMenuItem item) {
+                    return PopupMenuItem<OverflowMenuItem>(
+                      value: item,
+                      child: Text(
+                        item.title,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                    );
+              }).toList();
             },
           ),
 
@@ -344,5 +386,55 @@ class _PosScreenState extends State<PosScreen> {
       ),
     );
   }
+
+  Widget _defaultTerminalWidget(PosScreenState state) {
+    return Container();
+  }
+
+  Widget _connectWidget(PosScreenState state) {
+    return Container();
+  }
+
+  Widget _settingsWidget(PosScreenState state) {
+    return Container(
+      child: Column(
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Text(
+                'Terminal UUID',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                ),
+              ),
+              AutoSizeText(
+                state.activeTerminal.id,
+                minFontSize: 12,
+                maxLines: 0,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                ),
+              ),
+              FlatButton(
+                child: Text(
+                  state.terminalCopied ? 'Copied': 'Copy',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
+                ),
+                onPressed: () {
+
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
 }
 
