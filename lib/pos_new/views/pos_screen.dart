@@ -18,20 +18,36 @@ bool _isTablet;
 
 class PosInitScreen extends StatelessWidget {
 
+  List<Terminal> terminals;
+  Terminal activeTerminal;
+
+  PosInitScreen({
+    this.terminals,
+    this.activeTerminal,
+  });
+
   @override
   Widget build(BuildContext context) {
     GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context);
 
-    return PosScreen(globalStateModel: globalStateModel,);
+    return PosScreen(
+      globalStateModel: globalStateModel,
+      terminals: terminals,
+      activeTerminal: activeTerminal,
+    );
   }
 }
 
 class PosScreen extends StatefulWidget {
 
   GlobalStateModel globalStateModel;
+  List<Terminal> terminals;
+  Terminal activeTerminal;
 
   PosScreen({
     this.globalStateModel,
+    this.terminals,
+    this.activeTerminal,
   });
 
   @override
@@ -49,7 +65,13 @@ class _PosScreenState extends State<PosScreen> {
   @override
   void initState() {
     super.initState();
-    screenBloc.add(PosScreenInitEvent(widget.globalStateModel.currentBusiness));
+    screenBloc.add(
+        PosScreenInitEvent(
+          currentBusiness: widget.globalStateModel.currentBusiness,
+          terminals: widget.terminals,
+          activeTerminal: widget.activeTerminal,
+        )
+    );
   }
 
   @override
