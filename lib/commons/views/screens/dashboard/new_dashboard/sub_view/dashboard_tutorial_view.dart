@@ -9,7 +9,7 @@ import 'blur_effect_view.dart';
 
 class DashboardTutorialView extends StatefulWidget {
   final List<AppWidget> appWidgets;
-  final BusinessApps appWidget;
+  final AppWidget appWidget;
   DashboardTutorialView({this.appWidgets, this.appWidget});
   @override
   _DashboardTutorialViewState createState() => _DashboardTutorialViewState();
@@ -38,12 +38,12 @@ class _DashboardTutorialViewState extends State<DashboardTutorialView> {
                           height: 16,
                           decoration: BoxDecoration(
                               image: DecorationImage(
-                                  image: NetworkImage('$uiKit${widget.appWidget.code}.png'),
+                                  image: NetworkImage('${uiKit}tutorial.png'),
                                   fit: BoxFit.fitWidth)),
                         ),
                         SizedBox(width: 8,),
                         Text(
-                          Language.getTransactionStrings(widget.appWidget.dashboardInfo.title),
+                          'TUTORIALS',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 12,

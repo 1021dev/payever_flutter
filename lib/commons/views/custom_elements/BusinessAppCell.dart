@@ -8,7 +8,7 @@ import '../../utils/env.dart';
 import '../../utils/translations.dart';
 
 class BusinessAppCell extends StatelessWidget {
-  final AppWidget currentApp;
+  final BusinessApps currentApp;
   final Function onTap;
 
   BusinessAppCell({
@@ -36,19 +36,19 @@ class BusinessAppCell extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  width: 30,
-                  height: 30,
+                  width: 50,
+                  height: 50,
                   decoration: BoxDecoration(
                       image: DecorationImage(
                           image: NetworkImage(
-                              '$uiKit${currentApp.icon}'),
-                          fit: BoxFit.fitWidth)),
+                              '$uiKit${currentApp.dashboardInfo.icon.replaceAll('32', '64')}'),
+                          fit: BoxFit.cover)),
                 ),
               ],
             ),
             SizedBox(height: 2),
             Text(
-              currentApp.title ?? '',
+              currentApp.dashboardInfo.title.replaceAll('dashboard.apps.', '') ?? '',
               style: TextStyle(
                   fontSize: 10,
                   color: Colors.white

@@ -9,6 +9,7 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/blur_effect_view.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/dashboard_advertising_view.dart';
+import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/dashboard_app_pos.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/dashboard_business_apps_view.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/dashboard_app_detail_cell.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/dashboard_connect_view.dart';
@@ -187,9 +188,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _body(DashboardScreenState state) {
-    List<BusinessApps> widgets = [];
+    List<AppWidget> widgets = [];
     if (state.currentWidgets.length > 0) {
-      widgets.addAll(state.businessWidgets);//.where((element) => element.order != null));
+      widgets.addAll(state.currentWidgets);//.where((element) => element.order != null));
       widgets.sort((w1, w2) {
         if (w1.order == null) {
           return 1;
@@ -197,166 +198,124 @@ class _DashboardScreenState extends State<DashboardScreen> {
         if (w2.order == null) {
           return 1;
         }
-        return w1.order.compareTo(w2.order);
+        return w2.order.compareTo(w1.order);
       });
     }
     List<Widget> dashboardWidgets = [];
     dashboardWidgets.add(_headerView(state));
     dashboardWidgets.add(_searchBar(state));
-    BusinessApps transactionApp = widgets.where((element) => element.code == 'transactions').first;
-    dashboardWidgets.add(
-        DashboardTransactionsView(
-          appWidget: transactionApp,
-          onOpen: () {
-            Provider.of<GlobalStateModel>(context,listen: false)
-                .setCurrentBusiness(state.activeBusiness);
-            Provider.of<GlobalStateModel>(context,listen: false)
-                .setCurrentWallpaper(state.curWall);
-            Navigator.push(
-              context,
-              PageTransition(
-                child: TransactionScreenInit(),
-                type: PageTransitionType.fade,
-              ),
-            );
-          },
-        )
-    );
-    dashboardWidgets.add(
-        DashboardBusinessAppsView(
-          businessApps: state.currentWidgets,
-          onTapEdit: () {},
-          onTapWidget: (AppWidget aw) {
-            if (aw.title.toLowerCase().contains('transactions')) {
-              Provider.of<GlobalStateModel>(context,listen: false)
-                  .setCurrentBusiness(state.activeBusiness);
-              Provider.of<GlobalStateModel>(context,listen: false)
-                  .setCurrentWallpaper(state.curWall);
-              Navigator.push(
-                context,
-                PageTransition(
-                  child: TransactionScreenInit(),
-                  type: PageTransitionType.fade,
-                ),
-              );
-            }
-          },
-        )
-    );
-    BusinessApps shopApp = widgets.where((element) => element.code == 'shop').first;
-    dashboardWidgets.add(
-        DashboardAppDetailCell(
-          appWidget: shopApp,
-        )
-    );
-
-    BusinessApps posApp = widgets.where((element) => element.code == 'pos').first;
-    dashboardWidgets.add(
-//        DashboardAppDetailCell(
-//          appWidget: posApp,
-//        )
-        POSCard('pos', NetworkImage(uiKit + posApp.dashboardInfo.icon), posApp.url)
-    );
-
-    BusinessApps checkoutApp = widgets.where((element) => element.code == 'checkout').first;
-    dashboardWidgets.add(
-        DashboardAppDetailCell(
-          appWidget: checkoutApp,
-        )
-    );
-
-    BusinessApps marketingApp = widgets.where((element) => element.code == 'marketing').first;
-    dashboardWidgets.add(
-        DashboardAppDetailCell(
-          appWidget: marketingApp,
-        )
-    );
-
-    BusinessApps settingsApp = widgets.where((element) => element.code == 'settings').first;
-    dashboardWidgets.add(
-        DashboardSettingsView(
-          appWidget: settingsApp,
-        )
-    );
-
-    BusinessApps tutorialApp = widgets.where((element) => element.code == 'tutorial').first;
-    dashboardWidgets.add(
-        DashboardTutorialView(
-          appWidget: tutorialApp,
-        )
-    );
 
     for (int i = 0; i < widgets.length; i++) {
-      BusinessApps appWidget = widgets[i];
-      if (appWidget.code == null) {
-      } else if (appWidget.code == 'shop') {
+      AppWidget appWidget = widgets[i];
+      if (appWidget.type == 'transactions') {
+        dashboardWidgets.add(
+            DashboardTransactionsView(
+              appWidget: appWidget,
+              onOpen: () {
+                Provider.of<GlobalStateModel>(context,listen: false)
+                    .setCurrentBusiness(state.activeBusiness);
+                Provider.of<GlobalStateModel>(context,listen: false)
+                    .setCurrentWallpaper(state.curWall);
+                Navigator.push(
+                  context,
+                  PageTransition(
+                    child: TransactionScreenInit(),
+                    type: PageTransitionType.fade,
+                  ),
+                );
+              },
+            )
+        );
+      } else if (appWidget.type == 'apps') {
+        dashboardWidgets.add(
+            DashboardBusinessAppsView(
+              businessApps: state.businessWidgets,
+              onTapEdit: () {},
+              onTapWidget: (BusinessApps aw) {
+                if (aw.dashboardInfo.title.toLowerCase().contains('transactions')) {
+                  Provider.of<GlobalStateModel>(context,listen: false)
+                      .setCurrentBusiness(state.activeBusiness);
+                  Provider.of<GlobalStateModel>(context,listen: false)
+                      .setCurrentWallpaper(state.curWall);
+                  Navigator.push(
+                    context,
+                    PageTransition(
+                      child: TransactionScreenInit(),
+                      type: PageTransitionType.fade,
+                    ),
+                  );
+                }
+              },
+            )
+        );
+      } else if (appWidget.type == 'shop') {
         dashboardWidgets.add(
             DashboardAppDetailCell(
               appWidget: appWidget,
             )
         );
-      } else if (appWidget.code == 'shipping') {
+      } else if (appWidget.type == 'shipping') {
         dashboardWidgets.add(
             DashboardAppDetailCell(
               appWidget: appWidget,
             )
         );
-      } else if (appWidget.code == 'pos') {
+      } else if (appWidget.type == 'pos') {
         dashboardWidgets.add(
-//            DashboardAppDetailCell(
-//              appWidget: appWidget,
-//            )
-            POSCard('pos', NetworkImage(uiKit + appWidget.dashboardInfo.icon), appWidget.url)
+            DashboardAppPosView(
+              appWidget: appWidget,
+            )
+//            POSCard('pos', NetworkImage(uiKit + appWidget.icon), appWidget.help)
         );
-      } else if (appWidget.code == 'checkout') {
+      } else if (appWidget.type == 'checkout') {
         dashboardWidgets.add(
             DashboardAppDetailCell(
               appWidget: appWidget,
             )
         );
-      } else if (appWidget.code == 'marketing') {
+      } else if (appWidget.type == 'marketing') {
         dashboardWidgets.add(
             DashboardAppDetailCell(
               appWidget: appWidget,
             )
         );
-      } else if (appWidget.code == 'studio') {
+      } else if (appWidget.type == 'studio') {
         dashboardWidgets.add(
             DashboardStudioView(
               appWidget: appWidget,
             )
         );
-      } else if (appWidget.code == 'ads') {
+      } else if (appWidget.type == 'ads') {
         dashboardWidgets.add(
             DashboardAdvertisingView(
               appWidget: appWidget,
             )
         );
-      } else if (appWidget.code == 'contacts') {
+      } else if (appWidget.type == 'contacts') {
         dashboardWidgets.add(
             DashboardAppDetailCell(
               appWidget: appWidget,
             )
         );
-      } else if (appWidget.code == 'products') {
+      } else if (appWidget.type == 'products') {
         dashboardWidgets.add(
             DashboardProductsView(
               appWidget: appWidget,
             )
         );
-      } else if (appWidget.code == 'connect') {
+      } else if (appWidget.type == 'connect') {
         dashboardWidgets.add(
             DashboardConnectView(
               appWidget: appWidget,
             )
         );
-      } else if (appWidget.code == 'settings') {
+      } else if (appWidget.type == 'settings') {
         dashboardWidgets.add(
             DashboardSettingsView(
               appWidget: appWidget,
             )
         );
-      } else if (appWidget.code == 'tutorial') {
+      } else if (appWidget.type == 'tutorial') {
         dashboardWidgets.add(
             DashboardTutorialView(
               appWidgets: state.currentWidgets,

@@ -9,7 +9,7 @@ import 'package:payever/commons/views/screens/dashboard/dashboard_card_ref.dart'
 import 'blur_effect_view.dart';
 
 class DashboardProductsView extends StatefulWidget {
-  final BusinessApps appWidget;
+  final AppWidget appWidget;
 
   DashboardProductsView({
     this.appWidget,
@@ -41,12 +41,12 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
                           height: 16,
                           decoration: BoxDecoration(
                               image: DecorationImage(
-                                  image: NetworkImage('$uiKit${widget.appWidget.code}.png'),
+                                  image: NetworkImage('${uiKit}product.png'),
                                   fit: BoxFit.fitWidth)),
                         ),
                         SizedBox(width: 8,),
                         Text(
-                          Language.getTransactionStrings(widget.appWidget.dashboardInfo.title),
+                          'PRODUCTS',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 12,

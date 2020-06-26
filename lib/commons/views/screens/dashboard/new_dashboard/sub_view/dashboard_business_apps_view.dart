@@ -9,7 +9,7 @@ import '../../../../../models/app_widget.dart';
 import 'blur_effect_view.dart';
 
 class DashboardBusinessAppsView extends StatefulWidget {
-  final List<AppWidget> businessApps;
+  final List<BusinessApps> businessApps;
   final Function onTapEdit;
   final Function onTapWidget;
   DashboardBusinessAppsView({
@@ -25,10 +25,15 @@ class _DashboardBusinessAppsViewState extends State<DashboardBusinessAppsView> {
   String uiKit = 'https://payeverstage.azureedge.net/icons-png/icons-apps-white/icon-apps-white-';
   @override
   Widget build(BuildContext context) {
+    List<BusinessApps> businessApps =
+    widget.businessApps.where((element) => element.order != null).toList();
+    businessApps.sort((b1, b2) {
+      return b1.order.compareTo(b2.order);
+    });
     return BlurEffectView(
       padding: EdgeInsets.fromLTRB(14, 12, 14, 0),
       child: Container(
-        height: 44 + (widget.businessApps.length / 4).ceilToDouble() * 82,
+        height: 44 + (businessApps.length / 4).ceilToDouble() * 82,
         child: Column(
           children: [
             Row(
@@ -78,10 +83,10 @@ class _DashboardBusinessAppsViewState extends State<DashboardBusinessAppsView> {
             Padding(
               padding: EdgeInsets.only(top: 8),
             ),
-            if (widget.businessApps != null) Expanded(
+            if (businessApps != null) Expanded(
               child: GridView.count(
                 crossAxisCount: 4,
-                children: widget.businessApps.map((e) => BusinessAppCell(
+                children: businessApps.map((e) => BusinessAppCell(
                   onTap: (){
                     widget.onTapWidget(e);
                   },

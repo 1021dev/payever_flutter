@@ -8,7 +8,7 @@ import '../../../../../utils/env.dart';
 
 class DashboardStudioView extends StatefulWidget {
   final VoidCallback onOpen;
-  final BusinessApps appWidget;
+  final AppWidget appWidget;
 
   DashboardStudioView({this.onOpen, this.appWidget});
   @override
@@ -30,12 +30,12 @@ class _DashboardStudioViewState extends State<DashboardStudioView> {
                 height: 16,
                 decoration: BoxDecoration(
                     image: DecorationImage(
-                        image: NetworkImage('$uiKit${widget.appWidget.code}.png'),
+                        image: NetworkImage('${uiKit}studio.png'),
                         fit: BoxFit.fitWidth)),
               ),
               SizedBox(width: 8,),
               Text(
-                Language.getTransactionStrings(widget.appWidget.dashboardInfo.title),
+                'STUDIO',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 12,

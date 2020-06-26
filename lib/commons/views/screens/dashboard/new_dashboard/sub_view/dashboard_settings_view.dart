@@ -7,7 +7,7 @@ import 'package:payever/commons/utils/env.dart';
 import 'blur_effect_view.dart';
 
 class DashboardSettingsView extends StatefulWidget {
-  final BusinessApps appWidget;
+  final AppWidget appWidget;
 
   DashboardSettingsView({
     this.appWidget,
@@ -35,12 +35,12 @@ class _DashboardSettingsViewState extends State<DashboardSettingsView> {
                       height: 16,
                       decoration: BoxDecoration(
                           image: DecorationImage(
-                              image: NetworkImage('$uiKit${widget.appWidget.code}.png'),
+                              image: NetworkImage('${uiKit}settings.png'),
                               fit: BoxFit.fitWidth)),
                     ),
                     SizedBox(width: 8,),
                     Text(
-                      Language.getTransactionStrings(widget.appWidget.dashboardInfo.title),
+                      'SETTINGS',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 12,

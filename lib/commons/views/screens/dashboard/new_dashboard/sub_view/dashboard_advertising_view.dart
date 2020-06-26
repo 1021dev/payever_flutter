@@ -7,7 +7,7 @@ import '../../../../../utils/env.dart';
 import 'blur_effect_view.dart';
 
 class DashboardAdvertisingView extends StatefulWidget {
-  final BusinessApps appWidget;
+  final AppWidget appWidget;
 
   DashboardAdvertisingView({ this.appWidget});
   @override
@@ -30,12 +30,12 @@ class _DashboardAdvertisingViewState extends State<DashboardAdvertisingView> {
                 height: 16,
                 decoration: BoxDecoration(
                     image: DecorationImage(
-                        image: NetworkImage('$uiKit${widget.appWidget.code}.png'),
+                        image: NetworkImage('https://payeverstage.azureedge.net/icons-png/icons-apps-white/icon-apps-white-ad.png'),
                         fit: BoxFit.fitWidth)),
               ),
               SizedBox(width: 8,),
               Text(
-                Language.getTransactionStrings(widget.appWidget.dashboardInfo.title),
+                'ADVERTISING',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 12,

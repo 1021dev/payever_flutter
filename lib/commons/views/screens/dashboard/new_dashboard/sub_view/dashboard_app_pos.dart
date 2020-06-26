@@ -4,7 +4,7 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/blur_effect_view.dart';
 
 class DashboardAppPosView extends StatefulWidget {
-  final BusinessApps appWidget;
+  final AppWidget appWidget;
   DashboardAppPosView({
     this.appWidget,
   });
@@ -38,7 +38,7 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                 ),
                 SizedBox(height: 8),
                 Text(
-                  Language.getTransactionStrings(widget.appWidget.dashboardInfo.title),
+                  'POINT OF SALE',
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -73,7 +73,7 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                     },
                     child: Center(
                       child: Text(
-                        !widget.appWidget.installed ? "Get started" : "Continue setup process",
+                        !widget.appWidget.install ? "Get started" : "Continue setup process",
                         softWrap: true,
                         style: TextStyle(
                             color: Colors.white, fontSize: 12),
@@ -81,11 +81,11 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                     ),
                   ),
                 ),
-                if (!widget.appWidget.installed) Container(
+                if (!widget.appWidget.install) Container(
                   width: 1,
                   color: Colors.white12,
                 ),
-                if (!widget.appWidget.installed) Expanded(
+                if (!widget.appWidget.install) Expanded(
                   flex: 1,
                   child: InkWell(
                     onTap: () {

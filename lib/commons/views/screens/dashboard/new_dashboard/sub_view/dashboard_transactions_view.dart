@@ -9,7 +9,7 @@ import '../../../../../../products/models/models.dart';
 
 class DashboardTransactionsView extends StatefulWidget {
   final VoidCallback onOpen;
-  final BusinessApps appWidget;
+  final AppWidget appWidget;
 
   DashboardTransactionsView({this.onOpen, this.appWidget});
   @override
@@ -39,12 +39,12 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                             height: 16,
                             decoration: BoxDecoration(
                                 image: DecorationImage(
-                                    image: NetworkImage('$uiKit${widget.appWidget.code}.png'),
+                                    image: NetworkImage('${uiKit}transactions.png'),
                                     fit: BoxFit.fitWidth)),
                           ),
                           SizedBox(width: 8,),
                           Text(
-                            Language.getTransactionStrings(widget.appWidget.dashboardInfo.title),
+                            'TRANSACTIONS',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 12,
