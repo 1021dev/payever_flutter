@@ -25,6 +25,8 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
   Stream<DashboardScreenState> mapEventToState(DashboardScreenEvent event) async* {
     if (event is DashboardScreenInitEvent) {
       yield* _checkVersion();
+    } else if (event is FetchPosEvent) {
+      yield* fetchPOSCard(event.business);
     }
   }
 
@@ -246,16 +248,18 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
       curWall: currentWallpaper,
       language: language,
     );
-    yield* fetchPOSCard(activeBusiness, accessToken);
+
+    add(FetchPosEvent(business: activeBusiness));
   }
 
-  Stream<DashboardScreenState> fetchPOSCard(Business activeBusiness, String token) async* {
+  Stream<DashboardScreenState> fetchPOSCard(Business activeBusiness) async* {
+    String token = GlobalUtils.activeToken.accessToken;
     yield state.copyWith(isPosLoading: true);
     List<Terminal> terminals = [];
     List<ChannelSet> channelSets = [];
     dynamic terminalsObj = await api.getTerminal(activeBusiness.id, token);
-    terminals.forEach((terminal) {
-      terminalsObj._terminals.add(Terminal.toMap(terminal));
+    terminalsObj.forEach((terminal) {
+      terminals.add(Terminal.toMap(terminal));
     });
 //    if (terminals.isEmpty) {
 //      _parts._noTerminals = true;

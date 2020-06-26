@@ -21,6 +21,7 @@ import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/d
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/dashboard_tutorial_view.dart';
 import 'package:payever/commons/views/screens/login/login_page.dart';
 import 'package:payever/commons/views/screens/switcher/switcher_page.dart';
+import 'package:payever/pos/pos.dart';
 import 'package:payever/transactions/transactions.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -266,8 +267,28 @@ class _DashboardScreenState extends State<DashboardScreen> {
               isLoading: state.isPosLoading,
               appWidget: appWidget,
               terminals: state.terminalList,
+              activeTerminal: state.activeTerminal,
+              onTapEditTerminal: () {
+
+              },
+              onTapOpen: () {
+                Provider.of<GlobalStateModel>(context,listen: false)
+                    .setCurrentBusiness(state.activeBusiness);
+                Provider.of<GlobalStateModel>(context,listen: false)
+                    .setCurrentWallpaper(state.curWall);
+                Navigator.push(
+                    context,
+                    PageTransition(
+                        child: ChangeNotifierProvider<PosStateModel>(
+                          create: (BuildContext context) =>
+                              PosStateModel(globalStateModel, PosApi()),
+                          child: PosProductsListScreen(
+                              terminal: state.activeTerminal,
+                              business: state.activeBusiness),
+                        ),
+                        type: PageTransitionType.fade,
+                        duration: Duration(milliseconds: 50)));              },
             )
-//            POSCard('pos', NetworkImage(uiKit + appWidget.icon), appWidget.help)
         );
       } else if (appWidget.type == 'checkout') {
         dashboardWidgets.add(
@@ -326,6 +347,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
         );
       }
     }
+    dashboardWidgets.add(
+        Padding(
+          padding: EdgeInsets.only(top: 24),
+        )
+    );
 
     return Scaffold(
       backgroundColor: Colors.black87,
@@ -372,7 +398,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     );
                   },
                 ),
-              )
+              ),
             ],
           ),
         ),

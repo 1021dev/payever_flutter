@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/commons/commons.dart';
@@ -8,11 +9,15 @@ class DashboardAppPosView extends StatefulWidget {
   final List<Terminal> terminals;
   final Terminal activeTerminal;
   final bool isLoading;
+  final Function onTapOpen;
+  final Function onTapEditTerminal;
   DashboardAppPosView({
     this.appWidget,
     this.terminals = const [],
-    this.isLoading = true,
+    this.isLoading,
     this.activeTerminal,
+    this.onTapEditTerminal,
+    this.onTapOpen,
   });
   @override
   _DashboardAppPosViewState createState() => _DashboardAppPosViewState();
@@ -28,18 +33,24 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
     String avatarName = '';
     if (widget.activeTerminal != null) {
       String name = widget.activeTerminal.name;
-      String firstCharacter = name.substring(0, 0).toUpperCase();
-      String lastCharacter = name.substring(name.length - 1, name.length -1).toUpperCase();
-      avatarName = '$firstCharacter$lastCharacter';
+      if (name.contains(" ")) {
+        avatarName = name.substring(0, 1);
+        avatarName = avatarName + name.split(" ")[1].substring(0, 1);
+      } else {
+        avatarName = name.substring(0, 1) + name.substring(name.length - 1);
+        avatarName = avatarName.toUpperCase();
+      }
     }
     return BlurEffectView(
-      padding: EdgeInsets.fromLTRB(14, 12, 14, 12),
+      padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
       child: Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
                     width: 16,
@@ -62,15 +73,13 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                 ],
               ),
               InkWell(
-                onTap: () {
-
-                },
+                onTap: widget.onTapOpen,
                 child: Container(
                   height: 20,
                   width: 40,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: Colors.black.withAlpha(100)
+                      color: Colors.black.withOpacity(0.4)
                   ),
                   child: Center(
                     child: Text("Open",
@@ -97,6 +106,7 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
             children: <Widget>[
               // Terminal View
               Expanded(
+                flex: 1,
                 child: Row(
                   children: <Widget>[
                     widget.activeTerminal.logo != null ?
@@ -111,25 +121,29 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                         )
                       ),
                     ):
-                    CircleAvatar(
-                      radius: 25,
-                      child: Text(
-                        avatarName,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 32,
-                          fontWeight: FontWeight.w800,
+                        Container(
+                          child: CircleAvatar(
+                            radius: 25,
+                            backgroundColor: Colors.blueGrey.withOpacity(0.5),
+                            child: Text(
+                              avatarName,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 24,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
                     Padding(
-                      padding: EdgeInsets.only(left: 8),
+                      padding: EdgeInsets.only(left: 12),
                     ),
-                    Text(
+                    AutoSizeText(
                       widget.activeTerminal.name,
+                      minFontSize: 16,
+                      maxFontSize: 24,
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 24,
                         fontWeight: FontWeight.w500,
                       ),
                     )
@@ -137,24 +151,24 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                 ),
 
               ),
+              Padding(
+                padding: EdgeInsets.only(left: 12),
+              ),
               // Edit Button
               Expanded(
                 flex: 1,
-                child: Container(
-                  child: InkWell(
-                    onTap: () {
-
-                    },
+                child: Material(
+                  borderRadius: BorderRadius.circular(8),
+                  clipBehavior: Clip.antiAlias,
+                  color: Colors.white.withOpacity(0.1),
+                  child: MaterialButton(
+                    onPressed: widget.onTapEditTerminal,
                     child: Container(
                       height: 50,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(6),
-                          color: Colors.black26
-                      ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.mode_edit),
+                          Icon(Icons.edit),
                           SizedBox(width: 8),
                           Text(
                             "Edit",

@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:payever/commons/commons.dart';
 
 abstract class DashboardScreenEvent extends Equatable {
   DashboardScreenEvent();
@@ -16,3 +17,15 @@ class DashboardScreenInitEvent extends DashboardScreenEvent {
   ];
 }
 
+class FetchPosEvent extends DashboardScreenEvent {
+  final Business business;
+  FetchPosEvent({
+    this.business,
+  });
+
+  @override
+  List<Object> get props => [
+    this.business,
+  ];
+
+}
