@@ -27,3 +27,13 @@ class PosScreenInitEvent extends PosScreenEvent {
   ];
 }
 
+class GetPosIntegrationsEvent extends PosScreenEvent {
+  final String businessId;
+
+  GetPosIntegrationsEvent({this.businessId});
+
+  @override
+  List<Object> get props => [
+    this.businessId,
+  ];
+}

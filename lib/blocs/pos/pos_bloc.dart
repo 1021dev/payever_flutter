@@ -27,6 +27,8 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
         }
       }
       yield* fetchPos(event.currentBusiness);
+    } else if (event is GetPosIntegrationsEvent) {
+      yield* getIntegrations(event.businessId);
     }
   }
 
@@ -77,4 +79,7 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
     yield state.copyWith(activeTerminal: activeTerminal, terminals: terminals, isLoading: false);
   }
 
+  Stream<PosScreenState> getIntegrations(String businessId) async* {
+    dynamic integrationObj = await api.getPosIntegrations(GlobalUtils.activeToken.accessToken, businessId);
+  }
 }

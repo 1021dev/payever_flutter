@@ -306,6 +306,7 @@ class _PosScreenState extends State<PosScreen> {
           ): Column(
             children: <Widget>[
               _toolBar(state),
+              _getBody(state),
             ],
           ),
         ),
@@ -387,6 +388,19 @@ class _PosScreenState extends State<PosScreen> {
     );
   }
 
+  Widget _getBody(PosScreenState state) {
+    switch(selectedIndex) {
+      case 0:
+        return _defaultTerminalWidget(state);
+      case 1:
+        return _connectWidget(state);
+      case 2:
+        return _settingsWidget(state);
+      default:
+        return Container();
+    }
+  }
+
   Widget _defaultTerminalWidget(PosScreenState state) {
     return Container();
   }
@@ -397,6 +411,7 @@ class _PosScreenState extends State<PosScreen> {
 
   Widget _settingsWidget(PosScreenState state) {
     return Container(
+      padding: EdgeInsets.all(16),
       child: Column(
         children: <Widget>[
           Row(
@@ -408,14 +423,22 @@ class _PosScreenState extends State<PosScreen> {
                   fontSize: 16,
                 ),
               ),
-              AutoSizeText(
-                state.activeTerminal.id,
-                minFontSize: 12,
-                maxLines: 0,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
+              Padding(
+                padding: EdgeInsets.only(left: 8),
+              ),
+              Flexible(
+                child: AutoSizeText(
+                  state.activeTerminal.id,
+                  minFontSize: 12,
+                  maxLines: 2,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
                 ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 8),
               ),
               FlatButton(
                 child: Text(
@@ -423,6 +446,7 @@ class _PosScreenState extends State<PosScreen> {
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 16,
+                    fontWeight: FontWeight.w500
                   ),
                 ),
                 onPressed: () {

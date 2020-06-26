@@ -273,3 +273,190 @@ class CartItem {
     uuid = obj[GlobalUtils.DB_POS_CART_CART_UUID];
   }
 }
+
+class Communication {
+  DateTime _createdAt;
+  bool _installed;
+  Integration _integration;
+  DateTime _updatedAt;
+  int __v;
+  int _id;
+
+  Communication.toMap(dynamic obj) {
+    _createdAt = obj['createdAt'];
+    _installed = obj['installed'];
+    _integration = Integration.toMap(obj['integration']);
+    _updatedAt = obj['updatedAt'];
+    _id = obj['_id'];
+    __v = obj['__v'];
+  }
+
+  int get id => _id;
+  DateTime get createdAt => _createdAt;
+  DateTime get updatedAt => _updatedAt;
+  int get v => __v;
+  bool get installed => _installed;
+  Integration get integration => _integration;
+}
+class Integration {
+  List<dynamic> _allowedBusinesses = [];
+  String _category;
+  DisplayOption _displayOptions;
+  String _createdAt;
+  bool _enabled;
+  InstallationOptions _installationOptions;
+  String _name;
+  int _order;
+  String _updatedAt;
+  num __v;
+  String _id;
+  List<dynamic> _reviews = [];
+  int _timesInstalled;
+  List<dynamic> _versions = [];
+  Connect _connect;
+
+  Integration.toMap(dynamic obj) {
+    _allowedBusinesses = obj['allowedBusinesses'];
+    _category = obj['category'];
+    _displayOptions = DisplayOption.toMap(obj['displayOptions']);
+    _createdAt = obj[GlobalUtils.DB_POS_TERMINAL_CREATED_AT];
+    _enabled = obj[GlobalUtils.DB_TRANS_DETAIL_ACT_ENABLED];
+    _installationOptions = InstallationOptions.toMap(obj['installationOptions']);
+    _name = obj[GlobalUtils.DB_POS_TERMINAL_NAME];
+    _order = obj['order'];
+    _updatedAt = obj[GlobalUtils.DB_POS_TERMINAL_UPDATED_AT];
+    __v = obj[GlobalUtils.DB_POS_TERMINAL_V];
+    _id = obj[GlobalUtils.DB_POS_TERMINAL_ID];
+    _timesInstalled = obj['timesInstalled'];
+    _connect = Connect.toMap(obj['connect']);
+
+    dynamic _allowedBusinessesObj = obj['allowedBusinesses'];
+    _allowedBusinessesObj.forEach((sub) {
+      _allowedBusinesses.add(sub);
+    });
+
+    dynamic _reviewsObj = obj['reviews'];
+    _reviewsObj.forEach((sub) {
+      _reviews.add(sub);
+    });
+
+    dynamic _versionsObj = obj['versions'];
+    _versionsObj.forEach((sub) {
+      _versions.add(sub);
+    });
+  }
+
+  List<dynamic> get allowedBusinesses => _allowedBusinesses;
+
+  num get v => __v;
+
+  String get category => _category;
+
+  dynamic get displayOptions => _displayOptions;
+
+  String get createdAt => _createdAt;
+
+  bool get enabled => _enabled;
+
+  dynamic get installationOptions => _installationOptions;
+
+  String get name => _name;
+
+  int get order => _order;
+
+  String get updatedAt => _updatedAt;
+
+  String get id => _id;
+
+  int get timesInstalled => _timesInstalled;
+
+  Connect get connect => _connect;
+
+  List<dynamic> get reviews => _reviews;
+
+  List<dynamic> get versions => _versions;
+
+}
+
+class InstallationOptions {
+  String appSupport;
+  String category;
+  List<dynamic> countryList = [];
+  String description;
+  String developer;
+  String languages;
+  List<LinkObj> links = [];
+  String optionIcon;
+  String price;
+  String pricingLink;
+  String website;
+  String id;
+
+  InstallationOptions.toMap(dynamic obj) {
+    appSupport = obj['appSupport'];
+    category = obj['category'];
+    description = obj['description'];
+    developer = obj['developer'];
+    languages = obj['languages'];
+    optionIcon = obj['optionIcon'];
+    price = obj['price'];
+    pricingLink = obj['pricingLink'];
+    website = obj['website'];
+    id = obj['_id'];
+    dynamic _countryListObj = obj['countryList'];
+    _countryListObj.forEach((sub) {
+      countryList.add(sub);
+    });
+
+    dynamic _linksObj = obj['links'];
+    _linksObj.forEach((sub) {
+      links.add(LinkObj.toMap(sub));
+    });
+  }
+}
+
+class LinkObj {
+  String type;
+  String url;
+  String id;
+
+  LinkObj.toMap(dynamic obj) {
+    type = obj['type'];
+    url = obj['url'];
+    id = obj['_id'];
+  }
+}
+
+class DisplayOption {
+  String icon;
+  String title;
+  String id;
+
+  DisplayOption.toMap(dynamic obj) {
+    icon = obj['icon'];
+    title = obj['title'];
+    id = obj['_id'];
+  }
+}
+
+class Connect {
+  Action fromAction;
+  String url;
+  String url1;
+
+  Connect.toMap(dynamic obj) {
+    fromAction = Action.toMap(obj['fromAction']);
+    url = obj['url'];
+    url1 = obj['url1'];
+  }
+}
+
+class Action {
+  String actionEndpoint;
+  String initEndpoint;
+
+  Action.toMap(dynamic obj) {
+    actionEndpoint = obj['actionEndpoint'];
+    initEndpoint = obj['initEndpoint'];
+  }
+}

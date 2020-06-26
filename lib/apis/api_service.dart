@@ -148,7 +148,7 @@ class ApiService {
     try {
       print('$TAG - getBusinessApps()');
       dynamic response = await _client.getTypeless(
-        RestDataSource.businessApps + businessId,
+        '$businessApps$businessId',
         headers: {
           HttpHeaders.authorizationHeader: 'Bearer $accessToken',
           HttpHeaders.contentTypeHeader: 'application/json',
@@ -219,7 +219,7 @@ class ApiService {
     try {
       print('$TAG - getDays()');
       dynamic response = await _client.getTypeless(
-          transactionsUrl + id + days,
+          '$transactionsUrl$id$days',
           headers: {
             HttpHeaders.authorizationHeader: 'Bearer $token',
             HttpHeaders.contentTypeHeader: 'application/json',
@@ -236,7 +236,7 @@ class ApiService {
     try {
       print('$TAG - getMonths()');
       dynamic response = await _client.getTypeless(
-          transactionsUrl + id + months,
+          '$transactionsUrl$id$months',
           headers: {
             HttpHeaders.authorizationHeader: 'Bearer $token',
             HttpHeaders.contentTypeHeader: 'application/json',
@@ -254,7 +254,7 @@ class ApiService {
     try {
       print('$TAG - getTransactionList()');
       dynamic response = await _client.getTypeless(
-          transactionWidUrl + id + transactionWidEnd,
+          '$transactionWidUrl$id$transactionWidEnd',
           headers: {
             HttpHeaders.authorizationHeader: 'Bearer $token',
             HttpHeaders.contentTypeHeader: 'application/json',
@@ -272,7 +272,7 @@ class ApiService {
     try {
       print('$TAG - getWidgets()');
       dynamic response = await _client.getTypeless(
-          widgetsUrl + id + widgetsEnd,
+          '$widgetsUrl$id$widgetsEnd',
           headers: {
             HttpHeaders.authorizationHeader: 'Bearer $token',
             HttpHeaders.contentTypeHeader: 'application/json',
@@ -306,7 +306,7 @@ class ApiService {
     try {
       print('$TAG - getWallpaper()');
       dynamic response = await _client.getTypeless(
-          wallpaperUrl + id + wallpaperEnd,
+          '$wallpaperUrl$id$wallpaperEnd',
           headers: {
             HttpHeaders.authorizationHeader: 'Bearer $token',
             HttpHeaders.contentTypeHeader: 'application/json',
@@ -374,7 +374,7 @@ class ApiService {
     try {
       print('$TAG - geTerminal()');
       dynamic response = await _client.getTypeless(
-          posBusiness + idBusiness + posTerminalEnd,
+          '$posBusiness$idBusiness$posTerminalEnd',
           headers: {
             HttpHeaders.authorizationHeader: 'Bearer $token',
             HttpHeaders.contentTypeHeader: 'application/json',
@@ -391,7 +391,7 @@ class ApiService {
     try {
       print('$TAG - getChannelSet()');
       dynamic response = await _client.getTypeless(
-          checkoutBusiness + idBusiness + endChannelSet,
+          '$checkoutBusiness$idBusiness$endChannelSet',
           headers: {
             HttpHeaders.authorizationHeader: 'Bearer $token',
             HttpHeaders.contentTypeHeader: 'application/json',
@@ -408,11 +408,7 @@ class ApiService {
     try {
       print('$TAG - getCheckoutIntegration()');
       dynamic response = await _client.getTypeless(
-          checkoutBusiness +
-              idBusiness +
-              checkout +
-              checkoutID +
-              endIntegration,
+          '$checkoutBusiness$idBusiness$checkout$checkoutID$endIntegration',
           headers: {
             HttpHeaders.authorizationHeader: 'Bearer $token',
             HttpHeaders.contentTypeHeader: 'application/json',
@@ -429,7 +425,7 @@ class ApiService {
     try {
       print('$TAG - getLastWeek()');
       dynamic response = await _client.getTypeless(
-          transactionsUrl + idBusiness + widgetsChannelSet + channel + days,
+          '$transactionsUrl$idBusiness$widgetsChannelSet$channel$days',
           headers: {
             HttpHeaders.authorizationHeader: 'Bearer $token',
             HttpHeaders.contentTypeHeader: 'application/json',
@@ -446,11 +442,7 @@ class ApiService {
     try {
       print('$TAG - getPopularWeek()');
       dynamic response = await _client.getTypeless(
-          productsUrl +
-              idBusiness +
-              widgetsChannelSet +
-              channel +
-              popularWeek,
+          '$productsUrl$idBusiness$widgetsChannelSet$channel$popularWeek',
           headers: {
             HttpHeaders.authorizationHeader: 'Bearer $token',
             HttpHeaders.contentTypeHeader: 'application/json',
@@ -467,7 +459,7 @@ class ApiService {
     try {
       print('$TAG - getProductsPopularWeek()');
       dynamic response = await _client.getTypeless(
-          productsUrl + idBusiness + popularWeek,
+          '$productsUrl$idBusiness$popularWeek',
           headers: {
             HttpHeaders.authorizationHeader: 'Bearer $token',
             HttpHeaders.contentTypeHeader: 'application/json',
@@ -484,7 +476,7 @@ class ApiService {
     try {
       print('$TAG - getProductsPopularMonth()');
       dynamic response = await _client.getTypeless(
-          productsUrl + idBusiness + popularMonth,
+          '$productsUrl$idBusiness$popularMonth',
           headers: {
             HttpHeaders.authorizationHeader: 'Bearer $token',
             HttpHeaders.contentTypeHeader: 'application/json',
@@ -501,7 +493,7 @@ class ApiService {
     try {
       print('$TAG - getProductLastSold()');
       dynamic response = await _client.getTypeless(
-          productsUrl + idBusiness + prodLastSold,
+          '$productsUrl$idBusiness$prodLastSold',
           headers: {
             HttpHeaders.authorizationHeader: 'Bearer $token',
             HttpHeaders.contentTypeHeader: 'application/json',
@@ -518,7 +510,7 @@ class ApiService {
     try {
       print('$TAG - deleteTransactionList()');
       dynamic response = await _client.deleteTypeless(
-          transactionWidUrl + id + transactionWidEnd,
+          '$transactionWidUrl$id$transactionWidEnd',
           headers: {
             HttpHeaders.authorizationHeader: 'Bearer $token',
             HttpHeaders.contentTypeHeader: 'application/json',
@@ -553,6 +545,40 @@ class ApiService {
       print('$TAG - patchTutorials()');
       dynamic response = await _client.getTypeless(
           '$widgetsUrl$id/widget-tutorial/$video/watched',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getPosIntegrations(String token, String businessId) async {
+    try {
+      print('$TAG - getPosIntegrations()');
+      dynamic response = await _client.deleteTypeless(
+          '${Env.pos}$posBusiness$businessId$endIntegration',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getPosCommunications(String token, String businessId) async {
+    try {
+      print('$TAG - getPosCommunications()');
+      dynamic response = await _client.deleteTypeless(
+          '${Env.pos}$posBusiness$businessId$endIntegration/category/communications',
           headers: {
             HttpHeaders.authorizationHeader: 'Bearer $token',
             HttpHeaders.contentTypeHeader: 'application/json',
