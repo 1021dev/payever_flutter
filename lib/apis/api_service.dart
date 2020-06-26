@@ -561,7 +561,7 @@ class ApiService {
     try {
       print('$TAG - getPosIntegrations()');
       dynamic response = await _client.getTypeless(
-          '${Env.connect}/api/business/$businessId$endIntegration',
+          '${Env.pos}/api/business/$businessId$endIntegration',
           headers: {
             HttpHeaders.authorizationHeader: 'Bearer $token',
             HttpHeaders.contentTypeHeader: 'application/json',

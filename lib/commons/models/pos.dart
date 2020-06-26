@@ -285,7 +285,9 @@ class Communication {
   Communication.toMap(dynamic obj) {
     _createdAt = obj['createdAt'];
     _installed = obj['installed'];
-    _integration = Integration.toMap(obj['integration']);
+    if (obj['integration'] != null) {
+      _integration = Integration.toMap(obj['integration']);
+    }
     _updatedAt = obj['updatedAt'];
     _id = obj['_id'];
     __v = obj['__v'];
@@ -318,10 +320,14 @@ class Integration {
   Integration.toMap(dynamic obj) {
     _allowedBusinesses = obj['allowedBusinesses'];
     _category = obj['category'];
-    _displayOptions = DisplayOption.toMap(obj['displayOptions']);
+    if (obj['displayOptions'] != null) {
+      _displayOptions = DisplayOption.toMap(obj['displayOptions']);
+    }
     _createdAt = obj[GlobalUtils.DB_POS_TERMINAL_CREATED_AT];
     _enabled = obj[GlobalUtils.DB_TRANS_DETAIL_ACT_ENABLED];
-    _installationOptions = InstallationOptions.toMap(obj['installationOptions']);
+    if (obj['installationOptions'] != null) {
+      _installationOptions = InstallationOptions.toMap(obj['installationOptions']);
+    }
     _name = obj[GlobalUtils.DB_POS_TERMINAL_NAME];
     _order = obj['order'];
     _updatedAt = obj[GlobalUtils.DB_POS_TERMINAL_UPDATED_AT];
@@ -332,20 +338,24 @@ class Integration {
       _connect = Connect.toMap(obj['connect']);
     }
 
-    dynamic _allowedBusinessesObj = obj['allowedBusinesses'];
-    _allowedBusinessesObj.forEach((sub) {
-      _allowedBusinesses.add(sub);
-    });
-
-    dynamic _reviewsObj = obj['reviews'];
-    _reviewsObj.forEach((sub) {
-      _reviews.add(sub);
-    });
-
-    dynamic _versionsObj = obj['versions'];
-    _versionsObj.forEach((sub) {
-      _versions.add(sub);
-    });
+    if (obj['allowedBusinesses'] != null) {
+      dynamic _allowedBusinessesObj = obj['allowedBusinesses'];
+      _allowedBusinessesObj.forEach((sub) {
+        _allowedBusinesses.add(sub);
+      });
+    }
+    if (obj['reviews'] != null) {
+      dynamic _reviewsObj = obj['reviews'];
+      _reviewsObj.forEach((sub) {
+        _reviews.add(sub);
+      });
+    }
+    if (obj['versions'] != null) {
+      dynamic _versionsObj = obj['versions'];
+      _versionsObj.forEach((sub) {
+        _versions.add(sub);
+      });
+    }
   }
 
   List<dynamic> get allowedBusinesses => _allowedBusinesses;
@@ -354,13 +364,13 @@ class Integration {
 
   String get category => _category;
 
-  dynamic get displayOptions => _displayOptions;
+  DisplayOption get displayOptions => _displayOptions;
 
   String get createdAt => _createdAt;
 
   bool get enabled => _enabled;
 
-  dynamic get installationOptions => _installationOptions;
+  InstallationOptions get installationOptions => _installationOptions;
 
   String get name => _name;
 

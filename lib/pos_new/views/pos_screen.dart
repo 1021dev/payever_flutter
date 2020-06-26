@@ -413,20 +413,68 @@ class _PosScreenState extends State<PosScreen> {
     return Center(
       child: Container(
         padding: EdgeInsets.only(left: 16, right: 16),
-        height: (integrations.length * 50).toDouble() + 50,
+        height: (state.integrations.length * 50).toDouble() + 50,
         child: BlurEffectView(
           color: Color.fromRGBO(20, 20, 20, 0.2),
           blur: 15,
           radius: 12,
-          padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
+          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
           child: Column(
             children: <Widget>[
               Expanded(
                 child: ListView.separated(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
                     return Container(
-                      height: 44,
-                      child: Text('Text'),
+                      height: 50,
+                      child: Container(
+                        padding: EdgeInsets.only(left: 16, right: 16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text(
+                              integrations[index].integration.name,//displayOptions.title,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            Row(
+                              children: <Widget>[
+                                Switch(
+                                  value: true,
+                                  onChanged: (value) {
+                                  },
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 8),
+                                ),
+                                InkWell(
+                                  onTap: () {},
+                                  child: Container(
+                                    height: 20,
+                                    width: 40,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Colors.black.withOpacity(0.4)
+                                    ),
+                                    child: Center(
+                                      child: Text("Open",
+                                        style: TextStyle(
+                                            fontSize: 10,
+                                            color: Colors.white
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      )
                     );
                   },
                   separatorBuilder: (context, index) {
@@ -434,12 +482,22 @@ class _PosScreenState extends State<PosScreen> {
                       height: 0,
                       thickness: 0.5,
                       color: Colors.white30,
+                      endIndent: 0,
+                      indent: 0,
                     );
                   },
-                  itemCount: integrations.length,
+                  itemCount: state.integrations.length,
                 ),
               ),
+              integrations.length > 0 ? Divider(
+                height: 0,
+                thickness: 0.5,
+                color: Colors.white30,
+                endIndent: 0,
+                indent: 0,
+              ): Container(height: 0,),
               Container(
+                padding: EdgeInsets.only(left: 16, right: 16),
                 height: 50,
                 child: InkWell(
                   onTap: () {
