@@ -46,8 +46,8 @@ class _DashboardBusinessAppsViewState extends State<DashboardBusinessAppsView> {
                       height: 20,
                       decoration: BoxDecoration(
                           image: DecorationImage(
-                              image: NetworkImage('https://payeverstage.azureedge.net/icons-png/icons-apps-white/icon-apps-white-apps.png'),
-                              fit: BoxFit.fitWidth)),
+                              image: NetworkImage('https://payeverstage.azureedge.net/icons-png/icons-apps-white/icon-apps-white-dashboard.png'),
+                              fit: BoxFit.scaleDown)),
                     ),
                     SizedBox(width: 8,),
                     Text(

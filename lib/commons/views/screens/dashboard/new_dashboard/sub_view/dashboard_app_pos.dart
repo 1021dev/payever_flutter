@@ -5,8 +5,12 @@ import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/b
 
 class DashboardAppPosView extends StatefulWidget {
   final AppWidget appWidget;
+  final List<Terminal> terminals;
+  final bool isLoading;
   DashboardAppPosView({
     this.appWidget,
+    this.terminals = const [],
+    this.isLoading = true,
   });
   @override
   _DashboardAppPosViewState createState() => _DashboardAppPosViewState();
@@ -18,92 +22,154 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
 
   @override
   Widget build(BuildContext context) {
+    List<Terminal> terminals = widget.terminals;
+    Terminal defaultTerminal;
+    String avatarName = '';
+    if (terminals.length > 0) {
+      defaultTerminal = terminals.where((element) => element.active).toList().first;
+      String name = defaultTerminal.name;
+      String firstCharacter = name.substring(0, 0).toUpperCase();
+      String lastCharacter = name.substring(name.length - 1, name.length -1).toUpperCase();
+      avatarName = '$firstCharacter$lastCharacter';
+    }
     return BlurEffectView(
-      padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
+      padding: EdgeInsets.fromLTRB(14, 12, 14, 12),
       child: Column(
         children: [
-          Container(
-            padding: EdgeInsets.fromLTRB(12, 0, 12, 0),
-            child: Column(
-              children: [
-                Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: NetworkImage(icon),
-                      fit: BoxFit.fitWidth,
-                    ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 16,
+                    height: 16,
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: NetworkImage('${uiKit}point-of-sale.png'),
+                            fit: BoxFit.fitWidth)),
                   ),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  'POINT OF SALE',
-                  style: TextStyle(
+                  Padding(
+                    padding: EdgeInsets.only(right: 8),
+                  ),
+                  Text(
+                    'POINT OF SALE',
+                    style: TextStyle(
                       color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold
+                      fontSize: 12,
+                    ),
+                  )
+                ],
+              ),
+              InkWell(
+                onTap: () {
+
+                },
+                child: Container(
+                  height: 20,
+                  width: 40,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.black.withAlpha(100)
+                  ),
+                  child: Center(
+                    child: Text("Open",
+                      style: TextStyle(
+                          fontSize: 10,
+                          color: Colors.white
+                      ),
+                    ),
                   ),
                 ),
-                SizedBox(height: 4),
-                Text(
-                  widget.appWidget.id,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 10,
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-          SizedBox(height: 12),
-          Container(
-            height: 40,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(bottomLeft: Radius.circular(6), bottomRight: Radius.circular(6)),
-                color: Colors.black38
+          Padding(
+            padding: EdgeInsets.only(top: 8),
+          ),
+          widget.isLoading ? Container(
+            height: 50,
+            child: Center(
+              child: CircularProgressIndicator(),
             ),
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 1,
+          ):
+          Row(
+            children: <Widget>[
+              // Terminal View
+              Expanded(
+                child: Row(
+                  children: <Widget>[
+                    defaultTerminal.logo != null ?
+                    Container(
+                      width: 50,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                          image: NetworkImage(defaultTerminal.logo),
+                          fit: BoxFit.cover,
+                        )
+                      ),
+                    ):
+                    CircleAvatar(
+                      radius: 25,
+                      child: Text(
+                        avatarName,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 32,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 8),
+                    ),
+                    Text(
+                      defaultTerminal.name,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 24,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    )
+                  ],
+                ),
+
+              ),
+              // Edit Button
+              Expanded(
+                flex: 1,
+                child: Container(
                   child: InkWell(
                     onTap: () {
 
                     },
-                    child: Center(
-                      child: Text(
-                        !widget.appWidget.install ? "Get started" : "Continue setup process",
-                        softWrap: true,
-                        style: TextStyle(
-                            color: Colors.white, fontSize: 12),
+                    child: Container(
+                      height: 50,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(6),
+                          color: Colors.black26
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.mode_edit),
+                          SizedBox(width: 8),
+                          Text(
+                            "Edit",
+                            softWrap: true,
+                            style: TextStyle(
+                                color: Colors.white, fontSize: 16),
+                          )
+                        ],
                       ),
                     ),
                   ),
                 ),
-                if (!widget.appWidget.install) Container(
-                  width: 1,
-                  color: Colors.white12,
-                ),
-                if (!widget.appWidget.install) Expanded(
-                  flex: 1,
-                  child: InkWell(
-                    onTap: () {
-
-                    },
-                    child: Center(
-                      child: Text(
-                        "Learn more",
-                        softWrap: true,
-                        style: TextStyle(
-                            color: Colors.white, fontSize: 12),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          )
+              ),
+            ],
+          ),
         ],
       ),
     );
