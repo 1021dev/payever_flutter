@@ -543,7 +543,7 @@ class ApiService {
   Future<dynamic> patchTutorials(String token, String id, String video) async {
     try {
       print('$TAG - patchTutorials()');
-      dynamic response = await _client.getTypeless(
+      dynamic response = await _client.patch(
           '$widgetsUrl$id/widget-tutorial/$video/watched',
           headers: {
             HttpHeaders.authorizationHeader: 'Bearer $token',
@@ -560,8 +560,8 @@ class ApiService {
   Future<dynamic> getPosIntegrations(String token, String businessId) async {
     try {
       print('$TAG - getPosIntegrations()');
-      dynamic response = await _client.deleteTypeless(
-          '${Env.pos}$posBusiness$businessId$endIntegration',
+      dynamic response = await _client.getTypeless(
+          '${Env.connect}/api/business/$businessId$endIntegration',
           headers: {
             HttpHeaders.authorizationHeader: 'Bearer $token',
             HttpHeaders.contentTypeHeader: 'application/json',
@@ -577,8 +577,42 @@ class ApiService {
   Future<dynamic> getPosCommunications(String token, String businessId) async {
     try {
       print('$TAG - getPosCommunications()');
-      dynamic response = await _client.deleteTypeless(
-          '${Env.pos}$posBusiness$businessId$endIntegration/category/communications',
+      dynamic response = await _client.getTypeless(
+          '${Env.connect}/api/business/$businessId$endIntegration/category/communications',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> patchPosConnectDevicePaymentInstall(String token, String businessId) async {
+    try {
+      print('$TAG - patchPosInstall()');
+      dynamic response = await _client.patch(
+          '${Env.connect}/api/business/$businessId/integration/device-payments/install',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getPosDevicePaymentSettings(String businessId, String token) async {
+    try {
+      print('$TAG - getPosSettings()');
+      dynamic response = await _client.getTypeless(
+          'https://device-payments-backend.staging.devpayever.com/api/v1/$businessId/settings',
           headers: {
             HttpHeaders.authorizationHeader: 'Bearer $token',
             HttpHeaders.contentTypeHeader: 'application/json',

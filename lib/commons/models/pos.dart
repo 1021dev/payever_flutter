@@ -275,12 +275,12 @@ class CartItem {
 }
 
 class Communication {
-  DateTime _createdAt;
+  String _createdAt;
   bool _installed;
   Integration _integration;
-  DateTime _updatedAt;
+  String _updatedAt;
   int __v;
-  int _id;
+  String _id;
 
   Communication.toMap(dynamic obj) {
     _createdAt = obj['createdAt'];
@@ -291,9 +291,9 @@ class Communication {
     __v = obj['__v'];
   }
 
-  int get id => _id;
-  DateTime get createdAt => _createdAt;
-  DateTime get updatedAt => _updatedAt;
+  String get id => _id;
+  String get createdAt => _createdAt;
+  String get updatedAt => _updatedAt;
   int get v => __v;
   bool get installed => _installed;
   Integration get integration => _integration;
@@ -328,7 +328,9 @@ class Integration {
     __v = obj[GlobalUtils.DB_POS_TERMINAL_V];
     _id = obj[GlobalUtils.DB_POS_TERMINAL_ID];
     _timesInstalled = obj['timesInstalled'];
-    _connect = Connect.toMap(obj['connect']);
+    if (obj['connect'] != null) {
+      _connect = Connect.toMap(obj['connect']);
+    }
 
     dynamic _allowedBusinessesObj = obj['allowedBusinesses'];
     _allowedBusinessesObj.forEach((sub) {
@@ -445,7 +447,9 @@ class Connect {
   String url1;
 
   Connect.toMap(dynamic obj) {
-    fromAction = Action.toMap(obj['fromAction']);
+    if (obj['fromAction'] != null) {
+      fromAction = Action.toMap(obj['fromAction']);
+    }
     url = obj['url'];
     url1 = obj['url1'];
   }
@@ -458,5 +462,28 @@ class Action {
   Action.toMap(dynamic obj) {
     actionEndpoint = obj['actionEndpoint'];
     initEndpoint = obj['initEndpoint'];
+  }
+}
+
+class DevicePaymentSettings {
+  bool autoresponderEnabled;
+  bool enabled;
+  bool secondFactor;
+  int verificationType;
+
+  DevicePaymentSettings.toMap(dynamic obj) {
+    autoresponderEnabled = obj['autoresponderEnabled'];
+    enabled = obj['enabled'];
+    secondFactor = obj['secondFactor'];
+    verificationType = obj['verificationType'];
+  }
+}
+
+class DevicePaymentInstall {
+  bool installed;
+  String name;
+  DevicePaymentInstall.toMap(dynamic obj) {
+    installed = obj['installed'];
+    name = obj['name'];
   }
 }

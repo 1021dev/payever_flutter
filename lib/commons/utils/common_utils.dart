@@ -759,6 +759,7 @@ class GlobalUtils {
   static const String ENV_FRONTEND = 'frontend';
   static const String ENV_TRANSACTIONS = 'transactions';
   static const String ENV_POS = 'pos';
+  static const String ENV_CONNECT = 'connect';
   static const String ENV_CHECKOUT = 'checkout';
   static const String ENV_CHECKOUT_PHP = 'payments';
   static const String ENV_MEDIA = 'media';

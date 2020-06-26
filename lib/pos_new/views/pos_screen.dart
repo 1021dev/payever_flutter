@@ -9,6 +9,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
+import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/blur_effect_view.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/dashboard_menu_view.dart';
 import 'package:payever/pos_new/widgets/pos_top_button.dart';
 import 'package:provider/provider.dart';
@@ -306,7 +307,9 @@ class _PosScreenState extends State<PosScreen> {
           ): Column(
             children: <Widget>[
               _toolBar(state),
-              _getBody(state),
+              Expanded(
+                child: _getBody(state),
+              ),
             ],
           ),
         ),
@@ -406,7 +409,67 @@ class _PosScreenState extends State<PosScreen> {
   }
 
   Widget _connectWidget(PosScreenState state) {
-    return Container();
+    List<Communication> integrations = state.integrations;
+    return Center(
+      child: Container(
+        padding: EdgeInsets.only(left: 16, right: 16),
+        height: (integrations.length * 50).toDouble() + 50,
+        child: BlurEffectView(
+          color: Color.fromRGBO(20, 20, 20, 0.2),
+          blur: 15,
+          radius: 12,
+          padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                child: ListView.separated(
+                  itemBuilder: (context, index) {
+                    return Container(
+                      height: 44,
+                      child: Text('Text'),
+                    );
+                  },
+                  separatorBuilder: (context, index) {
+                    return Divider(
+                      height: 0,
+                      thickness: 0.5,
+                      color: Colors.white30,
+                    );
+                  },
+                  itemCount: integrations.length,
+                ),
+              ),
+              Container(
+                height: 50,
+                child: InkWell(
+                  onTap: () {
+
+                  },
+                  child: Container(
+                    child: Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.add,
+                          size: 12,
+                        ),
+                        Padding(padding: EdgeInsets.only(left: 4),),
+                        Text(
+                          'Add',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _settingsWidget(PosScreenState state) {
@@ -458,6 +521,25 @@ class _PosScreenState extends State<PosScreen> {
         ],
       ),
     );
+  }
+
+  void showDevicePaymentSettings(PosScreenState state) {
+    if (state.devicePaymentSettings == null) {
+      screenBloc.add(GetPosDevicePaymentSettings(businessId: widget.globalStateModel.currentBusiness.id));
+    }
+
+  }
+
+  void showIntegrations(PosScreenState state) {
+
+
+  }
+
+  void showCommunications(PosScreenState state) {
+    if (state.communications.length == 0) {
+      screenBloc.add(GetPosCommunications(businessId: widget.globalStateModel.currentBusiness.id));
+    }
+
   }
 
 }

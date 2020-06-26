@@ -11,6 +11,7 @@ class Env {
   static String commerceOsBack;
   static String transactions;
   static String pos;
+  static String connect;
   static String checkout;
   static String checkoutPhp;
   static String media;
@@ -35,6 +36,7 @@ class Env {
     Env.commerceOsBack =
         obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_COMMERCE_OS];
     Env.pos = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_POS];
+    Env.connect = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_CONNECT];
     Env.checkout = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_CHECKOUT];
     Env.checkoutPhp = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_CHECKOUT_PHP];
     Env.media = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_MEDIA];

@@ -6,12 +6,18 @@ class PosScreenState {
   final List<Terminal> terminals;
   final Terminal activeTerminal;
   final bool terminalCopied;
+  final List<Communication> integrations;
+  final List<Communication> communications;
+  final DevicePaymentSettings devicePaymentSettings;
 
   PosScreenState({
     this.isLoading = true,
     this.terminals = const [],
     this.activeTerminal,
     this.terminalCopied = false,
+    this.integrations = const [],
+    this.communications = const [],
+    this.devicePaymentSettings,
   });
 
   List<Object> get props => [
@@ -19,6 +25,9 @@ class PosScreenState {
     this.terminals,
     this.activeTerminal,
     this.terminalCopied,
+    this.integrations,
+    this.communications,
+    this.devicePaymentSettings,
   ];
 
   PosScreenState copyWith({
@@ -26,12 +35,18 @@ class PosScreenState {
     List<Terminal> terminals,
     Terminal activeTerminal,
     bool terminalCopied,
+    List<Communication> integrations,
+    List<Communication> communications,
+    DevicePaymentSettings devicePaymentSettings,
   }) {
     return PosScreenState(
       isLoading: isLoading ?? this.isLoading,
       terminals: terminals ?? this.terminals,
       activeTerminal: activeTerminal ?? this.activeTerminal,
       terminalCopied: terminalCopied ?? this.terminalCopied,
+      integrations: integrations ?? this.integrations,
+      communications: communications ?? this.communications,
+      devicePaymentSettings: devicePaymentSettings ?? this.devicePaymentSettings,
     );
   }
 }
@@ -46,5 +61,15 @@ class PosScreenFailure extends PosScreenState {
   @override
   String toString() {
     return 'PosScreenFailure { error $error }';
+  }
+}
+class DevicePaymentInstallSuccess extends PosScreenState {
+  final DevicePaymentInstall install;
+
+  DevicePaymentInstallSuccess({ this.install}) : super();
+
+  @override
+  String toString() {
+    return 'DevicePaymentInstallSuccess { error $install }';
   }
 }

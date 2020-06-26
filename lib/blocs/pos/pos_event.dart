@@ -37,3 +37,36 @@ class GetPosIntegrationsEvent extends PosScreenEvent {
     this.businessId,
   ];
 }
+
+class GetPosCommunications extends PosScreenEvent {
+  final String businessId;
+
+  GetPosCommunications({this.businessId});
+
+  @override
+  List<Object> get props => [
+    this.businessId,
+  ];
+}
+
+class GetPosDevicePaymentSettings extends PosScreenEvent {
+  final String businessId;
+
+  GetPosDevicePaymentSettings({this.businessId});
+
+  @override
+  List<Object> get props => [
+    this.businessId,
+  ];
+}
+
+class InstallDevicePaymentEvent extends PosScreenEvent {
+  final String businessId;
+
+  InstallDevicePaymentEvent({this.businessId});
+
+  @override
+  List<Object> get props => [
+    this.businessId,
+  ];
+}
