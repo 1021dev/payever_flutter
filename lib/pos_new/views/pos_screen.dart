@@ -9,6 +9,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/dashboard_menu_view.dart';
+import 'package:payever/pos_new/widgets/pos_top_button.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -61,6 +62,7 @@ class _PosScreenState extends State<PosScreen> {
 
   PosScreenBloc screenBloc = PosScreenBloc();
   String wallpaper;
+  int selectedIndex = 0;
 
   @override
   void initState() {
@@ -293,16 +295,54 @@ class _PosScreenState extends State<PosScreen> {
       color: Colors.black87,
       child: Row(
         children: <Widget>[
-          MaterialButton(
-            onPressed: () {
-
+          PosTopButton(
+            title: state.activeTerminal.name,
+            selectedIndex: selectedIndex,
+            index: 0,
+            onTap: () {
+              setState(() {
+                selectedIndex = 0;
+              });
             },
-            child: Text(''),
-          )
+          ),
+          PosTopButton(
+            title: 'Connect',
+            selectedIndex: selectedIndex,
+            index: 1,
+            onTap: () {
+              setState(() {
+                selectedIndex = 1;
+              });
+            },
+          ),
+          PosTopButton(
+            title: 'Settings',
+            selectedIndex: selectedIndex,
+            index: 2,
+            onTap: () {
+              setState(() {
+                selectedIndex = 2;
+              });
+            },
+          ),
+          PosTopButton(
+            title: 'Open',
+            selectedIndex: selectedIndex,
+            index: 3,
+            onTap: () {
+            },
+          ),
+          PosTopButton(
+            title: '...',
+            selectedIndex: selectedIndex,
+            index: 4,
+            onTap: () {
+            },
+          ),
+
         ],
       ),
     );
   }
-
 }
 
