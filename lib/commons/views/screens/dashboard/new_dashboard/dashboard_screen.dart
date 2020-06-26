@@ -22,6 +22,7 @@ import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/d
 import 'package:payever/commons/views/screens/login/login_page.dart';
 import 'package:payever/commons/views/screens/switcher/switcher_page.dart';
 import 'package:payever/pos/pos.dart';
+import 'package:payever/pos_new/views/pos_screen.dart';
 import 'package:payever/transactions/transactions.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -279,13 +280,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 Navigator.push(
                     context,
                     PageTransition(
-                        child: ChangeNotifierProvider<PosStateModel>(
-                          create: (BuildContext context) =>
-                              PosStateModel(globalStateModel, PosApi()),
-                          child: PosProductsListScreen(
-                              terminal: state.activeTerminal,
-                              business: state.activeBusiness),
-                        ),
+                        child: PosInitScreen(),
                         type: PageTransitionType.fade,
                         duration: Duration(milliseconds: 50)));              },
             )

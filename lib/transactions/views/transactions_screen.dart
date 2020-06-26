@@ -139,124 +139,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
           return Scaffold(
             backgroundColor: Colors.black,
             resizeToAvoidBottomPadding: false,
-            appBar: AppBar(
-              centerTitle: false,
-              elevation: 0,
-              automaticallyImplyLeading: false,
-              backgroundColor: Colors.black87,
-              title: Row(
-                children: <Widget>[
-                  Container(
-                    child: Center(
-                      child: Container(
-                          child: SvgPicture.asset(
-                            'assets/images/transactions.svg',
-                            color: Colors.white,
-                            height: 16,
-                            width: 24,
-                          )
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 8),
-                  ),
-                  Text(
-                    'Transactions',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-              actions: <Widget>[
-                IconButton(
-                  constraints: BoxConstraints(
-                      maxHeight: 32,
-                      maxWidth: 32,
-                      minHeight: 32,
-                      minWidth: 32
-                  ),
-                  icon: Icon(
-                    Icons.person_pin,
-                    color: Colors.white,
-                    size: 24,
-                  ),
-                  onPressed: () {
-
-                  },
-                ),
-                IconButton(
-                  constraints: BoxConstraints(
-                      maxHeight: 32,
-                      maxWidth: 32,
-                      minHeight: 32,
-                      minWidth: 32
-                  ),
-                  icon: Icon(
-                    Icons.search,
-                    color: Colors.white,
-                    size: 24,
-                  ),
-                  onPressed: () {
-
-                  },
-                ),
-                IconButton(
-                  constraints: BoxConstraints(
-                      maxHeight: 32,
-                      maxWidth: 32,
-                      minHeight: 32,
-                      minWidth: 32
-                  ),
-                  icon: Icon(
-                    Icons.notifications,
-                    color: Colors.white,
-                    size: 24,
-                  ),
-                  onPressed: () {
-
-                  },
-                ),
-                IconButton(
-                  constraints: BoxConstraints(
-                      maxHeight: 32,
-                      maxWidth: 32,
-                      minHeight: 32,
-                      minWidth: 32
-                  ),
-                  icon: Icon(
-                    Icons.menu,
-                    color: Colors.white,
-                    size: 24,
-                  ),
-                  onPressed: () {
-
-                  },
-                ),
-                IconButton(
-                  constraints: BoxConstraints(
-                      maxHeight: 32,
-                      maxWidth: 32,
-                      minHeight: 32,
-                      minWidth: 32
-                  ),
-                  icon: Icon(
-                    Icons.close,
-                    color: Colors.white,
-                    size: 24,
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-                Padding(
-                  padding: EdgeInsets.only(right: 16),
-                ),
-              ],
-            ),
+            appBar: _appBar(state),
             body: SafeArea(
               child: BackgroundBase(
                 true,
@@ -541,7 +424,127 @@ class _TransactionScreenState extends State<TransactionScreen> {
         },
       ),
     );
+  }
 
+  Widget _appBar(TransactionsScreenState state) {
+    return AppBar(
+      centerTitle: false,
+      elevation: 0,
+      automaticallyImplyLeading: false,
+      backgroundColor: Colors.black87,
+      title: Row(
+        children: <Widget>[
+          Container(
+            child: Center(
+              child: Container(
+                  child: SvgPicture.asset(
+                    'assets/images/transactions.svg',
+                    color: Colors.white,
+                    height: 16,
+                    width: 24,
+                  )
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 8),
+          ),
+          Text(
+            'Transactions',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+      actions: <Widget>[
+        IconButton(
+          constraints: BoxConstraints(
+              maxHeight: 32,
+              maxWidth: 32,
+              minHeight: 32,
+              minWidth: 32
+          ),
+          icon: Icon(
+            Icons.person_pin,
+            color: Colors.white,
+            size: 24,
+          ),
+          onPressed: () {
+
+          },
+        ),
+        IconButton(
+          constraints: BoxConstraints(
+              maxHeight: 32,
+              maxWidth: 32,
+              minHeight: 32,
+              minWidth: 32
+          ),
+          icon: Icon(
+            Icons.search,
+            color: Colors.white,
+            size: 24,
+          ),
+          onPressed: () {
+
+          },
+        ),
+        IconButton(
+          constraints: BoxConstraints(
+              maxHeight: 32,
+              maxWidth: 32,
+              minHeight: 32,
+              minWidth: 32
+          ),
+          icon: Icon(
+            Icons.notifications,
+            color: Colors.white,
+            size: 24,
+          ),
+          onPressed: () {
+
+          },
+        ),
+        IconButton(
+          constraints: BoxConstraints(
+              maxHeight: 32,
+              maxWidth: 32,
+              minHeight: 32,
+              minWidth: 32
+          ),
+          icon: Icon(
+            Icons.menu,
+            color: Colors.white,
+            size: 24,
+          ),
+          onPressed: () {
+
+          },
+        ),
+        IconButton(
+          constraints: BoxConstraints(
+              maxHeight: 32,
+              maxWidth: 32,
+              minHeight: 32,
+              minWidth: 32
+          ),
+          icon: Icon(
+            Icons.close,
+            color: Colors.white,
+            size: 24,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        Padding(
+          padding: EdgeInsets.only(right: 16),
+        ),
+      ],
+    );
   }
 
   void showSearchTextDialog(TransactionsScreenState state) {
