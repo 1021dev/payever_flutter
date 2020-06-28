@@ -142,7 +142,10 @@ class RestDataSource {
       HttpHeaders.contentTypeHeader: "application/json",
       HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
     };
+    print('Refresh Headers => $headers');
+
     return _netUtil.get(refreshUrl, headers: headers).then((dynamic res) {
+      print('Refresh Token => $res');
       return res;
     });
   }
@@ -176,8 +179,8 @@ class RestDataSource {
   }
 
   Future<dynamic> getTransactionList(
-      String id, String token, String query, BuildContext context) {
-    print("TAG - getTransactionList()");
+      String id, String token, String query) async {
+    print("TAG - getTransactionList() $token");
     var headers = {
       HttpHeaders.authorizationHeader: "Bearer $token",
       HttpHeaders.contentTypeHeader: "application/json",
@@ -218,7 +221,7 @@ class RestDataSource {
   }
 
   Future<dynamic> getWidgetsPersonal(String token, BuildContext context) {
-    print("TAG - getEnv()");
+    print("TAG - getWidgetsPersonal()");
     var headers = {
       HttpHeaders.authorizationHeader: "Bearer $token",
       HttpHeaders.contentTypeHeader: "application/json",
@@ -257,7 +260,7 @@ class RestDataSource {
   }
 
   Future<dynamic> getMonthsPersonal(String token, BuildContext context) {
-    print("TAG - getEnv()");
+    print("TAG - getMonthsPersonal()");
     var headers = {
       HttpHeaders.authorizationHeader: "Bearer $token",
       HttpHeaders.contentTypeHeader: "application/json",
@@ -271,7 +274,7 @@ class RestDataSource {
   }
 
   Future<dynamic> getDaysPersonal(String token, BuildContext context) {
-    print("TAG - getEnv()");
+    print("TAG - getDaysPersonal()");
     var headers = {
       HttpHeaders.authorizationHeader: "Bearer $token",
       HttpHeaders.contentTypeHeader: "application/json",

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:payever/blocs/payever_bloc_delegate.dart';
+import 'package:payever/commons/views/screens/dashboard/new_dashboard/dashboard_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 
@@ -9,6 +12,7 @@ import 'commons/utils/utils.dart';
 import 'commons/network/network.dart';
 
 void main() {
+  BlocSupervisor.delegate = PayeverBlocDelegate();
   Provider.debugCheckInvalidValueType = null;
   runApp(PayeverApp());
 }
@@ -79,7 +83,7 @@ class _MyAppState extends State<MyApp> {
         },
         home: _loadCredentials.value
             ? Center(child: CircularProgressIndicator())
-            : _haveCredentials ? DashboardMidScreen(wallpaper) : LoginScreen(),
+            : _haveCredentials ? DashboardScreen(wallpaper: wallpaper,) : LoginScreen(),//DashboardMidScreen(wallpaper) : LoginScreen(),
       ),
     );
   }

@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/models/fetchwallpaper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
@@ -15,7 +16,8 @@ import '../../../view_models/view_models.dart';
 import '../../custom_elements/custom_elements.dart';
 import '../login/login.dart';
 import '../switcher/switcher.dart';
-import 'dashboard_screen_ref.dart';
+//import 'dashboard_screen_ref.dart';
+import 'new_dashboard/dashboard_screen.dart';
 
 class DashboardMidScreen extends StatefulWidget {
   final String wallpaper;
@@ -34,6 +36,19 @@ class _DashboardMidScreenState extends State<DashboardMidScreen> {
   List<Business> businesses = List();
 
   final _formKey = GlobalKey();
+  DashboardScreenBloc screenBloc = DashboardScreenBloc();
+
+  @override
+  void initState() {
+    screenBloc.add(DashboardScreenInitEvent());
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    screenBloc.close();
+    super.dispose();
+  }
 
   void _loadUserData() async {
     var dataLoaded = await loadData();
@@ -41,17 +56,17 @@ class _DashboardMidScreenState extends State<DashboardMidScreen> {
       var data = json.decode(dataLoaded);
       var responseMsg = data['responseMsg'];
       switch (responseMsg) {
-        case "refreshToken":
+        case 'refreshToken':
           return _fetchUserData(data['token'], false);
           break;
-        case "refreshTokenLogin":
+        case 'refreshTokenLogin':
           return _fetchUserData(data['token'], true);
           break;
-        case "error":
+        case 'error':
           return Future.delayed(Duration(milliseconds: 1500))
               .then((_) => _loadUserData());
           break;
-        case "goToLogin":
+        case 'goToLogin':
           return _redirectUser();
           break;
         default:
@@ -91,7 +106,7 @@ class _DashboardMidScreenState extends State<DashboardMidScreen> {
       });
 
       // RestDataSource().getVersion(GlobalUtils.ActiveToken.accessToken).then((list){
-      //   print("Version");
+      //   print('Version');
       //   list.forEach((a){
       //     print(a);
       //   });
@@ -128,17 +143,16 @@ class _DashboardMidScreenState extends State<DashboardMidScreen> {
               .then((dynamic wall) {
             FetchWallpaper fetchWallpaper = FetchWallpaper.map(wall);
             preferences.setString(
-                GlobalUtils.WALLPAPER, wallpaperBase + fetchWallpaper.currentWallpaper.id);
-            globalStateModel.setCurrentWallpaper(wallpaperBase + fetchWallpaper.currentWallpaper.id,
+                GlobalUtils.WALLPAPER, wallpaperBase + fetchWallpaper.currentWallpaper.wallpaper);
+            globalStateModel.setCurrentWallpaper(wallpaperBase + fetchWallpaper.currentWallpaper.wallpaper,
                 notify: false);
-            Navigator.pushReplacement(
-                _formKey.currentContext,
-                PageTransition(
-                    child: DashboardScreen(
-                      appWidgets: widgets,
-                    ),
-                    type: PageTransitionType.fade,
-                    duration: Duration(milliseconds: 200)));
+              Navigator.pushReplacement(
+                  _formKey.currentContext,
+                  PageTransition(
+                      child: DashboardScreen(
+                      ),
+                      type: PageTransitionType.fade,
+                      duration: Duration(milliseconds: 200)));
           });
         });
       }).catchError((onError) {
@@ -161,7 +175,7 @@ class _DashboardMidScreenState extends State<DashboardMidScreen> {
       });
     });
     Locale myLocale = Localizations.localeOf(context);
-    print("Language - ${myLocale.languageCode}");
+    print('Language - ${myLocale.languageCode}');
     bool _isPortrait =
         Orientation.portrait == MediaQuery.of(context).orientation;
     Measurements.height = (_isPortrait
@@ -220,7 +234,7 @@ class _DashboardMidScreenState extends State<DashboardMidScreen> {
     if (DateTime.now()
             .difference(DateTime.fromMillisecondsSinceEpoch(
                 Measurements.parseJwt(preferences
-                        .getString(GlobalUtils.REFRESH_TOKEN))["exp"] *
+                        .getString(GlobalUtils.REFRESH_TOKEN))['exp'] *
                     1000))
             .inHours <
         0) {
@@ -231,25 +245,25 @@ class _DashboardMidScreenState extends State<DashboardMidScreen> {
             _formKey.currentContext);
         if (refreshToken != null) {
           return json.encode({
-            "responseMsg": "refreshToken",
-            "token": refreshToken,
-            "renew": false,
+            'responseMsg': 'refreshToken',
+            'token': refreshToken,
+            'renew': false,
           });
         } else {
           return json.encode({
-            "responseMsg": "error",
-            "token": "",
-            "renew": false,
+            'responseMsg': 'error',
+            'token': '',
+            'renew': false,
           });
         }
       } catch (e) {
-        if (e.toString().contains("SocketException")) {
+        if (e.toString().contains('SocketException')) {
           return _loadUserData();
         } else {
           return json.encode({
-            "responseMsg": "goToLogin",
-            "token": "",
-            "renew": false,
+            'responseMsg': 'goToLogin',
+            'token': '',
+            'renew': false,
           });
         }
       }
@@ -266,25 +280,25 @@ class _DashboardMidScreenState extends State<DashboardMidScreen> {
               preferences.getString(GlobalUtils.fingerprint));
           if (refreshTokenLogin != null) {
             return json.encode({
-              "responseMsg": "refreshTokenLogin",
-              "token": refreshTokenLogin,
-              "renew": false,
+              'responseMsg': 'refreshTokenLogin',
+              'token': refreshTokenLogin,
+              'renew': false,
             });
           } else {
             return json.encode({
-              "responseMsg": "error",
-              "token": "",
-              "renew": false,
+              'responseMsg': 'error',
+              'token': '',
+              'renew': false,
             });
           }
         } catch (e) {
-          if (e.toString().contains("SocketException")) {
+          if (e.toString().contains('SocketException')) {
             return _loadUserData();
           } else {
             return json.encode({
-              "responseMsg": "goToLogin",
-              "token": "",
-              "renew": false,
+              'responseMsg': 'goToLogin',
+              'token': '',
+              'renew': false,
             });
           }
         }

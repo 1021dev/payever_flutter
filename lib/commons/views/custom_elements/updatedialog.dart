@@ -11,7 +11,7 @@ import '../../utils/utils.dart';
 
 class VersionController{
 
-  Future<void> checkVersion(BuildContext context,VoidCallback _action){
+  Future<void> checkVersion(BuildContext context,VoidCallback _action) async {
     PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
       String version = packageInfo.version;
       

@@ -468,6 +468,7 @@ class Items {
   String updatedAt;
   num vatRate;
   String _id;
+  List<Option> options = [];
 
   Items.toMap(dynamic obj) {
     createdAt = obj[GlobalUtils.DB_TRANS_DETAIL_IT_CREATED_AT];
@@ -481,6 +482,24 @@ class Items {
     updatedAt = obj[GlobalUtils.DB_TRANS_DETAIL_IT_UPDATED_AT];
     vatRate = obj[GlobalUtils.DB_TRANS_DETAIL_IT_VAT_RATE];
     _id = obj[GlobalUtils.DB_TRANS_DETAIL_IT__ID];
+    if (obj[GlobalUtils.DB_TRANS_DETAIL_ITEM_OPTIONS].isNotEmpty) {
+      obj[GlobalUtils.DB_TRANS_DETAIL_ITEM_OPTIONS].forEach((op) {
+        options.add(Option.toMap(op));
+      });
+    }
+  }
+}
+
+class Option {
+  String id;
+  String name;
+  String value;
+  String _id;
+
+  Option.toMap(dynamic obj) {
+    id = obj[GlobalUtils.DB_TRANS_DETAIL_ITEM_OPTION_ID];
+    name = obj[GlobalUtils.DB_TRANS_DETAIL_ITEM_OPTION_NAME];
+    value = obj[GlobalUtils.DB_TRANS_DETAIL_ITEM_OPTION_VALUE];
   }
 }
 

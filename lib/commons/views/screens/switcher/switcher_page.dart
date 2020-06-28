@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/commons/models/fetchwallpaper.dart';
+import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/blur_effect_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 
@@ -9,8 +10,11 @@ import '../../../view_models/view_models.dart';
 import '../../../models/models.dart';
 import '../../../network/network.dart';
 import '../../../utils/utils.dart';
-import '../dashboard/dashboard_screen_ref.dart';
 import 'loader.dart';
+
+
+import 'package:payever/commons/views/screens/dashboard/new_dashboard/dashboard_screen.dart';
+//import '../dashboard/dashboard_screen_ref.dart';
 
 const double _heightFactorTablet = 0.05;
 const double _heightFactorPhone = 0.07;
@@ -22,9 +26,6 @@ bool _isTablet = false;
 bool _isPortrait = true;
 
 SwitchParts parts = SwitchParts();
-
-String imageBase = Env.storage + '/images/';
-String wallpaperBase = Env.storage + '/wallpapers/';
 
 class SwitcherScreen extends StatefulWidget {
   SwitcherScreen();
@@ -72,13 +73,27 @@ class _SwitcherScreenState extends State<SwitcherScreen>
       children: <Widget>[
         Positioned(
           height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
+          width: MediaQuery.of(context).size.width + 200,
+          left: -50,
           top: 0.0,
-          child: Image.asset(
-            "assets/images/loginverticaltablet.png",
-            fit: BoxFit.cover,
+          child: Container(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width + 200,
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: NetworkImage(
+                        "https://payever.azureedge.net/images/commerceos-background.jpg"),
+                    fit: BoxFit.cover)),
+            child: BlurEffectView(
+              blur: 5,
+              radius: 0,
+              child: Container(
+                color: Colors.black.withAlpha(50),
+              ),
+            ),
           ),
         ),
+
         Scaffold(
           backgroundColor: Colors.transparent,
           body: AnimatedOpacity(
@@ -192,17 +207,17 @@ class _GridItemsState extends State<GridItems> {
           });
           parts.fetchWallpaper(widget.business.id, context).then((img) {
             parts.getWidgets(widget.business.id, context).then((onValue) {
-              Provider.of<GlobalStateModel>(context)
+              Provider.of<GlobalStateModel>(context,listen: false)
                   .setCurrentBusiness(widget.business);
               SharedPreferences.getInstance().then((p) {
-                Provider.of<GlobalStateModel>(context)
+                Provider.of<GlobalStateModel>(context,listen: false)
                     .setCurrentWallpaper(p.getString(GlobalUtils.WALLPAPER));
 
                 Navigator.pushReplacement(
                     context,
                     PageTransition(
                         //child:DashboardScreen(GlobalUtils.ActiveToken,img,widget.business,parts._widgets,null),
-                        child: DashboardScreen(appWidgets: parts._widgets),
+                        child: DashboardScreen(wallpaper: p.getString(GlobalUtils.WALLPAPER),),
                         type: PageTransitionType.fade));
               });
             });
@@ -313,7 +328,7 @@ class _SwitcherState extends State<Switcher> {
         Navigator.pushReplacement(
             context,
             PageTransition(
-                child: DashboardScreen(appWidgets: parts._widgets),
+                child: DashboardScreen(wallpaper: wallpaperId,),
                 // child:DashboardScreen(
                 //   GlobalUtils.ActiveToken,
                 //   wallpaperId.isEmpty? NetworkImage(WALLPAPER_BASE + wallpaperId):AssetImage("images/loginHorizontalTablet.png"),
@@ -344,86 +359,88 @@ class _SwitcherState extends State<Switcher> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Container(
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Text("Personal"),
-                    Padding(
-                      padding: EdgeInsets.only(
-                          top: (Measurements.height *
-                                  (_isTablet
-                                      ? _heightFactorTablet
-                                      : _heightFactorPhone)) /
-                              3),
-                    ),
-                    InkWell(
-                      highlightColor: Colors.transparent,
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: <Widget>[
-                          CustomCircleAvatar(
-                              parts._logUser.logo != null
-                                  ? parts._logUser.logo
-                                  : "user",
-                              parts._logUser.firstName),
-                          _loadPersonal
-                              ? Stack(
-                                  alignment: Alignment.center,
-                                  children: <Widget>[
-                                    Container(
-                                      height: Measurements.height * 0.08,
-                                      width: Measurements.height * 0.08,
-                                      decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: Colors.black.withOpacity(0.2)),
-                                    ),
-                                    Container(
-                                      child: CircularProgressIndicator(),
-                                    )
-                                  ],
-                                )
-                              : Container(),
-                        ],
-                      ),
-                      onTap: () {
-                        print("onIconSelect - personal");
-                        setState(() => _loadPersonal = true);
-                        goPersonalDashDummy();
-                      },
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                          top: (Measurements.height *
-                                  (_isTablet
-                                      ? _heightFactorTablet
-                                      : _heightFactorPhone)) /
-                              3),
-                    ),
-                    InkWell(
-                      highlightColor: Colors.transparent,
-                      child: Container(
-                        height: 48,
-                        alignment: Alignment.center,
-                        child: Text(parts._logUser.firstName),
-                      ),
-                      onTap: () {
-                        print("onTextSelect - personal");
-                        setState(() => _loadPersonal = true);
-                        goPersonalDashDummy();
-                      },
-                    ),
-                  ],
-                ),
-              ),
+//              Container(
+//                child: Column(
+//                  mainAxisSize: MainAxisSize.max,
+//                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                  children: <Widget>[
+//                    Text("Personal"),
+//                    Padding(
+//                      padding: EdgeInsets.only(
+//                          top: (Measurements.height *
+//                                  (_isTablet
+//                                      ? _heightFactorTablet
+//                                      : _heightFactorPhone)) /
+//                              3),
+//                    ),
+//                    InkWell(
+//                      highlightColor: Colors.transparent,
+//                      child: Stack(
+//                        alignment: Alignment.center,
+//                        children: <Widget>[
+//                          CustomCircleAvatar(
+//                              parts._logUser.logo != null
+//                                  ? parts._logUser.logo
+//                                  : "user",
+//                              parts._logUser.firstName),
+//                          _loadPersonal
+//                              ? Stack(
+//                                  alignment: Alignment.center,
+//                                  children: <Widget>[
+//                                    Container(
+//                                      height: Measurements.height * 0.08,
+//                                      width: Measurements.height * 0.08,
+//                                      decoration: BoxDecoration(
+//                                          shape: BoxShape.circle,
+//                                          color: Colors.black.withOpacity(0.2)),
+//                                    ),
+//                                    Container(
+//                                      child: CircularProgressIndicator(),
+//                                    )
+//                                  ],
+//                                )
+//                              : Container(),
+//                        ],
+//                      ),
+//                      onTap: () {
+//                        print("onIconSelect - personal");
+//                        setState(() => _loadPersonal = true);
+//                        goPersonalDashDummy();
+//                      },
+//                    ),
+//                    Padding(
+//                      padding: EdgeInsets.only(
+//                          top: (Measurements.height *
+//                                  (_isTablet
+//                                      ? _heightFactorTablet
+//                                      : _heightFactorPhone)) /
+//                              3),
+//                    ),
+//                    InkWell(
+//                      highlightColor: Colors.transparent,
+//                      child: Container(
+//                        height: 48,
+//                        alignment: Alignment.center,
+//                        child: Text(parts._logUser.firstName),
+//                      ),
+//                      onTap: () {
+//                        print("onTextSelect - personal");
+//                        setState(() => _loadPersonal = true);
+//                        goPersonalDashDummy();
+//                      },
+//                    ),
+//                  ],
+//                ),
+//              ),
               parts.businesses != null
                   ? Container(
-                      padding: EdgeInsets.only(
-                          left: (Measurements.width * (_isTablet ? 0.2 : 0.2))),
+//                      padding: EdgeInsets.only(
+//                          left: (Measurements.width * (_isTablet ? 0.2 : 0.2))),
                       child: Column(
                         children: <Widget>[
-                          Text("Business"),
+                          Text("BUSINESS", style: TextStyle(
+                            color: Colors.white.withAlpha(200)
+                          ),),
                           Padding(
                             padding: EdgeInsets.only(
                                 top: (Measurements.height *
@@ -474,14 +491,13 @@ class _SwitcherState extends State<Switcher> {
                                   Provider.of<GlobalStateModel>(context, listen: false)
                                       .setCurrentBusiness(parts._active);
                                   SharedPreferences.getInstance().then((p) {
-                                    Provider.of<GlobalStateModel>(context)
+                                    Provider.of<GlobalStateModel>(context, listen: false)
                                         .setCurrentWallpaper(
                                             p.getString(GlobalUtils.WALLPAPER));
                                     Navigator.pushReplacement(
                                         context,
                                         PageTransition(
-                                            child: DashboardScreen(
-                                                appWidgets: parts._widgets),
+                                            child: DashboardScreen(wallpaper: p.getString(GlobalUtils.WALLPAPER),),
                                             type: PageTransitionType.fade));
                                   });
                                 });
@@ -568,12 +584,11 @@ class SwitchParts {
     await api
         .getWallpaper(id, GlobalUtils.activeToken.accessToken, context)
         .then((dynamic obj) {
-      print("fetchWallpaper obj - $obj");
       fetchWallpaper = FetchWallpaper.map(obj);
       SharedPreferences.getInstance().then((p) {
         preferences = p;
         preferences.setString(
-            GlobalUtils.WALLPAPER, wallpaperBase + fetchWallpaper.currentWallpaper.id);
+            GlobalUtils.WALLPAPER, wallpaperBase + fetchWallpaper.currentWallpaper.wallpaper);
         preferences.setString(GlobalUtils.BUSINESS, id);
         print(id);
       });

@@ -101,7 +101,7 @@ class DashboardStateModel extends ChangeNotifier with Validators {
 
   Future<dynamic> fetchTotal(Business currentBusiness) {
     return RestDataSource().getTransactionList(
-        currentBusiness.id, GlobalUtils.activeToken.accessToken, "", null);
+        currentBusiness.id, GlobalUtils.activeToken.accessToken, "");
   }
 
   Future<dynamic> getDaily(Business currentBusiness) async {
