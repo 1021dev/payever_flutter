@@ -65,7 +65,7 @@ android {
         release {
             signingConfig signingConfigs.release
             minifyEnabled true
-            useProguard true
+//            useProguard true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -77,7 +77,9 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'com.google.android.material:material:1.0.0'
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
 }

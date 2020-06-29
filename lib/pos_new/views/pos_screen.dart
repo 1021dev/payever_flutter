@@ -117,10 +117,10 @@ class _PosScreenState extends State<PosScreen> {
   Future<void> _getBatteryLevel() async {
     String batteryLevel;
     try {
-      final int result = await platform.invokeMethod('getBatteryLevel');
-      batteryLevel = 'Battery level at $result % .';
+      final int result = await platform.invokeMethod('openTapOnPhone');
+      batteryLevel = 'openTapOnPhone => $result.';
     } on PlatformException catch (e) {
-      batteryLevel = "Failed to get battery level: '${e.message}'.";
+      batteryLevel = "openTapOnPhone =>: '${e.message}'.";
     }
 
     setState(() {
