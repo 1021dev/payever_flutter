@@ -17,7 +17,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 bool _isPortrait;
 bool _isTablet;
 
+Map<String, Icon> icons = {
+  'device-payments': Icon(Icons.phone_iphone, size: 24,),
+  'qr': Icon(Icons.phone_iphone, size: 24,),
+  'twilio': Icon(Icons.phone_iphone, size: 24,),
 
+};
 class PosConnectScreen extends StatefulWidget {
 
   PosScreenBloc screenBloc;
@@ -180,70 +185,6 @@ class _PosConnectScreenState extends State<PosConnectScreen> {
               minWidth: 32
           ),
           icon: Icon(
-            Icons.person_pin,
-            color: Colors.white,
-            size: 24,
-          ),
-          onPressed: () {
-
-          },
-        ),
-        IconButton(
-          constraints: BoxConstraints(
-              maxHeight: 32,
-              maxWidth: 32,
-              minHeight: 32,
-              minWidth: 32
-          ),
-          icon: Icon(
-            Icons.search,
-            color: Colors.white,
-            size: 24,
-          ),
-          onPressed: () {
-
-          },
-        ),
-        IconButton(
-          constraints: BoxConstraints(
-              maxHeight: 32,
-              maxWidth: 32,
-              minHeight: 32,
-              minWidth: 32
-          ),
-          icon: Icon(
-            Icons.notifications,
-            color: Colors.white,
-            size: 24,
-          ),
-          onPressed: () {
-
-          },
-        ),
-        IconButton(
-          constraints: BoxConstraints(
-              maxHeight: 32,
-              maxWidth: 32,
-              minHeight: 32,
-              minWidth: 32
-          ),
-          icon: Icon(
-            Icons.menu,
-            color: Colors.white,
-            size: 24,
-          ),
-          onPressed: () {
-            _innerDrawerKey.currentState.toggle();
-          },
-        ),
-        IconButton(
-          constraints: BoxConstraints(
-              maxHeight: 32,
-              maxWidth: 32,
-              minHeight: 32,
-              minWidth: 32
-          ),
-          icon: Icon(
             Icons.close,
             color: Colors.white,
             size: 24,
@@ -346,8 +287,12 @@ class _PosConnectScreenState extends State<PosConnectScreen> {
                                   children: <Widget>[
                                     Row(
                                       children: <Widget>[
-                                        Image.network(
-                                          communications[index].integration.displayOptions.icon,
+                                        Icon(
+                                          Icons.phone_iphone,
+                                          size: 16,
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 8),
                                         ),
                                         Text(
                                           communications[index].integration.displayOptions.title,//displayOptions.title,
