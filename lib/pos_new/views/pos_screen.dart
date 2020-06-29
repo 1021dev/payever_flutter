@@ -3,6 +3,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -59,6 +60,7 @@ class PosScreen extends StatefulWidget {
 }
 
 class _PosScreenState extends State<PosScreen> {
+  static const platform = const MethodChannel('payever.flutter.dev/tapthephone');
 
   final GlobalKey<InnerDrawerState> _innerDrawerKey = GlobalKey<InnerDrawerState>();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -107,6 +109,23 @@ class _PosScreenState extends State<PosScreen> {
   void dispose() {
     screenBloc.close();
     super.dispose();
+  }
+
+  // Get battery level.
+  String _batteryLevel = 'Unknown battery level.';
+
+  Future<void> _getBatteryLevel() async {
+    String batteryLevel;
+    try {
+      final int result = await platform.invokeMethod('getBatteryLevel');
+      batteryLevel = 'Battery level at $result % .';
+    } on PlatformException catch (e) {
+      batteryLevel = "Failed to get battery level: '${e.message}'.";
+    }
+
+    setState(() {
+      _batteryLevel = batteryLevel;
+    });
   }
 
   @override
@@ -221,7 +240,7 @@ class _PosScreenState extends State<PosScreen> {
             size: 24,
           ),
           onPressed: () {
-
+            _getBatteryLevel();
           },
         ),
         IconButton(
@@ -308,6 +327,7 @@ class _PosScreenState extends State<PosScreen> {
             child: CircularProgressIndicator(),
           ): Column(
             children: <Widget>[
+              Text(_batteryLevel),
               _toolBar(state),
               Expanded(
                 child: _getBody(state),
