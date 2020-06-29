@@ -9,7 +9,7 @@ class PosScreenState {
   final List<Communication> integrations;
   final List<Communication> communications;
   final DevicePaymentSettings devicePaymentSettings;
-
+  final bool showCommunications;
   PosScreenState({
     this.isLoading = true,
     this.terminals = const [],
@@ -18,6 +18,7 @@ class PosScreenState {
     this.integrations = const [],
     this.communications = const [],
     this.devicePaymentSettings,
+    this.showCommunications = false,
   });
 
   List<Object> get props => [
@@ -28,6 +29,7 @@ class PosScreenState {
     this.integrations,
     this.communications,
     this.devicePaymentSettings,
+    this.showCommunications,
   ];
 
   PosScreenState copyWith({
@@ -38,6 +40,7 @@ class PosScreenState {
     List<Communication> integrations,
     List<Communication> communications,
     DevicePaymentSettings devicePaymentSettings,
+    bool showCommunications,
   }) {
     return PosScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -47,6 +50,7 @@ class PosScreenState {
       integrations: integrations ?? this.integrations,
       communications: communications ?? this.communications,
       devicePaymentSettings: devicePaymentSettings ?? this.devicePaymentSettings,
+      showCommunications: showCommunications ?? this.showCommunications,
     );
   }
 }

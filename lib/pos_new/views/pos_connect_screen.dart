@@ -11,62 +11,34 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/blur_effect_view.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/dashboard_menu_view.dart';
-import 'package:payever/pos_new/views/pos_connect_screen.dart';
 import 'package:payever/pos_new/widgets/pos_top_button.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 bool _isPortrait;
 bool _isTablet;
 
 
-class PosInitScreen extends StatelessWidget {
+class PosConnectScreen extends StatefulWidget {
 
-  List<Terminal> terminals;
-  Terminal activeTerminal;
-
-  PosInitScreen({
-    this.terminals,
-    this.activeTerminal,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context);
-
-    return PosScreen(
-      globalStateModel: globalStateModel,
-      terminals: terminals,
-      activeTerminal: activeTerminal,
-    );
-  }
-}
-
-class PosScreen extends StatefulWidget {
-
+  PosScreenBloc screenBloc;
   GlobalStateModel globalStateModel;
-  List<Terminal> terminals;
-  Terminal activeTerminal;
 
-  PosScreen({
+  PosConnectScreen({
+    this.screenBloc,
     this.globalStateModel,
-    this.terminals,
-    this.activeTerminal,
   });
 
   @override
-  createState() => _PosScreenState();
+  createState() => _PosConnectScreenState();
 }
 
-class _PosScreenState extends State<PosScreen> {
+class _PosConnectScreenState extends State<PosConnectScreen> {
 
   final GlobalKey<InnerDrawerState> _innerDrawerKey = GlobalKey<InnerDrawerState>();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  PosScreenBloc screenBloc = PosScreenBloc();
   String wallpaper;
-  int selectedIndex = 0;
-  bool isShowCommunications = false;
+  String selectedState = '';
 
   List<OverflowMenuItem> appBarPopUpActions(BuildContext context, PosScreenState state) {
     return [
@@ -94,18 +66,10 @@ class _PosScreenState extends State<PosScreen> {
   @override
   void initState() {
     super.initState();
-    screenBloc.add(
-        PosScreenInitEvent(
-          currentBusiness: widget.globalStateModel.currentBusiness,
-          terminals: widget.terminals,
-          activeTerminal: widget.activeTerminal,
-        )
-    );
   }
 
   @override
   void dispose() {
-    screenBloc.close();
     super.dispose();
   }
 
@@ -121,7 +85,7 @@ class _PosScreenState extends State<PosScreen> {
     _isTablet = Measurements.width < 600 ? false : true;
 
     return BlocListener(
-      bloc: screenBloc,
+      bloc: widget.screenBloc,
       listener: (BuildContext context, PosScreenState state) async {
         if (state is PosScreenFailure) {
           Navigator.pushReplacement(
@@ -134,7 +98,7 @@ class _PosScreenState extends State<PosScreen> {
         }
       },
       child: BlocBuilder<PosScreenBloc, PosScreenState>(
-        bloc: screenBloc,
+        bloc: widget.screenBloc,
         builder: (BuildContext context, PosScreenState state) {
           return DashboardMenuView(
             innerDrawerKey: _innerDrawerKey,
@@ -323,295 +287,144 @@ class _PosScreenState extends State<PosScreen> {
     return Container(
       height: 44,
       color: Colors.black87,
-      child: Row(
-        children: <Widget>[
-          PosTopButton(
-            title: state.activeTerminal.name,
-            selectedIndex: selectedIndex,
-            index: 0,
-            onTap: () {
-              setState(() {
-                selectedIndex = 0;
-              });
-            },
-          ),
-          PosTopButton(
-            title: 'Connect',
-            selectedIndex: selectedIndex,
-            index: 1,
-            onTap: () {
-              setState(() {
-                selectedIndex = 1;
-              });
-            },
-          ),
-          PosTopButton(
-            title: 'Settings',
-            selectedIndex: selectedIndex,
-            index: 2,
-            onTap: () {
-              setState(() {
-                selectedIndex = 2;
-              });
-            },
-          ),
-          PosTopButton(
-            title: 'Open',
-            selectedIndex: selectedIndex,
-            index: 3,
-            onTap: () {
-            },
-          ),
-          PopupMenuButton<OverflowMenuItem>(
-            icon: Icon(Icons.more_horiz),
-            offset: Offset(0, 100),
-            onSelected: (OverflowMenuItem item) => item.onTap,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-            color: Colors.black87,
-            itemBuilder: (BuildContext context) {
-              return appBarPopUpActions(context, state)
-                  .map((OverflowMenuItem item) {
-                    return PopupMenuItem<OverflowMenuItem>(
-                      value: item,
-                      child: Text(
-                        item.title,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w300,
-                        ),
-                      ),
-                    );
-              }).toList();
-            },
-          ),
-
-        ],
-      ),
+      child: Container(),
     );
   }
 
   Widget _getBody(PosScreenState state) {
-    switch(selectedIndex) {
-      case 0:
-        return _defaultTerminalWidget(state);
-      case 1:
+    switch(selectedState) {
+      case '':
         return _connectWidget(state);
-      case 2:
-        return _settingsWidget(state);
+      case 'device_payment':
+        return _connectWidget(state);
+      case 'settings':
+        return showCommunications(state);
       default:
         return Container();
     }
   }
 
-  Widget _defaultTerminalWidget(PosScreenState state) {
+  Widget _defaultConnectionWidget(PosScreenState state) {
     return Container();
   }
 
   Widget _connectWidget(PosScreenState state) {
-    List<Communication> integrations = state.integrations;
-    return isShowCommunications
-        ? showDevicePaymentSettings(state):
-      Center(
-        child: Container(
-          padding: EdgeInsets.only(left: 16, right: 16),
-          height: (state.integrations.length * 50).toDouble() + 50,
-          child: BlurEffectView(
-            color: Color.fromRGBO(20, 20, 20, 0.2),
-            blur: 15,
-            radius: 12,
-            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-            child: Column(
-              children: <Widget>[
-                Expanded(
-                  child: ListView.separated(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      return Container(
-                        height: 50,
-                        child: Container(
-                          padding: EdgeInsets.only(left: 16, right: 16),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Text(
-                                integrations[index].integration.name,//displayOptions.title,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              Row(
-                                children: <Widget>[
-                                  Switch(
-                                    value: true,
-                                    onChanged: (value) {
-                                    },
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 8),
-                                  ),
-                                  InkWell(
-                                    onTap: () {},
-                                    child: Container(
-                                      height: 20,
-                                      width: 40,
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(10),
-                                          color: Colors.black.withOpacity(0.4)
-                                      ),
-                                      child: Center(
-                                        child: Text("Open",
+    if (state.communications.length == 0) {
+      widget.screenBloc.add(GetPosCommunications(businessId: widget.globalStateModel.currentBusiness.id));
+    }
+    List<Communication> communications = state.communications;
+    return Container(
+      margin: EdgeInsets.all(12),
+      child: BlurEffectView(
+        color: Color.fromRGBO(20, 20, 20, 0.2),
+        blur: 15,
+        radius: 12,
+        padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
+        child: Column(
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.only(left: 16, right: 16),
+              height: (communications.length * 50).toDouble(),
+              child: BlurEffectView(
+                color: Color.fromRGBO(20, 20, 20, 0.2),
+                blur: 15,
+                radius: 12,
+                padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                child: Column(
+                  children: <Widget>[
+                    Expanded(
+                      child: ListView.separated(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          return Container(
+                              height: 50,
+                              child: Container(
+                                padding: EdgeInsets.only(left: 16, right: 16),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Row(
+                                      children: <Widget>[
+                                        Image.network(
+                                          communications[index].integration.displayOptions.icon,
+                                        ),
+                                        Text(
+                                          communications[index].integration.displayOptions.title,//displayOptions.title,
                                           style: TextStyle(
-                                              fontSize: 10,
-                                              color: Colors.white
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    InkWell(
+                                      onTap: () {},
+                                      child: Container(
+                                        height: 20,
+                                        width: 40,
+                                        decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(10),
+                                            color: Colors.black.withOpacity(0.4)
+                                        ),
+                                        child: Center(
+                                          child: Text("Open",
+                                            style: TextStyle(
+                                                fontSize: 10,
+                                                color: Colors.white
+                                            ),
                                           ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               )
-                            ],
-                          ),
-                        )
-                      );
-                    },
-                    separatorBuilder: (context, index) {
-                      return Divider(
-                        height: 0,
-                        thickness: 0.5,
-                        color: Colors.white30,
-                        endIndent: 0,
-                        indent: 0,
-                      );
-                    },
-                    itemCount: state.integrations.length,
-                  ),
-                ),
-                integrations.length > 0 ? Divider(
-                  height: 0,
-                  thickness: 0.5,
-                  color: Colors.white30,
-                  endIndent: 0,
-                  indent: 0,
-                ): Container(height: 0,),
-                Container(
-                  padding: EdgeInsets.only(left: 16, right: 16),
-                  height: 50,
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        PageTransition(
-                          child: PosConnectScreen(
-                            globalStateModel: widget.globalStateModel,
-                            screenBloc: screenBloc,
-                          ),
-                          type: PageTransitionType.fade,
-                          duration: Duration(milliseconds: 500),
-                        ),
-                      );
-                    },
-                    child: Container(
-                      child: Row(
-                        children: <Widget>[
-                          Icon(
-                            Icons.add,
-                            size: 12,
-                          ),
-                          Padding(padding: EdgeInsets.only(left: 4),),
-                          Text(
-                            'Add',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ],
+                          );
+                        },
+                        separatorBuilder: (context, index) {
+                          return Divider(
+                            height: 0,
+                            thickness: 0.5,
+                            color: Colors.white30,
+                            endIndent: 0,
+                            indent: 0,
+                          );
+                        },
+                        itemCount: state.communications.length,
                       ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
-      );
-  }
 
-  Widget _settingsWidget(PosScreenState state) {
-    return Container(
-      padding: EdgeInsets.all(16),
-      child: Column(
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              Text(
-                'Terminal UUID',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 8),
-              ),
-              Flexible(
-                child: AutoSizeText(
-                  state.activeTerminal.id,
-                  minFontSize: 12,
-                  maxLines: 2,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 8),
-              ),
-              FlatButton(
-                child: Text(
-                  state.terminalCopied ? 'Copied': 'Copy',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500
-                  ),
-                ),
-                onPressed: () {
-
-                },
-              ),
-            ],
-          ),
-        ],
       ),
     );
   }
 
   Widget showDevicePaymentSettings(PosScreenState state) {
     if (state.devicePaymentSettings == null) {
-      screenBloc.add(GetPosDevicePaymentSettings(businessId: widget.globalStateModel.currentBusiness.id));
+      widget.screenBloc.add(GetPosDevicePaymentSettings(businessId: widget.globalStateModel.currentBusiness.id));
     }
 
     return  Container();
   }
 
   void showIntegrations(PosScreenState state) {
+
+
   }
 
-  void showCommunications(PosScreenState state) {
+  Widget showCommunications(PosScreenState state) {
     if (state.communications.length == 0) {
-      screenBloc.add(GetPosCommunications(businessId: widget.globalStateModel.currentBusiness.id));
+      widget.screenBloc.add(GetPosCommunications(businessId: widget.globalStateModel.currentBusiness.id));
     }
     List<Communication> communications = state.communications;
-    Container(
+    return Container(
       padding: EdgeInsets.only(left: 16, right: 16),
       child: BlurEffectView(
         color: Color.fromRGBO(20, 20, 20, 0.2),
