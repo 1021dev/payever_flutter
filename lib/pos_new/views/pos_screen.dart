@@ -111,21 +111,8 @@ class _PosScreenState extends State<PosScreen> {
     super.dispose();
   }
 
-  // Get battery level.
-  String _batteryLevel = 'Unknown battery level.';
-
-  Future<void> _getBatteryLevel() async {
-    String batteryLevel;
-    try {
-      final int result = await platform.invokeMethod('openTapOnPhone');
-      batteryLevel = 'openTapOnPhone => $result.';
-    } on PlatformException catch (e) {
-      batteryLevel = "openTapOnPhone =>: '${e.message}'.";
-    }
-
-    setState(() {
-      _batteryLevel = batteryLevel;
-    });
+  Future<Null> _showNativeView() async {
+    await platform.invokeMethod('showNativeView');
   }
 
   @override
@@ -240,8 +227,8 @@ class _PosScreenState extends State<PosScreen> {
             size: 24,
           ),
           onPressed: () {
-            _getBatteryLevel();
-          },
+            _showNativeView();
+            },
         ),
         IconButton(
           constraints: BoxConstraints(
@@ -327,7 +314,6 @@ class _PosScreenState extends State<PosScreen> {
             child: CircularProgressIndicator(),
           ): Column(
             children: <Widget>[
-              Text(_batteryLevel),
               _toolBar(state),
               Expanded(
                 child: _getBody(state),
@@ -367,8 +353,8 @@ class _PosScreenState extends State<PosScreen> {
           ),
           PosTopButton(
             title: 'Settings',
-            selectedIndex: selectedIndex,
             index: 2,
+            selectedIndex: selectedIndex,
             onTap: () {
               setState(() {
                 selectedIndex = 2;
@@ -380,6 +366,7 @@ class _PosScreenState extends State<PosScreen> {
             selectedIndex: selectedIndex,
             index: 3,
             onTap: () {
+              _showNativeView();
             },
           ),
           PopupMenuButton<OverflowMenuItem>(

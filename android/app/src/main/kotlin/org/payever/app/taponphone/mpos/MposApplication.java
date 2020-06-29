@@ -7,7 +7,9 @@ import androidx.annotation.CallSuper;
 
 import io.flutter.app.FlutterApplication;
 import io.flutter.view.FlutterMain;
-
+import io.flutter.plugin.common.PluginRegistry;
+import io.flutter.plugin.common.PluginRegistry.PluginRegistrantCallback;
+import io.flutter.plugins.GeneratedPluginRegistrant;
 
 import com.mastercard.terminalsdk.ConfigurationInterface;
 import com.mastercard.terminalsdk.LibraryServicesInterface;
@@ -36,7 +38,7 @@ import org.payever.app.taponphone.utils.DataManager;
 
 import io.flutter.view.FlutterMain;
 
-public class MposApplication extends FlutterApplication {
+public class MposApplication extends FlutterApplication implements PluginRegistrantCallback {
 
 
     private final String TAG = "MposApplication";
@@ -260,5 +262,10 @@ public class MposApplication extends FlutterApplication {
         } catch (ConfigurationException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void registerWith(PluginRegistry registry) {
+        GeneratedPluginRegistrant.registerWith(registry);
     }
 }
