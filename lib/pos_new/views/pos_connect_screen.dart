@@ -1,18 +1,14 @@
 import 'dart:ui';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/blur_effect_view.dart';
-import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/dashboard_menu_view.dart';
 import 'package:payever/pos_new/widgets/pos_top_button.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 bool _isPortrait;
 bool _isTablet;
@@ -39,7 +35,6 @@ class PosConnectScreen extends StatefulWidget {
 
 class _PosConnectScreenState extends State<PosConnectScreen> {
 
-  final GlobalKey<InnerDrawerState> _innerDrawerKey = GlobalKey<InnerDrawerState>();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   String wallpaper;
@@ -105,39 +100,7 @@ class _PosConnectScreenState extends State<PosConnectScreen> {
       child: BlocBuilder<PosScreenBloc, PosScreenState>(
         bloc: widget.screenBloc,
         builder: (BuildContext context, PosScreenState state) {
-          return DashboardMenuView(
-            innerDrawerKey: _innerDrawerKey,
-            onLogout: () {
-              SharedPreferences.getInstance().then((p) {
-                p.setString(GlobalUtils.BUSINESS, '');
-                p.setString(GlobalUtils.EMAIL, '');
-                p.setString(GlobalUtils.PASSWORD, '');
-                p.setString(GlobalUtils.DEVICE_ID, '');
-                p.setString(GlobalUtils.DB_TOKEN_ACC, '');
-                p.setString(GlobalUtils.DB_TOKEN_RFS, '');
-              });
-              Navigator.pushReplacement(
-                  context,
-                  PageTransition(
-                      child: LoginScreen(), type: PageTransitionType.fade));
-            },
-            onSwitchBusiness: () {
-              Navigator.pushReplacement(
-                  context,
-                  PageTransition(
-                      child: SwitcherScreen(), type: PageTransitionType.fade));
-            },
-            onPersonalInfo: () {
-
-            },
-            onAddBusiness: () {
-
-            },
-            onClose: () {
-              _innerDrawerKey.currentState.toggle();
-            },
-            scaffold: _body(state),
-          );
+          return _body(state);
         },
       ),
     );

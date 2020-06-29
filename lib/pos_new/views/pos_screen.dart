@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
@@ -227,7 +228,6 @@ class _PosScreenState extends State<PosScreen> {
             size: 24,
           ),
           onPressed: () {
-            _showNativeView();
             },
         ),
         IconButton(
@@ -366,7 +366,9 @@ class _PosScreenState extends State<PosScreen> {
             selectedIndex: selectedIndex,
             index: 3,
             onTap: () {
-              _showNativeView();
+              if (Platform.isAndroid) {
+                _showNativeView();
+              }
             },
           ),
           PopupMenuButton<OverflowMenuItem>(
