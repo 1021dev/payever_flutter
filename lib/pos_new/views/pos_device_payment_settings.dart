@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -90,23 +91,8 @@ class _PosDevicePaymentSettingsState extends State<PosDevicePaymentSettings> {
       backgroundColor: Colors.black87,
       title: Row(
         children: <Widget>[
-          Container(
-            child: Center(
-              child: Container(
-                  child: SvgPicture.asset(
-                    'assets/images/pos.svg',
-                    color: Colors.white,
-                    height: 16,
-                    width: 24,
-                  )
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 8),
-          ),
           Text(
-            'Point of Sale',
+            'Device Payment',
             style: TextStyle(
               color: Colors.white,
               fontSize: 16,
@@ -193,33 +179,41 @@ class _PosDevicePaymentSettingsState extends State<PosDevicePaymentSettings> {
               Container(
                 height: 64,
                 color: Color(0xFF424141),
-                padding: EdgeInsets.only(left: 16, right: 16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Row(
+                child: SizedBox.expand(
+                  child: MaterialButton(
+                    onPressed: () {
+                      setState(() {
+                        isOpened = !isOpened;
+                      });
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Icon(
+                              Icons.settings,
+                              size: 20,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(left: 8),
+                            ),
+                            Text(
+                              'Settings',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                              ),
+                            )
+                          ],
+                        ),
                         Icon(
-                          Icons.settings,
+                          isOpened ? Icons.keyboard_arrow_up: Icons.keyboard_arrow_down,
                           size: 20,
                         ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 8),
-                        ),
-                        Text(
-                          'Settings',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                          ),
-                        )
                       ],
                     ),
-                    Icon(
-                      Icons.keyboard_arrow_up,
-                      size: 20,
-                    ),
-                  ],
+                  ),
                 ),
               ),
               isOpened ? Divider(
@@ -239,7 +233,7 @@ class _PosDevicePaymentSettingsState extends State<PosDevicePaymentSettings> {
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 16,
-                            fontWeight: FontWeight.w500,
+                            fontWeight: FontWeight.w200,
                           ),
                         ),
                         CupertinoSwitch(
@@ -269,7 +263,7 @@ class _PosDevicePaymentSettingsState extends State<PosDevicePaymentSettings> {
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 16,
-                            fontWeight: FontWeight.w500,
+                            fontWeight: FontWeight.w200,
                           ),
                         ),
                         CupertinoSwitch(
@@ -291,22 +285,42 @@ class _PosDevicePaymentSettingsState extends State<PosDevicePaymentSettings> {
                   height: 64,
                   child: Container(
                     padding: EdgeInsets.only(left: 16, right: 16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(top: 4),
+                        ),
                         Text(
-                          'Two Factor Authentication',//displayOptions.title,
+                          'verify type:',
                           style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
+                            color: Colors.white70,
+                            fontSize: 12,
                           ),
                         ),
-                        CupertinoSwitch(
-                          value: state.devicePaymentSettings.autoresponderEnabled,
-                          onChanged: (value) {
+                        Expanded(
+                          child: DropdownButton<String>(
+                            icon: Container(),
+                            underline: Container(),
+                            isExpanded: true,
+                            value: dropdownItems[state.devicePaymentSettings.verificationType],
+                            onChanged: (value) {
 
-                          },
+                            },
+                            items: dropdownItems.map((label) => DropdownMenuItem(
+                              child: Text(
+                                label,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w300,
+                                ),
+                              ),
+                              value: label,
+                            ))
+                                .toList(),
+                          ),
                         ),
                       ],
                     ),
@@ -317,7 +331,7 @@ class _PosDevicePaymentSettingsState extends State<PosDevicePaymentSettings> {
                 height: 0,
                 thickness: 0.5,
               ): Container(),
-              Container(
+              isOpened ? Container(
                 height: 64,
                 color: Color(0xFF424141),
                 child: SizedBox.expand(
@@ -335,7 +349,7 @@ class _PosDevicePaymentSettingsState extends State<PosDevicePaymentSettings> {
                     ),
                   ),
                 ),
-              ),
+              ): Container(),
             ],
           ),
         ),
