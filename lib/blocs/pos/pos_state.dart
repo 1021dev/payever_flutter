@@ -10,12 +10,15 @@ class PosScreenState {
   final List<Communication> communications;
   final DevicePaymentSettings devicePaymentSettings;
   final bool showCommunications;
+  final List<String> terminalIntegrations;
+
   PosScreenState({
     this.isLoading = true,
     this.terminals = const [],
     this.activeTerminal,
     this.terminalCopied = false,
     this.integrations = const [],
+    this.terminalIntegrations = const [],
     this.communications = const [],
     this.devicePaymentSettings,
     this.showCommunications = false,
@@ -27,6 +30,7 @@ class PosScreenState {
     this.activeTerminal,
     this.terminalCopied,
     this.integrations,
+    this.terminalIntegrations,
     this.communications,
     this.devicePaymentSettings,
     this.showCommunications,
@@ -38,6 +42,7 @@ class PosScreenState {
     Terminal activeTerminal,
     bool terminalCopied,
     List<Communication> integrations,
+    List<String> terminalIntegrations,
     List<Communication> communications,
     DevicePaymentSettings devicePaymentSettings,
     bool showCommunications,
@@ -48,6 +53,7 @@ class PosScreenState {
       activeTerminal: activeTerminal ?? this.activeTerminal,
       terminalCopied: terminalCopied ?? this.terminalCopied,
       integrations: integrations ?? this.integrations,
+      terminalIntegrations: terminalIntegrations ?? this.terminalIntegrations,
       communications: communications ?? this.communications,
       devicePaymentSettings: devicePaymentSettings ?? this.devicePaymentSettings,
       showCommunications: showCommunications ?? this.showCommunications,

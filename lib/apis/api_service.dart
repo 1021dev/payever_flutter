@@ -574,6 +574,23 @@ class ApiService {
     }
   }
 
+  Future<dynamic> getTerminalIntegrations(String token, String businessId, String terminalId) async {
+    try {
+      print('$TAG - getTerminalIntegrations()');
+      dynamic response = await _client.getTypeless(
+          '${Env.pos}/api/business/$businessId/terminal/$terminalId$endIntegration',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<dynamic> getPosCommunications(String token, String businessId) async {
     try {
       print('$TAG - getPosCommunications()');

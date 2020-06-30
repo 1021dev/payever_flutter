@@ -18,6 +18,8 @@ import 'package:payever/pos_new/widgets/pos_top_button.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'pos_device_payment_settings.dart';
+
 bool _isPortrait;
 bool _isTablet;
 
@@ -396,7 +398,6 @@ class _PosScreenState extends State<PosScreen> {
               }).toList();
             },
           ),
-
         ],
       ),
     );
@@ -421,9 +422,8 @@ class _PosScreenState extends State<PosScreen> {
 
   Widget _connectWidget(PosScreenState state) {
     List<Communication> integrations = state.integrations;
-    return isShowCommunications
-        ? showDevicePaymentSettings(state):
-      Center(
+    List<String> terminalIntegrations = state.terminalIntegrations;
+    return Center(
         child: Container(
           padding: EdgeInsets.only(left: 16, right: 16),
           height: (state.integrations.length * 50).toDouble() + 50,
@@ -456,8 +456,8 @@ class _PosScreenState extends State<PosScreen> {
                               ),
                               Row(
                                 children: <Widget>[
-                                  Switch(
-                                    value: true,
+                                  CupertinoSwitch(
+                                    value: terminalIntegrations.contains(integrations[index].integration.name),
                                     onChanged: (value) {
                                     },
                                   ),
@@ -465,7 +465,22 @@ class _PosScreenState extends State<PosScreen> {
                                     padding: EdgeInsets.only(left: 8),
                                   ),
                                   InkWell(
-                                    onTap: () {},
+                                    onTap: () {
+                                      if (state.integrations[index].integration.name == 'device-payments') {
+                                        Navigator.push(
+                                          context,
+                                          PageTransition(
+                                            child: PosDevicePaymentSettings(
+                                              businessId: widget.globalStateModel.currentBusiness.id,
+                                              screenBloc: screenBloc,
+                                            ),
+                                            type: PageTransitionType.fade,
+                                            duration: Duration(milliseconds: 500),
+                                          ),
+                                        );
+                                      }
+
+                                    },
                                     child: Container(
                                       height: 20,
                                       width: 40,
@@ -651,7 +666,7 @@ class _PosScreenState extends State<PosScreen> {
                             ),
                             Row(
                               children: <Widget>[
-                                Switch(
+                                CupertinoSwitch(
                                   value: true,
                                   onChanged: (value) {
                                   },

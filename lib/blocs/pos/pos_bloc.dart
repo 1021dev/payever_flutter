@@ -31,6 +31,8 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
       yield* fetchPos(event.currentBusiness);
     } else if (event is GetPosIntegrationsEvent) {
       yield* getIntegrations(event.businessId);
+    } else if (event is GetTerminalIntegrationsEvent) {
+      yield* getTerminalIntegrations(event.businessId, event.terminalId);
     } else if (event is GetPosCommunications) {
       yield* getCommunications(event.businessId);
     } else if (event is GetPosDevicePaymentSettings) {
@@ -99,6 +101,16 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
       integrations.add(Communication.toMap(element));
     });
     yield state.copyWith(integrations: integrations);
+    add(GetTerminalIntegrationsEvent(businessId: businessId, terminalId: state.activeTerminal.id));
+  }
+
+  Stream<PosScreenState> getTerminalIntegrations(String businessId, String terminalId) async* {
+    dynamic integrationObj = await api.getTerminalIntegrations(GlobalUtils.activeToken.accessToken, businessId, terminalId);
+    List<String> integrations = [];
+    integrationObj.forEach((element) {
+      integrations.add(element);
+    });
+    yield state.copyWith(terminalIntegrations: integrations);
   }
 
   Stream<PosScreenState> getCommunications(String businessId) async* {

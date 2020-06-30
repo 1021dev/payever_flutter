@@ -38,6 +38,19 @@ class GetPosIntegrationsEvent extends PosScreenEvent {
   ];
 }
 
+class GetTerminalIntegrationsEvent extends PosScreenEvent {
+  final String businessId;
+  final String terminalId;
+
+  GetTerminalIntegrationsEvent({this.businessId, this.terminalId});
+
+  @override
+  List<Object> get props => [
+    this.businessId,
+    this.terminalId,
+  ];
+}
+
 class GetPosCommunications extends PosScreenEvent {
   final String businessId;
 
