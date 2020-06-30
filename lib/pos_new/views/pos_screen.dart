@@ -15,6 +15,7 @@ import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/b
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/dashboard_menu_view.dart';
 import 'package:payever/pos_new/views/pos_connect_screen.dart';
 import 'package:payever/pos_new/views/pos_create_terminal_screen.dart';
+import 'package:payever/pos_new/views/pos_switch_terminals_screen.dart';
 import 'package:payever/pos_new/widgets/pos_top_button.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -79,7 +80,17 @@ class _PosScreenState extends State<PosScreen> {
       OverflowMenuItem(
         title: 'Switch terminal',
         onTap: () async {
-
+          Navigator.push(
+            context,
+            PageTransition(
+              child: PosSwitchTerminalsScreen(
+                businessId: widget.globalStateModel.currentBusiness.id,
+                screenBloc: screenBloc,
+              ),
+              type: PageTransitionType.fade,
+              duration: Duration(milliseconds: 500),
+            ),
+          );
         },
       ),
       OverflowMenuItem(

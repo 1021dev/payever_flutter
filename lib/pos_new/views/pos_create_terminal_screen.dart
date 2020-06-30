@@ -41,7 +41,6 @@ class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
 
   @override
   void initState() {
-    widget.screenBloc.add(GetPosDevicePaymentSettings(businessId: widget.businessId));
     super.initState();
   }
 
