@@ -459,6 +459,15 @@ class _PosScreenState extends State<PosScreen> {
                                   CupertinoSwitch(
                                     value: terminalIntegrations.contains(integrations[index].integration.name),
                                     onChanged: (value) {
+                                      screenBloc.add(value ? InstallTerminalDevicePaymentEvent(
+                                        payment: integrations[index].integration.name,
+                                        businessId: widget.globalStateModel.currentBusiness.id,
+                                        terminalId: state.activeTerminal.id,
+                                      ): UninstallTerminalDevicePaymentEvent(
+                                        payment: integrations[index].integration.name,
+                                        businessId: widget.globalStateModel.currentBusiness.id,
+                                        terminalId: state.activeTerminal.id,
+                                      ));
                                     },
                                   ),
                                   Padding(

@@ -610,9 +610,60 @@ class ApiService {
 
   Future<dynamic> patchPosConnectDevicePaymentInstall(String token, String businessId) async {
     try {
-      print('$TAG - patchPosInstall()');
-      dynamic response = await _client.patch(
-          '${Env.connect}/api/business/$businessId/integration/device-payments/install',
+      print('$TAG - patchPosConnectDevicePaymentInstall()');
+      dynamic response = await _client.patchTypeless(
+          '${Env.pos}/api/business/$businessId/integration/device-payments/install',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> patchPosConnectDevicePaymentUninstall(String token, String businessId) async {
+    try {
+      print('$TAG - patchPosConnectDevicePaymentUninstall()');
+      dynamic response = await _client.patchTypeless(
+          '${Env.pos}/api/business/$businessId/integration/device-payments/uninstall',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> patchPosTerminalDevicePaymentInstall(String token, String payment, String businessId, String terminalId) async {
+    try {
+      print('$TAG - patchPosTerminalDevicePaymentInstall()');
+      dynamic response = await _client.patchTypeless(
+          '${Env.pos}/api/business/$businessId/terminal/$terminalId/integration/$payment/install',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> patchPosTerminalDevicePaymentUninstall(String token, String payment, String businessId, String terminalId) async {
+    try {
+      print('$TAG - patchPosTerminalDevicePaymentUninstall()');
+      dynamic response = await _client.patchTypeless(
+          '${Env.pos}/api/business/$businessId/terminal/$terminalId/integration/$payment/uninstall',
           headers: {
             HttpHeaders.authorizationHeader: 'Bearer $token',
             HttpHeaders.contentTypeHeader: 'application/json',

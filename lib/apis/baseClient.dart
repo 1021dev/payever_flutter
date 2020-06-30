@@ -100,6 +100,21 @@ class BaseClient {
     );
   }
 
+  Future<dynamic> patchTypeless(
+      String path, {
+        Map<String, dynamic> queryParameters,
+        Map<String, dynamic> headers,
+        dynamic body,
+      }) async {
+    return _requestTypeless(
+      path,
+      RestCallType.patch,
+      queryParameters: queryParameters,
+      headers: headers,
+      data: body,
+    );
+  }
+
   Future<T> post<T extends Jsonable>(
       String path, {
         Map<String, dynamic> queryParameters,

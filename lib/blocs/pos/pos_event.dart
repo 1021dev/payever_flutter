@@ -84,6 +84,47 @@ class InstallDevicePaymentEvent extends PosScreenEvent {
   ];
 }
 
+class UninstallDevicePaymentEvent extends PosScreenEvent {
+  final String businessId;
+
+  UninstallDevicePaymentEvent({this.businessId});
+
+  @override
+  List<Object> get props => [
+    this.businessId,
+  ];
+}
+
+class InstallTerminalDevicePaymentEvent extends PosScreenEvent {
+  final String payment;
+  final String businessId;
+  final String terminalId;
+
+  InstallTerminalDevicePaymentEvent({this.payment, this.businessId, this.terminalId});
+
+  @override
+  List<Object> get props => [
+    this.payment,
+    this.businessId,
+    this.terminalId,
+  ];
+}
+
+class UninstallTerminalDevicePaymentEvent extends PosScreenEvent {
+  final String payment;
+  final String businessId;
+  final String terminalId;
+
+  UninstallTerminalDevicePaymentEvent({this.payment, this.businessId, this.terminalId});
+
+  @override
+  List<Object> get props => [
+    this.payment,
+    this.businessId,
+    this.terminalId,
+  ];
+}
+
 class UpdateDevicePaymentSettings extends PosScreenEvent{
   final DevicePaymentSettings settings;
 

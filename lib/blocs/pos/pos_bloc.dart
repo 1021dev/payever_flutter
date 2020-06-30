@@ -39,6 +39,12 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
       yield* getDevicePaymentSettings(event.businessId);
     } else if (event is InstallDevicePaymentEvent) {
       yield* installDevicePayment(event.businessId);
+    } else if (event is UninstallDevicePaymentEvent) {
+      yield* uninstallDevicePayment(event.businessId);
+    } else if (event is InstallTerminalDevicePaymentEvent) {
+      yield* installTerminalDevicePayment(event.payment, event.businessId, event.terminalId);
+    } else if (event is UninstallTerminalDevicePaymentEvent) {
+      yield* uninstallTerminalDevicePayment(event.payment, event.businessId, event.terminalId);
     } else if (event is UpdateDevicePaymentSettings) {
       yield state.copyWith(devicePaymentSettings: event.settings);
     } else if (event is SaveDevicePaymentSettings) {
@@ -133,6 +139,31 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
     DevicePaymentInstall devicePaymentInstall = DevicePaymentInstall.toMap(installPaymentObj);
     yield DevicePaymentInstallSuccess(install: devicePaymentInstall);
     add(GetPosIntegrationsEvent(businessId: businessId));
+  }
+
+  Stream<PosScreenState> uninstallDevicePayment(String businessId) async* {
+    dynamic installPaymentObj = await api.patchPosConnectDevicePaymentUninstall(GlobalUtils.activeToken.accessToken, businessId);
+    DevicePaymentInstall devicePaymentInstall = DevicePaymentInstall.toMap(installPaymentObj);
+    yield DevicePaymentInstallSuccess(install: devicePaymentInstall);
+    add(GetPosIntegrationsEvent(businessId: businessId));
+  }
+
+  Stream<PosScreenState> installTerminalDevicePayment(String payment, String businessId, String terminalId) async* {
+    List<String> terminalIntegrations = state.terminalIntegrations;
+    terminalIntegrations.add(payment);
+    yield state.copyWith(terminalIntegrations: terminalIntegrations);
+    dynamic installPaymentObj = await api.patchPosTerminalDevicePaymentInstall(GlobalUtils.activeToken.accessToken, payment, businessId, terminalId);
+    print(installPaymentObj);
+    add(GetTerminalIntegrationsEvent(businessId: businessId, terminalId: terminalId));
+  }
+
+  Stream<PosScreenState> uninstallTerminalDevicePayment(String payment, String businessId, String terminalId) async* {
+    List<String> terminalIntegrations = state.terminalIntegrations;
+    terminalIntegrations.removeWhere((element) => element == payment);
+    yield state.copyWith(terminalIntegrations: terminalIntegrations);
+    dynamic installPaymentObj = await api.patchPosTerminalDevicePaymentUninstall(GlobalUtils.activeToken.accessToken, payment, businessId, terminalId);
+    print(installPaymentObj);
+    add(GetTerminalIntegrationsEvent(businessId: businessId, terminalId: terminalId));
   }
 
   Stream<PosScreenState> saveDevicePaymentSettings(String businessId, bool secondFactor, bool autoResponderEnabled, int verificationType) async* {
