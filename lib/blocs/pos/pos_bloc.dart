@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/commons/commons.dart';
@@ -53,6 +54,8 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
       yield* saveDevicePaymentSettings(event.businessId, event.autoresponderEnabled, event.secondFactor, event.verificationType);
     } else if (event is UploadTerminalImage) {
       yield* uploadTerminalImage(event.businessId, event.file);
+    } else if (event is CreatePosTerminalEvent) {
+      yield* createTerminal(event.logo, event.name, event.businessId);
     }
   }
 
@@ -191,9 +194,17 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
 
   Stream<PosScreenState> createTerminal(String logo, String name, String businessId) async* {
     dynamic response = await api.postTerminal(businessId, GlobalUtils.activeToken.accessToken, logo, name);
-    Terminal terminal = Terminal.toMap(response);
-    if (terminal != null) {
+//    Terminal terminal = Terminal.toMap(response);
+    if (response != null) {
       yield PosScreenSuccess();
+    } else {
+      yield PosScreenFailure(error: 'Create Terminal failed');
     }
+    yield* fetchPos(businessId);
+  }
+
+  Stream<PosScreenState> activeTerminal(String businessId, String terminalId) async* {
+    dynamic response = await api.patchActiveTerminal(GlobalUtils.activeToken.accessToken, businessId, terminalId);
+    yield* fetchPos(businessId);
   }
 }

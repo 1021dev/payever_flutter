@@ -171,6 +171,19 @@ class UploadTerminalImage extends PosScreenEvent{
     this.file,
     this.businessId,
   ];
+}
 
+class CreatePosTerminalEvent extends PosScreenEvent{
+  final String businessId;
+  final String logo;
+  final String name;
+  CreatePosTerminalEvent({this.name, this.businessId, this.logo});
+
+  @override
+  List<Object> get props => [
+    this.name,
+    this.logo,
+    this.businessId,
+  ];
 }
 

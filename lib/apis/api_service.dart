@@ -764,5 +764,22 @@ class ApiService {
     }
   }
 
+  Future<dynamic> patchActiveTerminal(String token, String businessId, String terminalId) async {
+    try {
+      print('$TAG - patchActiveTerminal()');
+      dynamic response = await _client.patchTypeless(
+          '$posBusiness$businessId/terminal/$terminalId/active',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
 
 }

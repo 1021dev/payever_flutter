@@ -72,6 +72,8 @@ class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
               type: PageTransitionType.fade,
             ),
           );
+        } else if (state is PosScreenSuccess) {
+          Navigator.pop(context);
         }
       },
       child: BlocBuilder<PosScreenBloc, PosScreenState>(
@@ -178,11 +180,11 @@ class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
                             child: Stack(
                               alignment: Alignment.topRight,
                               children: <Widget>[
-                                state.blobName != ''
+                                state.blobName != null && state.blobName != ''
                                     ? Center(
                                     child: CircleAvatar(
                                       backgroundColor: Colors.grey,
-                                      backgroundImage: NetworkImage(imageBase + state.blobName),
+                                      backgroundImage: NetworkImage('$imageBase${state.blobName}'),
                                       child: Container(
                                         height: 60,
                                         width: 60,
@@ -234,11 +236,19 @@ class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
                               radius: 12,
                               padding: EdgeInsets.only(left: 12, right: 12),
                               child: TextFormField(
+                                key: formKey,
                                 controller: terminalNameController,
                                 onSaved: (val) {},
                                 onChanged: (val) {
                                   setState(() {
                                   });
+                                },
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Terminal name required';
+                                  } else {
+                                    return '';
+                                  }
                                 },
                                 decoration: new InputDecoration(
                                   labelText: "Terminal name",
@@ -264,6 +274,13 @@ class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
                 child: SizedBox.expand(
                   child: MaterialButton(
                     onPressed: () {
+                      if (!state.isLoading && !terminalNameController.text.isEmpty) {
+                        widget.screenBloc.add(CreatePosTerminalEvent(
+                          businessId: widget.businessId,
+                          name: terminalNameController.text,
+                          logo: state.blobName != '' ? state.blobName : null,
+                        ));
+                      }
                     },
                     child: Text(
                       'Done',
@@ -286,39 +303,10 @@ class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
   Future getImage() async {
     isLoading = true;
     var img = await ImagePicker.pickImage(source: ImageSource.gallery);
-    if (img.existsSync())
-      setState(() {
-        print("_image: $img");
-        widget.screenBloc.add(UploadTerminalImage(file: img, businessId: widget.businessId));
-//        PosApi api = PosApi();
-//        api
-//            .postTerminalImage(
-//            image, widget._business, GlobalUtils.activeToken.accessToken)
-//            .then((dynamic res) {
-//          _logo = res["blobName"];
-//          api
-//              .postEditTerminal(widget._id, newName, widget._logo,
-//              widget._business, GlobalUtils.activeToken.accessToken)
-//              .then((res) {
-//            print(res);
-//            setState(() {
-//              _isLoading = false;
-//            });
-//          });
-//        }).catchError((onError) {
-//          setState(() {
-//            print(onError);
-//            _isLoading = false;
-//          });
-//          if (onError.toString().contains("401")) {
-//            GlobalUtils.clearCredentials();
-//            Navigator.pushReplacement(
-//                context,
-//                PageTransition(
-//                    child: LoginScreen(), type: PageTransitionType.fade));
-//          }
-//        });
-      });
+    if (img.existsSync()) {
+      print("_image: $img");
+      widget.screenBloc.add(UploadTerminalImage(file: img, businessId: widget.businessId));
+    }
   }
 
 
