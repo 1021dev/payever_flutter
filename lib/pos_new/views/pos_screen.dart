@@ -14,6 +14,7 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/blur_effect_view.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/dashboard_menu_view.dart';
 import 'package:payever/pos_new/views/pos_connect_screen.dart';
+import 'package:payever/pos_new/views/pos_create_terminal_screen.dart';
 import 'package:payever/pos_new/widgets/pos_top_button.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -84,12 +85,22 @@ class _PosScreenState extends State<PosScreen> {
       OverflowMenuItem(
         title: 'Add new terminal',
         onTap: () async {
-
+          Navigator.push(
+            context,
+            PageTransition(
+              child: PosCreateTerminalScreen(
+                businessId: widget.globalStateModel.currentBusiness.id,
+                screenBloc: screenBloc,
+              ),
+              type: PageTransitionType.fade,
+              duration: Duration(milliseconds: 500),
+            ),
+          );
         },
       ),
       OverflowMenuItem(
         title: 'Edit',
-        onTap: () async {
+        onTap: () {
 
         },
       ),
@@ -376,7 +387,7 @@ class _PosScreenState extends State<PosScreen> {
           PopupMenuButton<OverflowMenuItem>(
             icon: Icon(Icons.more_horiz),
             offset: Offset(0, 100),
-            onSelected: (OverflowMenuItem item) => item.onTap,
+            onSelected: (OverflowMenuItem item) => item.onTap(),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),
@@ -456,7 +467,7 @@ class _PosScreenState extends State<PosScreen> {
                               ),
                               Row(
                                 children: <Widget>[
-                                  CupertinoSwitch(
+                                    CupertinoSwitch(
                                     value: terminalIntegrations.contains(integrations[index].integration.name),
                                     onChanged: (value) {
                                       screenBloc.add(value ? InstallTerminalDevicePaymentEvent(
