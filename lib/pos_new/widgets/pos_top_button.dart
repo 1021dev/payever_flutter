@@ -59,7 +59,7 @@ class PosTopButton extends StatelessWidget {
 class OverflowMenuItem {
   final String title;
   final Color textColor;
-  final VoidCallback onTap;
+  final Function onTap;
 
   OverflowMenuItem({
     this.title,

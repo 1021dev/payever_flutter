@@ -12,7 +12,8 @@ import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/blur_effect_view.dart';
-import 'package:payever/pos_new/widgets/pos_top_button.dart';
+
+import 'pos_create_terminal_screen.dart';
 
 bool _isPortrait;
 bool _isTablet;
@@ -251,13 +252,27 @@ class _PosSwitchTerminalsScreenState extends State<PosSwitchTerminalsScreen> {
       padding: EdgeInsets.only(left: 8, right: 8, bottom: 24),
       shrinkWrap: true,
       children: state.terminals.map((ter) => TerminalCell(
-        onTap: (Terminal tt){
+        onTap: (Terminal tn){
           setState(() {
-            selectedTerminal = tt;
+            selectedTerminal = tn;
           });
         },
         selected: selectedTerminal,
         terminal: ter,
+        onMore: (Terminal tn) {},
+        onOpen: (Terminal tn) {
+          Navigator.push(
+            context,
+            PageTransition(
+              child: PosCreateTerminalScreen(
+                businessId: widget.businessId,
+                screenBloc: widget.screenBloc,
+              ),
+              type: PageTransitionType.fade,
+              duration: Duration(milliseconds: 500),
+            ),
+          );
+        },
       )).toList(),
       physics: NeverScrollableScrollPhysics(),
     );
@@ -270,41 +285,15 @@ class TerminalCell extends StatelessWidget {
   final Terminal terminal;
   final Terminal selected;
   final Function onOpen;
-  final Function onDelete;
-  final Function onEdit;
-  final Function onDefault;
+  final Function onMore;
 
   TerminalCell({
     this.onTap,
     this.terminal,
     this.selected,
-    this.onEdit,
-    this.onDefault,
-    this.onDelete,
     this.onOpen,
+    this.onMore
   });
-
-  List<OverflowMenuItem> appBarPopUpActions(BuildContext context, PosScreenState state) {
-    return [
-      OverflowMenuItem(
-        title: 'Switch terminal',
-        onTap: () async {
-        },
-      ),
-      OverflowMenuItem(
-        title: 'Add new terminal',
-        onTap: () async {
-        },
-      ),
-      OverflowMenuItem(
-        title: 'Edit',
-        onTap: () {
-
-        },
-      ),
-    ];
-  }
-
 
   @override
   Widget build(BuildContext context) {
@@ -322,6 +311,9 @@ class TerminalCell extends StatelessWidget {
         borderRadius: BorderRadius.circular(24),
       ),
       elevation: 0,
+      focusElevation: 0,
+      hoverElevation: 0,
+      highlightElevation: 0,
       color: selected.id == terminal.id ? Colors.white24 : Colors.transparent.withOpacity(0),
       onPressed: () {
         onTap(terminal);
@@ -379,7 +371,9 @@ class TerminalCell extends StatelessWidget {
                 children: <Widget>[
                   MaterialButton(
                     minWidth: 0,
-                    onPressed: () {},
+                    onPressed: () {
+                      onOpen(terminal);
+                    },
                     height: 20,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
@@ -396,7 +390,9 @@ class TerminalCell extends StatelessWidget {
                   ),
                   Flexible(
                     child: MaterialButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        onMore(terminal);
+                      },
                       minWidth: 0,
                       height: 20,
                       shape: RoundedRectangleBorder(
