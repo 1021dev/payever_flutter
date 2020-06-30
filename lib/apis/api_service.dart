@@ -610,7 +610,7 @@ class ApiService {
 
   Future<dynamic> getPosDevicePaymentSettings(String businessId, String token) async {
     try {
-      print('$TAG - getPosSettings()');
+      print('$TAG - getPosDevicePaymentSettings()');
       dynamic response = await _client.getTypeless(
           'https://device-payments-backend.staging.devpayever.com/api/v1/$businessId/settings',
           headers: {

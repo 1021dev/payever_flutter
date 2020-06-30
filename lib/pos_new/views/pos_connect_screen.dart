@@ -247,7 +247,7 @@ class _PosConnectScreenState extends State<PosConnectScreen> {
                                           context,
                                           PageTransition(
                                             child: PosDevicePaymentSettings(
-                                              globalStateModel: widget.globalStateModel,
+                                              businessId: widget.globalStateModel.currentBusiness.id,
                                               screenBloc: widget.screenBloc,
                                             ),
                                             type: PageTransitionType.fade,

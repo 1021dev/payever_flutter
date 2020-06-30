@@ -272,6 +272,7 @@ class BaseClient {
       }) async {
     Response response;
 
+    print(path);
       if (headers == null) {
         headers = {};
       }
