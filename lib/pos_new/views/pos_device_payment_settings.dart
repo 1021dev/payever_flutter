@@ -42,6 +42,7 @@ class _PosDevicePaymentSettingsState extends State<PosDevicePaymentSettings> {
 
   @override
   void initState() {
+    widget.screenBloc.add(GetPosDevicePaymentSettings(businessId: widget.businessId));
     super.initState();
   }
 
@@ -159,7 +160,6 @@ class _PosDevicePaymentSettingsState extends State<PosDevicePaymentSettings> {
 
   Widget _getBody(PosScreenState state) {
     if (state.devicePaymentSettings == null) {
-      widget.screenBloc.add(GetPosDevicePaymentSettings(businessId: widget.businessId));
       return Center(
         child: CircularProgressIndicator(),
       );
@@ -239,7 +239,9 @@ class _PosDevicePaymentSettingsState extends State<PosDevicePaymentSettings> {
                         CupertinoSwitch(
                           value: state.devicePaymentSettings.secondFactor,
                           onChanged: (value) {
-
+                            DevicePaymentSettings settings = state.devicePaymentSettings;
+                            settings.secondFactor = value;
+                            widget.screenBloc.add(UpdateDevicePaymentSettings(settings: settings));
                           },
                         ),
                       ],
@@ -269,7 +271,9 @@ class _PosDevicePaymentSettingsState extends State<PosDevicePaymentSettings> {
                         CupertinoSwitch(
                           value: state.devicePaymentSettings.autoresponderEnabled,
                           onChanged: (value) {
-
+                            DevicePaymentSettings settings = state.devicePaymentSettings;
+                            settings.autoresponderEnabled = value;
+                            widget.screenBloc.add(UpdateDevicePaymentSettings(settings: settings));
                           },
                         ),
                       ],
@@ -306,7 +310,9 @@ class _PosDevicePaymentSettingsState extends State<PosDevicePaymentSettings> {
                             isExpanded: true,
                             value: dropdownItems[state.devicePaymentSettings.verificationType],
                             onChanged: (value) {
-
+                              DevicePaymentSettings settings = state.devicePaymentSettings;
+                              settings.verificationType = dropdownItems.indexOf(value, 0);
+                              widget.screenBloc.add(UpdateDevicePaymentSettings(settings: settings));
                             },
                             items: dropdownItems.map((label) => DropdownMenuItem(
                               child: Text(
@@ -337,7 +343,13 @@ class _PosDevicePaymentSettingsState extends State<PosDevicePaymentSettings> {
                 child: SizedBox.expand(
                   child: MaterialButton(
                     onPressed: () {
-
+                      DevicePaymentSettings settings = state.devicePaymentSettings;
+                      widget.screenBloc.add(SaveDevicePaymentSettings(
+                        businessId: widget.businessId,
+                        autoresponderEnabled: settings.autoresponderEnabled,
+                        secondFactor: settings.secondFactor,
+                        verificationType: settings.verificationType,
+                      ));
                     },
                     child: Text(
                       'Save',

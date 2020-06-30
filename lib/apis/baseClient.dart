@@ -147,7 +147,7 @@ class BaseClient {
     );
   }
 
-  Future<Response> putTypeless(
+  Future<dynamic> putTypeless(
       String path, {
         Map<String, dynamic> queryParameters,
         Map<String, dynamic> headers,
@@ -310,6 +310,8 @@ class BaseClient {
             ),
           );
         } else if (callType == RestCallType.put) {
+          print(data);
+          print(headers);
           response = await _dio.put(
             path,
             data: data,

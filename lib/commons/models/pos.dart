@@ -482,10 +482,12 @@ class DevicePaymentSettings {
   int verificationType;
 
   DevicePaymentSettings.toMap(dynamic obj) {
-    autoresponderEnabled = obj['autoresponderEnabled'];
-    enabled = obj['enabled'];
-    secondFactor = obj['secondFactor'];
-    verificationType = obj['verificationType'];
+    if (obj != null) {
+      autoresponderEnabled = obj['autoresponderEnabled'];
+      enabled = obj['enabled'];
+      secondFactor = obj['secondFactor'];
+      verificationType = obj['verificationType'];
+    }
   }
 }
 

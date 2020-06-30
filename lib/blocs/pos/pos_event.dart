@@ -70,3 +70,38 @@ class InstallDevicePaymentEvent extends PosScreenEvent {
     this.businessId,
   ];
 }
+
+class UpdateDevicePaymentSettings extends PosScreenEvent{
+  final DevicePaymentSettings settings;
+
+  UpdateDevicePaymentSettings({this.settings});
+
+  @override
+  List<Object> get props => [
+    this.settings,
+  ];
+
+}
+
+class SaveDevicePaymentSettings extends PosScreenEvent{
+  final String businessId;
+  final bool autoresponderEnabled;
+  final bool secondFactor;
+  final int verificationType;
+
+  SaveDevicePaymentSettings({
+    this.businessId,
+    this.autoresponderEnabled,
+    this.secondFactor,
+    this.verificationType,
+  });
+
+  @override
+  List<Object> get props => [
+    this.businessId,
+    this.autoresponderEnabled,
+    this.secondFactor,
+    this.verificationType,
+  ];
+
+}

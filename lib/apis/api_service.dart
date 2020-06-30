@@ -625,4 +625,26 @@ class ApiService {
     }
   }
 
+  Future<dynamic> putDevicePaymentSettings(String businessId, String token, bool autoreponderEnabled, bool secondFactor, int verificationType) async {
+    try {
+      print('$TAG - putDevicePaymentSettings()');
+      dynamic response = await _client.putTypeless(
+          'https://device-payments-backend.staging.devpayever.com/api/v1/$businessId/settings',
+            body: {
+            'autoresponderEnabled' : autoreponderEnabled,
+            'secondFactor' : secondFactor,
+            'verificationType' : verificationType,
+          },
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
 }

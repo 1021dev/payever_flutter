@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/models/pos.dart';
@@ -36,6 +37,10 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
       yield* getDevicePaymentSettings(event.businessId);
     } else if (event is InstallDevicePaymentEvent) {
       yield* installDevicePayment(event.businessId);
+    } else if (event is UpdateDevicePaymentSettings) {
+      yield state.copyWith(devicePaymentSettings: event.settings);
+    } else if (event is SaveDevicePaymentSettings) {
+      yield* saveDevicePaymentSettings(event.businessId, event.autoresponderEnabled, event.secondFactor, event.verificationType);
     }
   }
 
@@ -116,5 +121,17 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
     DevicePaymentInstall devicePaymentInstall = DevicePaymentInstall.toMap(installPaymentObj);
     yield DevicePaymentInstallSuccess(install: devicePaymentInstall);
     add(GetPosIntegrationsEvent(businessId: businessId));
+  }
+
+  Stream<PosScreenState> saveDevicePaymentSettings(String businessId, bool secondFactor, bool autoResponderEnabled, int verificationType) async* {
+    dynamic devicePaymentSettingsObj = await api.putDevicePaymentSettings(
+      businessId,
+      GlobalUtils.activeToken.accessToken,
+      autoResponderEnabled,
+      secondFactor,
+      verificationType,
+    );
+    DevicePaymentSettings devicePayment = DevicePaymentSettings.toMap(devicePaymentSettingsObj);
+    yield state.copyWith(devicePaymentSettings: devicePayment, isLoading: false);
   }
 }
