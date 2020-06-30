@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:equatable/equatable.dart';
 import 'package:payever/commons/commons.dart';
 
@@ -157,5 +159,18 @@ class SaveDevicePaymentSettings extends PosScreenEvent{
     this.secondFactor,
     this.verificationType,
   ];
+}
+
+class UploadTerminalImage extends PosScreenEvent{
+  final File file;
+  final String businessId;
+  UploadTerminalImage({this.file, this.businessId});
+
+  @override
+  List<Object> get props => [
+    this.file,
+    this.businessId,
+  ];
 
 }
+

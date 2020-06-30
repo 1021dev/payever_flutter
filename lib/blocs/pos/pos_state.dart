@@ -11,6 +11,7 @@ class PosScreenState {
   final DevicePaymentSettings devicePaymentSettings;
   final bool showCommunications;
   final List<String> terminalIntegrations;
+  final String blobName;
 
   PosScreenState({
     this.isLoading = true,
@@ -22,6 +23,7 @@ class PosScreenState {
     this.communications = const [],
     this.devicePaymentSettings,
     this.showCommunications = false,
+    this.blobName = '',
   });
 
   List<Object> get props => [
@@ -34,6 +36,7 @@ class PosScreenState {
     this.communications,
     this.devicePaymentSettings,
     this.showCommunications,
+    this.blobName,
   ];
 
   PosScreenState copyWith({
@@ -46,6 +49,7 @@ class PosScreenState {
     List<Communication> communications,
     DevicePaymentSettings devicePaymentSettings,
     bool showCommunications,
+    String blobName,
   }) {
     return PosScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -57,6 +61,7 @@ class PosScreenState {
       communications: communications ?? this.communications,
       devicePaymentSettings: devicePaymentSettings ?? this.devicePaymentSettings,
       showCommunications: showCommunications ?? this.showCommunications,
+      blobName: blobName ?? this.blobName,
     );
   }
 }

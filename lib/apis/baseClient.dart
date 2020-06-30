@@ -147,6 +147,36 @@ class BaseClient {
     );
   }
 
+  Future<dynamic> postFormTypeless(
+      String path, {
+        Map<String, dynamic> queryParameters,
+        Map<String, dynamic> headers,
+        FormData body,
+      }) async {
+    return _requestTypeless(
+      path,
+      RestCallType.formPost,
+      queryParameters: queryParameters,
+      headers: headers,
+      data: body,
+    );
+  }
+
+  Future<dynamic> postTypeLess(
+      String path, {
+        Map<String, dynamic> queryParameters,
+        Map<String, dynamic> headers,
+        Map<String, dynamic> body,
+      }) async {
+    return _requestTypeless(
+      path,
+      RestCallType.post,
+      queryParameters: queryParameters,
+      headers: headers,
+      data: body,
+    );
+  }
+
   Future<T> put<T extends Jsonable>(
       String path, {
         Map<String, dynamic> queryParameters,

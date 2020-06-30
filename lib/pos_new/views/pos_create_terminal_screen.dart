@@ -31,12 +31,12 @@ class PosCreateTerminalScreen extends StatefulWidget {
 }
 
 class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
+  String imageBase = Env.storage + '/images/';
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   String wallpaper;
   final TextEditingController terminalNameController = TextEditingController();
-  File image;
   bool isLoading = false;
 
   @override
@@ -178,11 +178,11 @@ class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
                             child: Stack(
                               alignment: Alignment.topRight,
                               children: <Widget>[
-                                image != null
+                                state.blobName != ''
                                     ? Center(
                                     child: CircleAvatar(
                                       backgroundColor: Colors.grey,
-                                      backgroundImage: NetworkImage(imageBase + image.path),
+                                      backgroundImage: NetworkImage(imageBase + state.blobName),
                                       child: Container(
                                         height: 60,
                                         width: 60,
@@ -203,32 +203,22 @@ class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
                                     ),
                                   ),
                                 ),
-                                image != null
-                                    ? Container(
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.black.withOpacity(0.3),
-                                  ),
-                                  child: Icon(
-                                    Icons.close,
-                                    color: Colors.white.withOpacity(0.7),
+                                isLoading
+                                    ? Center(
+                                  child: Container(
+                                    width: 16,
+                                    height: 16,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      valueColor: new AlwaysStoppedAnimation<Color>(Colors.black87),
+                                    ),
                                   ),
                                 )
-                                    : Container(),
-                                isLoading
-                                    ? Center(child: CircularProgressIndicator())
                                     : Container(),
                               ],
                             ),
                             onTap: () {
-                              if (image != null) {
-                                setState(() {
-                                  isLoading = false;
-                                  image = null;
-                                });
-                              } else {
-                                getImage();
-                              }
+                              getImage();
                             },
                           ),
                         ),
@@ -298,8 +288,8 @@ class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
     var img = await ImagePicker.pickImage(source: ImageSource.gallery);
     if (img.existsSync())
       setState(() {
-        image = img;
-        print("_image: $image");
+        print("_image: $img");
+        widget.screenBloc.add(UploadTerminalImage(file: img, businessId: widget.businessId));
 //        PosApi api = PosApi();
 //        api
 //            .postTerminalImage(

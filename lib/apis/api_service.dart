@@ -117,7 +117,7 @@ class ApiService {
       dynamic response = await _client.getTypeless(
           '${appRegistryUrl}mobile-settings',
           headers: {
-            HttpHeaders.contentTypeHeader: "application/json",
+            HttpHeaders.contentTypeHeader: 'application/json',
             HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
           }
       );
@@ -714,5 +714,55 @@ class ApiService {
       return Future.error(e);
     }
   }
+
+  Future<dynamic> postTerminalImage(
+      File logo, 
+      String business, 
+      String token,
+      ) async {
+    print('$TAG - postTerminalImage()');
+    var headers = {
+      HttpHeaders.authorizationHeader: 'Bearer $token',
+      HttpHeaders.contentTypeHeader: '*/*',
+      HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+    };
+
+    String fileName = logo.path.split('/').last;
+    FormData formData = FormData.fromMap({
+      'file': await MultipartFile.fromFile(
+        logo.path,
+        filename: fileName,
+      ),
+    });
+
+    dynamic upload = await _client.postForm(
+        '$mediaBusiness$business$mediaImageEnd',
+        body: formData,
+        headers: headers
+    );
+    return upload;
+  }
+
+  Future<dynamic> postTerminal(String idBusiness, String token, String logo, String name) async {
+    try {
+      print('$TAG - postTerminal()');
+      dynamic response = await _client.postTypeLess(
+          '$posBusiness$idBusiness$posTerminalEnd',
+          body: {
+            'logo': logo,
+            'name': name,
+          },
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
 
 }

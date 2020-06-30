@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/apis/api_service.dart';
@@ -28,7 +30,7 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
           return;
         }
       }
-      yield* fetchPos(event.currentBusiness);
+      yield* fetchPos(event.currentBusiness.id);
     } else if (event is GetPosIntegrationsEvent) {
       yield* getIntegrations(event.businessId);
     } else if (event is GetTerminalIntegrationsEvent) {
@@ -49,15 +51,17 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
       yield state.copyWith(devicePaymentSettings: event.settings);
     } else if (event is SaveDevicePaymentSettings) {
       yield* saveDevicePaymentSettings(event.businessId, event.autoresponderEnabled, event.secondFactor, event.verificationType);
+    } else if (event is UploadTerminalImage) {
+      yield* uploadTerminalImage(event.businessId, event.file);
     }
   }
 
-  Stream<PosScreenState> fetchPos(Business activeBusiness) async* {
+  Stream<PosScreenState> fetchPos(String activeBusinessId) async* {
     String token = GlobalUtils.activeToken.accessToken;
     yield state.copyWith(isLoading: true);
     List<Terminal> terminals = [];
     List<ChannelSet> channelSets = [];
-    dynamic terminalsObj = await api.getTerminal(activeBusiness.id, token);
+    dynamic terminalsObj = await api.getTerminal(activeBusinessId, token);
     terminalsObj.forEach((terminal) {
       terminals.add(Terminal.toMap(terminal));
     });
@@ -65,7 +69,7 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
 //      _parts._noTerminals = true;
 //      _parts._mainCardLoading.value = false;
 //    }
-    dynamic channelsObj = await api.getChannelSet(activeBusiness.id, token);
+    dynamic channelsObj = await api.getChannelSet(activeBusinessId, token);
     channelsObj.forEach((channelSet) {
       channelSets.add(ChannelSet.toMap(channelSet));
     });
@@ -73,12 +77,12 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
     terminals.forEach((terminal) async {
       channelSets.forEach((channelSet) async {
         if (terminal.channelSet == channelSet.id) {
-          dynamic paymentObj = await api.getCheckoutIntegration(activeBusiness.id, channelSet.checkout, token);
+          dynamic paymentObj = await api.getCheckoutIntegration(activeBusinessId, channelSet.checkout, token);
           paymentObj.forEach((pm) {
             terminal.paymentMethods.add(pm);
           });
 
-          dynamic daysObj = await api.getLastWeek(activeBusiness.id, channelSet.id, token);
+          dynamic daysObj = await api.getLastWeek(activeBusinessId, channelSet.id, token);
           int length = daysObj.length - 1;
           for (int i = length; i > length - 7; i--) {
             terminal.lastWeekAmount += Day.map(daysObj[i]).amount;
@@ -87,7 +91,7 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
             terminal.lastWeek.add(Day.map(day));
           });
 
-          dynamic productsObj = await api.getPopularWeek(activeBusiness.id, channelSet.id, token);
+          dynamic productsObj = await api.getPopularWeek(activeBusinessId, channelSet.id, token);
           productsObj.forEach((product) {
             terminal.bestSales.add(Product.toMap(product));
           });
@@ -97,7 +101,7 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
 
     Terminal activeTerminal = terminals.where((element) => element.active).toList().first;
     yield state.copyWith(activeTerminal: activeTerminal, terminals: terminals, isLoading: false);
-    add(GetPosIntegrationsEvent(businessId: activeBusiness.id));
+    add(GetPosIntegrationsEvent(businessId: activeBusinessId));
   }
 
   Stream<PosScreenState> getIntegrations(String businessId) async* {
@@ -176,5 +180,20 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
     );
     DevicePaymentSettings devicePayment = DevicePaymentSettings.toMap(devicePaymentSettingsObj);
     yield state.copyWith(devicePaymentSettings: devicePayment, isLoading: false);
+  }
+
+  Stream<PosScreenState> uploadTerminalImage(String businessId, File file) async* {
+    yield state.copyWith(blobName: '');
+    dynamic response = await api.postTerminalImage(file, businessId, GlobalUtils.activeToken.accessToken);
+    String blobName = response['blobName'];
+    yield state.copyWith(blobName: blobName);
+  }
+
+  Stream<PosScreenState> createTerminal(String logo, String name, String businessId) async* {
+    dynamic response = await api.postTerminal(businessId, GlobalUtils.activeToken.accessToken, logo, name);
+    Terminal terminal = Terminal.toMap(response);
+    if (terminal != null) {
+      yield PosScreenSuccess();
+    }
   }
 }
