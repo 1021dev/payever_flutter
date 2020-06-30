@@ -69,6 +69,7 @@ class _PosScreenState extends State<PosScreen> {
 
   final GlobalKey<InnerDrawerState> _innerDrawerKey = GlobalKey<InnerDrawerState>();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 
   PosScreenBloc screenBloc = PosScreenBloc();
   String wallpaper;

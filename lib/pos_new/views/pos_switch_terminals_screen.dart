@@ -131,6 +131,7 @@ class _PosSwitchTerminalsScreenState extends State<PosSwitchTerminalsScreen> {
 
   Widget _body(PosScreenState state) {
     return Scaffold(
+      key: scaffoldKey,
       backgroundColor: Colors.black,
       resizeToAvoidBottomPadding: false,
       appBar: _appBar(state),
@@ -259,7 +260,26 @@ class _PosSwitchTerminalsScreenState extends State<PosSwitchTerminalsScreen> {
         },
         selected: selectedTerminal,
         terminal: ter,
-        onMore: (Terminal tn) {},
+        onMore: (Terminal tn) {
+          showCupertinoModalPopup(
+            context: context,
+            builder: (builder) {
+              bool isDefault = tn.id == state.activeTerminal.id;
+              return Container(
+                height: 64.0 * (isDefault ? 1.0 : 3.0) + MediaQuery.of(context).padding.bottom,
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.all(Radius.circular(15)),
+                ),
+                padding: EdgeInsets.only(top: 16),
+                child: Column(
+                  children: popupButtons.sublist(0, isDefault ? 1 : 3),
+                ),
+              );
+            },
+          );
+        },
         onOpen: (Terminal tn) {
           Navigator.push(
             context,
@@ -277,6 +297,36 @@ class _PosSwitchTerminalsScreenState extends State<PosSwitchTerminalsScreen> {
       physics: NeverScrollableScrollPhysics(),
     );
   }
+
+  List<Widget> popupButtons = [
+    Container(
+      height: 44,
+      child: SizedBox.expand(
+        child: MaterialButton(
+          onPressed: ( ) {},
+          child: Text('Edit'),
+        ),
+      ),
+    ),
+    Container(
+      height: 44,
+      child: SizedBox.expand(
+        child: MaterialButton(
+          onPressed: ( ) {},
+          child: Text('Set as Default'),
+        ),
+      ),
+    ),
+    Container(
+      height: 44,
+      child: SizedBox.expand(
+        child: MaterialButton(
+          onPressed: ( ) {},
+          child: Text('Delete'),
+        ),
+      ),
+    ),
+  ];
 
 }
 
