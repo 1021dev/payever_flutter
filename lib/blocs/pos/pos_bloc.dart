@@ -108,12 +108,13 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
   Stream<PosScreenState> getDevicePaymentSettings(String businessId) async* {
     dynamic devicePaymentSettingsObj = await api.getPosCommunications(GlobalUtils.activeToken.accessToken, businessId);
     DevicePaymentSettings devicePayment = DevicePaymentSettings.toMap(devicePaymentSettingsObj);
-    yield state.copyWith(devicePaymentSettings: devicePayment);
+    yield state.copyWith(devicePaymentSettings: devicePayment, isLoading: false);
   }
 
   Stream<PosScreenState> installDevicePayment(String businessId) async* {
     dynamic installPaymentObj = await api.patchPosConnectDevicePaymentInstall(GlobalUtils.activeToken.accessToken, businessId);
     DevicePaymentInstall devicePaymentInstall = DevicePaymentInstall.toMap(installPaymentObj);
     yield DevicePaymentInstallSuccess(install: devicePaymentInstall);
+    add(GetPosIntegrationsEvent(businessId: businessId));
   }
 }

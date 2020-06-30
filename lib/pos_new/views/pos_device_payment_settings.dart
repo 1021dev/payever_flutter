@@ -8,8 +8,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/blur_effect_view.dart';
-
-import 'pos_device_payment_settings.dart';
+import 'package:payever/pos_new/widgets/pos_top_button.dart';
 
 bool _isPortrait;
 bool _isTablet;
@@ -20,21 +19,21 @@ Map<String, Icon> icons = {
   'twilio': Icon(Icons.phone_iphone, size: 24,),
 
 };
-class PosConnectScreen extends StatefulWidget {
+class PosDevicePaymentSettings extends StatefulWidget {
 
   PosScreenBloc screenBloc;
   GlobalStateModel globalStateModel;
 
-  PosConnectScreen({
+  PosDevicePaymentSettings({
     this.screenBloc,
     this.globalStateModel,
   });
 
   @override
-  createState() => _PosConnectScreenState();
+  createState() => _PosDevicePaymentSettingsState();
 }
 
-class _PosConnectScreenState extends State<PosConnectScreen> {
+class _PosDevicePaymentSettingsState extends State<PosDevicePaymentSettings> {
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
@@ -108,7 +107,7 @@ class _PosConnectScreenState extends State<PosConnectScreen> {
             padding: EdgeInsets.only(left: 8),
           ),
           Text(
-            'Device Payment',
+            'Point of Sale',
             style: TextStyle(
               color: Colors.white,
               fontSize: 16,
@@ -174,128 +173,94 @@ class _PosConnectScreenState extends State<PosConnectScreen> {
   }
 
   Widget _getBody(PosScreenState state) {
-    switch(selectedState) {
-      case '':
-        return _connectWidget(state);
-      case 'device_payment':
-        return _connectWidget(state);
-      case 'settings':
-        return showCommunications(state);
-      default:
-        return Container();
-    }
-  }
-
-  Widget _connectWidget(PosScreenState state) {
-    if (state.communications.length == 0) {
-      widget.screenBloc.add(GetPosCommunications(businessId: widget.globalStateModel.currentBusiness.id));
+    if (state.devicePaymentSettings == null) {
+      widget.screenBloc.add(GetPosDevicePaymentSettings(businessId: widget.globalStateModel.currentBusiness.id));
+      return Center(
+        child: CircularProgressIndicator(),
+      );
     }
     List<Communication> communications = state.communications;
-    return Container(
-      margin: EdgeInsets.all(12),
-      child: BlurEffectView(
-        color: Color.fromRGBO(20, 20, 20, 0.2),
-        blur: 15,
-        radius: 12,
-        padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
-        child: Column(
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.only(left: 16, right: 16),
-              height: (communications.length * 50).toDouble(),
-              child: BlurEffectView(
-                color: Color.fromRGBO(20, 20, 20, 0.2),
-                blur: 15,
-                radius: 12,
-                padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                child: Column(
-                  children: <Widget>[
-                    Expanded(
-                      child: ListView.separated(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          return Container(
-                              height: 50,
-                              child: Container(
-                                padding: EdgeInsets.only(left: 16, right: 16),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Row(
-                                      children: <Widget>[
-                                        Icon(
-                                          Icons.phone_iphone,
-                                          size: 16,
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.only(left: 8),
-                                        ),
-                                        Text(
-                                          communications[index].integration.name,//displayOptions.title,
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ],
+    return Center(
+      child: Container(
+        padding: EdgeInsets.only(left: 16, right: 16),
+        height: (state.integrations.length * 50).toDouble() + 50,
+        child: BlurEffectView(
+          color: Color.fromRGBO(20, 20, 20, 0.2),
+          blur: 15,
+          radius: 12,
+          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return Container(
+                        height: 50,
+                        child: Container(
+                          padding: EdgeInsets.only(left: 16, right: 16),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Row(
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.phone_iphone,
+                                    size: 16,
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 8),
+                                  ),
+                                  Text(
+                                    communications[index].integration.name,//displayOptions.title,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
                                     ),
-                                    InkWell(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          PageTransition(
-                                            child: PosDevicePaymentSettings(
-                                              globalStateModel: widget.globalStateModel,
-                                              screenBloc: widget.screenBloc,
-                                            ),
-                                            type: PageTransitionType.fade,
-                                            duration: Duration(milliseconds: 500),
-                                          ),
-                                        );
-                                      },
-                                      child: Container(
-                                        height: 20,
-                                        width: 40,
-                                        decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(10),
-                                            color: Colors.black.withOpacity(0.4)
-                                        ),
-                                        child: Center(
-                                          child: Text("Open",
-                                            style: TextStyle(
-                                                fontSize: 10,
-                                                color: Colors.white
-                                            ),
-                                          ),
-                                        ),
+                                  ),
+                                ],
+                              ),
+                              InkWell(
+                                onTap: () {},
+                                child: Container(
+                                  height: 20,
+                                  width: 40,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Colors.black.withOpacity(0.4)
+                                  ),
+                                  child: Center(
+                                    child: Text("Open",
+                                      style: TextStyle(
+                                          fontSize: 10,
+                                          color: Colors.white
                                       ),
                                     ),
-                                  ],
+                                  ),
                                 ),
-                              )
-                          );
-                        },
-                        separatorBuilder: (context, index) {
-                          return Divider(
-                            height: 0,
-                            thickness: 0.5,
-                            color: Colors.white30,
-                            endIndent: 0,
-                            indent: 0,
-                          );
-                        },
-                        itemCount: state.communications.length,
-                      ),
-                    ),
-                  ],
+                              ),
+                            ],
+                          ),
+                        )
+                    );
+                  },
+                  separatorBuilder: (context, index) {
+                    return Divider(
+                      height: 0,
+                      thickness: 0.5,
+                      color: Colors.white30,
+                      endIndent: 0,
+                      indent: 0,
+                    );
+                  },
+                  itemCount: state.communications.length,
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-
       ),
     );
   }
