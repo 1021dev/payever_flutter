@@ -187,3 +187,16 @@ class CreatePosTerminalEvent extends PosScreenEvent{
   ];
 }
 
+class SetActiveTerminalEvent extends PosScreenEvent{
+  final Terminal activeTerminal;
+  final String businessId;
+
+  SetActiveTerminalEvent({this.activeTerminal, this.businessId});
+
+  @override
+  List<Object> get props => [
+    this.activeTerminal,
+    this.businessId,
+  ];
+}
+

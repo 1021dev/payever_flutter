@@ -56,6 +56,9 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
       yield* uploadTerminalImage(event.businessId, event.file);
     } else if (event is CreatePosTerminalEvent) {
       yield* createTerminal(event.logo, event.name, event.businessId);
+    } else if (event is SetActiveTerminalEvent) {
+      yield state.copyWith(activeTerminal: event.activeTerminal);
+      yield* getTerminalIntegrations(event.businessId, event.activeTerminal.id);
     }
   }
 

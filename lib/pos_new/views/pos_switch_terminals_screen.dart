@@ -40,10 +40,13 @@ class _PosSwitchTerminalsScreenState extends State<PosSwitchTerminalsScreen> {
   String wallpaper;
   bool isLoading = false;
   Terminal selectedTerminal;
+  Terminal defaultTerminal;
 
   @override
   void initState() {
     selectedTerminal = widget.screenBloc.state.activeTerminal;
+    List<Terminal> terminals = widget.screenBloc.state.terminals;
+    defaultTerminal = terminals.where((element) => element.active).first;
     super.initState();
   }
 
@@ -148,6 +151,8 @@ class _PosSwitchTerminalsScreenState extends State<PosSwitchTerminalsScreen> {
   }
 
   Widget _getBody(PosScreenState state) {
+    List<Terminal> terminals = state.terminals;
+    defaultTerminal = terminals.where((element) => element.active).first;
     return SingleChildScrollView(
       physics: BouncingScrollPhysics(),
       child: Column(
@@ -225,7 +230,19 @@ class _PosSwitchTerminalsScreenState extends State<PosSwitchTerminalsScreen> {
               padding: EdgeInsets.only(top: 12),
             ),
             MaterialButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  PageTransition(
+                    child: PosCreateTerminalScreen(
+                      businessId: widget.businessId,
+                      screenBloc: widget.screenBloc,
+                    ),
+                    type: PageTransitionType.fade,
+                    duration: Duration(milliseconds: 500),
+                  ),
+                );
+              },
               height: 32,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
@@ -264,7 +281,7 @@ class _PosSwitchTerminalsScreenState extends State<PosSwitchTerminalsScreen> {
           showCupertinoModalPopup(
             context: context,
             builder: (builder) {
-              bool isDefault = tn.id == state.activeTerminal.id;
+              bool isDefault = tn.id == defaultTerminal.id;
               return Container(
                 height: 64.0 * (isDefault ? 1.0 : 3.0) + MediaQuery.of(context).padding.bottom,
                 width: MediaQuery.of(context).size.width,
@@ -274,60 +291,65 @@ class _PosSwitchTerminalsScreenState extends State<PosSwitchTerminalsScreen> {
                 ),
                 padding: EdgeInsets.only(top: 16),
                 child: Column(
-                  children: popupButtons.sublist(0, isDefault ? 1 : 3),
+                  children: popupButtons(context, tn).sublist(0, isDefault ? 1 : 3),
                 ),
               );
             },
           );
         },
         onOpen: (Terminal tn) {
-          Navigator.push(
-            context,
-            PageTransition(
-              child: PosCreateTerminalScreen(
-                businessId: widget.businessId,
-                screenBloc: widget.screenBloc,
-              ),
-              type: PageTransitionType.fade,
-              duration: Duration(milliseconds: 500),
-            ),
-          );
+          widget.screenBloc.add(SetActiveTerminalEvent(activeTerminal: tn, businessId: widget.businessId));
+          Navigator.pop(context);
         },
       )).toList(),
       physics: NeverScrollableScrollPhysics(),
     );
   }
 
-  List<Widget> popupButtons = [
-    Container(
-      height: 44,
-      child: SizedBox.expand(
-        child: MaterialButton(
-          onPressed: ( ) {},
-          child: Text('Edit'),
+  List<Widget> popupButtons(BuildContext context, Terminal terminal) {
+    return [
+      Container(
+        height: 44,
+        child: SizedBox.expand(
+          child: MaterialButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                PageTransition(
+                  child: PosCreateTerminalScreen(
+                    businessId: widget.businessId,
+                    screenBloc: widget.screenBloc,
+                    editTerminal: terminal,
+                  ),
+                  type: PageTransitionType.fade,
+                  duration: Duration(milliseconds: 500),
+                ),
+              );
+            },
+            child: Text('Edit'),
+          ),
         ),
       ),
-    ),
-    Container(
-      height: 44,
-      child: SizedBox.expand(
-        child: MaterialButton(
-          onPressed: ( ) {},
-          child: Text('Set as Default'),
+      Container(
+        height: 44,
+        child: SizedBox.expand(
+          child: MaterialButton(
+            onPressed: () {},
+            child: Text('Set as Default'),
+          ),
         ),
       ),
-    ),
-    Container(
-      height: 44,
-      child: SizedBox.expand(
-        child: MaterialButton(
-          onPressed: ( ) {},
-          child: Text('Delete'),
+      Container(
+        height: 44,
+        child: SizedBox.expand(
+          child: MaterialButton(
+            onPressed: () {},
+            child: Text('Delete'),
+          ),
         ),
       ),
-    ),
-  ];
-
+    ];
+  }
 }
 
 class TerminalCell extends StatelessWidget {

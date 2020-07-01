@@ -20,10 +20,12 @@ class PosCreateTerminalScreen extends StatefulWidget {
 
   PosScreenBloc screenBloc;
   String businessId;
+  Terminal editTerminal;
 
   PosCreateTerminalScreen({
     this.screenBloc,
     this.businessId,
+    this.editTerminal,
   });
 
   @override
@@ -41,6 +43,9 @@ class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
 
   @override
   void initState() {
+    if (widget.editTerminal != null) {
+      terminalNameController.text = widget.editTerminal.name;
+    }
     super.initState();
   }
 
@@ -93,7 +98,7 @@ class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
       title: Row(
         children: <Widget>[
           Text(
-            'Create Terminal',
+            widget.editTerminal != null ? 'Edit Terminal': 'Create Terminal',
             style: TextStyle(
               color: Colors.white,
               fontSize: 16,
@@ -134,10 +139,7 @@ class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
       body: SafeArea(
         child: BackgroundBase(
           true,
-          body: state.isLoading ?
-          Center(
-            child: CircularProgressIndicator(),
-          ): Column(
+          body: Column(
             children: <Widget>[
               Expanded(
                 child: _getBody(state),
@@ -150,10 +152,9 @@ class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
   }
 
   Widget _getBody(PosScreenState state) {
-    if (state.devicePaymentSettings == null) {
-      return Center(
-        child: CircularProgressIndicator(),
-      );
+    String blobName = state.blobName;
+    if (widget.editTerminal != null) {
+      blobName = widget.editTerminal.logo;
     }
     return Center(
       child: Container(
@@ -179,7 +180,7 @@ class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
                             child: Stack(
                               alignment: Alignment.topRight,
                               children: <Widget>[
-                                state.blobName != null && state.blobName != ''
+                                blobName != null && blobName != ''
                                     ? Center(
                                     child: CircleAvatar(
                                       backgroundColor: Colors.grey,
@@ -189,8 +190,7 @@ class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
                                         width: 60,
                                       ),
                                     ),
-                                )
-                                    : Center(
+                                ): Center(
                                   child: CircleAvatar(
                                     backgroundColor: Colors.grey,
                                     child: Container(
@@ -273,7 +273,7 @@ class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
                 child: SizedBox.expand(
                   child: MaterialButton(
                     onPressed: () {
-                      if (!state.isLoading && !terminalNameController.text.isEmpty) {
+                      if (!terminalNameController.text.isEmpty) {
                         widget.screenBloc.add(CreatePosTerminalEvent(
                           businessId: widget.businessId,
                           name: terminalNameController.text,
