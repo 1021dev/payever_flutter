@@ -292,7 +292,9 @@ class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
                         submitTerminal(state);
                       }
                     },
-                    child: Text(
+                    child: state.isLoading ? Center(
+                      child: CircularProgressIndicator(),
+                    ) : Text(
                       'Done',
                       style: TextStyle(
                         color: Colors.white,

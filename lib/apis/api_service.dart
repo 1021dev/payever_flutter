@@ -802,5 +802,22 @@ class ApiService {
     }
   }
 
+  Future<dynamic> deleteTerminal(String token, String businessId, String terminalId) async {
+    try {
+      print('$TAG - patchActiveTerminal()');
+      dynamic response = await _client.deleteTypeless(
+          '$posBusiness$businessId$posTerminalMid$terminalId',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
 
 }

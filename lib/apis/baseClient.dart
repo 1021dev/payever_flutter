@@ -25,7 +25,7 @@ class BaseClient {
     );
   }
 
-  Future<Response> deleteTypeless(
+  Future<dynamic> deleteTypeless(
       String path, {
         Map<String, dynamic> queryParameters,
         Map<String, dynamic> headers,

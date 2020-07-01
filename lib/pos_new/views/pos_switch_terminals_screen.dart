@@ -47,6 +47,8 @@ class _PosSwitchTerminalsScreenState extends State<PosSwitchTerminalsScreen> {
     selectedTerminal = widget.screenBloc.state.activeTerminal;
     List<Terminal> terminals = widget.screenBloc.state.terminals;
     defaultTerminal = terminals.where((element) => element.active).first;
+    
+    widget.screenBloc.add(GetPosTerminalsEvent(businessId: widget.businessId));
     super.initState();
   }
 
@@ -335,7 +337,10 @@ class _PosSwitchTerminalsScreenState extends State<PosSwitchTerminalsScreen> {
         height: 44,
         child: SizedBox.expand(
           child: MaterialButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pop(context);
+              widget.screenBloc.add(SetDefaultTerminalEvent(activeTerminal: terminal, businessId: widget.businessId));
+            },
             child: Text('Set as Default'),
           ),
         ),
@@ -344,7 +349,80 @@ class _PosSwitchTerminalsScreenState extends State<PosSwitchTerminalsScreen> {
         height: 44,
         child: SizedBox.expand(
           child: MaterialButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pop(context);
+              showCupertinoDialog(
+                context: context,
+                builder: (builder) {
+                  return Dialog(
+                    backgroundColor: Colors.transparent,
+                    child: Container(
+                      height: 250,
+                      child: BlurEffectView(
+                        color: Color.fromRGBO(50, 50, 50, 0.4),
+                        padding: EdgeInsets.all(16),
+                        child: Column(
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.only(top: 16),
+                            ),
+                            Icon(Icons.info),
+                            Padding(
+                              padding: EdgeInsets.only(top: 16),
+                            ),
+                            Text(
+                              'Deleting Terminal',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w300,
+                                color: Colors.white
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 16),
+                            ),
+                            Text(
+                              'Do you really want to delete your terminal? Because all data will be lost and you will not be able to restore it.',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w300,
+                                  color: Colors.white
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 16),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
+                                MaterialButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text(
+                                    'No',
+                                  ),
+                                ),
+                                MaterialButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                    widget.screenBloc.add(DeleteTerminalEvent(businessId: widget.businessId, activeTerminal: terminal));
+                                  },
+                                  child: Text(
+                                    'Yes',
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
             child: Text('Delete'),
           ),
         ),

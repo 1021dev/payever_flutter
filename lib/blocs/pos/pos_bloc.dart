@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/commons/commons.dart';
@@ -63,6 +64,12 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
       yield* getTerminalIntegrations(event.businessId, event.activeTerminal.id);
     } else if (event is UpdateBlobImage) {
       yield state.copyWith(blobName: event.logo);
+    } else if (event is SetDefaultTerminalEvent) {
+      yield* activeTerminal(event.businessId, event.activeTerminal.id);
+    } else if (event is DeleteTerminalEvent) {
+      yield* deleteTerminal(event.businessId, event.activeTerminal.id);
+    } else if (event is GetPosTerminalsEvent) {
+      yield* fetchPos(event.businessId);
     }
   }
 
@@ -110,7 +117,11 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
     });
 
     Terminal activeTerminal = terminals.where((element) => element.active).toList().first;
-    yield state.copyWith(activeTerminal: activeTerminal, terminals: terminals, isLoading: false);
+    if (state.activeTerminal == null) {
+      yield state.copyWith(activeTerminal: activeTerminal, terminals: terminals, isLoading: false);
+    } else {
+      yield state.copyWith(terminals: terminals, isLoading: false);
+    }
     add(GetPosIntegrationsEvent(businessId: activeBusinessId));
   }
 
@@ -200,30 +211,49 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
   }
 
   Stream<PosScreenState> createTerminal(String logo, String name, String businessId) async* {
+    yield state.copyWith(isLoading: true);
     dynamic response = await api.postTerminal(businessId, GlobalUtils.activeToken.accessToken, logo, name);
     if (response != null) {
       yield PosScreenSuccess();
     } else {
       yield PosScreenFailure(error: 'Create Terminal failed');
     }
-    yield state.copyWith(blobName: '');
+    yield state.copyWith(blobName: '',);
     yield* fetchPos(businessId);
   }
 
   Stream<PosScreenState> updateTerminal(String logo, String name, String businessId, String terminalId) async* {
+    yield state.copyWith(isLoading: true);
     dynamic response = await api.patchTerminal(businessId, GlobalUtils.activeToken.accessToken, logo, name, terminalId);
 //    Terminal terminal = Terminal.toMap(response);
     if (response != null) {
       yield PosScreenSuccess();
     } else {
-      yield PosScreenFailure(error: 'Create Terminal failed');
+      yield PosScreenFailure(error: 'Update Terminal failed');
     }
     yield state.copyWith(blobName: '');
     yield* fetchPos(businessId);
   }
 
   Stream<PosScreenState> activeTerminal(String businessId, String terminalId) async* {
+    yield state.copyWith(isLoading: true);
     dynamic response = await api.patchActiveTerminal(GlobalUtils.activeToken.accessToken, businessId, terminalId);
+    if (response != null) {
+      yield PosScreenSuccess();
+    } else {
+      yield PosScreenFailure(error: 'Active Terminal failed');
+    }
+    yield* fetchPos(businessId);
+  }
+
+  Stream<PosScreenState> deleteTerminal(String businessId, String terminalId) async* {
+    yield state.copyWith(isLoading: true);
+    dynamic response = await api.deleteTerminal(GlobalUtils.activeToken.accessToken, businessId, terminalId);
+    if (response != null) {
+      yield PosScreenSuccess();
+    } else {
+      yield PosScreenFailure(error: 'Delete Terminal failed');
+    }
     yield* fetchPos(businessId);
   }
 }
