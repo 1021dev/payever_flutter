@@ -40,11 +40,14 @@ class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
   String wallpaper;
   final TextEditingController terminalNameController = TextEditingController();
   bool isLoading = false;
+  bool isError = false;
+  bool isButtonPressed = false;
 
   @override
   void initState() {
     if (widget.editTerminal != null) {
       terminalNameController.text = widget.editTerminal.name;
+      widget.screenBloc.add(UpdateBlobImage(logo: widget.editTerminal.logo));
     }
     super.initState();
   }
@@ -139,12 +142,16 @@ class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
       body: SafeArea(
         child: BackgroundBase(
           true,
-          body: Column(
-            children: <Widget>[
-              Expanded(
-                child: _getBody(state),
-              ),
-            ],
+          body: Form(
+            key: formKey,
+            autovalidate: false,
+            child: Column(
+              children: <Widget>[
+                Expanded(
+                  child: _getBody(state),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -153,9 +160,6 @@ class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
 
   Widget _getBody(PosScreenState state) {
     String blobName = state.blobName;
-    if (widget.editTerminal != null) {
-      blobName = widget.editTerminal.logo;
-    }
     return Center(
       child: Container(
         padding: EdgeInsets.only(left: 16, right: 16),
@@ -184,7 +188,7 @@ class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
                                     ? Center(
                                     child: CircleAvatar(
                                       backgroundColor: Colors.grey,
-                                      backgroundImage: NetworkImage('$imageBase${state.blobName}'),
+                                      backgroundImage: NetworkImage('$imageBase$blobName'),
                                       child: Container(
                                         height: 60,
                                         width: 60,
@@ -235,18 +239,29 @@ class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
                               radius: 12,
                               padding: EdgeInsets.only(left: 12, right: 12),
                               child: TextFormField(
-                                key: formKey,
                                 controller: terminalNameController,
                                 onSaved: (val) {},
                                 onChanged: (val) {
-                                  setState(() {
-                                  });
+                                  isButtonPressed = false;
+                                  if (isError) {
+                                    formKey.currentState.validate();
+                                  }
+                                },
+                                onFieldSubmitted: (val) {
+                                  if (formKey.currentState.validate()) {
+                                    submitTerminal(state);
+                                  }
                                 },
                                 validator: (value) {
+                                  if (!isButtonPressed) {
+                                    return null;
+                                  }
+                                  isError = true;
                                   if (value.isEmpty) {
                                     return 'Terminal name required';
                                   } else {
-                                    return '';
+                                    isError = false;
+                                    return null;
                                   }
                                 },
                                 decoration: new InputDecoration(
@@ -273,12 +288,8 @@ class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
                 child: SizedBox.expand(
                   child: MaterialButton(
                     onPressed: () {
-                      if (!terminalNameController.text.isEmpty) {
-                        widget.screenBloc.add(CreatePosTerminalEvent(
-                          businessId: widget.businessId,
-                          name: terminalNameController.text,
-                          logo: state.blobName != '' ? state.blobName : null,
-                        ));
+                      if (formKey.currentState.validate()) {
+                        submitTerminal(state);
                       }
                     },
                     child: Text(
@@ -297,6 +308,23 @@ class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
         ),
       ),
     );
+  }
+
+  void submitTerminal(PosScreenState state) {
+    if (widget.editTerminal != null) {
+      widget.screenBloc.add(UpdatePosTerminalEvent(
+        businessId: widget.businessId,
+        name: terminalNameController.text,
+        logo: state.blobName != '' ? state.blobName : null,
+        terminalId: widget.editTerminal.id,
+      ));
+    } else {
+      widget.screenBloc.add(CreatePosTerminalEvent(
+        businessId: widget.businessId,
+        name: terminalNameController.text,
+        logo: state.blobName != '' ? state.blobName : null,
+      ));
+    }
   }
 
   Future getImage() async {

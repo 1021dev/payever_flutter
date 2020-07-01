@@ -56,9 +56,13 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
       yield* uploadTerminalImage(event.businessId, event.file);
     } else if (event is CreatePosTerminalEvent) {
       yield* createTerminal(event.logo, event.name, event.businessId);
+    } else if (event is UpdatePosTerminalEvent) {
+      yield* updateTerminal(event.logo, event.name, event.businessId, event.terminalId);
     } else if (event is SetActiveTerminalEvent) {
       yield state.copyWith(activeTerminal: event.activeTerminal);
       yield* getTerminalIntegrations(event.businessId, event.activeTerminal.id);
+    } else if (event is UpdateBlobImage) {
+      yield state.copyWith(blobName: event.logo);
     }
   }
 
@@ -197,12 +201,24 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
 
   Stream<PosScreenState> createTerminal(String logo, String name, String businessId) async* {
     dynamic response = await api.postTerminal(businessId, GlobalUtils.activeToken.accessToken, logo, name);
+    if (response != null) {
+      yield PosScreenSuccess();
+    } else {
+      yield PosScreenFailure(error: 'Create Terminal failed');
+    }
+    yield state.copyWith(blobName: '');
+    yield* fetchPos(businessId);
+  }
+
+  Stream<PosScreenState> updateTerminal(String logo, String name, String businessId, String terminalId) async* {
+    dynamic response = await api.patchTerminal(businessId, GlobalUtils.activeToken.accessToken, logo, name, terminalId);
 //    Terminal terminal = Terminal.toMap(response);
     if (response != null) {
       yield PosScreenSuccess();
     } else {
       yield PosScreenFailure(error: 'Create Terminal failed');
     }
+    yield state.copyWith(blobName: '');
     yield* fetchPos(businessId);
   }
 

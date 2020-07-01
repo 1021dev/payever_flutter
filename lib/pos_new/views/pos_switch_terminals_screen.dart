@@ -313,6 +313,7 @@ class _PosSwitchTerminalsScreenState extends State<PosSwitchTerminalsScreen> {
         child: SizedBox.expand(
           child: MaterialButton(
             onPressed: () {
+              Navigator.pop(context);
               Navigator.push(
                 context,
                 PageTransition(

@@ -173,6 +173,16 @@ class UploadTerminalImage extends PosScreenEvent{
   ];
 }
 
+class UpdateBlobImage extends PosScreenEvent{
+  final String logo;
+  UpdateBlobImage({this.logo});
+
+  @override
+  List<Object> get props => [
+    this.logo,
+  ];
+}
+
 class CreatePosTerminalEvent extends PosScreenEvent{
   final String businessId;
   final String logo;
@@ -184,6 +194,22 @@ class CreatePosTerminalEvent extends PosScreenEvent{
     this.name,
     this.logo,
     this.businessId,
+  ];
+}
+
+class UpdatePosTerminalEvent extends PosScreenEvent{
+  final String businessId;
+  final String logo;
+  final String name;
+  final String terminalId;
+  UpdatePosTerminalEvent({this.name, this.businessId, this.logo, this.terminalId});
+
+  @override
+  List<Object> get props => [
+    this.name,
+    this.logo,
+    this.businessId,
+    this.terminalId,
   ];
 }
 
