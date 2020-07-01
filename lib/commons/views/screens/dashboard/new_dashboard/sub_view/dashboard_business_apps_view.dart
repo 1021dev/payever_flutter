@@ -9,7 +9,7 @@ import '../../../../../models/app_widget.dart';
 import 'blur_effect_view.dart';
 
 class DashboardBusinessAppsView extends StatefulWidget {
-  final List<BusinessApps> businessApps;
+  final List<AppWidget> businessApps;
   final Function onTapEdit;
   final Function onTapWidget;
   DashboardBusinessAppsView({
@@ -25,7 +25,7 @@ class _DashboardBusinessAppsViewState extends State<DashboardBusinessAppsView> {
   String uiKit = 'https://payeverstage.azureedge.net/icons-png/icons-apps-white/icon-apps-white-';
   @override
   Widget build(BuildContext context) {
-    List<BusinessApps> businessApps =
+    List<AppWidget> businessApps =
     widget.businessApps.where((element) => element.order != null).toList();
     businessApps.sort((b1, b2) {
       return b1.order.compareTo(b2.order);
@@ -33,7 +33,7 @@ class _DashboardBusinessAppsViewState extends State<DashboardBusinessAppsView> {
     return BlurEffectView(
       padding: EdgeInsets.fromLTRB(14, 12, 14, 0),
       child: Container(
-        height: 44 + (businessApps.length / 4).ceilToDouble() * 82,
+        height: 56 + (businessApps.length / 4).ceilToDouble() * 86,
         child: Column(
           children: [
             Row(

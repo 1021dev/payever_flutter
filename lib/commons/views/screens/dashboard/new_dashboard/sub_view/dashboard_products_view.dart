@@ -9,7 +9,7 @@ import 'package:payever/commons/views/screens/dashboard/dashboard_card_ref.dart'
 import 'blur_effect_view.dart';
 
 class DashboardProductsView extends StatefulWidget {
-  final AppWidget appWidget;
+  final BusinessApps appWidget;
 
   DashboardProductsView({
     this.appWidget,

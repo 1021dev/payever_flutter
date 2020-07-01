@@ -7,7 +7,7 @@ import '../../../../../utils/env.dart';
 import 'blur_effect_view.dart';
 
 class DashboardAdvertisingView extends StatefulWidget {
-  final AppWidget appWidget;
+  final BusinessApps appWidget;
 
   DashboardAdvertisingView({ this.appWidget});
   @override

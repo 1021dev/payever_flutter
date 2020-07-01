@@ -7,7 +7,7 @@ import 'package:payever/commons/utils/env.dart';
 import 'blur_effect_view.dart';
 
 class DashboardSettingsView extends StatefulWidget {
-  final AppWidget appWidget;
+  final BusinessApps appWidget;
 
   DashboardSettingsView({
     this.appWidget,

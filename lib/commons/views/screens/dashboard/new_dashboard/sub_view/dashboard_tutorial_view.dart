@@ -9,8 +9,7 @@ import 'blur_effect_view.dart';
 
 class DashboardTutorialView extends StatefulWidget {
   final List<AppWidget> appWidgets;
-  final AppWidget appWidget;
-  DashboardTutorialView({this.appWidgets, this.appWidget});
+  DashboardTutorialView({this.appWidgets});
   @override
   _DashboardTutorialViewState createState() => _DashboardTutorialViewState();
 }

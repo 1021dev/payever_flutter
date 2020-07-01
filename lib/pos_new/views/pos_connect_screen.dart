@@ -279,7 +279,8 @@ class _PosConnectScreenState extends State<PosConnectScreen> {
                                             color: Colors.black.withOpacity(0.4)
                                         ),
                                         child: Center(
-                                          child: Text("Open",
+                                          child: Text(
+                                            communications[index].integration.enabled ? 'Open': 'Install',
                                             style: TextStyle(
                                                 fontSize: 10,
                                                 color: Colors.white
@@ -381,7 +382,7 @@ class _PosConnectScreenState extends State<PosConnectScreen> {
                                         color: Colors.black.withOpacity(0.4)
                                     ),
                                     child: Center(
-                                      child: Text("Open",
+                                      child: Text('Open',
                                         style: TextStyle(
                                             fontSize: 10,
                                             color: Colors.white

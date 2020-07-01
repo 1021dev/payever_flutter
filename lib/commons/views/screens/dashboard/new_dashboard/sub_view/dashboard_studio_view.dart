@@ -8,7 +8,7 @@ import '../../../../../utils/env.dart';
 
 class DashboardStudioView extends StatefulWidget {
   final VoidCallback onOpen;
-  final AppWidget appWidget;
+  final BusinessApps appWidget;
 
   DashboardStudioView({this.onOpen, this.appWidget});
   @override

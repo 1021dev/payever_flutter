@@ -190,26 +190,28 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _body(DashboardScreenState state) {
-    List<AppWidget> widgets = [];
-    if (state.currentWidgets.length > 0) {
-      widgets.addAll(state.currentWidgets);//.where((element) => element.order != null));
-      widgets.sort((w1, w2) {
-        if (w1.order == null) {
-          return 1;
-        }
-        if (w2.order == null) {
-          return 1;
-        }
-        return w2.order.compareTo(w1.order);
-      });
+    List<BusinessApps> widgets = [];
+    if (state.businessWidgets.length > 0) {
+      widgets.addAll(state.businessWidgets);
+      widgets.reversed.toList();
     }
     List<Widget> dashboardWidgets = [];
     dashboardWidgets.add(_headerView(state));
     dashboardWidgets.add(_searchBar(state));
 
+    int currentOrder = 0;
     for (int i = 0; i < widgets.length; i++) {
-      AppWidget appWidget = widgets[i];
-      if (appWidget.type == 'transactions') {
+      currentOrder = i + 1;
+      List<BusinessApps> appWidgets = widgets.where((element) => element.order == currentOrder).toList();
+      if (appWidgets.length == 0) {
+        continue;
+      }
+      BusinessApps appWidget = appWidgets[0];
+      print('$currentOrder => $appWidget');
+      if (appWidget.dashboardInfo == null) {
+        continue;
+      }
+      if (appWidget.code == 'transactions') {
         dashboardWidgets.add(
             DashboardTransactionsView(
               appWidget: appWidget,
@@ -228,41 +230,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
               },
             )
         );
-      } else if (appWidget.type == 'apps') {
-        dashboardWidgets.add(
-            DashboardBusinessAppsView(
-              businessApps: state.businessWidgets,
-              onTapEdit: () {},
-              onTapWidget: (BusinessApps aw) {
-                if (aw.dashboardInfo.title.toLowerCase().contains('transactions')) {
-                  Provider.of<GlobalStateModel>(context,listen: false)
-                      .setCurrentBusiness(state.activeBusiness);
-                  Provider.of<GlobalStateModel>(context,listen: false)
-                      .setCurrentWallpaper(state.curWall);
-                  Navigator.push(
-                    context,
-                    PageTransition(
-                      child: TransactionScreenInit(),
-                      type: PageTransitionType.fade,
-                    ),
-                  );
-                }
-              },
-            )
-        );
-      } else if (appWidget.type == 'shop') {
+      } else if (appWidget.code == 'shop') {
         dashboardWidgets.add(
             DashboardAppDetailCell(
               appWidget: appWidget,
             )
         );
-      } else if (appWidget.type == 'shipping') {
+      } else if (appWidget.code == 'shipping') {
         dashboardWidgets.add(
             DashboardAppDetailCell(
               appWidget: appWidget,
             )
         );
-      } else if (appWidget.type == 'pos') {
+      } else if (appWidget.code == 'pos') {
         dashboardWidgets.add(
             DashboardAppPosView(
               isLoading: state.isPosLoading,
@@ -285,63 +265,85 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         duration: Duration(milliseconds: 50)));              },
             )
         );
-      } else if (appWidget.type == 'checkout') {
+      } else if (appWidget.code == 'checkout') {
         dashboardWidgets.add(
             DashboardAppDetailCell(
               appWidget: appWidget,
             )
         );
-      } else if (appWidget.type == 'marketing') {
+      } else if (appWidget.code == 'marketing') {
         dashboardWidgets.add(
             DashboardAppDetailCell(
               appWidget: appWidget,
             )
         );
-      } else if (appWidget.type == 'studio') {
+      } else if (appWidget.code == 'studio') {
         dashboardWidgets.add(
             DashboardStudioView(
               appWidget: appWidget,
             )
         );
-      } else if (appWidget.type == 'ads') {
+      } else if (appWidget.code == 'ads') {
         dashboardWidgets.add(
             DashboardAdvertisingView(
               appWidget: appWidget,
             )
         );
-      } else if (appWidget.type == 'contacts') {
+      } else if (appWidget.code == 'contacts') {
         dashboardWidgets.add(
             DashboardAppDetailCell(
               appWidget: appWidget,
             )
         );
-      } else if (appWidget.type == 'products') {
+      } else if (appWidget.code == 'products') {
         dashboardWidgets.add(
             DashboardProductsView(
               appWidget: appWidget,
             )
         );
-      } else if (appWidget.type == 'connect') {
+      } else if (appWidget.code == 'connect') {
         dashboardWidgets.add(
             DashboardConnectView(
               appWidget: appWidget,
             )
         );
-      } else if (appWidget.type == 'settings') {
+      }
+      if (dashboardWidgets.length == 3) {
         dashboardWidgets.add(
-            DashboardSettingsView(
-              appWidget: appWidget,
-            )
-        );
-      } else if (appWidget.type == 'tutorial') {
-        dashboardWidgets.add(
-            DashboardTutorialView(
-              appWidgets: state.currentWidgets,
-              appWidget: appWidget,
+            DashboardBusinessAppsView(
+              businessApps: state.currentWidgets,
+              onTapEdit: () {},
+              onTapWidget: (BusinessApps aw) {
+                if (aw.dashboardInfo.title.toLowerCase().contains('transactions')) {
+                  Provider.of<GlobalStateModel>(context,listen: false)
+                      .setCurrentBusiness(state.activeBusiness);
+                  Provider.of<GlobalStateModel>(context,listen: false)
+                      .setCurrentWallpaper(state.curWall);
+                  Navigator.push(
+                    context,
+                    PageTransition(
+                      child: TransactionScreenInit(),
+                      type: PageTransitionType.fade,
+                    ),
+                  );
+                }
+              },
             )
         );
       }
     }
+    BusinessApps appWidget = widgets.where((element) => element.code == 'settings' ).toList().first;
+    dashboardWidgets.add(
+        DashboardSettingsView(
+          appWidget: appWidget,
+        )
+    );
+    dashboardWidgets.add(
+        DashboardTutorialView(
+          appWidgets: state.currentWidgets,
+        )
+    );
+
     dashboardWidgets.add(
         Padding(
           padding: EdgeInsets.only(top: 24),

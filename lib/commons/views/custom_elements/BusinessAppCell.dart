@@ -8,7 +8,7 @@ import '../../utils/env.dart';
 import '../../utils/translations.dart';
 
 class BusinessAppCell extends StatelessWidget {
-  final BusinessApps currentApp;
+  final AppWidget currentApp;
   final Function onTap;
 
   BusinessAppCell({
@@ -22,33 +22,34 @@ class BusinessAppCell extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
+        height: 72,
         child: Column(
           children: [
             Stack(
               alignment: AlignmentDirectional.center,
               children: [
                 Container(
-                  width: 50,
-                  height: 50,
+                  width: 56,
+                  height: 56,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(6),
                       color: Colors.black38
                   ),
                 ),
                 Container(
-                  width: 50,
-                  height: 50,
+                  width: 44,
+                  height: 44,
                   decoration: BoxDecoration(
                       image: DecorationImage(
                           image: NetworkImage(
-                              '$uiKit${currentApp.dashboardInfo.icon.replaceAll('32', '64')}'),
+                              '$uiKit${currentApp.icon}'),
                           fit: BoxFit.cover)),
                 ),
               ],
             ),
             SizedBox(height: 2),
             Text(
-              currentApp.dashboardInfo.title.replaceAll('dashboard.apps.', '') ?? '',
+              Language.getWidgetStrings(currentApp.title),
               style: TextStyle(
                   fontSize: 10,
                   color: Colors.white

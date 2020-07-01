@@ -6,7 +6,7 @@ import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/b
 import '../../../../../utils/env.dart';
 
 class DashboardAppDetailCell extends StatefulWidget {
-  final AppWidget appWidget;
+  final BusinessApps appWidget;
   DashboardAppDetailCell({
     this.appWidget,
   });
@@ -32,12 +32,12 @@ class _DashboardAppDetailCellState extends State<DashboardAppDetailCell> {
                   height: 40,
                   decoration: BoxDecoration(
                       image: DecorationImage(
-                          image: NetworkImage('$uiKit${widget.appWidget.type}.png'),
+                          image: NetworkImage('$uiKit${widget.appWidget.code}.png'),
                           fit: BoxFit.fitWidth)),
                 ),
                 SizedBox(height: 8),
                 Text(
-                  Language.getTransactionStrings(widget.appWidget.title),
+                  Language.getCommerceOSStrings(widget.appWidget.dashboardInfo.title),
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -46,7 +46,7 @@ class _DashboardAppDetailCellState extends State<DashboardAppDetailCell> {
                 ),
                 SizedBox(height: 4),
                 Text(
-                  widget.appWidget.id,
+                  Language.getWidgetStrings("widgets.${widget.appWidget.code}.install-app"),
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 10,
@@ -72,7 +72,7 @@ class _DashboardAppDetailCellState extends State<DashboardAppDetailCell> {
                     },
                     child: Center(
                       child: Text(
-                        !widget.appWidget.install ? "Get started" : "Continue setup process",
+                        widget.appWidget.setupStatus != 'NotStated' ? "Get started" : "Continue setup process",
                         softWrap: true,
                         style: TextStyle(
                             color: Colors.white, fontSize: 12),
@@ -80,11 +80,11 @@ class _DashboardAppDetailCellState extends State<DashboardAppDetailCell> {
                     ),
                   ),
                 ),
-                if (!widget.appWidget.install) Container(
+                if (widget.appWidget.setupStatus != 'NotStated') Container(
                   width: 1,
                   color: Colors.white12,
                 ),
-                if (!widget.appWidget.install) Expanded(
+                if (widget.appWidget.setupStatus != 'NotStated') Expanded(
                   flex: 1,
                   child: InkWell(
                     onTap: () {
