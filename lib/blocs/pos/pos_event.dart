@@ -284,3 +284,27 @@ class CopyTerminalEvent extends PosScreenEvent {
   ];
 }
 
+class GenerateQRCodeEvent extends PosScreenEvent {
+  final String businessId;
+  final String businessName;
+  final String avatarUrl;
+  final String id;
+  final String url;
+
+  GenerateQRCodeEvent({
+    this.businessId,
+    this.businessName,
+    this.avatarUrl,
+    this.id,
+    this.url,
+  });
+
+  @override
+  List<Object> get props => [
+    this.businessId,
+    this.businessName,
+    this.avatarUrl,
+    this.id,
+    this.url,
+  ];
+}

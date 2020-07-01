@@ -8,6 +8,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/blur_effect_view.dart';
+import 'package:payever/pos_new/views/pos_qr_settings.dart';
 
 import 'pos_device_payment_settings.dart';
 
@@ -243,17 +244,32 @@ class _PosConnectScreenState extends State<PosConnectScreen> {
                                     ),
                                     InkWell(
                                       onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          PageTransition(
-                                            child: PosDevicePaymentSettings(
-                                              businessId: widget.globalStateModel.currentBusiness.id,
-                                              screenBloc: widget.screenBloc,
+                                        if (communications[index].integration.name == 'device-payments') {
+                                          Navigator.push(
+                                            context,
+                                            PageTransition(
+                                              child: PosDevicePaymentSettings(
+                                                businessId: widget.globalStateModel.currentBusiness.id,
+                                                screenBloc: widget.screenBloc,
+                                              ),
+                                              type: PageTransitionType.fade,
+                                              duration: Duration(milliseconds: 500),
                                             ),
-                                            type: PageTransitionType.fade,
-                                            duration: Duration(milliseconds: 500),
-                                          ),
-                                        );
+                                          );
+                                        } else if (communications[index].integration.name == 'qr') {
+                                          Navigator.push(
+                                            context,
+                                            PageTransition(
+                                              child: PosQRSettings(
+                                                businessId: widget.globalStateModel.currentBusiness.id,
+                                                screenBloc: widget.screenBloc,
+                                                businessName: widget.globalStateModel.currentBusiness.name,
+                                              ),
+                                              type: PageTransitionType.fade,
+                                              duration: Duration(milliseconds: 500),
+                                            ),
+                                          );
+                                        }
                                       },
                                       child: Container(
                                         height: 20,

@@ -22,6 +22,7 @@ class Env {
   static String wrapper;
   static String employees;
   static String appRegistry;
+  static String qr;
 
   Env.map(dynamic obj) {
     Env.users = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_USER];
@@ -47,5 +48,6 @@ class Env {
     Env.wrapper = obj[GlobalUtils.ENV_FRONTEND][GlobalUtils.ENV_WRAPPER];
     Env.employees = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_EMPLOYEES];
     Env.appRegistry = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_APP_REGISTRY];
+    Env.qr = obj[GlobalUtils.ENV_CONNECT]['qr'];
   }
 }

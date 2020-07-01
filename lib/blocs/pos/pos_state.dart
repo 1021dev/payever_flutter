@@ -14,6 +14,7 @@ class PosScreenState {
   final String blobName;
   final bool isUpdating;
   final Terminal copyedTerminal;
+  final dynamic qrForm;
 
   PosScreenState({
     this.isLoading = true,
@@ -28,6 +29,7 @@ class PosScreenState {
     this.showCommunications = false,
     this.blobName = '',
     this.copyedTerminal,
+    this.qrForm,
   });
 
   List<Object> get props => [
@@ -43,6 +45,7 @@ class PosScreenState {
     this.showCommunications,
     this.blobName,
     this.copyedTerminal,
+    this.qrForm,
   ];
 
   PosScreenState copyWith({
@@ -58,6 +61,7 @@ class PosScreenState {
     bool showCommunications,
     String blobName,
     Terminal copiedTerminal,
+    dynamic qrForm,
   }) {
     return PosScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -72,6 +76,7 @@ class PosScreenState {
       showCommunications: showCommunications ?? this.showCommunications,
       blobName: blobName ?? this.blobName,
       copyedTerminal: copiedTerminal,
+      qrForm: qrForm ?? this.qrForm,
     );
   }
 }

@@ -72,6 +72,8 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
       yield* fetchPos(event.businessId);
     } else if (event is CopyTerminalEvent) {
       yield state.copyWith(copiedTerminal: event.terminal, terminalCopied: true);
+    } else if (event is GenerateQRCodeEvent) {
+      yield* postGenerateQRCode(event.businessId, event.businessName, event.avatarUrl, event.id, event.url);
     }
   }
 
@@ -258,5 +260,24 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
       yield PosScreenFailure(error: 'Delete Terminal failed');
     }
     yield* fetchPos(businessId);
+  }
+
+  Stream<PosScreenState> postGenerateQRCode(
+      String businessId,
+      String businessName,
+      String avatarUrl,
+      String id,
+      String url,
+      ) async* {
+    yield state.copyWith(isLoading: true);
+    dynamic response = await api.postGenerateTerminalQRCode(
+      GlobalUtils.activeToken.accessToken,
+      businessId,
+      businessName,
+      avatarUrl,
+      id,
+      url,
+    );
+    yield state.copyWith(qrForm: response, isLoading: false);
   }
 }

@@ -693,6 +693,37 @@ class ApiService {
     }
   }
 
+  Future<dynamic> postGenerateTerminalQRCode(
+      String token,
+      String businessId,
+      String businessName,
+      String avatarUrl,
+      String id,
+      String url,
+      ) async {
+    try {
+      print('$TAG - getPosDevicePaymentSettings()');
+      dynamic response = await _client.postTypeLess(
+          '${Env.qr}/api/app/$businessId/generate',
+          body: {
+            'avatarUrl': avatarUrl,
+            'businessId': businessId,
+            'businessName': businessName,
+            'id': id,
+            'url': url,
+          },
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<dynamic> putDevicePaymentSettings(String businessId, String token, bool autoreponderEnabled, bool secondFactor, int verificationType) async {
     try {
       print('$TAG - putDevicePaymentSettings()');

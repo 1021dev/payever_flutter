@@ -21,6 +21,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'pos_device_payment_settings.dart';
+import 'pos_qr_settings.dart';
 
 bool _isPortrait;
 bool _isTablet;
@@ -521,9 +522,20 @@ class _PosScreenState extends State<PosScreen> {
                                             duration: Duration(milliseconds: 500),
                                           ),
                                         );
-                                      }
-
-                                    },
+                                      } else if (state.integrations[index].integration.name == 'qr') {
+                                        Navigator.push(
+                                          context,
+                                          PageTransition(
+                                            child: PosQRSettings(
+                                              businessId: widget.globalStateModel.currentBusiness.id,
+                                              screenBloc: screenBloc,
+                                              businessName: widget.globalStateModel.currentBusiness.name,
+                                            ),
+                                            type: PageTransitionType.fade,
+                                            duration: Duration(milliseconds: 500),
+                                          ),
+                                        );
+                                      }                                    },
                                     child: Container(
                                       height: 20,
                                       width: 40,
