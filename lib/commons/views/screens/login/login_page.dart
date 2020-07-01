@@ -199,8 +199,8 @@ class _LoginState extends State<Login>
                         child: Container(
                             width: Measurements.width /
                                 ((_isTablet
-                                        ? _widthFactorTablet
-                                        : _widthFactorPhone) *
+                                    ? _widthFactorTablet
+                                    : _widthFactorPhone) *
                                     2),
                             child: Image.asset(
                                 "assets/images/logo-payever-white.png")),
@@ -208,9 +208,9 @@ class _LoginState extends State<Login>
                       Padding(
                         padding: EdgeInsets.only(
                             top: (Measurements.height *
-                                    (_isTablet
-                                        ? _heightFactorTablet
-                                        : _heightFactorPhone)) /
+                                (_isTablet
+                                    ? _heightFactorTablet
+                                    : _heightFactorPhone)) /
                                 1.5),
                       ),
                       if (_isInvalidInformation)
@@ -248,29 +248,27 @@ class _LoginState extends State<Login>
                         key: formKey,
                         child: Center(
                             child: Column(
-                          children: <Widget>[
-                            Container(
-                              padding: EdgeInsets.only(top: 1.0),
-                              width: Measurements.width /
-                                  (_isTablet
-                                      ? _widthFactorTablet
-                                      : _widthFactorPhone),
-                              height: 55,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    color: Colors.black.withOpacity(0.25),
-                                    shape: BoxShape.rectangle,
-                                    borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(8.0),
-                                        topRight: Radius.circular(8.0))),
-                                child: SingleChildScrollView(
-                                    child: Column(
-                                  children: <Widget>[
-                                    Padding(
+                              children: <Widget>[
+                                Container(
+                                  padding: EdgeInsets.only(top: 1.0),
+                                  width: Measurements.width /
+                                      (_isTablet
+                                          ? _widthFactorTablet
+                                          : _widthFactorPhone),
+                                  height: 55,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        color: Colors.black.withOpacity(0.25),
+                                        shape: BoxShape.rectangle,
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(8.0),
+                                            topRight: Radius.circular(8.0))),
+                                    child: Padding(
                                       padding: EdgeInsets.only(
                                           left: _paddingText,
                                           right: _paddingText),
                                       child: TextFormField(
+                                        enabled: !_isLoading,
                                         onSaved: (val) => _username = val,
                                         onChanged: (val) {
                                           setState(() {
@@ -284,41 +282,37 @@ class _LoginState extends State<Login>
                                           if (!value.contains('@')) {
                                             return 'Enter valid email address';
                                           }
+                                          return null;
                                         },
                                         decoration: new InputDecoration(
                                           labelText: "E-Mail Address",
                                           border: InputBorder.none,
                                           contentPadding: _isTablet
                                               ? EdgeInsets.all(
-                                                  Measurements.height * 0.007)
+                                              Measurements.height * 0.007)
                                               : null,
                                         ),
                                         style: TextStyle(fontSize: 16),
                                         keyboardType:
-                                            TextInputType.emailAddress,
+                                        TextInputType.emailAddress,
                                         initialValue: kDebugMode ? "testcases@payever.de" : email,
                                       ),
                                     ),
-                                  ],
-                                )),
-                              ),
-                            ),
-                            Container(
-                              padding: EdgeInsets.only(top: 1),
-                              width: Measurements.width /
-                                  (_isTablet
-                                      ? _widthFactorTablet
-                                      : _widthFactorPhone),
-                              height: 55,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.black.withOpacity(0.25),
-                                  shape: BoxShape.rectangle,
+                                  ),
                                 ),
-                                child: SingleChildScrollView(
-                                    child: Column(
-                                  children: <Widget>[
-                                    Container(
+                                Container(
+                                  padding: EdgeInsets.only(top: 1),
+                                  width: Measurements.width /
+                                      (_isTablet
+                                          ? _widthFactorTablet
+                                          : _widthFactorPhone),
+                                  height: 55,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.black.withOpacity(0.25),
+                                      shape: BoxShape.rectangle,
+                                    ),
+                                    child: Container(
                                       child: Stack(
                                         alignment: Alignment.centerRight,
                                         children: <Widget>[
@@ -327,6 +321,7 @@ class _LoginState extends State<Login>
                                                 left: _paddingText,
                                                 right: _paddingText),
                                             child: TextFormField(
+                                              enabled: !_isLoading,
                                               onSaved: (val) => _password = val,
                                               onChanged: (val) {
                                                 setState(() {
@@ -337,14 +332,15 @@ class _LoginState extends State<Login>
                                                 if (value.isEmpty) {
                                                   return 'Password is required';
                                                 }
+                                                return null;
                                               },
                                               decoration: new InputDecoration(
                                                 labelText: "Password",
                                                 border: InputBorder.none,
                                                 contentPadding: _isTablet
                                                     ? EdgeInsets.all(
-                                                        Measurements.height *
-                                                            0.007)
+                                                    Measurements.height *
+                                                        0.007)
                                                     : null,
                                               ),
                                               obscureText: true,
@@ -355,57 +351,55 @@ class _LoginState extends State<Login>
                                         ],
                                       ),
                                     ),
-                                  ],
-                                )),
-                              ),
-                            ),
-                          ],
-                        )),
+                                  ),
+                                ),
+                              ],
+                            )),
                       ),
                       Center(
                           child: Container(
-                        padding: EdgeInsets.only(top: 1),
-                        width: Measurements.width /
-                            (_isTablet
-                                ? _widthFactorTablet
-                                : _widthFactorPhone),
-                        height: 55,
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(0.8),
-                              shape: BoxShape.rectangle,
-                              borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(8.0),
-                                  bottomRight: Radius.circular(8.0))),
-                          child: !_isLoading
-                              ? InkWell(
-                                  key: GlobalKeys.loginButton,
-                                  child: Center(
-                                      child: Text(
-                                    "Login",
-                                    style: TextStyle(fontSize: 16),
-                                  )),
-                                  onTap: () {
-                                    print("login");
-                                    _submit();
-                                  },
-                                )
-                              : Center(
-                                  child: CircularProgressIndicator(),
-                                ),
-                        ),
-                      )),
+                            padding: EdgeInsets.only(top: 1),
+                            width: Measurements.width /
+                                (_isTablet
+                                    ? _widthFactorTablet
+                                    : _widthFactorPhone),
+                            height: 55,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.black.withOpacity(0.8),
+                                  shape: BoxShape.rectangle,
+                                  borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(8.0),
+                                      bottomRight: Radius.circular(8.0))),
+                              child: !_isLoading
+                                  ? InkWell(
+                                key: GlobalKeys.loginButton,
+                                child: Center(
+                                    child: Text(
+                                      "Login",
+                                      style: TextStyle(fontSize: 16),
+                                    )),
+                                onTap: () {
+                                  print("login");
+                                  _submit();
+                                },
+                              )
+                                  : Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                            ),
+                          )),
                       Padding(
                         padding: EdgeInsets.only(
                             top: (Measurements.height *
-                                    (_isTablet
-                                        ? _heightFactorTablet
-                                        : _heightFactorPhone)) /
+                                (_isTablet
+                                    ? _heightFactorTablet
+                                    : _heightFactorPhone)) /
                                 2),
                       ),
                       Container(
                         padding:
-                            EdgeInsets.only(right: Measurements.width * 0.02),
+                        EdgeInsets.only(right: Measurements.width * 0.02),
                         child: InkWell(
                           child: Text(
                             "Forgot your password?",
@@ -419,39 +413,6 @@ class _LoginState extends State<Login>
                           },
                         ),
                       ),
-
-//                      Container(
-//                        width: Measurements.width /
-//                            (_isTablet ? _widthFactorTablet : _widthFactorPhone),
-//                        child: Row(
-//                          mainAxisAlignment: MainAxisAlignment.center,
-//                          children: <Widget>[
-//                            Container(
-//                              child: Row(
-//                                children: <Widget>[
-//                                  Text("Don't have a payever account? "),
-//                                  Container(
-//                                    padding: EdgeInsets.symmetric(
-//                                        vertical: Measurements.width * 0.02),
-//                                    child: Center(
-//                                      child: InkWell(
-//                                        child: Text(
-//                                          "Sign up for free",
-//                                          style: TextStyle(
-//                                              fontWeight: FontWeight.bold),
-//                                        ),
-//                                        onTap: () {
-//                                          _launchURL(GlobalUtils.SIGN_UP);
-//                                        },
-//                                      ),
-//                                    ),
-//                                  ),
-//                                ],
-//                              ),
-//                            ),
-//                          ],
-//                        ),
-//                      )
                     ],
                   ),
                 ),
@@ -474,10 +435,9 @@ class _LoginState extends State<Login>
                 children: [
                   DropdownButton(
                     value: "EN",
+                    isDense: true,
                     icon: Icon(
-                      IconData(58131,
-                          fontFamily:
-                          'MaterialIcons'),
+                      Icons.keyboard_arrow_down,
                       color: Colors.white.withAlpha(160),
                       size: 18,
                     ),
@@ -501,31 +461,6 @@ class _LoginState extends State<Login>
               ),
             ),
           ),
-//          Container(
-//            height: 30,
-//            padding: EdgeInsets.fromLTRB(4, 0, 4, 0),
-//            decoration: BoxDecoration(
-//              color: Color.fromRGBO(0, 0, 0, 0.6),
-//              borderRadius: BorderRadius.circular(4),
-//            ),
-//            child: Row(
-//              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//              children: [
-//                Text("EN",
-//                  style: TextStyle(
-//                      color: Colors.white.withAlpha(160),
-//                      fontSize: 12
-//                  ),),
-//                Icon(
-//                  IconData(58131,
-//                      fontFamily:
-//                      'MaterialIcons'),
-//                  color: Colors.white.withAlpha(160),
-//                  size: 18,
-//                )
-//              ],
-//            ),
-//          )
         ],
       ),
     );
