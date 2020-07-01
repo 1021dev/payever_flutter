@@ -89,6 +89,17 @@ public class HomeActivity extends BaseActivity
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+//        isPermissionAccepted = checkStoragePermission();
+//        if (isPermissionAccepted) {
+//            initializeMposApplication();
+//            IntentFilter filter = new IntentFilter(NfcAdapter.ACTION_ADAPTER_STATE_CHANGED);
+//            this.registerReceiver(mReceiver, filter);
+//        }
+    }
+
     void initializeMposApplication() {
         MposApplication.INSTANCE.initializeMposLibrary(this);
         // check if NFC is enabled
@@ -235,12 +246,23 @@ public class HomeActivity extends BaseActivity
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+//        if (mReceiver != null) {
+//            this.unregisterReceiver(mReceiver);
+//            MposApplication.INSTANCE.closeFileConnections();
+//        }
+
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         // Remove the broadcast listener
-        this.unregisterReceiver(mReceiver);
-        // Close file connections
-        MposApplication.INSTANCE.closeFileConnections();
+        if (mReceiver != null) {
+            this.unregisterReceiver(mReceiver);
+            MposApplication.INSTANCE.closeFileConnections();
+        }
     }
 
 //    public NfcProvider getNfcProvider() {

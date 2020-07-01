@@ -105,13 +105,6 @@ class _DashboardMidScreenState extends State<DashboardMidScreen> {
         Measurements.loadImages(_formKey.currentContext);
       });
 
-      // RestDataSource().getVersion(GlobalUtils.ActiveToken.accessToken).then((list){
-      //   print('Version');
-      //   list.forEach((a){
-      //     print(a);
-      //   });
-      // });
-
       RestDataSource()
           .getWidgets(preferences.getString(GlobalUtils.BUSINESS),
               GlobalUtils.activeToken.accessToken, _formKey.currentContext)
