@@ -152,7 +152,6 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                     ),
                   ],
                 ),
-
               ),
               Padding(
                 padding: EdgeInsets.only(left: 12),
