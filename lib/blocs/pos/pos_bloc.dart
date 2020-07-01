@@ -70,6 +70,8 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
       yield* deleteTerminal(event.businessId, event.activeTerminal.id);
     } else if (event is GetPosTerminalsEvent) {
       yield* fetchPos(event.businessId);
+    } else if (event is CopyTerminalEvent) {
+      yield state.copyWith(copiedTerminal: event.terminal, terminalCopied: true);
     }
   }
 
@@ -118,9 +120,9 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
 
     Terminal activeTerminal = terminals.where((element) => element.active).toList().first;
     if (state.activeTerminal == null) {
-      yield state.copyWith(activeTerminal: activeTerminal, terminals: terminals, isLoading: false);
+      yield state.copyWith(activeTerminal: activeTerminal, terminals: terminals, isLoading: false, terminalCopied: false);
     } else {
-      yield state.copyWith(terminals: terminals, isLoading: false);
+      yield state.copyWith(terminals: terminals, isLoading: false, terminalCopied: false);
     }
     add(GetPosIntegrationsEvent(businessId: activeBusinessId));
   }
@@ -191,7 +193,8 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
     add(GetTerminalIntegrationsEvent(businessId: businessId, terminalId: terminalId));
   }
 
-  Stream<PosScreenState> saveDevicePaymentSettings(String businessId, bool secondFactor, bool autoResponderEnabled, int verificationType) async* {
+  Stream<PosScreenState> saveDevicePaymentSettings(String businessId, bool autoResponderEnabled, bool secondFactor, int verificationType) async* {
+    yield state.copyWith(isUpdating: true);
     dynamic devicePaymentSettingsObj = await api.putDevicePaymentSettings(
       businessId,
       GlobalUtils.activeToken.accessToken,
@@ -200,30 +203,30 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
       verificationType,
     );
     DevicePaymentSettings devicePayment = DevicePaymentSettings.toMap(devicePaymentSettingsObj);
-    yield state.copyWith(devicePaymentSettings: devicePayment, isLoading: false);
+    yield state.copyWith(devicePaymentSettings: devicePayment, isLoading: false, isUpdating: false);
   }
 
   Stream<PosScreenState> uploadTerminalImage(String businessId, File file) async* {
-    yield state.copyWith(blobName: '');
+    yield state.copyWith(blobName: '', isLoading: true);
     dynamic response = await api.postTerminalImage(file, businessId, GlobalUtils.activeToken.accessToken);
     String blobName = response['blobName'];
-    yield state.copyWith(blobName: blobName);
+    yield state.copyWith(blobName: blobName, isLoading: false);
   }
 
   Stream<PosScreenState> createTerminal(String logo, String name, String businessId) async* {
-    yield state.copyWith(isLoading: true);
+    yield state.copyWith(isUpdating: true);
     dynamic response = await api.postTerminal(businessId, GlobalUtils.activeToken.accessToken, logo, name);
     if (response != null) {
       yield PosScreenSuccess();
     } else {
       yield PosScreenFailure(error: 'Create Terminal failed');
     }
-    yield state.copyWith(blobName: '',);
+    yield state.copyWith(blobName: '', isUpdating: false);
     yield* fetchPos(businessId);
   }
 
   Stream<PosScreenState> updateTerminal(String logo, String name, String businessId, String terminalId) async* {
-    yield state.copyWith(isLoading: true);
+    yield state.copyWith(isUpdating: true);
     dynamic response = await api.patchTerminal(businessId, GlobalUtils.activeToken.accessToken, logo, name, terminalId);
 //    Terminal terminal = Terminal.toMap(response);
     if (response != null) {
@@ -231,7 +234,7 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
     } else {
       yield PosScreenFailure(error: 'Update Terminal failed');
     }
-    yield state.copyWith(blobName: '');
+    yield state.copyWith(blobName: '', isUpdating: false);
     yield* fetchPos(businessId);
   }
 

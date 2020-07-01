@@ -39,7 +39,6 @@ class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
 
   String wallpaper;
   final TextEditingController terminalNameController = TextEditingController();
-  bool isLoading = false;
   bool isError = false;
   bool isButtonPressed = false;
 
@@ -208,7 +207,7 @@ class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
                                     ),
                                   ),
                                 ),
-                                isLoading
+                                state.isLoading
                                     ? Center(
                                   child: Container(
                                     width: 16,
@@ -292,7 +291,7 @@ class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
                         submitTerminal(state);
                       }
                     },
-                    child: state.isLoading ? Center(
+                    child: state.isUpdating ? Center(
                       child: CircularProgressIndicator(),
                     ) : Text(
                       'Done',
@@ -330,7 +329,6 @@ class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
   }
 
   Future getImage() async {
-    isLoading = true;
     var img = await ImagePicker.pickImage(source: ImageSource.gallery);
     if (img.existsSync()) {
       print("_image: $img");

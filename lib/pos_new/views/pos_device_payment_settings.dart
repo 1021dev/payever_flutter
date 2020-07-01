@@ -351,7 +351,9 @@ class _PosDevicePaymentSettingsState extends State<PosDevicePaymentSettings> {
                         verificationType: settings.verificationType,
                       ));
                     },
-                    child: Text(
+                    child: state.isUpdating ? Container(
+                      child: CircularProgressIndicator(),
+                    ) : Text(
                       'Save',
                       style: TextStyle(
                         color: Colors.white,

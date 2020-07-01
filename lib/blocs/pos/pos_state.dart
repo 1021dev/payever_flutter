@@ -12,9 +12,12 @@ class PosScreenState {
   final bool showCommunications;
   final List<String> terminalIntegrations;
   final String blobName;
+  final bool isUpdating;
+  final Terminal copyedTerminal;
 
   PosScreenState({
     this.isLoading = true,
+    this.isUpdating = false,
     this.terminals = const [],
     this.activeTerminal,
     this.terminalCopied = false,
@@ -24,10 +27,12 @@ class PosScreenState {
     this.devicePaymentSettings,
     this.showCommunications = false,
     this.blobName = '',
+    this.copyedTerminal,
   });
 
   List<Object> get props => [
     this.isLoading,
+    this.isUpdating,
     this.terminals,
     this.activeTerminal,
     this.terminalCopied,
@@ -37,10 +42,12 @@ class PosScreenState {
     this.devicePaymentSettings,
     this.showCommunications,
     this.blobName,
+    this.copyedTerminal,
   ];
 
   PosScreenState copyWith({
     bool isLoading,
+    bool isUpdating,
     List<Terminal> terminals,
     Terminal activeTerminal,
     bool terminalCopied,
@@ -50,9 +57,11 @@ class PosScreenState {
     DevicePaymentSettings devicePaymentSettings,
     bool showCommunications,
     String blobName,
+    Terminal copiedTerminal,
   }) {
     return PosScreenState(
       isLoading: isLoading ?? this.isLoading,
+      isUpdating: isUpdating ?? this.isUpdating,
       terminals: terminals ?? this.terminals,
       activeTerminal: activeTerminal ?? this.activeTerminal,
       terminalCopied: terminalCopied ?? this.terminalCopied,
@@ -62,6 +71,7 @@ class PosScreenState {
       devicePaymentSettings: devicePaymentSettings ?? this.devicePaymentSettings,
       showCommunications: showCommunications ?? this.showCommunications,
       blobName: blobName ?? this.blobName,
+      copyedTerminal: copiedTerminal,
     );
   }
 }

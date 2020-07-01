@@ -26,6 +26,7 @@ class DashboardAppPosView extends StatefulWidget {
 class _DashboardAppPosViewState extends State<DashboardAppPosView> {
   String uiKit = 'https://payeverstage.azureedge.net/icons-png/icons-apps-white/icon-apps-white-';
   String icon = 'https://payeverstage.azureedge.net/icons-png/icons-apps-white/icon-apps-white-point-of-sale.png';
+  String imageBase = Env.storage + '/images/';
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +117,7 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         image: DecorationImage(
-                          image: NetworkImage(widget.activeTerminal.logo),
+                          image: NetworkImage('$imageBase${widget.activeTerminal.logo}'),
                           fit: BoxFit.cover,
                         )
                       ),
@@ -138,15 +139,17 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                     Padding(
                       padding: EdgeInsets.only(left: 12),
                     ),
-                    AutoSizeText(
-                      widget.activeTerminal.name,
-                      minFontSize: 16,
-                      maxFontSize: 24,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w500,
+                    Expanded(
+                      child: AutoSizeText(
+                        widget.activeTerminal.name,
+                        minFontSize: 16,
+                        maxFontSize: 24,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
-                    )
+                    ),
                   ],
                 ),
 

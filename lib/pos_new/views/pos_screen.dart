@@ -113,7 +113,18 @@ class _PosScreenState extends State<PosScreen> {
       OverflowMenuItem(
         title: 'Edit',
         onTap: () {
-
+          Navigator.push(
+            context,
+            PageTransition(
+              child: PosCreateTerminalScreen(
+                businessId: widget.globalStateModel.currentBusiness.id,
+                screenBloc: screenBloc,
+                editTerminal: state.activeTerminal,
+              ),
+              type: PageTransitionType.fade,
+              duration: Duration(milliseconds: 500),
+            ),
+          );
         },
       ),
     ];
@@ -617,7 +628,7 @@ class _PosScreenState extends State<PosScreen> {
               Padding(
                 padding: EdgeInsets.only(left: 8),
               ),
-              Flexible(
+              Expanded(
                 child: AutoSizeText(
                   state.activeTerminal.id,
                   minFontSize: 12,
@@ -631,7 +642,12 @@ class _PosScreenState extends State<PosScreen> {
               Padding(
                 padding: EdgeInsets.only(left: 8),
               ),
-              FlatButton(
+              MaterialButton(
+                height: 32,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                color: Colors.black26,
                 child: Text(
                   state.terminalCopied ? 'Copied': 'Copy',
                   style: TextStyle(
@@ -641,7 +657,7 @@ class _PosScreenState extends State<PosScreen> {
                   ),
                 ),
                 onPressed: () {
-
+                  screenBloc.add(CopyTerminalEvent(businessId: widget.globalStateModel.currentBusiness.id, terminal: state.activeTerminal));
                 },
               ),
             ],

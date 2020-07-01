@@ -267,3 +267,20 @@ class GetPosTerminalsEvent extends PosScreenEvent {
     this.activeTerminal,
   ];
 }
+
+class CopyTerminalEvent extends PosScreenEvent {
+  final String businessId;
+  final Terminal terminal;
+
+  CopyTerminalEvent({
+    this.businessId,
+    this.terminal,
+  });
+
+  @override
+  List<Object> get props => [
+    this.businessId,
+    this.terminal,
+  ];
+}
+
