@@ -149,6 +149,111 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
+  Widget _appBar(DashboardScreenState state) {
+    return AppBar(
+      centerTitle: false,
+      elevation: 0,
+      automaticallyImplyLeading: false,
+      backgroundColor: Colors.black87,
+      title: Row(
+        children: <Widget>[
+          Container(
+            child: Center(
+              child: Container(
+                  child: SvgPicture.asset(
+                    'assets/images/payeverlogo.svg',
+                    color: Colors.white,
+                    height: 16,
+                    width: 24,
+                  )
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 8),
+          ),
+          Text(
+            'Business',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+      actions: <Widget>[
+        IconButton(
+          constraints: BoxConstraints(
+              maxHeight: 32,
+              maxWidth: 32,
+              minHeight: 32,
+              minWidth: 32
+          ),
+          icon: Icon(
+            Icons.person_pin,
+            color: Colors.white,
+            size: 24,
+          ),
+          onPressed: () {
+
+          },
+        ),
+        IconButton(
+          constraints: BoxConstraints(
+              maxHeight: 32,
+              maxWidth: 32,
+              minHeight: 32,
+              minWidth: 32
+          ),
+          icon: Icon(
+            Icons.search,
+            color: Colors.white,
+            size: 24,
+          ),
+          onPressed: () {
+
+          },
+        ),
+        IconButton(
+          constraints: BoxConstraints(
+              maxHeight: 32,
+              maxWidth: 32,
+              minHeight: 32,
+              minWidth: 32
+          ),
+          icon: Icon(
+            Icons.notifications,
+            color: Colors.white,
+            size: 24,
+          ),
+          onPressed: () {
+
+          },
+        ),
+        IconButton(
+          constraints: BoxConstraints(
+              maxHeight: 32,
+              maxWidth: 32,
+              minHeight: 32,
+              minWidth: 32
+          ),
+          icon: Icon(
+            Icons.menu,
+            color: Colors.white,
+            size: 24,
+          ),
+          onPressed: () {
+            _innerDrawerKey.currentState.toggle();
+          },
+        ),
+        Padding(
+          padding: EdgeInsets.only(right: 16),
+        ),
+      ],
+    );
+  }
+
   Widget _showMain(DashboardScreenState state) {
     if (state.language != null) {
       Language.language = state.language;
@@ -196,154 +301,164 @@ class _DashboardScreenState extends State<DashboardScreen> {
       widgets.reversed.toList();
     }
     List<Widget> dashboardWidgets = [];
+    // HEADER
     dashboardWidgets.add(_headerView(state));
+    // SEARCH BAR
     dashboardWidgets.add(_searchBar(state));
 
-    int currentOrder = 0;
-    for (int i = 0; i < widgets.length; i++) {
-      currentOrder = i + 1;
-      List<BusinessApps> appWidgets = widgets.where((element) => element.order == currentOrder).toList();
-      if (appWidgets.length == 0) {
-        continue;
-      }
-      BusinessApps appWidget = appWidgets[0];
-      print('$currentOrder => $appWidget');
-      if (appWidget.dashboardInfo == null) {
-        continue;
-      }
-      if (appWidget.code == 'transactions') {
-        dashboardWidgets.add(
-            DashboardTransactionsView(
-              appWidget: appWidget,
-              onOpen: () {
-                Provider.of<GlobalStateModel>(context,listen: false)
-                    .setCurrentBusiness(state.activeBusiness);
-                Provider.of<GlobalStateModel>(context,listen: false)
-                    .setCurrentWallpaper(state.curWall);
-                Navigator.push(
-                  context,
-                  PageTransition(
-                    child: TransactionScreenInit(),
-                    type: PageTransitionType.fade,
-                  ),
-                );
-              },
-            )
-        );
-      } else if (appWidget.code == 'shop') {
-        dashboardWidgets.add(
-            DashboardAppDetailCell(
-              appWidget: appWidget,
-            )
-        );
-      } else if (appWidget.code == 'shipping') {
-        dashboardWidgets.add(
-            DashboardAppDetailCell(
-              appWidget: appWidget,
-            )
-        );
-      } else if (appWidget.code == 'pos') {
-        dashboardWidgets.add(
-            DashboardAppPosView(
-              isLoading: state.isPosLoading,
-              appWidget: appWidget,
-              terminals: state.terminalList,
-              activeTerminal: state.activeTerminal,
-              onTapEditTerminal: () {
-
-              },
-              onTapOpen: () {
-                Provider.of<GlobalStateModel>(context,listen: false)
-                    .setCurrentBusiness(state.activeBusiness);
-                Provider.of<GlobalStateModel>(context,listen: false)
-                    .setCurrentWallpaper(state.curWall);
-                Navigator.push(
-                    context,
-                    PageTransition(
-                        child: PosInitScreen(),
-                        type: PageTransitionType.fade,
-                        duration: Duration(milliseconds: 50)));              },
-            )
-        );
-      } else if (appWidget.code == 'checkout') {
-        dashboardWidgets.add(
-            DashboardAppDetailCell(
-              appWidget: appWidget,
-            )
-        );
-      } else if (appWidget.code == 'marketing') {
-        dashboardWidgets.add(
-            DashboardAppDetailCell(
-              appWidget: appWidget,
-            )
-        );
-      } else if (appWidget.code == 'studio') {
-        dashboardWidgets.add(
-            DashboardStudioView(
-              appWidget: appWidget,
-            )
-        );
-      } else if (appWidget.code == 'ads') {
-        dashboardWidgets.add(
-            DashboardAdvertisingView(
-              appWidget: appWidget,
-            )
-        );
-      } else if (appWidget.code == 'contacts') {
-        dashboardWidgets.add(
-            DashboardAppDetailCell(
-              appWidget: appWidget,
-            )
-        );
-      } else if (appWidget.code == 'products') {
-        dashboardWidgets.add(
-            DashboardProductsView(
-              appWidget: appWidget,
-            )
-        );
-      } else if (appWidget.code == 'connect') {
-        dashboardWidgets.add(
-            DashboardConnectView(
-              appWidget: appWidget,
-            )
-        );
-      }
-      if (dashboardWidgets.length == 3) {
-        dashboardWidgets.add(
-            DashboardBusinessAppsView(
-              businessApps: state.currentWidgets,
-              onTapEdit: () {},
-              onTapWidget: (BusinessApps aw) {
-                if (aw.dashboardInfo.title.toLowerCase().contains('transactions')) {
-                  Provider.of<GlobalStateModel>(context,listen: false)
-                      .setCurrentBusiness(state.activeBusiness);
-                  Provider.of<GlobalStateModel>(context,listen: false)
-                      .setCurrentWallpaper(state.curWall);
-                  Navigator.push(
-                    context,
-                    PageTransition(
-                      child: TransactionScreenInit(),
-                      type: PageTransitionType.fade,
-                    ),
-                  );
-                }
-              },
-            )
-        );
-      }
+    // TRANSACTIONS
+    List<BusinessApps> appWidgets = widgets.where((element) => element.code == 'transactions').toList();
+    BusinessApps appWidget;
+    if (appWidgets.length > 0) {
+      appWidget = appWidgets[0];
     }
-    BusinessApps appWidget = widgets.where((element) => element.code == 'settings' ).toList().first;
+    if (appWidget != null) {
+      dashboardWidgets.add(
+          DashboardTransactionsView(
+            appWidget: appWidget,
+            onOpen: () {
+              Provider.of<GlobalStateModel>(context,listen: false)
+                  .setCurrentBusiness(state.activeBusiness);
+              Provider.of<GlobalStateModel>(context,listen: false)
+                  .setCurrentWallpaper(state.curWall);
+              Navigator.push(
+                context,
+                PageTransition(
+                  child: TransactionScreenInit(),
+                  type: PageTransitionType.fade,
+                ),
+              );
+            },
+          )
+      );
+    }
+    // Business Apps
+    dashboardWidgets.add(
+        DashboardBusinessAppsView(
+          businessApps: state.currentWidgets,
+          onTapEdit: () {},
+          onTapWidget: (AppWidget aw) {
+            if (aw.type.contains('transactions')) {
+              Provider.of<GlobalStateModel>(context,listen: false)
+                  .setCurrentBusiness(state.activeBusiness);
+              Provider.of<GlobalStateModel>(context,listen: false)
+                  .setCurrentWallpaper(state.curWall);
+              Navigator.push(
+                context,
+                PageTransition(
+                  child: TransactionScreenInit(),
+                  type: PageTransitionType.fade,
+                ),
+              );
+            }
+          },
+        )
+    );
+
+    // Shop
+    appWidget = widgets.where((element) => element.code == 'shop' ).toList().first;
+    dashboardWidgets.add(
+        DashboardAppDetailCell(
+          appWidget: appWidget,
+        )
+    );
+
+    // Point of Sale
+    appWidget = widgets.where((element) => element.code == 'pos' ).toList().first;
+    dashboardWidgets.add(
+        DashboardAppPosView(
+          isLoading: state.isPosLoading,
+          appWidget: appWidget,
+          terminals: state.terminalList,
+          activeTerminal: state.activeTerminal,
+          onTapEditTerminal: () {
+
+          },
+          onTapOpen: () {
+            Provider.of<GlobalStateModel>(context,listen: false)
+                .setCurrentBusiness(state.activeBusiness);
+            Provider.of<GlobalStateModel>(context,listen: false)
+                .setCurrentWallpaper(state.curWall);
+            Navigator.push(
+              context,
+              PageTransition(
+                child: PosInitScreen(),
+                type: PageTransitionType.fade,
+                duration: Duration(milliseconds: 50),
+              ),
+            );
+          },
+        )
+    );
+
+    // Checkout
+    appWidget = widgets.where((element) => element.code == 'checkout' ).toList().first;
+    dashboardWidgets.add(
+        DashboardAppDetailCell(
+          appWidget: appWidget,
+        )
+    );
+
+    // Mail
+    appWidget = widgets.where((element) => element.code == 'marketing' ).toList().first;
+    dashboardWidgets.add(
+        DashboardAppDetailCell(
+          appWidget: appWidget,
+        )
+    );
+
+    // Studio
+    appWidget = widgets.where((element) => element.code == 'settings' ).toList().first;
+    dashboardWidgets.add(
+        DashboardStudioView(
+          appWidget: appWidget,
+        )
+    );
+
+    // Ads
+    appWidget = widgets.where((element) => element.code == 'settings' ).toList().first;
+    dashboardWidgets.add(
+        DashboardAdvertisingView(
+          appWidget: appWidget,
+        )
+    );
+
+    // Contacts
+    dashboardWidgets.add(
+        DashboardAppDetailCell(
+          appWidget: appWidget,
+        )
+    );
+
+    // Products
+    dashboardWidgets.add(
+        DashboardProductsView(
+          appWidget: appWidget,
+        )
+    );
+
+    // Connects
+    dashboardWidgets.add(
+        DashboardConnectView(
+          appWidget: appWidget,
+        )
+    );
+
+    // Settings
+    appWidget = widgets.where((element) => element.code == 'settings' ).toList().first;
     dashboardWidgets.add(
         DashboardSettingsView(
           appWidget: appWidget,
         )
     );
+    // Tutorials
     dashboardWidgets.add(
         DashboardTutorialView(
           appWidgets: state.currentWidgets,
         )
     );
 
+    // Paddings
     dashboardWidgets.add(
         Padding(
           padding: EdgeInsets.only(top: 24),
@@ -470,110 +585,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ],
         ),
       ),
-    );
-  }
-  Widget _appBar(DashboardScreenState state) {
-    return AppBar(
-      centerTitle: false,
-      elevation: 0,
-      automaticallyImplyLeading: false,
-      backgroundColor: Colors.black87,
-      title: Row(
-        children: <Widget>[
-          Container(
-            child: Center(
-              child: Container(
-                  child: SvgPicture.asset(
-                    'assets/images/payeverlogo.svg',
-                    color: Colors.white,
-                    height: 16,
-                    width: 24,
-                  )
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 8),
-          ),
-          Text(
-            'Business',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
-      actions: <Widget>[
-        IconButton(
-          constraints: BoxConstraints(
-              maxHeight: 32,
-              maxWidth: 32,
-              minHeight: 32,
-              minWidth: 32
-          ),
-          icon: Icon(
-            Icons.person_pin,
-            color: Colors.white,
-            size: 24,
-          ),
-          onPressed: () {
-
-          },
-        ),
-        IconButton(
-          constraints: BoxConstraints(
-              maxHeight: 32,
-              maxWidth: 32,
-              minHeight: 32,
-              minWidth: 32
-          ),
-          icon: Icon(
-            Icons.search,
-            color: Colors.white,
-            size: 24,
-          ),
-          onPressed: () {
-
-          },
-        ),
-        IconButton(
-          constraints: BoxConstraints(
-              maxHeight: 32,
-              maxWidth: 32,
-              minHeight: 32,
-              minWidth: 32
-          ),
-          icon: Icon(
-            Icons.notifications,
-            color: Colors.white,
-            size: 24,
-          ),
-          onPressed: () {
-
-          },
-        ),
-        IconButton(
-          constraints: BoxConstraints(
-              maxHeight: 32,
-              maxWidth: 32,
-              minHeight: 32,
-              minWidth: 32
-          ),
-          icon: Icon(
-            Icons.menu,
-            color: Colors.white,
-            size: 24,
-          ),
-          onPressed: () {
-            _innerDrawerKey.currentState.toggle();
-          },
-        ),
-        Padding(
-          padding: EdgeInsets.only(right: 16),
-        ),
-      ],
     );
   }
 }
