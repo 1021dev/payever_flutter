@@ -526,7 +526,7 @@ class ApiService {
   Future<dynamic> getTutorials(String token, String id) async {
     try {
       print('$TAG - getTutorials()');
-      dynamic response = await _client.deleteTypeless(
+      dynamic response = await _client.getTypeless(
           '$widgetsUrl$id/widget-tutorial',
           headers: {
             HttpHeaders.authorizationHeader: 'Bearer $token',
@@ -543,7 +543,7 @@ class ApiService {
   Future<dynamic> patchTutorials(String token, String id, String video) async {
     try {
       print('$TAG - patchTutorials()');
-      dynamic response = await _client.patch(
+      dynamic response = await _client.patchTypeless(
           '$widgetsUrl$id/widget-tutorial/$video/watched',
           headers: {
             HttpHeaders.authorizationHeader: 'Bearer $token',
@@ -838,6 +838,30 @@ class ApiService {
       print('$TAG - patchActiveTerminal()');
       dynamic response = await _client.deleteTypeless(
           '$posBusiness$businessId$posTerminalMid$terminalId',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> subscriptionBusinessApp(
+      String token,
+      String businessId,
+      String appName,
+      ) async {
+    try {
+      print('$TAG - subscriptionBusinessApp()');
+      dynamic response = await _client.postTypeLess(
+          '${Env.transactions}/api/subscriptions/trials/$businessId',
+          body: {
+            'appName': appName,
+          },
           headers: {
             HttpHeaders.authorizationHeader: 'Bearer $token',
             HttpHeaders.contentTypeHeader: 'application/json',

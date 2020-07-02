@@ -27,6 +27,10 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
       yield* _checkVersion();
     } else if (event is FetchPosEvent) {
       yield* fetchPOSCard(event.business);
+    } else if (event is FetchMonthlyEvent) {
+      yield* getDaily(event.business);
+    } else if (event is FetchTutorials) {
+      yield* getTutorials(event.business);
     }
   }
 
@@ -249,7 +253,7 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
       language: language,
     );
 
-    add(FetchPosEvent(business: activeBusiness));
+    add(FetchMonthlyEvent(business: activeBusiness));
   }
 
   Stream<DashboardScreenState> fetchPOSCard(Business activeBusiness) async* {
@@ -297,6 +301,7 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
 
     Terminal activeTerminal = terminals.where((element) => element.active).toList().first;
     yield state.copyWith(activeTerminal: activeTerminal, terminalList: terminals, isPosLoading: false);
+    add(FetchTutorials(business: activeBusiness));
   }
 
   Future<dynamic> fetchDaily(Business currentBusiness) {
@@ -309,44 +314,50 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
         currentBusiness.id, GlobalUtils.activeToken.accessToken);
   }
 
-  Future<dynamic> fetchTotal(Business currentBusiness) {
-    return api.getTransactionList(
-        currentBusiness.id, GlobalUtils.activeToken.accessToken, '');
-  }
-
-  Future<dynamic> getDaily(Business currentBusiness) async {
+  Stream<DashboardScreenState> getDaily(Business currentBusiness) async* {
     List<Day> lastMonth = [];
     var days = await fetchDaily(currentBusiness);
     days.forEach((day) {
       lastMonth.add(Day.map(day));
     });
     state.copyWith(lastMonth: lastMonth);
-    return getMonthly(currentBusiness);
+    yield* getMonthly(currentBusiness);
   }
 
-  Future<dynamic> getMonthly(Business currentBusiness) async {
+  Stream<DashboardScreenState> getMonthly(Business currentBusiness) async* {
     List<Month> lastYear = [];
     List<double> monthlySum = [];
     var months = await fetchMonthly(currentBusiness);
     months.forEach((month) {
       lastYear.add(Month.map(month));
     });
-    num sum;
+    num sum = 0;
     for (int i = (lastYear.length - 1); i >= 0; i--) {
       sum += lastYear[i].amount;
-      monthlySum.add(sum);
+      monthlySum.add(sum.toDouble());
     }
 
     state.copyWith(lastYear: lastYear, monthlySum: monthlySum);
-    return getTotal(currentBusiness);
+    yield* getTotal(currentBusiness);
   }
 
-  Future<dynamic> getTotal(Business currentBusiness) async {
-    var _total = await fetchTotal(currentBusiness);
-    state.copyWith(total: Transaction.toMap(_total).paginationData.amount.toDouble());
-    return _total;
+  Stream<DashboardScreenState> getTotal(Business currentBusiness) async* {
+    dynamic response = await api.getTransactionList(
+        currentBusiness.id, GlobalUtils.activeToken.accessToken, '');
+    state.copyWith(total: Transaction.toMap(response).paginationData.amount.toDouble());
+
+    add(FetchPosEvent(business: currentBusiness));
+
   }
 
+  Stream<DashboardScreenState> getTutorials(Business currentBusiness) async* {
+    dynamic response = await api.getTutorials(GlobalUtils.activeToken.accessToken, currentBusiness.id);
+    List<Tutorial> tutorials = [];
+    response.forEach((element) {
+      tutorials.add(Tutorial.map(element));
+    });
+    state.copyWith(tutorials: tutorials);
+  }
 
   Future<List<WallpaperCategory>> getWallpaper() => EmployeesApi().getWallpapers()
       .then((wallpapers){

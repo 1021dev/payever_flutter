@@ -29,3 +29,29 @@ class FetchPosEvent extends DashboardScreenEvent {
   ];
 
 }
+
+class FetchMonthlyEvent extends DashboardScreenEvent {
+  final Business business;
+  FetchMonthlyEvent({
+    this.business,
+  });
+
+  @override
+  List<Object> get props => [
+    this.business,
+  ];
+
+}
+
+class FetchTutorials extends DashboardScreenEvent {
+  final Business business;
+  FetchTutorials({
+    this.business,
+  });
+
+  @override
+  List<Object> get props => [
+    this.business,
+  ];
+
+}
