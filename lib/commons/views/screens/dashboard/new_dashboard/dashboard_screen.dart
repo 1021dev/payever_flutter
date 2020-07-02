@@ -11,7 +11,7 @@ import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/b
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/dashboard_advertising_view.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/dashboard_app_pos.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/dashboard_business_apps_view.dart';
-import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/dashboard_app_detail_cell.dart';
+import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/dashboard_contact_view.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/dashboard_checkout_view.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/dashboard_connect_view.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/dashboard_menu_view.dart';
@@ -484,7 +484,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     businessApp = businessApps.where((element) => element.code == 'contacts' ).toList().length > 0
         ? businessApps.where((element) => element.code == 'contacts' ).toList().first : null;
     dashboardWidgets.add(
-        DashboardAppDetailCell(
+        DashboardContactView(
           businessApps: businessApp,
           appWidget: appWidget,
         )
@@ -524,7 +524,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     // Tutorials
     dashboardWidgets.add(
         DashboardTutorialView(
-          appWidgets: state.currentWidgets,
+          tutorials: state.tutorials,
         )
     );
 

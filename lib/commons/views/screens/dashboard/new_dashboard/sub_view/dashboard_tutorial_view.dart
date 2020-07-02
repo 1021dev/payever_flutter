@@ -8,8 +8,8 @@ import 'package:payever/commons/views/custom_elements/TutorialCell.dart';
 import 'blur_effect_view.dart';
 
 class DashboardTutorialView extends StatefulWidget {
-  final List<AppWidget> appWidgets;
-  DashboardTutorialView({this.appWidgets});
+  final List<Tutorial> tutorials;
+  DashboardTutorialView({this.tutorials});
   @override
   _DashboardTutorialViewState createState() => _DashboardTutorialViewState();
 }
@@ -76,27 +76,33 @@ class _DashboardTutorialViewState extends State<DashboardTutorialView> {
                 ),
                 SizedBox(height: 8),
                 Container(
-                  height: 40.0 * 2,
+                  height: widget.tutorials.length > 0 ? 80.0: 0,
                   child: ListView.builder(itemBuilder: (BuildContext context, int index) {
                     return TutorialCell(
-                      title: index == 0 ? "payever Dashboard" : "payever Connect",
+                      tutorial: widget.tutorials[index],
                       showUnderline: index == 0,
                     );
-                  }, itemCount: 2,physics: NeverScrollableScrollPhysics(),),
+                  }, itemCount: widget.tutorials.length > 0 ? 2: 0,
+                    physics: NeverScrollableScrollPhysics(),),
                 ),
                 SizedBox(height: 8),
               ],
             ),
           ),
-          if (isExpanded && widget.appWidgets != null)
+          (isExpanded && widget.tutorials != null && widget.tutorials.length > 2) ?
             Container(
-              height: 40.0 * widget.appWidgets.length,
+              height: 40.0 * (widget.tutorials.length - 2),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(bottomLeft: Radius.circular(6), bottomRight: Radius.circular(6)),
                   color: Colors.black38
               ),
-              child: ListView.builder(itemBuilder: _itemBuilder, itemCount: widget.appWidgets.length,physics: NeverScrollableScrollPhysics(),),
-            )
+              child: ListView.builder(
+                itemBuilder: _itemBuilder,
+                itemCount: widget.tutorials.length - 2,
+                physics: NeverScrollableScrollPhysics(),
+              ),
+            ):
+            Container(),
         ],
       ),
     );
@@ -105,8 +111,8 @@ class _DashboardTutorialViewState extends State<DashboardTutorialView> {
     return Container(
       padding: EdgeInsets.fromLTRB(12, 0, 12, 0),
       child: TutorialCell(
-        title: "payever ${widget.appWidgets[index].title}",
-        showUnderline: index != widget.appWidgets.length - 1,
+        tutorial: widget.tutorials[index + 2],
+        showUnderline: index != widget.tutorials.length - 3,
       ),
     );
   }

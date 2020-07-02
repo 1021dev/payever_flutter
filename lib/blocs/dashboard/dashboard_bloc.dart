@@ -1,13 +1,11 @@
 import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:package_info/package_info.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/blocs/dashboard/dashboard.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/models/fetchwallpaper.dart';
-import 'package:payever/commons/network/rest_ds.dart';
 import 'package:payever/settings/network/employees_api.dart';
 import 'package:payever/transactions/transactions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -45,8 +43,7 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
     print("_version:${vv.minVersion}");
     print("compare:${version.compareTo(vv.minVersion)}");
 
-    if(version.compareTo(vv.minVersion)<0){
-//          showPopUp(context, _version);
+    if (version.compareTo(vv.minVersion) < 0) {
       print('Not Supported Version');
     }else{
       yield* loadData();
@@ -320,7 +317,7 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
     days.forEach((day) {
       lastMonth.add(Day.map(day));
     });
-    state.copyWith(lastMonth: lastMonth);
+    yield state.copyWith(lastMonth: lastMonth);
     yield* getMonthly(currentBusiness);
   }
 
@@ -337,14 +334,14 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
       monthlySum.add(sum.toDouble());
     }
 
-    state.copyWith(lastYear: lastYear, monthlySum: monthlySum);
+    yield state.copyWith(lastYear: lastYear, monthlySum: monthlySum);
     yield* getTotal(currentBusiness);
   }
 
   Stream<DashboardScreenState> getTotal(Business currentBusiness) async* {
     dynamic response = await api.getTransactionList(
         currentBusiness.id, GlobalUtils.activeToken.accessToken, '');
-    state.copyWith(total: Transaction.toMap(response).paginationData.amount.toDouble());
+    yield state.copyWith(total: Transaction.toMap(response).paginationData.amount.toDouble());
 
     add(FetchPosEvent(business: currentBusiness));
 
@@ -356,7 +353,7 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
     response.forEach((element) {
       tutorials.add(Tutorial.map(element));
     });
-    state.copyWith(tutorials: tutorials);
+    yield state.copyWith(tutorials: tutorials);
   }
 
   Future<List<WallpaperCategory>> getWallpaper() => EmployeesApi().getWallpapers()

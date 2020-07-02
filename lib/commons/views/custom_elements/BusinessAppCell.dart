@@ -37,8 +37,8 @@ class BusinessAppCell extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  width: 44,
-                  height: 44,
+                  width: 32,
+                  height: 32,
                   decoration: BoxDecoration(
                       image: DecorationImage(
                           image: NetworkImage(

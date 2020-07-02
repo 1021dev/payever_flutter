@@ -1,12 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:payever/commons/commons.dart';
 
 class TutorialCell extends StatelessWidget {
-  final String title;
+  final Tutorial tutorial;
   final bool showUnderline;
 
-  TutorialCell({this.title, this.showUnderline = false});
+  TutorialCell({this.tutorial, this.showUnderline = false});
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -25,7 +26,7 @@ class TutorialCell extends StatelessWidget {
                   ),
                   SizedBox(width: 12),
                   Text(
-                    title,
+                    tutorial.title,
                     softWrap: true,
                     style: TextStyle(
                         color: Colors.white, fontSize: 12),
@@ -35,6 +36,14 @@ class TutorialCell extends StatelessWidget {
               ),
               Row(
                 children: [
+                  tutorial.watched ? Padding(
+                    padding: EdgeInsets.only(right: 8),
+                    child: Icon(
+                      Icons.remove_red_eye,
+                      size: 20,
+                      color: Colors.white38,
+                    ),
+                  ): Container(),
                   InkWell(
                     onTap: () {
 
