@@ -1,13 +1,9 @@
-import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
@@ -47,7 +43,7 @@ class _PosSwitchTerminalsScreenState extends State<PosSwitchTerminalsScreen> {
     selectedTerminal = widget.screenBloc.state.activeTerminal;
     List<Terminal> terminals = widget.screenBloc.state.terminals;
     defaultTerminal = terminals.where((element) => element.active).first;
-    
+
     widget.screenBloc.add(GetPosTerminalsEvent(businessId: widget.businessId));
     super.initState();
   }
@@ -373,9 +369,9 @@ class _PosSwitchTerminalsScreenState extends State<PosSwitchTerminalsScreen> {
                             Text(
                               'Deleting Terminal',
                               style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w300,
-                                color: Colors.white
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w300,
+                                  color: Colors.white
                               ),
                             ),
                             Padding(

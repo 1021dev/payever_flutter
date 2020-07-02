@@ -194,14 +194,14 @@ class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
                               children: <Widget>[
                                 blobName != null && blobName != ''
                                     ? Center(
-                                    child: CircleAvatar(
-                                      backgroundColor: Colors.grey,
-                                      backgroundImage: NetworkImage('$imageBase$blobName'),
-                                      child: Container(
-                                        height: 60,
-                                        width: 60,
-                                      ),
+                                  child: CircleAvatar(
+                                    backgroundColor: Colors.grey,
+                                    backgroundImage: NetworkImage('$imageBase$blobName'),
+                                    child: Container(
+                                      height: 60,
+                                      width: 60,
                                     ),
+                                  ),
                                 ): Center(
                                   child: CircleAvatar(
                                     backgroundColor: Colors.grey,

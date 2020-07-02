@@ -1,10 +1,6 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
-import 'package:date_format/date_format.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,7 +9,6 @@ import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/blur_effect_view.dart';
-import 'package:payever/pos_new/widgets/pos_top_button.dart';
 import 'package:http/http.dart' as http;
 
 bool _isPortrait;
@@ -229,9 +224,9 @@ class _PosQRSettingsState extends State<PosQRSettings> {
                   getBlob(w);
                 }
                 Widget imageWidget = isOpened ? Container(
-                  height: 300,
-                  color: Colors.white,
-                  child: imageData != null ? Image.memory(imageData, fit: BoxFit.fitHeight,) :Container()
+                    height: 300,
+                    color: Colors.white,
+                    child: imageData != null ? Image.memory(imageData, fit: BoxFit.fitHeight,) :Container()
                 ): Container();
                 widgets.add(imageWidget);
               } else if (w[0]['type'] == 'text') {
@@ -242,7 +237,7 @@ class _PosQRSettingsState extends State<PosQRSettings> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text(
-                        w[0]['value']
+                          w[0]['value']
                       ),
                       MaterialButton(
                         minWidth: 0,

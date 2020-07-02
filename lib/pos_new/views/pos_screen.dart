@@ -265,7 +265,7 @@ class _PosScreenState extends State<PosScreen> {
             size: 24,
           ),
           onPressed: () {
-            },
+          },
         ),
         IconButton(
           constraints: BoxConstraints(
@@ -419,17 +419,17 @@ class _PosScreenState extends State<PosScreen> {
             itemBuilder: (BuildContext context) {
               return appBarPopUpActions(context, state)
                   .map((OverflowMenuItem item) {
-                    return PopupMenuItem<OverflowMenuItem>(
-                      value: item,
-                      child: Text(
-                        item.title,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w300,
-                        ),
-                      ),
-                    );
+                return PopupMenuItem<OverflowMenuItem>(
+                  value: item,
+                  child: Text(
+                    item.title,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w300,
+                    ),
+                  ),
+                );
               }).toList();
             },
           ),
@@ -459,22 +459,22 @@ class _PosScreenState extends State<PosScreen> {
     List<Communication> integrations = state.integrations;
     List<String> terminalIntegrations = state.terminalIntegrations;
     return Center(
-        child: Container(
-          padding: EdgeInsets.only(left: 16, right: 16),
-          height: (state.integrations.length * 50).toDouble() + 50,
-          child: BlurEffectView(
-            color: Color.fromRGBO(20, 20, 20, 0.2),
-            blur: 15,
-            radius: 12,
-            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-            child: Column(
-              children: <Widget>[
-                Expanded(
-                  child: ListView.separated(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      return Container(
+      child: Container(
+        padding: EdgeInsets.only(left: 16, right: 16),
+        height: (state.integrations.length * 50).toDouble() + 50,
+        child: BlurEffectView(
+          color: Color.fromRGBO(20, 20, 20, 0.2),
+          blur: 15,
+          radius: 12,
+          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return Container(
                         height: 50,
                         child: Container(
                           padding: EdgeInsets.only(left: 16, right: 16),
@@ -491,7 +491,7 @@ class _PosScreenState extends State<PosScreen> {
                               ),
                               Row(
                                 children: <Widget>[
-                                    CupertinoSwitch(
+                                  CupertinoSwitch(
                                     value: terminalIntegrations.contains(integrations[index].integration.name),
                                     onChanged: (value) {
                                       screenBloc.add(value ? InstallTerminalDevicePaymentEvent(
@@ -558,69 +558,69 @@ class _PosScreenState extends State<PosScreen> {
                             ],
                           ),
                         )
-                      );
-                    },
-                    separatorBuilder: (context, index) {
-                      return Divider(
-                        height: 0,
-                        thickness: 0.5,
-                        color: Colors.white30,
-                        endIndent: 0,
-                        indent: 0,
-                      );
-                    },
-                    itemCount: state.integrations.length,
-                  ),
+                    );
+                  },
+                  separatorBuilder: (context, index) {
+                    return Divider(
+                      height: 0,
+                      thickness: 0.5,
+                      color: Colors.white30,
+                      endIndent: 0,
+                      indent: 0,
+                    );
+                  },
+                  itemCount: state.integrations.length,
                 ),
-                integrations.length > 0 ? Divider(
-                  height: 0,
-                  thickness: 0.5,
-                  color: Colors.white30,
-                  endIndent: 0,
-                  indent: 0,
-                ): Container(height: 0,),
-                Container(
-                  padding: EdgeInsets.only(left: 16, right: 16),
-                  height: 50,
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        PageTransition(
-                          child: PosConnectScreen(
-                            globalStateModel: widget.globalStateModel,
-                            screenBloc: screenBloc,
-                          ),
-                          type: PageTransitionType.fade,
-                          duration: Duration(milliseconds: 500),
+              ),
+              integrations.length > 0 ? Divider(
+                height: 0,
+                thickness: 0.5,
+                color: Colors.white30,
+                endIndent: 0,
+                indent: 0,
+              ): Container(height: 0,),
+              Container(
+                padding: EdgeInsets.only(left: 16, right: 16),
+                height: 50,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      PageTransition(
+                        child: PosConnectScreen(
+                          globalStateModel: widget.globalStateModel,
+                          screenBloc: screenBloc,
                         ),
-                      );
-                    },
-                    child: Container(
-                      child: Row(
-                        children: <Widget>[
-                          Icon(
-                            Icons.add,
-                            size: 12,
-                          ),
-                          Padding(padding: EdgeInsets.only(left: 4),),
-                          Text(
-                            'Add',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ],
+                        type: PageTransitionType.fade,
+                        duration: Duration(milliseconds: 500),
                       ),
+                    );
+                  },
+                  child: Container(
+                    child: Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.add,
+                          size: 12,
+                        ),
+                        Padding(padding: EdgeInsets.only(left: 4),),
+                        Text(
+                          'Add',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
-      );
+      ),
+    );
   }
 
   Widget _settingsWidget(PosScreenState state) {
@@ -663,9 +663,9 @@ class _PosScreenState extends State<PosScreen> {
                 child: Text(
                   state.terminalCopied ? 'Copied': 'Copy',
                   style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500
                   ),
                 ),
                 onPressed: () {

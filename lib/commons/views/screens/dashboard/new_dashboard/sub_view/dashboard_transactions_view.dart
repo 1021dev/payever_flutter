@@ -1,11 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:payever/commons/utils/env.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/views/custom_elements/DashboardOptionCell.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/blur_effect_view.dart';
+import 'package:payever/pos/models/models.dart';
 
-import '../../../../../../products/models/models.dart';
 
 class DashboardTransactionsView extends StatefulWidget {
   final VoidCallback onOpen;
