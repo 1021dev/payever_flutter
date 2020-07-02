@@ -24,6 +24,7 @@ import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/d
 import 'package:payever/commons/views/screens/login/login_page.dart';
 import 'package:payever/commons/views/screens/switcher/switcher_page.dart';
 import 'package:payever/pos/pos.dart';
+import 'package:payever/pos_new/views/pos_create_terminal_screen.dart';
 import 'package:payever/pos_new/views/pos_screen.dart';
 import 'package:payever/transactions/transactions.dart';
 import 'package:provider/provider.dart';
@@ -383,8 +384,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
           appWidget: appWidget,
           terminals: state.terminalList,
           activeTerminal: state.activeTerminal,
-          onTapEditTerminal: () {
-
+          onTapEditTerminal: () async {
+            final result = await Navigator.push(
+              context,
+              PageTransition(
+                child: PosCreateTerminalScreen(
+                  fromDashBoard: true,
+                  businessId: globalStateModel.currentBusiness.id,
+                  screenBloc: PosScreenBloc(),
+                  editTerminal: state.activeTerminal,
+                ),
+                type: PageTransitionType.fade,
+                duration: Duration(milliseconds: 500),
+              ),
+            );
+            print('Terminal Update Result => $result');
+            if ((result != null) && (result == 'Terminal Updated')) {
+              screenBloc.add(FetchPosEvent(business: state.activeBusiness));
+            }
           },
           onTapOpen: () {
             Provider.of<GlobalStateModel>(context,listen: false)

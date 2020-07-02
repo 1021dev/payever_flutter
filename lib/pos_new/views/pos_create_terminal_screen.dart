@@ -21,11 +21,13 @@ class PosCreateTerminalScreen extends StatefulWidget {
   PosScreenBloc screenBloc;
   String businessId;
   Terminal editTerminal;
+  bool fromDashBoard;
 
   PosCreateTerminalScreen({
     this.screenBloc,
     this.businessId,
     this.editTerminal,
+    this.fromDashBoard = false,
   });
 
   @override
@@ -53,6 +55,9 @@ class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
 
   @override
   void dispose() {
+    if (widget.fromDashBoard) {
+      widget.screenBloc.close();
+    }
     super.dispose();
   }
 
@@ -79,7 +84,11 @@ class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
             ),
           );
         } else if (state is PosScreenSuccess) {
-          Navigator.pop(context);
+          if(widget.fromDashBoard) {
+            Navigator.pop(context, 'Terminal Updated');
+          } else {
+            Navigator.pop(context);
+          }
         }
       },
       child: BlocBuilder<PosScreenBloc, PosScreenState>(

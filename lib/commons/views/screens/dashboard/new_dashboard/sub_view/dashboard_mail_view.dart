@@ -135,65 +135,98 @@ class _DashboardMailViewState extends State<DashboardMailView> {
                   Row(
                     children: [
                       Expanded(
-                        flex: 1,
-                        child: Container(
-                          child: InkWell(
-                            onTap: () {
-
-                            },
-                            child: Container(
-                              height: 60,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(6),
-                                  color: Colors.black26
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(Icons.local_grocery_store),
-                                  SizedBox(width: 8),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.only(left: 4, right: 4),
+                              child: Column(
+                                children: <Widget>[
                                   Text(
-                                    "Link",
-                                    softWrap: true,
+                                    'Campaigns',
                                     style: TextStyle(
-                                        color: Colors.white, fontSize: 16),
-                                  )
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w200,
+                                    ),
+                                  ),
+                                  Text(
+                                    '0',
+                                    style: TextStyle(
+                                      fontSize: 32,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
-                          ),
+                            Container(
+                              color: Colors.white24,
+                              width: 1,
+                              height: 50,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(left: 4, right: 4),
+                              child: Column(
+                                children: <Widget>[
+                                  Text(
+                                    'Mailings',
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w200,
+                                    ),
+                                  ),
+                                  Text(
+                                    '0',
+                                    style: TextStyle(
+                                      fontSize: 32,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              color: Colors.white24,
+                              width: 1,
+                              height: 50,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(left: 4, right: 4),
+                              child: Column(
+                                children: <Widget>[
+                                  Text(
+                                    'Sales',
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w200,
+                                    ),
+                                  ),
+                                  Text(
+                                    '0',
+                                    style: TextStyle(
+                                      fontSize: 32,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 12),
-                      ),
                       Expanded(
-                        flex: 1,
-                        child: Container(
-                          child: InkWell(
-                            onTap: () {
+                        child: MaterialButton(
+                          onPressed: () {
 
-                            },
-                            child: Container(
-                              height: 60,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(6),
-                                  color: Colors.black26
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(Icons.edit),
-                                  SizedBox(width: 8),
-                                  Text(
-                                    "Manage",
-                                    softWrap: true,
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 16),
-                                  )
-                                ],
-                              ),
-                            ),
+                          },
+                          color: Colors.black26,
+                          height: 60,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            "New Campaign",
+                            softWrap: true,
+                            style: TextStyle(
+                                color: Colors.white, fontSize: 16),
                           ),
                         ),
                       ),

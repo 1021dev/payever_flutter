@@ -233,6 +233,7 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                       Expanded(
                         child: AutoSizeText(
                           widget.activeTerminal.name,
+                          maxLines: 2,
                           minFontSize: 16,
                           maxFontSize: 24,
                           style: TextStyle(
@@ -250,27 +251,28 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                 // Edit Button
                 Expanded(
                   flex: 1,
-                  child: Material(
-                    borderRadius: BorderRadius.circular(8),
-                    clipBehavior: Clip.antiAlias,
-                    color: Colors.white.withOpacity(0.1),
-                    child: MaterialButton(
-                      onPressed: widget.onTapEditTerminal,
-                      child: Container(
-                        height: 50,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.edit),
-                            SizedBox(width: 8),
-                            Text(
-                              "Edit",
-                              softWrap: true,
-                              style: TextStyle(
-                                  color: Colors.white, fontSize: 16),
-                            )
-                          ],
-                        ),
+                  child: MaterialButton(
+                    onPressed: widget.onTapEditTerminal,
+                    color: Colors.black26,
+                    height: 60,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Container(
+                      height: 50,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.edit),
+                          SizedBox(width: 8),
+                          Text(
+                            "Edit",
+                            softWrap: true,
+                            style: TextStyle(
+                                color: Colors.white, fontSize: 16),
+                          )
+                        ],
                       ),
                     ),
                   ),
