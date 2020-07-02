@@ -17,7 +17,7 @@ class PosScreenState {
   final dynamic qrForm;
 
   PosScreenState({
-    this.isLoading = true,
+    this.isLoading = false,
     this.isUpdating = false,
     this.terminals = const [],
     this.activeTerminal,

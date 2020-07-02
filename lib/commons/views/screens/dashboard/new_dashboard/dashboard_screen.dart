@@ -359,6 +359,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   type: PageTransitionType.fade,
                 ),
               );
+            } else if (aw.type.contains('pos')) {
+              Provider.of<GlobalStateModel>(context,listen: false)
+                  .setCurrentBusiness(state.activeBusiness);
+              Provider.of<GlobalStateModel>(context,listen: false)
+                  .setCurrentWallpaper(state.curWall);
+              Navigator.push(
+                context,
+                PageTransition(
+                  child: PosInitScreen(),
+                  type: PageTransitionType.fade,
+                  duration: Duration(milliseconds: 50),
+                ),
+              );
             }
           },
         )
