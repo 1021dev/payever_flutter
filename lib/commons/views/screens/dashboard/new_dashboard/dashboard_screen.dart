@@ -342,7 +342,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     // Business Apps
     dashboardWidgets.add(
         DashboardBusinessAppsView(
-          businessApps: state.currentWidgets,
+          businessApps: state.businessWidgets,
+          appWidgets: state.currentWidgets,
           onTapEdit: () {},
           onTapWidget: (AppWidget aw) {
             if (aw.type.contains('transactions')) {
