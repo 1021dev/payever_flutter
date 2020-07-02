@@ -6,9 +6,11 @@ import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/b
 import '../../../../../utils/env.dart';
 
 class DashboardAppDetailCell extends StatefulWidget {
-  final BusinessApps appWidget;
+  final AppWidget appWidget;
+  final BusinessApps businessApps;
   DashboardAppDetailCell({
     this.appWidget,
+    this.businessApps,
   });
   @override
   _DashboardAppDetailCellState createState() => _DashboardAppDetailCellState();
@@ -32,12 +34,12 @@ class _DashboardAppDetailCellState extends State<DashboardAppDetailCell> {
                   height: 40,
                   decoration: BoxDecoration(
                       image: DecorationImage(
-                          image: NetworkImage('$uiKit${widget.appWidget.code}.png'),
+                          image: NetworkImage('$uiKit${widget.businessApps.code}.png'),
                           fit: BoxFit.fitWidth)),
                 ),
                 SizedBox(height: 8),
                 Text(
-                  Language.getCommerceOSStrings(widget.appWidget.dashboardInfo.title),
+                  Language.getCommerceOSStrings(widget.businessApps.dashboardInfo.title),
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -46,7 +48,7 @@ class _DashboardAppDetailCellState extends State<DashboardAppDetailCell> {
                 ),
                 SizedBox(height: 4),
                 Text(
-                  Language.getWidgetStrings("widgets.${widget.appWidget.code}.install-app"),
+                  Language.getWidgetStrings("widgets.${widget.businessApps.code}.install-app"),
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 10,
@@ -72,7 +74,7 @@ class _DashboardAppDetailCellState extends State<DashboardAppDetailCell> {
                     },
                     child: Center(
                       child: Text(
-                        widget.appWidget.setupStatus != 'NotStated' ? "Get started" : "Continue setup process",
+                        widget.businessApps.setupStatus != 'NotStated' ? "Get started" : "Continue setup process",
                         softWrap: true,
                         style: TextStyle(
                             color: Colors.white, fontSize: 12),
@@ -80,11 +82,11 @@ class _DashboardAppDetailCellState extends State<DashboardAppDetailCell> {
                     ),
                   ),
                 ),
-                if (widget.appWidget.setupStatus != 'NotStated') Container(
+                if (widget.businessApps.setupStatus != 'NotStated') Container(
                   width: 1,
                   color: Colors.white12,
                 ),
-                if (widget.appWidget.setupStatus != 'NotStated') Expanded(
+                if (widget.businessApps.setupStatus != 'NotStated') Expanded(
                   flex: 1,
                   child: InkWell(
                     onTap: () {

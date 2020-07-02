@@ -8,10 +8,12 @@ import 'package:payever/commons/views/custom_elements/DashboardOptionCell.dart';
 import 'blur_effect_view.dart';
 
 class DashboardConnectView extends StatefulWidget {
-  final BusinessApps appWidget;
+  final AppWidget appWidget;
+  final BusinessApps businessApps;
 
   DashboardConnectView({
     this.appWidget,
+    this.businessApps,
   });
   @override
   _DashboardConnectViewState createState() => _DashboardConnectViewState();

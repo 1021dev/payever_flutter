@@ -7,17 +7,17 @@ import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/b
 
 import '../../../../../../products/models/models.dart';
 
-class DashboardTransactionsView extends StatefulWidget {
+class DashboardCheckoutView extends StatefulWidget {
   final VoidCallback onOpen;
   final BusinessApps businessApps;
   final AppWidget appWidget;
 
-  DashboardTransactionsView({this.onOpen, this.businessApps, this.appWidget});
+  DashboardCheckoutView({this.onOpen, this.businessApps, this.appWidget});
   @override
-  _DashboardTransactionsViewState createState() => _DashboardTransactionsViewState();
+  _DashboardCheckoutViewState createState() => _DashboardCheckoutViewState();
 }
 
-class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
+class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
   bool isExpanded = false;
   String uiKit = 'https://payeverstage.azureedge.net/icons-png/';
   @override
@@ -84,7 +84,7 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                                 borderRadius: BorderRadius.circular(10),
                                 color: Colors.white10
                             ),
-                            child: Row(
+                            child:  Row(
                               children: [
                                 Expanded(
                                   flex: 1,
@@ -124,43 +124,84 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                                 ),
                               ],
                             ),
-                          )
+                          ),
                         ],
                       )
                     ],
                   ),
-                  SizedBox(height: 8),
+                  Padding(
+                    padding: EdgeInsets.only(top: 8),
+                  ),
                   Row(
                     children: [
-                      Icon(
-                        Icons.arrow_upward,
-                        color: Colors.white,
-                        size: 10,
+                      Expanded(
+                        flex: 1,
+                        child: Container(
+                          child: InkWell(
+                            onTap: () {
+
+                            },
+                            child: Container(
+                              height: 60,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(6),
+                                  color: Colors.black26
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.local_grocery_store),
+                                  SizedBox(width: 8),
+                                  Text(
+                                    "Link",
+                                    softWrap: true,
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 16),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
-                      SizedBox(width: 4),
-                      Text(
-                        "This month",
-                        style: TextStyle(
-                            fontSize: 10,
-                            color: Colors.white.withAlpha(150)
+                      Padding(
+                        padding: EdgeInsets.only(left: 12),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Container(
+                          child: InkWell(
+                            onTap: () {
+
+                            },
+                            child: Container(
+                              height: 60,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(6),
+                                  color: Colors.black26
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.edit),
+                                  SizedBox(width: 8),
+                                  Text(
+                                    "Manage",
+                                    softWrap: true,
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 16),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Text(
-                        "0 \$",
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white.withAlpha(150),
-                        ),
-                      )
-                    ],
+                  Padding(
+                    padding: EdgeInsets.only(top: 16),
                   ),
-                  SizedBox(height: 20),
                 ],
               ),
             ),
@@ -202,6 +243,14 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                         color: Colors.white,
                         fontSize: 16,
                         fontWeight: FontWeight.bold
+                    ),
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    Language.getWidgetStrings("widgets.${widget.appWidget.type}.install-app"),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 10,
                     ),
                   ),
                   SizedBox(height: 4),

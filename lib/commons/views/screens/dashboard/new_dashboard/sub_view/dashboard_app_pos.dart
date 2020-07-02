@@ -5,7 +5,8 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/blur_effect_view.dart';
 
 class DashboardAppPosView extends StatefulWidget {
-  final BusinessApps appWidget;
+  final BusinessApps businessApps;
+  final AppWidget appWidget;
   final List<Terminal> terminals;
   final Terminal activeTerminal;
   final bool isLoading;
@@ -13,6 +14,7 @@ class DashboardAppPosView extends StatefulWidget {
   final Function onTapEditTerminal;
   DashboardAppPosView({
     this.appWidget,
+    this.businessApps,
     this.terminals = const [],
     this.isLoading,
     this.activeTerminal,
@@ -61,7 +63,7 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    Language.getCommerceOSStrings(widget.appWidget.dashboardInfo.title),
+                    Language.getCommerceOSStrings(widget.businessApps.dashboardInfo.title),
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 16,
@@ -70,7 +72,7 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                   ),
                   SizedBox(height: 4),
                   Text(
-                    Language.getWidgetStrings("widgets.${widget.appWidget.code}.install-app"),
+                    Language.getWidgetStrings("widgets.${widget.businessApps.code}.install-app"),
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 10,
@@ -96,7 +98,7 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                       },
                       child: Center(
                         child: Text(
-                          widget.appWidget.setupStatus != 'NotStated' ? "Get started" : "Continue setup process",
+                          widget.businessApps.setupStatus != 'NotStated' ? "Get started" : "Continue setup process",
                           softWrap: true,
                           style: TextStyle(
                               color: Colors.white, fontSize: 12),
@@ -104,11 +106,11 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                       ),
                     ),
                   ),
-                  if (widget.appWidget.setupStatus != 'NotStated') Container(
+                  if (widget.businessApps.setupStatus != 'NotStated') Container(
                     width: 1,
                     color: Colors.white12,
                   ),
-                  if (widget.appWidget.setupStatus != 'NotStated') Expanded(
+                  if (widget.businessApps.setupStatus != 'NotStated') Expanded(
                     flex: 1,
                     child: InkWell(
                       onTap: () {

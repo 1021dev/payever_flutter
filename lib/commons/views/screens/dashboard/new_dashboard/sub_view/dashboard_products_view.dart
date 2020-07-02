@@ -9,10 +9,11 @@ import 'package:payever/commons/views/screens/dashboard/dashboard_card_ref.dart'
 import 'blur_effect_view.dart';
 
 class DashboardProductsView extends StatefulWidget {
-  final BusinessApps appWidget;
-
+  final AppWidget appWidget;
+  final BusinessApps businessApps;
   DashboardProductsView({
     this.appWidget,
+    this.businessApps,
   });
   @override
   _DashboardProductsViewState createState() => _DashboardProductsViewState();

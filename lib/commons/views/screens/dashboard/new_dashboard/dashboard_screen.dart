@@ -12,10 +12,12 @@ import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/d
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/dashboard_app_pos.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/dashboard_business_apps_view.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/dashboard_app_detail_cell.dart';
+import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/dashboard_checkout_view.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/dashboard_connect_view.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/dashboard_menu_view.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/dashboard_products_view.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/dashboard_settings_view.dart';
+import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/dashboard_shop_view.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/dashboard_studio_view.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/dashboard_transactions_view.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/dashboard_tutorial_view.dart';
@@ -29,6 +31,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../utils/env.dart';
 import '../../../views.dart';
+import 'sub_view/dashboard_mail_view.dart';
 
 class DashboardScreen extends StatefulWidget {
   final String wallpaper;
@@ -295,9 +298,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _body(DashboardScreenState state) {
-    List<BusinessApps> widgets = [];
+    List<AppWidget> widgets = [];
+    List<BusinessApps> businessApps = [];
     if (state.businessWidgets.length > 0) {
-      widgets.addAll(state.businessWidgets);
+      widgets.addAll(state.currentWidgets);
+      businessApps.addAll(state.businessWidgets);
       widgets.reversed.toList();
     }
     List<Widget> dashboardWidgets = [];
@@ -307,15 +312,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
     dashboardWidgets.add(_searchBar(state));
 
     // TRANSACTIONS
-    List<BusinessApps> appWidgets = widgets.where((element) => element.code == 'transactions').toList();
-    BusinessApps appWidget;
+    List<AppWidget> appWidgets = widgets.where((element) => element.type == 'transactions').toList();
+    AppWidget appWidget;
     if (appWidgets.length > 0) {
       appWidget = appWidgets[0];
     }
+    BusinessApps businessApp = businessApps.where((element) => element.code == 'transactions').toList().first;
     if (appWidget != null) {
       dashboardWidgets.add(
           DashboardTransactionsView(
             appWidget: appWidget,
+            businessApps: businessApp,
             onOpen: () {
               Provider.of<GlobalStateModel>(context,listen: false)
                   .setCurrentBusiness(state.activeBusiness);
@@ -356,18 +363,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
 
     // Shop
-    appWidget = widgets.where((element) => element.code == 'shop' ).toList().first;
+    appWidget = widgets.where((element) => element.type == 'shop' ).toList().first;
+    businessApp = businessApps.where((element) => element.code == 'shop' ).toList().first;
     dashboardWidgets.add(
-        DashboardAppDetailCell(
+        DashboardShopView(
+          businessApps: businessApp,
           appWidget: appWidget,
         )
     );
 
     // Point of Sale
-    appWidget = widgets.where((element) => element.code == 'pos' ).toList().first;
+    appWidget = widgets.where((element) => element.type == 'pos' ).toList().first;
+    businessApp = businessApps.where((element) => element.code == 'pos' ).toList().first;
     dashboardWidgets.add(
         DashboardAppPosView(
           isLoading: state.isPosLoading,
+          businessApps: businessApp,
           appWidget: appWidget,
           terminals: state.terminalList,
           activeTerminal: state.activeTerminal,
@@ -392,62 +403,88 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
 
     // Checkout
-    appWidget = widgets.where((element) => element.code == 'checkout' ).toList().first;
-    dashboardWidgets.add(
-        DashboardAppDetailCell(
-          appWidget: appWidget,
-        )
-    );
+    appWidget = widgets.where((element) => element.type == 'checkout' ).toList().first;
+    businessApp = businessApps.where((element) => element.code == 'checkout' ).toList().first;
+    if (appWidget != null) {
+      dashboardWidgets.add(
+          DashboardCheckoutView(
+            businessApps: businessApp,
+            appWidget: appWidget,
+          )
+      );
+    }
 
     // Mail
-    appWidget = widgets.where((element) => element.code == 'marketing' ).toList().first;
+    appWidget = widgets.where((element) => element.type == 'marketing' ).toList().first;
+    businessApp = businessApps.where((element) => element.code == 'marketing' ).toList().first;
     dashboardWidgets.add(
-        DashboardAppDetailCell(
+        DashboardMailView(
+          businessApps: businessApp,
           appWidget: appWidget,
         )
     );
 
     // Studio
-    appWidget = widgets.where((element) => element.code == 'settings' ).toList().first;
+    appWidget = widgets.where((element) => element.type == 'studio' ).toList().first;
+    businessApp = businessApps.where((element) => element.code == 'studio' ).toList().length > 0
+        ? businessApps.where((element) => element.code == 'studio' ).toList().first : null;
     dashboardWidgets.add(
         DashboardStudioView(
+          businessApps: businessApp,
           appWidget: appWidget,
         )
     );
 
     // Ads
-    appWidget = widgets.where((element) => element.code == 'settings' ).toList().first;
+    appWidget = widgets.where((element) => element.type == 'ads' ).toList().first;
+    businessApp = businessApps.where((element) => element.code == 'ads' ).toList().length > 0
+        ? businessApps.where((element) => element.code == 'ads' ).toList().first : null;
     dashboardWidgets.add(
         DashboardAdvertisingView(
+          businessApps: businessApp,
           appWidget: appWidget,
         )
     );
 
     // Contacts
+    appWidget = widgets.where((element) => element.type == 'contacts' ).toList().first;
+    businessApp = businessApps.where((element) => element.code == 'contacts' ).toList().length > 0
+        ? businessApps.where((element) => element.code == 'contacts' ).toList().first : null;
     dashboardWidgets.add(
         DashboardAppDetailCell(
+          businessApps: businessApp,
           appWidget: appWidget,
         )
     );
 
     // Products
+    appWidget = widgets.where((element) => element.type == 'products' ).toList().first;
+    businessApp = businessApps.where((element) => element.code == 'products' ).toList().length > 0
+        ? businessApps.where((element) => element.code == 'products' ).toList().first : null;
     dashboardWidgets.add(
         DashboardProductsView(
+          businessApps: businessApp,
           appWidget: appWidget,
         )
     );
 
     // Connects
+    appWidget = widgets.where((element) => element.type == 'connect' ).toList().first;
+    businessApp = businessApps.where((element) => element.code == 'connect' ).toList().length > 0
+        ? businessApps.where((element) => element.code == 'connect' ).toList().first : null;
     dashboardWidgets.add(
         DashboardConnectView(
+          businessApps: businessApp,
           appWidget: appWidget,
         )
     );
 
     // Settings
-    appWidget = widgets.where((element) => element.code == 'settings' ).toList().first;
+    appWidget = widgets.where((element) => element.type == 'settings' ).toList().first;
+    businessApp = businessApps.where((element) => element.code == 'settings' ).toList().first;
     dashboardWidgets.add(
         DashboardSettingsView(
+          businessApps: businessApp,
           appWidget: appWidget,
         )
     );
@@ -551,6 +588,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 )
               ]
           ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(top: 64),
         ),
       ],
     );
