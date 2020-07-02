@@ -50,6 +50,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   DashboardScreenBloc screenBloc;
   bool isTablet = false;
   bool isLoaded = false;
+  String searchString = '';
+  TextEditingController searchController = TextEditingController();
 
   GlobalStateModel globalStateModel;
   @override
@@ -629,10 +631,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Widget _searchBar(DashboardScreenState state) {
     return BlurEffectView(
-      radius: 13,
-      padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
+      radius: 12,
+      padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
       child: Container(
-        height: 36,
+        height: 40,
         child: Row(
           children: [
             Icon(
@@ -642,15 +644,79 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
             SizedBox(width: 8),
             Expanded(
-              child: TextField(
-                decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: 'Search'
-                ),
-                style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.white
-                ),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: TextField(
+                      controller: searchController,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(0),
+                        isDense: true,
+                        border: InputBorder.none,
+                        hintText: 'Search',
+                        hintStyle: TextStyle(
+                          color: Colors.white
+                        ),
+                      ),
+                      style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.white
+                      ),
+                      onChanged: (val) {
+                        if (val.length > 0) {
+                          if (searchString.length > 0) {
+                            searchString = val;
+                          } else {
+                            setState(() {
+                              searchString = val;
+                            });
+                          }
+                        } else {
+                          if (searchString.length == 0) {
+                            searchString = val;
+                          } else {
+                            setState(() {
+                              searchString = val;
+                            });
+                          }
+                        }
+                      },
+                      onSubmitted: (val) {},
+                    ),
+                  ),
+                  searchController.text.isEmpty ? Container() : MaterialButton(
+                    onPressed: () {},
+                    shape: CircleBorder(
+                      side: BorderSide.none,
+                    ),
+                    color: Colors.white54.withOpacity(0.2),
+                    elevation: 0,
+                    height: 20,
+                    minWidth: 20,
+                    child: Icon(
+                      Icons.close,
+                      size: 12,
+                    ),
+                  ),
+                  searchController.text.isEmpty ? Container() : MaterialButton(
+                    onPressed: () {},
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)
+                    ),
+                    color: Colors.white54.withOpacity(0.2),
+                    elevation: 0,
+                    minWidth: 0,
+                    height: 20,
+                    child: Text(
+                      'Search',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w300,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             )
           ],
