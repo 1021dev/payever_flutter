@@ -23,6 +23,8 @@ class DashboardScreenState {
   final List<Widget> activeWid;
   final String language;
   final String curWall;
+  final List<Business> searchBusinesses;
+  final List<Collection> searchTransactions;
 
   DashboardScreenState({
     this.isLoading = false,
@@ -45,6 +47,8 @@ class DashboardScreenState {
     this.activeWid = const [],
     this.language,
     this.curWall,
+    this.searchBusinesses = const [],
+    this.searchTransactions = const [],
   });
 
   List<Object> get props => [
@@ -68,6 +72,8 @@ class DashboardScreenState {
     this.isInitialScreen,
     this.language,
     this.curWall,
+    this.searchBusinesses,
+    this.searchTransactions,
   ];
 
   DashboardScreenState copyWith({
@@ -91,6 +97,8 @@ class DashboardScreenState {
     List<Widget> activeWid,
     String language,
     String curWall,
+    List<Business> searchBusinesses,
+    List<Collection> searchTransactions,
   }) {
     return DashboardScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -113,6 +121,8 @@ class DashboardScreenState {
       activeWid: activeWid ?? this.activeWid,
       language: language ?? this.language,
       curWall: curWall ?? this.curWall,
+      searchBusinesses: searchBusinesses ?? this.searchBusinesses,
+      searchTransactions: searchTransactions ?? this.searchTransactions,
     );
   }
 }

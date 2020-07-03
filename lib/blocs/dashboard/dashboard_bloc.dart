@@ -29,6 +29,8 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
       yield* getDaily(event.business);
     } else if (event is FetchTutorials) {
       yield* getTutorials(event.business);
+    } else if (event is SearchDashboardEvent) {
+      yield* searchDashboard(event.key);
     }
   }
 
@@ -364,4 +366,19 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
     });
     return _list;
   });
+
+  Stream<DashboardScreenState> searchDashboard(String key) async* {
+
+    List<Business> businesses = [];
+    businesses.addAll(state.businesses);
+    if (businesses.length == 0) {
+      dynamic businessResponse = await api.getBusinesses(GlobalUtils.activeToken.accessToken);
+      businessResponse.forEach((element) {
+        businesses.add(Business.map(element));
+      });
+      yield state.copyWith(businesses: businesses);
+    }
+
+    
+  }
 }

@@ -681,11 +681,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           }
                         }
                       },
-                      onSubmitted: (val) {},
+                      onSubmitted: (val) {
+                        // TODO: Search
+
+                      },
                     ),
                   ),
                   searchController.text.isEmpty ? Container() : MaterialButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      setState(() {
+                        searchString = '';
+                        searchController.text = searchString;
+                      });
+                    },
                     shape: CircleBorder(
                       side: BorderSide.none,
                     ),
@@ -699,7 +707,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                   ),
                   searchController.text.isEmpty ? Container() : MaterialButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      // TODO: Search
+                    },
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)
                     ),
