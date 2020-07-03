@@ -5,6 +5,7 @@ class PosScreenState {
   final bool isLoading;
   final List<Terminal> terminals;
   final Terminal activeTerminal;
+  final bool businessCopied;
   final bool terminalCopied;
   final List<Communication> integrations;
   final List<Communication> communications;
@@ -13,7 +14,8 @@ class PosScreenState {
   final List<String> terminalIntegrations;
   final String blobName;
   final bool isUpdating;
-  final Terminal copyedTerminal;
+  final String copiedBusiness;
+  final Terminal copiedTerminal;
   final dynamic qrForm;
 
   PosScreenState({
@@ -21,6 +23,7 @@ class PosScreenState {
     this.isUpdating = false,
     this.terminals = const [],
     this.activeTerminal,
+    this.businessCopied = false,
     this.terminalCopied = false,
     this.integrations = const [],
     this.terminalIntegrations = const [],
@@ -28,7 +31,8 @@ class PosScreenState {
     this.devicePaymentSettings,
     this.showCommunications = false,
     this.blobName = '',
-    this.copyedTerminal,
+    this.copiedBusiness,
+    this.copiedTerminal,
     this.qrForm,
   });
 
@@ -37,6 +41,7 @@ class PosScreenState {
     this.isUpdating,
     this.terminals,
     this.activeTerminal,
+    this.businessCopied,
     this.terminalCopied,
     this.integrations,
     this.terminalIntegrations,
@@ -44,7 +49,8 @@ class PosScreenState {
     this.devicePaymentSettings,
     this.showCommunications,
     this.blobName,
-    this.copyedTerminal,
+    this.copiedBusiness,
+    this.copiedTerminal,
     this.qrForm,
   ];
 
@@ -53,6 +59,7 @@ class PosScreenState {
     bool isUpdating,
     List<Terminal> terminals,
     Terminal activeTerminal,
+    bool businessCopied,
     bool terminalCopied,
     List<Communication> integrations,
     List<String> terminalIntegrations,
@@ -61,6 +68,7 @@ class PosScreenState {
     bool showCommunications,
     String blobName,
     Terminal copiedTerminal,
+    String copiedBusiness,
     dynamic qrForm,
   }) {
     return PosScreenState(
@@ -68,6 +76,7 @@ class PosScreenState {
       isUpdating: isUpdating ?? this.isUpdating,
       terminals: terminals ?? this.terminals,
       activeTerminal: activeTerminal ?? this.activeTerminal,
+      businessCopied: businessCopied ?? this.businessCopied,
       terminalCopied: terminalCopied ?? this.terminalCopied,
       integrations: integrations ?? this.integrations,
       terminalIntegrations: terminalIntegrations ?? this.terminalIntegrations,
@@ -75,7 +84,8 @@ class PosScreenState {
       devicePaymentSettings: devicePaymentSettings ?? this.devicePaymentSettings,
       showCommunications: showCommunications ?? this.showCommunications,
       blobName: blobName ?? this.blobName,
-      copyedTerminal: copiedTerminal,
+      copiedBusiness: copiedBusiness,
+      copiedTerminal: copiedTerminal,
       qrForm: qrForm ?? this.qrForm,
     );
   }

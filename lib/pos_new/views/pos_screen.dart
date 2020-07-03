@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -19,6 +20,7 @@ import 'package:payever/pos_new/views/pos_switch_terminals_screen.dart';
 import 'package:payever/pos_new/widgets/pos_top_button.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 import 'pos_device_payment_settings.dart';
 import 'pos_qr_settings.dart';
@@ -71,6 +73,7 @@ class _PosScreenState extends State<PosScreen> {
   final GlobalKey<InnerDrawerState> _innerDrawerKey = GlobalKey<InnerDrawerState>();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
+  final Completer<WebViewController> _controller = Completer<WebViewController>();
 
   PosScreenBloc screenBloc = PosScreenBloc();
   String wallpaper;
@@ -369,7 +372,7 @@ class _PosScreenState extends State<PosScreen> {
       child: Row(
         children: <Widget>[
           PosTopButton(
-            title: state.activeTerminal.name,
+            title: state.activeTerminal != null ? state.activeTerminal.name : '',
             selectedIndex: selectedIndex,
             index: 0,
             onTap: () {
@@ -452,7 +455,33 @@ class _PosScreenState extends State<PosScreen> {
   }
 
   Widget _defaultTerminalWidget(PosScreenState state) {
-    return Container();
+    if (state.activeTerminal == null) {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+    return Container(
+      color: Colors.white,
+      child: WebView(
+        initialUrl: 'https://${state.activeTerminal.id}.payever.business',
+        onWebViewCreated: (WebViewController webViewController) {
+        },
+        javascriptChannels: <JavascriptChannel>[
+          _toasterJavascriptChannel(context),
+        ].toSet(),
+        navigationDelegate: (NavigationRequest request) {
+          print('allowing navigation to $request');
+          return NavigationDecision.navigate;
+        },
+        onPageStarted: (String url) {
+          print('Page started loading: $url');
+        },
+        onPageFinished: (String url) {
+          print('Page finished loading: $url');
+        },
+        gestureNavigationEnabled: true,
+      ),
+    );
   }
 
   Widget _connectWidget(PosScreenState state) {
@@ -631,6 +660,52 @@ class _PosScreenState extends State<PosScreen> {
           Row(
             children: <Widget>[
               Text(
+                'Business UUID',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 8),
+              ),
+              Expanded(
+                child: AutoSizeText(
+                  widget.globalStateModel.currentBusiness.id,
+                  minFontSize: 12,
+                  maxLines: 2,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 8),
+              ),
+              MaterialButton(
+                height: 32,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                color: Colors.black26,
+                child: Text(
+                  state.businessCopied ? 'Copied': 'Copy',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500
+                  ),
+                ),
+                onPressed: () {
+                  screenBloc.add(CopyBusinessEvent(businessId: widget.globalStateModel.currentBusiness.id));
+                },
+              ),
+            ],
+          ),
+          Row(
+            children: <Widget>[
+              Text(
                 'Terminal UUID',
                 style: TextStyle(
                   color: Colors.white,
@@ -677,17 +752,6 @@ class _PosScreenState extends State<PosScreen> {
         ],
       ),
     );
-  }
-
-  Widget showDevicePaymentSettings(PosScreenState state) {
-    if (state.devicePaymentSettings == null) {
-      screenBloc.add(GetPosDevicePaymentSettings(businessId: widget.globalStateModel.currentBusiness.id));
-    }
-
-    return  Container();
-  }
-
-  void showIntegrations(PosScreenState state) {
   }
 
   void showCommunications(PosScreenState state) {
@@ -812,5 +876,15 @@ class _PosScreenState extends State<PosScreen> {
     );
   }
 
+  JavascriptChannel _toasterJavascriptChannel(BuildContext context) {
+    return JavascriptChannel(
+        name: 'Toaster',
+        onMessageReceived: (JavascriptMessage message) {
+          Scaffold.of(context).showSnackBar(
+            SnackBar(content: Text(message.message)),
+          );
+        }
+    );
+  }
 }
 

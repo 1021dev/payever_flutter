@@ -70,6 +70,8 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
       yield* deleteTerminal(event.businessId, event.activeTerminal.id);
     } else if (event is GetPosTerminalsEvent) {
       yield* fetchPos(event.businessId);
+    } else if (event is CopyBusinessEvent) {
+      yield state.copyWith(copiedBusiness: event.businessId, businessCopied: true);
     } else if (event is CopyTerminalEvent) {
       yield state.copyWith(copiedTerminal: event.terminal, terminalCopied: true);
     } else if (event is GenerateQRCodeEvent) {
