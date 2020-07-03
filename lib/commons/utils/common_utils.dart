@@ -768,6 +768,9 @@ class GlobalUtils {
   static const String ENV_WRAPPER = 'checkoutWrapper';
   static const String ENV_EMPLOYEES = 'employees';
   static const String ENV_APP_REGISTRY = 'appRegistry';
+  static const String ENV_CONNECT_QR = 'qr';
+  static const String ENV_CUSTOM_CDN = 'cdn';
+  static const String ENV_BACKEND_DEVICE_PAYMENT = 'devicePayments';
 
   // dashboard_
   static const String CURRENT_WALLPAPER = 'currentWallpaper';

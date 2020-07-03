@@ -26,8 +26,7 @@ class DashboardAppPosView extends StatefulWidget {
 }
 
 class _DashboardAppPosViewState extends State<DashboardAppPosView> {
-  String uinotKit = 'https://payeverstage.azureedge.net/icons-png/';
-  String uiKit = 'https://payeverstage.azureedge.net/icons-png/icons-apps-white/icon-apps-white-';
+  String uiKit = '${Env.cdnIcon}icons-apps-white/icon-apps-white-';
   String imageBase = Env.storage + '/images/';
 
   @override
@@ -58,7 +57,7 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                     height: 40,
                     decoration: BoxDecoration(
                         image: DecorationImage(
-                            image: NetworkImage('${uinotKit}icon-comerceos-pos-not-installed.png'),
+                            image: NetworkImage('${Env.cdnIcon}icon-comerceos-pos-not-installed.png'),
                             fit: BoxFit.fitWidth)),
                   ),
                   SizedBox(height: 8),

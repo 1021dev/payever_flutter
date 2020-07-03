@@ -20,7 +20,7 @@ class DashboardConnectView extends StatefulWidget {
 }
 
 class _DashboardConnectViewState extends State<DashboardConnectView> {
-  String uiKit = 'https://payeverstage.azureedge.net/icons-png/icons-apps-white/icon-apps-white-';
+  String uiKit = '${Env.cdnIcon}icons-apps-white/icon-apps-white-';
   bool isExpanded = false;
   @override
   Widget build(BuildContext context) {
@@ -42,7 +42,7 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                           height: 16,
                           decoration: BoxDecoration(
                               image: DecorationImage(
-                                  image: NetworkImage('https://payeverstage.azureedge.net/icons-png/icons-apps-white/icon-apps-white-connect.png'),
+                                  image: NetworkImage('${Env.cdnIcon}icons-apps-white/icon-apps-white-connect.png'),
                                   fit: BoxFit.fitWidth)),
                         ),
                         SizedBox(width: 8,),

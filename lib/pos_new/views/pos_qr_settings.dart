@@ -210,7 +210,7 @@ class _PosQRSettingsState extends State<PosQRSettings> {
     );
 
     if (response != null) {
-      if (response['form'] != null) {
+      if (response is Map) {
         dynamic form = response['form'];
         String contentType = form['contentType'] != null ? form['contentType'] : '';
         dynamic content = form['content'] != null ? form['content']: null;

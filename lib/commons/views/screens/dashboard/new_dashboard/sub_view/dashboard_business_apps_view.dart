@@ -24,7 +24,7 @@ class DashboardBusinessAppsView extends StatefulWidget {
 }
 
 class _DashboardBusinessAppsViewState extends State<DashboardBusinessAppsView> {
-  String uiKit = 'https://payeverstage.azureedge.net/icons-png/icons-apps-white/icon-apps-white-';
+  String uiKit = '${Env.cdnIcon}icons-apps-white/icon-apps-white-';
   @override
   Widget build(BuildContext context) {
     List<BusinessApps> businessApps =
@@ -53,7 +53,7 @@ class _DashboardBusinessAppsViewState extends State<DashboardBusinessAppsView> {
                       height: 20,
                       decoration: BoxDecoration(
                           image: DecorationImage(
-                              image: NetworkImage('https://payeverstage.azureedge.net/icons-png/icons-apps-white/icon-apps-white-dashboard.png'),
+                              image: NetworkImage('${Env.cdnIcon}icons-apps-white/icon-apps-white-dashboard.png'),
                               fit: BoxFit.scaleDown)),
                     ),
                     SizedBox(width: 8,),

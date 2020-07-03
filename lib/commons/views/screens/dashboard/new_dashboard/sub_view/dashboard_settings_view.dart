@@ -19,7 +19,7 @@ class DashboardSettingsView extends StatefulWidget {
 }
 
 class _DashboardSettingsViewState extends State<DashboardSettingsView> {
-  String uiKit = 'https://payeverstage.azureedge.net/icons-png/icons-apps-white/icon-apps-white-';
+  String uiKit = '${Env.cdnIcon}icons-apps-white/icon-apps-white-';
   @override
   Widget build(BuildContext context) {
     return BlurEffectView(

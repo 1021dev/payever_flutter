@@ -23,6 +23,10 @@ class Env {
   static String employees;
   static String appRegistry;
   static String qr;
+  static String devicePayments;
+  static String cdn;
+  static String cdnImage;
+  static String cdnIcon;
 
   Env.map(dynamic obj) {
     Env.users = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_USER];
@@ -48,6 +52,10 @@ class Env {
     Env.wrapper = obj[GlobalUtils.ENV_FRONTEND][GlobalUtils.ENV_WRAPPER];
     Env.employees = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_EMPLOYEES];
     Env.appRegistry = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_APP_REGISTRY];
-    Env.qr = obj[GlobalUtils.ENV_CONNECT]['qr'];
+    Env.qr = obj[GlobalUtils.ENV_CONNECT][GlobalUtils.ENV_CONNECT_QR];
+    Env.devicePayments = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_BACKEND_DEVICE_PAYMENT];
+    Env.cdn = obj[GlobalUtils.ENV_CUSTOM][GlobalUtils.ENV_CUSTOM_CDN];
+    Env.cdnImage = '${Env.cdn}/images/';
+    Env.cdnIcon = '${Env.cdn}/icons-png/';
   }
 }

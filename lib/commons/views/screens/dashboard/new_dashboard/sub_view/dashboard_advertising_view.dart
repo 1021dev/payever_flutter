@@ -16,7 +16,7 @@ class DashboardAdvertisingView extends StatefulWidget {
 }
 
 class _DashboardAdvertisingViewState extends State<DashboardAdvertisingView> {
-  String uiKit = 'https://payeverstage.azureedge.net/icons-png/icons-apps-white/icon-apps-white-';
+  String uiKit = '${Env.cdnIcon}icons-apps-white/icon-apps-white-';
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,7 @@ class _DashboardAdvertisingViewState extends State<DashboardAdvertisingView> {
                 height: 16,
                 decoration: BoxDecoration(
                     image: DecorationImage(
-                        image: NetworkImage('https://payeverstage.azureedge.net/icons-png/icons-apps-white/icon-apps-white-ad.png'),
+                        image: NetworkImage('${Env.cdnIcon}icons-apps-white/icon-apps-white-ad.png'),
                         fit: BoxFit.fitWidth)),
               ),
               SizedBox(width: 8,),

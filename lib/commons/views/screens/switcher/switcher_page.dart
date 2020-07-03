@@ -82,7 +82,7 @@ class _SwitcherScreenState extends State<SwitcherScreen>
             decoration: BoxDecoration(
                 image: DecorationImage(
                     image: NetworkImage(
-                        "https://payever.azureedge.net/images/commerceos-background.jpg"),
+                        "${Env.cdn}/images/commerceos-background.jpg"),
                     fit: BoxFit.cover)),
             child: BlurEffectView(
               blur: 5,

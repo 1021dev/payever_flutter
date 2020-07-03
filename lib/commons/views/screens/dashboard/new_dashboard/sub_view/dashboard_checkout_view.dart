@@ -19,7 +19,6 @@ class DashboardCheckoutView extends StatefulWidget {
 
 class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
   bool isExpanded = false;
-  String uiKit = 'https://payeverstage.azureedge.net/icons-png/';
   @override
   Widget build(BuildContext context) {
 
@@ -42,7 +41,7 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                             height: 16,
                             decoration: BoxDecoration(
                                 image: DecorationImage(
-                                    image: NetworkImage('${uiKit}icons-apps-white/icon-apps-white-${widget.appWidget.type}.png'),
+                                    image: NetworkImage('${Env.cdnIcon}icons-apps-white/icon-apps-white-${widget.appWidget.type}.png'),
                                     fit: BoxFit.fitWidth)),
                           ),
                           SizedBox(width: 8,),
@@ -232,7 +231,7 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                     height: 40,
                     decoration: BoxDecoration(
                         image: DecorationImage(
-                            image: NetworkImage('${uiKit}icon-comerceos-${widget.appWidget.type}-not-installed.png'),
+                            image: NetworkImage('${Env.cdnIcon}icon-comerceos-${widget.appWidget.type}-not-installed.png'),
                             fit: BoxFit.fitWidth),
                     ),
                   ),

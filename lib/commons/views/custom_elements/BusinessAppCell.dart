@@ -16,7 +16,6 @@ class BusinessAppCell extends StatelessWidget {
     this.onTap
   });
 
-  String uiKit = 'https://payeverstage.azureedge.net/icons-png/';
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -42,7 +41,7 @@ class BusinessAppCell extends StatelessWidget {
                   decoration: BoxDecoration(
                       image: DecorationImage(
                           image: NetworkImage(
-                              '$uiKit${currentApp.icon}'),
+                              '${Env.cdnIcon}${currentApp.icon}'),
                           fit: BoxFit.cover)),
                 ),
               ],

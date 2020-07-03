@@ -15,7 +15,7 @@ class DashboardTutorialView extends StatefulWidget {
 }
 
 class _DashboardTutorialViewState extends State<DashboardTutorialView> {
-  String uiKit = 'https://payeverstage.azureedge.net/icons-png/icons-apps-white/icon-apps-white-';
+  String uiKit = '${Env.cdnIcon}icons-apps-white/icon-apps-white-';
   bool isExpanded = false;
   @override
   Widget build(BuildContext context) {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:payever/commons/utils/env.dart';
 
 import '../models/models.dart';
 
@@ -7,9 +8,9 @@ class GlobalStateModel extends ChangeNotifier {
   String _currentWallpaperBlur;
 
   String _defaultCustomWallpaper =
-      "https://payevertest.azureedge.net/images/commerseos-background.jpg";
+      "${Env.cdnImage}commerseos-background.jpg";
   String _defaultCustomWallpaperBlur =
-      "https://payevertest.azureedge.net/images/commerseos-background-blurred.jpg";
+      "${Env.cdnImage}commerseos-background-blurred.jpg";
 
   Business _currentBusiness;
   List<AppWidget> _appWidgets;

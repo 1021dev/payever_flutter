@@ -18,7 +18,6 @@ class DashboardContactView extends StatefulWidget {
 
 class _DashboardContactViewState extends State<DashboardContactView> {
   bool isExpanded = false;
-  String uiKit = 'https://payeverstage.azureedge.net/icons-png/';
   @override
   Widget build(BuildContext context) {
 
@@ -41,7 +40,7 @@ class _DashboardContactViewState extends State<DashboardContactView> {
                             height: 16,
                             decoration: BoxDecoration(
                                 image: DecorationImage(
-                                    image: NetworkImage('${uiKit}icons-apps-white/icon-apps-white-mail.png'),
+                                    image: NetworkImage('${Env.cdnIcon}icons-apps-white/icon-apps-white-mail.png'),
                                     fit: BoxFit.fitWidth)),
                           ),
                           SizedBox(width: 8,),
@@ -239,7 +238,7 @@ class _DashboardContactViewState extends State<DashboardContactView> {
                     height: 40,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                          image: NetworkImage('${uiKit}icon-comerceos-mail-not-installed.png'),
+                          image: NetworkImage('${Env.cdnIcon}icon-comerceos-mail-not-installed.png'),
                           fit: BoxFit.fitWidth),
                     ),
                   ),

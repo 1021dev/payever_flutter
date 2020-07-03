@@ -680,7 +680,7 @@ class ApiService {
     try {
       print('$TAG - getPosDevicePaymentSettings()');
       dynamic response = await _client.getTypeless(
-          'https://device-payments-backend.staging.devpayever.com/api/v1/$businessId/settings',
+          '${Env.devicePayments}/api/v1/$businessId/settings',
           headers: {
             HttpHeaders.authorizationHeader: 'Bearer $token',
             HttpHeaders.contentTypeHeader: 'application/json',
@@ -728,7 +728,7 @@ class ApiService {
     try {
       print('$TAG - putDevicePaymentSettings()');
       dynamic response = await _client.putTypeless(
-          'https://device-payments-backend.staging.devpayever.com/api/v1/$businessId/settings',
+          '${Env.devicePayments}/api/v1/$businessId/settings',
             body: {
             'autoresponderEnabled' : autoreponderEnabled,
             'secondFactor' : secondFactor,
