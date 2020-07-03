@@ -29,8 +29,6 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
       yield* getDaily(event.business);
     } else if (event is FetchTutorials) {
       yield* getTutorials(event.business);
-    } else if (event is SearchDashboardEvent) {
-      yield* searchDashboard(event.key);
     }
   }
 

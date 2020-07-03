@@ -55,14 +55,3 @@ class FetchTutorials extends DashboardScreenEvent {
   ];
 
 }
-
-class SearchDashboardEvent extends DashboardScreenEvent {
-  final String key;
-
-  SearchDashboardEvent({this.key});
-
-  @override
-  List<Object> get props => [
-    this.key,
-  ];
-}
