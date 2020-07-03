@@ -6,6 +6,7 @@ import android.util.Log;
 import androidx.annotation.CallSuper;
 
 import io.flutter.app.FlutterApplication;
+import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.view.FlutterMain;
 import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.plugin.common.PluginRegistry.PluginRegistrantCallback;
@@ -38,7 +39,7 @@ import org.payever.app.taponphone.utils.DataManager;
 
 import io.flutter.view.FlutterMain;
 
-public class MposApplication extends FlutterApplication implements PluginRegistrantCallback {
+public class MposApplication extends FlutterApplication {
 
 
     private final String TAG = "MposApplication";
@@ -264,8 +265,8 @@ public class MposApplication extends FlutterApplication implements PluginRegistr
         }
     }
 
-    @Override
-    public void registerWith(PluginRegistry registry) {
-        GeneratedPluginRegistrant.registerWith(registry);
-    }
+//    @Override
+//    public void registerWith(FlutterEngine registry) {
+//        GeneratedPluginRegistrant.registerWith(registry);
+//    }
 }

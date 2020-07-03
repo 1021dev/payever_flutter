@@ -43,6 +43,9 @@
             android:name=".taponphone.activity.HomeActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        <meta-data
+            android:name="flutterEmbedding"
+            android:value="2" />
 
     </application>
 </manifest>

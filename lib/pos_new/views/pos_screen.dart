@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:page_transition/page_transition.dart';
@@ -73,7 +74,9 @@ class _PosScreenState extends State<PosScreen> {
   final GlobalKey<InnerDrawerState> _innerDrawerKey = GlobalKey<InnerDrawerState>();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
-  final Completer<WebViewController> _controller = Completer<WebViewController>();
+  InAppWebViewController webView;
+  double progress = 0;
+  String url = '';
 
   PosScreenBloc screenBloc = PosScreenBloc();
   String wallpaper;
@@ -462,24 +465,44 @@ class _PosScreenState extends State<PosScreen> {
     }
     return Container(
       color: Colors.white,
-      child: WebView(
-        initialUrl: 'https://${state.activeTerminal.id}.payever.business',
-        onWebViewCreated: (WebViewController webViewController) {
-        },
-        javascriptChannels: <JavascriptChannel>[
-          _toasterJavascriptChannel(context),
-        ].toSet(),
-        navigationDelegate: (NavigationRequest request) {
-          print('allowing navigation to $request');
-          return NavigationDecision.navigate;
-        },
-        onPageStarted: (String url) {
-          print('Page started loading: $url');
-        },
-        onPageFinished: (String url) {
-          print('Page finished loading: $url');
-        },
-        gestureNavigationEnabled: true,
+      child: Column(
+        children: <Widget>[
+          Container(
+              padding: EdgeInsets.all(0.0),
+              child: progress < 1.0
+                  ? LinearProgressIndicator(value: progress)
+                  : Container()
+          ),
+          Expanded(
+            child: InAppWebView(
+              initialUrl: "https://${state.activeTerminal.id}.payever.business",
+              initialHeaders: {},
+              initialOptions: InAppWebViewGroupOptions(
+                  crossPlatform: InAppWebViewOptions(
+                    debuggingEnabled: true,
+                  )
+              ),
+              onWebViewCreated: (InAppWebViewController controller) {
+                webView = controller;
+              },
+              onLoadStart: (InAppWebViewController controller, String url) {
+                setState(() {
+                  this.url = url;
+                });
+              },
+              onLoadStop: (InAppWebViewController controller, String url) async {
+                setState(() {
+                  this.url = url;
+                });
+              },
+              onProgressChanged: (InAppWebViewController controller, int progress) {
+                setState(() {
+                  this.progress = progress / 100;
+                });
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
