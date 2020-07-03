@@ -254,7 +254,7 @@ class ApiService {
     try {
       print('$TAG - getTransactionList()');
       dynamic response = await _client.getTypeless(
-          '$transactionWidUrl$id$transactionWidEnd',
+          '$transactionWidUrl$id$transactionWidEnd$query',
           headers: {
             HttpHeaders.authorizationHeader: 'Bearer $token',
             HttpHeaders.contentTypeHeader: 'application/json',

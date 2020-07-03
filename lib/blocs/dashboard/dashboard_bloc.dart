@@ -379,6 +379,34 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
       yield state.copyWith(businesses: businesses);
     }
 
-    
+    List<Business> searchBusinessResult = [];
+    searchBusinessResult = businesses.where((element) {
+      if (element.name.toLowerCase().contains(key.toLowerCase())) {
+        return true;
+      }
+      if (element.email.toLowerCase().contains(key.toLowerCase())) {
+        return true;
+      }
+      return false;
+    });
+
+    List<Collection> searchTransacionResult = [];
+    String sortQuery = '?orderBy=created_at&direction=desc&qyert=$key&limit=8';
+
+    dynamic obj = await api.getTransactionList(state.activeBusiness.id, GlobalUtils.activeToken.accessToken, sortQuery);
+    Transaction data = Transaction.toMap(obj);
+
+    if (searchBusinessResult.length >  4) {
+      yield state.copyWith(
+        searchBusinesses: searchBusinessResult.sublist(0, 4),
+        searchTransactions: data.collection.sublist(0, 4),
+      );
+    } else {
+      yield state.copyWith(
+        searchBusinesses: searchBusinessResult,
+        searchTransactions: data.collection.sublist(0, 8 - searchBusinessResult.length),
+      );
+    }
+
   }
 }
