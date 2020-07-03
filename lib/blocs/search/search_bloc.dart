@@ -27,10 +27,14 @@ class SearchScreenBloc extends Bloc<SearchScreenEvent, SearchScreenState> {
   Stream<SearchScreenState> search(String key, String businessId) async* {
 
     yield state.copyWith(isLoading: true);
+    if (key == '') {
+      yield state.copyWith(isLoading: false, searchTransactions: [], searchBusinesses: []);
+      return;
+    }
     List<Business> businesses = [];
     if (state.businesses.length > 0) {
-      businesses.addAll(state.businesses);
     }
+    businesses.addAll(state.businesses);
     if (businesses.length == 0) {
       dynamic businessResponse = await api.getBusinesses(GlobalUtils.activeToken.accessToken);
       businessResponse.forEach((element) {
