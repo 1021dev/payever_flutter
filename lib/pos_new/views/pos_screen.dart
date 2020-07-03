@@ -18,6 +18,7 @@ import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/d
 import 'package:payever/pos_new/views/pos_connect_screen.dart';
 import 'package:payever/pos_new/views/pos_create_terminal_screen.dart';
 import 'package:payever/pos_new/views/pos_switch_terminals_screen.dart';
+import 'package:payever/pos_new/views/pos_twillo_settings.dart';
 import 'package:payever/pos_new/widgets/pos_top_button.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -579,6 +580,19 @@ class _PosScreenState extends State<PosScreen> {
                                           context,
                                           PageTransition(
                                             child: PosQRSettings(
+                                              businessId: widget.globalStateModel.currentBusiness.id,
+                                              screenBloc: screenBloc,
+                                              businessName: widget.globalStateModel.currentBusiness.name,
+                                            ),
+                                            type: PageTransitionType.fade,
+                                            duration: Duration(milliseconds: 500),
+                                          ),
+                                        );
+                                      } else if (state.integrations[index].integration.name == 'twilio') {
+                                        Navigator.push(
+                                          context,
+                                          PageTransition(
+                                            child: PosTwilioScreen(
                                               businessId: widget.globalStateModel.currentBusiness.id,
                                               screenBloc: screenBloc,
                                               businessName: widget.globalStateModel.currentBusiness.name,

@@ -17,6 +17,7 @@ class PosScreenState {
   final String copiedBusiness;
   final Terminal copiedTerminal;
   final dynamic qrForm;
+  final dynamic twilioForm;
 
   PosScreenState({
     this.isLoading = false,
@@ -34,6 +35,7 @@ class PosScreenState {
     this.copiedBusiness,
     this.copiedTerminal,
     this.qrForm,
+    this.twilioForm,
   });
 
   List<Object> get props => [
@@ -52,6 +54,7 @@ class PosScreenState {
     this.copiedBusiness,
     this.copiedTerminal,
     this.qrForm,
+    this.twilioForm,
   ];
 
   PosScreenState copyWith({
@@ -70,6 +73,7 @@ class PosScreenState {
     Terminal copiedTerminal,
     String copiedBusiness,
     dynamic qrForm,
+    dynamic twilioForm,
   }) {
     return PosScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -87,6 +91,7 @@ class PosScreenState {
       copiedBusiness: copiedBusiness,
       copiedTerminal: copiedTerminal,
       qrForm: qrForm ?? this.qrForm,
+      twilioForm: twilioForm ?? this.twilioForm,
     );
   }
 }

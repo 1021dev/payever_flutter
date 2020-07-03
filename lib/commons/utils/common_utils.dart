@@ -771,6 +771,13 @@ class GlobalUtils {
   static const String ENV_CONNECT_QR = 'qr';
   static const String ENV_CUSTOM_CDN = 'cdn';
   static const String ENV_BACKEND_DEVICE_PAYMENT = 'devicePayments';
+  static const String ENV_THIRD_PARTY = 'thirdParty';
+  static const String ENV_THIRD_PARTY_COMMUNICATIONS = 'communications';
+  static const String ENV_THIRD_PARTY_PAYMENT = 'payments';
+  static const String ENV_PAYMENT = 'payments';
+  static const String ENV_PAYMENT_STRIPE = 'stripe';
+  static const String ENV_PAYMENT_INSTANT_PAYMENT = 'instantPayment';
+  static const String ENV_PAYMENT_SANTANDERNL = 'santanderNl';
 
   // dashboard_
   static const String CURRENT_WALLPAPER = 'currentWallpaper';

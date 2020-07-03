@@ -702,7 +702,7 @@ class ApiService {
       String url,
       ) async {
     try {
-      print('$TAG - getPosDevicePaymentSettings()');
+      print('$TAG - postGenerateTerminalQRCode()');
       dynamic response = await _client.postTypeLess(
           '${Env.qr}/api/app/$businessId/generate',
           body: {
@@ -712,6 +712,27 @@ class ApiService {
             'id': id,
             'url': url,
           },
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getTwilioSettings(
+      String token,
+      String businessId,
+      ) async {
+    try {
+      print('$TAG - getTwilioSettings()');
+      dynamic response = await _client.postTypeLess(
+          '${Env.thirdPartyCommunication}/api/business/$businessId/integration/twilio/form',
+          body: {},
           headers: {
             HttpHeaders.authorizationHeader: 'Bearer $token',
             HttpHeaders.contentTypeHeader: 'application/json',

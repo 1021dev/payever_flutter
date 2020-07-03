@@ -321,3 +321,16 @@ class GenerateQRCodeEvent extends PosScreenEvent {
     this.url,
   ];
 }
+
+class GetTwilioSettings extends PosScreenEvent {
+  final String businessId;
+
+  GetTwilioSettings({
+    this.businessId,
+  });
+
+  @override
+  List<Object> get props => [
+    this.businessId,
+  ];
+}

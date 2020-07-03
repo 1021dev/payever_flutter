@@ -27,6 +27,12 @@ class Env {
   static String cdn;
   static String cdnImage;
   static String cdnIcon;
+  static String thirdParty;
+  static String thirdPartyCommunication;
+  static String thirdPartyPayment;
+  static String paymentStripe;
+  static String paymentInstantPayment;
+  static String paymentSantanderNl;
 
   Env.map(dynamic obj) {
     Env.users = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_USER];
@@ -57,5 +63,11 @@ class Env {
     Env.cdn = obj[GlobalUtils.ENV_CUSTOM][GlobalUtils.ENV_CUSTOM_CDN];
     Env.cdnImage = '${Env.cdn}/images/';
     Env.cdnIcon = '${Env.cdn}/icons-png/';
+    Env.thirdParty = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_THIRD_PARTY];
+    Env.thirdPartyCommunication = obj[GlobalUtils.ENV_THIRD_PARTY][GlobalUtils.ENV_THIRD_PARTY_COMMUNICATIONS];
+    Env.thirdPartyPayment = obj[GlobalUtils.ENV_THIRD_PARTY][GlobalUtils.ENV_THIRD_PARTY_PAYMENT];
+    Env.paymentStripe = obj[GlobalUtils.ENV_PAYMENT][GlobalUtils.ENV_PAYMENT_STRIPE];
+    Env.paymentInstantPayment = obj[GlobalUtils.ENV_PAYMENT][GlobalUtils.ENV_PAYMENT_INSTANT_PAYMENT];
+    Env.paymentSantanderNl = obj[GlobalUtils.ENV_PAYMENT][GlobalUtils.ENV_PAYMENT_SANTANDERNL];
   }
 }

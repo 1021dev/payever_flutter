@@ -76,6 +76,8 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
       yield state.copyWith(copiedTerminal: event.terminal, terminalCopied: true);
     } else if (event is GenerateQRCodeEvent) {
       yield* postGenerateQRCode(event.businessId, event.businessName, event.avatarUrl, event.id, event.url);
+    } else if (event is GetTwilioSettings) {
+      yield* getTwilioSettings(event.businessId);
     }
   }
 
@@ -282,4 +284,16 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
     );
     yield state.copyWith(qrForm: response, isLoading: false);
   }
+
+  Stream<PosScreenState> getTwilioSettings(
+      String businessId,
+      ) async* {
+    yield state.copyWith(isLoading: true);
+    dynamic response = await api.getTwilioSettings(
+      GlobalUtils.activeToken.accessToken,
+      businessId,
+    );
+    yield state.copyWith(twilioForm: response, isLoading: false);
+  }
+
 }

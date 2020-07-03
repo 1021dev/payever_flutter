@@ -9,6 +9,7 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/blur_effect_view.dart';
 import 'package:payever/pos_new/views/pos_qr_settings.dart';
+import 'package:payever/pos_new/views/pos_twillo_settings.dart';
 
 import 'pos_device_payment_settings.dart';
 
@@ -261,6 +262,19 @@ class _PosConnectScreenState extends State<PosConnectScreen> {
                                             context,
                                             PageTransition(
                                               child: PosQRSettings(
+                                                businessId: widget.globalStateModel.currentBusiness.id,
+                                                screenBloc: widget.screenBloc,
+                                                businessName: widget.globalStateModel.currentBusiness.name,
+                                              ),
+                                              type: PageTransitionType.fade,
+                                              duration: Duration(milliseconds: 500),
+                                            ),
+                                          );
+                                        } else if (communications[index].integration.name == 'twilio') {
+                                          Navigator.push(
+                                            context,
+                                            PageTransition(
+                                              child: PosTwilioScreen(
                                                 businessId: widget.globalStateModel.currentBusiness.id,
                                                 screenBloc: widget.screenBloc,
                                                 businessName: widget.globalStateModel.currentBusiness.name,
