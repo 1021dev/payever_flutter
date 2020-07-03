@@ -26,6 +26,7 @@ import 'package:payever/commons/views/screens/switcher/switcher_page.dart';
 import 'package:payever/pos/pos.dart';
 import 'package:payever/pos_new/views/pos_create_terminal_screen.dart';
 import 'package:payever/pos_new/views/pos_screen.dart';
+import 'package:payever/search/views/search_screen.dart';
 import 'package:payever/transactions/transactions.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -682,8 +683,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         }
                       },
                       onSubmitted: (val) {
-                        // TODO: Search
-
+                        Navigator.push(
+                          context,
+                          PageTransition(
+                            child: SearchScreen(
+                              businessId: state.activeBusiness.id,
+                              searchQuery: searchController.text,
+                            ),
+                            type: PageTransitionType.fade,
+                            duration: Duration(milliseconds: 50),
+                          ),
+                        );
+                        setState(() {
+                          searchString = '';
+                          searchController.text = searchString;
+                        });
                       },
                     ),
                   ),
@@ -708,7 +722,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                   searchController.text.isEmpty ? Container() : MaterialButton(
                     onPressed: () {
-                      // TODO: Search
+                      Navigator.push(
+                        context,
+                        PageTransition(
+                          child: SearchScreen(
+                            businessId: state.activeBusiness.id,
+                            searchQuery: searchController.text,
+                          ),
+                          type: PageTransitionType.fade,
+                          duration: Duration(milliseconds: 50),
+                        ),
+                      );
+                      setState(() {
+                        searchString = '';
+                        searchController.text = searchString;
+                      });
                     },
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)
