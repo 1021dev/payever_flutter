@@ -53,7 +53,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   bool isLoaded = false;
   String searchString = '';
   TextEditingController searchController = TextEditingController();
-
+  FocusNode searchFocus = FocusNode();
   GlobalStateModel globalStateModel;
   @override
   void initState() {
@@ -650,6 +650,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   Expanded(
                     child: TextField(
                       controller: searchController,
+                      focusNode: searchFocus,
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.all(0),
                         isDense: true,
@@ -697,6 +698,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         setState(() {
                           searchString = '';
                           searchController.text = searchString;
+                          FocusScope.of(context).unfocus();
                         });
                       },
                     ),
@@ -706,6 +708,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       setState(() {
                         searchString = '';
                         searchController.text = searchString;
+                        FocusScope.of(context).unfocus();
                       });
                     },
                     shape: CircleBorder(
@@ -736,6 +739,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       setState(() {
                         searchString = '';
                         searchController.text = searchString;
+                        FocusScope.of(context).unfocus();
                       });
                     },
                     shape: RoundedRectangleBorder(

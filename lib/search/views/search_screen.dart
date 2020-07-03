@@ -8,6 +8,8 @@ import 'package:payever/commons/utils/utils.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/blur_effect_view.dart';
 import 'package:payever/commons/views/screens/login/login_page.dart';
+import 'package:payever/search/widgets/search_result_business_view.dart';
+import 'package:payever/search/widgets/search_result_transaction_view.dart';
 
 bool _isPortrait;
 bool _isTablet;
@@ -90,6 +92,8 @@ class _SearchScreenState extends State<SearchScreen> {
           body: Column(
             children: <Widget>[
               Container(
+                alignment: Alignment.topRight,
+                padding: EdgeInsets.only(top: 16, right: 16),
                 child: IconButton(
                   constraints: BoxConstraints(
                       maxHeight: 32,
@@ -109,7 +113,7 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
               _searchBar(state),
               Expanded(
-                child: _searchBar(state),
+                child: _searchResultLsit(state),
               ),
             ],
           ),
@@ -124,10 +128,10 @@ class _SearchScreenState extends State<SearchScreen> {
         top: 44,
         left: 16,
         right: 16,
-        bottom: 24,
       ),
       child: BlurEffectView(
         radius: 12,
+        color: Color.fromRGBO(100, 100, 100, 0.2),
         padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
         child: Container(
           height: 40,
@@ -159,32 +163,29 @@ class _SearchScreenState extends State<SearchScreen> {
                             color: Colors.white
                         ),
                         onChanged: (val) {
-                          if (val.length > 0) {
-                            if (searchString.length > 0) {
-                              searchString = val;
-                            } else {
-                              setState(() {
-                                searchString = val;
-                              });
-                            }
-                          } else {
-                            if (searchString.length == 0) {
-                              searchString = val;
-                            } else {
-                              setState(() {
-                                searchString = val;
-                              });
+                          searchString = val;
+                          Future.delayed(
+                              Duration(milliseconds: 300))
+                              .then((value) async {
+                            if (!state.isLoading) {
+                              screenBloc.add(SearchEvent(businessId: widget.businessId, key: searchString));
                             }
                           }
+                          );
                         },
                         onSubmitted: (val) {
-                          // TODO: Search
-
+                          screenBloc.add(SearchEvent(businessId: widget.businessId, key: searchString));
                         },
                       ),
                     ),
-                    state.isLoading ? Container(
-                      child: CircularProgressIndicator(),
+                    state.isLoading ?
+                      SizedBox(
+                        width: 36,
+                        height: 36,
+                        child: Padding(
+                          padding: EdgeInsets.all(8),
+                          child: CircularProgressIndicator(),
+                        ),
                     ) : Container(),
                   ],
                 ),
@@ -197,6 +198,96 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   Widget _searchResultLsit(SearchScreenState state) {
-    return Container();
+    return SingleChildScrollView(
+      child: Container(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          children: <Widget>[
+            state.searchBusinesses.length > 0 ?
+            BlurEffectView(
+              blur: 1,
+              color: Colors.transparent,
+              radius: 12,
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    height: 36,
+                    padding: EdgeInsets.only(left: 8),
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Business',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  BlurEffectView(
+                    blur: 15,
+                    color: Color.fromRGBO(50, 50, 50, 0.2),
+                    radius: 0,
+                    child: ListView.separated(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        return SearchResultBusinessView(
+                          business: state.searchBusinesses[index],
+                        );
+                      },
+                      separatorBuilder: (ctx, index) {
+                        return Divider(height: 0, thickness: 1,);
+                      },
+                      itemCount: state.searchBusinesses.length,
+                    ),
+                  ),
+                ],
+              ),
+            ): Container(),
+            state.searchTransactions.length > 0 ?
+            BlurEffectView(
+              blur: 1,
+              color: Colors.transparent,
+              radius: 12,
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    height: 36,
+                    padding: EdgeInsets.only(left: 8),
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Transactions',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  BlurEffectView(
+                    blur: 15,
+                    color: Color.fromRGBO(50, 50, 50, 0.2),
+                    radius: 0,
+                    child: ListView.separated(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        return SearchResultTransactionView(
+                          collection: state.searchTransactions[index],
+                        );
+                      },
+                      separatorBuilder: (ctx, index) {
+                        return Divider(height: 0, thickness: 1,);
+                      },
+                      itemCount: state.searchTransactions.length,
+                    ),
+                  ),
+                ],
+              ),
+            ): Container(),
+          ],
+        ),
+      ),
+    );
   }
 }

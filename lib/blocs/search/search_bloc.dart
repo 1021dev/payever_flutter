@@ -28,11 +28,16 @@ class SearchScreenBloc extends Bloc<SearchScreenEvent, SearchScreenState> {
 
     yield state.copyWith(isLoading: true);
     List<Business> businesses = [];
-    dynamic businessResponse = await api.getBusinesses(GlobalUtils.activeToken.accessToken);
-    businessResponse.forEach((element) {
-      businesses.add(Business.map(element));
-    });
-
+    if (state.businesses.length > 0) {
+      businesses.addAll(state.businesses);
+    }
+    if (businesses.length == 0) {
+      dynamic businessResponse = await api.getBusinesses(GlobalUtils.activeToken.accessToken);
+      businessResponse.forEach((element) {
+        businesses.add(Business.map(element));
+      });
+      yield state.copyWith(businesses: businesses);
+    }
     List<Business> searchBusinessResult = [];
     searchBusinessResult = businesses.where((element) {
       if (element.name.toLowerCase().contains(key.toLowerCase())) {
@@ -42,25 +47,28 @@ class SearchScreenBloc extends Bloc<SearchScreenEvent, SearchScreenState> {
         return true;
       }
       return false;
-    });
+    }).toList();
 
-    List<Collection> searchTransacionResult = [];
+    List<Collection> searchTransactionsResult = [];
     String sortQuery = '?orderBy=created_at&direction=desc&qyert=$key&limit=8';
 
     dynamic obj = await api.getTransactionList(businessId, GlobalUtils.activeToken.accessToken, sortQuery);
     Transaction data = Transaction.toMap(obj);
-    searchTransacionResult = data.collection;
+    searchTransactionsResult = data.collection;
+
+    print('searchBusinessResult=> $searchBusinessResult');
+    print('searchTransactionsResult=> $searchTransactionsResult');
     if (searchBusinessResult.length >  4) {
       yield state.copyWith(
         isLoading: false,
         searchBusinesses: searchBusinessResult.sublist(0, 4),
-        searchTransactions: searchTransacionResult.sublist(0, 4),
+        searchTransactions: searchTransactionsResult.sublist(0, 4),
       );
     } else {
       yield state.copyWith(
         isLoading: false,
         searchBusinesses: searchBusinessResult,
-        searchTransactions: searchTransacionResult.sublist(0, 8 - searchBusinessResult.length),
+        searchTransactions: searchTransactionsResult.sublist(0, 8 - searchBusinessResult.length),
       );
     }
 
