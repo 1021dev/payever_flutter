@@ -334,3 +334,116 @@ class GetTwilioSettings extends PosScreenEvent {
     this.businessId,
   ];
 }
+
+class GetAddTwilioPhoneFrom extends PosScreenEvent {
+  final String businessId;
+
+  GetAddTwilioPhoneFrom({
+    this.businessId,
+  });
+
+  @override
+  List<Object> get props => [
+    this.businessId,
+  ];
+}
+
+class AddPhoneNumberSettings extends PosScreenEvent {
+  final String businessId;
+  final String action;
+  final String id;
+
+  AddPhoneNumberSettings({
+    this.businessId,
+    this.action,
+    this.id,
+  });
+
+  @override
+  List<Object> get props => [
+    this.businessId,
+    this.action,
+    this.id,
+  ];
+}
+
+class RemovePhoneNumberSettings extends PosScreenEvent {
+  final String businessId;
+  final String action;
+  final String id;
+  final String sid;
+
+  RemovePhoneNumberSettings({
+    this.businessId,
+    this.action,
+    this.id,
+    this.sid,
+  });
+
+  @override
+  List<Object> get props => [
+    this.businessId,
+    this.action,
+    this.id,
+    this.sid,
+  ];
+}
+
+class SearchPhoneNumberEvent extends PosScreenEvent {
+  final String businessId;
+  final String action;
+  final String country;
+  final String excludeAny;
+  final String excludeForeign;
+  final String excludeLocal;
+  final String id;
+  final String phoneNumber;
+
+  SearchPhoneNumberEvent({
+    this.businessId,
+    this.action,
+    this.country,
+    this.excludeAny,
+    this.excludeForeign,
+    this.excludeLocal,
+    this.id,
+    this.phoneNumber,
+  });
+
+  @override
+  List<Object> get props => [
+    this.businessId,
+    this.action,
+    this.country,
+    this.excludeAny,
+    this.excludeForeign,
+    this.excludeLocal,
+    this.id,
+    this.phoneNumber,
+  ];
+}
+
+class PurchaseNumberEvent extends PosScreenEvent {
+  final String businessId;
+  final String action;
+  final String id;
+  final String value;
+  final String phone;
+
+  PurchaseNumberEvent({
+    this.businessId,
+    this.action,
+    this.id,
+    this.value,
+    this.phone,
+  });
+
+  @override
+  List<Object> get props => [
+    this.businessId,
+    this.action,
+    this.id,
+    this.value,
+    this.phone,
+  ];
+}

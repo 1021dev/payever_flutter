@@ -296,4 +296,17 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
     yield state.copyWith(twilioForm: response, isLoading: false);
   }
 
+  Stream<PosScreenState> addPhoneNumberSettings(
+      String businessId,
+      String action,
+      String id,
+      ) async* {
+    yield state.copyWith(isLoading: true);
+    dynamic response = await api.getTwilioSettings(
+      GlobalUtils.activeToken.accessToken,
+      businessId,
+    );
+    yield state.copyWith(twilioForm: response, isLoading: false);
+  }
+
 }

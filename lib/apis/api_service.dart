@@ -745,6 +745,126 @@ class ApiService {
     }
   }
 
+  Future<dynamic> addPhoneNumberSettings(
+      String token,
+      String businessId,
+      String action,
+      String id,
+      ) async {
+    try {
+      print('$TAG - getTwilioSettings()');
+      dynamic response = await _client.postTypeLess(
+          '${Env.thirdPartyCommunication}/api/business/$businessId/integration/twilio/action/add-number',
+          body: {
+            'action': action,
+            'id': id,
+          },
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> searchPhoneNumberSettings(
+      String token,
+      String businessId,
+      String action,
+      String country,
+      bool excludeAny,
+      bool excludeForeign,
+      bool excludeLocal,
+      String phoneNumber,
+      String id,
+      ) async {
+    try {
+      print('$TAG - getTwilioSettings()');
+      dynamic response = await _client.postTypeLess(
+          '${Env.thirdPartyCommunication}/api/business/$businessId/integration/twilio/action/search-numbers',
+          body: {
+            'action': action,
+            'country': country,
+            'excludeAny': excludeAny,
+            'excludeForeign': excludeForeign,
+            'excludeLocal': excludeLocal,
+            'id': id,
+            'phoneNumber': phoneNumber,
+          },
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> purchasePhoneNumberSettings(
+      String token,
+      String businessId,
+      String action,
+      String phone,
+      String id,
+      String price,
+      ) async {
+    try {
+      print('$TAG - getTwilioSettings()');
+      dynamic response = await _client.postTypeLess(
+          '${Env.thirdPartyCommunication}/api/business/$businessId/integration/twilio/action/purchase-number',
+          body: {
+            'action': action,
+            'id': id,
+            'phone': phone,
+            'price': price,
+          },
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> removePhoneNumberSettings(
+      String token,
+      String businessId,
+      String action,
+      String id,
+      String sid,
+      ) async {
+    try {
+      print('$TAG - getTwilioSettings()');
+      dynamic response = await _client.postTypeLess(
+          '${Env.thirdPartyCommunication}/api/business/$businessId/integration/twilio/action/remove-number',
+          body: {
+            'action': action,
+            'id': id,
+            'sid': sid,
+          },
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<dynamic> putDevicePaymentSettings(String businessId, String token, bool autoreponderEnabled, bool secondFactor, int verificationType) async {
     try {
       print('$TAG - putDevicePaymentSettings()');
