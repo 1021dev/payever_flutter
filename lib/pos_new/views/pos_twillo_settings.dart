@@ -40,7 +40,7 @@ class _PosTwilioScreenState extends State<PosTwilioScreen> {
 
   String wallpaper;
   String selectedState = '';
-  bool isOpened = true;
+  int isOpened = -1;
 
   var imageData;
 
@@ -169,13 +169,12 @@ class _PosTwilioScreenState extends State<PosTwilioScreen> {
         if (content != null) {
           List contentData = content[contentType];
           contentData.forEach((data) {
-//            dynamic data = content[contentType][0];
             if (data['data'] != null) {
               List<dynamic> list = data['data'];
               for(dynamic w in list) {
                 if (w[0]['type'] == 'image') {
                 } else if (w[0]['type'] == 'text') {
-                  Widget textWidget = isOpened ? Container(
+                  Widget textWidget = isOpened == -1 ? Container(
                     height: 64,
                     padding: EdgeInsets.only(left: 16, right: 16),
                     child: Row(
@@ -206,24 +205,87 @@ class _PosTwilioScreenState extends State<PosTwilioScreen> {
                     ),
                   ): Container();
                   widgets.add(textWidget);
-
                 }
               }
             } else if (data['fieldset'] != null) {
               List<dynamic> list = data['fieldset'];
+              Widget section = Container(
+                height: 64,
+                color: Colors.black45,
+                padding: EdgeInsets.only(left: 16, right: 16),
+                child: SizedBox.expand(
+                  child: MaterialButton(
+                    onPressed: () {
+                      setState(() {
+                        isOpened = -1;
+                      });
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Icon(
+                              Icons.vpn_key,
+                              size: 16,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(left: 8),
+                            ),
+                            Text(
+                              data['title'],
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            )
+                          ],
+                        ),
+                        Icon(
+                          isOpened == -1 ? Icons.keyboard_arrow_up: Icons.keyboard_arrow_down,
+                          size: 20,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+              widgets.add(section);
+
               for(dynamic w in list) {
-                if (w['type'] == 'input') {
-                  Widget inputWidget = Container();
+                if (w['type'].contains('input')) {
+                  Widget inputWidget = Container(
+                    child: TextField(
+                      style: TextStyle(fontSize: Measurements.height * 0.02),
+                      onChanged: (val) {
+
+                      },
+                      decoration: InputDecoration(
+                        hintText: w['inputSettings']['placeholder'],
+                        hintStyle: TextStyle(
+                          color: Colors.white.withOpacity(0.5),
+                        ),
+                        labelText: w['fieldSettings']['label'],
+                        labelStyle: TextStyle(
+                          color: Colors.grey,
+                        ),
+                        border: InputBorder.none,
+                      ),
+                      keyboardType: TextInputType.text,
+                      obscureText: w['type'] == 'input-password',
+                    ),
+                  );
                   widgets.add(inputWidget);
                 } else if (w['type'] == 'text') {
-                  Widget textWidget = isOpened ? Container(
+                  Widget textWidget = isOpened == -1 ? Container(
                     height: 64,
                     padding: EdgeInsets.only(left: 16, right: 16),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text(
-                            w['value']
+                            w['value'],
                         ),
                         MaterialButton(
                           minWidth: 0,
@@ -258,7 +320,7 @@ class _PosTwilioScreenState extends State<PosTwilioScreen> {
     return Center(
       child: Container(
         padding: EdgeInsets.only(left: 16, right: 16),
-        height: isOpened ? 300.0 + 64.0 * 3.0: 64.0,
+        height: isOpened == -1 ? 300.0 + 64.0 * 3.0: 64.0,
         child: BlurEffectView(
           color: Color.fromRGBO(20, 20, 20, 0.2),
           blur: 15,

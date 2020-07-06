@@ -78,6 +78,31 @@ class Language {
     }).catchError((onError) {
       print(onError);
     });
+
+    DefaultAssetBundle.of(context)
+        .loadString("assets/translations/pos/front_end/$language.json", cache: false)
+        .then((value) {
+      posStrings = JsonDecoder().convert(value);
+    }).catchError((onError) {
+      print(onError);
+    });
+
+    DefaultAssetBundle.of(context)
+        .loadString("assets/translations/pos/connect/$language.json", cache: false)
+        .then((value) {
+      posConnectStrings = JsonDecoder().convert(value);
+    }).catchError((onError) {
+      print(onError);
+    });
+
+    DefaultAssetBundle.of(context)
+        .loadString("assets/translations/pos/tpm/$language.json", cache: false)
+        .then((value) {
+      posTpmStrings = JsonDecoder().convert(value);
+    }).catchError((onError) {
+      print(onError);
+    });
+
     return await DefaultAssetBundle.of(context)
         .loadString("assets/translations/custom/$language.json", cache: false)
         .then((value) {
@@ -98,6 +123,9 @@ class Language {
   static dynamic cartStrings = Map();
   static dynamic customStrings = Map();
   static dynamic settingsStrings = Map();
+  static dynamic posStrings = Map();
+  static dynamic posConnectStrings = Map();
+  static dynamic posTpmStrings = Map();
 
   static String getWidgetStrings(String tag) => widgetStrings[tag] ?? tag;
 
