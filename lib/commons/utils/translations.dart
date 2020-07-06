@@ -10,21 +10,21 @@ class Language {
     if (language == null) language = deft;
     DefaultAssetBundle.of(context)
 //        .loadString("../translations/widget_app/$language.json", cache: false)
-        .loadString("assets/translations/widget_app/$language.json", cache: false)
+        .loadString("assets/translations/widget_app/$language.json", cache: true)
         .then((value) {
       widgetStrings = JsonDecoder().convert(value);
     }).catchError((onError) {
       print(onError);
     });
     DefaultAssetBundle.of(context)
-        .loadString("assets/translations/connect_app/$language.json", cache: false)
+        .loadString("assets/translations/connect_app/$language.json", cache: true)
         .then((value) {
       connectStrings = JsonDecoder().convert(value);
     }).catchError((onError) {
       print(onError);
     });
     DefaultAssetBundle.of(context)
-        .loadString("assets/translations/commerceos/$language.json", cache: false)
+        .loadString("assets/translations/commerceos/$language.json", cache: true)
         .then((value) {
       commerceOsStrings = JsonDecoder().convert(value);
     }).catchError((onError) {
@@ -34,14 +34,14 @@ class Language {
   }
 
   Future<void> loadRest(context) async {
-    DefaultAssetBundle.of(context)
-        .loadString("assets/translations/transaction_app/$language.json", cache: false)
+    await DefaultAssetBundle.of(context)
+        .loadString("assets/translations/transaction_app/$language.json", cache: true)
         .then((value) {
       transactionStrings = JsonDecoder().convert(value);
     }).catchError((onError) {
       print(onError);
     });
-    DefaultAssetBundle.of(context)
+    await DefaultAssetBundle.of(context)
         .loadString(
             "assets/translations/transaction_app/transaction_specific/$language.json",
             cache: false)
@@ -50,14 +50,14 @@ class Language {
     }).catchError((onError) {
       print(onError);
     });
-    DefaultAssetBundle.of(context)
-        .loadString("assets/translations/product_app/$language.json", cache: false)
+    await DefaultAssetBundle.of(context)
+        .loadString("assets/translations/product_app/$language.json", cache: true)
         .then((value) {
       productStrings = JsonDecoder().convert(value);
     }).catchError((onError) {
       print(onError);
     });
-    DefaultAssetBundle.of(context)
+    await DefaultAssetBundle.of(context)
         .loadString("assets/translations/product_app/product_list/$language.json",
             cache: false)
         .then((value) {
@@ -65,38 +65,38 @@ class Language {
     }).catchError((onError) {
       print(onError);
     });
-    DefaultAssetBundle.of(context).loadString("assets/translations/settings_app/$language.json",cache: false).then((value){
+    await DefaultAssetBundle.of(context).loadString("assets/translations/settings_app/$language.json",cache: true).then((value){
       settingsStrings = JsonDecoder().convert(value);
     }).catchError((onError){
       print(onError);
     });
 
-    DefaultAssetBundle.of(context)
-        .loadString("assets/translations/cart_app/$language.json", cache: false)
+    await DefaultAssetBundle.of(context)
+        .loadString("assets/translations/cart_app/$language.json", cache: true)
         .then((value) {
       cartStrings = JsonDecoder().convert(value);
     }).catchError((onError) {
       print(onError);
     });
 
-    DefaultAssetBundle.of(context)
-        .loadString("assets/translations/pos/front_end/$language.json", cache: false)
+    await DefaultAssetBundle.of(context)
+        .loadString("assets/translations/pos/front_end/$language.json", cache: true)
         .then((value) {
       posStrings = JsonDecoder().convert(value);
     }).catchError((onError) {
       print(onError);
     });
 
-    DefaultAssetBundle.of(context)
-        .loadString("assets/translations/pos/connect/$language.json", cache: false)
+    await DefaultAssetBundle.of(context)
+        .loadString("assets/translations/pos/connect/$language.json", cache: true)
         .then((value) {
       posConnectStrings = JsonDecoder().convert(value);
     }).catchError((onError) {
       print(onError);
     });
 
-    DefaultAssetBundle.of(context)
-        .loadString("assets/translations/pos/tpm/$language.json", cache: false)
+    await DefaultAssetBundle.of(context)
+        .loadString("assets/translations/pos/tpm/$language.json", cache: true)
         .then((value) {
       posTpmStrings = JsonDecoder().convert(value);
     }).catchError((onError) {
@@ -104,7 +104,7 @@ class Language {
     });
 
     return await DefaultAssetBundle.of(context)
-        .loadString("assets/translations/custom/$language.json", cache: false)
+        .loadString("assets/translations/custom/$language.json", cache: true)
         .then((value) {
       customStrings = JsonDecoder().convert(value);
       print("last language");
@@ -150,6 +150,12 @@ class Language {
   static String getCustomStrings(String tag) => customStrings[tag] ?? tag;
 
   static String getSettingsStrings(String tag) => settingsStrings[tag] ?? tag;
+
+  static String getPosStrings(String tag) => posStrings[tag] ?? tag;
+
+  static String getPosTpmStrings(String tag) => posTpmStrings[tag] ?? tag;
+
+  static String getPosConnectStrings(String tag) => posConnectStrings[tag] ?? tag;
 
   static String language;
 

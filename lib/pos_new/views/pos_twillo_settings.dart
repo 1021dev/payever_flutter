@@ -212,7 +212,6 @@ class _PosTwilioScreenState extends State<PosTwilioScreen> {
               Widget section = Container(
                 height: 64,
                 color: Colors.black45,
-                padding: EdgeInsets.only(left: 16, right: 16),
                 child: SizedBox.expand(
                   child: MaterialButton(
                     onPressed: () {
@@ -256,21 +255,23 @@ class _PosTwilioScreenState extends State<PosTwilioScreen> {
               for(dynamic w in list) {
                 if (w['type'].contains('input')) {
                   Widget inputWidget = Container(
+                    height: 64,
                     child: TextField(
-                      style: TextStyle(fontSize: Measurements.height * 0.02),
+                      style: TextStyle(fontSize: 16),
                       onChanged: (val) {
 
                       },
                       decoration: InputDecoration(
-                        hintText: w['inputSettings']['placeholder'],
+                        contentPadding: EdgeInsets.only(left: 16, right: 16),
+                        hintText: Language.getPosTpmStrings(w['inputSettings']['placeholder']),
                         hintStyle: TextStyle(
                           color: Colors.white.withOpacity(0.5),
                         ),
-                        labelText: w['fieldSettings']['label'],
+                        labelText: Language.getPosTpmStrings(w['fieldSettings']['label']),
                         labelStyle: TextStyle(
                           color: Colors.grey,
                         ),
-                        border: InputBorder.none,
+                        border: UnderlineInputBorder(),
                       ),
                       keyboardType: TextInputType.text,
                       obscureText: w['type'] == 'input-password',
