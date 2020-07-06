@@ -136,6 +136,21 @@ flutter:
     - assets/videos/phone_portrait.mp4
     - assets/videos/tablet_landscape.mp4
     - assets/videos/tablet_portrait.mp4
+    - assets/translations/
+    - assets/translations/cart_app/
+    - assets/translations/commerceos/
+    - assets/translations/connect_app/
+    - assets/translations/custom/
+    - assets/translations/pos/
+    - assets/translations/product_app/
+    - assets/translations/settings_app/
+    - assets/translations/transaction_app/
+    - assets/translations/widget_app/
+    - assets/translations/transaction_app/transaction_specific/
+    - assets/translations/product_app/product_list/
+    - assets/translations/pos/connect/
+    - assets/translations/pos/front_end/
+    - assets/translations/pos/tpm/
 #    fonts:
 #      - family: Helvetica Neue
 #        fonts:

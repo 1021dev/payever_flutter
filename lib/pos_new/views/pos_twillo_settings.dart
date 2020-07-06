@@ -169,7 +169,7 @@ class _PosTwilioScreenState extends State<PosTwilioScreen> {
         if (content != null) {
           List contentData = content[contentType];
           contentData.forEach((data) {
-            if (data['data'] != null) {
+            if (data['datadata'] != null) {
               List<dynamic> list = data['data'];
               for(dynamic w in list) {
                 if (w[0]['type'] == 'image') {
@@ -222,24 +222,29 @@ class _PosTwilioScreenState extends State<PosTwilioScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        Row(
-                          children: <Widget>[
-                            Icon(
-                              Icons.vpn_key,
-                              size: 16,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 8),
-                            ),
-                            Text(
-                              data['title'],
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
+                        Expanded(
+                          child: Row(
+                            children: <Widget>[
+                              Icon(
+                                Icons.vpn_key,
+                                size: 16,
                               ),
-                            )
-                          ],
+                              Padding(
+                                padding: EdgeInsets.only(left: 8),
+                              ),
+                              Expanded(
+                                child: Text(
+                                  data['title'],
+                                  maxLines: 1,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                         Icon(
                           isOpened == -1 ? Icons.keyboard_arrow_up: Icons.keyboard_arrow_down,
@@ -252,66 +257,82 @@ class _PosTwilioScreenState extends State<PosTwilioScreen> {
               );
               widgets.add(section);
 
-              for(dynamic w in list) {
+              for(int j = 0; j < list.length; j++) {
+                dynamic w = list[j];
                 if (w['type'].contains('input')) {
+                  Map<String, dynamic> valueList = {};
+                  if (data['fieldsetData'] != null) {
+                    valueList = data['fieldsetData'];
+                  }
+                  String value = '';
+                  if (valueList.containsKey(w['name'])) {
+                    value = valueList[w['name']];
+                  }
                   Widget inputWidget = Container(
                     height: 64,
-                    child: TextField(
-                      style: TextStyle(fontSize: 16),
-                      onChanged: (val) {
+                    child: Center(
+                      child: TextFormField(
+                        style: TextStyle(fontSize: 16),
+                        onChanged: (val) {
 
-                      },
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.only(left: 16, right: 16),
-                        hintText: Language.getPosTpmStrings(w['inputSettings']['placeholder']),
-                        hintStyle: TextStyle(
-                          color: Colors.white.withOpacity(0.5),
+                        },
+                        initialValue: value,
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.only(left: 16, right: 16),
+                          hintText: Language.getPosTpmStrings(w['inputSettings']['placeholder']),
+                          hintStyle: TextStyle(
+                            color: Colors.white.withOpacity(0.5),
+                          ),
+                          labelText: Language.getPosTpmStrings(w['fieldSettings']['label']),
+                          labelStyle: TextStyle(
+                            color: Colors.grey,
+                          ),
+                          enabledBorder: InputBorder.none,
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                          ),
                         ),
-                        labelText: Language.getPosTpmStrings(w['fieldSettings']['label']),
-                        labelStyle: TextStyle(
-                          color: Colors.grey,
-                        ),
-                        border: UnderlineInputBorder(),
+                        keyboardType: TextInputType.text,
+                        obscureText: w['type'] == 'input-password',
                       ),
-                      keyboardType: TextInputType.text,
-                      obscureText: w['type'] == 'input-password',
                     ),
                   );
                   widgets.add(inputWidget);
-                } else if (w['type'] == 'text') {
-                  Widget textWidget = isOpened == -1 ? Container(
-                    height: 64,
-                    padding: EdgeInsets.only(left: 16, right: 16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(
-                            w['value'],
-                        ),
-                        MaterialButton(
-                          minWidth: 0,
-                          onPressed: () {
-                          },
-                          height: 20,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          color: Colors.black26,
-                          child: Text(
-                            w['action'],
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ): Container();
-                  widgets.add(textWidget);
+                  widgets.add(Divider(height: 0, thickness: 0.5, color: Color(0xFF888888),));
                 }
               }
+            } else if (data['operation'] != null) {
+              Widget textWidget = isOpened == -1 ? Container(
+                height: 64,
+                padding: EdgeInsets.only(left: 16, right: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      w['value'],
+                    ),
+                    MaterialButton(
+                      minWidth: 0,
+                      onPressed: () {
+                      },
+                      height: 20,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      color: Colors.black26,
+                      child: Text(
+                        w['action'],
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ): Container();
+              widgets.add(textWidget);
             }
           }
           );
