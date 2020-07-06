@@ -447,3 +447,28 @@ class PurchaseNumberEvent extends PosScreenEvent {
     this.phone,
   ];
 }
+
+class UpdateAddPhoneNumberSettings extends PosScreenEvent {
+  final String businessId;
+  final String action;
+  final String id;
+  final String value;
+  final String phone;
+
+  UpdateAddPhoneNumberSettings({
+    this.businessId,
+    this.action,
+    this.id,
+    this.value,
+    this.phone,
+  });
+
+  @override
+  List<Object> get props => [
+    this.businessId,
+    this.action,
+    this.id,
+    this.value,
+    this.phone,
+  ];
+}

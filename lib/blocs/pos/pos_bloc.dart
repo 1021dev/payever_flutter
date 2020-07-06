@@ -8,6 +8,7 @@ import 'package:payever/apis/api_service.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/models/pos.dart';
 import 'package:payever/commons/utils/common_utils.dart';
+import 'package:payever/pos_new/models/models.dart';
 
 import '../bloc.dart';
 
@@ -316,7 +317,47 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
       action,
       id,
     );
-    yield state.copyWith(twilioAddPhoneForm: response, isLoading: false);
+    List<CountryDropdownItem> dropdownItems = [];
+    AddPhoneNumberSettingsModel model = AddPhoneNumberSettingsModel();
+    dynamic fieldsetData = {};
+    if (response != null) {
+      if (response is Map) {
+        dynamic form = response['form'];
+        model.id = form['actionContext'];
+        dynamic content = form['content'] != null ? form['content'] : null;
+        if (content != null) {
+          if (content['fieldset'] != null) {
+            List<dynamic> contentFields = content['fieldset'];
+            contentFields.forEach((field) {
+              if (field['type'] == 'select') {
+                dynamic selectSettings = field['selectSettings'];
+                if (selectSettings != null) {
+                  if (selectSettings['options'] != null) {
+                    List<dynamic> options = selectSettings['options'];
+                    options.forEach((element) {
+                      CountryDropdownItem item = CountryDropdownItem(
+                          label: element['label'], value: element['value']);
+                      if (!dropdownItems.contains(item)) {
+                        dropdownItems.add(item);
+                      }
+                    });
+                    print(content['fieldsetData']);
+                  }
+                }
+              }
+            });
+          }
+          if (content['fieldsetData'] != null) {
+            fieldsetData = content['fieldsetData'];
+            model.excludeLocal = fieldsetData['excludeLocal'];
+            model.excludeForeign = fieldsetData['excludeForeign'];
+          }
+        }
+      }
+    }
+    model.country = dropdownItems.firstWhere((element) => element.value == fieldsetData['country']);
+
+    yield state.copyWith(dropdownItems: dropdownItems, settingsModel: model, isLoading: false);
   }
 
   Stream<PosScreenState> searchPhoneNumbers(
@@ -379,5 +420,4 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
     );
     add(GetTwilioSettings(businessId: businessId));
   }
-
 }

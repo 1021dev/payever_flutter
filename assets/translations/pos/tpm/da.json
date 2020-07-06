@@ -27,5 +27,10 @@
   "tpm.communications.twilio.remove": "Remove",
   "tpm.communications.twilio.search": "Search phone number",
   "tpm.communications.twilio.view": "View",
-  "tpm.communications.twilio.yes": "Yes"
+  "tpm.communications.twilio.yes": "Yes",
+  "tpm.forms.authentication": "Credentials",
+  "tpm.forms.connect": "Connect",
+  "tpm.forms.options": "Standard",
+  "tpm.forms.reset_credentials": "Disconnect",
+  "tpm.forms.save": "Save"
 }

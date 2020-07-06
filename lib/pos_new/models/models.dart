@@ -16,10 +16,10 @@ class CountryDropdownItem {
 }
 
 class AddPhoneNumberSettingsModel{
-  String id;
-  String country;
-  String phoneNumber;
-  bool excludeAny;
-  bool excludeForeign;
-  bool excludeLocal;
+  String id = '';
+  CountryDropdownItem country;
+  String phoneNumber = '';
+  bool excludeAny = false;
+  bool excludeForeign = false;
+  bool excludeLocal = false;
 }

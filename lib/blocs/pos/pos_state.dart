@@ -21,6 +21,7 @@ class PosScreenState {
   final dynamic twilioForm;
   final dynamic twilioAddPhoneForm;
   final AddPhoneNumberSettingsModel settingsModel;
+  final List<CountryDropdownItem> dropdownItems;
 
   PosScreenState({
     this.isLoading = false,
@@ -41,6 +42,7 @@ class PosScreenState {
     this.twilioForm,
     this.twilioAddPhoneForm,
     this.settingsModel,
+    this.dropdownItems = const [],
   });
 
   List<Object> get props => [
@@ -62,6 +64,7 @@ class PosScreenState {
     this.twilioForm,
     this.twilioAddPhoneForm,
     this.settingsModel,
+    this.dropdownItems,
   ];
 
   PosScreenState copyWith({
@@ -83,6 +86,7 @@ class PosScreenState {
     dynamic twilioForm,
     dynamic twilioAddPhoneForm,
     AddPhoneNumberSettingsModel settingsModel,
+    List<CountryDropdownItem> dropdownItems,
   }) {
     return PosScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -103,6 +107,7 @@ class PosScreenState {
       twilioForm: twilioForm ?? this.twilioForm,
       twilioAddPhoneForm: twilioAddPhoneForm ?? this.twilioAddPhoneForm,
       settingsModel: settingsModel ?? this.settingsModel,
+      dropdownItems: dropdownItems ?? this.dropdownItems,
     );
   }
 }

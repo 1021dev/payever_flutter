@@ -40,7 +40,6 @@ class _PosTwilioAddPhoneNumberState extends State<PosTwilioAddPhoneNumber> {
 
   String wallpaper;
   String selectedState = '';
-  CountryDropdownItem selectedItem;
 
   @override
   void initState() {
@@ -158,41 +157,7 @@ class _PosTwilioAddPhoneNumberState extends State<PosTwilioAddPhoneNumber> {
   }
 
   Widget _getBody(PosScreenState state) {
-    dynamic response = state.twilioAddPhoneForm;
-    List<CountryDropdownItem> dropdownItems = [];
-    dynamic fieldsetData = {};
-    if (response != null) {
-      if (response is Map) {
-        dynamic form = response['form'];
-        dynamic content = form['content'] != null ? form['content']: null;
-        if (content != null) {
-          if (content['fieldset'] != null) {
-            List<dynamic> contentFields = content['fieldset'];
-            contentFields.forEach((field) {
-              if (field['type'] == 'select') {
-                dynamic selectSettings = field['selectSettings'];
-                if (selectSettings != null) {
-                  if (selectSettings['options'] != null) {
-                    List<dynamic> options = selectSettings['options'];
-                    options.forEach((element) {
-                      CountryDropdownItem item = CountryDropdownItem(label: element['label'], value: element['value']);
-                      if (!dropdownItems.contains(item)) {
-                        dropdownItems.add(item);
-                      }
-                    });
-                    print(content['fieldsetData']);
-                  }
-                }
-              }
-            });
-          }
-          if (content['fieldsetData'] != null) {
-            fieldsetData = content['fieldsetData'];
-          }
-        }
-      }
-    }
-    selectedItem = dropdownItems.firstWhere((element) => element.value == fieldsetData['country']);
+    List<CountryDropdownItem> dropdownItems = state.dropdownItems;
     return Center(
       child: Wrap(
         runSpacing: 16,
@@ -233,13 +198,10 @@ class _PosTwilioAddPhoneNumberState extends State<PosTwilioAddPhoneNumber> {
                                         icon: Container(),
                                         underline: Container(),
                                         isExpanded: true,
-                                        value: selectedItem != null ? selectedItem.label: dropdownItems.first.label,
+                                        value: state.settingsModel.country != null ? state.settingsModel.country.label: dropdownItems.first.label,
                                         onChanged: (value) {
                                           setState(() {
                                             CountryDropdownItem item = dropdownItems.firstWhere((element) => element.label == value);
-                                            if (item != null) {
-                                              selectedItem = item;
-                                            }
                                           });
                                         },
                                         items: dropdownItems.map((item) => DropdownMenuItem(
