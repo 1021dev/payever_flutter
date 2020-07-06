@@ -105,7 +105,7 @@ class _PosQRSettingsState extends State<PosQRSettings> {
       title: Row(
         children: <Widget>[
           Text(
-            'QR Generator',
+            Language.getPosTpmStrings('tpm.communications.qr.title'),
             style: TextStyle(
               color: Colors.white,
               fontSize: 16,
@@ -190,7 +190,7 @@ class _PosQRSettingsState extends State<PosQRSettings> {
                       padding: EdgeInsets.only(left: 8),
                     ),
                     Text(
-                      'QR Generator',
+                      Language.getPosTpmStrings('tpm.communications.qr.title'),
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 16,
@@ -237,7 +237,7 @@ class _PosQRSettingsState extends State<PosQRSettings> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text(
-                          w[0]['value']
+                          Language.getPosTpmStrings(w[0]['value']),
                       ),
                       MaterialButton(
                         minWidth: 0,
@@ -249,7 +249,7 @@ class _PosQRSettingsState extends State<PosQRSettings> {
                         ),
                         color: Colors.black26,
                         child: Text(
-                          w[1]['action'],
+                          Language.getPosTpmStrings(w[1]['text']),
                           style: TextStyle(
                             fontSize: 10,
                             color: Colors.white,

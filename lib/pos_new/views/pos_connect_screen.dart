@@ -224,24 +224,29 @@ class _PosConnectScreenState extends State<PosConnectScreen> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: <Widget>[
-                                    Row(
-                                      children: <Widget>[
-                                        Icon(
-                                          Icons.phone_iphone,
-                                          size: 16,
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.only(left: 8),
-                                        ),
-                                        Text(
-                                          communications[index].integration.name,//displayOptions.title,
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500,
+                                    Expanded(
+                                      child: Row(
+                                        children: <Widget>[
+                                          Icon(
+                                            Icons.phone_iphone,
+                                            size: 16,
                                           ),
-                                        ),
-                                      ],
+                                          Padding(
+                                            padding: EdgeInsets.only(left: 8),
+                                          ),
+                                          Expanded(
+                                            child: Text(
+                                              Language.getPosConnectStrings(communications[index].integration.displayOptions.title),
+                                              maxLines: 1,
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                     InkWell(
                                       onTap: () {

@@ -535,7 +535,7 @@ class _PosScreenState extends State<PosScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Text(
-                                integrations[index].integration.name,//displayOptions.title,
+                                Language.getPosConnectStrings(integrations[index].integration.displayOptions.title),
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 16,
