@@ -61,13 +61,13 @@ class Env {
     Env.qr = obj[GlobalUtils.ENV_CONNECT][GlobalUtils.ENV_CONNECT_QR];
     Env.devicePayments = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_BACKEND_DEVICE_PAYMENT];
     Env.cdn = obj[GlobalUtils.ENV_CUSTOM][GlobalUtils.ENV_CUSTOM_CDN];
-    Env.cdnImage = '${Env.cdn}/images/';
-    Env.cdnIcon = '${Env.cdn}/icons-png/';
     Env.thirdParty = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_THIRD_PARTY];
     Env.thirdPartyCommunication = obj[GlobalUtils.ENV_THIRD_PARTY][GlobalUtils.ENV_THIRD_PARTY_COMMUNICATIONS];
     Env.thirdPartyPayment = obj[GlobalUtils.ENV_THIRD_PARTY][GlobalUtils.ENV_THIRD_PARTY_PAYMENT];
     Env.paymentStripe = obj[GlobalUtils.ENV_PAYMENT][GlobalUtils.ENV_PAYMENT_STRIPE];
     Env.paymentInstantPayment = obj[GlobalUtils.ENV_PAYMENT][GlobalUtils.ENV_PAYMENT_INSTANT_PAYMENT];
     Env.paymentSantanderNl = obj[GlobalUtils.ENV_PAYMENT][GlobalUtils.ENV_PAYMENT_SANTANDERNL];
+    Env.cdnImage = '${obj[GlobalUtils.ENV_CUSTOM][GlobalUtils.ENV_CUSTOM_CDN]}/images/';
+    Env.cdnIcon = '${obj[GlobalUtils.ENV_CUSTOM][GlobalUtils.ENV_CUSTOM_CDN]}/icons-png/';
   }
 }

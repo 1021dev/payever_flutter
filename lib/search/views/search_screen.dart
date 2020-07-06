@@ -85,8 +85,8 @@ class _SearchScreenState extends State<SearchScreen> {
           Provider.of<GlobalStateModel>(context,listen: false)
               .setCurrentBusiness(state.business);
           Provider.of<GlobalStateModel>(context,listen: false)
-              .setCurrentWallpaper(state.wallpaper.currentWallpaper.wallpaper);
-          Navigator.pop(context);
+              .setCurrentWallpaper('$wallpaperBase${state.wallpaper.currentWallpaper.wallpaper}');
+          Navigator.pop(context, 'changed');
         }
       },
       child: BlocBuilder<SearchScreenBloc, SearchScreenState>(

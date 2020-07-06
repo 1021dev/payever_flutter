@@ -22,7 +22,7 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
   @override
   Stream<DashboardScreenState> mapEventToState(DashboardScreenEvent event) async* {
     if (event is DashboardScreenInitEvent) {
-      yield* _checkVersion();
+      yield* _checkVersion(event.wallpaper);
     } else if (event is FetchPosEvent) {
       yield* fetchPOSCard(event.business);
     } else if (event is FetchMonthlyEvent) {
@@ -32,7 +32,8 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
     }
   }
 
-  Stream<DashboardScreenState> _checkVersion() async* {
+  Stream<DashboardScreenState> _checkVersion(String wallpapaer) async* {
+    yield state.copyWith(curWall: wallpapaer);
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     String version = packageInfo.version;
     var environment = await api.getEnv();

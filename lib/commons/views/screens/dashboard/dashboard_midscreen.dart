@@ -40,7 +40,7 @@ class _DashboardMidScreenState extends State<DashboardMidScreen> {
 
   @override
   void initState() {
-    screenBloc.add(DashboardScreenInitEvent());
+    screenBloc.add(DashboardScreenInitEvent(wallpaper: widget.wallpaper));
     super.initState();
   }
 

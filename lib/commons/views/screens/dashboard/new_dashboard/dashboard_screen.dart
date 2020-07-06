@@ -69,7 +69,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     screenBloc = DashboardScreenBloc();
-    screenBloc.add(DashboardScreenInitEvent());
+    screenBloc.add(DashboardScreenInitEvent(wallpaper: widget.wallpaper));
     super.initState();
   }
 
@@ -129,6 +129,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _showLoading(DashboardScreenState state) {
+    print('wallpaper => ${widget.wallpaper}');
     return Stack(
       overflow: Overflow.visible,
       fit: StackFit.expand,
@@ -139,7 +140,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           top: 0.0,
           child: Container(
             child: CachedNetworkImage(
-              imageUrl: widget.wallpaper,
+              imageUrl: state.curWall,
               placeholder: (context, url) => Container(),
               errorWidget: (context, url, error) => Icon(Icons.error),
               fit: BoxFit.cover,
@@ -721,8 +722,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           }
                         }
                       },
-                      onSubmitted: (val) {
-                        Navigator.push(
+                      onSubmitted: (val) async {
+                        final result = await Navigator.push(
                           context,
                           PageTransition(
                             child: SearchScreen(
@@ -736,11 +737,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             duration: Duration(milliseconds: 50),
                           ),
                         );
-                        setState(() {
-                          searchString = '';
-                          searchController.text = searchString;
-                          FocusScope.of(context).unfocus();
-                        });
+                        if ((result != null) && (result == 'changed')) {
+                          setState(() {
+                            searchString = '';
+                            searchController.text = searchString;
+                            FocusScope.of(context).unfocus();
+                          });
+                          screenBloc.add(DashboardScreenInitEvent(wallpaper: globalStateModel.currentWallpaper));
+                        } else {
+                          setState(() {
+                            searchString = '';
+                            searchController.text = searchString;
+                            FocusScope.of(context).unfocus();
+                          });
+                        }
                       },
                     ),
                   ),
@@ -765,8 +775,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                   ),
                   searchController.text.isEmpty ? Container() : MaterialButton(
-                    onPressed: () {
-                      Navigator.push(
+                    onPressed: () async {
+                      final result = await Navigator.push(
                         context,
                         PageTransition(
                           child: SearchScreen(
@@ -780,11 +790,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           duration: Duration(milliseconds: 50),
                         ),
                       );
-                      setState(() {
-                        searchString = '';
-                        searchController.text = searchString;
-                        FocusScope.of(context).unfocus();
-                      });
+                      if ((result != null) && (result == 'changed')) {
+                        setState(() {
+                          searchString = '';
+                          searchController.text = searchString;
+                          FocusScope.of(context).unfocus();
+                        });
+                        screenBloc.add(DashboardScreenInitEvent(wallpaper: globalStateModel.currentWallpaper));
+                      } else {
+                        setState(() {
+                          searchString = '';
+                          searchController.text = searchString;
+                          FocusScope.of(context).unfocus();
+                        });
+                      }
                     },
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)
