@@ -54,7 +54,7 @@ class SearchScreenBloc extends Bloc<SearchScreenEvent, SearchScreenState> {
     }).toList();
 
     List<Collection> searchTransactionsResult = [];
-    String sortQuery = '?orderBy=created_at&direction=desc&qyert=$key&limit=8';
+    String sortQuery = '?orderBy=created_at&direction=desc&query=$key&limit=8';
 
     dynamic obj = await api.getTransactionList(businessId, GlobalUtils.activeToken.accessToken, sortQuery);
     Transaction data = Transaction.toMap(obj);
@@ -69,11 +69,19 @@ class SearchScreenBloc extends Bloc<SearchScreenEvent, SearchScreenState> {
         searchTransactions: searchTransactionsResult.sublist(0, 4),
       );
     } else {
-      yield state.copyWith(
-        isLoading: false,
-        searchBusinesses: searchBusinessResult,
-        searchTransactions: searchTransactionsResult.sublist(0, 8 - searchBusinessResult.length),
-      );
+      if (searchTransactionsResult.length > 8 - searchBusinessResult.length) {
+        yield state.copyWith(
+          isLoading: false,
+          searchBusinesses: searchBusinessResult,
+          searchTransactions: searchTransactionsResult.sublist(0, 8 - searchBusinessResult.length),
+        );
+      } else {
+        yield state.copyWith(
+          isLoading: false,
+          searchBusinesses: searchBusinessResult,
+          searchTransactions: searchTransactionsResult,
+        );
+      }
     }
 
   }

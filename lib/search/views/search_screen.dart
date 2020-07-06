@@ -4,10 +4,12 @@ import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/search/search_bloc.dart';
 import 'package:payever/blocs/search/search_event.dart';
+import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/utils.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/blur_effect_view.dart';
 import 'package:payever/commons/views/screens/login/login_page.dart';
+import 'package:payever/search/widgets/app_widget_cell.dart';
 import 'package:payever/search/widgets/search_result_business_view.dart';
 import 'package:payever/search/widgets/search_result_transaction_view.dart';
 
@@ -17,10 +19,12 @@ bool _isTablet;
 class SearchScreen extends StatefulWidget {
   final String businessId;
   final String searchQuery;
+  final List<AppWidget> appWidgets;
 
   SearchScreen({
     this.businessId,
     this.searchQuery,
+    this.appWidgets,
   });
 
   @override
@@ -113,7 +117,7 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
               _searchBar(state),
               Expanded(
-                child: _searchResultLsit(state),
+                child: _searchResultList(state),
               ),
             ],
           ),
@@ -168,24 +172,24 @@ class _SearchScreenState extends State<SearchScreen> {
                               Duration(milliseconds: 300))
                               .then((value) async {
                             if (!state.isLoading) {
-                              screenBloc.add(SearchEvent(businessId: widget.businessId, key: searchString));
+                              screenBloc.add(SearchEvent(businessId: widget.businessId, key: val));
                             }
                           }
                           );
                         },
                         onSubmitted: (val) {
-                          screenBloc.add(SearchEvent(businessId: widget.businessId, key: searchString));
+                          screenBloc.add(SearchEvent(businessId: widget.businessId, key: val));
                         },
                       ),
                     ),
                     state.isLoading ?
-                      SizedBox(
-                        width: 36,
-                        height: 36,
-                        child: Padding(
-                          padding: EdgeInsets.all(8),
-                          child: CircularProgressIndicator(),
-                        ),
+                    SizedBox(
+                      width: 36,
+                      height: 36,
+                      child: Padding(
+                        padding: EdgeInsets.all(8),
+                        child: CircularProgressIndicator(),
+                      ),
                     ) : Container(),
                   ],
                 ),
@@ -197,7 +201,7 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  Widget _searchResultLsit(SearchScreenState state) {
+  Widget _searchResultList(SearchScreenState state) {
     return SingleChildScrollView(
       child: Container(
         padding: EdgeInsets.all(16),
@@ -233,6 +237,9 @@ class _SearchScreenState extends State<SearchScreen> {
                       itemBuilder: (context, index) {
                         return SearchResultBusinessView(
                           business: state.searchBusinesses[index],
+                          onTap: (business) {
+
+                          },
                         );
                       },
                       separatorBuilder: (ctx, index) {
@@ -274,6 +281,9 @@ class _SearchScreenState extends State<SearchScreen> {
                       itemBuilder: (context, index) {
                         return SearchResultTransactionView(
                           collection: state.searchTransactions[index],
+                          onTap: (collection) {
+
+                          },
                         );
                       },
                       separatorBuilder: (ctx, index) {
@@ -281,6 +291,33 @@ class _SearchScreenState extends State<SearchScreen> {
                       },
                       itemCount: state.searchTransactions.length,
                     ),
+                  ),
+                ],
+              ),
+            ): Container(),
+            state.searchBusinesses.length == 0 && state.searchTransactions.length == 0 && widget.appWidgets.length > 0
+                ? BlurEffectView(
+              blur: 15,
+              color: Color.fromRGBO(50, 50, 50, 0.2),
+              radius: 12,
+              child: Column(
+                children: <Widget>[
+                  GridView.count(
+                    crossAxisCount: 4,
+                    shrinkWrap: true,
+                    padding: EdgeInsets.only(left: 64, right: 64),
+                    crossAxisSpacing: 36,
+                    mainAxisSpacing: 36,
+                    childAspectRatio: 1,
+                    addAutomaticKeepAlives: true,
+                    children: widget.appWidgets.map((e) => AppWidgetCell(
+                      onTap: (appwidget) {
+
+                      },
+                      appWidget: e,
+                    ),
+                    ).toList(),
+                    physics: NeverScrollableScrollPhysics(),
                   ),
                 ],
               ),

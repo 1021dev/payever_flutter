@@ -389,7 +389,7 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
     });
 
     List<Collection> searchTransacionResult = [];
-    String sortQuery = '?orderBy=created_at&direction=desc&qyert=$key&limit=8';
+    String sortQuery = '?orderBy=created_at&direction=desc&query=$key&limit=8';
 
     dynamic obj = await api.getTransactionList(state.activeBusiness.id, GlobalUtils.activeToken.accessToken, sortQuery);
     Transaction data = Transaction.toMap(obj);

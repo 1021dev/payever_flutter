@@ -717,6 +717,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             child: SearchScreen(
                               businessId: state.activeBusiness.id,
                               searchQuery: searchController.text,
+                              appWidgets: state.currentWidgets,
                             ),
                             type: PageTransitionType.fade,
                             duration: Duration(milliseconds: 50),
@@ -758,6 +759,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           child: SearchScreen(
                             businessId: state.activeBusiness.id,
                             searchQuery: searchController.text,
+                            appWidgets: state.currentWidgets,
                           ),
                           type: PageTransitionType.fade,
                           duration: Duration(milliseconds: 50),
