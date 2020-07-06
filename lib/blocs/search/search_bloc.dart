@@ -4,8 +4,10 @@ import 'package:payever/blocs/search/search_event.dart';
 import 'package:payever/blocs/search/search_state.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/models/business.dart';
+import 'package:payever/commons/models/fetchwallpaper.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/env.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SearchScreenBloc extends Bloc<SearchScreenEvent, SearchScreenState> {
   SearchScreenBloc();
@@ -21,6 +23,8 @@ class SearchScreenBloc extends Bloc<SearchScreenEvent, SearchScreenState> {
       SearchScreenEvent event) async* {
     if (event is SearchEvent) {
       yield* search(event.key, event.businessId);
+    } else if (event is SetBusinessEvent) {
+      yield* setBusiness(event.business);
     }
   }
 
@@ -84,6 +88,18 @@ class SearchScreenBloc extends Bloc<SearchScreenEvent, SearchScreenState> {
       }
     }
 
+  }
+
+  Stream<SearchScreenState> setBusiness(Business business) async* {
+    yield state.copyWith(isLoading: true);
+    dynamic response = await api.getWallpaper(business.id, GlobalUtils.activeToken.accessToken);
+    FetchWallpaper fetchWallpaper = FetchWallpaper.map(response);
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setString(
+          GlobalUtils.WALLPAPER, wallpaperBase + fetchWallpaper.currentWallpaper.wallpaper);
+    preferences.setString(GlobalUtils.BUSINESS, business.id);
+    yield state.copyWith(isLoading: false);
+    yield SetBusinessSuccess(wallpaper: fetchWallpaper, business: business);
   }
 
 }

@@ -12,6 +12,8 @@ import 'package:payever/commons/views/screens/login/login_page.dart';
 import 'package:payever/search/widgets/app_widget_cell.dart';
 import 'package:payever/search/widgets/search_result_business_view.dart';
 import 'package:payever/search/widgets/search_result_transaction_view.dart';
+import 'package:payever/transactions/transactions.dart';
+import 'package:provider/provider.dart';
 
 bool _isPortrait;
 bool _isTablet;
@@ -20,11 +22,15 @@ class SearchScreen extends StatefulWidget {
   final String businessId;
   final String searchQuery;
   final List<AppWidget> appWidgets;
+  final Business activeBusiness;
+  final String currentWall;
 
   SearchScreen({
     this.businessId,
     this.searchQuery,
     this.appWidgets,
+    this.activeBusiness,
+    this.currentWall,
   });
 
   @override
@@ -67,7 +73,7 @@ class _SearchScreenState extends State<SearchScreen> {
     return BlocListener(
       bloc: screenBloc,
       listener: (BuildContext context, SearchScreenState state) async {
-        if (state is PosScreenFailure) {
+        if (state is SearchScreenStateFailure) {
           Navigator.pushReplacement(
             context,
             PageTransition(
@@ -75,6 +81,12 @@ class _SearchScreenState extends State<SearchScreen> {
               type: PageTransitionType.fade,
             ),
           );
+        } else if (state is SetBusinessSuccess) {
+          Provider.of<GlobalStateModel>(context,listen: false)
+              .setCurrentBusiness(state.business);
+          Provider.of<GlobalStateModel>(context,listen: false)
+              .setCurrentWallpaper(state.wallpaper.currentWallpaper.wallpaper);
+          Navigator.pop(context);
         }
       },
       child: BlocBuilder<SearchScreenBloc, SearchScreenState>(
@@ -202,6 +214,8 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   Widget _searchResultList(SearchScreenState state) {
+    List<AppWidget> appWidgets = [];
+    appWidgets = widget.appWidgets.where((element) => element.type != 'apps').toList();
     return SingleChildScrollView(
       child: Container(
         padding: EdgeInsets.all(16),
@@ -238,7 +252,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         return SearchResultBusinessView(
                           business: state.searchBusinesses[index],
                           onTap: (business) {
-
+                            screenBloc.add(SetBusinessEvent(business: business));
                           },
                         );
                       },
@@ -282,6 +296,27 @@ class _SearchScreenState extends State<SearchScreen> {
                         return SearchResultTransactionView(
                           collection: state.searchTransactions[index],
                           onTap: (collection) {
+                            Provider.of<GlobalStateModel>(context,listen: false)
+                                .setCurrentBusiness(widget.activeBusiness);
+                            Provider.of<GlobalStateModel>(context,listen: false)
+                                .setCurrentWallpaper(widget.currentWall);
+                            Navigator.pushReplacement(
+                              context,
+                              PageTransition(
+                                child: TransactionScreenInit(),
+                                type: PageTransitionType.fade,
+                              ),
+                            );
+                            Navigator.push(
+                              context,
+                              PageTransition(
+                                child: TransactionDetailsScreen(
+                                  businessId: widget.activeBusiness.id,
+                                  transactionId: collection.uuid,
+                                ),
+                                type: PageTransitionType.fade,
+                              ),
+                            );
 
                           },
                         );
@@ -295,7 +330,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 ],
               ),
             ): Container(),
-            state.searchBusinesses.length == 0 && state.searchTransactions.length == 0 && widget.appWidgets.length > 0
+            state.searchBusinesses.length == 0 && state.searchTransactions.length == 0 && appWidgets.length > 0
                 ? BlurEffectView(
               blur: 15,
               color: Color.fromRGBO(50, 50, 50, 0.2),
@@ -305,12 +340,11 @@ class _SearchScreenState extends State<SearchScreen> {
                   GridView.count(
                     crossAxisCount: 4,
                     shrinkWrap: true,
-                    padding: EdgeInsets.only(left: 64, right: 64),
+                    padding: EdgeInsets.only(left: 64, right: 64, top: 24, bottom: 16),
                     crossAxisSpacing: 36,
                     mainAxisSpacing: 36,
                     childAspectRatio: 1,
-                    addAutomaticKeepAlives: true,
-                    children: widget.appWidgets.map((e) => AppWidgetCell(
+                    children: appWidgets.map((e) => AppWidgetCell(
                       onTap: (appwidget) {
 
                       },
@@ -319,6 +353,18 @@ class _SearchScreenState extends State<SearchScreen> {
                     ).toList(),
                     physics: NeverScrollableScrollPhysics(),
                   ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 16, bottom: 24, right: 24, left: 24),
+                    child: Text(
+                      Language.getCommerceOSStrings('search_box.content.details'),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  )
                 ],
               ),
             ): Container(),

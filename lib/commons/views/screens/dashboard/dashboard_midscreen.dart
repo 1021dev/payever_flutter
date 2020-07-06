@@ -142,8 +142,7 @@ class _DashboardMidScreenState extends State<DashboardMidScreen> {
               Navigator.pushReplacement(
                   _formKey.currentContext,
                   PageTransition(
-                      child: DashboardScreen(
-                      ),
+                      child: DashboardScreenInit(),
                       type: PageTransitionType.fade,
                       duration: Duration(milliseconds: 200)));
           });

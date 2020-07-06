@@ -83,7 +83,7 @@ class _MyAppState extends State<MyApp> {
         },
         home: _loadCredentials.value
             ? Center(child: CircularProgressIndicator())
-            : _haveCredentials ? DashboardScreen(wallpaper: wallpaper,) : LoginScreen(),//DashboardMidScreen(wallpaper) : LoginScreen(),
+            : _haveCredentials ? DashboardScreenInit() : LoginScreen(),//DashboardMidScreen(wallpaper) : LoginScreen(),
       ),
     );
   }

@@ -35,6 +35,17 @@ import '../../../../utils/env.dart';
 import '../../../views.dart';
 import 'sub_view/dashboard_mail_view.dart';
 
+class DashboardScreenInit extends StatelessWidget {
+
+  @override
+  Widget build(BuildContext context) {
+    GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context);
+
+    return DashboardScreen(wallpaper: globalStateModel.currentWallpaper,);
+  }
+}
+
+
 class DashboardScreen extends StatefulWidget {
   final String wallpaper;
 
@@ -718,6 +729,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               businessId: state.activeBusiness.id,
                               searchQuery: searchController.text,
                               appWidgets: state.currentWidgets,
+                              activeBusiness: state.activeBusiness,
+                              currentWall: state.curWall,
                             ),
                             type: PageTransitionType.fade,
                             duration: Duration(milliseconds: 50),
@@ -760,6 +773,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             businessId: state.activeBusiness.id,
                             searchQuery: searchController.text,
                             appWidgets: state.currentWidgets,
+                            activeBusiness: state.activeBusiness,
+                            currentWall: state.curWall,
                           ),
                           type: PageTransitionType.fade,
                           duration: Duration(milliseconds: 50),

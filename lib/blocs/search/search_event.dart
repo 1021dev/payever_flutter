@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:payever/commons/commons.dart';
 
 abstract class SearchScreenEvent extends Equatable {
   SearchScreenEvent();
@@ -17,5 +18,16 @@ class SearchEvent extends SearchScreenEvent {
   List<Object> get props => [
     this.key,
     this.businessId,
+  ];
+}
+
+class SetBusinessEvent extends SearchScreenEvent {
+  final Business business;
+
+  SetBusinessEvent({this.business,});
+
+  @override
+  List<Object> get props => [
+    this.business,
   ];
 }

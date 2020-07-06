@@ -217,7 +217,7 @@ class _GridItemsState extends State<GridItems> {
                     context,
                     PageTransition(
                         //child:DashboardScreen(GlobalUtils.ActiveToken,img,widget.business,parts._widgets,null),
-                        child: DashboardScreen(wallpaper: p.getString(GlobalUtils.WALLPAPER),),
+                        child: DashboardScreenInit(),
                         type: PageTransitionType.fade));
               });
             });
@@ -328,7 +328,7 @@ class _SwitcherState extends State<Switcher> {
         Navigator.pushReplacement(
             context,
             PageTransition(
-                child: DashboardScreen(wallpaper: wallpaperId,),
+                child: DashboardScreenInit(),
                 // child:DashboardScreen(
                 //   GlobalUtils.ActiveToken,
                 //   wallpaperId.isEmpty? NetworkImage(WALLPAPER_BASE + wallpaperId):AssetImage("images/loginHorizontalTablet.png"),
@@ -497,7 +497,7 @@ class _SwitcherState extends State<Switcher> {
                                     Navigator.pushReplacement(
                                         context,
                                         PageTransition(
-                                            child: DashboardScreen(wallpaper: p.getString(GlobalUtils.WALLPAPER),),
+                                            child: DashboardScreenInit(),
                                             type: PageTransitionType.fade));
                                   });
                                 });

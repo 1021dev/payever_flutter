@@ -1,4 +1,5 @@
 import 'package:payever/commons/commons.dart';
+import 'package:payever/commons/models/fetchwallpaper.dart';
 
 class SearchScreenState {
   final bool isLoading;
@@ -36,4 +37,17 @@ class SearchScreenState {
 }
 
 class SearchScreenStateSuccess extends SearchScreenState {}
+class SetBusinessSuccess extends SearchScreenState {
+  final FetchWallpaper wallpaper;
+  final Business business;
+
+  SetBusinessSuccess({ this.wallpaper, this.business}) : super();
+
+  @override
+  String toString() {
+    return 'SetBusinessSuccess { $wallpaper }';
+  }
+
+
+}
 class SearchScreenStateFailure extends SearchScreenState {}
