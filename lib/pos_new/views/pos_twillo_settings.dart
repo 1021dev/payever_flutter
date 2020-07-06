@@ -10,6 +10,7 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/blur_effect_view.dart';
 import 'package:http/http.dart' as http;
+import 'package:payever/pos_new/views/pos_twillo_add_phonenumber.dart';
 
 bool _isPortrait;
 bool _isTablet;
@@ -164,6 +165,12 @@ class _PosTwilioScreenState extends State<PosTwilioScreen> {
     if (response != null) {
       if (response is Map) {
         dynamic form = response['form'];
+        String id = '';
+        if (form['actionContext'] != null) {
+          if (form['actionContext']['id'] != null) {
+            id = form['actionContext']['id'];
+          }
+        }
         String contentType = form['contentType'] != null ? form['contentType'] : '';
         dynamic content = form['content'] != null ? form['content']: null;
         if (content != null) {
@@ -286,6 +293,19 @@ class _PosTwilioScreenState extends State<PosTwilioScreen> {
                       child: MaterialButton(
                         minWidth: 0,
                         onPressed: () {
+                          Navigator.push(
+                            context,
+                            PageTransition(
+                              child: PosTwilioAddPhoneNumber(
+                                businessId: widget.businessId,
+                                screenBloc: widget.screenBloc,
+                                businessName: widget.businessName,
+                                id: id,
+                              ),
+                              type: PageTransitionType.fade,
+                              duration: Duration(milliseconds: 500),
+                            ),
+                          );
                         },
                         color: Colors.black87,
                         child: Text(
@@ -378,10 +398,10 @@ class _PosTwilioScreenState extends State<PosTwilioScreen> {
                           initialValue: value,
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.only(left: 16, right: 16),
-                            hintText: Language.getPosTpmStrings(w['inputSettings']['placeholder']),
-                            hintStyle: TextStyle(
-                              color: Colors.white.withOpacity(0.5),
-                            ),
+//                            hintText: Language.getPosTpmStrings(w['inputSettings']['placeholder']),
+//                            hintStyle: TextStyle(
+//                              color: Colors.white.withOpacity(0.5),
+//                            ),
                             labelText: Language.getPosTpmStrings(w['fieldSettings']['label']),
                             labelStyle: TextStyle(
                               color: Colors.grey,

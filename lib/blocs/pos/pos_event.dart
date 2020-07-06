@@ -393,9 +393,9 @@ class SearchPhoneNumberEvent extends PosScreenEvent {
   final String businessId;
   final String action;
   final String country;
-  final String excludeAny;
-  final String excludeForeign;
-  final String excludeLocal;
+  final bool excludeAny;
+  final bool excludeForeign;
+  final bool excludeLocal;
   final String id;
   final String phoneNumber;
 

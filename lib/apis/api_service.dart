@@ -752,7 +752,7 @@ class ApiService {
       String id,
       ) async {
     try {
-      print('$TAG - getTwilioSettings()');
+      print('$TAG - addPhoneNumberSettings()');
       dynamic response = await _client.postTypeLess(
           '${Env.thirdPartyCommunication}/api/business/$businessId/integration/twilio/action/add-number',
           body: {
@@ -783,7 +783,7 @@ class ApiService {
       String id,
       ) async {
     try {
-      print('$TAG - getTwilioSettings()');
+      print('$TAG - searchPhoneNumberSettings()');
       dynamic response = await _client.postTypeLess(
           '${Env.thirdPartyCommunication}/api/business/$businessId/integration/twilio/action/search-numbers',
           body: {
@@ -816,7 +816,7 @@ class ApiService {
       String price,
       ) async {
     try {
-      print('$TAG - getTwilioSettings()');
+      print('$TAG - purchasePhoneNumberSettings()');
       dynamic response = await _client.postTypeLess(
           '${Env.thirdPartyCommunication}/api/business/$businessId/integration/twilio/action/purchase-number',
           body: {
@@ -845,7 +845,7 @@ class ApiService {
       String sid,
       ) async {
     try {
-      print('$TAG - getTwilioSettings()');
+      print('$TAG - removePhoneNumberSettings()');
       dynamic response = await _client.postTypeLess(
           '${Env.thirdPartyCommunication}/api/business/$businessId/integration/twilio/action/remove-number',
           body: {

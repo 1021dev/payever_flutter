@@ -601,7 +601,8 @@ class _PosScreenState extends State<PosScreen> {
                                             duration: Duration(milliseconds: 500),
                                           ),
                                         );
-                                      }                                    },
+                                      }
+                                    },
                                     child: Container(
                                       height: 20,
                                       width: 40,

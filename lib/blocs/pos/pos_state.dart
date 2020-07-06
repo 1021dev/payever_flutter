@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:payever/commons/commons.dart';
+import 'package:payever/pos_new/models/models.dart';
 
 class PosScreenState {
   final bool isLoading;
@@ -19,6 +20,7 @@ class PosScreenState {
   final dynamic qrForm;
   final dynamic twilioForm;
   final dynamic twilioAddPhoneForm;
+  final AddPhoneNumberSettingsModel settingsModel;
 
   PosScreenState({
     this.isLoading = false,
@@ -38,6 +40,7 @@ class PosScreenState {
     this.qrForm,
     this.twilioForm,
     this.twilioAddPhoneForm,
+    this.settingsModel,
   });
 
   List<Object> get props => [
@@ -58,6 +61,7 @@ class PosScreenState {
     this.qrForm,
     this.twilioForm,
     this.twilioAddPhoneForm,
+    this.settingsModel,
   ];
 
   PosScreenState copyWith({
@@ -78,6 +82,7 @@ class PosScreenState {
     dynamic qrForm,
     dynamic twilioForm,
     dynamic twilioAddPhoneForm,
+    AddPhoneNumberSettingsModel settingsModel,
   }) {
     return PosScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -97,6 +102,7 @@ class PosScreenState {
       qrForm: qrForm ?? this.qrForm,
       twilioForm: twilioForm ?? this.twilioForm,
       twilioAddPhoneForm: twilioAddPhoneForm ?? this.twilioAddPhoneForm,
+      settingsModel: settingsModel ?? this.settingsModel,
     );
   }
 }

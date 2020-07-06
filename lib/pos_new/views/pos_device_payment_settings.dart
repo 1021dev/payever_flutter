@@ -327,7 +327,7 @@ class _PosDevicePaymentSettingsState extends State<PosDevicePaymentSettings> {
                         ),
                       ],
                     ),
-                  )
+                  ),
               ): Container(),
               isOpened ? Divider(
                 color: Colors.white30,

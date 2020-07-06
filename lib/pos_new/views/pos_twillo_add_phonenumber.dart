@@ -1,15 +1,13 @@
-import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/blur_effect_view.dart';
-import 'package:http/http.dart' as http;
+import 'package:payever/pos_new/models/models.dart';
 
 bool _isPortrait;
 bool _isTablet;
@@ -23,11 +21,13 @@ class PosTwilioAddPhoneNumber extends StatefulWidget {
   PosScreenBloc screenBloc;
   String businessId;
   String businessName;
+  String id;
 
   PosTwilioAddPhoneNumber({
     this.screenBloc,
     this.businessId,
     this.businessName,
+    this.id,
   });
 
   @override
@@ -40,15 +40,15 @@ class _PosTwilioAddPhoneNumberState extends State<PosTwilioAddPhoneNumber> {
 
   String wallpaper;
   String selectedState = '';
-  int isOpened = -1;
-
-  var imageData;
+  CountryDropdownItem selectedItem;
 
   @override
   void initState() {
     widget.screenBloc.add(
-      GetTwilioSettings(
+      AddPhoneNumberSettings(
         businessId: widget.businessId,
+        action: 'add-number',
+        id: widget.id,
       ),
     );
     super.initState();
@@ -101,7 +101,7 @@ class _PosTwilioAddPhoneNumberState extends State<PosTwilioAddPhoneNumber> {
       title: Row(
         children: <Widget>[
           Text(
-            'Twilio',
+            Language.getPosTpmStrings('tpm.communications.twilio.adding_numbers'),
             style: TextStyle(
               color: Colors.white,
               fontSize: 16,
@@ -158,276 +158,41 @@ class _PosTwilioAddPhoneNumberState extends State<PosTwilioAddPhoneNumber> {
   }
 
   Widget _getBody(PosScreenState state) {
-    dynamic response = state.twilioForm;
-    List<Widget> widgets = [];
-
+    dynamic response = state.twilioAddPhoneForm;
+    List<CountryDropdownItem> dropdownItems = [];
+    dynamic fieldsetData = {};
     if (response != null) {
       if (response is Map) {
         dynamic form = response['form'];
-        String contentType = form['contentType'] != null ? form['contentType'] : '';
         dynamic content = form['content'] != null ? form['content']: null;
         if (content != null) {
-          List contentData = content[contentType];
-          for (int i = 0 ; i < contentData.length; i++) {
-            dynamic data = contentData[i];
-            if (data['data'] != null) {
-              List<dynamic> list = data['data'];
-              Widget section = Container(
-                height: 56,
-                color: Colors.black45,
-                child: SizedBox.expand(
-                  child: MaterialButton(
-                    onPressed: () {
-                      setState(() {
-                        if (isOpened == i) {
-                          isOpened = -1;
-                        } else {
-                          isOpened = i;
-                        }
-                      });
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Expanded(
-                          child: Row(
-                            children: <Widget>[
-                              Icon(
-                                Icons.phone_iphone,
-                                size: 16,
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(left: 8),
-                              ),
-                              Expanded(
-                                child: Text(
-                                  data['title'],
-                                  maxLines: 1,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Icon(
-                          isOpened == i ? Icons.keyboard_arrow_up: Icons.keyboard_arrow_down,
-                          size: 20,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-              widgets.add(section);
-              if (isOpened == i) {
-                for(dynamic w in list) {
-                  if (w[0]['type'] == 'text') {
-                    Widget textWidget = Container(
-                      height: 64,
-                      padding: EdgeInsets.only(left: 16, right: 16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Row(
-                            children: <Widget>[
-                              Text(
-                                w[0]['value'],
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(left: 8),
-                              ),
-                              Text(
-                                w[1]['value'],
-                                style: TextStyle(
-                                  color: Colors.white.withOpacity(0.5),
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w300,
-                                ),
-                              ),
-                            ],
-                          ),
-                          MaterialButton(
-                            minWidth: 0,
-                            onPressed: () {
-                            },
-                            height: 20,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            color: Colors.black26,
-                            child: Text(
-                              Language.getPosTpmStrings(w[2]['text']),
-                              style: TextStyle(
-                                fontSize: 10,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                    widgets.add(textWidget);
+          if (content['fieldset'] != null) {
+            List<dynamic> contentFields = content['fieldset'];
+            contentFields.forEach((field) {
+              if (field['type'] == 'select') {
+                dynamic selectSettings = field['selectSettings'];
+                if (selectSettings != null) {
+                  if (selectSettings['options'] != null) {
+                    List<dynamic> options = selectSettings['options'];
+                    options.forEach((element) {
+                      CountryDropdownItem item = CountryDropdownItem(label: element['label'], value: element['value']);
+                      if (!dropdownItems.contains(item)) {
+                        dropdownItems.add(item);
+                      }
+                    });
+                    print(content['fieldsetData']);
                   }
                 }
-                if (data['operation'] != null) {
-                  Widget textWidget = Container(
-                    height: 56,
-                    child: SizedBox.expand(
-                      child: MaterialButton(
-                        minWidth: 0,
-                        onPressed: () {
-                        },
-                        color: Colors.black87,
-                        child: Text(
-                          Language.getPosTpmStrings(data['operation']['text']),
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                  widgets.add(textWidget);
-                }
               }
-            } else if (data['fieldset'] != null) {
-              List<dynamic> list = data['fieldset'];
-              Widget section = Container(
-                height: 56,
-                color: Colors.black45,
-                child: SizedBox.expand(
-                  child: MaterialButton(
-                    onPressed: () {
-                      setState(() {
-                        if (isOpened == i) {
-                          isOpened = -1;
-                        } else {
-                          isOpened = i;
-                        }
-                      });
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Expanded(
-                          child: Row(
-                            children: <Widget>[
-                              Icon(
-                                Icons.vpn_key,
-                                size: 16,
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(left: 8),
-                              ),
-                              Expanded(
-                                child: Text(
-                                  data['title'],
-                                  maxLines: 1,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Icon(
-                          isOpened == i ? Icons.keyboard_arrow_up: Icons.keyboard_arrow_down,
-                          size: 20,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-              widgets.add(section);
-              if (isOpened == i) {
-                for(int j = 0; j < list.length; j++) {
-                  dynamic w = list[j];
-                  if (w['type'].contains('input')) {
-                    Map<String, dynamic> valueList = {};
-                    if (data['fieldsetData'] != null) {
-                      valueList = data['fieldsetData'];
-                    }
-                    String value = '';
-                    if (valueList.containsKey(w['name'])) {
-                      value = valueList[w['name']];
-                    }
-                    Widget inputWidget = Container(
-                      height: 64,
-                      child: Center(
-                        child: TextFormField(
-                          style: TextStyle(fontSize: 16),
-                          onChanged: (val) {
-
-                          },
-                          initialValue: value,
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.only(left: 16, right: 16),
-                            hintText: Language.getPosTpmStrings(w['inputSettings']['placeholder']),
-                            hintStyle: TextStyle(
-                              color: Colors.white.withOpacity(0.5),
-                            ),
-                            labelText: Language.getPosTpmStrings(w['fieldSettings']['label']),
-                            labelStyle: TextStyle(
-                              color: Colors.grey,
-                            ),
-                            enabledBorder: InputBorder.none,
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.blue, width: 0.5),
-                            ),
-                          ),
-                          keyboardType: TextInputType.text,
-                          obscureText: w['type'] == 'input-password',
-                        ),
-                      ),
-                    );
-                    widgets.add(inputWidget);
-                    widgets.add(Divider(height: 0, thickness: 0.5, color: Color(0xFF888888),));
-                  }
-                }
-                if (data['operation'] != null) {
-                  Widget textWidget = Container(
-                    height: 56,
-                    child: SizedBox.expand(
-                      child: MaterialButton(
-                        minWidth: 0,
-                        onPressed: () {
-                        },
-                        color: Colors.black87,
-                        child: Text(
-                          Language.getPosTpmStrings(data['operation']['text']),
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                  widgets.add(textWidget);
-                }
-              }
-            }
+            });
+          }
+          if (content['fieldsetData'] != null) {
+            fieldsetData = content['fieldsetData'];
           }
         }
       }
     }
+    selectedItem = dropdownItems.firstWhere((element) => element.value == fieldsetData['country']);
     return Center(
       child: Wrap(
         runSpacing: 16,
@@ -435,14 +200,167 @@ class _PosTwilioAddPhoneNumberState extends State<PosTwilioAddPhoneNumber> {
             Container(
               padding: EdgeInsets.only(left: 16, right: 16),
               child: BlurEffectView(
-                color: Color.fromRGBO(20, 20, 20, 0.2),
+                color: Color.fromRGBO(50, 50, 50, 0.2),
                 blur: 15,
                 radius: 12,
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: widgets.map((e) => e).toList(),
+                  children: <Widget>[
+                    Container(
+                      color: Colors.black26,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          Flexible(
+                            child: Center(
+                              child: Container(
+                                padding: EdgeInsets.only(left: 16, right: 16),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(
+                                      Language.getPosTpmStrings('tpm.communications.twilio.country'),
+                                      style: TextStyle(
+                                        color: Colors.white70,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                    dropdownItems.length > 0 ? Expanded(
+                                      child: DropdownButton<String>(
+                                        icon: Container(),
+                                        underline: Container(),
+                                        isExpanded: true,
+                                        value: selectedItem != null ? selectedItem.label: dropdownItems.first.label,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            CountryDropdownItem item = dropdownItems.firstWhere((element) => element.label == value);
+                                            if (item != null) {
+                                              selectedItem = item;
+                                            }
+                                          });
+                                        },
+                                        items: dropdownItems.map((item) => DropdownMenuItem(
+                                          child: Text(
+                                            item.label,
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w300,
+                                            ),
+                                          ),
+                                          value: item.label,
+                                        ),
+                                        ).toList(),
+                                      ),
+                                    ): Container(),
+                                  ],
+                                ),
+                                height: 64,
+                              ),
+                            ),
+                            flex: 1,
+                          ),
+                          Container(
+                            color: Color(0xFF888888),
+                            width: 1,
+                            height: 64,
+                          ),
+                          Flexible(
+                            child: Container(
+                                height: 64,
+                                child: Center(
+                                  child: TextFormField(
+                                    style: TextStyle(fontSize: 16),
+                                    onChanged: (val) {
+
+                                    },
+                                    initialValue: '',
+                                    decoration: InputDecoration(
+                                      contentPadding: EdgeInsets.only(left: 16, right: 16),
+                                      labelText: Language.getPosTpmStrings('tpm.communications.twilio.phone_number_optional'),
+                                      labelStyle: TextStyle(
+                                        color: Colors.grey,
+                                      ),
+                                      enabledBorder: InputBorder.none,
+                                      focusedBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                                      ),
+                                    ),
+                                    keyboardType: TextInputType.text,
+                                  ),
+                                )
+                            ),
+                            flex: 1,
+                          ),
+                        ],
+                      ),
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.check_box_outline_blank),
+                      title: Text(
+                        Language.getPosTpmStrings('tpm.communications.twilio.exclude_any'),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.check_box_outline_blank),
+                      title: Text(
+                        Language.getPosTpmStrings('tpm.communications.twilio.exclude_local'),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.check_box_outline_blank),
+                      title: Text(
+                        Language.getPosTpmStrings('tpm.communications.twilio.exclude_foreign'),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      height: 56,
+                      child: SizedBox.expand(
+                        child: MaterialButton(
+                          minWidth: 0,
+                          onPressed: () {
+                            widget.screenBloc.add(SearchPhoneNumberEvent(
+                              businessId: widget.businessId,
+                              id: widget.id,
+                              action: 'search-numbers',
+                              country: 'US',
+                              excludeAny: false,
+                              excludeForeign: false,
+                              excludeLocal: false,
+                              phoneNumber: '',
+                            ));
+                          },
+                          color: Colors.black87,
+                          child: Text(
+                            Language.getPosTpmStrings('tpm.communications.twilio.search'),
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
                 ),
               ),
             ),
@@ -451,4 +369,3 @@ class _PosTwilioAddPhoneNumberState extends State<PosTwilioAddPhoneNumber> {
     );
   }
 }
-

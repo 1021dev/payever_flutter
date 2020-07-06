@@ -78,6 +78,14 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
       yield* postGenerateQRCode(event.businessId, event.businessName, event.avatarUrl, event.id, event.url);
     } else if (event is GetTwilioSettings) {
       yield* getTwilioSettings(event.businessId);
+    } else if (event is AddPhoneNumberSettings) {
+      yield* addPhoneNumberSettings(event.businessId, event.action, event.id);
+    } else if (event is SearchPhoneNumberEvent) {
+
+    } else if (event is PurchaseNumberEvent) {
+
+    } else if (event is RemovePhoneNumberSettings) {
+
     }
   }
 
@@ -302,11 +310,74 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
       String id,
       ) async* {
     yield state.copyWith(isLoading: true);
-    dynamic response = await api.getTwilioSettings(
+    dynamic response = await api.addPhoneNumberSettings(
       GlobalUtils.activeToken.accessToken,
       businessId,
+      action,
+      id,
     );
-    yield state.copyWith(twilioForm: response, isLoading: false);
+    yield state.copyWith(twilioAddPhoneForm: response, isLoading: false);
+  }
+
+  Stream<PosScreenState> searchPhoneNumbers(
+      String businessId,
+      String action,
+      String country,
+      bool excludeAny,
+      bool excludeForeign,
+      bool excludeLocal,
+      String phoneNumber,
+      String id,
+      ) async* {
+    yield state.copyWith(isLoading: true);
+    dynamic response = await api.searchPhoneNumberSettings(
+      GlobalUtils.activeToken.accessToken,
+      businessId,
+      action,
+      country,
+      excludeAny,
+      excludeForeign,
+      excludeLocal,
+      phoneNumber,
+      id,
+    );
+    yield state.copyWith(twilioAddPhoneForm: response, isLoading: false);
+  }
+
+  Stream<PosScreenState> purchasePhoneNumber(
+      String businessId,
+      String action,
+      String phone,
+      String id,
+      String price,
+      ) async* {
+    yield state.copyWith(isLoading: true);
+    dynamic response = await api.purchasePhoneNumberSettings(
+      GlobalUtils.activeToken.accessToken,
+      businessId,
+      action,
+      phone,
+      id,
+      price,
+    );
+    add(GetTwilioSettings(businessId: businessId));
+  }
+
+  Stream<PosScreenState> removePhoneNumber(
+      String businessId,
+      String action,
+      String id,
+      String sid,
+      ) async* {
+    yield state.copyWith(isLoading: true);
+    dynamic response = await api.removePhoneNumberSettings(
+      GlobalUtils.activeToken.accessToken,
+      businessId,
+      action,
+      id,
+      sid,
+    );
+    add(GetTwilioSettings(businessId: businessId));
   }
 
 }
