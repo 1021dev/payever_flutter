@@ -142,7 +142,13 @@ class _PosSwitchTerminalsScreenState extends State<PosSwitchTerminalsScreen> {
           body: state.isLoading ?
           Center(
             child: CircularProgressIndicator(),
-          ): _getBody(state),
+          ): Container(
+            alignment: Alignment.center,
+            child: Container(
+              width: Measurements.width,
+              child: _getBody(state),
+            ),
+          ),
         ),
       ),
     );
@@ -263,7 +269,7 @@ class _PosSwitchTerminalsScreenState extends State<PosSwitchTerminalsScreen> {
 
   Widget _furtherTerminals(PosScreenState state) {
     return GridView.count(
-      crossAxisCount: 3,
+      crossAxisCount: _isTablet ? 5: 3,
       childAspectRatio: 0.7,
       padding: EdgeInsets.only(left: 8, right: 8, bottom: 24),
       shrinkWrap: true,

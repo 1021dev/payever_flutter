@@ -153,12 +153,18 @@ class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
           body: Form(
             key: formKey,
             autovalidate: false,
-            child: Column(
-              children: <Widget>[
-                Expanded(
-                  child: _getBody(state),
+            child: Container(
+              alignment: Alignment.center,
+              child: Container(
+                width: Measurements.width,
+                child: Column(
+                  children: <Widget>[
+                    Expanded(
+                      child: _getBody(state),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),

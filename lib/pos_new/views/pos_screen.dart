@@ -356,13 +356,15 @@ class _PosScreenState extends State<PosScreen> {
           body: state.isLoading ?
           Center(
             child: CircularProgressIndicator(),
-          ): Column(
-            children: <Widget>[
-              _toolBar(state),
-              Expanded(
-                child: _getBody(state),
-              ),
-            ],
+          ): Center(
+            child: Column(
+              children: <Widget>[
+                _toolBar(state),
+                Expanded(
+                  child: _getBody(state),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -513,6 +515,7 @@ class _PosScreenState extends State<PosScreen> {
     List<String> terminalIntegrations = state.terminalIntegrations;
     return Center(
       child: Container(
+        width: Measurements.width,
         padding: EdgeInsets.only(left: 16, right: 16),
         height: (state.integrations.length * 50).toDouble() + 50,
         child: BlurEffectView(
@@ -693,6 +696,7 @@ class _PosScreenState extends State<PosScreen> {
   Widget _settingsWidget(PosScreenState state) {
     return Container(
       padding: EdgeInsets.all(16),
+      width: Measurements.width,
       child: Column(
         children: <Widget>[
           Row(
