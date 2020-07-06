@@ -110,7 +110,7 @@ class _PosConnectScreenState extends State<PosConnectScreen> {
             padding: EdgeInsets.only(left: 8),
           ),
           Text(
-            'Device Payment',
+            'Connect',
             style: TextStyle(
               color: Colors.white,
               fontSize: 16,
@@ -176,16 +176,7 @@ class _PosConnectScreenState extends State<PosConnectScreen> {
   }
 
   Widget _getBody(PosScreenState state) {
-    switch(selectedState) {
-      case '':
-        return _connectWidget(state);
-      case 'device_payment':
-        return _connectWidget(state);
-      case 'settings':
-        return showCommunications(state);
-      default:
-        return Container();
-    }
+    return _connectWidget(state);
   }
 
   Widget _connectWidget(PosScreenState state) {
