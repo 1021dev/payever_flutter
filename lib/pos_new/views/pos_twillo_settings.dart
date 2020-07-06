@@ -168,55 +168,154 @@ class _PosTwilioScreenState extends State<PosTwilioScreen> {
         dynamic content = form['content'] != null ? form['content']: null;
         if (content != null) {
           List contentData = content[contentType];
-          contentData.forEach((data) {
-            if (data['datadata'] != null) {
+          for (int i = 0 ; i < contentData.length; i++) {
+            dynamic data = contentData[i];
+            if (data['data'] != null) {
               List<dynamic> list = data['data'];
-              for(dynamic w in list) {
-                if (w[0]['type'] == 'image') {
-                } else if (w[0]['type'] == 'text') {
-                  Widget textWidget = isOpened == -1 ? Container(
-                    height: 64,
-                    padding: EdgeInsets.only(left: 16, right: 16),
+              Widget section = Container(
+                height: 56,
+                color: Colors.black45,
+                child: SizedBox.expand(
+                  child: MaterialButton(
+                    onPressed: () {
+                      setState(() {
+                        if (isOpened == i) {
+                          isOpened = -1;
+                        } else {
+                          isOpened = i;
+                        }
+                      });
+                    },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        Text(
-                            w[0]['value']
+                        Expanded(
+                          child: Row(
+                            children: <Widget>[
+                              Icon(
+                                Icons.phone_iphone,
+                                size: 16,
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(left: 8),
+                              ),
+                              Expanded(
+                                child: Text(
+                                  data['title'],
+                                  maxLines: 1,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                        MaterialButton(
-                          minWidth: 0,
-                          onPressed: () {
-                          },
-                          height: 20,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          color: Colors.black26,
-                          child: Text(
-                            w[1]['action'],
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
+                        Icon(
+                          isOpened == i ? Icons.keyboard_arrow_up: Icons.keyboard_arrow_down,
+                          size: 20,
                         ),
                       ],
                     ),
-                  ): Container();
+                  ),
+                ),
+              );
+              widgets.add(section);
+              if (isOpened == i) {
+                for(dynamic w in list) {
+                  if (w[0]['type'] == 'text') {
+                    Widget textWidget = Container(
+                      height: 64,
+                      padding: EdgeInsets.only(left: 16, right: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Row(
+                            children: <Widget>[
+                              Text(
+                                w[0]['value'],
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(left: 8),
+                              ),
+                              Text(
+                                w[1]['value'],
+                                style: TextStyle(
+                                  color: Colors.white.withOpacity(0.5),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w300,
+                                ),
+                              ),
+                            ],
+                          ),
+                          MaterialButton(
+                            minWidth: 0,
+                            onPressed: () {
+                            },
+                            height: 20,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            color: Colors.black26,
+                            child: Text(
+                              Language.getPosTpmStrings(w[2]['text']),
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                    widgets.add(textWidget);
+                  }
+                }
+                if (data['operation'] != null) {
+                  Widget textWidget = Container(
+                    height: 56,
+                    child: SizedBox.expand(
+                      child: MaterialButton(
+                        minWidth: 0,
+                        onPressed: () {
+                        },
+                        color: Colors.black87,
+                        child: Text(
+                          Language.getPosTpmStrings(data['operation']['text']),
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
                   widgets.add(textWidget);
                 }
               }
             } else if (data['fieldset'] != null) {
               List<dynamic> list = data['fieldset'];
               Widget section = Container(
-                height: 64,
+                height: 56,
                 color: Colors.black45,
                 child: SizedBox.expand(
                   child: MaterialButton(
                     onPressed: () {
                       setState(() {
-                        isOpened = -1;
+                        if (isOpened == i) {
+                          isOpened = -1;
+                        } else {
+                          isOpened = i;
+                        }
                       });
                     },
                     child: Row(
@@ -247,7 +346,7 @@ class _PosTwilioScreenState extends State<PosTwilioScreen> {
                           ),
                         ),
                         Icon(
-                          isOpened == -1 ? Icons.keyboard_arrow_up: Icons.keyboard_arrow_down,
+                          isOpened == i ? Icons.keyboard_arrow_up: Icons.keyboard_arrow_down,
                           size: 20,
                         ),
                       ],
@@ -256,123 +355,100 @@ class _PosTwilioScreenState extends State<PosTwilioScreen> {
                 ),
               );
               widgets.add(section);
+              if (isOpened == i) {
+                for(int j = 0; j < list.length; j++) {
+                  dynamic w = list[j];
+                  if (w['type'].contains('input')) {
+                    Map<String, dynamic> valueList = {};
+                    if (data['fieldsetData'] != null) {
+                      valueList = data['fieldsetData'];
+                    }
+                    String value = '';
+                    if (valueList.containsKey(w['name'])) {
+                      value = valueList[w['name']];
+                    }
+                    Widget inputWidget = Container(
+                      height: 64,
+                      child: Center(
+                        child: TextFormField(
+                          style: TextStyle(fontSize: 16),
+                          onChanged: (val) {
 
-              for(int j = 0; j < list.length; j++) {
-                dynamic w = list[j];
-                if (w['type'].contains('input')) {
-                  Map<String, dynamic> valueList = {};
-                  if (data['fieldsetData'] != null) {
-                    valueList = data['fieldsetData'];
+                          },
+                          initialValue: value,
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.only(left: 16, right: 16),
+                            hintText: Language.getPosTpmStrings(w['inputSettings']['placeholder']),
+                            hintStyle: TextStyle(
+                              color: Colors.white.withOpacity(0.5),
+                            ),
+                            labelText: Language.getPosTpmStrings(w['fieldSettings']['label']),
+                            labelStyle: TextStyle(
+                              color: Colors.grey,
+                            ),
+                            enabledBorder: InputBorder.none,
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                            ),
+                          ),
+                          keyboardType: TextInputType.text,
+                          obscureText: w['type'] == 'input-password',
+                        ),
+                      ),
+                    );
+                    widgets.add(inputWidget);
+                    widgets.add(Divider(height: 0, thickness: 0.5, color: Color(0xFF888888),));
                   }
-                  String value = '';
-                  if (valueList.containsKey(w['name'])) {
-                    value = valueList[w['name']];
-                  }
-                  Widget inputWidget = Container(
-                    height: 64,
-                    child: Center(
-                      child: TextFormField(
-                        style: TextStyle(fontSize: 16),
-                        onChanged: (val) {
-
+                }
+                if (data['operation'] != null) {
+                  Widget textWidget = Container(
+                    height: 56,
+                    child: SizedBox.expand(
+                      child: MaterialButton(
+                        minWidth: 0,
+                        onPressed: () {
                         },
-                        initialValue: value,
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.only(left: 16, right: 16),
-                          hintText: Language.getPosTpmStrings(w['inputSettings']['placeholder']),
-                          hintStyle: TextStyle(
-                            color: Colors.white.withOpacity(0.5),
-                          ),
-                          labelText: Language.getPosTpmStrings(w['fieldSettings']['label']),
-                          labelStyle: TextStyle(
-                            color: Colors.grey,
-                          ),
-                          enabledBorder: InputBorder.none,
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                        color: Colors.black87,
+                        child: Text(
+                          Language.getPosTpmStrings(data['operation']['text']),
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
-                        keyboardType: TextInputType.text,
-                        obscureText: w['type'] == 'input-password',
                       ),
                     ),
                   );
-                  widgets.add(inputWidget);
-                  widgets.add(Divider(height: 0, thickness: 0.5, color: Color(0xFF888888),));
+                  widgets.add(textWidget);
                 }
               }
-            } else if (data['operation'] != null) {
-              Widget textWidget = isOpened == -1 ? Container(
-                height: 64,
-                padding: EdgeInsets.only(left: 16, right: 16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(
-                      w['value'],
-                    ),
-                    MaterialButton(
-                      minWidth: 0,
-                      onPressed: () {
-                      },
-                      height: 20,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      color: Colors.black26,
-                      child: Text(
-                        w['action'],
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ): Container();
-              widgets.add(textWidget);
             }
           }
-          );
         }
       }
     }
     return Center(
-      child: Container(
-        padding: EdgeInsets.only(left: 16, right: 16),
-        height: isOpened == -1 ? 300.0 + 64.0 * 3.0: 64.0,
-        child: BlurEffectView(
-          color: Color.fromRGBO(20, 20, 20, 0.2),
-          blur: 15,
-          radius: 12,
-          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: widgets.map((e) => e).toList(),
-          ),
-        ),
+      child: Wrap(
+        runSpacing: 16,
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.only(left: 16, right: 16),
+              child: BlurEffectView(
+                color: Color.fromRGBO(20, 20, 20, 0.2),
+                blur: 15,
+                radius: 12,
+                padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: widgets.map((e) => e).toList(),
+                ),
+              ),
+            ),
+          ]
       ),
     );
-  }
-
-  Future getBlob(dynamic w) async {
-    var headers = {
-      HttpHeaders.authorizationHeader: 'Bearer ${GlobalUtils.activeToken.accessToken}',
-      HttpHeaders.contentTypeHeader: 'application/json',
-      HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-    };
-
-    http.get(w[0]['value'],
-        headers:  headers
-    ).then((http.Response response) {
-      print(response);
-      setState(() {
-        imageData = response.bodyBytes;
-      });
-    });
   }
 }
 
