@@ -208,6 +208,7 @@ class _PosSwitchTerminalsScreenState extends State<PosSwitchTerminalsScreen> {
                 height: 100,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
+                  color: Colors.blueGrey.withOpacity(0.5),
                   image: DecorationImage(
                     image: NetworkImage('$imageBase${activeTerminal.logo}'),
                     fit: BoxFit.cover,
@@ -373,7 +374,7 @@ class _PosSwitchTerminalsScreenState extends State<PosSwitchTerminalsScreen> {
                               padding: EdgeInsets.only(top: 16),
                             ),
                             Text(
-                              'Deleting Terminal',
+                              Language.getPosStrings('delete_terminal_confirm.title'),
                               style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w300,
@@ -384,7 +385,7 @@ class _PosSwitchTerminalsScreenState extends State<PosSwitchTerminalsScreen> {
                               padding: EdgeInsets.only(top: 16),
                             ),
                             Text(
-                              'Do you really want to delete your terminal? Because all data will be lost and you will not be able to restore it.',
+                              Language.getPosStrings('delete_terminal_confirm.description'),
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   fontSize: 14,
