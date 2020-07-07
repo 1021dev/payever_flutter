@@ -255,7 +255,7 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                       },
                       child: Center(
                         child: Text(
-                          !widget.appWidget.install ? 'Get started' : 'Continue setup process',
+                          !widget.businessApps.installed ? 'Get started' : 'Continue setup process',
                           softWrap: true,
                           style: TextStyle(
                               color: Colors.white, fontSize: 12),
@@ -263,11 +263,11 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                       ),
                     ),
                   ),
-                  if (!widget.appWidget.install) Container(
+                  if (!widget.businessApps.installed) Container(
                     width: 1,
                     color: Colors.white12,
                   ),
-                  if (!widget.appWidget.install) Expanded(
+                  if (!widget.businessApps.installed) Expanded(
                     flex: 1,
                     child: InkWell(
                       onTap: () {

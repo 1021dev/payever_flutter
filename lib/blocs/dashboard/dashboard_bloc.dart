@@ -263,17 +263,17 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
     List<Terminal> terminals = [];
     List<ChannelSet> channelSets = [];
     dynamic terminalsObj = await api.getTerminal(activeBusiness.id, token);
-    terminalsObj.forEach((terminal) {
-      terminals.add(Terminal.toMap(terminal));
-    });
-//    if (terminals.isEmpty) {
-//      _parts._noTerminals = true;
-//      _parts._mainCardLoading.value = false;
-//    }
+    if (terminalsObj != null){
+      terminalsObj.forEach((terminal) {
+        terminals.add(Terminal.toMap(terminal));
+      });
+    }
     dynamic channelsObj = await api.getChannelSet(activeBusiness.id, token);
-    channelsObj.forEach((channelSet) {
-      channelSets.add(ChannelSet.toMap(channelSet));
-    });
+    if (channelsObj != null){
+      channelsObj.forEach((channelSet) {
+        channelSets.add(ChannelSet.toMap(channelSet));
+      });
+    }
 
     terminals.forEach((terminal) async {
       channelSets.forEach((channelSet) async {
@@ -299,8 +299,11 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
         }
       });
     });
+    Terminal activeTerminal;
 
-    Terminal activeTerminal = terminals.firstWhere((element) => element.active);
+    if (terminals.length > 0) {
+      activeTerminal = terminals.firstWhere((element) => element.active);
+    }
     yield state.copyWith(activeTerminal: activeTerminal, terminalList: terminals, isPosLoading: false);
     if (this.isBroadcast) {
       add(FetchProducts(business: activeBusiness));

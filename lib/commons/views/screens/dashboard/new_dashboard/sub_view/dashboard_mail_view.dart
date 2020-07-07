@@ -89,7 +89,7 @@ class _DashboardMailViewState extends State<DashboardMailView> {
                                 Expanded(
                                   flex: 1,
                                   child: Center(
-                                    child: Text("1",
+                                    child: Text('1',
                                       style: TextStyle(
                                           fontSize: 10,
                                           color: Colors.white
@@ -223,7 +223,7 @@ class _DashboardMailViewState extends State<DashboardMailView> {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
-                            "New Campaign",
+                            'New Campaign',
                             softWrap: true,
                             style: TextStyle(
                                 color: Colors.white, fontSize: 16),
@@ -266,7 +266,7 @@ class _DashboardMailViewState extends State<DashboardMailView> {
                     decoration: BoxDecoration(
                         image: DecorationImage(
                             image: NetworkImage('${Env.cdnIcon}icon-comerceos-mail-not-installed.png'),
-                            fit: BoxFit.fitWidth),
+                            fit: BoxFit.contain),
                     ),
                   ),
                   SizedBox(height: 8),
@@ -280,7 +280,7 @@ class _DashboardMailViewState extends State<DashboardMailView> {
                   ),
                   SizedBox(height: 4),
                   Text(
-                    Language.getWidgetStrings("widgets.${widget.appWidget.type}.install-app"),
+                    Language.getWidgetStrings('widgets.${widget.appWidget.type}.install-app'),
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 10,
@@ -307,7 +307,7 @@ class _DashboardMailViewState extends State<DashboardMailView> {
                       },
                       child: Center(
                         child: Text(
-                          !widget.appWidget.install ? "Get started" : "Continue setup process",
+                          !widget.businessApps.installed ? 'Get started' : 'Continue setup process',
                           softWrap: true,
                           style: TextStyle(
                               color: Colors.white, fontSize: 12),
@@ -315,11 +315,11 @@ class _DashboardMailViewState extends State<DashboardMailView> {
                       ),
                     ),
                   ),
-                  if (!widget.appWidget.install) Container(
+                  if (!widget.businessApps.installed) Container(
                     width: 1,
                     color: Colors.white12,
                   ),
-                  if (!widget.appWidget.install) Expanded(
+                  if (!widget.businessApps.installed) Expanded(
                     flex: 1,
                     child: InkWell(
                       onTap: () {
@@ -327,7 +327,7 @@ class _DashboardMailViewState extends State<DashboardMailView> {
                       },
                       child: Center(
                         child: Text(
-                          "Learn more",
+                          'Learn more',
                           softWrap: true,
                           style: TextStyle(
                               color: Colors.white, fontSize: 12),

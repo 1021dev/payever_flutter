@@ -41,7 +41,7 @@ class _DashboardShopViewState extends State<DashboardShopView> {
                             height: 16,
                             decoration: BoxDecoration(
                                 image: DecorationImage(
-                                    image: NetworkImage('${Env.cdnIcon}icons-apps-white/icon-apps-white-${widget.appWidget.type}.png'),
+                                    image: NetworkImage('${Env.cdnIcon}icons-apps-white/icon-apps-white-shop.png'),
                                     fit: BoxFit.fitWidth)),
                           ),
                           SizedBox(width: 8,),
@@ -89,7 +89,7 @@ class _DashboardShopViewState extends State<DashboardShopView> {
                                 Expanded(
                                   flex: 1,
                                   child: Center(
-                                    child: Text("1",
+                                    child: Text('1',
                                       style: TextStyle(
                                           fontSize: 10,
                                           color: Colors.white
@@ -162,8 +162,8 @@ class _DashboardShopViewState extends State<DashboardShopView> {
                     height: 40,
                     decoration: BoxDecoration(
                         image: DecorationImage(
-                            image: NetworkImage('${Env.cdnIcon}icon-comerceos-${widget.appWidget.type}-not-installed.png'),
-                            fit: BoxFit.fitWidth),
+                            image: NetworkImage('${Env.cdnIcon}icon-comerceos-shop-not-installed.png'),
+                            fit: BoxFit.contain),
                     ),
                   ),
                   SizedBox(height: 8),
@@ -177,7 +177,7 @@ class _DashboardShopViewState extends State<DashboardShopView> {
                   ),
                   SizedBox(height: 4),
                   Text(
-                    Language.getWidgetStrings("widgets.${widget.appWidget.type}.install-app"),
+                    Language.getWidgetStrings('widgets.store.install-app'),
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 10,
@@ -204,7 +204,7 @@ class _DashboardShopViewState extends State<DashboardShopView> {
                       },
                       child: Center(
                         child: Text(
-                          !widget.appWidget.install ? "Get started" : "Continue setup process",
+                          !widget.businessApps.installed ? 'Get started' : 'Continue setup process',
                           softWrap: true,
                           style: TextStyle(
                               color: Colors.white, fontSize: 12),
@@ -212,11 +212,11 @@ class _DashboardShopViewState extends State<DashboardShopView> {
                       ),
                     ),
                   ),
-                  if (!widget.appWidget.install) Container(
+                  if (!widget.businessApps.installed) Container(
                     width: 1,
                     color: Colors.white12,
                   ),
-                  if (!widget.appWidget.install) Expanded(
+                  if (!widget.businessApps.installed) Expanded(
                     flex: 1,
                     child: InkWell(
                       onTap: () {
@@ -224,7 +224,7 @@ class _DashboardShopViewState extends State<DashboardShopView> {
                       },
                       child: Center(
                         child: Text(
-                          "Learn more",
+                          'Learn more',
                           softWrap: true,
                           style: TextStyle(
                               color: Colors.white, fontSize: 12),

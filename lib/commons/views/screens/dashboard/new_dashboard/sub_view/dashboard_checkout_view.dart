@@ -89,7 +89,7 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                                 Expanded(
                                   flex: 1,
                                   child: Center(
-                                    child: Text("1",
+                                    child: Text('1',
                                       style: TextStyle(
                                           fontSize: 10,
                                           color: Colors.white
@@ -153,7 +153,7 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                                   Icon(Icons.local_grocery_store),
                                   SizedBox(width: 8),
                                   Text(
-                                    "Link",
+                                    'Link',
                                     softWrap: true,
                                     style: TextStyle(
                                         color: Colors.white, fontSize: 16),
@@ -186,7 +186,7 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                                   Icon(Icons.edit),
                                   SizedBox(width: 8),
                                   Text(
-                                    "Manage",
+                                    'Manage',
                                     softWrap: true,
                                     style: TextStyle(
                                         color: Colors.white, fontSize: 16),
@@ -247,7 +247,7 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                   ),
                   SizedBox(height: 4),
                   Text(
-                    Language.getWidgetStrings("widgets.${widget.appWidget.type}.install-app"),
+                    Language.getWidgetStrings('widgets.checkout.actions.add-new'),
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 10,
@@ -274,7 +274,7 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                       },
                       child: Center(
                         child: Text(
-                          !widget.appWidget.install ? "Get started" : "Continue setup process",
+                          !widget.businessApps.installed ? 'Get started' : 'Continue setup process',
                           softWrap: true,
                           style: TextStyle(
                               color: Colors.white, fontSize: 12),
@@ -282,11 +282,11 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                       ),
                     ),
                   ),
-                  if (!widget.appWidget.install) Container(
+                  if (!widget.businessApps.installed) Container(
                     width: 1,
                     color: Colors.white12,
                   ),
-                  if (!widget.appWidget.install) Expanded(
+                  if (!widget.businessApps.installed) Expanded(
                     flex: 1,
                     child: InkWell(
                       onTap: () {
@@ -294,7 +294,7 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                       },
                       child: Center(
                         child: Text(
-                          "Learn more",
+                          'Learn more',
                           softWrap: true,
                           style: TextStyle(
                               color: Colors.white, fontSize: 12),

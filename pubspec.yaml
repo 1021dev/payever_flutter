@@ -86,6 +86,7 @@ flutter:
     - assets/translations/pos/connect/
     - assets/translations/pos/front_end/
     - assets/translations/pos/tpm/
+    - assets/translations/welcome/
 #    fonts:
 #      - family: Helvetica Neue
 #        fonts:

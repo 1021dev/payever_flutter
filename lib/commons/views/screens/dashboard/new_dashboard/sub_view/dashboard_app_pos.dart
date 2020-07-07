@@ -35,9 +35,9 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
     String avatarName = '';
     if (widget.activeTerminal != null) {
       String name = widget.activeTerminal.name;
-      if (name.contains(" ")) {
+      if (name.contains(' ')) {
         avatarName = name.substring(0, 1);
-        avatarName = avatarName + name.split(" ")[1].substring(0, 1);
+        avatarName = avatarName + name.split(' ')[1].substring(0, 1);
       } else {
         avatarName = name.substring(0, 1) + name.substring(name.length - 1);
         avatarName = avatarName.toUpperCase();
@@ -71,7 +71,7 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                   ),
                   SizedBox(height: 4),
                   Text(
-                    Language.getWidgetStrings("widgets.${widget.businessApps.code}.install-app"),
+                    Language.getWidgetStrings('widgets.${widget.businessApps.code}.install-app'),
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 10,
@@ -97,7 +97,7 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                       },
                       child: Center(
                         child: Text(
-                          widget.businessApps.setupStatus != 'NotStated' ? "Get started" : "Continue setup process",
+                          widget.businessApps.installed ? 'Get started' : 'Continue setup process',
                           softWrap: true,
                           style: TextStyle(
                               color: Colors.white, fontSize: 12),
@@ -105,11 +105,11 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                       ),
                     ),
                   ),
-                  if (widget.businessApps.setupStatus != 'NotStated') Container(
+                  if (widget.businessApps.installed) Container(
                     width: 1,
                     color: Colors.white12,
                   ),
-                  if (widget.businessApps.setupStatus != 'NotStated') Expanded(
+                  if (widget.businessApps.installed) Expanded(
                     flex: 1,
                     child: InkWell(
                       onTap: () {
@@ -117,7 +117,7 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                       },
                       child: Center(
                         child: Text(
-                          "Learn more",
+                          'Learn more',
                           softWrap: true,
                           style: TextStyle(
                               color: Colors.white, fontSize: 12),
@@ -173,7 +173,7 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                         color: Colors.black.withOpacity(0.4)
                     ),
                     child: Center(
-                      child: Text("Open",
+                      child: Text('Open',
                         style: TextStyle(
                             fontSize: 10,
                             color: Colors.white
@@ -266,7 +266,7 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                           Icon(Icons.edit),
                           SizedBox(width: 8),
                           Text(
-                            "Edit",
+                            'Edit',
                             softWrap: true,
                             style: TextStyle(
                                 color: Colors.white, fontSize: 16),

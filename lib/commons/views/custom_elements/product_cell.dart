@@ -38,7 +38,7 @@ class ProductCell extends StatelessWidget {
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: NetworkImage('${Env.storage}/products/${product.thumbnail}'),
-                    fit: BoxFit.fitWidth,
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),

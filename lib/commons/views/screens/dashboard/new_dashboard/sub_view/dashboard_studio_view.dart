@@ -57,7 +57,7 @@ class _DashboardStudioViewState extends State<DashboardStudioView> {
               ),
               child: Center(
                 child: Text(
-                  "Get professional product photos and videos",
+                  'Get professional product photos and videos',
                   softWrap: true,
                   style: TextStyle(
                       color: Colors.white, fontSize: 12),

@@ -76,7 +76,8 @@ class _DashboardBusinessAppsViewState extends State<DashboardBusinessAppsView> {
                         color: Colors.black.withAlpha(100)
                     ),
                     child: Center(
-                      child: Text("Edit",
+                      child: Text(
+                        Language.getCommerceOSStrings('Edit'),
                         style: TextStyle(
                             fontSize: 10,
                             color: Colors.white

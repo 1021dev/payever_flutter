@@ -88,7 +88,7 @@ class _DashboardContactViewState extends State<DashboardContactView> {
                                 Expanded(
                                   flex: 1,
                                   child: Center(
-                                    child: Text("1",
+                                    child: Text('1',
                                       style: TextStyle(
                                           fontSize: 10,
                                           color: Colors.white
@@ -197,7 +197,7 @@ class _DashboardContactViewState extends State<DashboardContactView> {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
-                            "Add Contact",
+                            'Add Contact',
                             softWrap: true,
                             style: TextStyle(
                                 color: Colors.white, fontSize: 16),
@@ -240,7 +240,7 @@ class _DashboardContactViewState extends State<DashboardContactView> {
                     decoration: BoxDecoration(
                       image: DecorationImage(
                           image: NetworkImage('${Env.cdnIcon}icon-comerceos-mail-not-installed.png'),
-                          fit: BoxFit.fitWidth),
+                          fit: BoxFit.contain),
                     ),
                   ),
                   SizedBox(height: 8),
@@ -254,7 +254,7 @@ class _DashboardContactViewState extends State<DashboardContactView> {
                   ),
                   SizedBox(height: 4),
                   Text(
-                    Language.getWidgetStrings("widgets.${widget.appWidget.type}.install-app"),
+                    Language.getWidgetStrings('widgets.${widget.appWidget.type}.install-app'),
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 10,
@@ -281,7 +281,7 @@ class _DashboardContactViewState extends State<DashboardContactView> {
                       },
                       child: Center(
                         child: Text(
-                          !widget.appWidget.install ? "Get started" : "Continue setup process",
+                          !widget.businessApps.installed ? 'Get started' : 'Continue setup process',
                           softWrap: true,
                           style: TextStyle(
                               color: Colors.white, fontSize: 12),
@@ -289,11 +289,11 @@ class _DashboardContactViewState extends State<DashboardContactView> {
                       ),
                     ),
                   ),
-                  if (!widget.appWidget.install) Container(
+                  if (!widget.businessApps.installed) Container(
                     width: 1,
                     color: Colors.white12,
                   ),
-                  if (!widget.appWidget.install) Expanded(
+                  if (!widget.businessApps.installed) Expanded(
                     flex: 1,
                     child: InkWell(
                       onTap: () {
@@ -301,7 +301,7 @@ class _DashboardContactViewState extends State<DashboardContactView> {
                       },
                       child: Center(
                         child: Text(
-                          "Learn more",
+                          'Learn more',
                           softWrap: true,
                           style: TextStyle(
                               color: Colors.white, fontSize: 12),
