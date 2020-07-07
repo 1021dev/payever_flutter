@@ -25,6 +25,7 @@ class DashboardScreenState {
   final String curWall;
   final List<Business> searchBusinesses;
   final List<Collection> searchTransactions;
+  final List<Products> lastSalesRandom;
 
   DashboardScreenState({
     this.isLoading = false,
@@ -49,6 +50,7 @@ class DashboardScreenState {
     this.curWall,
     this.searchBusinesses = const [],
     this.searchTransactions = const [],
+    this.lastSalesRandom = const [],
   });
 
   List<Object> get props => [
@@ -74,6 +76,7 @@ class DashboardScreenState {
     this.curWall,
     this.searchBusinesses,
     this.searchTransactions,
+    this.lastSalesRandom,
   ];
 
   DashboardScreenState copyWith({
@@ -99,6 +102,7 @@ class DashboardScreenState {
     String curWall,
     List<Business> searchBusinesses,
     List<Collection> searchTransactions,
+    List<Products> lastSalesRandom,
   }) {
     return DashboardScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -123,6 +127,7 @@ class DashboardScreenState {
       curWall: curWall ?? this.curWall,
       searchBusinesses: searchBusinesses ?? this.searchBusinesses,
       searchTransactions: searchTransactions ?? this.searchTransactions,
+      lastSalesRandom: lastSalesRandom ?? this.lastSalesRandom,
     );
   }
 }

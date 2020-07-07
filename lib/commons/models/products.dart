@@ -9,6 +9,8 @@ class Products {
   String _lastSale;
   String _name;
   num _quantity;
+  num _price;
+  num _salePrice;
   String _thumbnail;
   String _uuid;
   num __v;
@@ -20,6 +22,8 @@ class Products {
     _lastSale = obj[GlobalUtils.DB_PROD_LAST_SELL];
     _name = obj[GlobalUtils.DB_PROD_NAME];
     _quantity = obj[GlobalUtils.DB_PROD_QUANTITY];
+    _price = obj[GlobalUtils.DB_PROD_MODEL_PRICE];
+    _salePrice = obj[GlobalUtils.DB_PROD_MODEL_SALE_PRICE];
     _thumbnail = obj[GlobalUtils.DB_PROD_THUMBNAIL];
     _uuid = obj[GlobalUtils.DB_PROD_UUID];
 
@@ -54,6 +58,10 @@ class Products {
   String get name => _name;
 
   num get quantity => _quantity;
+
+  num get price => _price;
+
+  num get salePrice => _salePrice;
 
   String get thumbnail => _thumbnail;
 

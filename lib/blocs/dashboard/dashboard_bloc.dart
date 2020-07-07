@@ -29,6 +29,8 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
       yield* getDaily(event.business);
     } else if (event is FetchTutorials) {
       yield* getTutorials(event.business);
+    } else if (event is FetchProducts) {
+      yield* getProductsPopularMonthRandom(event.business);
     }
   }
 
@@ -299,7 +301,7 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
 
     Terminal activeTerminal = terminals.where((element) => element.active).toList().first;
     yield state.copyWith(activeTerminal: activeTerminal, terminalList: terminals, isPosLoading: false);
-    add(FetchTutorials(business: activeBusiness));
+    add(FetchProducts(business: activeBusiness));
   }
 
   Future<dynamic> fetchDaily(Business currentBusiness) {
@@ -345,7 +347,6 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
     yield state.copyWith(total: Transaction.toMap(response).paginationData.amount.toDouble());
 
     add(FetchPosEvent(business: currentBusiness));
-
   }
 
   Stream<DashboardScreenState> getTutorials(Business currentBusiness) async* {
@@ -366,46 +367,14 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
     return _list;
   });
 
-  Stream<DashboardScreenState> searchDashboard(String key) async* {
-
-    List<Business> businesses = [];
-    businesses.addAll(state.businesses);
-    if (businesses.length == 0) {
-      dynamic businessResponse = await api.getBusinesses(GlobalUtils.activeToken.accessToken);
-      businessResponse.forEach((element) {
-        businesses.add(Business.map(element));
-      });
-      yield state.copyWith(businesses: businesses);
-    }
-
-    List<Business> searchBusinessResult = [];
-    searchBusinessResult = businesses.where((element) {
-      if (element.name.toLowerCase().contains(key.toLowerCase())) {
-        return true;
-      }
-      if (element.email.toLowerCase().contains(key.toLowerCase())) {
-        return true;
-      }
-      return false;
+  Stream<DashboardScreenState> getProductsPopularMonthRandom(Business currentBusiness) async* {
+    List<Products> lastSales = [];
+    dynamic response = await api.getProductsPopularMonthRandom(currentBusiness.id, GlobalUtils.activeToken.accessToken);
+    response.forEach((element) {
+      lastSales.add(Products.toMap(element));
     });
-
-    List<Collection> searchTransacionResult = [];
-    String sortQuery = '?orderBy=created_at&direction=desc&query=$key&limit=8';
-
-    dynamic obj = await api.getTransactionList(state.activeBusiness.id, GlobalUtils.activeToken.accessToken, sortQuery);
-    Transaction data = Transaction.toMap(obj);
-
-    if (searchBusinessResult.length >  4) {
-      yield state.copyWith(
-        searchBusinesses: searchBusinessResult.sublist(0, 4),
-        searchTransactions: data.collection.sublist(0, 4),
-      );
-    } else {
-      yield state.copyWith(
-        searchBusinesses: searchBusinessResult,
-        searchTransactions: data.collection.sublist(0, 8 - searchBusinessResult.length),
-      );
-    }
-
+    yield state.copyWith(lastSalesRandom: lastSales);
+    add(FetchTutorials(business: currentBusiness));
   }
+
 }

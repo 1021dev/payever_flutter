@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/models/app_widget.dart';
 import 'package:payever/commons/utils/env.dart';
-import 'package:payever/commons/views/custom_elements/TutorialCell.dart';
+import 'package:payever/commons/views/custom_elements/tutorial_cell.dart';
 
 import 'blur_effect_view.dart';
 

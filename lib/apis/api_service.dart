@@ -506,6 +506,23 @@ class ApiService {
     }
   }
 
+  Future<dynamic> getProductsPopularMonthRandom(String idBusiness, String token) async {
+    try {
+      print('$TAG - getProductsPopularMonthRandom()');
+      dynamic response = await _client.getTypeless(
+          '$productsUrl$idBusiness$popularMonth$productRandomEnd',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<dynamic> deleteTransactionList(String id, String token, String query) async {
     try {
       print('$TAG - deleteTransactionList()');

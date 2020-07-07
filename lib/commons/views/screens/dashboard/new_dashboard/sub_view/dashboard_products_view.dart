@@ -2,18 +2,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/env.dart';
-import 'package:payever/commons/views/custom_elements/DashboardOptionCell.dart';
-import 'package:payever/commons/views/custom_elements/ProductCell.dart';
-import 'package:payever/commons/views/screens/dashboard/dashboard_card_ref.dart';
+import 'package:payever/commons/views/custom_elements/dashboard_option_cell.dart';
+import 'package:payever/commons/views/custom_elements/product_cell.dart';
 
 import 'blur_effect_view.dart';
 
 class DashboardProductsView extends StatefulWidget {
   final AppWidget appWidget;
   final BusinessApps businessApps;
+  final List<Products> lastSales;
+  final Business business;
   DashboardProductsView({
     this.appWidget,
     this.businessApps,
+    this.lastSales = const [],
+    this.business,
   });
   @override
   _DashboardProductsViewState createState() => _DashboardProductsViewState();
@@ -134,7 +137,11 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
                 SizedBox(height: 8),
                 Container(
                   height: 120,
-                  child: ListView.builder(itemBuilder: _itemBuilder, itemCount: 3, scrollDirection: Axis.horizontal,),
+                  child: ListView.builder(
+                    itemBuilder: _itemBuilder,
+                    itemCount: widget.lastSales.length > 3 ? 3: widget.lastSales.length,
+                    scrollDirection: Axis.horizontal,
+                  ),
                 )
               ],
             ),
@@ -146,14 +153,21 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
                   borderRadius: BorderRadius.only(bottomLeft: Radius.circular(6), bottomRight: Radius.circular(6)),
                   color: Colors.black38
               ),
-              child: ListView.builder(itemBuilder: _itemBuilderDDetails, itemCount: 2,physics: NeverScrollableScrollPhysics(),),
+              child: ListView.builder(
+                itemBuilder: _itemBuilderDDetails,
+                itemCount: 2,
+                physics: NeverScrollableScrollPhysics(),
+              ),
             )
         ],
       ),
     );
   }
   Widget _itemBuilder(BuildContext context, int index) {
-    return ProductCell();
+    return ProductCell(
+      product: widget.lastSales[index],
+      business: widget.business,
+    );
   }
   Widget _itemBuilderDDetails(BuildContext context, int index) {
     return DashboardOptionCell();

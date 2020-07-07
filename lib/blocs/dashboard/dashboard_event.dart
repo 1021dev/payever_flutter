@@ -57,3 +57,16 @@ class FetchTutorials extends DashboardScreenEvent {
   ];
 
 }
+
+class FetchProducts extends DashboardScreenEvent {
+  final Business business;
+  FetchProducts({
+    this.business,
+  });
+
+  @override
+  List<Object> get props => [
+    this.business,
+  ];
+
+}

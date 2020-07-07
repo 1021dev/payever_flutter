@@ -140,7 +140,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           top: 0.0,
           child: Container(
             child: CachedNetworkImage(
-              imageUrl: state.curWall,
+              imageUrl: state.curWall != null ? state.curWall: widget.wallpaper,
               placeholder: (context, url) => Container(),
               errorWidget: (context, url, error) => Icon(Icons.error),
               fit: BoxFit.cover,
@@ -531,6 +531,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
           DashboardProductsView(
             businessApps: businessApp,
             appWidget: appWidget,
+            lastSales: state.lastSalesRandom,
+            business: state.activeBusiness,
           )
       );
     }

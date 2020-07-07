@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/env.dart';
 import 'package:payever/commons/utils/translations.dart';
-import 'package:payever/commons/views/custom_elements/DashboardOptionCell.dart';
+import 'package:payever/commons/views/custom_elements/dashboard_option_cell.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/blur_effect_view.dart';
 import 'package:payever/pos/models/models.dart';
 
@@ -154,7 +154,7 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                       child: CircularProgressIndicator(),
                     ),
                   ):
-                    SizedBox(height: 8),
+                  SizedBox(height: 8),
                   !widget.isLoading ?  Row(
                     children: [
                       Icon(
@@ -166,25 +166,26 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                       Text(
                         Language.getWidgetStrings('widgets.transactions.this-month'),
                         style: TextStyle(
-                            fontSize: 10,
-                            color: Colors.white.withAlpha(150)
+                          fontSize: 10,
+                          color: Colors.white,
                         ),
                       ),
                     ],
                   ): Container(),
                   !widget.isLoading ?  SizedBox(height: 8): Container(),
-                 !widget.isLoading ?  Row(
-                      children: [
-                        Text(
-                          '${widget.lastMonth.last.amount} $currency',
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white.withAlpha(150),
-                          ),
-                        )
-                      ],
-                    ): Container(),
+                  widget.lastMonth.length > 0 ?  Row(
+                    children: [
+                      Text(
+                        '${widget.lastMonth.last.amount} $currency',
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      )
+                    ],
+                  ): Container(),
                   !widget.isLoading ? SizedBox(height: 20): Container(),
                 ],
               ),
@@ -215,9 +216,9 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: NetworkImage('${Env.cdnIcon}icon-comerceos-${widget.appWidget.type}-not-installed.png'),
-                            fit: BoxFit.fitWidth),
+                      image: DecorationImage(
+                          image: NetworkImage('${Env.cdnIcon}icon-comerceos-${widget.appWidget.type}-not-installed.png'),
+                          fit: BoxFit.fitWidth),
                     ),
                   ),
                   SizedBox(height: 8),

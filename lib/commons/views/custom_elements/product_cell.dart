@@ -1,10 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/env.dart';
 
 class ProductCell extends StatelessWidget {
+  final Products product;
+  final Business business;
+  ProductCell({this.product, this.business,});
   @override
   Widget build(BuildContext context) {
+    String currency = '';
+    NumberFormat format = NumberFormat();
+    if (business != null) {
+      currency = format.simpleCurrencySymbol(business.currency);
+    }
     return Container(
       width: 100,
       padding: EdgeInsets.fromLTRB(4, 0, 46, 0),
@@ -26,31 +36,33 @@ class ProductCell extends StatelessWidget {
                 width: 50,
                 height: 50,
                 decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: NetworkImage(Env.commerceOs +
-                            "/assets/ui-kit/icons-png/icon-commerceos-ad-64.png"),
-                        fit: BoxFit.fitWidth)),
+                  image: DecorationImage(
+                    image: NetworkImage('${Env.storage}/products/${product.thumbnail}'),
+                    fit: BoxFit.fitWidth,
+                  ),
+                ),
               ),
             ],
           ),
           SizedBox(height: 2),
           Text(
-            "Durable Iron Happy Continue",
+            product.name,
             softWrap: true,
             maxLines: 2,
+            textAlign: TextAlign.center,
             style: TextStyle(
-                fontSize: 10,
+                fontSize: 12,
                 color: Colors.white,
               fontWeight: FontWeight.bold
             ),
           ),
           SizedBox(height: 2),
           Text(
-            "738,66 \$",
+            '${product.price} $currency',
             softWrap: true,
             textAlign: TextAlign.start,
             style: TextStyle(
-                fontSize: 8,
+                fontSize: 12,
                 color: Colors.white,
             ),
           )
