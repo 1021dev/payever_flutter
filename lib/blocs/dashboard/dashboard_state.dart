@@ -37,7 +37,7 @@ class DashboardScreenState {
     this.user,
     this.wallpaper,
     this.currentWallpaper,
-    this.total = 0.0,
+    this.total = 0,
     this.terminalList = const [],
     this.activeTerminal,
     this.lastYear = const [],

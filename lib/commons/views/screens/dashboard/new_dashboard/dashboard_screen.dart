@@ -339,6 +339,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
           DashboardTransactionsView(
             appWidget: appWidget,
             businessApps: businessApp,
+            isLoading: state.isInitialScreen,
+            total: state.total,
+            lastMonth: state.lastMonth,
+            lastYear: state.lastYear,
+            monthlySum: state.monthlySum,
             onOpen: () {
               Provider.of<GlobalStateModel>(context,listen: false)
                   .setCurrentBusiness(state.activeBusiness);

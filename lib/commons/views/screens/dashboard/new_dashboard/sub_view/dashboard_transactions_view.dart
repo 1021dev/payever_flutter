@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/env.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/views/custom_elements/DashboardOptionCell.dart';
@@ -11,8 +13,22 @@ class DashboardTransactionsView extends StatefulWidget {
   final VoidCallback onOpen;
   final BusinessApps businessApps;
   final AppWidget appWidget;
+  final bool isLoading;
+  final List<Day> lastMonth;
+  final List<Month> lastYear;
+  final List<double> monthlySum;
+  final double total;
 
-  DashboardTransactionsView({this.onOpen, this.businessApps, this.appWidget});
+  DashboardTransactionsView({
+    this.onOpen,
+    this.businessApps,
+    this.appWidget,
+    this.total = 0,
+    this.isLoading = true,
+    this.lastMonth = const [],
+    this.lastYear = const [],
+    this.monthlySum = const [],
+  });
   @override
   _DashboardTransactionsViewState createState() => _DashboardTransactionsViewState();
 }
@@ -21,7 +37,11 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
   bool isExpanded = false;
   @override
   Widget build(BuildContext context) {
-
+    String currency = '';
+    if (widget.lastMonth.length > 0) {
+      NumberFormat format = NumberFormat();
+      currency = format.simpleCurrencySymbol(widget.lastMonth.last.currency);
+    }
     if (widget.businessApps.setupStatus == 'completed') {
       return BlurEffectView(
         padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
@@ -128,8 +148,14 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                       )
                     ],
                   ),
-                  SizedBox(height: 8),
-                  Row(
+                  widget.isLoading ? Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(24),
+                      child: CircularProgressIndicator(),
+                    ),
+                  ):
+                    SizedBox(height: 8),
+                  !widget.isLoading ?  Row(
                     children: [
                       Icon(
                         Icons.arrow_upward,
@@ -138,28 +164,28 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                       ),
                       SizedBox(width: 4),
                       Text(
-                        "This month",
+                        Language.getWidgetStrings('widgets.transactions.this-month'),
                         style: TextStyle(
                             fontSize: 10,
                             color: Colors.white.withAlpha(150)
                         ),
                       ),
                     ],
-                  ),
-                  SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Text(
-                        "0 \$",
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white.withAlpha(150),
-                        ),
-                      )
-                    ],
-                  ),
-                  SizedBox(height: 20),
+                  ): Container(),
+                  !widget.isLoading ?  SizedBox(height: 8): Container(),
+                 !widget.isLoading ?  Row(
+                      children: [
+                        Text(
+                          '${widget.lastMonth.last.amount} $currency',
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white.withAlpha(150),
+                          ),
+                        )
+                      ],
+                    ): Container(),
+                  !widget.isLoading ? SizedBox(height: 20): Container(),
                 ],
               ),
             ),
