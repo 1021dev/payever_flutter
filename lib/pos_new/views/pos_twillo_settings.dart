@@ -199,9 +199,10 @@ class _PosTwilioScreenState extends State<PosTwilioScreen> {
                         Expanded(
                           child: Row(
                             children: <Widget>[
-                              Icon(
-                                Icons.phone_iphone,
-                                size: 16,
+                              SvgPicture.asset(
+                                'assets/images/twilio.svg',
+                                width: 16,
+                                height: 16,
                               ),
                               Padding(
                                 padding: EdgeInsets.only(left: 8),

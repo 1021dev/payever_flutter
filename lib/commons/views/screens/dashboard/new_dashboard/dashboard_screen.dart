@@ -730,6 +730,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         }
                       },
                       onSubmitted: (val) async {
+                        if (val.length == 0) {
+                          FocusScope.of(context).unfocus();
+                          return;
+                        }
                         final result = await Navigator.push(
                           context,
                           PageTransition(

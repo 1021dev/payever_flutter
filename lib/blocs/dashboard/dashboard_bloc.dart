@@ -300,7 +300,7 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
       });
     });
 
-    Terminal activeTerminal = terminals.where((element) => element.active).toList().first;
+    Terminal activeTerminal = terminals.firstWhere((element) => element.active);
     yield state.copyWith(activeTerminal: activeTerminal, terminalList: terminals, isPosLoading: false);
     if (this.isBroadcast) {
       add(FetchProducts(business: activeBusiness));

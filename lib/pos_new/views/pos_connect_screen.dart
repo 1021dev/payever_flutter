@@ -16,10 +16,10 @@ import 'pos_device_payment_settings.dart';
 bool _isPortrait;
 bool _isTablet;
 
-Map<String, Icon> icons = {
-  'device-payments': Icon(Icons.phone_iphone, size: 24,),
-  'qr': Icon(Icons.phone_iphone, size: 24,),
-  'twilio': Icon(Icons.phone_iphone, size: 24,),
+Map<String, String> icons = {
+  'device-payments': 'assets/images/device.svg',
+  'qr': 'assets/images/qr-code.svg',
+  'twilio': 'assets/images/twilio.svg',
 
 };
 class PosConnectScreen extends StatefulWidget {
@@ -218,9 +218,10 @@ class _PosConnectScreenState extends State<PosConnectScreen> {
                                     Expanded(
                                       child: Row(
                                         children: <Widget>[
-                                          Icon(
-                                            Icons.phone_iphone,
-                                            size: 16,
+                                          SvgPicture.asset(
+                                            icons[communications[index].integration.name],
+                                            height: 16,
+                                            width: 16,
                                           ),
                                           Padding(
                                             padding: EdgeInsets.only(left: 8),

@@ -181,7 +181,7 @@ class _PosQRSettingsState extends State<PosQRSettings> {
                 Row(
                   children: <Widget>[
                     SvgPicture.asset(
-                      'assets/images/qr.svg',
+                      'assets/images/qr-code.svg',
                       height: 20,
                       width: 20,
                       color: Colors.white,
