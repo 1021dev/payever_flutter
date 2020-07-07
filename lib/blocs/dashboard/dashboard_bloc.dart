@@ -301,7 +301,9 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
 
     Terminal activeTerminal = terminals.where((element) => element.active).toList().first;
     yield state.copyWith(activeTerminal: activeTerminal, terminalList: terminals, isPosLoading: false);
-    add(FetchProducts(business: activeBusiness));
+    if (this.isBroadcast) {
+      add(FetchProducts(business: activeBusiness));
+    }
   }
 
   Future<dynamic> fetchDaily(Business currentBusiness) {

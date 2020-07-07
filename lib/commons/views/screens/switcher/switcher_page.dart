@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/models/fetchwallpaper.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/blur_effect_view.dart';
+import 'package:payever/commons/views/screens/login/login_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 
@@ -26,8 +28,6 @@ const double _heightFactorPhone = 0.07;
 bool _isTablet = false;
 bool _isPortrait = true;
 
-SwitchParts parts = SwitchParts();
-
 class SwitcherScreen extends StatefulWidget {
   SwitcherScreen();
 
@@ -35,31 +35,15 @@ class SwitcherScreen extends StatefulWidget {
   createState() => _SwitcherScreenState();
 }
 
-class _SwitcherScreenState extends State<SwitcherScreen>
-    implements LoadStateListener, AuthStateListener {
-//  String _userLogo = "";
-  bool _moreSelected = false;
-  bool _loadPersonal = false;
-  bool _loadBusiness = false;
+class _SwitcherScreenState extends State<SwitcherScreen> {
 
-//  bool _businessActiveImage = false;
-  bool _isLoad = false;
-
+  bool isSetLanguage = false;
   SwitcherScreenBloc screenBloc = SwitcherScreenBloc();
-
-  _SwitcherScreenState() {
-    print("Switcher");
-    var auth = AuthStateProvider();
-    auth.subscribe(this);
-    var load = LoadStateProvider();
-    load.subscribe(this);
-  }
 
   @override
   void initState() {
     super.initState();
     screenBloc.add(SwitcherScreenInitialEvent());
-    parts = SwitchParts();
   }
 
   @override
@@ -73,6 +57,41 @@ class _SwitcherScreenState extends State<SwitcherScreen>
         : MediaQuery.of(context).size.height);
     _isTablet = Measurements.width < 600 ? false : true;
 
+    return BlocListener(
+      bloc: screenBloc,
+      listener: (BuildContext context, SwitcherScreenState state) async {
+        if (state is SwitcherScreenStateFailure) {
+          Navigator.pushReplacement(
+            context,
+            PageTransition(
+              child: LoginScreen(),
+              type: PageTransitionType.fade,
+            ),
+          );
+        } else if (state is SwitcherScreenStateSuccess) {
+//          Provider.of<GlobalStateModel>(context,listen: false)
+//              .setCurrentBusiness(state.business);
+//          Provider.of<GlobalStateModel>(context,listen: false)
+//              .setCurrentWallpaper('$wallpaperBase${state.wallpaper.currentWallpaper.wallpaper}');
+//          Navigator.pop(context, 'changed');
+        }
+      },
+      child: BlocBuilder<SwitcherScreenBloc, SwitcherScreenState>(
+        bloc: screenBloc,
+        builder: (BuildContext context, SwitcherScreenState state) {
+          if (!isSetLanguage && state.logUser != null) {
+            Language.language = state.logUser.language;
+            Language(context);
+            Measurements.loadImages(context);
+            isSetLanguage = true;
+          }
+          return _body(state);
+        },
+      ),
+    );
+  }
+
+  Widget _body(SwitcherScreenState state) {
     return Stack(
       children: <Widget>[
         Positioned(
@@ -84,10 +103,12 @@ class _SwitcherScreenState extends State<SwitcherScreen>
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width + 200,
             decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: NetworkImage(
-                        "${Env.cdn}/images/commerceos-background.jpg"),
-                    fit: BoxFit.cover)),
+              image: DecorationImage(
+                image: NetworkImage(
+                    '${Env.cdn}/images/commerceos-background.jpg'),
+                fit: BoxFit.cover,
+              ),
+            ),
             child: BlurEffectView(
               blur: 5,
               radius: 0,
@@ -101,7 +122,7 @@ class _SwitcherScreenState extends State<SwitcherScreen>
         Scaffold(
           backgroundColor: Colors.transparent,
           body: AnimatedOpacity(
-            child: _isLoad ? Switcher() : Wait(),
+            child: state.isLoading ? Wait() : Switcher(screenBloc: screenBloc,),
             duration: Duration(milliseconds: 500),
             opacity: 1.0,
           ),
@@ -109,47 +130,13 @@ class _SwitcherScreenState extends State<SwitcherScreen>
       ],
     );
   }
-
-  @override
-  void onLoadStateChanged(LoadState state) {
-    setState(() => _isLoad = true);
-  }
-
-  @override
-  void onAuthStateChanged(AuthState state) {}
-
-  Future getBusiness() async {
-    SharedPreferences.getInstance().then((preferences) {
-      String token = preferences.getString(GlobalUtils.TOKEN);
-      if (token.length > 0) {
-        return RestDataSource().getUser(token, context).then((dynamic result) {
-          parts._logUser = User.map(result);
-          preferences.setString(GlobalUtils.LANGUAGE, parts._logUser.language);
-          Language.language = parts._logUser.language;
-          Language(context);
-          Measurements.loadImages(context);
-          return RestDataSource()
-              .getBusinesses(token, context)
-              .then((dynamic result) {
-            result.forEach((item) {
-              parts.businesses.add(Business.map(item));
-            });
-            return true;
-          }).catchError((e) {});
-        }).catchError((e) {
-          print('handle error on getMenuProfileData $e');
-        });
-      } else {
-        return false;
-      }
-    });
-  }
 }
 
 class GridItems extends StatefulWidget {
   final Business business;
-
-  GridItems({this.business});
+  final Function onTap;
+  final bool isLoading;
+  GridItems({this.business, this.onTap, this.isLoading = false});
 
   @override
   createState() => _GridItemsState();
@@ -159,7 +146,6 @@ class _GridItemsState extends State<GridItems> {
   double itemsHeight = (Measurements.height * 0.08);
 
   bool haveImage;
-  bool _isLoading = false;
   String imageURL;
 
   @override
@@ -190,9 +176,9 @@ class _GridItemsState extends State<GridItems> {
                     child: CustomCircleAvatar(
                         widget.business.logo != null
                             ? widget.business.logo
-                            : "business",
+                            : 'business',
                         widget.business.name)),
-                _isLoading
+                widget.isLoading
                     ? Center(child: CircularProgressIndicator())
                     : Container(),
               ],
@@ -205,28 +191,7 @@ class _GridItemsState extends State<GridItems> {
                 ))
           ],
         ),
-        onTap: () {
-          setState(() {
-            _isLoading = true;
-          });
-          parts.fetchWallpaper(widget.business.id, context).then((img) {
-            parts.getWidgets(widget.business.id, context).then((onValue) {
-              Provider.of<GlobalStateModel>(context,listen: false)
-                  .setCurrentBusiness(widget.business);
-              SharedPreferences.getInstance().then((p) {
-                Provider.of<GlobalStateModel>(context,listen: false)
-                    .setCurrentWallpaper(p.getString(GlobalUtils.WALLPAPER));
-
-                Navigator.pushReplacement(
-                    context,
-                    PageTransition(
-                        //child:DashboardScreen(GlobalUtils.ActiveToken,img,widget.business,parts._widgets,null),
-                        child: DashboardScreenInit(),
-                        type: PageTransitionType.fade));
-              });
-            });
-          });
-        },
+        onTap: widget.onTap,
       ),
     );
   }
@@ -237,47 +202,7 @@ class Wait extends StatefulWidget {
   _WaitState createState() => _WaitState();
 }
 
-class _WaitState extends State<Wait> implements LoadStateListener {
-  _WaitState() {
-    RestDataSource api = RestDataSource();
-//    Future<NetworkImage> getImage(String url) async {
-//      return NetworkImage(url);
-//    }
-
-    SharedPreferences.getInstance().then((preferences) {
-      String token = preferences.getString(GlobalUtils.TOKEN);
-      if (token.length > 0) {
-        api.getUser(token, context).then((dynamic result) {
-          parts._logUser = User.map(result);
-          preferences.setString(GlobalUtils.LANGUAGE, parts._logUser.language);
-          Language.language = parts._logUser.language;
-          Language(context);
-          Measurements.loadImages(context);
-          api.getBusinesses(token, context).then((dynamic result) {
-            result.forEach((item) {
-              parts.businesses.add(Business.map(item));
-            });
-            if (parts.businesses != null) {
-              parts.businesses.forEach((b) {
-                if (b.active) {
-                  parts._active = b;
-                }
-                parts._busWidgets.add(GridItems(business: b));
-              });
-            }
-            parts.grid = new CustomGrid();
-            var authStateProvider = LoadStateProvider();
-            authStateProvider.notify(LoadState.LOADED).then((bool r) {
-              var authStateProvider = LoadStateProvider();
-              authStateProvider.dispose(this);
-            });
-          });
-        }).catchError((e) {
-          print('handle error on getMenuProfileData $e');
-        });
-      }
-    });
-  }
+class _WaitState extends State<Wait> {
 
   @override
   Widget build(BuildContext context) {
@@ -285,20 +210,16 @@ class _WaitState extends State<Wait> implements LoadStateListener {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Center(
-          child: Text(""),
+          child: CircularProgressIndicator(),
         )
       ],
     );
   }
-
-  @override
-  void onLoadStateChanged(LoadState state) {
-    print("Loaded");
-  }
 }
 
 class Switcher extends StatefulWidget {
-  Switcher();
+  final SwitcherScreenBloc screenBloc;
+  Switcher({this.screenBloc});
 
   @override
   _SwitcherState createState() => _SwitcherState();
@@ -306,50 +227,13 @@ class Switcher extends StatefulWidget {
 
 class _SwitcherState extends State<Switcher> {
   bool _moreSelected = false;
-  bool _loadPersonal = false;
-  bool _loadBusiness = false;
-
-//  bool _businessActiveImage = false;
-
-  void goPersonalDashDummy() {
-    setState(() => _loadPersonal = false);
-  }
-
-  void goPersonalDash() {
-    String wallpaperId;
-    RestDataSource api = RestDataSource();
-    api
-        .getWallpaperPersonal(GlobalUtils.activeToken.accessToken, context)
-        .then((dynamic obj) {
-      wallpaperId = obj[GlobalUtils.CURRENT_WALLPAPER];
-      print(wallpaperId);
-      api
-          .getWidgetsPersonal(GlobalUtils.activeToken.accessToken, context)
-          .then((dynamic obj) {
-        obj.forEach((item) {
-          parts._widgets.add(AppWidget.map(item));
-        });
-        Navigator.pushReplacement(
-            context,
-            PageTransition(
-                child: DashboardScreenInit(),
-                // child:DashboardScreen(
-                //   GlobalUtils.ActiveToken,
-                //   wallpaperId.isEmpty? NetworkImage(WALLPAPER_BASE + wallpaperId):AssetImage("images/loginHorizontalTablet.png"),
-                //   null,
-                //   parts._widgets,
-                //   parts._logUser),
-                type: PageTransitionType.fade));
-      }).catchError((onError) {
-        print("wigets $onError");
-      });
-    }).catchError((onError) {
-      print("wallpaper $onError");
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
+    Business active;
+    if (widget.screenBloc.state.businesses.length > 0) {
+      active = widget.screenBloc.state.businesses.firstWhere((element) => element.active);
+    }
     return Column(
       children: <Widget>[
         AnimatedContainer(
@@ -363,259 +247,129 @@ class _SwitcherState extends State<Switcher> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-//              Container(
-//                child: Column(
-//                  mainAxisSize: MainAxisSize.max,
-//                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                  children: <Widget>[
-//                    Text("Personal"),
-//                    Padding(
-//                      padding: EdgeInsets.only(
-//                          top: (Measurements.height *
-//                                  (_isTablet
-//                                      ? _heightFactorTablet
-//                                      : _heightFactorPhone)) /
-//                              3),
-//                    ),
-//                    InkWell(
-//                      highlightColor: Colors.transparent,
-//                      child: Stack(
-//                        alignment: Alignment.center,
-//                        children: <Widget>[
-//                          CustomCircleAvatar(
-//                              parts._logUser.logo != null
-//                                  ? parts._logUser.logo
-//                                  : "user",
-//                              parts._logUser.firstName),
-//                          _loadPersonal
-//                              ? Stack(
-//                                  alignment: Alignment.center,
-//                                  children: <Widget>[
-//                                    Container(
-//                                      height: Measurements.height * 0.08,
-//                                      width: Measurements.height * 0.08,
-//                                      decoration: BoxDecoration(
-//                                          shape: BoxShape.circle,
-//                                          color: Colors.black.withOpacity(0.2)),
-//                                    ),
-//                                    Container(
-//                                      child: CircularProgressIndicator(),
-//                                    )
-//                                  ],
-//                                )
-//                              : Container(),
-//                        ],
-//                      ),
-//                      onTap: () {
-//                        print("onIconSelect - personal");
-//                        setState(() => _loadPersonal = true);
-//                        goPersonalDashDummy();
-//                      },
-//                    ),
-//                    Padding(
-//                      padding: EdgeInsets.only(
-//                          top: (Measurements.height *
-//                                  (_isTablet
-//                                      ? _heightFactorTablet
-//                                      : _heightFactorPhone)) /
-//                              3),
-//                    ),
-//                    InkWell(
-//                      highlightColor: Colors.transparent,
-//                      child: Container(
-//                        height: 48,
-//                        alignment: Alignment.center,
-//                        child: Text(parts._logUser.firstName),
-//                      ),
-//                      onTap: () {
-//                        print("onTextSelect - personal");
-//                        setState(() => _loadPersonal = true);
-//                        goPersonalDashDummy();
-//                      },
-//                    ),
-//                  ],
-//                ),
-//              ),
-              parts.businesses != null
+              widget.screenBloc.state.businesses.length > 0
                   ? Container(
-//                      padding: EdgeInsets.only(
-//                          left: (Measurements.width * (_isTablet ? 0.2 : 0.2))),
-                      child: Column(
-                        children: <Widget>[
-                          Text("BUSINESS", style: TextStyle(
-                            color: Colors.white.withAlpha(200)
-                          ),),
-                          Padding(
-                            padding: EdgeInsets.only(
-                                top: (Measurements.height *
-                                        (_isTablet
-                                            ? _heightFactorTablet
-                                            : _heightFactorPhone)) /
-                                    3),
-                          ),
-                          InkWell(
-                            highlightColor: Colors.transparent,
-                            child: Stack(
+                  child: Column(
+                    children: <Widget>[
+                      Text('BUSINESS', style: TextStyle(
+                          color: Colors.white.withAlpha(200)
+                      ),),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            top: (Measurements.height *
+                                (_isTablet
+                                    ? _heightFactorTablet
+                                    : _heightFactorPhone)) /
+                                3),
+                      ),
+                      InkWell(
+                        highlightColor: Colors.transparent,
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: <Widget>[
+                            CustomCircleAvatar(
+                                active.logo != null
+                                    ? active.logo
+                                    : 'business',
+                                active.name),
+                            widget.screenBloc.state.isLoading
+                                ? Stack(
                               alignment: Alignment.center,
                               children: <Widget>[
-                                CustomCircleAvatar(
-                                    parts._active.logo != null
-                                        ? parts._active.logo
-                                        : "business",
-                                    parts._active.name),
-                                _loadBusiness
-                                    ? Stack(
-                                        alignment: Alignment.center,
-                                        children: <Widget>[
-                                          Container(
-                                            height: Measurements.height * 0.08,
-                                            width: Measurements.height * 0.08,
-                                            decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color: Colors.black
-                                                    .withOpacity(0.2)),
-                                          ),
-                                          Container(
-                                            child: CircularProgressIndicator(),
-                                          )
-                                        ],
-                                      )
-                                    : Container(),
+                                Container(
+                                  height: Measurements.height * 0.08,
+                                  width: Measurements.height * 0.08,
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.black
+                                          .withOpacity(0.2)),
+                                ),
+                                Container(
+                                  child: CircularProgressIndicator(),
+                                )
+                              ],
+                            )
+                                : Container(),
+                          ],
+                        ),
+                        onTap: () {
+                          print('onIconSelect - business');
+                          widget.screenBloc.add(SwitcherSetBusinessEvent(business: active));
+                        },
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            top: (Measurements.height *
+                                (_isTablet
+                                    ? _heightFactorTablet
+                                    : _heightFactorPhone)) /
+                                3),
+                      ),
+                      widget.screenBloc.state.businesses.length > 0
+                          ? InkWell(
+                        key: GlobalKeys.allButton,
+                        highlightColor: Colors.transparent,
+                        child: Chip(
+                          backgroundColor:
+                          Colors.black.withOpacity(0.4),
+                          label: widget.screenBloc.state.businesses.length > 1
+                              ? Container(
+                            child: Row(
+                              children: <Widget>[
+                                Text(
+                                    'All ${widget.screenBloc.state.businesses.length}'),
+                                Icon(!_moreSelected
+                                    ? IconData(
+                                  58131,
+                                  fontFamily:
+                                  'MaterialIcons',
+                                )
+                                    : IconData(
+                                  58134,
+                                  fontFamily:
+                                  'MaterialIcons',
+                                ),
+                                ),
                               ],
                             ),
-                            onTap: () {
-                              print("onIconSelect - business");
-                              setState(() => _loadBusiness = true);
-                              parts
-                                  .fetchWallpaper(parts._active.id, context)
-                                  .then((img) {
-                                parts
-                                    .getWidgets(parts._active.id, context)
-                                    .then((onValue) {
-                                  Provider.of<GlobalStateModel>(context, listen: false)
-                                      .setCurrentBusiness(parts._active);
-                                  SharedPreferences.getInstance().then((p) {
-                                    Provider.of<GlobalStateModel>(context, listen: false)
-                                        .setCurrentWallpaper(
-                                            p.getString(GlobalUtils.WALLPAPER));
-                                    Navigator.pushReplacement(
-                                        context,
-                                        PageTransition(
-                                            child: DashboardScreenInit(),
-                                            type: PageTransitionType.fade));
-                                  });
-                                });
-                              });
-                            },
+                          )
+                              : Container(
+                            child: Row(
+                              children: <Widget>[
+                                Text(active.name),
+                                Icon(!_moreSelected
+                                    ? IconData(58131,
+                                    fontFamily:
+                                    'MaterialIcons')
+                                    : IconData(58134,
+                                    fontFamily:
+                                    'MaterialIcons'))
+                              ],
+                            ),
                           ),
-                          Padding(
-                            padding: EdgeInsets.only(
-                                top: (Measurements.height *
-                                        (_isTablet
-                                            ? _heightFactorTablet
-                                            : _heightFactorPhone)) /
-                                    3),
-                          ),
-                          (parts.businesses != null)
-                              ? InkWell(
-                                  key: GlobalKeys.allButton,
-                                  highlightColor: Colors.transparent,
-                                  child: Chip(
-                                    backgroundColor:
-                                        Colors.black.withOpacity(0.4),
-                                    label: parts.businesses.length > 1
-                                        ? Container(
-                                            child: Row(
-                                              children: <Widget>[
-                                                Text(
-                                                    "All ${parts.businesses.length}"),
-                                                Icon(!_moreSelected
-                                                    ? IconData(58131,
-                                                        fontFamily:
-                                                            'MaterialIcons')
-                                                    : IconData(58134,
-                                                        fontFamily:
-                                                            'MaterialIcons'))
-                                              ],
-                                            ),
-                                          )
-                                        : Container(
-                                            child: Row(
-                                              children: <Widget>[
-                                                Text(parts._active.name),
-                                                Icon(!_moreSelected
-                                                    ? IconData(58131,
-                                                        fontFamily:
-                                                            'MaterialIcons')
-                                                    : IconData(58134,
-                                                        fontFamily:
-                                                            'MaterialIcons'))
-                                              ],
-                                            ),
-                                          ),
-                                  ),
-                                  onTap: () {
-                                    print("onTextSelect - personal");
-                                    setState(
-                                        () => _moreSelected = !_moreSelected);
-                                  },
-                                )
-                              : Container(),
-                        ],
-                      ))
+                        ),
+                        onTap: () {
+                          print('onTextSelect - personal');
+                          setState(
+                                  () => _moreSelected = !_moreSelected);
+                        },
+                      )
+                          : Container(),
+                    ],
+                  ))
                   : Container(),
             ],
           ),
         ),
-        !_moreSelected ? Container() : Expanded(child: CustomGrid())
+        !_moreSelected
+            ? Container()
+            : Expanded(
+          child: CustomGrid(
+            screenBloc: widget.screenBloc,
+          ),
+        ),
       ],
     );
-  }
-}
-
-class SwitchParts {
-  User _logUser;
-  List<Business> businesses = List();
-  Business _active;
-  Widget grid;
-  List<GridItems> _busWidgets = List();
-  List<AppWidget> _widgets = List();
-
-  Future<String> fetchWallpaper(String id, BuildContext context) async {
-    FetchWallpaper fetchWallpaper;
-    SharedPreferences preferences;
-    RestDataSource api = new RestDataSource();
-    await api
-        .getWallpaper(id, GlobalUtils.activeToken.accessToken, context)
-        .then((dynamic obj) {
-      fetchWallpaper = FetchWallpaper.map(obj);
-      SharedPreferences.getInstance().then((p) {
-        preferences = p;
-        preferences.setString(
-            GlobalUtils.WALLPAPER, wallpaperBase + fetchWallpaper.currentWallpaper.wallpaper);
-        preferences.setString(GlobalUtils.BUSINESS, id);
-        print(id);
-      });
-    }).catchError((onError) {
-      print("ERROR ---- $onError");
-    });
-    return wallpaperBase + fetchWallpaper.currentWallpaper.id;
-  }
-
-  Future<List<AppWidget>> getWidgets(String id, BuildContext context) async {
-    RestDataSource api = RestDataSource();
-    await api
-        .getWidgets(id, GlobalUtils.activeToken.accessToken, context)
-        .then((dynamic obj) {
-      parts._widgets = List();
-      obj.forEach((item) {
-        parts._widgets.add(AppWidget.map(item));
-      });
-    }).catchError((onError) {
-      print("ERROR ---- $onError");
-    });
-
-    return parts._widgets;
   }
 }
 
@@ -631,11 +385,11 @@ class CustomCircleAvatar extends StatelessWidget {
     bool _haveImage;
     String displayName;
 
-    if (url.contains("user") || url.contains("business")) {
+    if (url.contains('user') || url.contains('business')) {
       _haveImage = false;
-      if (name.contains(" ")) {
+      if (name.contains(' ')) {
         displayName = name.substring(0, 1);
-        displayName = displayName + name.split(" ")[1].substring(0, 1);
+        displayName = displayName + name.split(' ')[1].substring(0, 1);
       } else {
         displayName = name.substring(0, 1) + name.substring(name.length - 1);
         displayName = displayName.toUpperCase();
@@ -649,44 +403,58 @@ class CustomCircleAvatar extends StatelessWidget {
       child: CircleAvatar(
         radius: Measurements.height * 0.04,
         backgroundColor:
-            _haveImage ? Colors.transparent : Colors.grey.withOpacity(0.4),
+        _haveImage ? Colors.transparent : Colors.grey.withOpacity(0.4),
         child: _haveImage
             ? CircleAvatar(
-                radius: Measurements.height * 0.08,
-                backgroundImage: image,
-                backgroundColor: Colors.transparent,
-              )
+          radius: Measurements.height * 0.08,
+          backgroundImage: image,
+          backgroundColor: Colors.transparent,
+        )
             : Text(displayName,
-                style:
-                    _isTablet ? Styles.noAvatarTablet : Styles.noAvatarPhone),
+            style:
+            _isTablet ? Styles.noAvatarTablet : Styles.noAvatarPhone),
       ),
     );
   }
 }
 
 class CustomGrid extends StatefulWidget {
+  final SwitcherScreenBloc screenBloc;
+
+  CustomGrid({this.screenBloc,});
   @override
   _CustomGridState createState() => _CustomGridState();
 }
 
 class _CustomGridState extends State<CustomGrid> {
+  Business selected;
   @override
   Widget build(BuildContext context) {
     List<Widget> business = List();
     int index = 0;
     business.add(
         Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-      Container(
-        child: Text("Business"),
-        padding: EdgeInsets.symmetric(vertical: Measurements.height * 0.01),
-      )
-    ]));
-    parts.businesses.forEach((f) {
-      business.add(Container(
-          key: Key("$index.switcher.icon"),
+          Container(
+            child: Text('Business'),
+            padding: EdgeInsets.symmetric(vertical: Measurements.height * 0.01),
+          )
+        ]));
+    widget.screenBloc.state.businesses.forEach((f) {
+      business.add(
+        Container(
+          key: Key('$index.switcher.icon'),
           child: GridItems(
             business: f,
-          )));
+            onTap: () {
+              setState(() {
+                selected = f;
+              });
+              widget.screenBloc.add(SwitcherSetBusinessEvent(business: f));
+            },
+            isLoading: f == selected,
+          ),
+        ),
+      );
       index++;
     });
     return ListView(
@@ -703,5 +471,3 @@ class _CustomGridState extends State<CustomGrid> {
     );
   }
 }
-
-//___
