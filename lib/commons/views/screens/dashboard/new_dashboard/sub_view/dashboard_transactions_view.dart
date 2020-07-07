@@ -38,9 +38,11 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
   @override
   Widget build(BuildContext context) {
     String currency = '';
-    if (widget.lastMonth.length > 0) {
+    if (widget.lastYear.length > 0) {
       NumberFormat format = NumberFormat();
-      currency = format.simpleCurrencySymbol(widget.lastMonth.last.currency);
+      currency = format.simpleCurrencySymbol(widget.lastYear.last.currency);
+
+      print('Last monthly => ${widget.lastYear.last.amount}');
     }
     if (widget.businessApps.setupStatus == 'completed') {
       return BlurEffectView(
@@ -86,7 +88,7 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                                   color: Colors.black.withAlpha(100)
                               ),
                               child: Center(
-                                child: Text("Open",
+                                child: Text('Open',
                                   style: TextStyle(
                                       fontSize: 10,
                                       color: Colors.white
@@ -108,7 +110,7 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                                 Expanded(
                                   flex: 1,
                                   child: Center(
-                                    child: Text("1",
+                                    child: Text('1',
                                       style: TextStyle(
                                           fontSize: 10,
                                           color: Colors.white
@@ -173,10 +175,10 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                     ],
                   ): Container(),
                   !widget.isLoading ?  SizedBox(height: 8): Container(),
-                  widget.lastMonth.length > 0 ?  Row(
+                  widget.lastYear.length > 0 ?  Row(
                     children: [
                       Text(
-                        '${widget.lastMonth.last.amount} $currency',
+                        '${widget.lastYear.last.amount} $currency',
                         textAlign: TextAlign.start,
                         style: TextStyle(
                           fontSize: 16,
@@ -251,7 +253,7 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                       },
                       child: Center(
                         child: Text(
-                          !widget.appWidget.install ? "Get started" : "Continue setup process",
+                          !widget.appWidget.install ? 'Get started' : 'Continue setup process',
                           softWrap: true,
                           style: TextStyle(
                               color: Colors.white, fontSize: 12),
@@ -271,7 +273,7 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                       },
                       child: Center(
                         child: Text(
-                          "Learn more",
+                          'Learn more',
                           softWrap: true,
                           style: TextStyle(
                               color: Colors.white, fontSize: 12),

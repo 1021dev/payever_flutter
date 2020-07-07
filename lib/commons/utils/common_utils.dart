@@ -782,6 +782,52 @@ class GlobalUtils {
   // dashboard_
   static const String CURRENT_WALLPAPER = 'currentWallpaper';
 
+  // Connect
+  static const String DB_CONNECT_INTEGRATION = 'integration';
+  static const String DB_CONNECT_CREATED_AT = 'createdAt';
+  static const String DB_CONNECT_UPDATED_AT = 'updatedAt';
+  static const String DB_CONNECT_INSTALLED = 'installed';
+  static const String DB_CONNECT_V = '__v';
+  static const String DB_CONNECT_ID = '_id';
+  static const String DB_CONNECT_CATEGORY = 'category';
+  static const String DB_CONNECT_ENABLED = 'enabled';
+  static const String DB_CONNECT_NAME = 'name';
+  static const String DB_CONNECT_ORDER = 'order';
+  static const String DB_CONNECT = 'connect';
+  static const String DB_CONNECT_TIMES_INSTALLED = 'timesInstalled';
+  static const String DB_CONNECT_ALLOWED_BUSINESSES = 'allowedBusinesses';
+  static const String DB_CONNECT_VERSIONS = 'versions';
+  static const String DB_CONNECT_REVIEWS = 'reviews';
+  static const String DB_CONNECT_DISPLAY_OPTIONS = 'displayOptions';
+  static const String DB_CONNECT_INSTALLATION_OPTIONS = 'installationOptions';
+  static const String DB_CONNECT_ICON = 'icon';
+  static const String DB_CONNECT_TITLE = 'title';
+  static const String DB_CONNECT_APP_SUPPORT = 'appSupport';
+  static const String DB_CONNECT_COUNTRY_LIST = 'countryList';
+  static const String DB_CONNECT_DESCRIPTION = 'description';
+  static const String DB_CONNECT_DEVELOPER = 'developer';
+  static const String DB_CONNECT_LANGUAGES = 'languages';
+  static const String DB_CONNECT_LINKS = 'links';
+  static const String DB_CONNECT_OPTION_ICON = 'optionIcon';
+  static const String DB_CONNECT_PRICE = 'price';
+  static const String DB_CONNECT_PRICE_LINK = 'pricingLink';
+  static const String DB_CONNECT_WEBSITE = 'website';
+  static const String DB_CONNECT_RATING = 'rating';
+  static const String DB_CONNECT_REVIEW_DATE = 'reviewDate';
+  static const String DB_CONNECT_TEXT = 'text';
+  static const String DB_CONNECT_USER_FULL_NAME = 'userFullName';
+  static const String DB_CONNECT_USER_ID = 'userId';
+  static const String DB_CONNECT_TYPE = 'type';
+  static const String DB_CONNECT_URL = 'url';
+
+
+  num rating;
+  String reviewDate;
+  String text;
+  String title;
+  String userFullName;
+  String userId;
+
   // fetch wallpaper
   static const String DB_BUSINESS_WALLPAPER_ID = '_id';
   static const String DB_BUSINESS_WALLPAPER_BUSINESS = 'business';

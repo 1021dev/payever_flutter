@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:payever/apis/baseClient.dart';
+import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/network/rest_ds.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/env.dart';
@@ -545,6 +546,23 @@ class ApiService {
       print('$TAG - getTutorials()');
       dynamic response = await _client.getTypeless(
           '$widgetsUrl$id/widget-tutorial',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getConnects(String token, String id) async {
+    try {
+      print('$TAG - getConnects()');
+      dynamic response = await _client.getTypeless(
+          '${Env.connect}/api/business/$id/integration/not-installed/random/filtered-by-country',
           headers: {
             HttpHeaders.authorizationHeader: 'Bearer $token',
             HttpHeaders.contentTypeHeader: 'application/json',
