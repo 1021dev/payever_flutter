@@ -62,7 +62,8 @@ class _DashboardSettingsViewState extends State<DashboardSettingsView> {
                         color: Colors.black.withAlpha(100)
                     ),
                     child: Center(
-                      child: Text("Open",
+                      child: Text(
+                        Language.getCommerceOSStrings('actions.open'),
                         style: TextStyle(
                             fontSize: 10,
                             color: Colors.white

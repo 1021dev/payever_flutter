@@ -88,10 +88,11 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                                   color: Colors.black.withAlpha(100)
                               ),
                               child: Center(
-                                child: Text('Open',
+                                child: Text(
+                                  'Open',
                                   style: TextStyle(
-                                      fontSize: 10,
-                                      color: Colors.white
+                                    fontSize: 10,
+                                    color: Colors.white,
                                   ),
                                 ),
                               ),
@@ -110,7 +111,8 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                                 Expanded(
                                   flex: 1,
                                   child: Center(
-                                    child: Text('1',
+                                    child: Text(
+                                      '1',
                                       style: TextStyle(
                                           fontSize: 10,
                                           color: Colors.white

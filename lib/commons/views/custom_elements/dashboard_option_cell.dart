@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:payever/commons/utils/translations.dart';
 
 class DashboardOptionCell extends StatelessWidget {
   @override
@@ -50,7 +51,8 @@ class DashboardOptionCell extends StatelessWidget {
                           color: Colors.white12
                       ),
                       child: Center(
-                        child: Text("Open",
+                        child: Text(
+                          Language.getCommerceOSStrings('actions.open'),
                           style: TextStyle(
                               fontSize: 10,
                               color: Colors.white

@@ -614,7 +614,8 @@ class _PosScreenState extends State<PosScreen> {
                                           color: Colors.black.withOpacity(0.4)
                                       ),
                                       child: Center(
-                                        child: Text("Open",
+                                        child: Text(
+                                          Language.getCommerceOSStrings('actions.open'),
                                           style: TextStyle(
                                               fontSize: 10,
                                               color: Colors.white

@@ -64,7 +64,8 @@ class TutorialCell extends StatelessWidget {
                             size: 12,
                           ),
                           SizedBox(width: 4),
-                          Text("Open",
+                          Text(
+                            Language.getCommerceOSStrings('actions.open'),
                             style: TextStyle(
                                 fontSize: 10,
                                 color: Colors.white
