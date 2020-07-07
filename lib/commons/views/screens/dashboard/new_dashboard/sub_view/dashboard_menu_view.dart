@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:payever/commons/commons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DashboardMenuView extends StatelessWidget {
@@ -73,7 +74,7 @@ class DashboardMenuView extends StatelessWidget {
                         ),
                         SizedBox(width: 8,),
                         Text(
-                          "Switch Business",
+                          Language.getCommerceOSStrings('dashboard.profile_menu.switch_profile'),
                           style: TextStyle(
                               fontSize: 14,
                               color: Colors.white
@@ -105,7 +106,7 @@ class DashboardMenuView extends StatelessWidget {
                         ),
                         SizedBox(width: 8,),
                         Text(
-                          "Personal Information",
+                          Language.getSettingsStrings('info_boxes.panels.general.menu_list.personal_information.title'),
                           style: TextStyle(
                               fontSize: 14,
                               color: Colors.white
@@ -137,7 +138,7 @@ class DashboardMenuView extends StatelessWidget {
                         ),
                         SizedBox(width: 8,),
                         Text(
-                          "Add Business",
+                          Language.getCommerceOSStrings('dashboard.profile_menu.add_business'),
                           style: TextStyle(
                               fontSize: 14,
                               color: Colors.white
@@ -167,7 +168,7 @@ class DashboardMenuView extends StatelessWidget {
                         ),
                         SizedBox(width: 8,),
                         Text(
-                          "Log Out",
+                          Language.getCommerceOSStrings('dashboard.profile_menu.log_out'),
                           style: TextStyle(
                               fontSize: 14,
                               color: Colors.white
@@ -199,7 +200,7 @@ class DashboardMenuView extends StatelessWidget {
                         ),
                         SizedBox(width: 8,),
                         Text(
-                          "Contact",
+                          Language.getCommerceOSStrings('dashboard.profile_menu.contact'),
                           style: TextStyle(
                               fontSize: 14,
                               color: Colors.white
@@ -233,7 +234,7 @@ class DashboardMenuView extends StatelessWidget {
                         ),
                         SizedBox(width: 8,),
                         Text(
-                          "Feedback",
+                          Language.getCommerceOSStrings('dashboard.profile_menu.feedback'),
                           style: TextStyle(
                               fontSize: 14,
                               color: Colors.white
