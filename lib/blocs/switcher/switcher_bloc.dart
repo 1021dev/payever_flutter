@@ -50,7 +50,6 @@ class SwitcherScreenBloc extends Bloc<SwitcherScreenEvent, SwitcherScreenState> 
   }
 
   Stream<SwitcherScreenState> fetchWallPaper(Business business) async* {
-    yield state.copyWith(isLoading: true);
     dynamic wallpapersObj = await api.getWallpaper(business.id, GlobalUtils.activeToken.accessToken);
     FetchWallpaper fetchWallpaper = FetchWallpaper.map(wallpapersObj);
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -59,5 +58,6 @@ class SwitcherScreenBloc extends Bloc<SwitcherScreenEvent, SwitcherScreenState> 
     preferences.setString(GlobalUtils.BUSINESS, business.id);
 
     yield state.copyWith(wallpaper: fetchWallpaper, isLoading: false);
+    yield SwitcherScreenStateSuccess(business: business, wallpaper: fetchWallpaper);
   }
 }

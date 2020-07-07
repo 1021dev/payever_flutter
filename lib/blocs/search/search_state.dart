@@ -47,7 +47,5 @@ class SetBusinessSuccess extends SearchScreenState {
   String toString() {
     return 'SetBusinessSuccess { $wallpaper }';
   }
-
-
 }
 class SearchScreenStateFailure extends SearchScreenState {}

@@ -48,5 +48,15 @@ class SwitcherScreenState {
   }
 }
 
-class SwitcherScreenStateSuccess extends SwitcherScreenState {}
+class SwitcherScreenStateSuccess extends SwitcherScreenState {
+  final FetchWallpaper wallpaper;
+  final Business business;
+
+  SwitcherScreenStateSuccess({ this.wallpaper, this.business}) : super();
+
+  @override
+  String toString() {
+    return 'SwitcherScreenStateSuccess { $wallpaper }';
+  }
+}
 class SwitcherScreenStateFailure extends SwitcherScreenState {}

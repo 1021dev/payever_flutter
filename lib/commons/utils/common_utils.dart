@@ -10,14 +10,14 @@ import 'utils.dart';
 
 class Styles {
   static TextStyle noAvatarPhone = TextStyle(
-    color: Colors.black.withOpacity(0.7),
+    color: Colors.white.withOpacity(0.7),
     fontSize: Measurements.height * 0.035,
-    fontWeight: FontWeight.w100,
+    fontWeight: FontWeight.w500,
   );
   static TextStyle noAvatarTablet = TextStyle(
-    color: Colors.black.withOpacity(0.7),
+    color: Colors.white.withOpacity(0.7),
     fontSize: Measurements.height * 0.025,
-    fontWeight: FontWeight.w100,
+    fontWeight: FontWeight.w500,
   );
 }
 

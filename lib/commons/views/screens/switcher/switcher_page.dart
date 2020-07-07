@@ -3,21 +3,14 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
-import 'package:payever/commons/models/fetchwallpaper.dart';
+import 'package:payever/commons/views/screens/dashboard/new_dashboard/dashboard_screen.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/blur_effect_view.dart';
 import 'package:payever/commons/views/screens/login/login_page.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 
 import '../../../view_models/view_models.dart';
 import '../../../models/models.dart';
-import '../../../network/network.dart';
 import '../../../utils/utils.dart';
-import 'loader.dart';
-
-
-import 'package:payever/commons/views/screens/dashboard/new_dashboard/dashboard_screen.dart';
-//import '../dashboard/dashboard_screen_ref.dart';
 
 const double _heightFactorTablet = 0.05;
 const double _heightFactorPhone = 0.07;
@@ -69,11 +62,18 @@ class _SwitcherScreenState extends State<SwitcherScreen> {
             ),
           );
         } else if (state is SwitcherScreenStateSuccess) {
-//          Provider.of<GlobalStateModel>(context,listen: false)
-//              .setCurrentBusiness(state.business);
-//          Provider.of<GlobalStateModel>(context,listen: false)
-//              .setCurrentWallpaper('$wallpaperBase${state.wallpaper.currentWallpaper.wallpaper}');
-//          Navigator.pop(context, 'changed');
+          Provider.of<GlobalStateModel>(context,listen: false)
+              .setCurrentBusiness(state.business);
+          Provider.of<GlobalStateModel>(context,listen: false)
+              .setCurrentWallpaper('$wallpaperBase${state.wallpaper.currentWallpaper.wallpaper}');
+          Navigator.pushReplacement(
+              context,
+              PageTransition(
+                child: DashboardScreenInit(),
+                type: PageTransitionType.fade,
+              )
+          );
+
         }
       },
       child: BlocBuilder<SwitcherScreenBloc, SwitcherScreenState>(
@@ -170,14 +170,17 @@ class _GridItemsState extends State<GridItems> {
               alignment: Alignment.center,
               children: <Widget>[
                 Container(
-                    alignment: Alignment.center,
-                    padding: EdgeInsets.symmetric(
-                        vertical: Measurements.height * 0.01),
-                    child: CustomCircleAvatar(
-                        widget.business.logo != null
-                            ? widget.business.logo
-                            : 'business',
-                        widget.business.name)),
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.symmetric(
+                    vertical: Measurements.height * 0.01,
+                  ),
+                  child: CustomCircleAvatar(
+                    widget.business.logo != null
+                        ? widget.business.logo
+                        : 'business',
+                    widget.business.name,
+                  ),
+                ),
                 widget.isLoading
                     ? Center(child: CircularProgressIndicator())
                     : Container(),
@@ -227,6 +230,7 @@ class Switcher extends StatefulWidget {
 
 class _SwitcherState extends State<Switcher> {
   bool _moreSelected = false;
+  bool selectActive = false;
 
   @override
   Widget build(BuildContext context) {
@@ -268,11 +272,12 @@ class _SwitcherState extends State<Switcher> {
                           alignment: Alignment.center,
                           children: <Widget>[
                             CustomCircleAvatar(
-                                active.logo != null
-                                    ? active.logo
-                                    : 'business',
-                                active.name),
-                            widget.screenBloc.state.isLoading
+                              active.logo != null
+                                  ? active.logo
+                                  : 'business',
+                              active.name,
+                            ),
+                            selectActive
                                 ? Stack(
                               alignment: Alignment.center,
                               children: <Widget>[
@@ -281,7 +286,7 @@ class _SwitcherState extends State<Switcher> {
                                   width: Measurements.height * 0.08,
                                   decoration: BoxDecoration(
                                       shape: BoxShape.circle,
-                                      color: Colors.black
+                                      color: Colors.white
                                           .withOpacity(0.2)),
                                 ),
                                 Container(
@@ -294,6 +299,9 @@ class _SwitcherState extends State<Switcher> {
                         ),
                         onTap: () {
                           print('onIconSelect - business');
+                          setState(() {
+                            selectActive = true;
+                          });
                           widget.screenBloc.add(SwitcherSetBusinessEvent(business: active));
                         },
                       ),
@@ -412,7 +420,12 @@ class CustomCircleAvatar extends StatelessWidget {
         )
             : Text(displayName,
             style:
-            _isTablet ? Styles.noAvatarTablet : Styles.noAvatarPhone),
+            TextStyle(
+              color: Colors.white.withOpacity(0.7),
+              fontSize: _isTablet ? Measurements.height * 0.025: Measurements.height * 0.035,
+              fontWeight: FontWeight.w500,
+            ),
+        ),
       ),
     );
   }
