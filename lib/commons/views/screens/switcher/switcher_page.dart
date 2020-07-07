@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/models/fetchwallpaper.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/blur_effect_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -44,6 +45,8 @@ class _SwitcherScreenState extends State<SwitcherScreen>
 //  bool _businessActiveImage = false;
   bool _isLoad = false;
 
+  SwitcherScreenBloc screenBloc = SwitcherScreenBloc();
+
   _SwitcherScreenState() {
     print("Switcher");
     var auth = AuthStateProvider();
@@ -55,6 +58,7 @@ class _SwitcherScreenState extends State<SwitcherScreen>
   @override
   void initState() {
     super.initState();
+    screenBloc.add(SwitcherScreenInitialEvent());
     parts = SwitchParts();
   }
 
