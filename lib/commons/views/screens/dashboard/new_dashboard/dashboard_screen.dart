@@ -431,6 +431,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
           DashboardShopView(
             businessApps: businessApp,
             appWidget: appWidget,
+            shops: state.shops,
+            shopModel: state.activeShop,
+            isLoading: state.isLoading,
             onOpen: () {
               Provider.of<GlobalStateModel>(context,listen: false)
                   .setCurrentBusiness(state.activeBusiness);
@@ -445,7 +448,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
               );
             },
-          )
+            onTapEditShop: () {
+
+            },
+          ),
       );
     }
 

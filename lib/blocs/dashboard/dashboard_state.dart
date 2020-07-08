@@ -15,6 +15,7 @@ class DashboardScreenState {
   final FetchWallpaper wallpaper;
   final CurrentWallpaper currentWallpaper;
   final Terminal activeTerminal;
+  final ShopModel activeShop;
   final List<Terminal> terminalList;
   final double total;
   final List<AppWidget> currentWidgets;
@@ -57,6 +58,7 @@ class DashboardScreenState {
     this.lastSalesRandom = const [],
     this.connects = const [],
     this.shops = const [],
+    this.activeShop,
   });
 
   List<Object> get props => [
@@ -85,6 +87,7 @@ class DashboardScreenState {
     this.lastSalesRandom,
     this.connects,
     this.shops,
+    this.activeShop,
   ];
 
   DashboardScreenState copyWith({
@@ -113,6 +116,7 @@ class DashboardScreenState {
     List<Products> lastSalesRandom,
     List<ConnectModel> connects,
     List<ShopModel> shops,
+    ShopModel activeShop,
   }) {
     return DashboardScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -140,6 +144,7 @@ class DashboardScreenState {
       lastSalesRandom: lastSalesRandom ?? this.lastSalesRandom,
       connects: connects ?? this.connects,
       shops: shops ?? this.shops,
+      activeShop: activeShop ?? this.activeShop,
     );
   }
 }

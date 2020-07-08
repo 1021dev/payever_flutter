@@ -1,9 +1,11 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/commons/utils/env.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/views/custom_elements/dashboard_option_cell.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/blur_effect_view.dart';
+import 'package:payever/shop/models/models.dart';
 
 import '../../../../../../products/models/models.dart';
 
@@ -11,24 +13,48 @@ class DashboardShopView extends StatefulWidget {
   final VoidCallback onOpen;
   final BusinessApps businessApps;
   final AppWidget appWidget;
+  final List<ShopModel> shops;
+  final ShopModel shopModel;
+  final bool isLoading;
+  final Function onTapEditShop;
 
-  DashboardShopView({this.onOpen, this.businessApps, this.appWidget});
+  DashboardShopView({
+    this.onOpen,
+    this.businessApps,
+    this.appWidget,
+    this.shopModel,
+    this.shops = const [],
+    this.isLoading = false,
+    this.onTapEditShop,
+  });
   @override
   _DashboardShopViewState createState() => _DashboardShopViewState();
 }
 
 class _DashboardShopViewState extends State<DashboardShopView> {
+  String imageBase = Env.storage + '/images/';
   bool isExpanded = false;
   @override
   Widget build(BuildContext context) {
+    List<ShopModel> shops = widget.shops;
+    String avatarName = '';
+    if (widget.shopModel != null) {
+      String name = widget.shopModel.name;
+      if (name.contains(' ')) {
+        avatarName = name.substring(0, 1);
+        avatarName = avatarName + name.split(' ')[1].substring(0, 1);
+      } else {
+        avatarName = name.substring(0, 1) + name.substring(name.length - 1);
+        avatarName = avatarName.toUpperCase();
+      }
+    }
 
     if (widget.businessApps.setupStatus == 'completed') {
       return BlurEffectView(
-        padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
+        padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
         child: Column(
           children: [
             Container(
-              padding: EdgeInsets.fromLTRB(14, 0, 14, 0),
               child: Column(
                 children: [
                   Row(
@@ -129,10 +155,112 @@ class _DashboardShopViewState extends State<DashboardShopView> {
                       )
                     ],
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 64),
-                  )
                 ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 8),
+            ),
+            widget.isLoading ? Container(
+              height: 50,
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            ):
+            widget.shopModel != null
+                ? (Row(
+              children: <Widget>[
+                // Shop View
+                Expanded(
+                  flex: 1,
+                  child: Row(
+                    children: <Widget>[
+                      widget.shopModel.logo != null ?
+                      Container(
+                        width: 50,
+                        height: 50,
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                              image: NetworkImage('$imageBase${widget.shopModel.logo}'),
+                              fit: BoxFit.cover,
+                            )
+                        ),
+                      ):
+                      Container(
+                        child: CircleAvatar(
+                          radius: 25,
+                          backgroundColor: Colors.blueGrey.withOpacity(0.5),
+                          child: Text(
+                            avatarName,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 24,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 12),
+                      ),
+                      Expanded(
+                        child: AutoSizeText(
+                          widget.shopModel.name,
+                          maxLines: 2,
+                          minFontSize: 16,
+                          maxFontSize: 24,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 12),
+                ),
+                // Edit Button
+                Expanded(
+                  flex: 1,
+                  child: MaterialButton(
+                    onPressed: widget.onTapEditShop,
+                    color: Colors.black26,
+                    height: 60,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Container(
+                      height: 50,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.edit),
+                          SizedBox(width: 8),
+                          Text(
+                            'Edit',
+                            softWrap: true,
+                            style: TextStyle(
+                                color: Colors.white, fontSize: 16),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ))
+                : Container(
+              alignment: Alignment.centerLeft,
+              height: 50,
+              child: Text(
+                'You have no shops',
+                style: TextStyle(
+                  color: Colors.white70,
+                ),
               ),
             ),
             if (isExpanded)
@@ -144,7 +272,6 @@ class _DashboardShopViewState extends State<DashboardShopView> {
                 ),
                 child: ListView.builder(itemBuilder: _itemBuilderDDetails, itemCount: 1,physics: NeverScrollableScrollPhysics(),),
               )
-
           ],
         ),
       );

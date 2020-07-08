@@ -178,7 +178,7 @@ class _LoginState extends State<Login>
             decoration: BoxDecoration(
                 image: DecorationImage(
                     image: NetworkImage(
-                        "${Env.cdn}/images/commerceos-background.jpg"),
+                        "https://payever.azureedge.net/images/commerceos-background.jpg"),
                     fit: BoxFit.cover)),
           ),
           Positioned(

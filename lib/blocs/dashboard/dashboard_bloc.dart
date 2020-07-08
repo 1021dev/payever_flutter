@@ -33,6 +33,8 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
       yield* getTutorials(event.business);
     } else if (event is FetchProducts) {
       yield* getProductsPopularMonthRandom(event.business);
+    } else if (event is FetchShops) {
+      yield* getShops(event.business);
     }
   }
 
@@ -397,13 +399,20 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
     add(FetchTutorials(business: currentBusiness));
   }
 
-  Stream<DashboardScreenState> getShopsp(Business currentBusiness) async* {
+  Stream<DashboardScreenState> getShops(Business currentBusiness) async* {
     List<ShopModel> shops = [];
     dynamic response = await api.getShops(currentBusiness.id, GlobalUtils.activeToken.accessToken);
-    response.forEach((element) {
-      shops.add(ShopModel.toMap(element));
-    });
-    yield state.copyWith(shops: shops);
+    if (response is List) {
+      response.forEach((element) {
+        shops.add(ShopModel.toMap(element));
+      });
+    }
+    ShopModel activeShop;
+    if (shops.length > 0) {
+      activeShop = shops.firstWhere((element) => element.active);
+    }
+
+    yield state.copyWith(shops: shops, activeShop: activeShop);
     add(FetchPosEvent(business: currentBusiness));
   }
 
