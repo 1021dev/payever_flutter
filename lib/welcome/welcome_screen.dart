@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/welcome/welcome_bloc.dart';
+import 'package:payever/blocs/welcome/welcome_event.dart';
 import 'package:payever/blocs/welcome/welcome_state.dart';
 import 'package:payever/commons/commons.dart';
+import 'package:payever/transactions/views/transactions_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -29,6 +31,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   WelcomeScreenBloc screenBloc = WelcomeScreenBloc();
   @override
   void initState() {
+    screenBloc.add(WelcomeScreenInitEvent(businessId: widget.business.id, uuid: widget.businessApps.microUuid,));
     super.initState();
   }
 
@@ -61,11 +64,15 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             ),
           );
         } else if (state is WelcomeScreenStateSuccess) {
-//          Provider.of<GlobalStateModel>(context,listen: false)
-//              .setCurrentBusiness(state.business);
-//          Provider.of<GlobalStateModel>(context,listen: false)
-//              .setCurrentWallpaper('$wallpaperBase${state.wallpaper.currentWallpaper.wallpaper}');
-//          Navigator.pop(context, 'changed');
+          GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context, listen: false);
+          globalStateModel.setRefresh(true);
+          Navigator.pushReplacement(
+            context,
+            PageTransition(
+              child: TransactionScreenInit(),
+              type: PageTransitionType.fade,
+            ),
+          );
         }
       },
       child: BlocBuilder<WelcomeScreenBloc, WelcomeScreenState>(
@@ -133,13 +140,20 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         width: Measurements.width * 0.7,
                         child: MaterialButton(
                           onPressed: () {
-                            Navigator.pop(context);
+                            screenBloc.add(ToggleEvent(businessId: widget.business.id, type: widget.businessApps.code,));
                           },
                           color: Colors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: Text(
+                          child: state.isLoading ? SizedBox(
+                            child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+                              strokeWidth: 2,
+                            ),
+                            height: 24.0,
+                            width: 24.0,
+                          ) : Text(
                             Language.getWelcomeStrings('welcome.get-started'),
                             style: TextStyle(
                               color: Colors.black,

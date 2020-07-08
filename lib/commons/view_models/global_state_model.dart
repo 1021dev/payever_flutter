@@ -12,6 +12,7 @@ class GlobalStateModel extends ChangeNotifier {
   String _defaultCustomWallpaperBlur =
       "https://payever.azureedge.net/images/commerseos-background-blurred.jpg";
 
+  bool _refresh = false;
   Business _currentBusiness;
   List<AppWidget> _appWidgets;
 
@@ -25,6 +26,8 @@ class GlobalStateModel extends ChangeNotifier {
 
   String get currentWallpaperBlur =>
       _currentWallpaperBlur ?? _defaultCustomWallpaperBlur;
+
+  bool get refresh => _refresh;
 
   setCurrentWallpaper(String wallpaper, {bool notify}) {
     _currentWallpaper = wallpaper;
@@ -54,5 +57,12 @@ class GlobalStateModel extends ChangeNotifier {
     print("_appWidgets: $_appWidgets");
 
     notifyListeners();
+  }
+
+  setRefresh(bool re) {
+    _refresh = re;
+    if (re) {
+      notifyListeners();
+    }
   }
 }

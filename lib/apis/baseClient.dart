@@ -393,19 +393,6 @@ class BaseClient {
       } on DioError catch (e) {
         debugPrint('Dio error: $e');
         return e;
-//        if (e.response.statusCode == 403) {
-//          bool reAuthResult = await _authService.reAuth();
-//          if (reAuthResult) {
-//            reAuthRequired = true;
-//            continue;
-//          } else {
-//            // TODO: throw error? (that app caches and sends you back to login?)
-//            reAuthRequired = false;
-//          }
-//        } else {
-//          // allow all non-auth errors to bubble up to callers
-//          rethrow;
-//        }
       }
   }
 }

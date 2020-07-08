@@ -40,17 +40,18 @@ class DashboardScreenInit extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context);
+    GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context, listen: true);
 
-    return DashboardScreen(wallpaper: globalStateModel.currentWallpaper,);
+    return DashboardScreen(wallpaper: globalStateModel.currentWallpaper, refresh: globalStateModel.refresh,);
   }
 }
 
 
 class DashboardScreen extends StatefulWidget {
   final String wallpaper;
+  final bool refresh;
 
-  DashboardScreen({this.wallpaper});
+  DashboardScreen({this.wallpaper, this.refresh});
 
   @override
   _DashboardScreenState createState() => _DashboardScreenState();
@@ -67,6 +68,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   TextEditingController searchController = TextEditingController();
   FocusNode searchFocus = FocusNode();
   GlobalStateModel globalStateModel;
+
   @override
   void initState() {
     screenBloc = DashboardScreenBloc();
@@ -83,7 +85,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    globalStateModel = Provider.of<GlobalStateModel>(context);
+    globalStateModel = Provider.of<GlobalStateModel>(context, listen: true);
     SharedPreferences.getInstance().then((p) {
       Language.language = p.getString(GlobalUtils.LANGUAGE);
       Language(context);
@@ -104,6 +106,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
         : MediaQuery.of(context).size.height);
     isTablet = MediaQuery.of(context).size.width > 600;
     Measurements.loadImages(context);
+    if (globalStateModel.refresh) {
+      screenBloc.add(DashboardScreenInitEvent(wallpaper: widget.wallpaper));
+      globalStateModel.setRefresh(false);
+    }
 
     return BlocListener(
       bloc: screenBloc,
@@ -359,6 +365,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
               );
             },
             onTapContinueSetup: (app) {
+              Provider.of<GlobalStateModel>(context,listen: false)
+                  .setCurrentBusiness(state.activeBusiness);
+              Provider.of<GlobalStateModel>(context,listen: false)
+                  .setCurrentWallpaper(state.curWall);
               Navigator.push(
                 context,
                 PageTransition(

@@ -592,6 +592,46 @@ class ApiService {
     }
   }
 
+  Future<dynamic> toggleInstalled(String token, String id, String uuid) async {
+    try {
+      print('$TAG - patchTutorials()');
+      dynamic response = await _client.postTypeLess(
+          '${Env.commerceOs}/api/apps/business/$id/toggle-installed',
+          body: {
+            'installed': true,
+            'microUuid': uuid,
+          },
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+  Future<dynamic> toggleSetUpStatus(String token, String id, String type) async {
+    try {
+      print('$TAG - patchTutorials()');
+      dynamic response = await _client.patchTypeless(
+          '${Env.commerceOs}/api/apps/business/$id/app/$type/toggle-setup-status',
+          body: {
+            'setupStatus': 'completed'
+          },
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<dynamic> getPosIntegrations(String token, String businessId) async {
     try {
       print('$TAG - getPosIntegrations()');
