@@ -524,6 +524,23 @@ class ApiService {
     }
   }
 
+  Future<dynamic> getShops(String idBusiness, String token) async {
+    try {
+      print('$TAG - getShops()');
+      dynamic response = await _client.getTypeless(
+          '$shopUrl$idBusiness$shopEnd',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<dynamic> deleteTransactionList(String id, String token, String query) async {
     try {
       print('$TAG - deleteTransactionList()');

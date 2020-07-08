@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/models/connect.dart';
 import 'package:payever/commons/models/fetchwallpaper.dart';
+import 'package:payever/shop/models/models.dart';
 
 class DashboardScreenState {
   final bool isLoading;
@@ -28,6 +29,7 @@ class DashboardScreenState {
   final List<Collection> searchTransactions;
   final List<Products> lastSalesRandom;
   final List<ConnectModel> connects;
+  final List<ShopModel> shops;
 
   DashboardScreenState({
     this.isLoading = false,
@@ -54,6 +56,7 @@ class DashboardScreenState {
     this.searchTransactions = const [],
     this.lastSalesRandom = const [],
     this.connects = const [],
+    this.shops = const [],
   });
 
   List<Object> get props => [
@@ -81,6 +84,7 @@ class DashboardScreenState {
     this.searchTransactions,
     this.lastSalesRandom,
     this.connects,
+    this.shops,
   ];
 
   DashboardScreenState copyWith({
@@ -108,6 +112,7 @@ class DashboardScreenState {
     List<Collection> searchTransactions,
     List<Products> lastSalesRandom,
     List<ConnectModel> connects,
+    List<ShopModel> shops,
   }) {
     return DashboardScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -134,6 +139,7 @@ class DashboardScreenState {
       searchTransactions: searchTransactions ?? this.searchTransactions,
       lastSalesRandom: lastSalesRandom ?? this.lastSalesRandom,
       connects: connects ?? this.connects,
+      shops: shops ?? this.shops,
     );
   }
 }

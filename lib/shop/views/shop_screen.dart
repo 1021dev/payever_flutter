@@ -68,7 +68,6 @@ class ShopScreen extends StatefulWidget {
 }
 
 class _ShopScreenState extends State<ShopScreen> {
-  static const platform = const MethodChannel('payever.flutter.dev/tapthephone');
 
   final GlobalKey<InnerDrawerState> _innerDrawerKey = GlobalKey<InnerDrawerState>();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -85,18 +84,13 @@ class _ShopScreenState extends State<ShopScreen> {
   List<OverflowMenuItem> appBarPopUpActions(BuildContext context, ShopScreenState state) {
     return [
       OverflowMenuItem(
-        title: 'Switch terminal',
+        title: 'Switch Shop',
         onTap: () async {
         },
       ),
       OverflowMenuItem(
-        title: 'Add new terminal',
+        title: 'Add new Shop',
         onTap: () async {
-        },
-      ),
-      OverflowMenuItem(
-        title: 'Edit',
-        onTap: () {
         },
       ),
     ];
@@ -118,10 +112,6 @@ class _ShopScreenState extends State<ShopScreen> {
   void dispose() {
     screenBloc.close();
     super.dispose();
-  }
-
-  Future<Null> _showNativeView() async {
-    await platform.invokeMethod('showNativeView');
   }
 
   @override
@@ -201,7 +191,7 @@ class _ShopScreenState extends State<ShopScreen> {
             child: Center(
               child: Container(
                   child: SvgPicture.asset(
-                    'assets/images/pos.svg',
+                    'assets/images/shopicon.svg',
                     color: Colors.white,
                     height: 16,
                     width: 24,
@@ -213,7 +203,7 @@ class _ShopScreenState extends State<ShopScreen> {
             padding: EdgeInsets.only(left: 8),
           ),
           Text(
-            'Point of Sale',
+            Language.getWidgetStrings('widgets.store.title'),
             style: TextStyle(
               color: Colors.white,
               fontSize: 16,
@@ -342,7 +332,7 @@ class _ShopScreenState extends State<ShopScreen> {
       child: Row(
         children: <Widget>[
           ShopTopButton(
-            title: state.activeTerminal != null ? state.activeTerminal.name : '',
+            title: Language.getCommerceOSStrings('dashboard_docker.items.dashboard'),
             selectedIndex: selectedIndex,
             index: 0,
             onTap: () {
@@ -352,7 +342,7 @@ class _ShopScreenState extends State<ShopScreen> {
             },
           ),
           ShopTopButton(
-            title: 'Connect',
+            title: Language.getPosStrings('info_boxes.terminal.panels.themes.title'),
             selectedIndex: selectedIndex,
             index: 1,
             onTap: () {
@@ -362,7 +352,7 @@ class _ShopScreenState extends State<ShopScreen> {
             },
           ),
           ShopTopButton(
-            title: 'Settings',
+            title: Language.getPosStrings('info_boxes.terminal.panels.settings.title'),
             index: 2,
             selectedIndex: selectedIndex,
             onTap: () {
@@ -372,13 +362,13 @@ class _ShopScreenState extends State<ShopScreen> {
             },
           ),
           ShopTopButton(
-            title: 'Open',
+            title: Language.getSettingsStrings('edit'),
             selectedIndex: selectedIndex,
             index: 3,
             onTap: () {
-              if (Platform.isAndroid) {
-                _showNativeView();
-              }
+              setState(() {
+                selectedIndex = 3;
+              });
             },
           ),
           PopupMenuButton<OverflowMenuItem>(
@@ -413,12 +403,12 @@ class _ShopScreenState extends State<ShopScreen> {
 
   Widget _getBody(ShopScreenState state) {
     switch(selectedIndex) {
-      case 0:
-        return _defaultTerminalWidget(state);
-      case 1:
-        return _connectWidget(state);
-      case 2:
-        return _settingsWidget(state);
+//      case 0:
+//        return _defaultTerminalWidget(state);
+//      case 1:
+//        return _connectWidget(state);
+//      case 2:
+//        return _settingsWidget(state);
       default:
         return Container();
     }

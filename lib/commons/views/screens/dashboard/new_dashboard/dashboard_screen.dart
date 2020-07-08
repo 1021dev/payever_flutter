@@ -27,6 +27,7 @@ import 'package:payever/pos/pos.dart';
 import 'package:payever/pos_new/views/pos_create_terminal_screen.dart';
 import 'package:payever/pos_new/views/pos_screen.dart';
 import 'package:payever/search/views/search_screen.dart';
+import 'package:payever/shop/views/shop_screen.dart';
 import 'package:payever/transactions/transactions.dart';
 import 'package:payever/welcome/welcome_screen.dart';
 import 'package:provider/provider.dart';
@@ -430,6 +431,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
           DashboardShopView(
             businessApps: businessApp,
             appWidget: appWidget,
+            onOpen: () {
+              Provider.of<GlobalStateModel>(context,listen: false)
+                  .setCurrentBusiness(state.activeBusiness);
+              Provider.of<GlobalStateModel>(context,listen: false)
+                  .setCurrentWallpaper(state.curWall);
+              Navigator.push(
+                context,
+                PageTransition(
+                  child: ShopInitScreen(),
+                  type: PageTransitionType.fade,
+                  duration: Duration(milliseconds: 50),
+                ),
+              );
+            },
           )
       );
     }

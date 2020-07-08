@@ -8,6 +8,7 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/models/connect.dart';
 import 'package:payever/commons/models/fetchwallpaper.dart';
 import 'package:payever/settings/network/employees_api.dart';
+import 'package:payever/shop/models/models.dart';
 import 'package:payever/transactions/transactions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -356,7 +357,7 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
         currentBusiness.id, GlobalUtils.activeToken.accessToken, '');
     yield state.copyWith(total: Transaction.toMap(response).paginationData.amount.toDouble());
 
-    add(FetchPosEvent(business: currentBusiness));
+    add(FetchShops(business: currentBusiness));
   }
 
   Stream<DashboardScreenState> getTutorials(Business currentBusiness) async* {
@@ -394,6 +395,16 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
     });
     yield state.copyWith(lastSalesRandom: lastSales);
     add(FetchTutorials(business: currentBusiness));
+  }
+
+  Stream<DashboardScreenState> getShopsp(Business currentBusiness) async* {
+    List<ShopModel> shops = [];
+    dynamic response = await api.getShops(currentBusiness.id, GlobalUtils.activeToken.accessToken);
+    response.forEach((element) {
+      shops.add(ShopModel.toMap(element));
+    });
+    yield state.copyWith(shops: shops);
+    add(FetchPosEvent(business: currentBusiness));
   }
 
 }

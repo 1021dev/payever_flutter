@@ -250,7 +250,7 @@ class _PosScreenState extends State<PosScreen> {
             padding: EdgeInsets.only(left: 8),
           ),
           Text(
-            'Point of Sale',
+            Language.getWidgetStrings('widgets.pos.title'),
             style: TextStyle(
               color: Colors.white,
               fontSize: 16,
