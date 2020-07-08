@@ -41,7 +41,7 @@ class _PosTwilioScreenState extends State<PosTwilioScreen> {
 
   String wallpaper;
   String selectedState = '';
-  int isOpened = -1;
+  int isOpened = 0;
 
   var imageData;
 

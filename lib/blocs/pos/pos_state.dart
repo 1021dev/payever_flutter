@@ -23,6 +23,7 @@ class PosScreenState {
   final AddPhoneNumberSettingsModel settingsModel;
   final List<CountryDropdownItem> dropdownItems;
   final dynamic fieldSetData;
+  final dynamic qrImage;
 
   PosScreenState({
     this.isLoading = false,
@@ -45,6 +46,7 @@ class PosScreenState {
     this.settingsModel,
     this.dropdownItems = const [],
     this.fieldSetData,
+    this.qrImage,
   });
 
   List<Object> get props => [
@@ -68,6 +70,7 @@ class PosScreenState {
     this.settingsModel,
     this.dropdownItems,
     this.fieldSetData,
+    this.qrImage
   ];
 
   PosScreenState copyWith({
@@ -91,6 +94,7 @@ class PosScreenState {
     AddPhoneNumberSettingsModel settingsModel,
     List<CountryDropdownItem> dropdownItems,
     dynamic fieldSetData,
+    dynamic qrImage,
   }) {
     return PosScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -113,6 +117,7 @@ class PosScreenState {
       settingsModel: settingsModel ?? this.settingsModel,
       dropdownItems: dropdownItems ?? this.dropdownItems,
       fieldSetData: fieldSetData ?? this.fieldSetData,
+      qrImage: qrImage ?? this.qrImage,
     );
   }
 }

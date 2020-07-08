@@ -808,7 +808,7 @@ class ApiService {
       String url,
       ) async {
     try {
-      print('$TAG - postGenerateTerminalQRCode()');
+      print('$TAG - postGenerateTerminalQRSettings()');
       dynamic response = await _client.postTypeLess(
           '${Env.qr}/api/form/$businessId/generate',
           body: {
@@ -818,6 +818,29 @@ class ApiService {
             'id': id,
             'url': url,
           },
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> saveGenerateTerminalQRSettings(
+      String token,
+      String businessId,
+      dynamic data
+      ) async {
+    try {
+      print('$TAG - saveGenerateTerminalQRSettings()');
+      data['action'] = 'save';
+      dynamic response = await _client.postTypeLess(
+          '${Env.qr}/api/form/$businessId/save',
+          body: data,
           headers: {
             HttpHeaders.authorizationHeader: 'Bearer $token',
             HttpHeaders.contentTypeHeader: 'application/json',

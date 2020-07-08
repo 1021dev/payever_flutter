@@ -1,7 +1,7 @@
 
 class CountryDropdownItem {
   final String label;
-  final String value;
+  final dynamic value;
   CountryDropdownItem({
     this.label,
     this.value,

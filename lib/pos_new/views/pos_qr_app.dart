@@ -42,8 +42,6 @@ class _PosQRAppScreenState extends State<PosQRAppScreen> {
   String selectedState = '';
   bool isOpened = true;
 
-  var imageData;
-
   @override
   void initState() {
     widget.screenBloc.add(
@@ -220,13 +218,10 @@ class _PosQRAppScreenState extends State<PosQRAppScreen> {
             List<dynamic> list = data['data'];
             for(dynamic w in list) {
               if (w[0]['type'] == 'image') {
-                if (imageData == null) {
-                  getBlob(w);
-                }
                 Widget imageWidget = isOpened ? Container(
                     height: 300,
                     color: Colors.white,
-                    child: imageData != null ? Image.memory(imageData, fit: BoxFit.fitHeight,) :Container()
+                    child: state.qrImage != null ? Image.memory(state.qrImage, fit: BoxFit.fitHeight,) :Container()
                 ): Container();
                 widgets.add(imageWidget);
               } else if (w[0]['type'] == 'text') {
@@ -284,23 +279,6 @@ class _PosQRAppScreenState extends State<PosQRAppScreen> {
         ),
       ),
     );
-  }
-
-  Future getBlob(dynamic w) async {
-    var headers = {
-      HttpHeaders.authorizationHeader: 'Bearer ${GlobalUtils.activeToken.accessToken}',
-      HttpHeaders.contentTypeHeader: 'application/json',
-      HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-    };
-
-    http.get(w[0]['value'],
-        headers:  headers
-    ).then((http.Response response) {
-      print(response);
-      setState(() {
-        imageData = response.bodyBytes;
-      });
-    });
   }
 }
 

@@ -194,7 +194,7 @@ class _PosTwilioAddPhoneNumberState extends State<PosTwilioAddPhoneNumber> {
                                       ),
                                     ),
                                     dropdownItems.length > 0 ? Expanded(
-                                      child: DropdownButton<String>(
+                                      child: DropdownButton<dynamic>(
                                         icon: Container(),
                                         underline: Container(),
                                         isExpanded: true,

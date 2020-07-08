@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/models/pos.dart';
@@ -75,12 +76,14 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
       yield state.copyWith(copiedBusiness: event.businessId, businessCopied: true);
     } else if (event is CopyTerminalEvent) {
       yield state.copyWith(copiedTerminal: event.terminal, terminalCopied: true);
+    } else if (event is GetQRImage) {
+      yield* getBlob(event.data, event.url);
     } else if (event is GenerateQRSettingsEvent) {
       yield* postGenerateQRSettings(event.businessId, event.businessName, event.avatarUrl, event.id, event.url);
     } else if (event is UpdateQRCodeSettings) {
       yield state.copyWith(fieldSetData: event.settings);
     } else if (event is SaveQRCodeSettings) {
-//      yield* postGenerateQRSettings(event.businessId, event.businessName, event.avatarUrl, event.id, event.url);
+      yield* saveQRCodeSettings(event.businessId, event.settings);
     } else if (event is GenerateQRCodeEvent) {
       yield* postGenerateQRCode(event.businessId, event.businessName, event.avatarUrl, event.id, event.url);
     } else if (event is GetTwilioSettings) {
@@ -297,7 +300,31 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
       id,
       url,
     );
+    String imageData;
+    if (response is Map) {
+      dynamic form = response['form'];
+      String contentType = form['contentType'] != null
+          ? form['contentType']
+          : '';
+      dynamic content = form['content'] != null ? form['content'] : null;
+      if (content != null) {
+        List<dynamic> contentData = content[contentType];
+        for (int i = 0; i < contentData.length; i++) {
+          dynamic data = content[contentType][i];
+          if (data['data'] != null) {
+            List<dynamic> list = data['data'];
+            for (dynamic w in list) {
+              if (w[0]['type'] == 'image') {
+                imageData = w[0]['value'];
+              }
+            }
+          }
+        }
+      }
+    }
+
     yield state.copyWith(qrForm: response, isLoading: false);
+    add(GetQRImage(url: imageData));
   }
 
   Stream<PosScreenState> postGenerateQRSettings(
@@ -333,8 +360,46 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
         }
       }
     }
+    yield state.copyWith(qrForm: response, fieldSetData: fieldsetData, isLoading: false);
+    add(GetQRImage(data: fieldsetData));
+  }
+
+  Stream<PosScreenState> saveQRCodeSettings(
+      String businessId,
+      dynamic data,
+      ) async* {
+    yield state.copyWith(isLoading: true);
+    dynamic response = await api.saveGenerateTerminalQRSettings(
+      GlobalUtils.activeToken.accessToken,
+      businessId,
+      data
+    );
+    dynamic fieldsetData;
+    if (response is Map) {
+      dynamic form = response['form'];
+      String contentType = form['contentType'] != null
+          ? form['contentType']
+          : '';
+      dynamic content = form['content'] != null ? form['content'] : null;
+      if (content != null) {
+        List<dynamic> contentData = content[contentType];
+        for (int i = 0; i < contentData.length; i++) {
+          dynamic data = content[contentType][i];
+          if (data['fieldsetData'] != null) {
+            fieldsetData = data['fieldsetData'];
+          } else if (data['data'] != null) {
+            List<dynamic> list = data['data'];
+            for (dynamic w in list) {
+              if (w[0]['type'] == 'image') {
+              }
+            }
+          }
+        }
+      }
+    }
 
     yield state.copyWith(qrForm: response, fieldSetData: fieldsetData, isLoading: false);
+    add(GetQRImage(data: fieldsetData));
   }
 
   Stream<PosScreenState> getTwilioSettings(
@@ -463,4 +528,40 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
     );
     add(GetTwilioSettings(businessId: businessId));
   }
+
+  Stream<PosScreenState> getBlob(dynamic w, String url) async* {
+    var headers = {
+      HttpHeaders.authorizationHeader: 'Bearer ${GlobalUtils.activeToken.accessToken}',
+      HttpHeaders.contentTypeHeader: 'application/json',
+      HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+    };
+    if (url != null) {
+      print('url => $url');
+      http.Response response = await http.get(
+        url,
+        headers:  headers,
+      );
+      yield state.copyWith(qrImage: response.bodyBytes);
+    } else {
+      Map<String, String> queryParameters = {};
+      if (w is Map) {
+        w.forEach((key, value) {
+          if (value != null) {
+            queryParameters[key] = value.toString();
+          }
+        });
+        print(queryParameters);
+      }
+      var uri =
+      Uri.https(Env.qr.replaceAll('https://', ''), '/api/download/png', queryParameters);
+
+      http.Response response = await http.get(
+        uri,
+        headers:  headers,
+      );
+      yield state.copyWith(qrImage: response.bodyBytes);
+    }
+
+  }
+
 }

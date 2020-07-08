@@ -523,3 +523,19 @@ class UpdateAddPhoneNumberSettings extends PosScreenEvent {
     this.phone,
   ];
 }
+
+class GetQRImage extends PosScreenEvent {
+  final dynamic data;
+  final String url;
+
+  GetQRImage({
+    this.data,
+    this.url,
+  });
+
+  @override
+  List<Object> get props => [
+    this.data,
+    this.url,
+  ];
+}
