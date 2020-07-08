@@ -10,14 +10,11 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/blur_effect_view.dart';
 import 'package:http/http.dart' as http;
+import 'package:payever/pos_new/models/models.dart';
 
 bool _isPortrait;
 bool _isTablet;
 
-List<String> dropdownItems = [
-  'Verify by code',
-  'Verify by ID',
-];
 class PosQRSettings extends StatefulWidget {
 
   PosScreenBloc screenBloc;
@@ -47,7 +44,7 @@ class _PosQRSettingsState extends State<PosQRSettings> {
   @override
   void initState() {
     widget.screenBloc.add(
-      GenerateQRCodeEvent(
+      GenerateQRSettingsEvent(
         businessId: widget.businessId,
         businessName: widget.businessName,
         avatarUrl: '$imageBase${widget.screenBloc.state.activeTerminal.logo}',
@@ -164,50 +161,6 @@ class _PosQRSettingsState extends State<PosQRSettings> {
   Widget _getBody(PosScreenState state) {
     dynamic response = state.qrForm;
     List<Widget> widgets = [];
-    widgets.add(
-      Container(
-        height: 64,
-        color: Color(0xFF424141),
-        child: SizedBox.expand(
-          child: MaterialButton(
-            onPressed: () {
-              setState(() {
-                isOpened = !isOpened;
-              });
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    SvgPicture.asset(
-                      'assets/images/qr-code.svg',
-                      height: 20,
-                      width: 20,
-                      color: Colors.white,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 8),
-                    ),
-                    Text(
-                      Language.getPosTpmStrings('tpm.communications.qr.title'),
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                      ),
-                    )
-                  ],
-                ),
-                Icon(
-                  isOpened ? Icons.keyboard_arrow_up: Icons.keyboard_arrow_down,
-                  size: 20,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
 
     if (response != null) {
       if (response is Map) {
@@ -215,53 +168,129 @@ class _PosQRSettingsState extends State<PosQRSettings> {
         String contentType = form['contentType'] != null ? form['contentType'] : '';
         dynamic content = form['content'] != null ? form['content']: null;
         if (content != null) {
-          dynamic data = content[contentType][0];
-          if (data['data'] != null) {
-            List<dynamic> list = data['data'];
-            for(dynamic w in list) {
-              if (w[0]['type'] == 'image') {
-                if (imageData == null) {
-                  getBlob(w);
-                }
-                Widget imageWidget = isOpened ? Container(
-                    height: 300,
-                    color: Colors.white,
-                    child: imageData != null ? Image.memory(imageData, fit: BoxFit.fitHeight,) :Container()
-                ): Container();
-                widgets.add(imageWidget);
-              } else if (w[0]['type'] == 'text') {
-                Widget textWidget = isOpened ? Container(
-                  height: 64,
-                  padding: EdgeInsets.only(left: 16, right: 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(
-                          Language.getPosTpmStrings(w[0]['value']),
-                      ),
-                      MaterialButton(
-                        minWidth: 0,
-                        onPressed: () {
-                        },
-                        height: 20,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+          List<dynamic> contentData = content[contentType];
+          for (int i = 0; i < contentData.length; i++) {
+            dynamic data = content[contentType][i];
+            widgets.add(
+              Container(
+                height: 64,
+                color: Color(0xFF424141),
+                child: SizedBox.expand(
+                  child: MaterialButton(
+                    onPressed: () {
+                      setState(() {
+                        isOpened = !isOpened;
+                      });
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.only(left: 16),
+                            ),
+                            Text(
+                              data['title'] ?? '',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                              ),
+                            )
+                          ],
                         ),
-                        color: Colors.black26,
-                        child: Text(
-                          Language.getPosTpmStrings(w[1]['text']),
-                          style: TextStyle(
-                            fontSize: 10,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                          ),
+                        Icon(
+                          isOpened ? Icons.keyboard_arrow_up: Icons.keyboard_arrow_down,
+                          size: 20,
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ): Container();
-                widgets.add(textWidget);
+                ),
+              ),
+            );
+            if (data['data'] != null) {
+              List<dynamic> list = data['data'];
+              for(dynamic w in list) {
+                if (w[0]['type'] == 'image') {
+                  if (imageData == null) {
+                    getBlob(w);
+                  }
+                  Widget imageWidget = isOpened ? Container(
+                      height: 300,
+                      color: Colors.white,
+                      child: imageData != null ? Image.memory(
+                        imageData, fit: BoxFit.fitHeight,) : Container()
+                  ) : Container();
+                  widgets.add(imageWidget);
+                }
               }
+            } else if (data['fieldset'] != null) {
+              List<dynamic> fieldset = data['fieldset'];
+              fieldset.forEach((element) {
+                if (element['type'] != 'hidden') {
+                  if (element['type'] == 'select') {
+                    String name = element['name'];
+                    dynamic fieldSettings = element['fieldSettings'];
+                    dynamic selectSettings = element['selectSettings'];
+                    List<CountryDropdownItem> dropdownItems = [];
+                    if (selectSettings['options'] != null) {
+                      List<dynamic> list = selectSettings['options'];
+                      list.forEach((ele) {
+                        dropdownItems.add(CountryDropdownItem.fromMap(ele));
+                      });
+                    }
+                    Widget selectWidget = Container(
+                      height: 64,
+                      child: Container(
+                        padding: EdgeInsets.only(left: 16, right: 16),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.only(top: 4),
+                            ),
+                            Text(
+                              fieldSettings['label'],
+                              style: TextStyle(
+                                color: Colors.white70,
+                                fontSize: 12,
+                              ),
+                            ),
+                            Expanded(
+                              child: DropdownButton<String>(
+                                icon: Container(),
+                                underline: Container(),
+                                isExpanded: true,
+                                value: dropdownItems.firstWhere((element) => element.label == state.fieldSetData[name]).value,
+                                onChanged: (value) {
+                                  dynamic settings = state.fieldSetData;
+                                  settings[name] = value;
+                                  widget.screenBloc.add(UpdateQRCodeSettings(settings: settings));
+                                },
+                                items: dropdownItems.map((label) => DropdownMenuItem(
+                                  child: Text(
+                                    label.label,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w300,
+                                    ),
+                                  ),
+                                  value: label.value,
+                                ))
+                                    .toList(),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                    widgets.add(selectWidget);
+                  }
+                }
+              });
             }
           }
         }
@@ -270,18 +299,23 @@ class _PosQRSettingsState extends State<PosQRSettings> {
     return Center(
       child: Container(
         padding: EdgeInsets.only(left: 16, right: 16),
-        height: isOpened ? 300.0 + 64.0 * 3.0: 64.0,
-        child: BlurEffectView(
-          color: Color.fromRGBO(20, 20, 20, 0.2),
-          blur: 15,
-          radius: 12,
-          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: widgets.map((e) => e).toList(),
-          ),
-        ),
+        child: Wrap(
+          children: <Widget>[
+            Expanded(
+              child: BlurEffectView(
+                color: Color.fromRGBO(20, 20, 20, 0.2),
+                blur: 15,
+                radius: 12,
+                padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: widgets.map((e) => e).toList(),
+                ),
+              ),
+            )
+          ],
+        )
       ),
     );
   }

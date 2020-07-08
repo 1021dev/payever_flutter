@@ -799,6 +799,37 @@ class ApiService {
     }
   }
 
+  Future<dynamic> postGenerateTerminalQRSettings(
+      String token,
+      String businessId,
+      String businessName,
+      String avatarUrl,
+      String id,
+      String url,
+      ) async {
+    try {
+      print('$TAG - postGenerateTerminalQRCode()');
+      dynamic response = await _client.postTypeLess(
+          '${Env.qr}/api/form/$businessId/generate',
+          body: {
+            'avatarUrl': avatarUrl,
+            'businessId': businessId,
+            'businessName': businessName,
+            'id': id,
+            'url': url,
+          },
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<dynamic> getTwilioSettings(
       String token,
       String businessId,

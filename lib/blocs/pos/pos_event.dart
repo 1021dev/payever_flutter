@@ -139,6 +139,32 @@ class UpdateDevicePaymentSettings extends PosScreenEvent{
 
 }
 
+class UpdateQRCodeSettings extends PosScreenEvent{
+  final dynamic settings;
+
+  UpdateQRCodeSettings({this.settings});
+
+  @override
+  List<Object> get props => [
+    this.settings,
+  ];
+
+}
+
+class SaveQRCodeSettings extends PosScreenEvent{
+  final dynamic settings;
+  final String businessId;
+
+  SaveQRCodeSettings({this.settings, this.businessId,});
+
+  @override
+  List<Object> get props => [
+    this.settings,
+    this.businessId,
+  ];
+
+}
+
 class SaveDevicePaymentSettings extends PosScreenEvent{
   final String businessId;
   final bool autoresponderEnabled;
@@ -305,6 +331,31 @@ class GenerateQRCodeEvent extends PosScreenEvent {
   final String url;
 
   GenerateQRCodeEvent({
+    this.businessId,
+    this.businessName,
+    this.avatarUrl,
+    this.id,
+    this.url,
+  });
+
+  @override
+  List<Object> get props => [
+    this.businessId,
+    this.businessName,
+    this.avatarUrl,
+    this.id,
+    this.url,
+  ];
+}
+
+class GenerateQRSettingsEvent extends PosScreenEvent {
+  final String businessId;
+  final String businessName;
+  final String avatarUrl;
+  final String id;
+  final String url;
+
+  GenerateQRSettingsEvent({
     this.businessId,
     this.businessName,
     this.avatarUrl,

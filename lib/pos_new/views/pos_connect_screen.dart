@@ -291,7 +291,7 @@ class _PosConnectScreenState extends State<PosConnectScreen> {
                                         ),
                                         child: Center(
                                           child: Text(
-                                            communications[index].integration.enabled ? 'Open': 'Install',
+                                            communications[index].installed ? 'Open': 'Install',
                                             style: TextStyle(
                                                 fontSize: 10,
                                                 color: Colors.white

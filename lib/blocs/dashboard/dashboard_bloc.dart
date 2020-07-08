@@ -35,12 +35,16 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
     }
   }
 
-  Stream<DashboardScreenState> _checkVersion(String wallpapaer) async* {
-    yield state.copyWith(curWall: wallpapaer);
+  Stream<DashboardScreenState> _checkVersion(String wallpaper) async* {
+    yield state.copyWith(curWall: wallpaper);
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     String version = packageInfo.version;
     var environment = await api.getEnv();
-    Env.map(environment);
+    if (environment != null) {
+      Env.map(environment);
+    } else {
+      add(DashboardScreenInitEvent(wallpaper: wallpaper));
+    }
     var v = await api.getVersion();
     Version vv = Version.map(v);
     print("version:$version");

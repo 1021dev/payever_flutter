@@ -75,6 +75,12 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
       yield state.copyWith(copiedBusiness: event.businessId, businessCopied: true);
     } else if (event is CopyTerminalEvent) {
       yield state.copyWith(copiedTerminal: event.terminal, terminalCopied: true);
+    } else if (event is GenerateQRSettingsEvent) {
+      yield* postGenerateQRSettings(event.businessId, event.businessName, event.avatarUrl, event.id, event.url);
+    } else if (event is UpdateQRCodeSettings) {
+      yield state.copyWith(fieldSetData: event.settings);
+    } else if (event is SaveQRCodeSettings) {
+//      yield* postGenerateQRSettings(event.businessId, event.businessName, event.avatarUrl, event.id, event.url);
     } else if (event is GenerateQRCodeEvent) {
       yield* postGenerateQRCode(event.businessId, event.businessName, event.avatarUrl, event.id, event.url);
     } else if (event is GetTwilioSettings) {
@@ -96,17 +102,17 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
     List<Terminal> terminals = [];
     List<ChannelSet> channelSets = [];
     dynamic terminalsObj = await api.getTerminal(activeBusinessId, token);
-    terminalsObj.forEach((terminal) {
-      terminals.add(Terminal.toMap(terminal));
-    });
-//    if (terminals.isEmpty) {
-//      _parts._noTerminals = true;
-//      _parts._mainCardLoading.value = false;
-//    }
+    if (terminalsObj != null) {
+      terminalsObj.forEach((terminal) {
+        terminals.add(Terminal.toMap(terminal));
+      });
+    }
     dynamic channelsObj = await api.getChannelSet(activeBusinessId, token);
-    channelsObj.forEach((channelSet) {
-      channelSets.add(ChannelSet.toMap(channelSet));
-    });
+    if (channelsObj != null) {
+      channelsObj.forEach((channelSet) {
+        channelSets.add(ChannelSet.toMap(channelSet));
+      });
+    }
 
     terminals.forEach((terminal) async {
       channelSets.forEach((channelSet) async {
@@ -292,6 +298,43 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
       url,
     );
     yield state.copyWith(qrForm: response, isLoading: false);
+  }
+
+  Stream<PosScreenState> postGenerateQRSettings(
+      String businessId,
+      String businessName,
+      String avatarUrl,
+      String id,
+      String url,
+      ) async* {
+    yield state.copyWith(isLoading: true);
+    dynamic response = await api.postGenerateTerminalQRSettings(
+      GlobalUtils.activeToken.accessToken,
+      businessId,
+      businessName,
+      avatarUrl,
+      id,
+      url,
+    );
+    dynamic fieldsetData;
+    if (response is Map) {
+      dynamic form = response['form'];
+      String contentType = form['contentType'] != null
+          ? form['contentType']
+          : '';
+      dynamic content = form['content'] != null ? form['content'] : null;
+      if (content != null) {
+        List<dynamic> contentData = content[contentType];
+        for (int i = 0; i < contentData.length; i++) {
+          dynamic data = content[contentType][i];
+          if (data['fieldsetData'] != null) {
+            fieldsetData = data['fieldsetData'];
+          }
+        }
+      }
+    }
+
+    yield state.copyWith(qrForm: response, fieldSetData: fieldsetData, isLoading: false);
   }
 
   Stream<PosScreenState> getTwilioSettings(

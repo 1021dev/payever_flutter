@@ -17,6 +17,7 @@ import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/b
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/dashboard_menu_view.dart';
 import 'package:payever/pos_new/views/pos_connect_screen.dart';
 import 'package:payever/pos_new/views/pos_create_terminal_screen.dart';
+import 'package:payever/pos_new/views/pos_qr_app.dart';
 import 'package:payever/pos_new/views/pos_switch_terminals_screen.dart';
 import 'package:payever/pos_new/views/pos_twillo_settings.dart';
 import 'package:payever/pos_new/widgets/pos_top_button.dart';
@@ -582,7 +583,7 @@ class _PosScreenState extends State<PosScreen> {
                                         Navigator.push(
                                           context,
                                           PageTransition(
-                                            child: PosQRSettings(
+                                            child: PosQRAppScreen(
                                               businessId: widget.globalStateModel.currentBusiness.id,
                                               screenBloc: screenBloc,
                                               businessName: widget.globalStateModel.currentBusiness.name,
