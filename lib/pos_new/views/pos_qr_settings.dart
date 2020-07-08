@@ -261,7 +261,6 @@ class _PosQRSettingsState extends State<PosQRSettings> {
                   ),
                 ): Container();
                 widgets.add(textWidget);
-
               }
             }
           }

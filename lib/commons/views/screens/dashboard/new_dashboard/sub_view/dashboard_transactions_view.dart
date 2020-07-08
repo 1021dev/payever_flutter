@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:payever/apis/api_service.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/env.dart';
 import 'package:payever/commons/utils/translations.dart';
@@ -18,6 +19,9 @@ class DashboardTransactionsView extends StatefulWidget {
   final List<Month> lastYear;
   final List<double> monthlySum;
   final double total;
+  final Function onTapGetStarted;
+  final Function onTapContinueSetup;
+  final Function onTapLearnMore;
 
   DashboardTransactionsView({
     this.onOpen,
@@ -28,6 +32,9 @@ class DashboardTransactionsView extends StatefulWidget {
     this.lastMonth = const [],
     this.lastYear = const [],
     this.monthlySum = const [],
+    this.onTapGetStarted,
+    this.onTapContinueSetup,
+    this.onTapLearnMore,
   });
   @override
   _DashboardTransactionsViewState createState() => _DashboardTransactionsViewState();
@@ -222,7 +229,7 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                     decoration: BoxDecoration(
                       image: DecorationImage(
                           image: NetworkImage('${Env.cdnIcon}icon-comerceos-${widget.appWidget.type}-not-installed.png'),
-                          fit: BoxFit.fitWidth),
+                          fit: BoxFit.contain),
                     ),
                   ),
                   SizedBox(height: 8),
@@ -251,7 +258,9 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                     flex: 1,
                     child: InkWell(
                       onTap: () {
-
+                        widget.businessApps.installed
+                            ? widget.onTapContinueSetup(widget.businessApps)
+                            : widget.onTapGetStarted(widget.businessApps);
                       },
                       child: Center(
                         child: Text(
@@ -271,7 +280,7 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                     flex: 1,
                     child: InkWell(
                       onTap: () {
-
+                        widget.onTapLearnMore(widget.businessApps);
                       },
                       child: Center(
                         child: Text(

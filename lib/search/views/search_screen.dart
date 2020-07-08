@@ -102,10 +102,10 @@ class _SearchScreenState extends State<SearchScreen> {
     return Scaffold(
       backgroundColor: Colors.black,
       resizeToAvoidBottomPadding: false,
-      body: SafeArea(
-        child: BackgroundBase(
-          true,
-          body: Column(
+      body: BackgroundBase(
+        true,
+        body: SafeArea(
+          child: Column(
             children: <Widget>[
               Container(
                 alignment: Alignment.topRight,

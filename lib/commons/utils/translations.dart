@@ -103,6 +103,14 @@ class Language {
       print(onError);
     });
 
+    await DefaultAssetBundle.of(context)
+        .loadString("assets/translations/welcome/$language.json", cache: true)
+        .then((value) {
+      welcomeStrings = JsonDecoder().convert(value);
+    }).catchError((onError) {
+      print(onError);
+    });
+
     return await DefaultAssetBundle.of(context)
         .loadString("assets/translations/custom/$language.json", cache: true)
         .then((value) {
@@ -126,6 +134,7 @@ class Language {
   static dynamic posStrings = Map();
   static dynamic posConnectStrings = Map();
   static dynamic posTpmStrings = Map();
+  static dynamic welcomeStrings = Map();
 
   static String getWidgetStrings(String tag) => widgetStrings[tag] ?? tag;
 
@@ -156,6 +165,8 @@ class Language {
   static String getPosTpmStrings(String tag) => posTpmStrings[tag] ?? tag;
 
   static String getPosConnectStrings(String tag) => posConnectStrings[tag] ?? tag;
+
+  static String getWelcomeStrings(String tag) => welcomeStrings[tag] ?? tag;
 
   static String language;
 

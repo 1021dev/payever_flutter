@@ -28,6 +28,7 @@ import 'package:payever/pos_new/views/pos_create_terminal_screen.dart';
 import 'package:payever/pos_new/views/pos_screen.dart';
 import 'package:payever/search/views/search_screen.dart';
 import 'package:payever/transactions/transactions.dart';
+import 'package:payever/welcome/welcome_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -357,6 +358,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
               );
             },
+            onTapContinueSetup: (app) {
+              Navigator.push(
+                context,
+                PageTransition(
+                  child: WelcomeScreen(
+                    business: state.activeBusiness,
+                    businessApps: app,
+                  ),
+                  type: PageTransitionType.fade,
+                ),
+              );
+            },
+            onTapGetStarted: () {},
+            onTapLearnMore: () {},
           )
       );
     }
@@ -730,8 +745,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         }
                       },
                       onSubmitted: (val) async {
+                        FocusScope.of(context).unfocus();
                         if (val.length == 0) {
-                          FocusScope.of(context).unfocus();
                           return;
                         }
                         final result = await Navigator.push(
@@ -787,6 +802,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                   searchController.text.isEmpty ? Container() : MaterialButton(
                     onPressed: () async {
+                      FocusScope.of(context).unfocus();
                       final result = await Navigator.push(
                         context,
                         PageTransition(
