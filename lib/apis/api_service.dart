@@ -541,6 +541,23 @@ class ApiService {
     }
   }
 
+  Future<dynamic> getTemplates(String token) async {
+    try {
+      print('$TAG - getTemplates()');
+      dynamic response = await _client.getTypeless(
+          '${Env.builderShop}/templates',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<dynamic> deleteTransactionList(String id, String token, String query) async {
     try {
       print('$TAG - deleteTransactionList()');

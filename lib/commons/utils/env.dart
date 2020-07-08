@@ -33,6 +33,8 @@ class Env {
   static String paymentStripe;
   static String paymentInstantPayment;
   static String paymentSantanderNl;
+  static String backendBuilder;
+  static String builderShop;
 
   Env.map(dynamic obj) {
     Env.users = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_USER];
@@ -67,6 +69,10 @@ class Env {
     Env.paymentStripe = obj[GlobalUtils.ENV_PAYMENT][GlobalUtils.ENV_PAYMENT_STRIPE];
     Env.paymentInstantPayment = obj[GlobalUtils.ENV_PAYMENT][GlobalUtils.ENV_PAYMENT_INSTANT_PAYMENT];
     Env.paymentSantanderNl = obj[GlobalUtils.ENV_PAYMENT][GlobalUtils.ENV_PAYMENT_SANTANDERNL];
+
+    Env.backendBuilder = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_BUILDER];
+    Env.builderShop = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_BUILDER_SHOP];
+
     Env.cdnImage = '${obj[GlobalUtils.ENV_CUSTOM][GlobalUtils.ENV_CUSTOM_CDN]}/images/';
     Env.cdnIcon = '${obj[GlobalUtils.ENV_CUSTOM][GlobalUtils.ENV_CUSTOM_CDN]}/icons-png/';
   }

@@ -20,6 +20,7 @@ import 'package:payever/pos_new/views/pos_connect_screen.dart';
 import 'package:payever/pos_new/views/pos_create_terminal_screen.dart';
 import 'package:payever/pos_new/views/pos_switch_terminals_screen.dart';
 import 'package:payever/pos_new/widgets/pos_top_button.dart';
+import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/widgets/shop_top_button.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -31,12 +32,12 @@ bool _isTablet;
 
 class ShopInitScreen extends StatelessWidget {
 
-  List<Terminal> terminals;
-  Terminal activeTerminal;
+  List<ShopModel> shopModels;
+  ShopModel activeShop;
 
   ShopInitScreen({
-    this.terminals,
-    this.activeTerminal,
+    this.shopModels,
+    this.activeShop,
   });
 
   @override
@@ -45,8 +46,8 @@ class ShopInitScreen extends StatelessWidget {
 
     return ShopScreen(
       globalStateModel: globalStateModel,
-      terminals: terminals,
-      activeTerminal: activeTerminal,
+      shopModels: shopModels,
+      activeShop: activeShop,
     );
   }
 }
@@ -54,13 +55,13 @@ class ShopInitScreen extends StatelessWidget {
 class ShopScreen extends StatefulWidget {
 
   GlobalStateModel globalStateModel;
-  List<Terminal> terminals;
-  Terminal activeTerminal;
+  List<ShopModel> shopModels;
+  ShopModel activeShop;
 
   ShopScreen({
     this.globalStateModel,
-    this.terminals,
-    this.activeTerminal,
+    this.shopModels,
+    this.activeShop,
   });
 
   @override
@@ -102,8 +103,8 @@ class _ShopScreenState extends State<ShopScreen> {
     screenBloc.add(
         ShopScreenInitEvent(
           currentBusiness: widget.globalStateModel.currentBusiness,
-          terminals: widget.terminals,
-          activeTerminal: widget.activeTerminal,
+//          terminals: widget.shopModels,
+//          activeTerminal: widget.activeShop,
         )
     );
   }
@@ -403,292 +404,9 @@ class _ShopScreenState extends State<ShopScreen> {
 
   Widget _getBody(ShopScreenState state) {
     switch(selectedIndex) {
-//      case 0:
-//        return _defaultTerminalWidget(state);
-//      case 1:
-//        return _connectWidget(state);
-//      case 2:
-//        return _settingsWidget(state);
       default:
         return Container();
     }
-  }
-
-  Widget _defaultTerminalWidget(ShopScreenState state) {
-    if (state.activeTerminal == null) {
-      return Center(
-        child: CircularProgressIndicator(),
-      );
-    }
-    return Container(
-      color: Colors.white,
-      child: Column(
-        children: <Widget>[
-          Container(
-              padding: EdgeInsets.all(0.0),
-              child: progress < 1.0
-                  ? LinearProgressIndicator(value: progress)
-                  : Container()
-          ),
-          Expanded(
-            child: InAppWebView(
-              initialUrl: "https://${state.activeTerminal.id}.payever.business",
-              initialHeaders: {},
-              initialOptions: InAppWebViewGroupOptions(
-                  crossPlatform: InAppWebViewOptions(
-                    debuggingEnabled: true,
-                  )
-              ),
-              onWebViewCreated: (InAppWebViewController controller) {
-                webView = controller;
-              },
-              onLoadStart: (InAppWebViewController controller, String url) {
-                setState(() {
-                  this.url = url;
-                });
-              },
-              onLoadStop: (InAppWebViewController controller, String url) async {
-                setState(() {
-                  this.url = url;
-                });
-              },
-              onProgressChanged: (InAppWebViewController controller, int progress) {
-                setState(() {
-                  this.progress = progress / 100;
-                });
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _connectWidget(ShopScreenState state) {
-    List<Communication> integrations = state.integrations;
-    List<String> terminalIntegrations = state.terminalIntegrations;
-    return Center(
-      child: Container(
-        width: Measurements.width,
-        padding: EdgeInsets.only(left: 16, right: 16),
-        height: (state.integrations.length * 50).toDouble() + 50,
-        child: BlurEffectView(
-          color: Color.fromRGBO(20, 20, 20, 0.2),
-          blur: 15,
-          radius: 12,
-          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-          child: Column(
-            children: <Widget>[
-              Expanded(
-                child: ListView.separated(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return Container(
-                        height: 50,
-                        child: Container(
-                          padding: EdgeInsets.only(left: 16, right: 16),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Text(
-                                Language.getPosConnectStrings(integrations[index].integration.displayOptions.title),
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              Row(
-                                children: <Widget>[
-                                  CupertinoSwitch(
-                                    value: terminalIntegrations.contains(integrations[index].integration.name),
-                                    onChanged: (value) {},
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 8),
-                                  ),
-                                  InkWell(
-                                    onTap: () {
-                                    },
-                                    child: Container(
-                                      height: 20,
-                                      width: 40,
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(10),
-                                          color: Colors.black.withOpacity(0.4)
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          Language.getCommerceOSStrings('actions.open'),
-                                          style: TextStyle(
-                                              fontSize: 10,
-                                              color: Colors.white
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                        )
-                    );
-                  },
-                  separatorBuilder: (context, index) {
-                    return Divider(
-                      height: 0,
-                      thickness: 0.5,
-                      color: Colors.white30,
-                      endIndent: 0,
-                      indent: 0,
-                    );
-                  },
-                  itemCount: state.integrations.length,
-                ),
-              ),
-              integrations.length > 0 ? Divider(
-                height: 0,
-                thickness: 0.5,
-                color: Colors.white30,
-                endIndent: 0,
-                indent: 0,
-              ): Container(height: 0,),
-              Container(
-                padding: EdgeInsets.only(left: 16, right: 16),
-                height: 50,
-                child: InkWell(
-                  onTap: () {
-                  },
-                  child: Container(
-                    child: Row(
-                      children: <Widget>[
-                        Icon(
-                          Icons.add,
-                          size: 12,
-                        ),
-                        Padding(padding: EdgeInsets.only(left: 4),),
-                        Text(
-                          'Add',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _settingsWidget(ShopScreenState state) {
-    return Container(
-      padding: EdgeInsets.all(16),
-      width: Measurements.width,
-      child: Column(
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              Text(
-                'Business UUID',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 8),
-              ),
-              Expanded(
-                child: AutoSizeText(
-                  widget.globalStateModel.currentBusiness.id,
-                  minFontSize: 12,
-                  maxLines: 2,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 8),
-              ),
-              MaterialButton(
-                height: 32,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                color: Colors.black26,
-                child: Text(
-                  state.businessCopied ? 'Copied': 'Copy',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500
-                  ),
-                ),
-                onPressed: () {
-//                  screenBloc.add(CopyBusinessEvent(businessId: widget.globalStateModel.currentBusiness.id));
-                },
-              ),
-            ],
-          ),
-          Row(
-            children: <Widget>[
-              Text(
-                'Terminal UUID',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 8),
-              ),
-              Expanded(
-                child: AutoSizeText(
-                  state.activeTerminal.id,
-                  minFontSize: 12,
-                  maxLines: 2,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 8),
-              ),
-              MaterialButton(
-                height: 32,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                color: Colors.black26,
-                child: Text(
-                  state.terminalCopied ? 'Copied': 'Copy',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500
-                  ),
-                ),
-                onPressed: () {
-//                  screenBloc.add(CopyTerminalEvent(businessId: widget.globalStateModel.currentBusiness.id, terminal: state.activeTerminal));
-                },
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
   }
 }
 

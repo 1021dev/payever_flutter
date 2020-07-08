@@ -1,6 +1,8 @@
 
 import 'package:bloc/bloc.dart';
 import 'package:payever/apis/api_service.dart';
+import 'package:payever/commons/commons.dart';
+import 'package:payever/shop/models/models.dart';
 
 import '../bloc.dart';
 import 'shop.dart';
@@ -19,6 +21,14 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
   }
 
   Stream<ShopScreenState> fetchShop(String activeBusinessId) async* {
+    dynamic templatesObj = await api.getTemplates(GlobalUtils.activeToken.accessToken);
+    List<TemplateModel> templates = [];
+    if (templatesObj != null) {
+      templatesObj.forEach((element) {
+        templates.add(TemplateModel.toMap(element));
+      });
+    }
+    yield state.copyWith(templates: templates);
   }
 
 }

@@ -32,7 +32,7 @@ class ShopModel {
     }
     if (obj['locales'] != null){
       List list = obj['locales'];
-      list.forEach((element) { 
+      list.forEach((element) {
         locales.add(element.toString());
       });
     }
@@ -50,5 +50,18 @@ class PasswordModel {
     passwordLock = obj['passwordLock'];
     _id = obj['_id'];
   }
+}
 
+class TemplateModel {
+  String id;
+  String name;
+  String picture;
+  String type;
+
+  TemplateModel.toMap(dynamic obj) {
+    id = obj['id'];
+    name = obj['name'];
+    picture = obj['picture'];
+    type = obj['type'];
+  }
 }
