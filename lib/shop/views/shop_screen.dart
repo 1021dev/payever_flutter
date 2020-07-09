@@ -9,9 +9,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/shop/shop.dart';
 import 'package:payever/commons/commons.dart';
+import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/blur_effect_view.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/dashboard_menu_view.dart';
 import 'package:payever/pos_new/widgets/pos_top_button.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/views/local_domain_screen.dart';
 import 'package:payever/shop/widgets/shop_top_button.dart';
 import 'package:payever/shop/widgets/theme_filter_content_view.dart';
 import 'package:payever/transactions/views/filter_content_view.dart';
@@ -438,6 +440,8 @@ class _ShopScreenState extends State<ShopScreen> {
     switch(selectedIndex) {
       case 1:
         return _templatesView(state);
+      case 2:
+        return _settings(state);
       default:
         return Container();
     }
@@ -669,6 +673,171 @@ class _ShopScreenState extends State<ShopScreen> {
             ): Container(),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _settings(ShopScreenState state) {
+    if (state.activeShop == null) {
+      return Container();
+    }
+    return Container(
+      padding: EdgeInsets.only(left: 16, right: 16),
+      child: Center(
+        child: BlurEffectView(
+          blur: 15,
+          color: Color.fromRGBO(50, 50, 50, 0.2),
+          child: Wrap(
+            children: <Widget>[
+              Container(
+                height: 50,
+                padding: EdgeInsets.only(left: 16, right: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      Language.getWidgetStrings('widgets.store.live-status'),
+                    ),
+                    CupertinoSwitch(
+                      value: state.activeShop.accessConfig.isLive,
+                      onChanged: (value) {
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              Divider(height: 0, thickness: 0.5, color: Colors.white54,),
+              Container(
+                height: 50,
+                padding: EdgeInsets.only(left: 16, right: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Flexible(
+                      flex: 2,
+                      child: Text(
+                        Language.getWidgetStrings('Payever Domain'),
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    Flexible(
+                      flex: 5,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            '${state.activeShop.accessConfig.internalDomain}.new.payever.shop',
+                          ),
+                          MaterialButton(
+                            minWidth: 0,
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                PageTransition(
+                                  child: LocalDomainScreen(
+                                    screenBloc: screenBloc,
+                                    businessId: Provider.of<GlobalStateModel>(context, listen: false).currentBusiness.id,
+                                    detailModel: state.activeShop,
+                                  ),
+                                  type: PageTransitionType.fade,
+                                ),
+                              );
+                            },
+                            child: Text(
+                                Language.getSettingsStrings('actions.edit')
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Divider(height: 0, thickness: 0.5, color: Colors.white54,),
+              Container(
+                height: 50,
+                padding: EdgeInsets.only(left: 16, right: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Flexible(
+                      flex: 2,
+                      child: Text(
+                        Language.getWidgetStrings('Own Domain'),
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    Flexible(
+                      flex: 5,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            state.activeShop.accessConfig.ownDomain != null
+                                ? '${state.activeShop.accessConfig.ownDomain}.new.payever.shop'
+                                : '',
+                          ),
+                          MaterialButton(
+                            minWidth: 0,
+                            onPressed: () {
+
+                            },
+                            child: Text(
+                                Language.getSettingsStrings('actions.edit')
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Divider(height: 0, thickness: 0.5, color: Colors.white54,),
+              Container(
+                height: 50,
+                padding: EdgeInsets.only(left: 16, right: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Flexible(
+                      flex: 2,
+                      child: Text(
+                        Language.getWidgetStrings('Password'),
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    Flexible(
+                      flex: 5,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            state.activeShop.accessConfig.isLocked ? 'Enabled': 'Disabled',
+                          ),
+                          MaterialButton(
+                            minWidth: 0,
+                            onPressed: () {
+
+                            },
+                            child: Text(
+                                Language.getSettingsStrings('actions.edit')
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

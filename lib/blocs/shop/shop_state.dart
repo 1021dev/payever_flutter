@@ -3,6 +3,7 @@ import 'package:payever/shop/models/models.dart';
 
 class ShopScreenState {
   final bool isLoading;
+  final bool isUpdating;
   final List<TemplateModel> templates;
   final List<ThemeModel> ownThemes;
   final List<ShopDetailModel> shops;
@@ -10,6 +11,7 @@ class ShopScreenState {
 
   ShopScreenState({
     this.isLoading = false,
+    this.isUpdating = false,
     this.shops = const [],
     this.templates = const [],
     this.ownThemes = const [],
@@ -18,6 +20,7 @@ class ShopScreenState {
 
   List<Object> get props => [
     this.isLoading,
+    this.isUpdating,
     this.templates,
     this.shops,
     this.ownThemes,
@@ -26,6 +29,7 @@ class ShopScreenState {
 
   ShopScreenState copyWith({
     bool isLoading,
+    bool isUpdating,
     List<TemplateModel> templates,
     List<ThemeModel> ownThemes,
     List<ShopDetailModel> shops,
@@ -33,6 +37,7 @@ class ShopScreenState {
   }) {
     return ShopScreenState(
       isLoading: isLoading ?? this.isLoading,
+      isUpdating: isUpdating ?? this.isUpdating,
       templates: templates ?? this.templates,
       shops: shops ?? this.shops,
       ownThemes: ownThemes ?? this.ownThemes,
