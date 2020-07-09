@@ -24,6 +24,7 @@ import 'package:payever/shop/widgets/theme_filter_content_view.dart';
 import 'package:payever/transactions/views/filter_content_view.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 
 bool _isPortrait;
@@ -1001,7 +1002,9 @@ class _ShopScreenState extends State<ShopScreen> {
                   children: <Widget>[
                     MaterialButton(
                       onPressed: () {
-
+                        if (state.activeShop != null) {
+                          _launchURL('https://${state.activeShop.accessConfig.internalDomain}.new.payever.shop/');
+                        }
                       },
                       height: 32,
                       color: Colors.white,
@@ -1100,6 +1103,15 @@ class _ShopScreenState extends State<ShopScreen> {
       ),
     );
   }
+
+  _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
 
 }
 

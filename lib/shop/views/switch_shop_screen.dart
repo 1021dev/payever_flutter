@@ -11,6 +11,7 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/blur_effect_view.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/create_shop_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 bool _isPortrait;
 bool _isTablet;
@@ -304,13 +305,23 @@ class _SwitchShopScreenState extends State<SwitchShopScreen> {
             },
           );
         },
-        onOpen: (ShopDetailModel tn) {
-//          widget.screenBloc.add(SetActiveTerminalEvent(activeTerminal: tn, businessId: widget.businessId));
+        onOpen: (ShopDetailModel shopDetailModel) {
           Navigator.pop(context);
+          if (shopDetailModel != null) {
+            _launchURL('https://${shopDetailModel.accessConfig.internalDomain}.new.payever.shop/');
+          }
         },
       )).toList(),
       physics: NeverScrollableScrollPhysics(),
     );
+  }
+
+  _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   List<Widget> popupButtons(BuildContext context, ShopDetailModel shopDetailModel) {
