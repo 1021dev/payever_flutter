@@ -232,7 +232,7 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
 
   Stream<PosScreenState> uploadTerminalImage(String businessId, File file) async* {
     yield state.copyWith(blobName: '', isLoading: true);
-    dynamic response = await api.postTerminalImage(file, businessId, GlobalUtils.activeToken.accessToken);
+    dynamic response = await api.postImageToBusiness(file, businessId, GlobalUtils.activeToken.accessToken);
     String blobName = response['blobName'];
     yield state.copyWith(blobName: blobName, isLoading: false);
   }

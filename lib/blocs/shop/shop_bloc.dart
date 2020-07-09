@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:payever/apis/api_service.dart';
@@ -25,6 +27,8 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
       yield* duplicateTheme(event.businessId, event.shopId, event.themeId);
     } else if (event is DeleteThemeEvent) {
       yield* deleteTheme(event.businessId, event.shopId, event.themeId);
+    } else if (event is UploadShopImage) {
+      yield* uploadShopImage(event.businessId, event.file);
     }
   }
 
@@ -94,5 +98,13 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
     }
     yield state.copyWith(ownThemes: themes);
   }
+
+  Stream<ShopScreenState> uploadShopImage(String businessId, File file) async* {
+    yield state.copyWith(blobName: '', isUploading: true);
+    dynamic response = await api.postImageToBusiness(file, businessId, GlobalUtils.activeToken.accessToken);
+    String blobName = response['blobName'];
+    yield state.copyWith(blobName: blobName, isUploading: false);
+  }
+
 
 }

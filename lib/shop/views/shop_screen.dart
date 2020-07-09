@@ -13,9 +13,11 @@ import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/b
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/dashboard_menu_view.dart';
 import 'package:payever/pos_new/widgets/pos_top_button.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/views/create_shop_screen.dart';
 import 'package:payever/shop/views/enable_password_screen.dart';
 import 'package:payever/shop/views/external_domain_screen.dart';
 import 'package:payever/shop/views/local_domain_screen.dart';
+import 'package:payever/shop/views/switch_shop_screen.dart';
 import 'package:payever/shop/widgets/shop_top_button.dart';
 import 'package:payever/shop/widgets/theme_filter_content_view.dart';
 import 'package:payever/transactions/views/filter_content_view.dart';
@@ -86,11 +88,33 @@ class _ShopScreenState extends State<ShopScreen> {
       OverflowMenuItem(
         title: 'Switch Shop',
         onTap: () async {
+          Navigator.push(
+            context,
+            PageTransition(
+              child: SwitchShopScreen(
+                businessId: widget.globalStateModel.currentBusiness.id,
+                screenBloc: screenBloc,
+              ),
+              type: PageTransitionType.fade,
+              duration: Duration(milliseconds: 500),
+            ),
+          );
         },
       ),
       OverflowMenuItem(
         title: 'Add new Shop',
         onTap: () async {
+          Navigator.push(
+            context,
+            PageTransition(
+              child: CreateShopScreen(
+                businessId: widget.globalStateModel.currentBusiness.id,
+                screenBloc: screenBloc,
+              ),
+              type: PageTransitionType.fade,
+              duration: Duration(milliseconds: 500),
+            ),
+          );
         },
       ),
     ];

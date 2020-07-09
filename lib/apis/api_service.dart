@@ -1156,12 +1156,12 @@ class ApiService {
     }
   }
 
-  Future<dynamic> postTerminalImage(
+  Future<dynamic> postImageToBusiness(
       File logo, 
       String business, 
       String token,
       ) async {
-    print('$TAG - postTerminalImage()');
+    print('$TAG - postImageToBusiness()');
     var headers = {
       HttpHeaders.authorizationHeader: 'Bearer $token',
       HttpHeaders.contentTypeHeader: '*/*',

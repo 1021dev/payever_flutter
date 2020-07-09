@@ -102,3 +102,16 @@ class GetActiveThemeEvent extends ShopScreenEvent {
     this.shopId,
   ];
 }
+
+
+class UploadShopImage extends ShopScreenEvent{
+  final File file;
+  final String businessId;
+  UploadShopImage({this.file, this.businessId});
+
+  @override
+  List<Object> get props => [
+    this.file,
+    this.businessId,
+  ];
+}
