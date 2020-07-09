@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/shop/models/models.dart';
@@ -18,13 +19,18 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
       yield* fetchShop(event.currentBusiness.id);
     } else if (event is InstallTemplateEvent) {
       yield* installTemplate(event.businessId, event.shopId, event.templateId);
+    } else if (event is GetActiveThemeEvent) {
+      yield* getActiveTheme(event.businessId, event.shopId);
+    } else if (event is DuplicateThemeEvent) {
+      yield* duplicateTheme(event.businessId, event.shopId, event.themeId);
+    } else if (event is DeleteThemeEvent) {
+      yield* deleteTheme(event.businessId, event.shopId, event.themeId);
     }
   }
 
   Stream<ShopScreenState> fetchShop(String activeBusinessId) async* {
     yield state.copyWith(isLoading: true);
     List<ShopDetailModel> shops = [];
-    List<ThemeModel> themes = [];
     List<TemplateModel> templates = [];
 
     dynamic response = await api.getShop(activeBusinessId, GlobalUtils.activeToken.accessToken);
@@ -45,15 +51,10 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
       });
     }
 
+    yield state.copyWith(shops: shops, activeShop: activeShop, templates: templates, isLoading: false);
     if (activeShop != null) {
-      dynamic themeObkj = await api.getOwnThemes(GlobalUtils.activeToken.accessToken, activeBusinessId, activeShop.id);
-      if (themeObkj != null) {
-        themeObkj.forEach((element) {
-          themes.add(ThemeModel.toMap(element));
-        });
-      }
+      add(GetActiveThemeEvent(businessId: activeBusinessId, shopId: activeShop.id));
     }
-    yield state.copyWith(shops: shops, activeShop: activeShop, templates: templates, ownThemes: themes, isLoading: false);
   }
 
   Stream<ShopScreenState> installTemplate(String activeBusinessId, String shopId, String templateId) async* {
@@ -84,6 +85,14 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
         yield state.copyWith(activeTheme: ThemeModel.toMap(response.first));
       }
     }
+    List<ThemeModel> themes = [];
+    dynamic themeObj = await api.getOwnThemes(GlobalUtils.activeToken.accessToken, activeBusinessId, shopId);
+    if (themeObj != null) {
+      themeObj.forEach((element) {
+        themes.add(ThemeModel.toMap(element));
+      });
+    }
+    yield state.copyWith(ownThemes: themes);
   }
 
 }

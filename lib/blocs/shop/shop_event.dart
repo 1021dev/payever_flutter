@@ -49,12 +49,12 @@ class InstallTemplateEvent extends ShopScreenEvent {
   ];
 }
 
-class DubplicateThemeEvent extends ShopScreenEvent {
+class DuplicateThemeEvent extends ShopScreenEvent {
   final String businessId;
   final String shopId;
   final String themeId;
 
-  DubplicateThemeEvent({
+  DuplicateThemeEvent({
     this.businessId,
     this.shopId,
     this.themeId,

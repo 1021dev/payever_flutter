@@ -136,7 +136,7 @@ class _ShopScreenState extends State<ShopScreen> {
         onTap: (theme) async {
           if (state.activeShop != null) {
             screenBloc.add(
-                DubplicateThemeEvent(
+                DuplicateThemeEvent(
                   businessId: widget.globalStateModel.currentBusiness.id,
                   themeId: theme.id,
                   shopId: state.activeShop.id,
@@ -166,6 +166,17 @@ class _ShopScreenState extends State<ShopScreen> {
       ),
     ];
   }
+
+  List<OverflowMenuItem> dashboardPopup(BuildContext context, ShopScreenState state) {
+    return [
+      OverflowMenuItem(
+        title: 'Edit',
+        onTap: () async {
+        },
+      ),
+    ];
+  }
+
 
   @override
   void initState() {
@@ -435,7 +446,7 @@ class _ShopScreenState extends State<ShopScreen> {
             },
           ),
           ShopTopButton(
-            title: Language.getSettingsStrings('edit'),
+            title: Language.getSettingsStrings('Edit'),
             selectedIndex: selectedIndex,
             index: 3,
             onTap: () {
@@ -476,6 +487,8 @@ class _ShopScreenState extends State<ShopScreen> {
 
   Widget _getBody(ShopScreenState state) {
     switch(selectedIndex) {
+      case 0:
+        return _dashboardWidget(state);
       case 1:
         return _templatesView(state);
       case 2:
@@ -899,5 +912,137 @@ class _ShopScreenState extends State<ShopScreen> {
       ),
     );
   }
+
+  Widget _dashboardWidget(ShopScreenState state) {
+    if (state.activeShop == null) {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+    return Container(
+      color: Colors.white,
+      child: Column(
+        children: <Widget>[
+          Container(
+            height: 50,
+            color: Color(0xFF222222),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(left: 12),
+                  child: Text(
+                    'Your Shop',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                Row(
+                  children: <Widget>[
+                    MaterialButton(
+                      onPressed: () {
+
+                      },
+                      height: 32,
+                      color: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Text(
+                        'Open',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 8),
+                    ),
+                    PopupMenuButton<OverflowMenuItem>(
+                      child: Material(
+                        color: Colors.white,
+                        shape: CircleBorder(),
+                        child: Icon(
+                          Icons.more_horiz,
+                          color: Colors.black,
+                          size: 32,
+                        ),
+                      ),
+                      offset: Offset(0, 100),
+                      onSelected: (OverflowMenuItem item) => item.onTap(),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      color: Colors.black87,
+                      itemBuilder: (BuildContext context) {
+                        return dashboardPopup(context, state)
+                            .map((OverflowMenuItem item) {
+                          return PopupMenuItem<OverflowMenuItem>(
+                            value: item,
+                            child: Text(
+                              item.title,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w300,
+                              ),
+                            ),
+                          );
+                        }).toList();
+                      },
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(right: 16),
+                    )
+                  ],
+                )
+              ],
+            ),
+          ),
+          Container(
+              padding: EdgeInsets.all(0.0),
+              child: progress < 1.0
+                  ? LinearProgressIndicator(value: progress)
+                  : Container()
+          ),
+          Expanded(
+            child: InAppWebView(
+              initialUrl: 'https://${state.activeShop.accessConfig.internalDomain}.new.payever.shop/',
+              initialHeaders: {},
+              initialOptions: InAppWebViewGroupOptions(
+                  crossPlatform: InAppWebViewOptions(
+                    debuggingEnabled: true,
+                  )
+              ),
+              onWebViewCreated: (InAppWebViewController controller) {
+                webView = controller;
+              },
+              onLoadStart: (InAppWebViewController controller, String url) {
+                setState(() {
+                  this.url = url;
+                });
+              },
+              onLoadStop: (InAppWebViewController controller, String url) async {
+                setState(() {
+                  this.url = url;
+                });
+              },
+              onProgressChanged: (InAppWebViewController controller, int progress) {
+                setState(() {
+                  this.progress = progress / 100;
+                });
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
 }
 
