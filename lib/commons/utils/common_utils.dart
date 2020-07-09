@@ -779,6 +779,7 @@ class GlobalUtils {
   static const String ENV_PAYMENT_STRIPE = 'stripe';
   static const String ENV_PAYMENT_INSTANT_PAYMENT = 'instantPayment';
   static const String ENV_PAYMENT_SANTANDERNL = 'santanderNl';
+  static const String ENV_NOTIFICATIONS = 'notifications';
 
   // dashboard_
   static const String CURRENT_WALLPAPER = 'currentWallpaper';

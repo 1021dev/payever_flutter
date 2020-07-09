@@ -83,3 +83,7 @@ class FetchShops extends DashboardScreenEvent {
   ];
 
 }
+
+class FetchNotifications extends DashboardScreenEvent {
+
+}

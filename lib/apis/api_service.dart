@@ -1178,5 +1178,22 @@ class ApiService {
     }
   }
 
+  Future<dynamic> getNotifications(String token) async {
+    try {
+      print('$TAG - getNotifications()');
+      dynamic response = await _client.getTypeless(
+          '${Env.notifications}/',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
 
 }

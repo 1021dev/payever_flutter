@@ -35,6 +35,8 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
       yield* getProductsPopularMonthRandom(event.business);
     } else if (event is FetchShops) {
       yield* getShops(event.business);
+    } else if (event is FetchNotifications) {
+      yield* fetchNotifications();
     }
   }
 
@@ -369,6 +371,7 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
       tutorials.add(Tutorial.map(element));
     });
     yield state.copyWith(tutorials: tutorials);
+    add(FetchNotifications());
   }
 
   Stream<DashboardScreenState> getConnects(Business currentBusiness) async* {
@@ -416,4 +419,10 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
     add(FetchPosEvent(business: currentBusiness));
   }
 
+  Stream<DashboardScreenState> fetchNotifications() async* {
+    List<dynamic> notifications = [];
+    dynamic response = await api.getNotifications(GlobalUtils.activeToken.accessToken);
+    print('Notifications => $response');
+
+  }
 }

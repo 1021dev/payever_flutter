@@ -393,11 +393,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
           appWidgets: state.currentWidgets,
           onTapEdit: () {},
           onTapWidget: (AppWidget aw) {
+            Provider.of<GlobalStateModel>(context,listen: false)
+                .setCurrentBusiness(state.activeBusiness);
+            Provider.of<GlobalStateModel>(context,listen: false)
+                .setCurrentWallpaper(state.curWall);
             if (aw.type.contains('transactions')) {
-              Provider.of<GlobalStateModel>(context,listen: false)
-                  .setCurrentBusiness(state.activeBusiness);
-              Provider.of<GlobalStateModel>(context,listen: false)
-                  .setCurrentWallpaper(state.curWall);
               Navigator.push(
                 context,
                 PageTransition(
@@ -406,14 +406,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
               );
             } else if (aw.type.contains('pos')) {
-              Provider.of<GlobalStateModel>(context,listen: false)
-                  .setCurrentBusiness(state.activeBusiness);
-              Provider.of<GlobalStateModel>(context,listen: false)
-                  .setCurrentWallpaper(state.curWall);
               Navigator.push(
                 context,
                 PageTransition(
                   child: PosInitScreen(),
+                  type: PageTransitionType.fade,
+                  duration: Duration(milliseconds: 50),
+                ),
+              );
+            } else if (aw.type.contains('shop')) {
+              Navigator.push(
+                context,
+                PageTransition(
+                  child: ShopInitScreen(),
                   type: PageTransitionType.fade,
                   duration: Duration(milliseconds: 50),
                 ),

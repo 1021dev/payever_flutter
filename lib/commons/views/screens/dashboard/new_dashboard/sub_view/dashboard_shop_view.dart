@@ -102,7 +102,6 @@ class _DashboardShopViewState extends State<DashboardShopView> {
                               ),
                             ),
                           ),
-                          SizedBox(width: 8),
                           isExpanded ? Container(
                             height: 20,
                             width: 40,
@@ -110,6 +109,7 @@ class _DashboardShopViewState extends State<DashboardShopView> {
                                 borderRadius: BorderRadius.circular(10),
                                 color: Colors.white10
                             ),
+                            padding: EdgeInsets.only(left: 8),
                             child:  Row(
                               children: [
                                 Expanded(
@@ -168,91 +168,93 @@ class _DashboardShopViewState extends State<DashboardShopView> {
               ),
             ):
             widget.shopModel != null
-                ? (Row(
-              children: <Widget>[
-                // Shop View
-                Expanded(
-                  flex: 1,
-                  child: Row(
-                    children: <Widget>[
-                      widget.shopModel.logo != null ?
-                      Container(
-                        width: 50,
-                        height: 50,
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                              image: NetworkImage('$imageBase${widget.shopModel.logo}'),
-                              fit: BoxFit.cover,
-                            )
-                        ),
-                      ):
-                      Container(
-                        child: CircleAvatar(
-                          radius: 25,
-                          backgroundColor: Colors.blueGrey.withOpacity(0.5),
-                          child: Text(
-                            avatarName,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 24,
-                              fontWeight: FontWeight.w600,
+                ? (
+                Row(
+                  children: <Widget>[
+                    // Shop View
+                    Expanded(
+                      flex: 1,
+                      child: Row(
+                        children: <Widget>[
+                          widget.shopModel.logo != null ?
+                          Container(
+                            width: 50,
+                            height: 50,
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                  image: NetworkImage('$imageBase${widget.shopModel.logo}'),
+                                  fit: BoxFit.cover,
+                                )
+                            ),
+                          ):
+                          Container(
+                            child: CircleAvatar(
+                              radius: 25,
+                              backgroundColor: Colors.blueGrey.withOpacity(0.5),
+                              child: Text(
+                                avatarName,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 12),
-                      ),
-                      Expanded(
-                        child: AutoSizeText(
-                          widget.shopModel.name,
-                          maxLines: 2,
-                          minFontSize: 16,
-                          maxFontSize: 24,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
+                          Padding(
+                            padding: EdgeInsets.only(left: 12),
                           ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 12),
-                ),
-                // Edit Button
-                Expanded(
-                  flex: 1,
-                  child: MaterialButton(
-                    onPressed: widget.onTapEditShop,
-                    color: Colors.black26,
-                    height: 60,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Container(
-                      height: 50,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.edit),
-                          SizedBox(width: 8),
-                          Text(
-                            'Edit',
-                            softWrap: true,
-                            style: TextStyle(
-                                color: Colors.white, fontSize: 16),
-                          )
+                          Expanded(
+                            child: AutoSizeText(
+                              widget.shopModel.name,
+                              maxLines: 2,
+                              minFontSize: 16,
+                              maxFontSize: 24,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
-                  ),
-                ),
-              ],
-            ))
+                    Padding(
+                      padding: EdgeInsets.only(left: 12),
+                    ),
+                    // Edit Button
+                    Expanded(
+                      flex: 1,
+                      child: MaterialButton(
+                        onPressed: widget.onTapEditShop,
+                        color: Colors.black26,
+                        height: 60,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Container(
+                          height: 50,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.edit),
+                              SizedBox(width: 8),
+                              Text(
+                                'Edit',
+                                softWrap: true,
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 16),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+            )
                 : Container(
               alignment: Alignment.centerLeft,
               height: 50,

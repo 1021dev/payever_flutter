@@ -31,6 +31,7 @@ class DashboardScreenState {
   final List<Products> lastSalesRandom;
   final List<ConnectModel> connects;
   final List<ShopModel> shops;
+  final List<dynamic> notifications;
 
   DashboardScreenState({
     this.isLoading = false,
@@ -59,6 +60,7 @@ class DashboardScreenState {
     this.connects = const [],
     this.shops = const [],
     this.activeShop,
+    this.notifications = const [],
   });
 
   List<Object> get props => [
@@ -88,6 +90,7 @@ class DashboardScreenState {
     this.connects,
     this.shops,
     this.activeShop,
+    this.notifications,
   ];
 
   DashboardScreenState copyWith({
@@ -117,6 +120,7 @@ class DashboardScreenState {
     List<ConnectModel> connects,
     List<ShopModel> shops,
     ShopModel activeShop,
+    List<dynamic> notifications,
   }) {
     return DashboardScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -145,6 +149,7 @@ class DashboardScreenState {
       connects: connects ?? this.connects,
       shops: shops ?? this.shops,
       activeShop: activeShop ?? this.activeShop,
+      notifications: notifications ?? this.notifications,
     );
   }
 }
