@@ -115,3 +115,55 @@ class UploadShopImage extends ShopScreenEvent{
     this.businessId,
   ];
 }
+
+class CreateShopEvent extends ShopScreenEvent {
+  final String name;
+  final String logo;
+  final String businessId;
+
+  CreateShopEvent({
+    this.name,
+    this.logo,
+    this.businessId,
+  });
+  @override
+  List<Object> get props => [
+    this.name,
+    this.logo,
+    this.businessId,
+  ];
+}
+
+class SetDefaultShop extends ShopScreenEvent {
+  final String businessId;
+  final String shopId;
+
+  SetDefaultShop({
+    this.shopId,
+    this.businessId,
+  });
+  @override
+  List<Object> get props => [
+    this.shopId,
+    this.businessId,
+  ];
+}
+
+class UpdateShopSettings extends ShopScreenEvent {
+  final AccessConfig config;
+  final String businessId;
+  final String shopId;
+
+  UpdateShopSettings({
+    this.config,
+    this.businessId,
+    this.shopId,
+  });
+
+  @override
+  List<Object> get props => [
+    this.config,
+    this.businessId,
+    this.shopId,
+  ];
+}

@@ -88,7 +88,7 @@ class _ShopScreenState extends State<ShopScreen> {
       OverflowMenuItem(
         title: 'Switch Shop',
         onTap: () async {
-          Navigator.push(
+          final result = await Navigator.push(
             context,
             PageTransition(
               child: SwitchShopScreen(
@@ -99,12 +99,19 @@ class _ShopScreenState extends State<ShopScreen> {
               duration: Duration(milliseconds: 500),
             ),
           );
+          if (result == 'refresh') {
+            screenBloc.add(
+                ShopScreenInitEvent(
+                  currentBusiness: widget.globalStateModel.currentBusiness,
+                )
+            );
+          }
         },
       ),
       OverflowMenuItem(
         title: 'Add new Shop',
         onTap: () async {
-          Navigator.push(
+          final result = await Navigator.push(
             context,
             PageTransition(
               child: CreateShopScreen(
@@ -115,6 +122,13 @@ class _ShopScreenState extends State<ShopScreen> {
               duration: Duration(milliseconds: 500),
             ),
           );
+          if (result == 'refresh') {
+            screenBloc.add(
+                ShopScreenInitEvent(
+                  currentBusiness: widget.globalStateModel.currentBusiness,
+                )
+            );
+          }
         },
       ),
     ];
@@ -265,11 +279,19 @@ class _ShopScreenState extends State<ShopScreen> {
                   PageTransition(
                       child: LoginScreen(), type: PageTransitionType.fade));
             },
-            onSwitchBusiness: () {
-              Navigator.pushReplacement(
+            onSwitchBusiness: () async {
+              final result = await Navigator.pushReplacement(
                   context,
                   PageTransition(
                       child: SwitcherScreen(), type: PageTransitionType.fade));
+              if (result == 'refresh') {
+                screenBloc.add(
+                    ShopScreenInitEvent(
+                      currentBusiness: widget.globalStateModel.currentBusiness,
+                    )
+                );
+              }
+
             },
             onPersonalInfo: () {
 

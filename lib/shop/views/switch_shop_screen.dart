@@ -43,6 +43,10 @@ class _SwitchShopScreenState extends State<SwitchShopScreen> {
 
     defaultShop = widget.screenBloc.state.activeShop;
     selectedShop = widget.screenBloc.state.activeShop;
+    if (defaultShop == null) {
+      defaultShop = widget.screenBloc.state.shops.first;
+      selectedShop = widget.screenBloc.state.shops.first;
+    }
     super.initState();
   }
 
@@ -65,7 +69,7 @@ class _SwitchShopScreenState extends State<SwitchShopScreen> {
     return BlocListener(
       bloc: widget.screenBloc,
       listener: (BuildContext context, ShopScreenState state) async {
-        if (state is PosScreenFailure) {
+        if (state is ShopScreenStateFailure) {
           Navigator.pushReplacement(
             context,
             PageTransition(
@@ -73,8 +77,8 @@ class _SwitchShopScreenState extends State<SwitchShopScreen> {
               type: PageTransitionType.fade,
             ),
           );
-        } else if (state is PosScreenSuccess) {
-          Navigator.pop(context);
+        } else if (state is ShopScreenStateSuccess) {
+          Navigator.pop(context, 'refresh');
         }
       },
       child: BlocBuilder<ShopScreenBloc, ShopScreenState>(
@@ -233,7 +237,7 @@ class _SwitchShopScreenState extends State<SwitchShopScreen> {
               padding: EdgeInsets.only(top: 12),
             ),
             MaterialButton(
-              onPressed: () {
+              onPressed: () async {
                 Navigator.pushReplacement(
                   context,
                   PageTransition(
@@ -317,7 +321,7 @@ class _SwitchShopScreenState extends State<SwitchShopScreen> {
           child: MaterialButton(
             onPressed: () {
               Navigator.pop(context);
-//              widget.screenBloc.add(SetDefaultTerminalEvent(activeTerminal: terminal, businessId: widget.businessId));
+              widget.screenBloc.add(SetDefaultShop(businessId: widget.businessId, shopId: shopDetailModel.id));
             },
             child: Text('Set as Default'),
           ),

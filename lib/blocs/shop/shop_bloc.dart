@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
@@ -29,6 +30,10 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
       yield* deleteTheme(event.businessId, event.shopId, event.themeId);
     } else if (event is UploadShopImage) {
       yield* uploadShopImage(event.businessId, event.file);
+    } else if (event is CreateShopEvent) {
+      yield* createShop(event.businessId, event.name, event.logo);
+    } else if (event is SetDefaultShop) {
+      yield* setDefaultShop(event.businessId, event.shopId);
     }
   }
 
@@ -106,5 +111,19 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
     yield state.copyWith(blobName: blobName, isUploading: false);
   }
 
+  Stream<ShopScreenState> createShop(String businessId, String name, String logo) async* {
+    yield state.copyWith(isUpdating: true);
+    dynamic response = await api.createShop(GlobalUtils.activeToken.accessToken, businessId, name, logo);
+    yield state.copyWith(isUpdating: false);
+    yield ShopScreenStateSuccess();
+  }
+
+  Stream<ShopScreenState> setDefaultShop(String businessId, String shopId) async* {
+    dynamic response = await api.setDefaultShop(GlobalUtils.activeToken.accessToken, businessId, shopId);
+    if (response != null) {
+      yield state.copyWith(activeShop: ShopDetailModel.toMap(response));
+    }
+    yield ShopScreenStateSuccess();
+  }
 
 }

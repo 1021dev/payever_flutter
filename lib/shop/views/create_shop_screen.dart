@@ -86,7 +86,7 @@ class _CreateShopScreenState extends State<CreateShopScreen> {
             ),
           );
         } else if (state is ShopScreenStateSuccess) {
-            Navigator.pop(context);
+            Navigator.pop(context, 'refresh');
         }
       },
       child: BlocBuilder<ShopScreenBloc, ShopScreenState>(
@@ -171,13 +171,18 @@ class _CreateShopScreenState extends State<CreateShopScreen> {
   }
 
   Widget _getBody(ShopScreenState state) {
-    String blobName;// = state.blobName;
+    String blobName = state.blobName;
     String avatarName = '';
     if (shopNameController.text.isNotEmpty) {
       String name = shopNameController.text;
-      if (name.contains(' ')) {
+      if (name.contains(' ') && name.split(' ').length > 1) {
         avatarName = name.substring(0, 1);
-        avatarName = avatarName + name.split(' ')[1].substring(0, 1);
+        if (name.split(' ')[1].length > 0) {
+          avatarName = avatarName + name.split(' ')[1].substring(0, 1);
+        } else {
+          avatarName = name.substring(0, 1) + name.substring(name.length - 1);
+          avatarName = avatarName.toUpperCase();
+        }
       } else {
         avatarName = name.substring(0, 1) + name.substring(name.length - 1);
         avatarName = avatarName.toUpperCase();
@@ -192,17 +197,15 @@ class _CreateShopScreenState extends State<CreateShopScreen> {
               padding: EdgeInsets.only(bottom: 64),
               child: GestureDetector(
                 child: Stack(
-                  alignment: Alignment.topRight,
+                  alignment: Alignment.center,
                   children: <Widget>[
-                    blobName != null && blobName != ''
+                    blobName != null
                         ? Center(
                       child: CircleAvatar(
+                        minRadius: 40,
+                        maxRadius: 40,
                         backgroundColor: Colors.grey,
-                        backgroundImage: NetworkImage('$imageBase$blobName'),
-                        child: Container(
-                          height: 80,
-                          width: 80,
-                        ),
+                        backgroundImage: Image.network('$imageBase$blobName').image,
                       ),
                     ): CircleAvatar(
                       minRadius: 40,
@@ -221,11 +224,10 @@ class _CreateShopScreenState extends State<CreateShopScreen> {
                     state.isUploading
                         ? Center(
                       child: Container(
-                        width: 16,
-                        height: 16,
+                        width: 24,
+                        height: 24,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          valueColor: new AlwaysStoppedAnimation<Color>(Colors.black87),
                         ),
                       ),
                     )
@@ -268,7 +270,6 @@ class _CreateShopScreenState extends State<CreateShopScreen> {
                               },
                               onFieldSubmitted: (val) {
                                 if (formKey.currentState.validate()) {
-//                                    submitTerminal(state);
                                 }
                               },
                               validator: (value) {
@@ -303,7 +304,9 @@ class _CreateShopScreenState extends State<CreateShopScreen> {
                     color: Color(0xFF222222),
                     child: SizedBox.expand(
                       child: MaterialButton(
-                        onPressed: buttonEnabled ? () {} : null,
+                        onPressed: buttonEnabled ? () {
+                          submitShop(state);
+                        } : null,
                         child: state.isUpdating ? Center(
                           child: CircularProgressIndicator(),
                         ) : Text(
@@ -327,12 +330,12 @@ class _CreateShopScreenState extends State<CreateShopScreen> {
     );
   }
 
-  void submitTerminal(ShopScreenState state) {
-//    widget.screenBloc.add(CreatePosTerminalEvent(
-//      businessId: widget.businessId,
-//      name: terminalNameController.text,
-//      logo: state.blobName != '' ? state.blobName : null,
-//    ));
+  void submitShop(ShopScreenState state) {
+    widget.screenBloc.add(CreateShopEvent(
+      businessId: widget.businessId,
+      name: shopNameController.text,
+      logo: state.blobName != '' ? state.blobName : null,
+    ));
   }
 
   Future getImage() async {

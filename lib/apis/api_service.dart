@@ -891,6 +891,24 @@ class ApiService {
     }
   }
 
+  Future<dynamic> setDefaultShop(String token, String businessId, String shopId) async {
+    try {
+      print('$TAG - setDefaultShop()');
+      dynamic response = await _client.putTypeless(
+          '${Env.shop}/api/business/$businessId/shop/$shopId/default',
+          body: {},
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<dynamic> getPosDevicePaymentSettings(String businessId, String token) async {
     try {
       print('$TAG - getPosDevicePaymentSettings()');
@@ -1182,6 +1200,27 @@ class ApiService {
         headers: headers
     );
     return upload;
+  }
+
+  Future<dynamic> createShop(String token, String idBusiness, String name, String logo) async {
+    try {
+      print('$TAG - postTerminal()');
+      dynamic response = await _client.postTypeLess(
+          '$shopBase/api/business/$idBusiness/shop',
+          body: {
+            'logo': logo,
+            'name': name,
+          },
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
   }
 
   Future<dynamic> postTerminal(String idBusiness, String token, String logo, String name) async {
