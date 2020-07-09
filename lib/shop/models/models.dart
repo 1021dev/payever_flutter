@@ -125,6 +125,7 @@ class AccessConfig {
   bool isPrivate;
   String ownDomain;
   String privateMessage;
+  String privatePassword;
 
   AccessConfig.toMap(dynamic obj) {
     id = obj['id'];
@@ -135,6 +136,21 @@ class AccessConfig {
     isPrivate = obj['isPrivate'];
     ownDomain = obj['ownDomain'];
     privateMessage = obj['privateMessage'];
+    privatePassword = obj['privatePassword'];
+  }
+
+  Map<String, dynamic> toData() {
+    Map<String, dynamic> data = {};
+    data['internalDomain'] = internalDomain;
+    data['internalDomainPattern'] = internalDomainPattern;
+    data['isLive'] = isLive;
+    data['isLocked'] = isLocked;
+    data['isPrivate'] = isPrivate;
+    data['ownDomain'] = ownDomain;
+    data['privatePassword'] = privatePassword;
+    data['privateMessage'] = privateMessage;
+
+    return data;
   }
 }
 

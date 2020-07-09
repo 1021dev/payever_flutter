@@ -333,17 +333,6 @@ class _SwitchShopScreenState extends State<SwitchShopScreen> {
           child: MaterialButton(
             onPressed: () {
               Navigator.pop(context);
-              Navigator.push(
-                context,
-                PageTransition(
-                  child: CreateShopScreen(
-                    businessId: widget.businessId,
-                    screenBloc: widget.screenBloc,
-                  ),
-                  type: PageTransitionType.fade,
-                  duration: Duration(milliseconds: 500),
-                ),
-              );
             },
             child: Text('Edit'),
           ),

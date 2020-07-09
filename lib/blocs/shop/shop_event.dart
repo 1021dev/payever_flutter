@@ -12,21 +12,15 @@ abstract class ShopScreenEvent extends Equatable {
 }
 
 class ShopScreenInitEvent extends ShopScreenEvent {
-  final Business currentBusiness;
-  final List<Terminal> terminals;
-  final Terminal activeTerminal;
+  final String currentBusinessId;
 
   ShopScreenInitEvent({
-    this.currentBusiness,
-    this.terminals,
-    this.activeTerminal,
+    this.currentBusinessId,
   });
 
   @override
   List<Object> get props => [
-    this.currentBusiness,
-    this.terminals,
-    this.activeTerminal,
+    this.currentBusinessId,
   ];
 }
 

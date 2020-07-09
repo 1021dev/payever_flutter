@@ -252,7 +252,20 @@ class _LocalDomainScreenState extends State<LocalDomainScreen> {
                 color: Color(0xFF222222),
                 child: SizedBox.expand(
                   child: MaterialButton(
-                    onPressed: buttonEnabled ? () {} : null,
+                    onPressed: buttonEnabled ? () async {
+                      AccessConfig config = state.activeShop.accessConfig;
+                      config.internalDomain = domainTextController.text;
+                      widget.screenBloc.add(
+                        UpdateShopSettings(
+                          businessId: widget.businessId,
+                          shopId: state.activeShop.id,
+                          config: config,
+                        ),
+                      );
+                      await Future.delayed(const Duration(milliseconds: 500)).then((value) {
+                        Navigator.pop(context);
+                      });
+                    } : null,
                     child: state.isUpdating ? Center(
                       child: CircularProgressIndicator(),
                     ) : Text(

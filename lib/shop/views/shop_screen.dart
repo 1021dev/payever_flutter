@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -102,7 +103,7 @@ class _ShopScreenState extends State<ShopScreen> {
           if (result == 'refresh') {
             screenBloc.add(
                 ShopScreenInitEvent(
-                  currentBusiness: widget.globalStateModel.currentBusiness,
+                  currentBusinessId: widget.globalStateModel.currentBusiness.id,
                 )
             );
           }
@@ -117,6 +118,7 @@ class _ShopScreenState extends State<ShopScreen> {
               child: CreateShopScreen(
                 businessId: widget.globalStateModel.currentBusiness.id,
                 screenBloc: screenBloc,
+                fromDashBoard: true,
               ),
               type: PageTransitionType.fade,
               duration: Duration(milliseconds: 500),
@@ -125,7 +127,7 @@ class _ShopScreenState extends State<ShopScreen> {
           if (result == 'refresh') {
             screenBloc.add(
                 ShopScreenInitEvent(
-                  currentBusiness: widget.globalStateModel.currentBusiness,
+                  currentBusinessId: widget.globalStateModel.currentBusiness.id,
                 )
             );
           }
@@ -223,7 +225,7 @@ class _ShopScreenState extends State<ShopScreen> {
     filterTypes.add(FilterItem(disPlayName: 'Own themes', value: 'Own themes'));
     screenBloc.add(
         ShopScreenInitEvent(
-          currentBusiness: widget.globalStateModel.currentBusiness,
+          currentBusinessId: widget.globalStateModel.currentBusiness.id,
 //          terminals: widget.shopModels,
 //          activeTerminal: widget.activeShop,
         )
@@ -287,7 +289,7 @@ class _ShopScreenState extends State<ShopScreen> {
               if (result == 'refresh') {
                 screenBloc.add(
                     ShopScreenInitEvent(
-                      currentBusiness: widget.globalStateModel.currentBusiness,
+                      currentBusinessId: widget.globalStateModel.currentBusiness.id,
                     )
                 );
               }
@@ -798,6 +800,15 @@ class _ShopScreenState extends State<ShopScreen> {
                     CupertinoSwitch(
                       value: state.activeShop.accessConfig.isLive,
                       onChanged: (value) {
+                        AccessConfig config = state.activeShop.accessConfig;
+                        config.isLive = value;
+                        screenBloc.add(
+                          UpdateShopSettings(
+                            businessId: widget.globalStateModel.currentBusiness.id,
+                            shopId: state.activeShop.id,
+                            config: config,
+                          ),
+                        );
                       },
                     ),
                   ],

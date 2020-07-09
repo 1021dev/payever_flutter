@@ -86,7 +86,16 @@ class _CreateShopScreenState extends State<CreateShopScreen> {
             ),
           );
         } else if (state is ShopScreenStateSuccess) {
+          if (widget.fromDashBoard) {
             Navigator.pop(context, 'refresh');
+          } else {
+            widget.screenBloc.add(
+                ShopScreenInitEvent(
+                  currentBusinessId: widget.businessId,
+                )
+            );
+            Navigator.pop(context);
+          }
         }
       },
       child: BlocBuilder<ShopScreenBloc, ShopScreenState>(

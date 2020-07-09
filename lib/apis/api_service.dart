@@ -6,6 +6,7 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/network/rest_ds.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/env.dart';
+import 'package:payever/shop/models/models.dart';
 
 class ApiService {
   static final envUrl = GlobalUtils.COMMERCE_OS_URL + '/env.json';
@@ -561,6 +562,23 @@ class ApiService {
     }
   }
 
+  Future<dynamic> getShopDetail(String idBusiness, String token, String shopId) async {
+    try {
+      print('$TAG - getShopDetail()');
+      dynamic response = await _client.getTypeless(
+        '$shopUrl$idBusiness$shopEnd/$shopId',
+        headers: {
+          HttpHeaders.authorizationHeader: 'Bearer $token',
+          HttpHeaders.contentTypeHeader: 'application/json',
+          HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+        }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<dynamic> getTemplates(String token) async {
     try {
       print('$TAG - getTemplates()');
@@ -926,6 +944,24 @@ class ApiService {
     }
   }
 
+  Future<dynamic> updateShopConfig(String token, String businessId, String shopId, AccessConfig config) async {
+    try {
+      print('$TAG - updateShopConfig()');
+      dynamic response = await _client.patchTypeless(
+          '${Env.shop}/api/business/$businessId/shop/access/$shopId',
+          body: config.toData(),
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<dynamic> postGenerateTerminalQRCode(
       String token,
       String businessId,
@@ -1204,11 +1240,11 @@ class ApiService {
 
   Future<dynamic> createShop(String token, String idBusiness, String name, String logo) async {
     try {
-      print('$TAG - postTerminal()');
+      print('$TAG - createShop()');
       dynamic response = await _client.postTypeLess(
           '$shopBase/api/business/$idBusiness/shop',
           body: {
-            'logo': logo,
+//            'logo': logo,
             'name': name,
           },
           headers: {

@@ -19,7 +19,7 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
   @override
   Stream<ShopScreenState> mapEventToState(ShopScreenEvent event) async* {
     if (event is ShopScreenInitEvent) {
-      yield* fetchShop(event.currentBusiness.id);
+      yield* fetchShop(event.currentBusinessId);
     } else if (event is InstallTemplateEvent) {
       yield* installTemplate(event.businessId, event.shopId, event.templateId);
     } else if (event is GetActiveThemeEvent) {
@@ -34,6 +34,8 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
       yield* createShop(event.businessId, event.name, event.logo);
     } else if (event is SetDefaultShop) {
       yield* setDefaultShop(event.businessId, event.shopId);
+    } else if (event is UpdateShopSettings) {
+      yield* updateShopSettings(event.businessId, event.shopId, event.config);
     }
   }
 
@@ -101,7 +103,13 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
         themes.add(ThemeModel.toMap(element));
       });
     }
-    yield state.copyWith(ownThemes: themes);
+    dynamic defaultObj = await api.getShopDetail(activeBusinessId, GlobalUtils.activeToken.accessToken, shopId);
+    if (defaultObj != null) {
+      ShopDetailModel model = ShopDetailModel.toMap(defaultObj);
+      yield state.copyWith(activeShop: model, ownThemes: themes);
+    } else {
+      yield state.copyWith(ownThemes: themes);
+    }
   }
 
   Stream<ShopScreenState> uploadShopImage(String businessId, File file) async* {
@@ -126,4 +134,12 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
     yield ShopScreenStateSuccess();
   }
 
+  Stream<ShopScreenState> updateShopSettings(String businessId, String shopId, AccessConfig config) async* {
+    dynamic response = await api.updateShopConfig(GlobalUtils.activeToken.accessToken, businessId, shopId, config);
+    dynamic defaultObj = await api.getShopDetail(businessId, GlobalUtils.activeToken.accessToken, shopId);
+    if (defaultObj != null) {
+      ShopDetailModel model = ShopDetailModel.toMap(defaultObj);
+      yield state.copyWith(activeShop: model);
+    }
+  }
 }

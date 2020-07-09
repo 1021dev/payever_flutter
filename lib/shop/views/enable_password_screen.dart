@@ -45,9 +45,12 @@ class _EnablePasswordScreenState extends State<EnablePasswordScreen> {
   bool isError = false;
   bool isButtonPressed = false;
   bool buttonEnabled = false;
+  bool isPrivate = false;
 
   @override
   void initState() {
+    isPrivate = widget.detailModel.accessConfig.isPrivate ?? false;
+
     super.initState();
   }
 
@@ -247,9 +250,13 @@ class _EnablePasswordScreenState extends State<EnablePasswordScreen> {
               Container(
                 child: ListTile(
                   onTap: () {
-
+                    setState(() {
+                      isPrivate = !isPrivate;
+                    });
                   },
-                  leading: Icon(Icons.check_box_outline_blank),
+                  leading: isPrivate
+                      ? Icon(Icons.check_box)
+                      : Icon(Icons.check_box_outline_blank),
                   title: Text(
                     'Enable password',
                     style: TextStyle(
@@ -265,7 +272,22 @@ class _EnablePasswordScreenState extends State<EnablePasswordScreen> {
                 color: Color(0xFF222222),
                 child: SizedBox.expand(
                   child: MaterialButton(
-                    onPressed: buttonEnabled ? () {} : null,
+                    onPressed: buttonEnabled ? () async {
+                      AccessConfig config = state.activeShop.accessConfig;
+                      config.privateMessage = visitorController.text;
+                      config.privatePassword = passwordController.text;
+                      config.isPrivate = isPrivate;
+                      widget.screenBloc.add(
+                        UpdateShopSettings(
+                          businessId: widget.businessId,
+                          shopId: state.activeShop.id,
+                          config: config,
+                        ),
+                      );
+                      await Future.delayed(const Duration(milliseconds: 500)).then((value) {
+                        Navigator.pop(context);
+                      });
+                    } : null,
                     child: state.isUpdating ? Center(
                       child: CircularProgressIndicator(),
                     ) : Text(
