@@ -16,6 +16,8 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
   Stream<ShopScreenState> mapEventToState(ShopScreenEvent event) async* {
     if (event is ShopScreenInitEvent) {
       yield* fetchShop(event.currentBusiness.id);
+    } else if (event is InstallTemplateEvent) {
+      yield* installTemplate(event.businessId, event.shopId, event.templateId);
     }
   }
 
@@ -51,8 +53,37 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
         });
       }
     }
-
     yield state.copyWith(shops: shops, activeShop: activeShop, templates: templates, ownThemes: themes, isLoading: false);
+  }
+
+  Stream<ShopScreenState> installTemplate(String activeBusinessId, String shopId, String templateId) async* {
+    dynamic response = await api.installTemplate(GlobalUtils.activeToken.accessToken, activeBusinessId, shopId, templateId);
+    if (response != null) {
+      print(ThemeResponse.toMap(response));
+    }
+    add(GetActiveThemeEvent(businessId: activeBusinessId, shopId: shopId));
+  }
+
+  Stream<ShopScreenState> duplicateTheme(String activeBusinessId, String shopId, String themeId) async* {
+    dynamic response = await api.duplicateTheme(GlobalUtils.activeToken.accessToken, activeBusinessId, shopId, themeId);
+    if (response != null) {
+      print(ThemeResponse.toMap(response));
+    }
+    add(GetActiveThemeEvent(businessId: activeBusinessId, shopId: shopId));
+  }
+
+  Stream<ShopScreenState> deleteTheme(String activeBusinessId, String shopId, String themeId) async* {
+    dynamic response = await api.deleteTheme(GlobalUtils.activeToken.accessToken, activeBusinessId, shopId, themeId);
+    add(GetActiveThemeEvent(businessId: activeBusinessId, shopId: shopId));
+  }
+
+  Stream<ShopScreenState> getActiveTheme(String activeBusinessId, String shopId) async* {
+    dynamic response = await api.getActiveTheme(GlobalUtils.activeToken.accessToken, activeBusinessId, shopId);
+    if (response is List) {
+      if (response.length > 0) {
+        yield state.copyWith(activeTheme: ThemeModel.toMap(response.first));
+      }
+    }
   }
 
 }

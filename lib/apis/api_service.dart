@@ -595,6 +595,75 @@ class ApiService {
     }
   }
 
+  Future<dynamic> installTemplate(String token, String businessId, String shopId, String templateId) async {
+    try {
+      print('$TAG - installTemplate()');
+      dynamic response = await _client.putTypeless(
+          '${Env.builderShop}/business/$businessId/shop/$shopId/template/$templateId/install',
+          body: {},
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> deleteTheme(String token, String businessId, String shopId, String themeId) async {
+    try {
+      print('$TAG - deleteTheme()');
+      dynamic response = await _client.deleteTypeless(
+          '${Env.builderShop}/business/$businessId/shop/$shopId/theme/$themeId',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> duplicateTheme(String token, String businessId, String shopId, String themeId) async {
+    try {
+      print('$TAG - duplicateTheme()');
+      dynamic response = await _client.putTypeless(
+        '${Env.builderShop}/business/$businessId/shop/$shopId/theme/$themeId/duplicate',
+        headers: {
+          HttpHeaders.authorizationHeader: 'Bearer $token',
+          HttpHeaders.contentTypeHeader: 'application/json',
+          HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+        },
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getActiveTheme(String token, String businessId, String shopId) async {
+    try {
+      print('$TAG - duplicateTheme()');
+      dynamic response = await _client.getTypeless(
+        '${Env.builderShop}/business/$businessId/shop/$shopId/themes/active',
+        headers: {
+          HttpHeaders.authorizationHeader: 'Bearer $token',
+          HttpHeaders.contentTypeHeader: 'application/json',
+          HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+        },
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<dynamic> deleteTransactionList(String id, String token, String query) async {
     try {
       print('$TAG - deleteTransactionList()');

@@ -8,6 +8,7 @@ class ShopScreenState {
   final List<ThemeModel> ownThemes;
   final List<ShopDetailModel> shops;
   final ShopDetailModel activeShop;
+  final ThemeModel activeTheme;
 
   ShopScreenState({
     this.isLoading = false,
@@ -16,6 +17,7 @@ class ShopScreenState {
     this.templates = const [],
     this.ownThemes = const [],
     this.activeShop,
+    this.activeTheme,
   });
 
   List<Object> get props => [
@@ -24,6 +26,7 @@ class ShopScreenState {
     this.templates,
     this.shops,
     this.ownThemes,
+    this.activeShop,
     this.activeShop,
   ];
 
@@ -34,6 +37,7 @@ class ShopScreenState {
     List<ThemeModel> ownThemes,
     List<ShopDetailModel> shops,
     ShopDetailModel activeShop,
+    ThemeModel activeTheme,
   }) {
     return ShopScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -42,6 +46,7 @@ class ShopScreenState {
       shops: shops ?? this.shops,
       ownThemes: ownThemes ?? this.ownThemes,
       activeShop: activeShop ?? this.activeShop,
+      activeTheme: activeTheme ?? this.activeTheme,
     );
   }
 }

@@ -147,3 +147,24 @@ class BusinessM {
     name = obj['name'];
   }
 }
+
+class ThemeResponse {
+  String id;
+  String name;
+  String picture;
+  dynamic published;
+  String source;
+  String type;
+  List<dynamic> versions;
+
+  ThemeResponse.toMap(dynamic obj) {
+    id = obj['id'];
+    name = obj['name'];
+    picture = obj['picture'];
+    published = obj['published'];
+    source = obj['source'];
+    type = obj['type'];
+    versions = obj['versions'];
+  }
+
+}

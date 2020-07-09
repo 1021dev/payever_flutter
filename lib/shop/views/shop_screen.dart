@@ -100,7 +100,16 @@ class _ShopScreenState extends State<ShopScreen> {
     return [
       OverflowMenuItem(
         title: 'Install',
-        onTap: () async {
+        onTap: (TemplateModel template) async {
+          if (state.activeShop != null) {
+            screenBloc.add(
+                InstallTemplateEvent(
+                  businessId: widget.globalStateModel.currentBusiness.id,
+                  templateId: template.id,
+                  shopId: state.activeShop.id,
+                )
+            );
+          }
         },
       ),
     ];
@@ -110,22 +119,49 @@ class _ShopScreenState extends State<ShopScreen> {
     return [
       OverflowMenuItem(
         title: 'Install',
-        onTap: () async {
+        onTap: (theme) async {
+          if (state.activeShop != null) {
+            screenBloc.add(
+                InstallTemplateEvent(
+                  businessId: widget.globalStateModel.currentBusiness.id,
+                  templateId: theme.id,
+                  shopId: state.activeShop.id,
+                )
+            );
+          }
         },
       ),
       OverflowMenuItem(
         title: 'Duplicate',
-        onTap: () async {
+        onTap: (theme) async {
+          if (state.activeShop != null) {
+            screenBloc.add(
+                DubplicateThemeEvent(
+                  businessId: widget.globalStateModel.currentBusiness.id,
+                  themeId: theme.id,
+                  shopId: state.activeShop.id,
+                )
+            );
+          }
         },
       ),
       OverflowMenuItem(
         title: 'Edit',
-        onTap: () async {
+        onTap: (theme) async {
         },
       ),
       OverflowMenuItem(
         title: 'Delete',
-        onTap: () async {
+        onTap: (theme) async {
+          if (state.activeShop != null) {
+            screenBloc.add(
+                DeleteThemeEvent(
+                  businessId: widget.globalStateModel.currentBusiness.id,
+                  themeId: theme.id,
+                  shopId: state.activeShop.id,
+                )
+            );
+          }
         },
       ),
     ];
@@ -559,7 +595,7 @@ class _ShopScreenState extends State<ShopScreen> {
                               child: PopupMenuButton<OverflowMenuItem>(
                                 icon: Icon(Icons.more_horiz),
                                 offset: Offset(0, 0),
-                                onSelected: (OverflowMenuItem item) => item.onTap(),
+                                onSelected: (OverflowMenuItem item) => item.onTap(templateModel),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8),
                                 ),
@@ -638,7 +674,7 @@ class _ShopScreenState extends State<ShopScreen> {
                               child: PopupMenuButton<OverflowMenuItem>(
                                 icon: Icon(Icons.more_horiz),
                                 offset: Offset(0, 0),
-                                onSelected: (OverflowMenuItem item) => item.onTap(),
+                                onSelected: (OverflowMenuItem item) => item.onTap(theme),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8),
                                 ),
