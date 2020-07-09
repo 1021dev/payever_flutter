@@ -13,6 +13,8 @@ import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/b
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/dashboard_menu_view.dart';
 import 'package:payever/pos_new/widgets/pos_top_button.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/shop/views/enable_password_screen.dart';
+import 'package:payever/shop/views/external_domain_screen.dart';
 import 'package:payever/shop/views/local_domain_screen.dart';
 import 'package:payever/shop/widgets/shop_top_button.dart';
 import 'package:payever/shop/widgets/theme_filter_content_view.dart';
@@ -784,7 +786,17 @@ class _ShopScreenState extends State<ShopScreen> {
                           MaterialButton(
                             minWidth: 0,
                             onPressed: () {
-
+                              Navigator.push(
+                                context,
+                                PageTransition(
+                                  child: ExternalDomainScreen(
+                                    screenBloc: screenBloc,
+                                    businessId: Provider.of<GlobalStateModel>(context, listen: false).currentBusiness.id,
+                                    detailModel: state.activeShop,
+                                  ),
+                                  type: PageTransitionType.fade,
+                                ),
+                              );
                             },
                             child: Text(
                                 Language.getSettingsStrings('actions.edit')
@@ -823,7 +835,17 @@ class _ShopScreenState extends State<ShopScreen> {
                           MaterialButton(
                             minWidth: 0,
                             onPressed: () {
-
+                              Navigator.push(
+                                context,
+                                PageTransition(
+                                  child: EnablePasswordScreen(
+                                    screenBloc: screenBloc,
+                                    businessId: Provider.of<GlobalStateModel>(context, listen: false).currentBusiness.id,
+                                    detailModel: state.activeShop,
+                                  ),
+                                  type: PageTransitionType.fade,
+                                ),
+                              );
                             },
                             child: Text(
                                 Language.getSettingsStrings('actions.edit')
