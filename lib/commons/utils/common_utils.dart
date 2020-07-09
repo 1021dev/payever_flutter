@@ -765,6 +765,7 @@ class GlobalUtils {
   static const String ENV_MEDIA = 'media';
   static const String ENV_PRODUCTS = 'products';
   static const String ENV_INVENTORY = 'inventory';
+  static const String ENV_SHOP = 'shop';
   static const String ENV_SHOPS = 'shops';
   static const String ENV_WRAPPER = 'checkoutWrapper';
   static const String ENV_EMPLOYEES = 'employees';

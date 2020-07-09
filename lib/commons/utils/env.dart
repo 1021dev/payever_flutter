@@ -36,6 +36,7 @@ class Env {
   static String backendBuilder;
   static String builderShop;
   static String notifications;
+  static String shop;
 
   Env.map(dynamic obj) {
     Env.users = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_USER];
@@ -57,6 +58,7 @@ class Env {
     Env.products = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_PRODUCTS];
     Env.inventory = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_INVENTORY];
     Env.shops = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_SHOPS];
+    Env.shop = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_SHOP];
     Env.builder = obj[GlobalUtils.ENV_FRONTEND][GlobalUtils.ENV_BUILDER_CLIENT];
     Env.wrapper = obj[GlobalUtils.ENV_FRONTEND][GlobalUtils.ENV_WRAPPER];
     Env.employees = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_EMPLOYEES];

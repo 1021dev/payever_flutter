@@ -58,8 +58,11 @@ class ApiService {
   static String posTerminalMid = '/terminal/';
 
   static String shopsBase = Env.shops;
-  static String shopUrl = '$shopsBase/api/business/';
+  static String shopsUrl = '$shopsBase/api/business/';
   static String shopEnd = '/shop';
+
+  static String shopBase = Env.shop;
+  static String shopUrl = '$shopBase/api/business/';
 
   static String checkoutBase = '${Env.checkout}/api';
   static String checkoutFlow = '$checkoutBase/flow/channel-set/';
@@ -528,6 +531,23 @@ class ApiService {
     try {
       print('$TAG - getShops()');
       dynamic response = await _client.getTypeless(
+          '$shopsUrl$idBusiness$shopEnd',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getShop(String idBusiness, String token) async {
+    try {
+      print('$TAG - getShop()');
+      dynamic response = await _client.getTypeless(
           '$shopUrl$idBusiness$shopEnd',
           headers: {
             HttpHeaders.authorizationHeader: 'Bearer $token',
@@ -546,6 +566,23 @@ class ApiService {
       print('$TAG - getTemplates()');
       dynamic response = await _client.getTypeless(
           '${Env.builderShop}/templates',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getOwnThemes(String token, String businessId, String shopId) async {
+    try {
+      print('$TAG - getOwnThemes()');
+      dynamic response = await _client.getTypeless(
+          '${Env.builderShop}/business/$businessId/shop/$shopId/themes',
           headers: {
             HttpHeaders.authorizationHeader: 'Bearer $token',
             HttpHeaders.contentTypeHeader: 'application/json',

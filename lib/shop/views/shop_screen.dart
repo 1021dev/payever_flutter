@@ -1,27 +1,20 @@
-import 'dart:async';
-import 'dart:io';
 import 'dart:ui';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/shop/shop.dart';
 import 'package:payever/commons/commons.dart';
-import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/blur_effect_view.dart';
 import 'package:payever/commons/views/screens/dashboard/new_dashboard/sub_view/dashboard_menu_view.dart';
-import 'package:payever/pos_new/views/pos_connect_screen.dart';
-import 'package:payever/pos_new/views/pos_create_terminal_screen.dart';
-import 'package:payever/pos_new/views/pos_switch_terminals_screen.dart';
 import 'package:payever/pos_new/widgets/pos_top_button.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/widgets/shop_top_button.dart';
+import 'package:payever/shop/widgets/theme_filter_content_view.dart';
+import 'package:payever/transactions/views/filter_content_view.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -81,6 +74,8 @@ class _ShopScreenState extends State<ShopScreen> {
   String wallpaper;
   int selectedIndex = 0;
   bool isShowCommunications = false;
+  List<FilterItem> filterTypes = [];
+  int selectedTypes = 0;
 
   List<OverflowMenuItem> appBarPopUpActions(BuildContext context, ShopScreenState state) {
     return [
@@ -97,9 +92,46 @@ class _ShopScreenState extends State<ShopScreen> {
     ];
   }
 
+  List<OverflowMenuItem> templatePopup(BuildContext context, ShopScreenState state) {
+    return [
+      OverflowMenuItem(
+        title: 'Install',
+        onTap: () async {
+        },
+      ),
+    ];
+  }
+
+  List<OverflowMenuItem> themePopup(BuildContext context, ShopScreenState state) {
+    return [
+      OverflowMenuItem(
+        title: 'Install',
+        onTap: () async {
+        },
+      ),
+      OverflowMenuItem(
+        title: 'Duplicate',
+        onTap: () async {
+        },
+      ),
+      OverflowMenuItem(
+        title: 'Edit',
+        onTap: () async {
+        },
+      ),
+      OverflowMenuItem(
+        title: 'Delete',
+        onTap: () async {
+        },
+      ),
+    ];
+  }
+
   @override
   void initState() {
     super.initState();
+    filterTypes.add(FilterItem(disPlayName: 'All themes', value: 'All themes'));
+    filterTypes.add(FilterItem(disPlayName: 'Own themes', value: 'Own themes'));
     screenBloc.add(
         ShopScreenInitEvent(
           currentBusiness: widget.globalStateModel.currentBusiness,
@@ -413,70 +445,230 @@ class _ShopScreenState extends State<ShopScreen> {
 
   Widget _templatesView(ShopScreenState state) {
     return Container(
-      child: GridView.count(
-        padding: EdgeInsets.only(left: 36, right: 36, top: 16, bottom: 16),
-        children:  state.templates.map((templateModel) {
-            return Container(
-              width: Measurements.width - 72,
-              height: (Measurements.width - 72) * 1.8,
-              clipBehavior: Clip.antiAlias,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                shape: BoxShape.rectangle,
-              ),
-              child: Column(
-                children: <Widget>[
-                  Expanded(
-                    child: Image.network(
-                      '${Env.storage}${templateModel.picture}',
-                      fit: BoxFit.cover,
+      child: Column(
+        children: <Widget>[
+          Container(
+            height: 64,
+            color: Color(0xFF222222),
+            child: Stack(
+              alignment: Alignment.center,
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.only(left: 16),
+                  alignment: Alignment.centerLeft,
+                  child: InkWell(
+                    onTap: () {
+                      showCupertinoModalPopup(
+                        context: context,
+                        builder: (builder) {
+                          return ThemeFilterContentView(
+                            selectedIndex: selectedTypes ,
+                            onSelected: (val) {
+                              Navigator.pop(context);
+                              setState(() {
+                                selectedTypes = val;
+                              });
+                            },
+                          );
+                        },
+                      );
+                    },
+                    child: Row(
+                      children: <Widget>[
+                        Icon(Icons.filter_list),
+                        Padding(
+                          padding: EdgeInsets.only(left: 8),
+                        ),
+                        Text(
+                          'Filter',
+                        )
+                      ],
                     ),
                   ),
-                  Container(
-                    color: Colors.black87,
-                    height: (Measurements.width - 72) * 0.38,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: <Widget>[
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                ),
+                Text(
+                  selectedTypes == 0
+                      ? '${state.templates.length} Templates'
+                      : '${state.ownThemes.length} Themes',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                  ),
+                )
+              ],
+            ),
+          ),
+          Expanded(
+            child: ((selectedTypes == 0 && state.templates.length > 0) || (selectedTypes == 1 && state.ownThemes.length > 0)) ? GridView.count(
+              padding: EdgeInsets.only(left: 36, right: 36, top: 16, bottom: 16),
+              children: selectedTypes == 0
+                  ? state.templates.map((templateModel) {
+                return Container(
+                  width: Measurements.width - 72,
+                  height: (Measurements.width - 72) * 1.8,
+                  clipBehavior: Clip.antiAlias,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    shape: BoxShape.rectangle,
+                  ),
+                  child: Column(
+                    children: <Widget>[
+                      Expanded(
+                        child: Image.network(
+                          '${Env.storage}${templateModel.picture}',
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      Container(
+                        color: Colors.black87,
+                        height: (Measurements.width - 72) * 0.38,
+                        child: Stack(
+                          alignment: Alignment.center,
                           children: <Widget>[
-                            Text(
-                              'new',
-                              style: TextStyle(
-                                color: Color(0xffff9000),
-                                fontSize: 10,
-                              ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Text(
+                                  'new',
+                                  style: TextStyle(
+                                    color: Color(0xffff9000),
+                                    fontSize: 10,
+                                  ),
+                                ),
+                                Text(
+                                  templateModel.name,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                              ],
                             ),
-                            Text(
-                              templateModel.name,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400,
+                            Container(
+                              alignment: Alignment.centerRight,
+                              child: PopupMenuButton<OverflowMenuItem>(
+                                icon: Icon(Icons.more_horiz),
+                                offset: Offset(0, 0),
+                                onSelected: (OverflowMenuItem item) => item.onTap(),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                color: Colors.black87,
+                                itemBuilder: (BuildContext context) {
+                                  return templatePopup(context, state)
+                                      .map((OverflowMenuItem item) {
+                                    return PopupMenuItem<OverflowMenuItem>(
+                                      value: item,
+                                      child: Text(
+                                        item.title,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w300,
+                                        ),
+                                      ),
+                                    );
+                                  }).toList();
+                                },
                               ),
                             ),
                           ],
                         ),
-                        Container(
-                          alignment: Alignment.centerRight,
-                          child: MaterialButton(
-                            onPressed: () {},
-                            child: Icon(Icons.more_vert),
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            );
-        }).toList(),
-        crossAxisCount: _isPortrait ? 1: 3,
-        mainAxisSpacing: 36,
-        crossAxisSpacing: 36,
-        childAspectRatio: 0.6,
+                );
+              }).toList()
+                  : state.ownThemes.map((theme) {
+                return Container(
+                  width: Measurements.width - 72,
+                  height: (Measurements.width - 72) * 1.8,
+                  clipBehavior: Clip.antiAlias,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    shape: BoxShape.rectangle,
+                  ),
+                  child: Column(
+                    children: <Widget>[
+                      Expanded(
+                        child: theme.picture != null ? Image.network(
+                          '${Env.storage}${theme.picture}',
+                          fit: BoxFit.cover,
+                        ) : SvgPicture.asset('assets/images/images_routes.json'),
+                      ),
+                      Container(
+                        color: Colors.black87,
+                        height: (Measurements.width - 72) * 0.38,
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: <Widget>[
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Text(
+                                  'new',
+                                  style: TextStyle(
+                                    color: Color(0xffff9000),
+                                    fontSize: 10,
+                                  ),
+                                ),
+                                Text(
+                                  theme.name,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Container(
+                              alignment: Alignment.centerRight,
+                              child: PopupMenuButton<OverflowMenuItem>(
+                                icon: Icon(Icons.more_horiz),
+                                offset: Offset(0, 0),
+                                onSelected: (OverflowMenuItem item) => item.onTap(),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                color: Colors.black87,
+                                itemBuilder: (BuildContext context) {
+                                  return themePopup(context, state)
+                                      .map((OverflowMenuItem item) {
+                                    return PopupMenuItem<OverflowMenuItem>(
+                                      value: item,
+                                      child: Text(
+                                        item.title,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w300,
+                                        ),
+                                      ),
+                                    );
+                                  }).toList();
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }).toList(),
+              crossAxisCount: _isPortrait ? 1: 3,
+              mainAxisSpacing: 36,
+              crossAxisSpacing: 36,
+              childAspectRatio: 0.6,
+            ): Container(),
+          ),
+        ],
       ),
     );
   }

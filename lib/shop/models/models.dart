@@ -1,3 +1,5 @@
+import 'package:payever/commons/commons.dart';
+
 class ShopModel {
   bool active;
   String business;
@@ -63,5 +65,85 @@ class TemplateModel {
     name = obj['name'];
     picture = obj['picture'];
     type = obj['type'];
+  }
+}
+
+class ThemeModel {
+  String id;
+  bool isActive = false;
+  bool isDeployed = false;
+  String name = '';
+  String picture;
+  String shopId;
+  String themeId;
+  String type;
+
+  ThemeModel.toMap(dynamic obj) {
+    id = obj['id'] ?? '';
+    isActive = obj['isActive'] ?? false;
+    isDeployed = obj['isDeployed'] ?? false;
+    name = obj['name'] ?? '';
+    picture = obj['picture'] ?? '';
+    shopId = obj['shopId'] ?? '';
+    themeId = obj['themeId'] ?? '';
+    type = obj['type'] ?? '';
+  }
+}
+
+class ShopDetailModel {
+  AccessConfig accessConfig;
+  BusinessM business;
+  ChannelSet channelSet;
+  String id;
+  bool isDefault = false;
+  String name;
+  String picture;
+
+  ShopDetailModel.toMap(dynamic obj) {
+    id = obj['id'];
+    isDefault = obj['isDefault'];
+    name = obj['name'];
+    picture = obj['picture'];
+    if (obj['accessConfig'] != null){
+      accessConfig = AccessConfig.toMap(obj['accessConfig']);
+    }
+    if (obj['business'] != null){
+      business = BusinessM.toMap(obj['business']);
+    }
+    if (obj['channelSet'] != null){
+      channelSet = ChannelSet.toMap(obj['channelSet']);
+    }
+  }
+}
+
+class AccessConfig {
+  String id;
+  String internalDomain;
+  String internalDomainPattern;
+  bool isLive;
+  bool isLocked;
+  bool isPrivate;
+  String ownDomain;
+  String privateMessage;
+
+  AccessConfig.toMap(dynamic obj) {
+    id = obj['id'];
+    internalDomain = obj['internalDomain'];
+    internalDomainPattern = obj['internalDomainPattern'];
+    isLive = obj['isLive'];
+    isLocked = obj['isLocked'];
+    isPrivate = obj['isPrivate'];
+    ownDomain = obj['ownDomain'];
+    privateMessage = obj['privateMessage'];
+  }
+}
+
+class BusinessM {
+  String id;
+  String name;
+
+  BusinessM.toMap(dynamic obj) {
+    id = obj['id'];
+    name = obj['name'];
   }
 }

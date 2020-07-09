@@ -1,10 +1,8 @@
-
 import 'package:bloc/bloc.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/shop/models/models.dart';
 
-import '../bloc.dart';
 import 'shop.dart';
 
 class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
@@ -23,14 +21,38 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
 
   Stream<ShopScreenState> fetchShop(String activeBusinessId) async* {
     yield state.copyWith(isLoading: true);
-    dynamic templatesObj = await api.getTemplates(GlobalUtils.activeToken.accessToken);
+    List<ShopDetailModel> shops = [];
+    List<ThemeModel> themes = [];
     List<TemplateModel> templates = [];
+
+    dynamic response = await api.getShop(activeBusinessId, GlobalUtils.activeToken.accessToken);
+    if (response is List) {
+      response.forEach((element) {
+        shops.add(ShopDetailModel.toMap(element));
+      });
+    }
+    ShopDetailModel activeShop;
+    if (shops.length > 0) {
+      activeShop = shops.firstWhere((element) => element.isDefault);
+    }
+
+    dynamic templatesObj = await api.getTemplates(GlobalUtils.activeToken.accessToken);
     if (templatesObj != null) {
       templatesObj.forEach((element) {
         templates.add(TemplateModel.toMap(element));
       });
     }
-    yield state.copyWith(templates: templates, isLoading: false);
+
+    if (activeShop != null) {
+      dynamic themeObkj = await api.getOwnThemes(GlobalUtils.activeToken.accessToken, activeBusinessId, activeShop.id);
+      if (themeObkj != null) {
+        themeObkj.forEach((element) {
+          themes.add(ThemeModel.toMap(element));
+        });
+      }
+    }
+
+    yield state.copyWith(shops: shops, activeShop: activeShop, templates: templates, ownThemes: themes, isLoading: false);
   }
 
 }
