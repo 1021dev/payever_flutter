@@ -17,10 +17,12 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
   @override
   Stream<ShopScreenState> mapEventToState(ShopScreenEvent event) async* {
     if (event is ShopScreenInitEvent) {
+      yield* fetchShop(event.currentBusiness.id);
     }
   }
 
   Stream<ShopScreenState> fetchShop(String activeBusinessId) async* {
+    yield state.copyWith(isLoading: true);
     dynamic templatesObj = await api.getTemplates(GlobalUtils.activeToken.accessToken);
     List<TemplateModel> templates = [];
     if (templatesObj != null) {
@@ -28,7 +30,7 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
         templates.add(TemplateModel.toMap(element));
       });
     }
-    yield state.copyWith(templates: templates);
+    yield state.copyWith(templates: templates, isLoading: false);
   }
 
 }

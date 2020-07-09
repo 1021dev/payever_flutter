@@ -404,9 +404,81 @@ class _ShopScreenState extends State<ShopScreen> {
 
   Widget _getBody(ShopScreenState state) {
     switch(selectedIndex) {
+      case 1:
+        return _templatesView(state);
       default:
         return Container();
     }
+  }
+
+  Widget _templatesView(ShopScreenState state) {
+    return Container(
+      child: GridView.count(
+        padding: EdgeInsets.only(left: 36, right: 36, top: 16, bottom: 16),
+        children:  state.templates.map((templateModel) {
+            return Container(
+              width: Measurements.width - 72,
+              height: (Measurements.width - 72) * 1.8,
+              clipBehavior: Clip.antiAlias,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                shape: BoxShape.rectangle,
+              ),
+              child: Column(
+                children: <Widget>[
+                  Expanded(
+                    child: Image.network(
+                      '${Env.storage}${templateModel.picture}',
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  Container(
+                    color: Colors.black87,
+                    height: (Measurements.width - 72) * 0.38,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: <Widget>[
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              'new',
+                              style: TextStyle(
+                                color: Color(0xffff9000),
+                                fontSize: 10,
+                              ),
+                            ),
+                            Text(
+                              templateModel.name,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Container(
+                          alignment: Alignment.centerRight,
+                          child: MaterialButton(
+                            onPressed: () {},
+                            child: Icon(Icons.more_vert),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+        }).toList(),
+        crossAxisCount: _isPortrait ? 1: 3,
+        mainAxisSpacing: 36,
+        crossAxisSpacing: 36,
+        childAspectRatio: 0.6,
+      ),
+    );
   }
 }
 
