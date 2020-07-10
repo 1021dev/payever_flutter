@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/products/models/models.dart';
@@ -19,8 +18,8 @@ class ProductGridItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(6.0)),
-        color: Color.fromRGBO(0, 0, 0, 0.3)
+          borderRadius: BorderRadius.all(Radius.circular(6.0)),
+          color: Color.fromRGBO(0, 0, 0, 0.3)
       ),
       child: InkWell(
         onTap: () {
@@ -42,46 +41,61 @@ class ProductGridItem extends StatelessWidget {
                 child: ProductItemImage(product.productsModel.images.isEmpty ? null : product.productsModel.images.first, isRoundOnlyTopCorners: false),
               ),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  product.productsModel.title,
-                  style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500
+            Padding(
+              padding: EdgeInsets.only(left: 24, right: 24, bottom: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    product.productsModel.title,
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500
+                    ),
                   ),
-                ),
-                Text(
-                  Measurements.currency(product.productsModel.currency) + formatter.format(product.productsModel.price),
-                  style: TextStyle(
-                      fontSize: 8,
-                      color: Color.fromRGBO(255, 255, 255, 0.4)
+                  Padding(
+                    padding: EdgeInsets.only(top: 8),
                   ),
-                ),
-                Text(
-                  product.productsModel.sku ?? Language.getProductListStrings('filters.quantity.options.outStock'),
-                  style: TextStyle(
-                      fontSize: 8,
-                      color: Color.fromRGBO(255, 255, 255, 0.4)
+                  Text(
+                    '${formatter.format(product.productsModel.price)} ${Measurements.currency(product.productsModel.currency)}',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w300,
+                    ),
                   ),
-                ),
-              ],
+                  Padding(
+                    padding: EdgeInsets.only(top: 8),
+                  ),
+                  Text(
+                    product.productsModel.onSales
+                        ? Language.getProductListStrings('filters.quantity.options.outStock')
+                        : Language.getProductListStrings('filters.quantity.options.inStock'),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w300,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 8),
+                  ),
+                ],
+              ),
             ),
-            InkWell(
-              onTap: () {
-                onTap();
-              },
-              child: Container(
-                alignment: Alignment.center,
-                height: 28,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(bottomRight: Radius.circular(6.0), bottomLeft: Radius.circular(6.0)),
-                    color: Color.fromRGBO(0, 0, 0, 0.3)
-                ),
-                child: Text(
-                    Language.getProductListStrings('open')
-                ),
+            Divider(
+              height: 0,
+              thickness: 0.5,
+              color: Colors.white54,
+            ),
+            Container(
+              height: 44,
+              alignment: Alignment.centerRight,
+              child: MaterialButton(
+                onPressed: () {
+
+                },
+                child: Icon(Icons.more_vert),
               ),
             ),
           ],

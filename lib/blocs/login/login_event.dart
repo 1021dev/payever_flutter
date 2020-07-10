@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:payever/commons/commons.dart';
 
 abstract class LoginScreenEvent extends Equatable {
   LoginScreenEvent();

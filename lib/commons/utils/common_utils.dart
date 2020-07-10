@@ -658,6 +658,7 @@ class GlobalUtils {
   static const String DB_PROD_MODEL_SKU = 'sku';
   static const String DB_PROD_MODEL_TITLE = 'title';
   static const String DB_PROD_MODEL_TYPE = 'type';
+  static const String DB_PROD_MODEL_SALES = 'onSales';
   static const String DB_PROD_MODEL_VARIANTS = 'variants';
   static const String DB_PROD_MODEL_SHIPPING = 'shipping';
   static const String DB_PROD_MODEL_CHANNEL_SET = 'channelSets';

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:payever/commons/commons.dart';
-import 'package:payever/pos_new/models/models.dart';
+import 'package:payever/pos/models/models.dart';
 
 class PosScreenState {
   final bool isLoading;

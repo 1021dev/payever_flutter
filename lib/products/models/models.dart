@@ -86,6 +86,7 @@ class ProductsModel {
   String currency;
   String type;
   bool enabled;
+  bool onSales;
   List<Categories> categories = List();
   List<ChannelSet> channels = List();
   List<Variants> variants = List();
@@ -102,6 +103,7 @@ class ProductsModel {
     barcode = obj[GlobalUtils.DB_PROD_MODEL_BARCODE];
     currency = obj[GlobalUtils.DB_PROD_MODEL_CURRENCY];
     type = obj[GlobalUtils.DB_PROD_MODEL_TYPE];
+    onSales = obj[GlobalUtils.DB_PROD_MODEL_SALES];
     enabled = obj[GlobalUtils.DB_PROD_MODEL_ENABLE];
     if (obj[GlobalUtils.DB_PROD_MODEL_IMAGES] != null)
       obj[GlobalUtils.DB_PROD_MODEL_IMAGES].forEach((img) {

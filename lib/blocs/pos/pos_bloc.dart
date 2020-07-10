@@ -1,15 +1,12 @@
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/models/pos.dart';
 import 'package:payever/commons/utils/common_utils.dart';
-import 'package:payever/pos_new/models/models.dart';
+import 'package:payever/pos/models/models.dart';
 
 import '../bloc.dart';
 
