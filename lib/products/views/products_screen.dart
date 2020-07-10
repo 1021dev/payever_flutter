@@ -462,7 +462,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
             padding: EdgeInsets.only(left: 16),
           ),
           Text(
-            'Total: ${state.products.length}',
+            'Total: ${_selectedIndexValue == 0 ? state.productsInfo.itemCount: state.collectionInfo.itemCount}',
             style: TextStyle(
               color: Colors.white,
               fontSize: 16,

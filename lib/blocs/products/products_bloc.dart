@@ -32,8 +32,10 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
     };
 
     dynamic response = await api.getProducts(GlobalUtils.activeToken.accessToken, body);
-    Info info;
+    Info productInfo;
     List<ProductsModel> products = [];
+    Info collectionInfo;
+    List<CollectionModel> collections = [];
     if (response != null) {
       dynamic data = response['data'];
       if (data != null) {
@@ -41,8 +43,11 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
         if (getProducts != null) {
           dynamic infoObj = getProducts['info'];
           if (infoObj != null) {
+            print('infoObj => $infoObj');
             dynamic pagination = infoObj['pagination'];
-            info = Info.toMap(pagination);
+            if (pagination != null) {
+              productInfo = Info.toMap(pagination);
+            }
           }
           List productsObj = getProducts['products'];
           if (productsObj != null) {
@@ -54,7 +59,29 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
       }
     }
 
-    yield state.copyWith(isLoading: false, products: products, info: info);
+    Map<String, String> queryParams = {
+      'page': '1',
+      'perPage': '20'
+    };
+    
+    dynamic colResponse = await api.getCollections(GlobalUtils.activeToken.accessToken, activeBusinessId, queryParams);
+    if (colResponse != null) {
+      dynamic infoObj = colResponse['info'];
+      if (infoObj != null) {
+        dynamic pagination = infoObj['pagination'];
+        if (pagination != null) {
+          collectionInfo = Info.toMap(pagination);
+        }
+      }
+      List colList = colResponse['products'];
+      if (colList != null) {
+        colList.forEach((element) {
+          collections.add(CollectionModel.toMap(element));
+        });
+      }
+    }
+
+    yield state.copyWith(isLoading: false, products: products, productsInfo: productInfo, collections: collections, collectionInfo: collectionInfo);
 
   }
 }

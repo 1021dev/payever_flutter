@@ -194,9 +194,21 @@ class Info {
 
   Info.toMap(dynamic obj) {
     page = obj['page'];
-    pageCount = obj['page_count'];
-    perPage = obj['per_page'];
-    itemCount = obj['item_count'];
+    if (obj['pageCount'] != null) {
+      pageCount = obj['pageCount'];
+    } else if (obj['page_count'] != null) {
+      pageCount = obj['page_count'];
+    }
+    if (obj['pageCount'] != null) {
+      perPage = obj['perPage'];
+    } else if (obj['per_page'] != null) {
+      perPage = obj['per_page'];
+    }
+    if (obj['pageCount'] != null) {
+      itemCount = obj['itemCount'];
+    } else if (obj['item_count'] != null) {
+      itemCount = obj['item_count'];
+    }
   }
 }
 

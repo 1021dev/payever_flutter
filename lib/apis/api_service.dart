@@ -547,6 +547,24 @@ class ApiService {
     }
   }
 
+  Future<dynamic> getCollections(String token, String businessId, Map<String, String> query) async {
+    try {
+      print('$TAG - getCollections()');
+      dynamic response = await _client.getTypeless(
+          '${Env.products}/collections/$businessId',
+          queryParameters: query,
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<dynamic> getShops(String idBusiness, String token) async {
     try {
       print('$TAG - getShops()');

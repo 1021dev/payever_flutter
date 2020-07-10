@@ -7,14 +7,18 @@ class ProductsScreenState {
   final bool isUpdating;
   final bool isUploading;
   final List<ProductsModel> products;
-  final Info info;
+  final List<CollectionModel> collections;
+  final Info productsInfo;
+  final Info collectionInfo;
 
   ProductsScreenState({
     this.isLoading = false,
     this.isUpdating = false,
     this.isUploading = false,
     this.products = const [],
-    this.info,
+    this.collections = const [],
+    this.productsInfo,
+    this.collectionInfo,
   });
 
   List<Object> get props => [
@@ -22,7 +26,9 @@ class ProductsScreenState {
     this.isUpdating,
     this.isUploading,
     this.products,
-    this.info,
+    this.collections,
+    this.productsInfo,
+    this.collectionInfo,
   ];
 
   ProductsScreenState copyWith({
@@ -30,14 +36,18 @@ class ProductsScreenState {
     bool isUpdating,
     bool isUploading,
     List<ProductsModel> products,
-    Info info,
+    List<CollectionModel> collections,
+    Info productsInfo,
+    Info collectionInfo,
   }) {
     return ProductsScreenState(
       isLoading: isLoading ?? this.isLoading,
       isUpdating: isUpdating ?? this.isUpdating,
       isUploading: isUploading ?? this.isUploading,
       products: products ?? this.products,
-      info: info ?? info,
+      collections: collections ?? this.collections,
+      productsInfo: productsInfo ?? this.productsInfo,
+      collectionInfo: collectionInfo ?? this.collectionInfo,
     );
   }
 }
