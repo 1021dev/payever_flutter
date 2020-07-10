@@ -7,7 +7,9 @@ class ProductsScreenState {
   final bool isUpdating;
   final bool isUploading;
   final List<ProductsModel> products;
+  final List<ProductListModel> productLists;
   final List<CollectionModel> collections;
+  final List<CollectionListModel> collectionLists;
   final Info productsInfo;
   final Info collectionInfo;
 
@@ -17,6 +19,8 @@ class ProductsScreenState {
     this.isUploading = false,
     this.products = const [],
     this.collections = const [],
+    this.productLists = const [],
+    this.collectionLists = const [],
     this.productsInfo,
     this.collectionInfo,
   });
@@ -27,6 +31,8 @@ class ProductsScreenState {
     this.isUploading,
     this.products,
     this.collections,
+    this.productLists,
+    this.collectionLists,
     this.productsInfo,
     this.collectionInfo,
   ];
@@ -37,6 +43,8 @@ class ProductsScreenState {
     bool isUploading,
     List<ProductsModel> products,
     List<CollectionModel> collections,
+    List<ProductListModel> productLists,
+    List<CollectionListModel> collectionLists,
     Info productsInfo,
     Info collectionInfo,
   }) {
@@ -46,6 +54,8 @@ class ProductsScreenState {
       isUploading: isUploading ?? this.isUploading,
       products: products ?? this.products,
       collections: collections ?? this.collections,
+      productLists: productLists ?? this.productLists,
+      collectionLists: collectionLists ?? this.collectionLists,
       productsInfo: productsInfo ?? this.productsInfo,
       collectionInfo: collectionInfo ?? this.collectionInfo,
     );

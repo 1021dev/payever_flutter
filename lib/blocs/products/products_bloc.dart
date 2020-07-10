@@ -34,8 +34,10 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
     dynamic response = await api.getProducts(GlobalUtils.activeToken.accessToken, body);
     Info productInfo;
     List<ProductsModel> products = [];
+    List<ProductListModel> productLists = [];
     Info collectionInfo;
     List<CollectionModel> collections = [];
+    List<CollectionListModel> collectionLists = [];
     if (response != null) {
       dynamic data = response['data'];
       if (data != null) {
@@ -53,6 +55,7 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
           if (productsObj != null) {
             productsObj.forEach((element) {
               products.add(ProductsModel.toMap(element));
+              productLists.add(ProductListModel(productsModel: ProductsModel.toMap(element), isChecked: false));
             });
           }
         }
@@ -77,11 +80,20 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
       if (colList != null) {
         colList.forEach((element) {
           collections.add(CollectionModel.toMap(element));
+          collectionLists.add(CollectionListModel(collectionModel: CollectionModel.toMap(element), isChecked: false));
         });
       }
     }
 
-    yield state.copyWith(isLoading: false, products: products, productsInfo: productInfo, collections: collections, collectionInfo: collectionInfo);
+    yield state.copyWith(
+      isLoading: false,
+      products: products,
+      productsInfo: productInfo,
+      collections: collections,
+      collectionInfo: collectionInfo,
+      productLists: productLists,
+      collectionLists: collectionLists,
+    );
 
   }
 }

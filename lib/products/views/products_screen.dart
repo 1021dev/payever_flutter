@@ -11,6 +11,8 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/screens/dashboard/sub_view/dashboard_menu_view.dart';
+import 'package:payever/products/models/models.dart';
+import 'package:payever/products/widgets/product_grid_item.dart';
 import 'package:payever/products/widgets/products_top_button.dart';
 import 'package:payever/transactions/views/filter_content_view.dart';
 import 'package:provider/provider.dart';
@@ -475,7 +477,32 @@ class _ProductsScreenState extends State<ProductsScreen> {
   }
 
   Widget _getBody(ProductsScreenState state) {
-    switch(selectedIndex) {
+    switch(_selectedIndexValue) {
+      case 0:
+        return Container(
+          child: GridView.count(
+            crossAxisCount: 1,
+            crossAxisSpacing: 12,
+            mainAxisSpacing: 12,
+            childAspectRatio: 0.7,
+            padding: EdgeInsets.only(left: 16.0, top: 12.0, right: 16.0, bottom: 12.0),
+            children: state.productLists.map ((product) {
+              return ProductGridItem(
+                product,
+                onTap: () {
+                },
+                onCheck: () {
+                  final index = state.productLists.indexOf(product);
+//                  final filteredIndex = widget.filteredProducts.indexOf(product);
+                  setState(() {
+//                    widget.products[index].isChecked = !widget.products[index].isChecked;
+//                    widget.filteredProducts[filteredIndex].isChecked = !widget.filteredProducts[filteredIndex].isChecked;
+                  });
+                },
+              );
+            }).toList(),
+          ),
+        );
       default:
         return Container();
     }

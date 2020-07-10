@@ -328,5 +328,18 @@ class CollectionModel {
       });
     }
   }
+}
 
+class ProductListModel {
+  bool isChecked;
+  ProductsModel productsModel;
+
+  ProductListModel({this.productsModel, this.isChecked});
+}
+
+class CollectionListModel {
+  bool isChecked;
+  CollectionModel collectionModel;
+
+  CollectionListModel({this.collectionModel, this.isChecked});
 }
