@@ -836,8 +836,10 @@ class _ShopScreenState extends State<ShopScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Text(
-                            '${state.activeShop.accessConfig.internalDomain}.new.payever.shop',
+                          Expanded(
+                            child: Text(
+                              '${state.activeShop.accessConfig.internalDomain}.new.payever.shop',
+                            ),
                           ),
                           MaterialButton(
                             minWidth: 0,

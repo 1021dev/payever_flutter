@@ -4,4 +4,6 @@ export './pos/pos.dart';
 export './transactions/transactions.dart';
 export './transaction_detail/transaction_detail.dart';
 export './search/search.dart';
+export './shop/shop.dart';
 export './switcher/switcher.dart';
+export './products/products.dart';
