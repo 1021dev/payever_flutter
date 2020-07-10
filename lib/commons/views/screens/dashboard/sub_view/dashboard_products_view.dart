@@ -4,7 +4,7 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/env.dart';
 import 'package:payever/commons/views/custom_elements/dashboard_option_cell.dart';
 import 'package:payever/commons/views/custom_elements/product_cell.dart';
-import 'package:payever/products_new/models/models.dart';
+import 'package:payever/products/models/models.dart';
 
 import '../../../custom_elements/blur_effect_view.dart';
 

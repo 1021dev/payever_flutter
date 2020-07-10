@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/models/connect.dart';
 import 'package:payever/commons/models/fetchwallpaper.dart';
-import 'package:payever/products_new/models/models.dart';
+import 'package:payever/products/models/models.dart';
 import 'package:payever/shop/models/models.dart';
 
 class DashboardScreenState {

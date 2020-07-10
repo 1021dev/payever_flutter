@@ -11,7 +11,7 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/screens/dashboard/sub_view/dashboard_menu_view.dart';
-import 'package:payever/products_new/widgets/products_top_button.dart';
+import 'package:payever/products/widgets/products_top_button.dart';
 import 'package:payever/transactions/views/filter_content_view.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -462,7 +462,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
             padding: EdgeInsets.only(left: 16),
           ),
           Text(
-            'Total: 0',
+            'Total: ${state.products.length}',
             style: TextStyle(
               color: Colors.white,
               fontSize: 16,

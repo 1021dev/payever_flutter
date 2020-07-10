@@ -186,14 +186,19 @@ class Shipping {
   }
 }
 
-//class Info {
-//  num page;
-//  num page_count;
-//  num per_page;
-//  num item_count;
-//
-//  Info.toMap(dynamic obj) {}
-//}
+class Info {
+  num page;
+  num pageCount;
+  num perPage;
+  num itemCount;
+
+  Info.toMap(dynamic obj) {
+    page = obj['page'];
+    pageCount = obj['page_count'];
+    perPage = obj['per_page'];
+    itemCount = obj['item_count'];
+  }
+}
 
 class InventoryModel {
   String _barcode;
@@ -280,4 +285,36 @@ class VariantsRef {
 class VariantType {
   String type;
   String value;
+}
+
+class CollectionModel {
+  String activeSince;
+  String business;
+  List<ChannelSet> channelSets = [];
+  String createdAt;
+  String description;
+  String name;
+  String slug;
+  String updatedAt;
+  num __v;
+  String _id;
+
+  CollectionModel.toMap(dynamic obj) {
+    activeSince = obj['activeSince'];
+    business = obj['business'];
+    createdAt = obj['createdAt'];
+    description = obj['description'];
+    name = obj['name'];
+    slug = obj['activeSince'];
+    updatedAt = obj['updatedAt'];
+    __v = obj['__v'];
+    _id = obj['_id'];
+    List channelObj = obj['channelSets'];
+    if (channelObj != null) {
+      channelObj.forEach((element) {
+        channelSets.add(ChannelSet.toMap(element));
+      });
+    }
+  }
+
 }

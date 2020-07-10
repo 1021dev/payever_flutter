@@ -528,9 +528,10 @@ class ApiService {
     }
   }
 
-  Future<dynamic> getProducts(String idBusiness, String token, Map<String, dynamic> body) async {
+  Future<dynamic> getProducts(String token, Map<String, dynamic> body) async {
     try {
-      print('$TAG - getProductLastSold()');
+      print('$TAG - getProducts()');
+      print('Product Payload body => $body');
       dynamic response = await _client.postTypeLess(
           '${Env.products}/products',
           body: body,

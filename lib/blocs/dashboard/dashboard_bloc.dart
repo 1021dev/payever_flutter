@@ -7,7 +7,7 @@ import 'package:payever/blocs/dashboard/dashboard.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/models/connect.dart';
 import 'package:payever/commons/models/fetchwallpaper.dart';
-import 'package:payever/products_new/models/models.dart';
+import 'package:payever/products/models/models.dart';
 import 'package:payever/settings/network/employees_api.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/transactions/transactions.dart';
