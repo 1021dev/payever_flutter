@@ -208,7 +208,7 @@ class _PosTwilioScreenState extends State<PosTwilioScreen> {
                               ),
                               Expanded(
                                 child: Text(
-                                  data['title'],
+                                  Language.getPosTpmStrings(data['title']),
                                   maxLines: 1,
                                   style: TextStyle(
                                     color: Colors.white,
@@ -353,7 +353,7 @@ class _PosTwilioScreenState extends State<PosTwilioScreen> {
                               ),
                               Expanded(
                                 child: Text(
-                                  data['title'],
+                                  Language.getPosTpmStrings(data['title']),
                                   maxLines: 1,
                                   style: TextStyle(
                                     color: Colors.white,

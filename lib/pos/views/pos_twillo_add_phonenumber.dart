@@ -261,6 +261,9 @@ class _PosTwilioAddPhoneNumberState extends State<PosTwilioAddPhoneNumber> {
                       ),
                     ),
                     ListTile(
+                      onTap: () {
+
+                      },
                       leading: Icon(Icons.check_box_outline_blank),
                       title: Text(
                         Language.getPosTpmStrings('tpm.communications.twilio.exclude_any'),
@@ -272,6 +275,9 @@ class _PosTwilioAddPhoneNumberState extends State<PosTwilioAddPhoneNumber> {
                       ),
                     ),
                     ListTile(
+                      onTap: () {
+
+                      },
                       leading: Icon(Icons.check_box_outline_blank),
                       title: Text(
                         Language.getPosTpmStrings('tpm.communications.twilio.exclude_local'),
@@ -283,6 +289,9 @@ class _PosTwilioAddPhoneNumberState extends State<PosTwilioAddPhoneNumber> {
                       ),
                     ),
                     ListTile(
+                      onTap: () {
+
+                      },
                       leading: Icon(Icons.check_box_outline_blank),
                       title: Text(
                         Language.getPosTpmStrings('tpm.communications.twilio.exclude_foreign'),
@@ -293,22 +302,77 @@ class _PosTwilioAddPhoneNumberState extends State<PosTwilioAddPhoneNumber> {
                         ),
                       ),
                     ),
+                    Column(
+                      children: state.twilioAddPhoneForm.map((e) {
+                        return Container(
+                          height: 50,
+                          padding: EdgeInsets.only(left: 16, right: 16),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Row(
+                                children: <Widget>[
+                                  Text(
+                                    e[0]['value'],
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 8),
+                                  ),
+                                  Text(
+                                    e[1]['value'],
+                                    style: TextStyle(
+                                      color: Colors.white.withOpacity(0.5),
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w300,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              MaterialButton(
+                                minWidth: 0,
+                                onPressed: () {
+                                },
+                                height: 20,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                color: Colors.black26,
+                                child: Text(
+                                  Language.getPosTpmStrings(e[2]['text']),
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    ),
                     Container(
                       height: 56,
                       child: SizedBox.expand(
                         child: MaterialButton(
                           minWidth: 0,
                           onPressed: () {
-                            widget.screenBloc.add(SearchPhoneNumberEvent(
-                              businessId: widget.businessId,
-                              id: widget.id,
-                              action: 'search-numbers',
-                              country: 'US',
-                              excludeAny: false,
-                              excludeForeign: false,
-                              excludeLocal: false,
-                              phoneNumber: '',
-                            ));
+                            widget.screenBloc.add(
+                                SearchPhoneNumberEvent(
+                                  businessId: widget.businessId,
+                                  id: widget.id,
+                                  action: 'search-numbers',
+                                  country: 'US',
+                                  excludeAny: false,
+                                  excludeForeign: false,
+                                  excludeLocal: false,
+                                  phoneNumber: '',
+                                ));
                           },
                           color: Colors.black87,
                           child: Text(

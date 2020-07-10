@@ -19,7 +19,7 @@ class PosScreenState {
   final Terminal copiedTerminal;
   final dynamic qrForm;
   final dynamic twilioForm;
-  final dynamic twilioAddPhoneForm;
+  final List twilioAddPhoneForm;
   final AddPhoneNumberSettingsModel settingsModel;
   final List<CountryDropdownItem> dropdownItems;
   final dynamic fieldSetData;
@@ -42,7 +42,7 @@ class PosScreenState {
     this.copiedTerminal,
     this.qrForm,
     this.twilioForm,
-    this.twilioAddPhoneForm,
+    this.twilioAddPhoneForm = const [],
     this.settingsModel,
     this.dropdownItems = const [],
     this.fieldSetData,
@@ -90,7 +90,7 @@ class PosScreenState {
     String copiedBusiness,
     dynamic qrForm,
     dynamic twilioForm,
-    dynamic twilioAddPhoneForm,
+    List twilioAddPhoneForm,
     AddPhoneNumberSettingsModel settingsModel,
     List<CountryDropdownItem> dropdownItems,
     dynamic fieldSetData,

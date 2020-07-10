@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:payever/commons/utils/env.dart';
 
 class ProductItemImage extends StatelessWidget {
   final String imageURL;
@@ -23,7 +24,7 @@ class ProductItemImage extends StatelessWidget {
     } else {
       if (imageURL != null) {
         return CachedNetworkImage(
-          imageUrl: "https://payeverstaging.blob.core.windows.net/products/" + imageURL,
+          imageUrl: '${Env.storage}/products/$imageURL',
           imageBuilder: (context, imageProvider) => Container(
             decoration: BoxDecoration(
                 borderRadius: isRoundOnlyTopCorners ? BorderRadius.only(topRight: Radius.circular(6.0), topLeft: Radius.circular(6.0)) : BorderRadius.all(Radius.circular(12.0)),

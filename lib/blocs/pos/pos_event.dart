@@ -480,6 +480,7 @@ class PurchaseNumberEvent extends PosScreenEvent {
   final String id;
   final String value;
   final String phone;
+  final String price;
 
   PurchaseNumberEvent({
     this.businessId,
@@ -487,6 +488,7 @@ class PurchaseNumberEvent extends PosScreenEvent {
     this.id,
     this.value,
     this.phone,
+    this.price,
   });
 
   @override
@@ -496,6 +498,7 @@ class PurchaseNumberEvent extends PosScreenEvent {
     this.id,
     this.value,
     this.phone,
+    this.price,
   ];
 }
 

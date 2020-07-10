@@ -88,11 +88,20 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
     } else if (event is AddPhoneNumberSettings) {
       yield* addPhoneNumberSettings(event.businessId, event.action, event.id);
     } else if (event is SearchPhoneNumberEvent) {
-
+      yield* searchPhoneNumbers(
+        event.businessId,
+        event.action,
+        event.country,
+        event.excludeAny,
+        event.excludeForeign,
+        event.excludeLocal,
+        event.phoneNumber,
+        event.id,
+      );
     } else if (event is PurchaseNumberEvent) {
-
+      yield* purchasePhoneNumber(event.businessId, event.action, event.phone, event.id, event.price);
     } else if (event is RemovePhoneNumberSettings) {
-
+      yield* removePhoneNumber(event.businessId, event.action, event.id, event.sid);
     }
   }
 
@@ -425,10 +434,15 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
     List<CountryDropdownItem> dropdownItems = [];
     AddPhoneNumberSettingsModel model = AddPhoneNumberSettingsModel();
     dynamic fieldsetData = {};
+    List contentData = [];
     if (response != null) {
       if (response is Map) {
         dynamic form = response['form'];
-        model.id = form['actionContext'];
+        if (form['actionContext'] is Map) {
+          model.id = form['actionContext']['id'];
+        } else if (form['actionContext'] is String){
+          model.id = form['actionContext'];
+        }
         dynamic content = form['content'] != null ? form['content'] : null;
         if (content != null) {
           if (content['fieldset'] != null) {
@@ -457,12 +471,16 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
             model.excludeLocal = fieldsetData['excludeLocal'];
             model.excludeForeign = fieldsetData['excludeForeign'];
           }
+
+          if (content['data'] != null) {
+            contentData = content['data'];
+          }
         }
       }
     }
     model.country = dropdownItems.firstWhere((element) => element.value == fieldsetData['country']);
 
-    yield state.copyWith(dropdownItems: dropdownItems, settingsModel: model, isLoading: false);
+    yield state.copyWith(dropdownItems: dropdownItems, settingsModel: model, isLoading: false, twilioAddPhoneForm: contentData);
   }
 
   Stream<PosScreenState> searchPhoneNumbers(
@@ -487,7 +505,56 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
       phoneNumber,
       id,
     );
-    yield state.copyWith(twilioAddPhoneForm: response, isLoading: false);
+    List<CountryDropdownItem> dropdownItems = [];
+    AddPhoneNumberSettingsModel model = AddPhoneNumberSettingsModel();
+    dynamic fieldsetData = {};
+    List contentData = [];
+    if (response != null) {
+      if (response is Map) {
+        dynamic form = response['form'];
+        if (form['actionContext'] is Map) {
+          model.id = form['actionContext']['id'];
+        } else if (form['actionContext'] is String){
+          model.id = form['actionContext'];
+        }
+        dynamic content = form['content'] != null ? form['content'] : null;
+        if (content != null) {
+          if (content['fieldset'] != null) {
+            List<dynamic> contentFields = content['fieldset'];
+            contentFields.forEach((field) {
+              if (field['type'] == 'select') {
+                dynamic selectSettings = field['selectSettings'];
+                if (selectSettings != null) {
+                  if (selectSettings['options'] != null) {
+                    List<dynamic> options = selectSettings['options'];
+                    options.forEach((element) {
+                      CountryDropdownItem item = CountryDropdownItem(
+                          label: element['label'], value: element['value']);
+                      if (!dropdownItems.contains(item)) {
+                        dropdownItems.add(item);
+                      }
+                    });
+                    print(content['fieldsetData']);
+                  }
+                }
+              }
+            });
+          }
+          if (content['fieldsetData'] != null) {
+            fieldsetData = content['fieldsetData'];
+            model.excludeLocal = fieldsetData['excludeLocal'];
+            model.excludeForeign = fieldsetData['excludeForeign'];
+          }
+
+          if (content['data'] != null) {
+            contentData = content['data'];
+          }
+        }
+      }
+    }
+    model.country = dropdownItems.firstWhere((element) => element.value == fieldsetData['country']);
+
+    yield state.copyWith(twilioAddPhoneForm: contentData, settingsModel: model, isLoading: false);
   }
 
   Stream<PosScreenState> purchasePhoneNumber(
