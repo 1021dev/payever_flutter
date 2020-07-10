@@ -26,6 +26,7 @@ import 'package:payever/commons/views/screens/switcher/switcher_page.dart';
 import 'package:payever/pos/pos.dart';
 import 'package:payever/pos_new/views/pos_create_terminal_screen.dart';
 import 'package:payever/pos_new/views/pos_screen.dart';
+import 'package:payever/products_new/views/products_screen.dart';
 import 'package:payever/search/views/search_screen.dart';
 import 'package:payever/shop/views/shop_screen.dart';
 import 'package:payever/transactions/transactions.dart';
@@ -454,7 +455,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
               );
             },
             onTapEditShop: () {
-
+              Provider.of<GlobalStateModel>(context,listen: false)
+                  .setCurrentBusiness(state.activeBusiness);
+              Provider.of<GlobalStateModel>(context,listen: false)
+                  .setCurrentWallpaper(state.curWall);
+              Navigator.push(
+                context,
+                PageTransition(
+                  child: ShopInitScreen(),
+                  type: PageTransitionType.fade,
+                  duration: Duration(milliseconds: 50),
+                ),
+              );
             },
           ),
       );
@@ -584,6 +596,38 @@ class _DashboardScreenState extends State<DashboardScreen> {
             appWidget: appWidget,
             lastSales: state.lastSalesRandom,
             business: state.activeBusiness,
+            onOpen: () async {
+              Provider.of<GlobalStateModel>(context,listen: false)
+                  .setCurrentBusiness(state.activeBusiness);
+              Provider.of<GlobalStateModel>(context,listen: false)
+                  .setCurrentWallpaper(state.curWall);
+              Navigator.push(
+                context,
+                PageTransition(
+                  child: ProductsInitScreen(),
+                  type: PageTransitionType.fade,
+                  duration: Duration(milliseconds: 50),
+                ),
+              );
+            },
+            onSelect: () async {
+              Provider.of<GlobalStateModel>(context,listen: false)
+                  .setCurrentBusiness(state.activeBusiness);
+              Provider.of<GlobalStateModel>(context,listen: false)
+                  .setCurrentWallpaper(state.curWall);
+              final result = await Navigator.push(
+                context,
+                PageTransition(
+                  child: ProductsInitScreen(),
+                  type: PageTransitionType.fade,
+                  duration: Duration(milliseconds: 500),
+                ),
+              );
+              print('Products Update Result => $result');
+              if ((result != null) && (result == 'Terminal Updated')) {
+//                screenBloc.add(FetchPosEvent(business: state.activeBusiness));
+              }
+            },
           )
       );
     }

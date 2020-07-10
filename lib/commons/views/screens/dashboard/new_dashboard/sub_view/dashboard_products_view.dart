@@ -12,11 +12,16 @@ class DashboardProductsView extends StatefulWidget {
   final BusinessApps businessApps;
   final List<Products> lastSales;
   final Business business;
+  final Function onOpen;
+  final Function onSelect;
+
   DashboardProductsView({
     this.appWidget,
     this.businessApps,
     this.lastSales = const [],
     this.business,
+    this.onOpen,
+    this.onSelect,
   });
   @override
   _DashboardProductsViewState createState() => _DashboardProductsViewState();
@@ -52,7 +57,7 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
                           ),
                           SizedBox(width: 8,),
                           Text(
-                            'PRODUCTS',
+                            Language.getCommerceOSStrings('dashboard.apps.products').toUpperCase(),
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 12,
@@ -63,9 +68,7 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
                       Row(
                         children: [
                           InkWell(
-                            onTap: () {
-
-                            },
+                            onTap: widget.onOpen,
                             child: Container(
                               height: 20,
                               width: 40,
@@ -262,6 +265,9 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
     return ProductCell(
       product: widget.lastSales[index],
       business: widget.business,
+      onTap: (Products product) {
+        widget.onSelect(product);
+      },
     );
   }
   Widget _itemBuilderDDetails(BuildContext context, int index) {

@@ -7,7 +7,10 @@ import 'package:payever/commons/utils/env.dart';
 class ProductCell extends StatelessWidget {
   final Products product;
   final Business business;
-  ProductCell({this.product, this.business,});
+  final Function onTap;
+
+  ProductCell({this.product, this.business, this.onTap,});
+
   @override
   Widget build(BuildContext context) {
     String currency = '';
@@ -21,28 +24,22 @@ class ProductCell extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Stack(
-            alignment: AlignmentDirectional.center,
-            children: [
-              Container(
-                width: 50,
-                height: 50,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(6),
-                    color: Colors.black38
+          GestureDetector(
+            onTap: () {
+              onTap(product);
+            },
+            child: Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(4),
+                image: DecorationImage(
+                  image: NetworkImage('${Env.storage}/products/${product.thumbnail}'),
+                  fit: BoxFit.contain,
                 ),
               ),
-              Container(
-                width: 50,
-                height: 50,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: NetworkImage('${Env.storage}/products/${product.thumbnail}'),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
           SizedBox(height: 2),
           Text(
