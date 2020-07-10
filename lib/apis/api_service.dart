@@ -881,7 +881,7 @@ class ApiService {
     try {
       print('$TAG - patchPosConnectDevicePaymentInstall()');
       dynamic response = await _client.patchTypeless(
-          '${Env.pos}/api/business/$businessId/integration/device-payments/install',
+          '${Env.connect}/api/business/$businessId/integration/device-payments/install',
           headers: {
             HttpHeaders.authorizationHeader: 'Bearer $token',
             HttpHeaders.contentTypeHeader: 'application/json',
@@ -898,7 +898,75 @@ class ApiService {
     try {
       print('$TAG - patchPosConnectDevicePaymentUninstall()');
       dynamic response = await _client.patchTypeless(
-          '${Env.pos}/api/business/$businessId/integration/device-payments/uninstall',
+          '${Env.connect}/api/business/$businessId/integration/device-payments/uninstall',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> patchPosQrInstall(String token, String businessId) async {
+    try {
+      print('$TAG - patchPosQrInstall()');
+      dynamic response = await _client.patchTypeless(
+          '${Env.connect}/api/business/$businessId/integration/qr/install',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> patchPosQrUninstall(String token, String businessId) async {
+    try {
+      print('$TAG - patchPosQrUninstall()');
+      dynamic response = await _client.patchTypeless(
+          '${Env.connect}/api/business/$businessId/integration/qr/uninstall',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> patchPosTwilioInstall(String token, String businessId) async {
+    try {
+      print('$TAG - patchPosTwilioInstall()');
+      dynamic response = await _client.patchTypeless(
+          '${Env.connect}/api/business/$businessId/integration/twilio/install',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> patchPosTwilioUninstall(String token, String businessId) async {
+    try {
+      print('$TAG - patchPosTwilioUninstall()');
+      dynamic response = await _client.patchTypeless(
+          '${Env.connect}/api/business/$businessId/integration/twilio/uninstall',
           headers: {
             HttpHeaders.authorizationHeader: 'Bearer $token',
             HttpHeaders.contentTypeHeader: 'application/json',
@@ -1175,7 +1243,7 @@ class ApiService {
       String price,
       ) async {
     try {
-      print('$TAG - purchasePhoneNumberSettings()');
+      print('$TAG - purchasePhoneNumberSettings() => $id');
       dynamic response = await _client.postTypeLess(
           '${Env.thirdPartyCommunication}/api/business/$businessId/integration/twilio/action/purchase-number',
           body: {

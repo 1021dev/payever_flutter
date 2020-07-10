@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:equatable/equatable.dart';
 import 'package:payever/commons/commons.dart';
+import 'package:payever/pos/models/models.dart';
 
 abstract class PosScreenEvent extends Equatable {
   PosScreenEvent();
@@ -90,6 +91,64 @@ class UninstallDevicePaymentEvent extends PosScreenEvent {
   final String businessId;
 
   UninstallDevicePaymentEvent({this.businessId});
+
+  @override
+  List<Object> get props => [
+    this.businessId,
+  ];
+}
+
+class InstallQREvent extends PosScreenEvent {
+  final String businessId;
+  final String businessName;
+  final String avatarUrl;
+  final String id;
+  final String url;
+
+  InstallQREvent({
+    this.businessId,
+    this.businessName,
+    this.avatarUrl,
+    this.id,
+    this.url,
+  });
+
+  @override
+  List<Object> get props => [
+    this.businessId,
+    this.businessName,
+    this.avatarUrl,
+    this.id,
+    this.url,
+  ];
+}
+
+class UninstallQREvent extends PosScreenEvent {
+  final String businessId;
+
+  UninstallQREvent({this.businessId});
+
+  @override
+  List<Object> get props => [
+    this.businessId,
+  ];
+}
+
+class InstallTwilioEvent extends PosScreenEvent {
+  final String businessId;
+
+  InstallTwilioEvent({this.businessId});
+
+  @override
+  List<Object> get props => [
+    this.businessId,
+  ];
+}
+
+class UninstallTwilioEvent extends PosScreenEvent {
+  final String businessId;
+
+  UninstallTwilioEvent({this.businessId});
 
   @override
   List<Object> get props => [
@@ -478,7 +537,6 @@ class PurchaseNumberEvent extends PosScreenEvent {
   final String businessId;
   final String action;
   final String id;
-  final String value;
   final String phone;
   final String price;
 
@@ -486,7 +544,6 @@ class PurchaseNumberEvent extends PosScreenEvent {
     this.businessId,
     this.action,
     this.id,
-    this.value,
     this.phone,
     this.price,
   });
@@ -496,20 +553,32 @@ class PurchaseNumberEvent extends PosScreenEvent {
     this.businessId,
     this.action,
     this.id,
-    this.value,
     this.phone,
     this.price,
   ];
 }
 
 class UpdateAddPhoneNumberSettings extends PosScreenEvent {
+  final AddPhoneNumberSettingsModel settingsModel;
+
+  UpdateAddPhoneNumberSettings({
+    this.settingsModel,
+  });
+
+  @override
+  List<Object> get props => [
+    this.settingsModel,
+  ];
+}
+
+class UpdateAddPhoneNumber extends PosScreenEvent {
   final String businessId;
   final String action;
   final String id;
   final String value;
   final String phone;
 
-  UpdateAddPhoneNumberSettings({
+  UpdateAddPhoneNumber({
     this.businessId,
     this.action,
     this.id,

@@ -19,10 +19,12 @@ class PosDevicePaymentSettings extends StatefulWidget {
 
   PosScreenBloc screenBloc;
   String businessId;
+  bool installed;
 
   PosDevicePaymentSettings({
     this.screenBloc,
     this.businessId,
+    this.installed = true,
   });
 
   @override
@@ -39,7 +41,11 @@ class _PosDevicePaymentSettingsState extends State<PosDevicePaymentSettings> {
 
   @override
   void initState() {
-    widget.screenBloc.add(GetPosDevicePaymentSettings(businessId: widget.businessId));
+    if (widget.installed) {
+      widget.screenBloc.add(GetPosDevicePaymentSettings(businessId: widget.businessId));
+    } else {
+      widget.screenBloc.add(InstallDevicePaymentEvent(businessId: widget.businessId));
+    }
     super.initState();
   }
 

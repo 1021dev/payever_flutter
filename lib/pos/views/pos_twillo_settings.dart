@@ -23,11 +23,13 @@ class PosTwilioScreen extends StatefulWidget {
   PosScreenBloc screenBloc;
   String businessId;
   String businessName;
+  bool installed;
 
   PosTwilioScreen({
     this.screenBloc,
     this.businessId,
     this.businessName,
+    this.installed = true,
   });
 
   @override
@@ -46,11 +48,15 @@ class _PosTwilioScreenState extends State<PosTwilioScreen> {
 
   @override
   void initState() {
-    widget.screenBloc.add(
-      GetTwilioSettings(
-        businessId: widget.businessId,
-      ),
-    );
+    if (widget.installed) {
+      widget.screenBloc.add(
+        GetTwilioSettings(
+          businessId: widget.businessId,
+        ),
+      );
+    } else {
+      widget.screenBloc.add(InstallTwilioEvent(businessId: widget.businessId));
+    }
     super.initState();
   }
 
@@ -265,6 +271,65 @@ class _PosTwilioScreenState extends State<PosTwilioScreen> {
                           MaterialButton(
                             minWidth: 0,
                             onPressed: () {
+                              String sid = '';
+                              if (w[2]['actionData'] != null) {
+                                dynamic actionData = w[2]['actionData'];
+                                sid = actionData['sid'] ?? '';
+                              }
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context)
+                                  {
+                                    return new CupertinoAlertDialog(
+                                      title: Column(
+                                        children: <Widget>[
+                                          Icon(Icons.warning),
+                                          Text(
+                                              Language.getPosTpmStrings('tpm.communications.twilio.are_you_sure')
+                                          ),
+                                        ],
+                                      ),
+                                      content: Padding(
+                                        padding: EdgeInsets.only(top: 16),
+                                        child: Text(
+                                          Language.getPosTpmStrings('tpm.communications.twilio.confirm_remove_number'),
+                                        ),
+                                      ),
+                                      actions: [
+                                        CupertinoDialogAction(
+                                            isDefaultAction: true,
+                                            child: new Text(
+                                              Language.getPosTpmStrings('tpm.communications.twilio.no'),
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                            onPressed: () {
+                                              Navigator.pop(context, 'Cancel');
+                                            }
+                                        ),
+                                        CupertinoDialogAction(
+                                            isDefaultAction: true,
+                                            child: new Text(
+                                              Language.getPosTpmStrings('tpm.communications.twilio.yes'),
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                              widget.screenBloc.add(RemovePhoneNumberSettings(
+                                                id: id,
+                                                action: 'remove-number',
+                                                businessId: widget.businessId,
+                                                sid: sid,
+                                              ));
+                                            }
+                                        )
+                                      ],
+                                    );
+                                  }
+                              );
                             },
                             height: 20,
                             shape: RoundedRectangleBorder(

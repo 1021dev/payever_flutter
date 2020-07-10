@@ -19,11 +19,13 @@ class PosQRSettings extends StatefulWidget {
   PosScreenBloc screenBloc;
   String businessId;
   String businessName;
+  bool installed;
 
   PosQRSettings({
     this.screenBloc,
     this.businessId,
     this.businessName,
+    this.installed = true,
   });
 
   @override
@@ -41,15 +43,25 @@ class _PosQRSettingsState extends State<PosQRSettings> {
 
   @override
   void initState() {
-    widget.screenBloc.add(
-      GenerateQRSettingsEvent(
+    if (widget.installed) {
+      widget.screenBloc.add(
+        GenerateQRSettingsEvent(
+          businessId: widget.businessId,
+          businessName: widget.businessName,
+          avatarUrl: '$imageBase${widget.screenBloc.state.activeTerminal.logo}',
+          id: widget.screenBloc.state.activeTerminal.id,
+          url: '${Env.checkout}/pay/create-flow-from-qr/channel-set-id/${widget.screenBloc.state.activeTerminal.channelSet}',
+        ),
+      );
+    } else {
+      widget.screenBloc.add(InstallQREvent(
         businessId: widget.businessId,
         businessName: widget.businessName,
         avatarUrl: '$imageBase${widget.screenBloc.state.activeTerminal.logo}',
         id: widget.screenBloc.state.activeTerminal.id,
         url: '${Env.checkout}/pay/create-flow-from-qr/channel-set-id/${widget.screenBloc.state.activeTerminal.channelSet}',
-      ),
-    );
+      ));
+    }
     super.initState();
   }
 

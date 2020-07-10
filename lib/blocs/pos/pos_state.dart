@@ -4,6 +4,7 @@ import 'package:payever/pos/models/models.dart';
 
 class PosScreenState {
   final bool isLoading;
+  final bool searching;
   final List<Terminal> terminals;
   final Terminal activeTerminal;
   final bool businessCopied;
@@ -28,6 +29,7 @@ class PosScreenState {
   PosScreenState({
     this.isLoading = false,
     this.isUpdating = false,
+    this.searching = false,
     this.terminals = const [],
     this.activeTerminal,
     this.businessCopied = false,
@@ -52,6 +54,7 @@ class PosScreenState {
   List<Object> get props => [
     this.isLoading,
     this.isUpdating,
+    this.searching,
     this.terminals,
     this.activeTerminal,
     this.businessCopied,
@@ -76,6 +79,7 @@ class PosScreenState {
   PosScreenState copyWith({
     bool isLoading,
     bool isUpdating,
+    bool searching,
     List<Terminal> terminals,
     Terminal activeTerminal,
     bool businessCopied,
@@ -99,6 +103,7 @@ class PosScreenState {
     return PosScreenState(
       isLoading: isLoading ?? this.isLoading,
       isUpdating: isUpdating ?? this.isUpdating,
+      searching: searching ?? this.searching,
       terminals: terminals ?? this.terminals,
       activeTerminal: activeTerminal ?? this.activeTerminal,
       businessCopied: businessCopied ?? this.businessCopied,

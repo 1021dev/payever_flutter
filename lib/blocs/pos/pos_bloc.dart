@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/commons/commons.dart';
@@ -44,6 +45,14 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
       yield* installDevicePayment(event.businessId);
     } else if (event is UninstallDevicePaymentEvent) {
       yield* uninstallDevicePayment(event.businessId);
+    } else if (event is InstallQREvent) {
+      yield* installQR(event.businessId, event.businessName, event.avatarUrl, event.url, event.id);
+    } else if (event is UninstallQREvent) {
+      yield* uninstallQR(event.businessId);
+    } else if (event is InstallTwilioEvent) {
+      yield* installTwilio(event.businessId);
+    } else if (event is UninstallTwilioEvent) {
+      yield* uninstallTwilio(event.businessId);
     } else if (event is InstallTerminalDevicePaymentEvent) {
       yield* installTerminalDevicePayment(event.payment, event.businessId, event.terminalId);
     } else if (event is UninstallTerminalDevicePaymentEvent) {
@@ -102,6 +111,8 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
       yield* purchasePhoneNumber(event.businessId, event.action, event.phone, event.id, event.price);
     } else if (event is RemovePhoneNumberSettings) {
       yield* removePhoneNumber(event.businessId, event.action, event.id, event.sid);
+    } else if (event is UpdateAddPhoneNumberSettings) {
+      yield state.copyWith(settingsModel: event.settingsModel);
     }
   }
 
@@ -192,16 +203,46 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
   }
 
   Stream<PosScreenState> installDevicePayment(String businessId) async* {
-    dynamic installPaymentObj = await api.patchPosConnectDevicePaymentInstall(GlobalUtils.activeToken.accessToken, businessId);
-    DevicePaymentInstall devicePaymentInstall = DevicePaymentInstall.toMap(installPaymentObj);
-    yield DevicePaymentInstallSuccess(install: devicePaymentInstall);
+    yield state.copyWith(isLoading: true);
+    dynamic response = await api.patchPosConnectDevicePaymentInstall(GlobalUtils.activeToken.accessToken, businessId);
     add(GetPosIntegrationsEvent(businessId: businessId));
+    add(GetPosDevicePaymentSettings(businessId: businessId));
   }
 
   Stream<PosScreenState> uninstallDevicePayment(String businessId) async* {
-    dynamic installPaymentObj = await api.patchPosConnectDevicePaymentUninstall(GlobalUtils.activeToken.accessToken, businessId);
-    DevicePaymentInstall devicePaymentInstall = DevicePaymentInstall.toMap(installPaymentObj);
-    yield DevicePaymentInstallSuccess(install: devicePaymentInstall);
+    dynamic response = await api.patchPosConnectDevicePaymentUninstall(GlobalUtils.activeToken.accessToken, businessId);
+    add(GetPosIntegrationsEvent(businessId: businessId));
+  }
+
+  Stream<PosScreenState> installQR(String businessId, String businessName, String avatar, String url, String terminalId) async* {
+    yield state.copyWith(isLoading: true);
+    dynamic response = await api.patchPosQrInstall(GlobalUtils.activeToken.accessToken, businessId);
+    add(GetPosIntegrationsEvent(businessId: businessId));
+    add(
+      GenerateQRSettingsEvent(
+        businessId: businessId,
+        businessName: businessName,
+        avatarUrl: avatar,
+        id: terminalId,
+        url: url,
+      ),
+    );
+  }
+
+  Stream<PosScreenState> uninstallQR(String businessId) async* {
+    dynamic response = await api.patchPosQrUninstall(GlobalUtils.activeToken.accessToken, businessId);
+    add(GetPosIntegrationsEvent(businessId: businessId));
+  }
+
+  Stream<PosScreenState> installTwilio(String businessId) async* {
+    yield state.copyWith(isLoading: true);
+    dynamic response = await api.patchPosTwilioInstall(GlobalUtils.activeToken.accessToken, businessId);
+    add(GetPosIntegrationsEvent(businessId: businessId));
+    add(GetTwilioSettings(businessId: businessId));
+  }
+
+  Stream<PosScreenState> uninstallTwilio(String businessId) async* {
+    dynamic response = await api.patchPosTwilioUninstall(GlobalUtils.activeToken.accessToken, businessId);
     add(GetPosIntegrationsEvent(businessId: businessId));
   }
 
@@ -493,7 +534,7 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
       String phoneNumber,
       String id,
       ) async* {
-    yield state.copyWith(isLoading: true);
+    yield state.copyWith(searching: true);
     dynamic response = await api.searchPhoneNumberSettings(
       GlobalUtils.activeToken.accessToken,
       businessId,
@@ -554,7 +595,7 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
     }
     model.country = dropdownItems.firstWhere((element) => element.value == fieldsetData['country']);
 
-    yield state.copyWith(twilioAddPhoneForm: contentData, settingsModel: model, isLoading: false);
+    yield state.copyWith(twilioAddPhoneForm: contentData, settingsModel: model, searching: false);
   }
 
   Stream<PosScreenState> purchasePhoneNumber(
@@ -573,6 +614,7 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
       id,
       price,
     );
+    yield state.copyWith(isLoading: false);
     add(GetTwilioSettings(businessId: businessId));
   }
 
@@ -590,7 +632,7 @@ class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
       id,
       sid,
     );
-    add(GetTwilioSettings(businessId: businessId));
+    yield state.copyWith(twilioForm: response, isLoading: false);
   }
 
   Stream<PosScreenState> getBlob(dynamic w, String url) async* {

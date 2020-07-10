@@ -243,43 +243,46 @@ class _PosConnectScreenState extends State<PosConnectScreen> {
                                     InkWell(
                                       onTap: () {
                                         if (communications[index].integration.name == 'device-payments') {
-                                          Navigator.push(
-                                            context,
-                                            PageTransition(
-                                              child: PosDevicePaymentSettings(
-                                                businessId: widget.globalStateModel.currentBusiness.id,
-                                                screenBloc: widget.screenBloc,
+                                            Navigator.push(
+                                              context,
+                                              PageTransition(
+                                                child: PosDevicePaymentSettings(
+                                                  businessId: widget.globalStateModel.currentBusiness.id,
+                                                  screenBloc: widget.screenBloc,
+                                                  installed: communications[index].installed,
+                                                ),
+                                                type: PageTransitionType.fade,
+                                                duration: Duration(milliseconds: 500),
                                               ),
-                                              type: PageTransitionType.fade,
-                                              duration: Duration(milliseconds: 500),
-                                            ),
-                                          );
+                                            );
                                         } else if (communications[index].integration.name == 'qr') {
-                                          Navigator.push(
-                                            context,
-                                            PageTransition(
-                                              child: PosQRSettings(
-                                                businessId: widget.globalStateModel.currentBusiness.id,
-                                                screenBloc: widget.screenBloc,
-                                                businessName: widget.globalStateModel.currentBusiness.name,
+                                            Navigator.push(
+                                              context,
+                                              PageTransition(
+                                                child: PosQRSettings(
+                                                  businessId: widget.globalStateModel.currentBusiness.id,
+                                                  screenBloc: widget.screenBloc,
+                                                  businessName: widget.globalStateModel.currentBusiness.name,
+                                                  installed: communications[index].installed,
+                                                ),
+                                                type: PageTransitionType.fade,
+                                                duration: Duration(milliseconds: 500),
                                               ),
-                                              type: PageTransitionType.fade,
-                                              duration: Duration(milliseconds: 500),
-                                            ),
-                                          );
+                                            );
                                         } else if (communications[index].integration.name == 'twilio') {
-                                          Navigator.push(
-                                            context,
-                                            PageTransition(
-                                              child: PosTwilioScreen(
-                                                businessId: widget.globalStateModel.currentBusiness.id,
-                                                screenBloc: widget.screenBloc,
-                                                businessName: widget.globalStateModel.currentBusiness.name,
+                                            Navigator.push(
+                                              context,
+                                              PageTransition(
+                                                child: PosTwilioScreen(
+                                                  businessId: widget.globalStateModel.currentBusiness.id,
+                                                  screenBloc: widget.screenBloc,
+                                                  businessName: widget.globalStateModel.currentBusiness.name,
+                                                  installed: communications[index].installed,
+                                                ),
+                                                type: PageTransitionType.fade,
+                                                duration: Duration(milliseconds: 500),
                                               ),
-                                              type: PageTransitionType.fade,
-                                              duration: Duration(milliseconds: 500),
-                                            ),
-                                          );
+                                            );
                                         }
                                       },
                                       child: Container(
