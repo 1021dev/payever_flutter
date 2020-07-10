@@ -62,6 +62,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
   bool isShowCommunications = false;
   List<FilterItem> filterTypes = [];
   int selectedTypes = 0;
+  int _selectedIndexValue = 0;
 
   @override
   void initState() {
@@ -286,10 +287,12 @@ class _ProductsScreenState extends State<ProductsScreen> {
           ): Center(
             child: Column(
               children: <Widget>[
+                _topBar(state),
                 _toolBar(state),
                 Expanded(
                   child: _getBody(state),
                 ),
+                _bottomBar(state),
               ],
             ),
           ),
@@ -298,7 +301,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
     );
   }
 
-  Widget _toolBar(ProductsScreenState state) {
+  Widget _topBar(ProductsScreenState state) {
     return Container(
       height: 44,
       color: Colors.black87,
@@ -323,6 +326,147 @@ class _ProductsScreenState extends State<ProductsScreen> {
                 selectedIndex = 1;
               });
             },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _toolBar(ProductsScreenState state) {
+    return Container(
+      height: 50,
+      color: Color(0xFF555555),
+      child: Row(
+        children: <Widget>[
+          Flexible(
+            flex: 1,
+            child: _selectedIndexValue == 0 ? Row(
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(left: 8),
+                ),
+                InkWell(
+                  onTap: () {
+
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(8),
+                    child: Icon(Icons.search),
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(8),
+                    child: Icon(Icons.filter_list),
+                  ),
+                ),
+              ],
+            ): Container(),
+          ),
+          Flexible(
+            flex: 2,
+            child: Container(
+              alignment: Alignment.center,
+              child: Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    MaterialButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(12),
+                          bottomLeft: Radius.circular(12),
+                        ),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _selectedIndexValue = 0;
+                        });
+                      },
+                      color: _selectedIndexValue == 0 ? Color(0xFF2a2a2a): Color(0xFF1F1F1F),
+                      height: 24,
+                      minWidth: 100,
+                      elevation: 0,
+                      child: Text(
+                        Language.getProductStrings('Products'),
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 2),
+                    ),
+                    MaterialButton(
+                      onPressed: () {
+                        setState(() {
+                          _selectedIndexValue = 1;
+                        });
+                      },
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(12),
+                          bottomRight: Radius.circular(12),
+                        ),
+                      ),
+                      color: _selectedIndexValue == 1 ? Color(0xFF2a2a2a): Color(0xFF1F1F1F),
+                      elevation: 0,
+                      height: 24,
+                      minWidth: 100,
+                      child: Text(
+                        Language.getProductStrings('Collections'),
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ),
+          ),
+          Flexible(
+            flex: 1,
+            child: _selectedIndexValue == 0 ? Container(
+              alignment: Alignment.centerRight,
+              padding: EdgeInsets.only(right: 8),
+              child: InkWell(
+                onTap: () {
+
+                },
+                child: Container(
+                  padding: EdgeInsets.all(8),
+                  child: Icon(Icons.sort),
+                ),
+              ),
+            ) : Container(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _bottomBar(ProductsScreenState state) {
+    return Container(
+      height: 50,
+      color: Colors.black87,
+      child: Row(
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(left: 16),
+          ),
+          Text(
+            'Total: 0',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ],
       ),

@@ -22,7 +22,7 @@ class ProductsTopButton extends StatelessWidget {
         color: index == selectedIndex ? Colors.white10: Colors.transparent,
         child: index == 0 ? Container(
           height: 44,
-          constraints:  BoxConstraints(minWidth: 44, maxWidth: 100),
+          constraints:  BoxConstraints(minWidth: 44, maxWidth: 50),
           alignment: Alignment.center,
           padding: EdgeInsets.only(left: 8, right: 8),
           child: AutoSizeText(

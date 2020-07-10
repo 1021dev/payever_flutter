@@ -23,6 +23,6 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
   }
 
   Stream<ProductsScreenState> fetchProducts(String activeBusinessId) async* {
-    yield state.copyWith(isLoading: true);
+//    yield state.copyWith(isLoading: true);
   }
 }
