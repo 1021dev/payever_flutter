@@ -7,12 +7,18 @@ import 'package:payever/products/widgets/product_item_image_view.dart';
 
 class ProductGridItem extends StatelessWidget {
   final ProductListModel product;
-  final VoidCallback onTap;
-  final VoidCallback onCheck;
+  final Function onTap;
+  final Function onCheck;
+  final Function onTapMenu;
 
   final formatter = new NumberFormat('###,###,###.00', 'en_US');
 
-  ProductGridItem(this.product, { this.onTap, this.onCheck });
+  ProductGridItem(
+      this.product, {
+        this.onTap,
+        this.onCheck,
+        this.onTapMenu,
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -21,24 +27,34 @@ class ProductGridItem extends StatelessWidget {
           borderRadius: BorderRadius.all(Radius.circular(6.0)),
           color: Color.fromRGBO(0, 0, 0, 0.3)
       ),
-      child: InkWell(
-        onTap: () {
-          onCheck();
-        },
-        child: Column(
+      child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(top: 4.0, left: 4.0),
-              child: product.isChecked
-                  ? Icon(Icons.check_circle)
-                  : Icon(Icons.check_circle_outline),
+            Container(
+              padding: EdgeInsets.only(top: 16, left: 24),
+              alignment: Alignment.centerLeft,
+              child: InkWell(
+                onTap: () {
+                  onCheck(product);
+                },
+                child: product.isChecked
+                    ? Icon(Icons.check_circle, color: Colors.white,)
+                    : Icon(Icons.radio_button_unchecked, color: Colors.white54,),
+              ) ,
             ),
             Expanded(
               child: Padding(
                 padding: EdgeInsets.all(24),
-                child: ProductItemImage(product.productsModel.images.isEmpty ? null : product.productsModel.images.first, isRoundOnlyTopCorners: false),
+                child: GestureDetector(
+                  onTap: () {
+                    onTap(product);
+                  },
+                  child: ProductItemImage(
+                    product.productsModel.images.isEmpty ? null : product.productsModel.images.first,
+                    isRoundOnlyTopCorners: false,
+                  ),
+                ),
               ),
             ),
             Padding(
@@ -92,14 +108,12 @@ class ProductGridItem extends StatelessWidget {
               height: 44,
               alignment: Alignment.centerRight,
               child: MaterialButton(
-                onPressed: () {
-
-                },
+                onPressed: onTapMenu(product),
                 child: Icon(Icons.more_vert),
+                minWidth: 0,
               ),
             ),
           ],
-        ),
       ),
     );
   }

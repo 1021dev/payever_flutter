@@ -20,6 +20,10 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
   Stream<ProductsScreenState> mapEventToState(ProductsScreenEvent event) async* {
     if (event is ProductsScreenInitEvent) {
       yield* fetchProducts(event.currentBusinessId);
+    } else if (event is CheckProductItem) {
+      yield* selectProduct(event.model);
+    } else if (event is CheckCollectionItem) {
+
     }
   }
 
@@ -95,5 +99,12 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
       collectionLists: collectionLists,
     );
 
+  }
+
+  Stream<ProductsScreenState> selectProduct(ProductListModel model) async* {
+    List<ProductListModel> productLists = state.productLists;
+    int index = productLists.indexOf(model);
+    productLists[index].isChecked = !model.isChecked;
+    yield state.copyWith(productLists: productLists);
   }
 }

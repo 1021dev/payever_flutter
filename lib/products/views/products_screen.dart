@@ -489,15 +489,13 @@ class _ProductsScreenState extends State<ProductsScreen> {
             children: state.productLists.map ((product) {
               return ProductGridItem(
                 product,
-                onTap: () {
+                onTap: (ProductListModel model) {
                 },
-                onCheck: () {
-                  final index = state.productLists.indexOf(product);
-//                  final filteredIndex = widget.filteredProducts.indexOf(product);
-                  setState(() {
-//                    widget.products[index].isChecked = !widget.products[index].isChecked;
-//                    widget.filteredProducts[filteredIndex].isChecked = !widget.filteredProducts[filteredIndex].isChecked;
-                  });
+                onCheck: (ProductListModel model) {
+                  screenBloc.add(CheckProductItem(model: model));
+                },
+                onTapMenu: (ProductListModel model) {
+
                 },
               );
             }).toList(),

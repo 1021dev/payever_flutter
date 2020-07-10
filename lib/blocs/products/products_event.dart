@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:equatable/equatable.dart';
+import 'package:payever/products/models/models.dart';
 
 abstract class ProductsScreenEvent extends Equatable {
   ProductsScreenEvent();
@@ -22,3 +23,24 @@ class ProductsScreenInitEvent extends ProductsScreenEvent {
   ];
 }
 
+class CheckProductItem extends ProductsScreenEvent {
+  final ProductListModel model;
+
+  CheckProductItem({this.model});
+
+  @override
+  List<Object> get props => [
+    this.model,
+  ];
+}
+
+class CheckCollectionItem extends ProductsScreenEvent {
+  final CollectionListModel model;
+
+  CheckCollectionItem({this.model});
+
+  @override
+  List<Object> get props => [
+    this.model,
+  ];
+}
