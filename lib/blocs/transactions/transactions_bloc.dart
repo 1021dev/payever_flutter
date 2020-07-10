@@ -59,8 +59,8 @@ class TransactionsScreenBloc extends Bloc<TransactionsScreenEvent, TransactionsS
     }
     try {
       dynamic obj = await api.getTransactionList(state.currentBusiness.id, GlobalUtils.activeToken.accessToken, queryString);
-      TransactionScreenData data = TransactionScreenData(obj);
-      yield state.copyWith(isLoading: false, isSearchLoading: false, data: data);
+      Transaction transaction = Transaction.toMap(obj);
+      yield state.copyWith(isLoading: false, isSearchLoading: false, transaction: transaction);
 
     } catch (error) {
       if (error.toString().contains('401')) {

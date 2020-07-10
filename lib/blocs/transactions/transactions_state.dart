@@ -6,7 +6,8 @@ class TransactionsScreenState {
   final bool isLoading;
   final bool isSearchLoading;
   final String searchText;
-  final TransactionScreenData data;
+  final Transaction transaction;
+  final String wallpaper;
   final Business currentBusiness;
   final List<FilterItem> filterTypes;
   final String curSortType;
@@ -16,7 +17,8 @@ class TransactionsScreenState {
     this.isLoading = true,
     this.isSearchLoading = false,
     this.searchText = '',
-    this.data,
+    this.transaction,
+    this.wallpaper,
     this.currentBusiness,
     this.curSortType = 'date',
     this.filterTypes = const [],
@@ -27,7 +29,8 @@ class TransactionsScreenState {
     this.isLoading,
     this.isSearchLoading,
     this.searchText,
-    this.data,
+    this.transaction,
+    this.wallpaper,
     this.currentBusiness,
     this.curSortType,
     this.filterTypes,
@@ -38,7 +41,8 @@ class TransactionsScreenState {
     bool isLoading,
     bool isSearchLoading,
     String searchText,
-    TransactionScreenData data,
+    Transaction transaction,
+    String wallpaper,
     Business currentBusiness,
     List<FilterItem> filterTypes,
     String curSortType,
@@ -48,7 +52,8 @@ class TransactionsScreenState {
       isLoading: isLoading ?? this.isLoading,
       isSearchLoading: isSearchLoading ?? this.isSearchLoading,
       searchText: searchText ?? this.searchText,
-      data: data ?? this.data,
+      transaction: transaction ?? this.transaction,
+      wallpaper: wallpaper ?? this.wallpaper,
       currentBusiness: currentBusiness ?? this.currentBusiness,
       filterTypes: filterTypes ?? this.filterTypes,
       curSortType: curSortType ?? this.curSortType,

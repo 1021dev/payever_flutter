@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/env.dart';
+import 'package:payever/products_new/models/models.dart';
 
 class ProductCell extends StatelessWidget {
   final Products product;

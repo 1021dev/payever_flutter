@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:payever/commons/models/app_widget.dart';
-import 'package:payever/pos/utils/utils.dart';
+import 'package:payever/commons/utils/env.dart';
 
 class AppWidgetCell extends StatelessWidget {
   final AppWidget appWidget;

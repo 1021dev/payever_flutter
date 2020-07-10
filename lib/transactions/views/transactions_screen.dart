@@ -22,7 +22,6 @@ import '../network/network.dart';
 import '../../commons/view_models/view_models.dart';
 import '../../commons/models/models.dart';
 import '../../commons/views/screens/login/login.dart';
-import '../../commons/views/screens/dashboard/transaction_card.dart';
 import 'sub_view/search_text_content_view.dart';
 import 'transactions_details_screen.dart';
 
@@ -114,10 +113,11 @@ class _TransactionScreenState extends State<TransactionScreen> {
       child: BlocBuilder<TransactionsScreenBloc, TransactionsScreenState>(
         bloc: screenBloc,
         builder: (BuildContext context, state) {
-          if (state.data != null) {
-            _quantity = state.data.transaction.paginationData.total ?? 0;
-            _currency = state.data.currency(widget.globalStateModel.currentBusiness.currency);
-            _totalAmount = state.data.transaction.paginationData.amount ?? 0;
+          NumberFormat format = NumberFormat();
+          if (state.transaction != null) {
+            _quantity = state.transaction.paginationData.total ?? 0;
+            _currency = format.simpleCurrencySymbol(widget.globalStateModel.currentBusiness.currency);
+            _totalAmount = state.transaction.paginationData.amount ?? 0;
           } else {
             _quantity = 0;
             _currency = '';
@@ -382,9 +382,8 @@ class _TransactionScreenState extends State<TransactionScreen> {
                     Expanded(
                       child: state.isSearchLoading ? Center(
                         child: CircularProgressIndicator(),
-                      ) : (state.data.transaction.collection.length > 0 ? CustomList(widget.globalStateModel,
-                          state.data != null ? state.data.transaction.collection : [],
-                          state.data,
+                      ) : (state.transaction.collection.length > 0 ? CustomList(widget.globalStateModel,
+                          state.transaction != null ? state.transaction.collection : [],
                           state):
                       Center(
                         child: Text(
@@ -573,9 +572,8 @@ class _TransactionScreenState extends State<TransactionScreen> {
 class CustomList extends StatefulWidget {
   final GlobalStateModel globalStateModel;
   final List<Collection> collection;
-  final TransactionScreenData data;
   final TransactionsScreenState screenState;
-  CustomList(this.globalStateModel, this.collection, this.data, this.screenState);
+  CustomList(this.globalStateModel, this.collection, this.screenState);
 
   @override
   _CustomListState createState() => _CustomListState();
@@ -596,7 +594,7 @@ class _CustomListState extends State<CustomList> {
   }
 
   void _scrollListener() {
-    pageCount = (widget.data.transaction.paginationData.total / 50).ceil();
+    pageCount = (widget.screenState.transaction.paginationData.total / 50).ceil();
     if (controller.position.extentAfter < 500) {
       if (page < pageCount && !isLoading.value) {
         setState(() {
@@ -668,13 +666,13 @@ class _CustomListState extends State<CustomList> {
               ? TabletTableRow(
             globalStateModel: widget.globalStateModel,
             currentTransaction: widget.collection[index],
-            data: widget.data,
+            state: widget.screenState,
             isHeader: false,
           )
               : PhoneTableRow(
             globalStateModel: widget.globalStateModel,
             currentTransaction: widget.collection[index],
-            data: widget.data,
+            state: widget.screenState,
             isHeader: false,
           ),
         );
@@ -685,7 +683,7 @@ class _CustomListState extends State<CustomList> {
 
 class PhoneTableRow extends StatelessWidget {
   final Collection currentTransaction;
-  final TransactionScreenData data;
+  final TransactionsScreenState state;
   final GlobalStateModel globalStateModel;
   final bool isHeader;
 
@@ -693,7 +691,7 @@ class PhoneTableRow extends StatelessWidget {
     this.globalStateModel,
     this.currentTransaction,
     this.isHeader,
-    this.data,
+    this.state,
   });
 
   final f = NumberFormat('###,###.00', 'en_US');
@@ -859,7 +857,7 @@ class PhoneTableRow extends StatelessWidget {
 
 class TabletTableRow extends StatelessWidget {
   final Collection currentTransaction;
-  final TransactionScreenData data;
+  final TransactionsScreenState state;
   final GlobalStateModel globalStateModel;
   final bool isHeader;
 
@@ -867,7 +865,7 @@ class TabletTableRow extends StatelessWidget {
     this.globalStateModel,
     this.currentTransaction,
     this.isHeader,
-    this.data,
+    this.state,
   });
 
   final f = NumberFormat('###,##0.00', 'en_US');

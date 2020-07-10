@@ -60,35 +60,6 @@ class DashboardStateModel extends ChangeNotifier with Validators {
   List<Widget> _activeWid = List();
   String uiKit = Env.commerceOs + "/assets/ui-kit/icons-png/";
 
-  Future<List<Widget>> loadWidgetCards() async {
-    for (int i = 0; i < _currentWidgets.length; i++) {
-      var wid = _currentWidgets[i];
-      switch (wid.type) {
-        case "transactions":
-          _activeWid.add(TransactionCard(
-            wid.type,
-            NetworkImage(uiKit + wid.icon),
-            false,
-          ));
-          break;
-        case "pos":
-          _activeWid
-              .add(POSCard(wid.type, NetworkImage(uiKit + wid.icon), wid.help));
-          break;
-        case "products":
-          _activeWid.add(
-              ProductsSoldCard(wid.type, NetworkImage(uiKit + wid.icon), wid.help));
-          break;
-        case "settings":
-          _activeWid.add(
-              SettingsCard(wid.type, NetworkImage(uiKit + wid.icon), wid.help));
-          break;
-        default:
-      }
-    }
-    return _activeWid;
-  }
-
   Future<dynamic> fetchDaily(Business currentBusiness) {
     return RestDataSource()
         .getDays(currentBusiness.id, GlobalUtils.activeToken.accessToken, null);

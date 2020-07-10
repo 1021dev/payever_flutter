@@ -528,6 +528,24 @@ class ApiService {
     }
   }
 
+  Future<dynamic> getProducts(String idBusiness, String token, Map<String, dynamic> body) async {
+    try {
+      print('$TAG - getProductLastSold()');
+      dynamic response = await _client.postTypeLess(
+          '${Env.products}/products',
+          body: body,
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<dynamic> getShops(String idBusiness, String token) async {
     try {
       print('$TAG - getShops()');
