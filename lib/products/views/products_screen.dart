@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,6 +12,7 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/screens/dashboard/sub_view/dashboard_menu_view.dart';
+import 'package:payever/pos/widgets/pos_top_button.dart';
 import 'package:payever/products/models/models.dart';
 import 'package:payever/products/widgets/product_grid_item.dart';
 import 'package:payever/products/widgets/products_top_button.dart';
@@ -481,6 +483,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
       case 0:
         return Container(
           child: GridView.count(
+            shrinkWrap: true,
             crossAxisCount: 1,
             crossAxisSpacing: 12,
             mainAxisSpacing: 12,
@@ -495,7 +498,23 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   screenBloc.add(CheckProductItem(model: model));
                 },
                 onTapMenu: (ProductListModel model) {
-
+                  showCupertinoModalPopup(
+                    context: context,
+                    builder: (builder) {
+                      return Container(
+                        height: 64.0 * 2.0 + MediaQuery.of(context).padding.bottom,
+                        width: MediaQuery.of(context).size.width,
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.all(Radius.circular(15)),
+                        ),
+                        padding: EdgeInsets.only(top: 16),
+                        child: Column(
+                          children: popupButtons(context, model,),
+                        ),
+                      );
+                    },
+                  );
                 },
               );
             }).toList(),
@@ -505,6 +524,108 @@ class _ProductsScreenState extends State<ProductsScreen> {
         return Container();
     }
   }
+
+  List<Widget> popupButtons(BuildContext context, ProductListModel model) {
+    return [
+      Container(
+        height: 44,
+        child: SizedBox.expand(
+          child: MaterialButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text(
+              Language.getProductStrings('edit'),
+            ),
+          ),
+        ),
+      ),
+      Container(
+        height: 44,
+        child: SizedBox.expand(
+          child: MaterialButton(
+            onPressed: () {
+              Navigator.pop(context);
+              showCupertinoDialog(
+                context: context,
+                builder: (builder) {
+                  return Dialog(
+                    backgroundColor: Colors.transparent,
+                    child: Container(
+                      height: 250,
+                      child: BlurEffectView(
+                        color: Color.fromRGBO(50, 50, 50, 0.4),
+                        padding: EdgeInsets.all(16),
+                        child: Column(
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.only(top: 16),
+                            ),
+                            Icon(Icons.info),
+                            Padding(
+                              padding: EdgeInsets.only(top: 16),
+                            ),
+                            Text(
+                              Language.getPosStrings('Deleting Products'),
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w300,
+                                  color: Colors.white
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 16),
+                            ),
+                            Text(
+                              Language.getPosStrings('Do you really want to delete your product?'),
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w300,
+                                  color: Colors.white
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 16),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
+                                MaterialButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text(
+                                    Language.getPosStrings('action.no'),
+                                  ),
+                                ),
+                                MaterialButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text(
+                                    Language.getPosStrings('action.yes'),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+            child: Text(
+              Language.getProductStrings('delete'),
+            ),
+          ),
+        ),
+      ),
+    ];
+  }
+
 
 }
 

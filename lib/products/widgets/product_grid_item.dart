@@ -52,7 +52,6 @@ class ProductGridItem extends StatelessWidget {
                   },
                   child: ProductItemImage(
                     product.productsModel.images.isEmpty ? null : product.productsModel.images.first,
-                    isRoundOnlyTopCorners: false,
                   ),
                 ),
               ),
