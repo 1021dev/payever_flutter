@@ -14,6 +14,7 @@ import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/screens/dashboard/sub_view/dashboard_menu_view.dart';
 import 'package:payever/pos/widgets/pos_top_button.dart';
 import 'package:payever/products/models/models.dart';
+import 'package:payever/products/widgets/collection_grid_item.dart';
 import 'package:payever/products/widgets/product_grid_item.dart';
 import 'package:payever/products/widgets/products_top_button.dart';
 import 'package:payever/transactions/views/filter_content_view.dart';
@@ -482,7 +483,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
     switch(_selectedIndexValue) {
       case 0:
         List<Widget> productsItems  = [];
-        productsItems.add(getAddITem(state));
+        productsItems.add(getAddProductItem(state));
         state.productLists.forEach ((product) {
           productsItems.add(
               ProductGridItem(
@@ -521,6 +522,31 @@ class _ProductsScreenState extends State<ProductsScreen> {
             childAspectRatio: 0.7,
             padding: EdgeInsets.only(left: 16.0, top: 12.0, right: 16.0, bottom: 12.0),
             children: productsItems,
+          ),
+        );
+      case 1:
+        List<Widget> collectionItems  = [];
+        collectionItems.add(getAddCollectionItem(state));
+        print(state.collections);
+        state.collectionLists.forEach ((collection) {
+          collectionItems.add(
+              CollectionGridItem(
+                collection,
+                onTap: (CollectionListModel model) {
+                },
+                onCheck: (CollectionListModel model) {
+                  screenBloc.add(CheckCollectionItem(model: model));
+                },
+              ));
+        });
+        return Container(
+          child: GridView.count(
+            crossAxisCount: 1,
+            crossAxisSpacing: 12,
+            mainAxisSpacing: 12,
+            childAspectRatio: 1,
+            padding: EdgeInsets.only(left: 16.0, top: 12.0, right: 16.0, bottom: 12.0),
+            children: collectionItems,
           ),
         );
       default:
@@ -629,7 +655,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
     ];
   }
 
-  Widget getAddITem(ProductsScreenState state) {
+  Widget getAddProductItem(ProductsScreenState state) {
     return Container(
         decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(12.0)),
@@ -671,6 +697,65 @@ class _ProductsScreenState extends State<ProductsScreen> {
                       ),
                       Text(
                         Language.getProductStrings('add_product'),
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
+        )
+
+    );
+  }
+
+  Widget getAddCollectionItem(ProductsScreenState state) {
+    return Container(
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(12.0)),
+            color: Color.fromRGBO(0, 0, 0, 0.3)
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              SvgPicture.asset(
+                'assets/images/productsicon.svg',
+                width: 80,
+                height: 80,
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 16),
+              ),
+              MaterialButton(
+                onPressed: () {
+
+                },
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(22),
+                ),
+                height: 44,
+                minWidth: 0,
+                elevation: 0,
+                color: Colors.white,
+                child: Container(
+                  width: 150,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Icon(
+                        Icons.add,
+                        color: Colors.black,
+                      ),
+                      Text(
+                        Language.getProductStrings('Add Collection'),
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 18,

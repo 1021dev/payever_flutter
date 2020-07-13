@@ -308,6 +308,7 @@ class CollectionModel {
   String createdAt;
   String description;
   String name;
+  String image;
   String slug;
   String updatedAt;
   num __v;
@@ -319,6 +320,7 @@ class CollectionModel {
     createdAt = obj['createdAt'];
     description = obj['description'];
     name = obj['name'];
+    image = obj['image'];
     slug = obj['activeSince'];
     updatedAt = obj['updatedAt'];
     __v = obj['__v'];

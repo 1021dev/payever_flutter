@@ -23,7 +23,7 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
     } else if (event is CheckProductItem) {
       yield* selectProduct(event.model);
     } else if (event is CheckCollectionItem) {
-
+      yield* selectCollection(event.model);
     }
   }
 
@@ -80,7 +80,7 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
           collectionInfo = Info.toMap(pagination);
         }
       }
-      List colList = colResponse['products'];
+      List colList = colResponse['collections'];
       if (colList != null) {
         colList.forEach((element) {
           collections.add(CollectionModel.toMap(element));
@@ -106,5 +106,12 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
     int index = productLists.indexOf(model);
     productLists[index].isChecked = !model.isChecked;
     yield state.copyWith(productLists: productLists);
+  }
+
+  Stream<ProductsScreenState> selectCollection(CollectionListModel model) async* {
+    List<CollectionListModel> collectionList = state.collectionLists;
+    int index = collectionList.indexOf(model);
+    collectionList[index].isChecked = !model.isChecked;
+    yield state.copyWith(collectionLists: collectionList);
   }
 }
