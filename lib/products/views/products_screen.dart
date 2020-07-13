@@ -15,6 +15,7 @@ import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/screens/dashboard/sub_view/dashboard_menu_view.dart';
 import 'package:payever/pos/widgets/pos_top_button.dart';
 import 'package:payever/products/models/models.dart';
+import 'package:payever/products/views/product_detail_screen.dart';
 import 'package:payever/products/widgets/collection_grid_item.dart';
 import 'package:payever/products/widgets/product_grid_item.dart';
 import 'package:payever/products/widgets/products_top_button.dart';
@@ -638,6 +639,18 @@ class _ProductsScreenState extends State<ProductsScreen> {
               ProductGridItem(
                 product,
                 onTap: (ProductListModel model) {
+                  Navigator.push(
+                    context,
+                    PageTransition(
+                      child: ProductDetailScreen(
+                        businessId: widget.globalStateModel.currentBusiness.id,
+                        screenBloc: screenBloc,
+                        productsModel: model.productsModel,
+                      ),
+                      type: PageTransitionType.fade,
+                      duration: Duration(milliseconds: 500),
+                    ),
+                  );
                 },
                 onCheck: (ProductListModel model) {
                   screenBloc.add(CheckProductItem(model: model));
@@ -802,7 +815,18 @@ class _ProductsScreenState extends State<ProductsScreen> {
         child: SizedBox.expand(
           child: MaterialButton(
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.push(
+                context,
+                PageTransition(
+                  child: ProductDetailScreen(
+                    businessId: widget.globalStateModel.currentBusiness.id,
+                    screenBloc: screenBloc,
+                    productsModel: model.productsModel,
+                  ),
+                  type: PageTransitionType.fade,
+                  duration: Duration(milliseconds: 500),
+                ),
+              );
             },
             child: Text(
               Language.getProductStrings('edit'),
