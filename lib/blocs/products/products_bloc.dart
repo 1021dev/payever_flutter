@@ -48,6 +48,8 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
       yield* unSelectCollections();
     } else if (event is DeleteCollectionProductsEvent) {
       yield* deleteCollectionProducts();
+    } else if (event is DeleteSingleProduct) {
+      yield* deleteSingleProduct(event.product);
     }
   }
 
@@ -66,6 +68,7 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
     Info collectionInfo;
     List<CollectionModel> collections = [];
     List<CollectionListModel> collectionLists = [];
+    List<InventoryModel> inventories = [];
     if (response != null) {
       dynamic data = response['data'];
       if (data != null) {
@@ -113,6 +116,15 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
       }
     }
 
+    dynamic inventoryResponse = await api.getInventories(GlobalUtils.activeToken.accessToken, activeBusinessId);
+    if (inventoryResponse != null) {
+      if (inventoryResponse is List) {
+        inventoryResponse.forEach((element) {
+          inventories.add(InventoryModel.toMap(element));
+        });
+      }
+    }
+
     yield state.copyWith(
       isLoading: false,
       products: products,
@@ -121,6 +133,7 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
       collectionInfo: collectionInfo,
       productLists: productLists,
       collectionLists: collectionLists,
+      inventories: inventories,
     );
 
   }
@@ -326,24 +339,53 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
   }
 
   Stream<ProductsScreenState> selectAllCollections() async* {
-    List<CollectionListModel> collecitonList = [];
-    collecitonList.addAll(state.collectionLists);
-    collecitonList.forEach((element) {
+    List<CollectionListModel> collectionList = [];
+    collectionList.addAll(state.collectionLists);
+    collectionList.forEach((element) {
       element.isChecked = true;
     });
-    yield state.copyWith(collectionLists: collecitonList);
+    yield state.copyWith(collectionLists: collectionList);
   }
 
   Stream<ProductsScreenState> unSelectCollections() async* {
-    List<CollectionListModel> collecitonList = [];
-    collecitonList.addAll(state.collectionLists);
-    collecitonList.forEach((element) {
+    List<CollectionListModel> collectionList = [];
+    collectionList.addAll(state.collectionLists);
+    collectionList.forEach((element) {
       element.isChecked = false;
     });
-    yield state.copyWith(collectionLists: collecitonList);
+    yield state.copyWith(collectionLists: collectionList);
   }
 
   Stream<ProductsScreenState> deleteCollectionProducts() async* {
+
+  }
+
+  Stream<ProductsScreenState> deleteSingleProduct(ProductListModel model) async* {
+
+  }
+
+  Stream<ProductsScreenState> getProductDetail() async* {
+    Map<String, dynamic> body = {
+      'operationName': null,
+      'variables': {},
+      'query': '{\n  getProducts(businessUuid: \"${state.businessId}\", paginationLimit: 20, pageNumber: 1, orderBy: \"createdAt\", orderDirection: \"desc\", filterById: [], search: \"\", filters: []) {\n    products {\n      images\n      id\n      title\n      description\n      onSales\n      price\n      salePrice\n      vatRate\n      sku\n      barcode\n      currency\n      type\n      active\n      categories {\n        title\n      }\n      collections {\n        _id\n        name\n        description\n      }\n      variants {\n        id\n        images\n        options {\n          name\n          value\n        }\n        description\n        onSales\n        price\n        salePrice\n        sku\n        barcode\n      }\n      channelSets {\n        id\n        type\n        name\n      }\n      shipping {\n        weight\n        width\n        length\n        height\n      }\n    }\n    info {\n      pagination {\n        page\n        page_count\n        per_page\n        item_count\n      }\n    }\n  }\n}\n'
+    };
+
+  }
+
+  Stream<ProductsScreenState> getProductCategories() async* {
+
+  }
+
+  Stream<ProductsScreenState> getTaxes() async* {
+
+  }
+
+  Stream<ProductsScreenState> getBillingSubscriptions() async* {
+
+  }
+
+  Stream<ProductsScreenState> getBusinessBillingSubscription(String businessId) async* {
 
   }
 }

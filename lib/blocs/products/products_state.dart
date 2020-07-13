@@ -13,6 +13,7 @@ class ProductsScreenState {
   final List<CollectionListModel> collectionLists;
   final Info productsInfo;
   final Info collectionInfo;
+  final List<InventoryModel> inventories;
 
   ProductsScreenState({
     this.isLoading = false,
@@ -25,6 +26,7 @@ class ProductsScreenState {
     this.collectionLists = const [],
     this.productsInfo,
     this.collectionInfo,
+    this.inventories = const [],
   });
 
   List<Object> get props => [
@@ -38,6 +40,7 @@ class ProductsScreenState {
     this.collectionLists,
     this.productsInfo,
     this.collectionInfo,
+    this.inventories,
   ];
 
   ProductsScreenState copyWith({
@@ -51,6 +54,7 @@ class ProductsScreenState {
     List<CollectionListModel> collectionLists,
     Info productsInfo,
     Info collectionInfo,
+    List<InventoryModel> inventories,
   }) {
     return ProductsScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -63,6 +67,7 @@ class ProductsScreenState {
       collectionLists: collectionLists ?? this.collectionLists,
       productsInfo: productsInfo ?? this.productsInfo,
       collectionInfo: collectionInfo ?? this.collectionInfo,
+      inventories: inventories ?? this.inventories,
     );
   }
 }

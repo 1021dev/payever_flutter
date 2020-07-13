@@ -81,3 +81,18 @@ class UnSelectCollectionsEvent extends ProductsScreenEvent {}
 
 @immutable
 class DeleteCollectionProductsEvent extends ProductsScreenEvent {}
+
+@immutable
+class DeleteSingleProduct extends ProductsScreenEvent {
+  final ProductListModel product;
+
+  DeleteSingleProduct({this.product});
+
+  @override
+  List<Object> get props => [
+    this.product,
+  ];
+}
+
+@immutable
+class GetInventoriesEvent extends ProductsScreenEvent {}

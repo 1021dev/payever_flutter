@@ -865,6 +865,13 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                   onPressed: () {
                                     Navigator.pop(context);
                                   },
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  height: 24,
+                                  elevation: 0,
+                                  minWidth: 0,
+                                  color: Colors.white10,
                                   child: Text(
                                     Language.getPosStrings('actions.no'),
                                   ),
@@ -873,6 +880,13 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                   onPressed: () {
                                     Navigator.pop(context);
                                   },
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  height: 24,
+                                  elevation: 0,
+                                  minWidth: 0,
+                                  color: Colors.white10,
                                   child: Text(
                                     Language.getPosStrings('actions.yes'),
                                   ),

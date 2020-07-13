@@ -757,6 +757,7 @@ class GlobalUtils {
   static const String ENV_BUILDER_CLIENT = 'builderClient';
   static const String ENV_BUILDER_SHOP = 'builderShop';
   static const String ENV_COMMERCE_OS = 'commerceos';
+  static const String ENV_COMMON = 'common';
   static const String ENV_FRONTEND = 'frontend';
   static const String ENV_TRANSACTIONS = 'transactions';
   static const String ENV_POS = 'pos';

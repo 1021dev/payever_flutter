@@ -1480,5 +1480,125 @@ class ApiService {
     }
   }
 
+  Future<dynamic> getInventories(String token, String businessId) async {
+    try {
+      print('$TAG - getInventories()');
+      dynamic response = await _client.getTypeless(
+          '${Env.inventory}/api/business/$businessId/inventory',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
 
+  //https://common-backend.payever.org/api/tax/list/DE
+  Future<dynamic> getTaxes(String token, String country) async {
+    try {
+      print('$TAG - getTaxes()');
+      dynamic response = await _client.getTypeless(
+          '${Env.common}/api/tax/list/$country',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getBillingSubscription(String token, String businessId) async {
+    try {
+      print('$TAG - getBillingSubscription()');
+      dynamic response = await _client.getTypeless(
+          '${Env.connect}/api/integration/billing-subscriptions',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getBusinessBillingSubscription(String token, String businessId) async {
+    try {
+      print('$TAG - getBusinessBillingSubscription()');
+      dynamic response = await _client.getTypeless(
+          '${Env.connect}/api/business/$businessId/integration/billing-subscriptions',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getInventory(String token, String businessId, String sku) async {
+    try {
+      print('$TAG - getInventory()');
+      dynamic response = await _client.getTypeless(
+          '${Env.inventory}/api/business/$businessId/inventory/sku/$sku',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getProductCategories(String token, String businessId, Map<String, dynamic> body) async {
+    try {
+      print('$TAG - getProductCategories()');
+      dynamic response = await _client.postTypeLess(
+          '${Env.products}/products',
+          body: body,
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getProductDetail(String token, String businessId, Map<String, dynamic> body) async {
+    try {
+      print('$TAG - getProductDetail()');
+      dynamic response = await _client.postTypeLess(
+          '${Env.products}/products',
+          body: body,
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
 }

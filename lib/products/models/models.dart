@@ -148,10 +148,12 @@ class Variants {
   String title;
   String description;
   bool hidden;
+  bool onSales;
   num price;
   num salePrice;
   String sku;
   String barcode;
+  List<VariantOption> options = [];
 
   Variants.toMap(dynamic obj) {
     id = obj[GlobalUtils.DB_PROD_MODEL_VAR_ID];
@@ -165,6 +167,11 @@ class Variants {
     obj[GlobalUtils.DB_PROD_MODEL_VAR_IMAGES].forEach((img) {
       images.add(img);
     });
+    if (obj['options'] != null) {
+      obj['options'].forEach((op) {
+        options.add(VariantOption.toMap(op));
+      });
+    }
   }
 }
 
@@ -299,6 +306,21 @@ class VariantsRef {
 class VariantType {
   String type;
   String value;
+
+  VariantType.toMap(dynamic obj) {
+    type = obj['type'];
+    value = obj['value'];
+  }
+}
+
+class VariantOption {
+  String name;
+  String value;
+
+  VariantOption.toMap(dynamic obj) {
+    name = obj['name'];
+    value = obj['value'];
+  }
 }
 
 class CollectionModel {
@@ -346,4 +368,44 @@ class CollectionListModel {
   CollectionModel collectionModel;
 
   CollectionListModel({this.collectionModel, this.isChecked});
+}
+
+class Tax {
+  String country;
+  String description;
+  String id;
+  num rate;
+
+  Tax.toMap(dynamic obj) {
+    country = obj['country'];
+    description = obj['description'];
+    id = obj['id'];
+    rate = obj['rate'];
+  }
+}
+
+class SkuDetail {
+  String barcode;
+  String business;
+  String createdAt;
+  bool isNegativeStockAllowed = false;
+  bool isTrackable = false;
+  String sku;
+  num stock;
+  String updatedAt;
+  num __v;
+  String _id;
+
+  SkuDetail.toMap(dynamic obj) {
+    barcode = obj['barcode'];
+    business = obj['business'];
+    createdAt = obj['createdAt'];
+    isNegativeStockAllowed = obj['isNegativeStockAllowed'];
+    isTrackable = obj['isTrackable'];
+    sku = obj['sku'];
+    stock = obj['stock'];
+    updatedAt = obj['updatedAt'];
+    __v = obj['__v'];
+    _id = obj['_id'];
+  }
 }

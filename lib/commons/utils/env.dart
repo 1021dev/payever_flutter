@@ -8,6 +8,7 @@ class Env {
   static String widgets;
   static String wallpapers;
   static String commerceOs;
+  static String common;
   static String commerceOsBack;
   static String transactions;
   static String pos;
@@ -48,6 +49,7 @@ class Env {
         obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_TRANSACTIONS];
     Env.wallpapers = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_WALLPAPER];
     Env.commerceOs = obj[GlobalUtils.ENV_FRONTEND][GlobalUtils.ENV_COMMERCE_OS];
+    Env.common = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_COMMON];
     Env.commerceOsBack =
         obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_COMMERCE_OS];
     Env.pos = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_POS];
