@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -7,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:loadmore/loadmore.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
@@ -515,13 +517,23 @@ class _ProductsScreenState extends State<ProductsScreen> {
               ));
         });
         return Container(
-          child: GridView.count(
-            crossAxisCount: 1,
-            crossAxisSpacing: 12,
-            mainAxisSpacing: 12,
-            childAspectRatio: 0.7,
-            padding: EdgeInsets.only(left: 16.0, top: 12.0, right: 16.0, bottom: 12.0),
-            children: productsItems,
+          child: RefreshIndicator(
+            child: LoadMore(
+              isFinish: state.productLists.length >= state.productsInfo.itemCount,
+              onLoadMore: _loadMoreProducts,
+              child: GridView.count(
+                crossAxisCount: 1,
+                crossAxisSpacing: 12,
+                mainAxisSpacing: 12,
+                childAspectRatio: 0.7,
+                padding: EdgeInsets.only(left: 16.0, top: 12.0, right: 16.0, bottom: 12.0),
+                children: productsItems,
+              ),
+              whenEmptyLoad: false,
+              delegate: DefaultLoadMoreDelegate(),
+              textBuilder: DefaultLoadMoreTextBuilder.chinese,
+            ),
+            onRefresh: _refreshProducts,
           ),
         );
       case 1:
@@ -540,13 +552,23 @@ class _ProductsScreenState extends State<ProductsScreen> {
               ));
         });
         return Container(
-          child: GridView.count(
-            crossAxisCount: 1,
-            crossAxisSpacing: 12,
-            mainAxisSpacing: 12,
-            childAspectRatio: 1,
-            padding: EdgeInsets.only(left: 16.0, top: 12.0, right: 16.0, bottom: 12.0),
-            children: collectionItems,
+          child: RefreshIndicator(
+            child: LoadMore(
+              isFinish: state.collectionLists.length >= state.collectionInfo.itemCount,
+              onLoadMore: _loadMoreCollections,
+              child: GridView.count(
+                crossAxisCount: 1,
+                crossAxisSpacing: 12,
+                mainAxisSpacing: 12,
+                childAspectRatio: 1,
+                padding: EdgeInsets.only(left: 16.0, top: 12.0, right: 16.0, bottom: 12.0),
+                children: collectionItems,
+              ),
+              whenEmptyLoad: false,
+              delegate: DefaultLoadMoreDelegate(),
+              textBuilder: DefaultLoadMoreTextBuilder.chinese,
+            ),
+            onRefresh: _refreshCollections,
           ),
         );
       default:
@@ -769,8 +791,42 @@ class _ProductsScreenState extends State<ProductsScreen> {
             ],
           ),
         )
-
     );
   }
+
+  Future<bool> _loadMoreProducts() async {
+    print('Load more');
+    await Future.delayed(Duration(seconds: 0, milliseconds: 1000));
+    screenBloc.add(
+      ProductsLoadMoreEvent()
+    );
+    return true;
+  }
+
+  Future<void> _refreshProducts() async {
+    Completer<Null> completer = new Completer<Null>();
+    screenBloc.add(
+      ProductsReloadEvent(completer)
+    );
+    return completer.future;
+  }
+
+  Future<bool> _loadMoreCollections() async {
+    print('Load more');
+    await Future.delayed(Duration(seconds: 0, milliseconds: 1000));
+    screenBloc.add(
+      CollectionsLoadMoreEvent()
+    );
+    return true;
+  }
+
+  Future<void> _refreshCollections() async {
+    Completer<Null> completer = new Completer<Null>();
+    screenBloc.add(
+      CollectionsReloadEvent(completer)
+    );
+    return completer.future;
+  }
+
 }
 

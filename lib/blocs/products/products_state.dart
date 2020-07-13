@@ -6,6 +6,7 @@ class ProductsScreenState {
   final bool isLoading;
   final bool isUpdating;
   final bool isUploading;
+  final String businessId;
   final List<ProductsModel> products;
   final List<ProductListModel> productLists;
   final List<CollectionModel> collections;
@@ -17,6 +18,7 @@ class ProductsScreenState {
     this.isLoading = false,
     this.isUpdating = false,
     this.isUploading = false,
+    this.businessId,
     this.products = const [],
     this.collections = const [],
     this.productLists = const [],
@@ -29,6 +31,7 @@ class ProductsScreenState {
     this.isLoading,
     this.isUpdating,
     this.isUploading,
+    this.businessId,
     this.products,
     this.collections,
     this.productLists,
@@ -41,6 +44,7 @@ class ProductsScreenState {
     bool isLoading,
     bool isUpdating,
     bool isUploading,
+    String businessId,
     List<ProductsModel> products,
     List<CollectionModel> collections,
     List<ProductListModel> productLists,
@@ -52,6 +56,7 @@ class ProductsScreenState {
       isLoading: isLoading ?? this.isLoading,
       isUpdating: isUpdating ?? this.isUpdating,
       isUploading: isUploading ?? this.isUploading,
+      businessId: businessId ?? this.businessId,
       products: products ?? this.products,
       collections: collections ?? this.collections,
       productLists: productLists ?? this.productLists,

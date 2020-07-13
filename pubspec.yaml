@@ -50,7 +50,7 @@ dependencies:
   flutter_tags: ^0.4.8
   date_format: ^1.0.8
   flutter_inappwebview: ^4.0.0
-
+  loadmore: 1.0.4
 dev_dependencies:
   flutter_test:
     sdk: flutter
