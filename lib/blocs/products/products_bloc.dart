@@ -364,28 +364,64 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
 
   }
 
-  Stream<ProductsScreenState> getProductDetail() async* {
+  Stream<ProductsScreenState> getProductDetail(String id) async* {
     Map<String, dynamic> body = {
-      'operationName': null,
-      'variables': {},
-      'query': '{\n  getProducts(businessUuid: \"${state.businessId}\", paginationLimit: 20, pageNumber: 1, orderBy: \"createdAt\", orderDirection: \"desc\", filterById: [], search: \"\", filters: []) {\n    products {\n      images\n      id\n      title\n      description\n      onSales\n      price\n      salePrice\n      vatRate\n      sku\n      barcode\n      currency\n      type\n      active\n      categories {\n        title\n      }\n      collections {\n        _id\n        name\n        description\n      }\n      variants {\n        id\n        images\n        options {\n          name\n          value\n        }\n        description\n        onSales\n        price\n        salePrice\n        sku\n        barcode\n      }\n      channelSets {\n        id\n        type\n        name\n      }\n      shipping {\n        weight\n        width\n        length\n        height\n      }\n    }\n    info {\n      pagination {\n        page\n        page_count\n        per_page\n        item_count\n      }\n    }\n  }\n}\n'
+      'operationName': 'getProducts',
+      'variables': {
+        'id': id,
+      },
+      'query': 'query getProducts(\$id: String!) {\n  product(id: \$id) {\n    businessUuid\n    images\n    currency\n    id\n    title\n    description\n    onSales\n    price\n    salePrice\n    vatRate\n    sku\n    barcode\n    type\n    active\n    collections {\n      _id\n      name\n      description\n    }\n    categories {\n      id\n      slug\n      title\n    }\n    channelSets {\n      id\n      type\n      name\n    }\n    variants {\n      id\n      images\n      options {\n        name\n        value\n      }\n      description\n      onSales\n      price\n      salePrice\n      sku\n      barcode\n    }\n    shipping {\n      weight\n      width\n      length\n      height\n    }\n  }\n}\n',
     };
-
+    dynamic response = await api.getProducts(GlobalUtils.activeToken.accessToken, body);
+    ProductsModel model;
+    dynamic data = response['data'];
+    if (data != null) {
+      dynamic getProduct = data['product'];
+      if (getProduct != null) {
+        model = ProductsModel.toMap(getProduct);
+      }
+    }
+    yield state.copyWith(productDetail: model);
   }
 
   Stream<ProductsScreenState> getProductCategories() async* {
-
+    Map<String, dynamic> body = {
+      'operationName': 'getCategories',
+      'variables': {
+        'businessUuid': state.businessId,
+        'page': 1,
+        'perPage': 100,
+        'titleChunk': '',
+      },
+      'query': 'query getCategories(\$businessUuid: String!, \$titleChunk: String, \$page: Int, \$perPage: Int) {\n  getCategories(businessUuid: \$businessUuid, title: \$titleChunk, pageNumber: \$page, paginationLimit: \$perPage) {\n    id\n    slug\n    title\n    businessUuid\n  }\n}\n',
+    };
+    List<Categories> categories = [];
+    dynamic response = await api.getProducts(GlobalUtils.activeToken.accessToken, body);
+    if (response != null) {
+      dynamic data = response['data'];
+      if (data != null) {
+        List getCategories = data['getCategories'];
+        if (getCategories != null) {
+          getCategories.forEach((element) {
+            categories.add(Categories.toMap(element));
+          });
+        }
+      }
+    }
+    yield state.copyWith(categories: categories);
   }
 
-  Stream<ProductsScreenState> getTaxes() async* {
-
+  Stream<ProductsScreenState> getTaxes(String country) async* {
+    dynamic response = await api.getTaxes(GlobalUtils.activeToken.accessToken, country);
   }
 
   Stream<ProductsScreenState> getBillingSubscriptions() async* {
+    dynamic response = await api.getBillingSubscription(GlobalUtils.activeToken.accessToken, state.businessId);
 
   }
 
   Stream<ProductsScreenState> getBusinessBillingSubscription(String businessId) async* {
+    dynamic response = await api.getBusinessBillingSubscription(GlobalUtils.activeToken.accessToken, state.businessId);
 
   }
 }

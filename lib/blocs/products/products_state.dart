@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:payever/commons/models/models.dart';
 import 'package:payever/products/models/models.dart';
 import 'package:payever/shop/models/models.dart';
 
@@ -14,6 +15,12 @@ class ProductsScreenState {
   final Info productsInfo;
   final Info collectionInfo;
   final List<InventoryModel> inventories;
+  final List<Categories> categories;
+  final ProductsModel productDetail;
+  final List<Tax> taxes;
+  final List<Terminal> terminals;
+  final List<ShopModel> shops;
+  final dynamic billingSubscription;
 
   ProductsScreenState({
     this.isLoading = false,
@@ -27,6 +34,12 @@ class ProductsScreenState {
     this.productsInfo,
     this.collectionInfo,
     this.inventories = const [],
+    this.categories = const [],
+    this.productDetail,
+    this.taxes = const [],
+    this.terminals = const [],
+    this.shops = const [],
+    this.billingSubscription,
   });
 
   List<Object> get props => [
@@ -41,6 +54,12 @@ class ProductsScreenState {
     this.productsInfo,
     this.collectionInfo,
     this.inventories,
+    this.categories,
+    this.productDetail,
+    this.taxes,
+    this.terminals,
+    this.shops,
+    this.billingSubscription,
   ];
 
   ProductsScreenState copyWith({
@@ -55,6 +74,12 @@ class ProductsScreenState {
     Info productsInfo,
     Info collectionInfo,
     List<InventoryModel> inventories,
+    List<Categories> categories,
+    ProductsModel productDetail,
+    List<Tax> taxes,
+    List<Terminal> terminals,
+    List<ShopModel> shops,
+    billingSubscription,
   }) {
     return ProductsScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -68,6 +93,12 @@ class ProductsScreenState {
       productsInfo: productsInfo ?? this.productsInfo,
       collectionInfo: collectionInfo ?? this.collectionInfo,
       inventories: inventories ?? this.inventories,
+      categories: categories ?? this.categories,
+      productDetail: productDetail ?? this.productDetail,
+      taxes: taxes ?? this.taxes,
+      terminals: terminals ?? this.terminals,
+      shops: shops ?? this.shops,
+      billingSubscription: billingSubscription ?? this.billingSubscription,
     );
   }
 }
