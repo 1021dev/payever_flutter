@@ -8,7 +8,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:loadmore/loadmore.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
@@ -21,6 +20,7 @@ import 'package:payever/products/widgets/product_grid_item.dart';
 import 'package:payever/products/widgets/products_top_button.dart';
 import 'package:payever/transactions/views/filter_content_view.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
@@ -71,22 +71,52 @@ class _ProductsScreenState extends State<ProductsScreen> {
   List<FilterItem> filterTypes = [];
   int selectedTypes = 0;
   int _selectedIndexValue = 0;
+  RefreshController _productsRefreshController = RefreshController(
+    initialRefresh: false,
+  );
+  RefreshController _collectionsRefreshController = RefreshController(
+    initialRefresh: false,
+  );
 
-  List<OverflowMenuItem> appBarPopUpActions(BuildContext context, ProductsScreenState state) {
+  List<OverflowMenuItem> productsPopUpActions(BuildContext context, ProductsScreenState state) {
     return [
       OverflowMenuItem(
         title: 'Select All',
-        onTap: () async {
+        onTap: () {
+          screenBloc.add(SelectAllProductsEvent());
         },
       ),
       OverflowMenuItem(
         title: 'UnSelect',
-        onTap: () async {
+        onTap: () {
+          screenBloc.add(UnSelectProductsEvent());
         },
       ),
       OverflowMenuItem(
         title: 'Add to Collection',
         onTap: () {
+        },
+      ),
+      OverflowMenuItem(
+        title: 'Delete Products',
+        onTap: () {
+        },
+      ),
+    ];
+  }
+
+  List<OverflowMenuItem> collectionsPopUpActions(BuildContext context, ProductsScreenState state) {
+    return [
+      OverflowMenuItem(
+        title: 'Select All',
+        onTap: () {
+          screenBloc.add(SelectAllCollectionsEvent());
+        },
+      ),
+      OverflowMenuItem(
+        title: 'UnSelect',
+        onTap: () {
+          screenBloc.add(UnSelectCollectionsEvent());
         },
       ),
       OverflowMenuItem(
@@ -429,7 +459,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
                             },
                             color: _selectedIndexValue == 0 ? Color(0xFF2a2a2a): Color(0xFF1F1F1F),
                             height: 24,
-                            minWidth: 100,
                             elevation: 0,
                             child: Text(
                               Language.getProductStrings('Products'),
@@ -457,7 +486,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
                             color: _selectedIndexValue == 1 ? Color(0xFF2a2a2a): Color(0xFF1F1F1F),
                             elevation: 0,
                             height: 24,
-                            minWidth: 100,
                             child: Text(
                               Language.getProductStrings('Collections'),
                               style: TextStyle(
@@ -514,14 +542,18 @@ class _ProductsScreenState extends State<ProductsScreen> {
                     InkWell(
                       child: SvgPicture.asset('assets/images/xsinacircle.svg'),
                       onTap: () {
-
+                        if (_selectedIndexValue == 0) {
+                          screenBloc.add(UnSelectProductsEvent());
+                        } else {
+                          screenBloc.add(UnSelectCollectionsEvent());
+                        }
                       },
                     ),
                     Padding(
                       padding: EdgeInsets.only(left: 8),
                     ),
                     Text(
-                      '$selectedCount ITEM SELECTED',
+                      '$selectedCount ITEM${selectedCount > 1 ? 'S': ''} SELECTED',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 16,
@@ -539,8 +571,19 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   ),
                   color: Colors.black87,
                   itemBuilder: (BuildContext context) {
-                    return appBarPopUpActions(context, state)
-                        .map((OverflowMenuItem item) {
+                    return _selectedIndexValue == 0 ? productsPopUpActions(context, state).map((OverflowMenuItem item) {
+                      return PopupMenuItem<OverflowMenuItem>(
+                        value: item,
+                        child: Text(
+                          item.title,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w300,
+                          ),
+                        ),
+                      );
+                    }).toList() : collectionsPopUpActions(context, state).map((OverflowMenuItem item) {
                       return PopupMenuItem<OverflowMenuItem>(
                         value: item,
                         child: Text(
@@ -621,24 +664,69 @@ class _ProductsScreenState extends State<ProductsScreen> {
               ));
         });
         return Container(
-          child: RefreshIndicator(
-            child: LoadMore(
-              isFinish: state.productLists.length >= state.productsInfo.itemCount,
-              onLoadMore: _loadMoreProducts,
-              child: GridView.count(
-                crossAxisCount: 1,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
-                childAspectRatio: 0.7,
-                padding: EdgeInsets.only(left: 16.0, top: 12.0, right: 16.0, bottom: 12.0),
-                children: productsItems,
-              ),
-              whenEmptyLoad: false,
-              delegate: DefaultLoadMoreDelegate(),
-              textBuilder: DefaultLoadMoreTextBuilder.chinese,
+          child: SmartRefresher(
+            enablePullDown: true,
+            enablePullUp: true,
+            header: MaterialClassicHeader(backgroundColor: Colors.black,semanticsLabel: '',),
+            footer: CustomFooter(
+              loadStyle: LoadStyle.ShowWhenLoading,
+              height: 1,
+              builder: (context, status) {
+                return Container();
+              },
             ),
-            onRefresh: _refreshProducts,
+            controller: _productsRefreshController,
+            onRefresh: () {
+              _refreshProducts();
+            },
+            onLoading: () {
+              _loadMoreProducts(state);
+            },
+            child: CustomScrollView(
+              slivers: <Widget>[
+                SliverGrid.count(
+                  crossAxisCount: 1,
+                  crossAxisSpacing: 12,
+                  mainAxisSpacing: 12,
+                  childAspectRatio: 0.75,
+                  children: List.generate(
+                    productsItems.length,
+                        (index) {
+                      return productsItems[index];
+                    },
+                  ),
+                ),
+                new SliverToBoxAdapter(
+                  child: state.productLists.length < state.productsInfo.itemCount ? Container(
+                    child: Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                  ) : Container(),
+                )
+              ],
+            ),
           ),
+//          child: RefreshIndicator(
+//            child: LoadMore(
+//              isFinish: state.productLists.length == state.productsInfo.itemCount,
+//              onLoadMore: _loadMoreProducts,
+//              child: GridView.count(
+//                crossAxisCount: 1,
+//                crossAxisSpacing: 12,
+//                mainAxisSpacing: 12,
+//                childAspectRatio: 0.7,
+//                padding: EdgeInsets.only(left: 16.0, top: 12.0, right: 16.0, bottom: 12.0),
+//                children: productsItems,
+//              ),
+//              whenEmptyLoad: false,
+//              delegate: DefaultLoadMoreDelegate(),
+//              textBuilder: DefaultLoadMoreTextBuilder.english,
+//            ),
+//            onRefresh: _refreshProducts,
+//          ),
         );
       case 1:
         List<Widget> collectionItems  = [];
@@ -656,23 +744,50 @@ class _ProductsScreenState extends State<ProductsScreen> {
               ));
         });
         return Container(
-          child: RefreshIndicator(
-            child: LoadMore(
-              isFinish: state.collectionLists.length >= state.collectionInfo.itemCount,
-              onLoadMore: _loadMoreCollections,
-              child: GridView.count(
-                crossAxisCount: 1,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
-                childAspectRatio: 1,
-                padding: EdgeInsets.only(left: 16.0, top: 12.0, right: 16.0, bottom: 12.0),
-                children: collectionItems,
-              ),
-              whenEmptyLoad: false,
-              delegate: DefaultLoadMoreDelegate(),
-              textBuilder: DefaultLoadMoreTextBuilder.chinese,
+          child: SmartRefresher(
+            enablePullDown: true,
+            enablePullUp: true,
+            header: MaterialClassicHeader(backgroundColor: Colors.black,semanticsLabel: '',),
+            footer: CustomFooter(
+              loadStyle: LoadStyle.ShowWhenLoading,
+              height: 1,
+              builder: (context, status) {
+                return Container();
+              },
             ),
-            onRefresh: _refreshCollections,
+            controller: _collectionsRefreshController,
+            onRefresh: () {
+              _refreshCollections();
+            },
+            onLoading: () {
+              _loadMoreCollections(state);
+            },
+            child: CustomScrollView(
+              slivers: <Widget>[
+                SliverGrid.count(
+                  crossAxisCount: 1,
+                  crossAxisSpacing: 12,
+                  mainAxisSpacing: 12,
+                  childAspectRatio: 1,
+                  children: List.generate(
+                    collectionItems.length,
+                        (index) {
+                      return collectionItems[index];
+                    },
+                  ),
+                ),
+                new SliverToBoxAdapter(
+                  child: state.collectionLists.length < state.collectionInfo.itemCount ? Container(
+                    child: Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                  ) : Container(),
+                )
+              ],
+            ),
           ),
         );
       default:
@@ -783,153 +898,158 @@ class _ProductsScreenState extends State<ProductsScreen> {
 
   Widget getAddProductItem(ProductsScreenState state) {
     return Container(
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(12.0)),
-            color: Color.fromRGBO(0, 0, 0, 0.3)
-        ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              SvgPicture.asset(
-                'assets/images/productsicon.svg',
-                width: 80,
-                height: 80,
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 16),
-              ),
-              MaterialButton(
-                onPressed: () {
+      margin: EdgeInsets.only(left: 16, right: 16, top: 8),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(12.0)),
+          color: Color.fromRGBO(0, 0, 0, 0.3)
+      ),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            SvgPicture.asset(
+              'assets/images/productsicon.svg',
+              width: 80,
+              height: 80,
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 16),
+            ),
+            MaterialButton(
+              onPressed: () {
 
-                },
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(22),
-                ),
-                height: 44,
-                minWidth: 0,
-                elevation: 0,
-                color: Colors.white,
-                child: Container(
-                  width: 150,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Icon(
-                        Icons.add,
+              },
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(22),
+              ),
+              height: 44,
+              minWidth: 0,
+              elevation: 0,
+              color: Colors.white,
+              child: Container(
+                width: 150,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(
+                      Icons.add,
+                      color: Colors.black,
+                    ),
+                    Text(
+                      Language.getProductStrings('add_product'),
+                      style: TextStyle(
                         color: Colors.black,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400,
                       ),
-                      Text(
-                        Language.getProductStrings('add_product'),
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              )
-            ],
-          ),
-        )
-
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 
   Widget getAddCollectionItem(ProductsScreenState state) {
     return Container(
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(12.0)),
-            color: Color.fromRGBO(0, 0, 0, 0.3)
-        ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              SvgPicture.asset(
-                'assets/images/productsicon.svg',
-                width: 80,
-                height: 80,
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 16),
-              ),
-              MaterialButton(
-                onPressed: () {
+      margin: EdgeInsets.only(left: 16, right: 16, top: 8),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(12.0)),
+          color: Color.fromRGBO(0, 0, 0, 0.3)
+      ),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            SvgPicture.asset(
+              'assets/images/productsicon.svg',
+              width: 80,
+              height: 80,
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 16),
+            ),
+            MaterialButton(
+              onPressed: () {
 
-                },
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(22),
-                ),
-                height: 44,
-                minWidth: 0,
-                elevation: 0,
-                color: Colors.white,
-                child: Container(
-                  width: 150,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Icon(
-                        Icons.add,
+              },
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(22),
+              ),
+              height: 44,
+              minWidth: 0,
+              elevation: 0,
+              color: Colors.white,
+              child: Container(
+                width: 150,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(
+                      Icons.add,
+                      color: Colors.black,
+                    ),
+                    Text(
+                      Language.getProductStrings('Add Collection'),
+                      style: TextStyle(
                         color: Colors.black,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400,
                       ),
-                      Text(
-                        Language.getProductStrings('Add Collection'),
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              )
-            ],
-          ),
-        )
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 
-  Future<bool> _loadMoreProducts() async {
+  void _loadMoreProducts(ProductsScreenState state) async {
     print('Load more products');
+    if (state.productsInfo.page == state.productsInfo.pageCount)
+      return;
+    screenBloc.add(
+        ProductsLoadMoreEvent()
+    );
     await Future.delayed(Duration(seconds: 0, milliseconds: 1000));
-    screenBloc.add(
-      ProductsLoadMoreEvent()
-    );
-    return true;
+    _productsRefreshController.loadComplete();
   }
 
-  Future<void> _refreshProducts() async {
-    Completer<Null> completer = new Completer<Null>();
+  void _refreshProducts() async {
     screenBloc.add(
-      ProductsReloadEvent(completer)
+      ProductsReloadEvent()
     );
-    return completer.future;
+    await Future.delayed(Duration(seconds: 0, milliseconds: 1000));
+    _productsRefreshController.refreshCompleted(resetFooterState: true);
   }
 
-  Future<bool> _loadMoreCollections() async {
+  void _loadMoreCollections(ProductsScreenState state) async {
     print('Load more collection');
-    await Future.delayed(Duration(seconds: 0, milliseconds: 1000));
+    if (state.collectionInfo.page == state.collectionInfo.pageCount)
+      return;
     screenBloc.add(
-      CollectionsLoadMoreEvent()
+        CollectionsLoadMoreEvent()
     );
-    return true;
+    await Future.delayed(Duration(seconds: 0, milliseconds: 1000));
+    _collectionsRefreshController.loadComplete();
   }
 
-  Future<void> _refreshCollections() async {
-    Completer<Null> completer = new Completer<Null>();
+  void _refreshCollections() async {
     screenBloc.add(
-      CollectionsReloadEvent(completer)
+      CollectionsReloadEvent()
     );
-    return completer.future;
+    await Future.delayed(Duration(seconds: 0, milliseconds: 1000));
+    _collectionsRefreshController.refreshCompleted(resetFooterState: true);
   }
 
 }

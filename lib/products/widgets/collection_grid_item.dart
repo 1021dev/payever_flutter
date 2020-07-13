@@ -22,6 +22,7 @@ class CollectionGridItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.only(left: 16, right: 16),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(12.0)),
           color: Color.fromRGBO(0, 0, 0, 0.3)

@@ -49,11 +49,6 @@ class CheckCollectionItem extends ProductsScreenEvent {
 
 @immutable
 class ProductsReloadEvent extends ProductsScreenEvent {
-  final Completer completer;
-  ProductsReloadEvent(this.completer);
-
-  @override
-  List<Object> get props => [completer];
 }
 
 @immutable
@@ -61,11 +56,6 @@ class ProductsLoadMoreEvent extends ProductsScreenEvent {}
 
 @immutable
 class CollectionsReloadEvent extends ProductsScreenEvent {
-  final Completer completer;
-  CollectionsReloadEvent(this.completer);
-
-  @override
-  List<Object> get props => [completer];
 }
 
 @immutable

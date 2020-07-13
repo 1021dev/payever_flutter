@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
@@ -26,13 +27,27 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
     } else if (event is CheckCollectionItem) {
       yield* selectCollection(event.model);
     } else if (event is ProductsReloadEvent) {
-
+      yield* reloadProducts();
     } else if (event is ProductsLoadMoreEvent) {
-
+      yield* loadMoreProducts();
     } else if (event is CollectionsReloadEvent) {
-
+      yield* reloadCollections();
     } else if (event is CollectionsLoadMoreEvent) {
-
+      yield* loadMoreCollections();
+    } else if (event is SelectAllProductsEvent) {
+      yield* selectAllProducts();
+    } else if (event is UnSelectProductsEvent) {
+      yield* unSelectProducts();
+    } else if (event is AddToCollectionEvent) {
+      yield* addToCollectionProducts();
+    } else if (event is DeleteProductsEvent) {
+      yield* deleteProducts();
+    } else if (event is SelectAllCollectionsEvent) {
+      yield* selectAllCollections();
+    } else if (event is UnSelectCollectionsEvent) {
+      yield* unSelectCollections();
+    } else if (event is DeleteCollectionProductsEvent) {
+      yield* deleteCollectionProducts();
     }
   }
 
@@ -282,5 +297,53 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
       collections: collections,
       collectionLists: collectionLists,
     );
+  }
+
+  Stream<ProductsScreenState> selectAllProducts() async* {
+    List<ProductListModel> productList = [];
+    productList.addAll(state.productLists);
+    productList.forEach((element) {
+      element.isChecked = true;
+    });
+    yield state.copyWith(productLists: productList);
+  }
+
+  Stream<ProductsScreenState> unSelectProducts() async* {
+    List<ProductListModel> productList = [];
+    productList.addAll(state.productLists);
+    productList.forEach((element) {
+      element.isChecked = false;
+    });
+    yield state.copyWith(productLists: productList);
+  }
+
+  Stream<ProductsScreenState> addToCollectionProducts() async* {
+
+  }
+
+  Stream<ProductsScreenState> deleteProducts() async* {
+
+  }
+
+  Stream<ProductsScreenState> selectAllCollections() async* {
+    List<CollectionListModel> collecitonList = [];
+    collecitonList.addAll(state.collectionLists);
+    collecitonList.forEach((element) {
+      element.isChecked = true;
+    });
+    yield state.copyWith(collectionLists: collecitonList);
+  }
+
+  Stream<ProductsScreenState> unSelectCollections() async* {
+    List<CollectionListModel> collecitonList = [];
+    collecitonList.addAll(state.collectionLists);
+    collecitonList.forEach((element) {
+      element.isChecked = false;
+    });
+    yield state.copyWith(collectionLists: collecitonList);
+  }
+
+  Stream<ProductsScreenState> deleteCollectionProducts() async* {
+
   }
 }
