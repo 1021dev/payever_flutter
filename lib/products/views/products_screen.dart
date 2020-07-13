@@ -374,65 +374,65 @@ class _ProductsScreenState extends State<ProductsScreen> {
           Flexible(
             flex: 2,
             child: Container(
-              alignment: Alignment.center,
-              child: Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    MaterialButton(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(12),
-                          bottomLeft: Radius.circular(12),
+                alignment: Alignment.center,
+                child: Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      MaterialButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(12),
+                            bottomLeft: Radius.circular(12),
+                          ),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _selectedIndexValue = 0;
+                          });
+                        },
+                        color: _selectedIndexValue == 0 ? Color(0xFF2a2a2a): Color(0xFF1F1F1F),
+                        height: 24,
+                        minWidth: 100,
+                        elevation: 0,
+                        child: Text(
+                          Language.getProductStrings('Products'),
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                      onPressed: () {
-                        setState(() {
-                          _selectedIndexValue = 0;
-                        });
-                      },
-                      color: _selectedIndexValue == 0 ? Color(0xFF2a2a2a): Color(0xFF1F1F1F),
-                      height: 24,
-                      minWidth: 100,
-                      elevation: 0,
-                      child: Text(
-                        Language.getProductStrings('Products'),
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
+                      Padding(
+                        padding: EdgeInsets.only(left: 2),
+                      ),
+                      MaterialButton(
+                        onPressed: () {
+                          setState(() {
+                            _selectedIndexValue = 1;
+                          });
+                        },
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(12),
+                            bottomRight: Radius.circular(12),
+                          ),
+                        ),
+                        color: _selectedIndexValue == 1 ? Color(0xFF2a2a2a): Color(0xFF1F1F1F),
+                        elevation: 0,
+                        height: 24,
+                        minWidth: 100,
+                        child: Text(
+                          Language.getProductStrings('Collections'),
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 2),
-                    ),
-                    MaterialButton(
-                      onPressed: () {
-                        setState(() {
-                          _selectedIndexValue = 1;
-                        });
-                      },
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(12),
-                          bottomRight: Radius.circular(12),
-                        ),
-                      ),
-                      color: _selectedIndexValue == 1 ? Color(0xFF2a2a2a): Color(0xFF1F1F1F),
-                      elevation: 0,
-                      height: 24,
-                      minWidth: 100,
-                      child: Text(
-                        Language.getProductStrings('Collections'),
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              )
+                    ],
+                  ),
+                )
             ),
           ),
           Flexible(
@@ -481,15 +481,11 @@ class _ProductsScreenState extends State<ProductsScreen> {
   Widget _getBody(ProductsScreenState state) {
     switch(_selectedIndexValue) {
       case 0:
-        return Container(
-          child: GridView.count(
-            crossAxisCount: 1,
-            crossAxisSpacing: 12,
-            mainAxisSpacing: 12,
-            childAspectRatio: 0.7,
-            padding: EdgeInsets.only(left: 16.0, top: 12.0, right: 16.0, bottom: 12.0),
-            children: state.productLists.map ((product) {
-              return ProductGridItem(
+        List<Widget> productsItems  = [];
+        productsItems.add(getAddITem(state));
+        state.productLists.map ((product) {
+          productsItems.add(
+              ProductGridItem(
                 product,
                 onTap: (ProductListModel model) {
                 },
@@ -515,8 +511,16 @@ class _ProductsScreenState extends State<ProductsScreen> {
                     },
                   );
                 },
-              );
-            }).toList(),
+              ));
+        });
+        return Container(
+          child: GridView.count(
+            crossAxisCount: 1,
+            crossAxisSpacing: 12,
+            mainAxisSpacing: 12,
+            childAspectRatio: 0.7,
+            padding: EdgeInsets.only(left: 16.0, top: 12.0, right: 16.0, bottom: 12.0),
+            children: productsItems,
           ),
         );
       default:
@@ -625,6 +629,53 @@ class _ProductsScreenState extends State<ProductsScreen> {
     ];
   }
 
+  Widget getAddITem(ProductsScreenState state) {
+    return Container(
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(6.0)),
+            color: Color.fromRGBO(0, 0, 0, 0.3)
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              SvgPicture.asset('assets/images/productsicon.svg'),
+              Padding(
+                padding: EdgeInsets.only(top: 16),
+              ),
+              MaterialButton(
+                onPressed: () {
 
+                },
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(22),
+                ),
+                height: 44,
+                minWidth: 100,
+                color: Colors.white,
+                child: Row(
+                  children: <Widget>[
+                    Icon(
+                      Icons.add,
+                      color: Colors.black,
+                    ),
+                    Text(
+                      Language.getProductStrings('add_product'),
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        )
+
+    );
+  }
 }
 

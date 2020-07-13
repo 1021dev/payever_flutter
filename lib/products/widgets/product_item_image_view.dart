@@ -26,15 +26,16 @@ class ProductItemImage extends StatelessWidget {
           imageUrl: '${Env.storage}/products/$imageURL',
           imageBuilder: (context, imageProvider) => Container(
             decoration: BoxDecoration(
+              color: Colors.white,
                 borderRadius: BorderRadius.all(Radius.circular(12.0)),
                 image: DecorationImage(
                     image: imageProvider,
-                    fit: BoxFit.cover
+                    fit: BoxFit.contain,
                 )
             ),
           ),
           color: Colors.white,
-          placeholder: (context, url) => Container(child: CircularProgressIndicator()),
+          placeholder: (context, url) => Container(child: Center(child: CircularProgressIndicator())),
           errorWidget: (context, url, error) =>  Container(child: Icon(Icons.error)),
         );
       } else {
