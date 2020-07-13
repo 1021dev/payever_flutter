@@ -483,7 +483,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
       case 0:
         return Container(
           child: GridView.count(
-            shrinkWrap: true,
             crossAxisCount: 1,
             crossAxisSpacing: 12,
             mainAxisSpacing: 12,
@@ -552,7 +551,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   return Dialog(
                     backgroundColor: Colors.transparent,
                     child: Container(
-                      height: 250,
+                      height: 216,
                       child: BlurEffectView(
                         color: Color.fromRGBO(50, 50, 50, 0.4),
                         padding: EdgeInsets.all(16),
@@ -596,7 +595,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                     Navigator.pop(context);
                                   },
                                   child: Text(
-                                    Language.getPosStrings('action.no'),
+                                    Language.getPosStrings('actions.no'),
                                   ),
                                 ),
                                 MaterialButton(
@@ -604,7 +603,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                     Navigator.pop(context);
                                   },
                                   child: Text(
-                                    Language.getPosStrings('action.yes'),
+                                    Language.getPosStrings('actions.yes'),
                                   ),
                                 ),
                               ],

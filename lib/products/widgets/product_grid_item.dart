@@ -107,7 +107,9 @@ class ProductGridItem extends StatelessWidget {
               height: 44,
               alignment: Alignment.centerRight,
               child: MaterialButton(
-                onPressed: onTapMenu(product),
+                onPressed: (){
+                  onTapMenu(product);
+                },
                 child: Icon(Icons.more_vert),
                 minWidth: 0,
               ),
