@@ -70,3 +70,24 @@ class CollectionsReloadEvent extends ProductsScreenEvent {
 
 @immutable
 class CollectionsLoadMoreEvent extends ProductsScreenEvent {}
+
+@immutable
+class SelectAllProductsEvent extends ProductsScreenEvent {}
+
+@immutable
+class UnSelectProductsEvent extends ProductsScreenEvent {}
+
+@immutable
+class AddToCollectionEvent extends ProductsScreenEvent {}
+
+@immutable
+class DeleteProductsEvent extends ProductsScreenEvent {}
+
+@immutable
+class SelectAllCollectionsEvent extends ProductsScreenEvent {}
+
+@immutable
+class UnSelectCollectionsEvent extends ProductsScreenEvent {}
+
+@immutable
+class DeleteCollectionProductsEvent extends ProductsScreenEvent {}

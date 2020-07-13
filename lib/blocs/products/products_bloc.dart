@@ -166,7 +166,50 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
   }
 
   Stream<ProductsScreenState> loadMoreProducts() async* {
+    int page = state.productsInfo.page + 1;
+    Map<String, dynamic> body = {
+      'operationName': null,
+      'variables': {},
+      'query': '{\n  getProducts(businessUuid: \"${state.businessId}\", paginationLimit: 20, pageNumber: $page, orderBy: \"createdAt\", orderDirection: \"desc\", filterById: [], search: \"\", filters: []) {\n    products {\n      images\n      id\n      title\n      description\n      onSales\n      price\n      salePrice\n      vatRate\n      sku\n      barcode\n      currency\n      type\n      active\n      categories {\n        title\n      }\n      collections {\n        _id\n        name\n        description\n      }\n      variants {\n        id\n        images\n        options {\n          name\n          value\n        }\n        description\n        onSales\n        price\n        salePrice\n        sku\n        barcode\n      }\n      channelSets {\n        id\n        type\n        name\n      }\n      shipping {\n        weight\n        width\n        length\n        height\n      }\n    }\n    info {\n      pagination {\n        page\n        page_count\n        per_page\n        item_count\n      }\n    }\n  }\n}\n'
+    };
 
+    dynamic response = await api.getProducts(GlobalUtils.activeToken.accessToken, body);
+    Info productInfo;
+    List<ProductsModel> products = [];
+    List<ProductListModel> productLists = [];
+    productLists.addAll(state.productLists);
+    if (response != null) {
+      dynamic data = response['data'];
+      if (data != null) {
+        dynamic getProducts = data['getProducts'];
+        if (getProducts != null) {
+          dynamic infoObj = getProducts['info'];
+          if (infoObj != null) {
+            print('infoObj => $infoObj');
+            dynamic pagination = infoObj['pagination'];
+            if (pagination != null) {
+              productInfo = Info.toMap(pagination);
+            }
+          }
+          List productsObj = getProducts['products'];
+          if (productsObj != null) {
+            productsObj.forEach((element) {
+              products.add(ProductsModel.toMap(element));
+            });
+          }
+        }
+      }
+    }
+    if (products.length > 0 && productLists.length == (page - 1) * 20) {
+      products.forEach((element) {
+        productLists.add(ProductListModel(productsModel: element, isChecked: false));
+      });
+    }
+    yield state.copyWith(
+      productsInfo: productInfo,
+      products: products,
+      productLists: productLists,
+    );
   }
 
   Stream<ProductsScreenState> reloadCollections() async* {
@@ -195,9 +238,49 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
         });
       }
     }
-  }
+    yield state.copyWith(
+      collectionInfo: collectionInfo,
+      collections: collections,
+      collectionLists: collectionLists,
+    );
+ }
 
   Stream<ProductsScreenState> loadMoreCollections() async* {
+    int page = state.collectionInfo.page + 1;
+    Info collectionInfo;
+    List<CollectionModel> collections = [];
+    List<CollectionListModel> collectionLists = [];
+    collectionLists.addAll(state.collectionLists);
+    Map<String, String> queryParams = {
+      'page': '$page',
+      'perPage': '20'
+    };
 
+    dynamic colResponse = await api.getCollections(GlobalUtils.activeToken.accessToken, state.businessId, queryParams);
+    if (colResponse != null) {
+      dynamic infoObj = colResponse['info'];
+      if (infoObj != null) {
+        dynamic pagination = infoObj['pagination'];
+        if (pagination != null) {
+          collectionInfo = Info.toMap(pagination);
+        }
+      }
+      List colList = colResponse['collections'];
+      if (colList != null) {
+        colList.forEach((element) {
+          collections.add(CollectionModel.toMap(element));
+        });
+      }
+    }
+    if (collections.length > 0 && collectionLists.length == 20 * (page - 1)) {
+      collections.forEach((element) {
+        collectionLists.add(CollectionListModel(collectionModel: element, isChecked: false));
+      });
+    }
+    yield state.copyWith(
+      collectionInfo: collectionInfo,
+      collections: collections,
+      collectionLists: collectionLists,
+    );
   }
 }

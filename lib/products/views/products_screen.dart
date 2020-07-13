@@ -72,6 +72,31 @@ class _ProductsScreenState extends State<ProductsScreen> {
   int selectedTypes = 0;
   int _selectedIndexValue = 0;
 
+  List<OverflowMenuItem> appBarPopUpActions(BuildContext context, ProductsScreenState state) {
+    return [
+      OverflowMenuItem(
+        title: 'Select All',
+        onTap: () async {
+        },
+      ),
+      OverflowMenuItem(
+        title: 'UnSelect',
+        onTap: () async {
+        },
+      ),
+      OverflowMenuItem(
+        title: 'Add to Collection',
+        onTap: () {
+        },
+      ),
+      OverflowMenuItem(
+        title: 'Delete Products',
+        onTap: () {
+        },
+      ),
+    ];
+  }
+
   @override
   void initState() {
     super.initState();
@@ -341,121 +366,200 @@ class _ProductsScreenState extends State<ProductsScreen> {
   }
 
   Widget _toolBar(ProductsScreenState state) {
-    return Container(
-      height: 50,
-      color: Color(0xFF555555),
-      child: Row(
-        children: <Widget>[
-          Flexible(
-            flex: 1,
-            child: _selectedIndexValue == 0 ? Row(
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(left: 8),
-                ),
-                InkWell(
-                  onTap: () {
+    int selectedCount = 0;
+    if (_selectedIndexValue == 0 && state.productLists.length > 0) {
+      selectedCount = state.productLists.where((element) => element.isChecked).toList().length;
+    } else if (_selectedIndexValue == 1 && state.collectionLists.length > 0){
+      selectedCount = state.collectionLists.where((element) => element.isChecked).toList().length;
+    }
+    return Stack(
+      children: <Widget>[
+        Container(
+          height: 50,
+          color: Color(0xFF555555),
+          child: Row(
+            children: <Widget>[
+              Flexible(
+                flex: 1,
+                child: _selectedIndexValue == 0 ? Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(left: 8),
+                    ),
+                    InkWell(
+                      onTap: () {
 
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(8),
-                    child: Icon(Icons.search),
-                  ),
-                ),
-                InkWell(
-                  onTap: () {
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(8),
+                        child: Icon(Icons.search),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
 
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(8),
-                    child: Icon(Icons.filter_list),
-                  ),
-                ),
-              ],
-            ): Container(),
-          ),
-          Flexible(
-            flex: 2,
-            child: Container(
-                alignment: Alignment.center,
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(8),
+                        child: Icon(Icons.filter_list),
+                      ),
+                    ),
+                  ],
+                ): Container(),
+              ),
+              Flexible(
+                flex: 2,
                 child: Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      MaterialButton(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(12),
-                            bottomLeft: Radius.circular(12),
+                    alignment: Alignment.center,
+                    child: Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          MaterialButton(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(12),
+                                bottomLeft: Radius.circular(12),
+                              ),
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _selectedIndexValue = 0;
+                              });
+                            },
+                            color: _selectedIndexValue == 0 ? Color(0xFF2a2a2a): Color(0xFF1F1F1F),
+                            height: 24,
+                            minWidth: 100,
+                            elevation: 0,
+                            child: Text(
+                              Language.getProductStrings('Products'),
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _selectedIndexValue = 0;
-                          });
-                        },
-                        color: _selectedIndexValue == 0 ? Color(0xFF2a2a2a): Color(0xFF1F1F1F),
-                        height: 24,
-                        minWidth: 100,
-                        elevation: 0,
-                        child: Text(
-                          Language.getProductStrings('Products'),
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
+                          Padding(
+                            padding: EdgeInsets.only(left: 2),
                           ),
-                        ),
+                          MaterialButton(
+                            onPressed: () {
+                              setState(() {
+                                _selectedIndexValue = 1;
+                              });
+                            },
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(12),
+                                bottomRight: Radius.circular(12),
+                              ),
+                            ),
+                            color: _selectedIndexValue == 1 ? Color(0xFF2a2a2a): Color(0xFF1F1F1F),
+                            elevation: 0,
+                            height: 24,
+                            minWidth: 100,
+                            child: Text(
+                              Language.getProductStrings('Collections'),
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 2),
-                      ),
-                      MaterialButton(
-                        onPressed: () {
-                          setState(() {
-                            _selectedIndexValue = 1;
-                          });
-                        },
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(12),
-                            bottomRight: Radius.circular(12),
-                          ),
-                        ),
-                        color: _selectedIndexValue == 1 ? Color(0xFF2a2a2a): Color(0xFF1F1F1F),
-                        elevation: 0,
-                        height: 24,
-                        minWidth: 100,
-                        child: Text(
-                          Language.getProductStrings('Collections'),
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-            ),
-          ),
-          Flexible(
-            flex: 1,
-            child: _selectedIndexValue == 0 ? Container(
-              alignment: Alignment.centerRight,
-              padding: EdgeInsets.only(right: 8),
-              child: InkWell(
-                onTap: () {
-
-                },
-                child: Container(
-                  padding: EdgeInsets.all(8),
-                  child: Icon(Icons.sort),
+                    )
                 ),
               ),
-            ) : Container(),
+              Flexible(
+                flex: 1,
+                child: _selectedIndexValue == 0 ? Container(
+                  alignment: Alignment.centerRight,
+                  padding: EdgeInsets.only(right: 8),
+                  child: InkWell(
+                    onTap: () {
+
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(8),
+                      child: Icon(Icons.sort),
+                    ),
+                  ),
+                ) : Container(),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+        selectedCount > 0 ? Container(
+          height: 50,
+          padding: EdgeInsets.only(
+            left: 16,
+            right: 16,
+            top: 4,
+            bottom: 4,
+          ),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Color(0xFF888888),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(left: 12),
+                    ),
+                    InkWell(
+                      child: SvgPicture.asset('assets/images/xsinacircle.svg'),
+                      onTap: () {
+
+                      },
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 8),
+                    ),
+                    Text(
+                      '$selectedCount ITEM SELECTED',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+                PopupMenuButton<OverflowMenuItem>(
+                  icon: Icon(Icons.more_horiz),
+                  offset: Offset(0, 100),
+                  onSelected: (OverflowMenuItem item) => item.onTap(),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  color: Colors.black87,
+                  itemBuilder: (BuildContext context) {
+                    return appBarPopUpActions(context, state)
+                        .map((OverflowMenuItem item) {
+                      return PopupMenuItem<OverflowMenuItem>(
+                        value: item,
+                        child: Text(
+                          item.title,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w300,
+                          ),
+                        ),
+                      );
+                    }).toList();
+                  },
+                ),
+              ],
+            ),
+          ),
+        ): Container(width: 0, height: 0,),
+      ],
     );
   }
 
@@ -795,7 +899,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
   }
 
   Future<bool> _loadMoreProducts() async {
-    print('Load more');
+    print('Load more products');
     await Future.delayed(Duration(seconds: 0, milliseconds: 1000));
     screenBloc.add(
       ProductsLoadMoreEvent()
@@ -812,7 +916,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
   }
 
   Future<bool> _loadMoreCollections() async {
-    print('Load more');
+    print('Load more collection');
     await Future.delayed(Duration(seconds: 0, milliseconds: 1000));
     screenBloc.add(
       CollectionsLoadMoreEvent()
