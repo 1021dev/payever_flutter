@@ -483,7 +483,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
       case 0:
         List<Widget> productsItems  = [];
         productsItems.add(getAddITem(state));
-        state.productLists.map ((product) {
+        state.productLists.forEach ((product) {
           productsItems.add(
               ProductGridItem(
                 product,
@@ -632,7 +632,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
   Widget getAddITem(ProductsScreenState state) {
     return Container(
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(6.0)),
+            borderRadius: BorderRadius.all(Radius.circular(12.0)),
             color: Color.fromRGBO(0, 0, 0, 0.3)
         ),
         child: Center(
@@ -640,7 +640,11 @@ class _ProductsScreenState extends State<ProductsScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              SvgPicture.asset('assets/images/productsicon.svg'),
+              SvgPicture.asset(
+                'assets/images/productsicon.svg',
+                width: 80,
+                height: 80,
+              ),
               Padding(
                 padding: EdgeInsets.only(top: 16),
               ),
@@ -652,23 +656,29 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   borderRadius: BorderRadius.circular(22),
                 ),
                 height: 44,
-                minWidth: 100,
+                minWidth: 0,
+                elevation: 0,
                 color: Colors.white,
-                child: Row(
-                  children: <Widget>[
-                    Icon(
-                      Icons.add,
-                      color: Colors.black,
-                    ),
-                    Text(
-                      Language.getProductStrings('add_product'),
-                      style: TextStyle(
+                child: Container(
+                  width: 150,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Icon(
+                        Icons.add,
                         color: Colors.black,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w400,
                       ),
-                    ),
-                  ],
+                      Text(
+                        Language.getProductStrings('add_product'),
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               )
             ],

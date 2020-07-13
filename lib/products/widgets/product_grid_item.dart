@@ -24,7 +24,7 @@ class ProductGridItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(6.0)),
+          borderRadius: BorderRadius.all(Radius.circular(12.0)),
           color: Color.fromRGBO(0, 0, 0, 0.3)
       ),
       child: Column(
