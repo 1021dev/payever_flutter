@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class ProductDetailHeaderView extends StatelessWidget {
   final String title;
@@ -35,7 +36,30 @@ class ProductDetailHeaderView extends StatelessWidget {
                 fontWeight: FontWeight.w400,
               ),
             ),
-            Text(
+            detail == 'channel'
+                ? Container(
+              alignment: Alignment.centerLeft,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  SvgPicture.asset(
+                    'assets/images/pos.svg',
+                    width: 20,
+                    height: 20,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 8),
+                  ),
+                  SvgPicture.asset(
+                    'assets/images/shopicon.svg',
+                    width: 20,
+                    height: 20,
+                  ),
+                ],
+              ),
+            )
+                : Text(
               this.detail ?? '',
               style: TextStyle(
                 color: Colors.white,

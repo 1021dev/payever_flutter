@@ -13,6 +13,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_tags/flutter_tags.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/shop/shop.dart';
@@ -63,10 +64,39 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   bool isButtonPressed = false;
   bool buttonEnabled = false;
 
+  int _selectedSectionIndex = 0;
+
+  TextEditingController _productNameController = TextEditingController();
+  TextEditingController _priceController = TextEditingController();
+  TextEditingController _salePriceController = TextEditingController();
+  TextEditingController _descriptionController = TextEditingController();
+  TextEditingController _skuController = TextEditingController();
+  TextEditingController _barCodeController = TextEditingController();
+  TextEditingController _categoryController = TextEditingController();
+  TextEditingController _weightController = TextEditingController();
+  TextEditingController _widthController = TextEditingController();
+  TextEditingController _lengthController = TextEditingController();
+  TextEditingController _heightController = TextEditingController();
+  TextEditingController _taxController = TextEditingController();
+
+  NumberFormat numberFormat = NumberFormat();
+
   @override
   void initState() {
     if (widget.productsModel != null) {
       widget.screenBloc.add(GetProductDetails(productsModel: widget.productsModel));
+      _productNameController.text = widget.productsModel.title ?? '';
+      _descriptionController.text = widget.productsModel.description;
+      _priceController.text = '${widget.productsModel.price ?? 0}';
+      _salePriceController.text = '${widget.productsModel.salePrice ?? 0}';
+      _skuController.text = '${widget.productsModel.sku ?? ''}';
+      _barCodeController.text = '${widget.productsModel.barcode ?? ''}';
+      if (widget.productsModel.shipping != null) {
+        _weightController.text = '${widget.productsModel.shipping.weight}';
+        _widthController.text = '${widget.productsModel.shipping.width}';
+        _lengthController.text = '${widget.productsModel.shipping.length}';
+        _heightController.text = '${widget.productsModel.shipping.height}';
+      }
     }
     super.initState();
   }
@@ -225,81 +255,101 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             ProductDetailHeaderView(
               title: Language.getProductStrings('sections.main').toUpperCase(),
               detail: '',
-              isExpanded: false,
+              isExpanded: _selectedSectionIndex == 0,
               onTap: () {
-
+                setState(() {
+                  _selectedSectionIndex = _selectedSectionIndex == 0 ? -1 : 0;
+                });
               },
             ),
             _getMainDetail(state),
             ProductDetailHeaderView(
               title: Language.getProductStrings('description.title').toUpperCase(),
               detail: '',
-              isExpanded: false,
+              isExpanded: _selectedSectionIndex == 1,
               onTap: () {
-
+                setState(() {
+                  _selectedSectionIndex = _selectedSectionIndex == 1 ? -1 : 1;
+                });
               },
             ),
             _getDescriptionDetail(state),
             ProductDetailHeaderView(
               title: Language.getProductStrings('sections.inventory').toUpperCase(),
               detail: '',
-              isExpanded: false,
+              isExpanded: _selectedSectionIndex == 2,
               onTap: () {
-
+                setState(() {
+                  _selectedSectionIndex = _selectedSectionIndex == 2 ? -1 : 2;
+                });
               },
             ),
             _getInventoryDetail(state),
             ProductDetailHeaderView(
               title: Language.getProductStrings('sections.category').toUpperCase(),
               detail: '',
-              isExpanded: false,
+              isExpanded: _selectedSectionIndex == 3,
               onTap: () {
-
+                setState(() {
+                  _selectedSectionIndex = _selectedSectionIndex == 3 ? -1 : 3;
+                });
               },
             ),
             _getCategoryDetail(state),
             ProductDetailHeaderView(
               title: Language.getProductStrings('sections.variants').toUpperCase(),
               detail: '',
-              isExpanded: false,
+              isExpanded: _selectedSectionIndex == 4,
               onTap: () {
-
+                setState(() {
+                  _selectedSectionIndex = _selectedSectionIndex == 4 ? -1 : 4;
+                });
               },
             ),
             _getVariantsDetail(state),
             ProductDetailHeaderView(
               title: Language.getProductStrings('sections.channels').toUpperCase(),
-              detail: '',
-              isExpanded: false,
+              detail: 'channel',
+              isExpanded: _selectedSectionIndex == 5,
               onTap: () {
-
+                setState(() {
+                  _selectedSectionIndex = _selectedSectionIndex == 5 ? -1 : 5;
+                });
               },
             ),
             _getChannelDetail(state),
             ProductDetailHeaderView(
               title: Language.getProductStrings('sections.shipping').toUpperCase(),
-              detail: '',
-              isExpanded: false,
+              detail: state.productDetail.shipping != null
+                  ? '${state.productDetail.shipping.weight} ${Language.getProductStrings('shipping.placeholders.weight')} (${state.productDetail.shipping.width} * ${state.productDetail.shipping.length} * ${state.productDetail.shipping.height})'
+                  : '',
+              isExpanded: _selectedSectionIndex == 6,
               onTap: () {
-
+                setState(() {
+                  _selectedSectionIndex = _selectedSectionIndex == 6 ? -1 : 6;
+                });
               },
             ),
             _getShippingDetail(state),
             ProductDetailHeaderView(
               title: Language.getProductStrings('sections.taxes').toUpperCase(),
               detail: '',
-              isExpanded: false,
+              isExpanded: _selectedSectionIndex == 7,
               onTap: () {
-
+                setState(() {
+                  _selectedSectionIndex = _selectedSectionIndex == 7 ? -1 : 7;
+                });
               },
             ),
             _getTaxesDetail(state),
             ProductDetailHeaderView(
               title: Language.getProductStrings('sections.visibility').toUpperCase(),
               detail: '',
-              isExpanded: false,
+              isExpanded: _selectedSectionIndex == 8,
               onTap: () {
-
+                setState(() {
+                  _selectedSectionIndex = _selectedSectionIndex == 8 ? -1 : 8;
+                });
               },
             ),
             _getVisibilityDetail(state),
@@ -314,6 +364,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   ///---------------------------------------------------------------------------
 
   Widget _getMainDetail(ProductsScreenState state) {
+    if (_selectedSectionIndex != 0) return Container();
     String imgUrl = state.productDetail.images.length > 0 ? state.productDetail.images.first: '';
     return Container(
       padding: EdgeInsets.only(top: 16, bottom: 16),
@@ -468,6 +519,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               children: <Widget>[
                 Expanded(
                   child: TextField(
+                    controller: _productNameController,
                     onChanged: (String text) {},
                     style: TextStyle(
                       color: Colors.white,
@@ -526,6 +578,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     children: <Widget>[
                       Expanded(
                         child: TextField(
+                          controller: _priceController,
                           onChanged: (String text) {},
                           style: TextStyle(
                             color: Colors.white,
@@ -545,7 +598,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         color: Color(0x80555555),
                         padding: EdgeInsets.only(left: 4, right: 4, top: 8, bottom: 8),
                         child: Text(
-                          'EUR',
+                          state.productDetail.currency ?? '',
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w300,
@@ -564,6 +617,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     children: <Widget>[
                       Expanded(
                         child: TextField(
+                          controller: _salePriceController,
                           onChanged: (String text) {},
                           style: TextStyle(
                             color: Colors.white,
@@ -583,7 +637,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         color: Color(0x80555555),
                         padding: EdgeInsets.only(left: 4, right: 4, top: 8, bottom: 8),
                         child: Text(
-                          'EUR',
+                          state.productDetail.currency ?? '',
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w300,
@@ -657,6 +711,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   ///---------------------------------------------------------------------------
 
   Widget _getDescriptionDetail(ProductsScreenState state) {
+    if (_selectedSectionIndex != 1) return Container();
     return Container(
       height: 150,
       margin: EdgeInsets.only(top: 16, bottom: 16),
@@ -675,6 +730,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           ),
           Expanded(
             child: TextField(
+              controller: _descriptionController,
               onChanged: (String text) {},
               style: TextStyle(
                 color: Colors.white,
@@ -697,6 +753,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   ///---------------------------------------------------------------------------
 
   Widget _getInventoryDetail(ProductsScreenState state) {
+    if (_selectedSectionIndex != 2) return Container();
     return Container(
       padding: EdgeInsets.only(top: 16, bottom: 16),
       child: Column(
@@ -711,6 +768,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               children: <Widget>[
                 Expanded(
                   child: TextField(
+                    controller: _skuController,
                     onChanged: (String text) {},
                     style: TextStyle(
                       color: Colors.white,
@@ -731,6 +789,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 ),
                 Expanded(
                   child: TextField(
+                    controller: _barCodeController,
                     onChanged: (String text) {},
                     style: TextStyle(
                       color: Colors.white,
@@ -844,10 +903,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   }
 
   ///---------------------------------------------------------------------------
-  ///                   Product Details - Inventory
+  ///                   Product Details - Category
   ///---------------------------------------------------------------------------
 
   Widget _getCategoryDetail(ProductsScreenState state) {
+    if (_selectedSectionIndex != 3) return Container();
     return Container(
       padding: EdgeInsets.only(top: 16, bottom: 16),
       child: Column(
@@ -910,12 +970,119 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   ///---------------------------------------------------------------------------
 
   Widget _getVariantsDetail(ProductsScreenState state) {
+    if (_selectedSectionIndex != 4) return Container();
     return Container(
       padding: EdgeInsets.only(top: 16, bottom: 16),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
+          ListView.separated(
+            shrinkWrap: true,
+            itemBuilder: (context, index) {
+              Variants variant = state.productDetail.variants[index];
+              String imgUrl = '';
+              if (variant.images.length > 0 ) {
+                imgUrl = variant.images.first;
+              }
+              return Container(
+                height: 60,
+                padding: EdgeInsets.only(left: 16, right: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        imgUrl != '' ? CachedNetworkImage(
+                          imageUrl: '${Env.storage}/products/$imgUrl',
+                          imageBuilder: (context, imageProvider) => Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          ),
+                          placeholder: (context, url) => Container(
+                            child: Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          ),
+                          errorWidget: (context, url, error) => Container(
+                            height: 50,
+                            width: 50,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(4,),
+                              color: Colors.white10,
+                            ),
+                            child: Center(
+                              child: SvgPicture.asset('assets/images/noimage.svg', width: 20, height: 20,),
+                            ),
+                          ),
+                        ) : Container(
+                          height: 50,
+                          width: 50,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4,),
+                            color: Colors.white10,
+                          ),
+                          child: Center(
+                            child: SvgPicture.asset('assets/images/noimage.svg', width: 20, height: 20,),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 8),
+                        ),
+                        Text(
+                          '${variant.options.length} item${variant.options.length > 1 ? 's': ''}',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
+                    RichText(
+                      textAlign: TextAlign.center,
+                      text: new TextSpan(
+                        children: [
+                          new TextSpan(
+                            text: '${variant.price} ${numberFormat.simpleCurrencySymbol(state.productDetail.currency)} ',
+                            style: TextStyle(color: Colors.white, fontSize: 12),
+                          ),
+                          new TextSpan(
+                            text: '${variant.price} ${numberFormat.simpleCurrencySymbol(state.productDetail.currency)}',
+                            style: TextStyle(
+                              color: Colors.white70,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w300,
+                              decoration: TextDecoration.lineThrough,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Row(
+                      children: <Widget>[
+
+                      ],
+                    ),
+
+                  ],
+                ),
+              );
+            },
+            separatorBuilder: (context, index) {
+              return Divider(
+                height: 0,
+                thickness: 0,
+                color: Color(0x80888888),
+              );
+            },
+            itemCount: state.productDetail.variants.length,
+          ),
           Container(
             alignment: Alignment.centerRight,
             child: MaterialButton(
@@ -942,6 +1109,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   ///---------------------------------------------------------------------------
 
   Widget _getChannelDetail(ProductsScreenState state) {
+    if (_selectedSectionIndex != 5) return Container();
     return Container(
       padding: EdgeInsets.only(top: 16, bottom: 16),
       child: Column(
@@ -977,6 +1145,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   ///---------------------------------------------------------------------------
 
   Widget _getShippingDetail(ProductsScreenState state) {
+    if (_selectedSectionIndex != 6) return Container();
     return Container(
       padding: EdgeInsets.only(top: 16, bottom: 16),
       child: Column(
@@ -991,6 +1160,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               children: <Widget>[
                 Expanded(
                   child: TextField(
+                    controller: _weightController,
                     onChanged: (String text) {},
                     style: TextStyle(
                       color: Colors.white,
@@ -1040,6 +1210,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               children: <Widget>[
                 Expanded(
                   child: TextField(
+                    controller: _widthController,
                     onChanged: (String text) {},
                     style: TextStyle(
                       color: Colors.white,
@@ -1089,6 +1260,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               children: <Widget>[
                 Expanded(
                   child: TextField(
+                    controller: _lengthController,
                     onChanged: (String text) {},
                     style: TextStyle(
                       color: Colors.white,
@@ -1138,6 +1310,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               children: <Widget>[
                 Expanded(
                   child: TextField(
+                    controller: _heightController,
                     onChanged: (String text) {},
                     style: TextStyle(
                       color: Colors.white,
@@ -1189,29 +1362,29 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   ///---------------------------------------------------------------------------
 
   Widget _getTaxesDetail(ProductsScreenState state) {
+    if (_selectedSectionIndex != 7) return Container();
     return Container(
       padding: EdgeInsets.only(top: 16, bottom: 16),
       child: Container(
         color: Color(0x80111111),
-        padding: EdgeInsets.only(left: 16, right: 16),
-        child: DropDownFormField(
-          titleText: Language.getProductStrings('price.headings.tax'),
+        padding: EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
+        child: state.taxes.length == 0
+            ? Container()
+            : DropDownFormField(
+          filled: false,
+          titleText: '',
           hintText: Language.getProductStrings('price.headings.tax'),
           value: '',
           onSaved: (value) {
           },
           onChanged: (value) {
           },
-          dataSource: [
-            {
-              "display": "Running",
-              "value": "Running",
-            },
-            {
-              "display": "Climbing",
-              "value": "Climbing",
-            },
-          ],
+          dataSource: state.taxes.map((e) {
+            return {
+              'display': '${e.description} ${e.rate}%',
+              'value': '${e.description} ${e.rate}%',
+            };
+          }).toList(),
           textField: 'display',
           valueField: 'value',
         ),
@@ -1224,6 +1397,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   ///---------------------------------------------------------------------------
 
   Widget _getVisibilityDetail(ProductsScreenState state) {
+    if (_selectedSectionIndex != 8) return Container();
     return Container(
       padding: EdgeInsets.only(top: 16, bottom: 16),
       child: Container(

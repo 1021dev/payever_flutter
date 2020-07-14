@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/products/models/models.dart';
+import 'package:payever/shop/models/models.dart';
 
 import 'products.dart';
 
@@ -385,6 +386,7 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
       }
     }
     yield state.copyWith(productDetail: model);
+    yield* getProductCategories();
   }
 
   Stream<ProductsScreenState> getProductCategories() async* {
@@ -412,19 +414,61 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
       }
     }
     yield state.copyWith(categories: categories);
+    yield* getTaxes('DE');
   }
 
   Stream<ProductsScreenState> getTaxes(String country) async* {
     dynamic response = await api.getTaxes(GlobalUtils.activeToken.accessToken, country);
-  }
-
-  Stream<ProductsScreenState> getBillingSubscriptions() async* {
-    dynamic response = await api.getBillingSubscription(GlobalUtils.activeToken.accessToken, state.businessId);
-
+    List<Tax> taxes = [];
+    if (response != null) {
+      if (response is List) {
+        response.forEach((element) {
+          taxes.add(Tax.toMap(element));
+        });
+      }
+    }
+    yield state.copyWith(taxes: taxes);
+    yield* getBusinessBillingSubscription(state.businessId);
   }
 
   Stream<ProductsScreenState> getBusinessBillingSubscription(String businessId) async* {
     dynamic response = await api.getBusinessBillingSubscription(GlobalUtils.activeToken.accessToken, state.businessId);
+    if (response != null) {
+      if (response['installed'] != null) {
+        if (response['installed'] == false) {
+          yield* getBillingSubscriptions();
+          return;
+        }
+      }
+    }
+    yield* getTerminals();
+  }
 
+  Stream<ProductsScreenState> getBillingSubscriptions() async* {
+    dynamic response = await api.getBillingSubscription(GlobalUtils.activeToken.accessToken, state.businessId);
+    yield* getTerminals();
+  }
+
+  Stream<ProductsScreenState> getTerminals() async* {
+    List<Terminal> terminals = [];
+    dynamic terminalsObj = await api.getTerminal(state.businessId, GlobalUtils.activeToken.accessToken);
+    if (terminalsObj != null) {
+      terminalsObj.forEach((terminal) {
+        terminals.add(Terminal.toMap(terminal));
+      });
+    }
+    yield state.copyWith(terminals: terminals);
+    yield* getShops();
+  }
+
+  Stream<ProductsScreenState> getShops() async* {
+    List<ShopModel> shops = [];
+    dynamic response = await api.getShops(state.businessId, GlobalUtils.activeToken.accessToken);
+    if (response is List) {
+      response.forEach((element) {
+        shops.add(ShopModel.toMap(element));
+      });
+    }
+    yield state.copyWith(shops: shops);
   }
 }
