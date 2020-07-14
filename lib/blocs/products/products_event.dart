@@ -106,3 +106,35 @@ class GetProductDetails extends ProductsScreenEvent {
     this.productsModel,
   ];
 }
+
+class UpdateProductDetail extends ProductsScreenEvent {
+  final ProductsModel productsModel;
+  final num increaseStock;
+
+  UpdateProductDetail({this.productsModel, this.increaseStock,});
+  @override
+  List<Object> get props => [
+    this.productsModel,
+    this.increaseStock,
+  ];
+}
+
+class SaveProductDetail extends ProductsScreenEvent {
+  final ProductsModel productsModel;
+
+  SaveProductDetail({this.productsModel});
+  @override
+  List<Object> get props => [
+    this.productsModel,
+  ];
+}
+
+class CreateProductEvent extends ProductsScreenEvent {
+  final ProductsModel productsModel;
+
+  CreateProductEvent({this.productsModel});
+  @override
+  List<Object> get props => [
+    this.productsModel,
+  ];
+}

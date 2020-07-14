@@ -53,7 +53,13 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
       yield* deleteSingleProduct(event.product);
     } else if (event is GetProductDetails) {
       yield state.copyWith(productDetail: event.productsModel);
-      yield* getProductDetail(event.productsModel.uuid);
+      yield* getProductDetail(event.productsModel.id);
+    } else if (event is UpdateProductDetail) {
+      yield state.copyWith(productDetail: event.productsModel, increaseStock: event.increaseStock);
+    } else if (event is SaveProductDetail) {
+
+    } else if (event is CreateProductEvent) {
+
     }
   }
 
@@ -369,6 +375,10 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
   }
 
   Stream<ProductsScreenState> getProductDetail(String id) async* {
+    yield state.copyWith(
+      increaseStock: 0,
+      inventory: null,
+    );
     Map<String, dynamic> body = {
       'operationName': 'getProducts',
       'variables': {
@@ -386,6 +396,16 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
       }
     }
     yield state.copyWith(productDetail: model);
+    yield* getInventory(model.sku);
+  }
+
+  Stream<ProductsScreenState> getInventory(String sku) async* {
+    dynamic response = await api.getInventory(GlobalUtils.activeToken.accessToken, state.businessId, sku);
+    if (response != null) {
+      InventoryModel inventoryModel = InventoryModel.toMap(response);
+      print(inventoryModel);
+      yield state.copyWith(inventory: inventoryModel);
+    }
     yield* getProductCategories();
   }
 

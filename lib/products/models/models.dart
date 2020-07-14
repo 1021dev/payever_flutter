@@ -78,6 +78,7 @@ class ProductsModel {
   String uuid;
   String title;
   String description;
+  String id;
   bool hidden;
   num price;
   num salePrice;
@@ -94,6 +95,7 @@ class ProductsModel {
 
   ProductsModel.toMap(dynamic obj) {
     uuid = obj[GlobalUtils.DB_PROD_MODEL_UUID] ?? "";
+    id = obj[GlobalUtils.DB_PROD_ID] ?? "";
     title = obj[GlobalUtils.DB_PROD_MODEL_TITLE];
     description = obj[GlobalUtils.DB_PROD_MODEL_DESCRIPTION];
     hidden = obj[GlobalUtils.DB_PROD_MODEL_HIDDEN];

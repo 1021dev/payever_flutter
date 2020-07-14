@@ -274,7 +274,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               },
             ),
             _getDescriptionDetail(state),
-            ProductDetailHeaderView(
+            state.inventory != null ? ProductDetailHeaderView(
               title: Language.getProductStrings('sections.inventory').toUpperCase(),
               detail: '',
               isExpanded: _selectedSectionIndex == 2,
@@ -283,11 +283,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   _selectedSectionIndex = _selectedSectionIndex == 2 ? -1 : 2;
                 });
               },
-            ),
-            _getInventoryDetail(state),
+            ): Container(),
+            state.inventory != null ? _getInventoryDetail(state): Container(),
             ProductDetailHeaderView(
               title: Language.getProductStrings('sections.category').toUpperCase(),
-              detail: '',
+              detail: state.productDetail.categories.length > 0 ? '${state.productDetail.categories.map((e) => e.title).toList().join(', ')}': '',
               isExpanded: _selectedSectionIndex == 3,
               onTap: () {
                 setState(() {
@@ -298,7 +298,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             _getCategoryDetail(state),
             ProductDetailHeaderView(
               title: Language.getProductStrings('sections.variants').toUpperCase(),
-              detail: '',
+              detail: state.productDetail.variants != null ? '${state.productDetail.variants.length} ${Language.getProductStrings('sections.variants').toLowerCase()}': '',
               isExpanded: _selectedSectionIndex == 4,
               onTap: () {
                 setState(() {
@@ -318,7 +318,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               },
             ),
             _getChannelDetail(state),
-            ProductDetailHeaderView(
+            state.productDetail.type == 'physical' ? ProductDetailHeaderView(
               title: Language.getProductStrings('sections.shipping').toUpperCase(),
               detail: state.productDetail.shipping != null
                   ? '${state.productDetail.shipping.weight} ${Language.getProductStrings('shipping.placeholders.weight')} (${state.productDetail.shipping.width} * ${state.productDetail.shipping.length} * ${state.productDetail.shipping.height})'
@@ -329,8 +329,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   _selectedSectionIndex = _selectedSectionIndex == 6 ? -1 : 6;
                 });
               },
-            ),
-            _getShippingDetail(state),
+            ): Container(),
+            state.productDetail.type == 'physical' ? _getShippingDetail(state): Container(),
             ProductDetailHeaderView(
               title: Language.getProductStrings('sections.taxes').toUpperCase(),
               detail: '',
@@ -409,31 +409,36 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 ),
               ),
             ),
-          ): Container(
-            height: Measurements.width * 0.7,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(12.0)),
-            ),
-            alignment: Alignment.center,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                SvgPicture.asset('assets/images/insertimageicon.svg'),
-                Padding(
-                  padding: EdgeInsets.only(top: 16),
-                ),
-                Text(
-                  'Upload images',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w400,
+          ): GestureDetector(
+            onTap: () {
+
+            },
+            child: Container(
+              height: Measurements.width * 0.7,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(12.0)),
+              ),
+              alignment: Alignment.center,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  SvgPicture.asset('assets/images/insertimageicon.svg'),
+                  Padding(
+                    padding: EdgeInsets.only(top: 16),
                   ),
-                ),
-              ],
+                  Text(
+                    'Upload images',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-          Container(
+          state.productDetail.images.length > 0 ? Container(
             height: 80,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
@@ -510,7 +515,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               },
               itemCount: state.productDetail.images.length + 1,
             ),
-          ),
+          ): Container(),
           Container(
             height: 64,
             color: Color(0x80111111),
@@ -555,7 +560,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       onChanged: (val) {
 
                       },
-                      value: false,
+                      value: state.productDetail.enabled ?? false,
                     )
                   ],
                 ),
@@ -680,7 +685,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     icon: Container(),
                     underline: Container(),
                     isExpanded: true,
-                    value: productTypes[0],
+                    value: state.productDetail.type ?? 'physical',
                     onChanged: (value) {
                     },
                     items: productTypes.map((label) => DropdownMenuItem(
@@ -692,7 +697,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           fontWeight: FontWeight.w300,
                         ),
                       ),
-                      value: label,
+                      value: label.toLowerCase(),
                     ))
                         .toList(),
                   ),
@@ -826,18 +831,20 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         onChanged: (val) {
 
                         },
-                        value: false,
+                        value: state.inventory.isTrackable,
                       ),
                       Padding(
                         padding: EdgeInsets.only(left: 4),
                       ),
-                      AutoSizeText(
-                        Language.getProductStrings('info.placeholders.inventoryTrackingEnabled'),
-                        minFontSize: 10,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w300,
+                      Expanded(
+                        child: AutoSizeText(
+                          Language.getProductStrings('info.placeholders.inventoryTrackingEnabled'),
+                          minFontSize: 10,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w300,
+                          ),
                         ),
                       ),
                     ],
@@ -867,14 +874,20 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         IconButton(
                           icon: Icon(Icons.remove_circle_outline),
                           onPressed: () {
-
+                            ProductsModel product = state.productDetail;
+                            num stock = state.inventory.stock ?? 0 + state.increaseStock;
+                            if (stock > 0) {
+                              int increase = state.increaseStock - 1;
+                              widget.screenBloc.add(UpdateProductDetail(productsModel: product, increaseStock: increase));
+                            }
                           },
                         ),
                         Padding(
                           padding: EdgeInsets.only(left: 4),
                         ),
-                        Text(
-                          '0',
+                        AutoSizeText(
+                          '${(state.inventory.stock ?? 0) + state.increaseStock}',
+                          minFontSize: 12,
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w400,
@@ -887,7 +900,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         IconButton(
                           icon: Icon(Icons.add_circle_outline),
                           onPressed: () {
-
+                            ProductsModel product = state.productDetail;
+                            int increase = state.increaseStock + 1;
+                            widget.screenBloc.add(UpdateProductDetail(productsModel: product, increaseStock: increase));
                           },
                         ),
                       ],
@@ -914,26 +929,19 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(left: 16, right: 16),
-            child: Text(
-              Language.getProductStrings('info.placeholders.inventory'),
-              style: TextStyle(
-                color: Colors.white60,
-                fontSize: 10,
-                fontWeight: FontWeight.w200,
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 4, bottom: 4),
-          ),
           Container(
             color: Color(0x80111111),
             padding: EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
             child: Tags(
               key: _tagStateKey,
-              itemCount: 1,
+              textField: TagsTextField(
+                hintText: 'Please enter to add a category',
+                suggestions: state.categories.map((e) {
+                  return e.title;
+                }).toList(),
+
+              ),
+              itemCount: state.productDetail.categories.length,
               alignment: WrapAlignment.start,
               spacing: 4,
               runSpacing: 8,
@@ -941,7 +949,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 return ItemTags(
                   key: Key('filterItem$index'),
                   index: index,
-                  title: 'text',
+                  title: state.productDetail.categories[index].title,
                   color: Colors.white12,
                   activeColor: Colors.white12,
                   textActiveColor: Colors.white,
@@ -985,9 +993,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               if (variant.images.length > 0 ) {
                 imgUrl = variant.images.first;
               }
+              print(variant.price);
               return Container(
                 height: 60,
-                padding: EdgeInsets.only(left: 16, right: 16),
+                padding: EdgeInsets.only(left: 16),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -1066,10 +1075,40 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     ),
                     Row(
                       children: <Widget>[
+                        MaterialButton(
+                          onPressed: () {
 
+                          },
+                          color: Colors.black26,
+                          height: 30,
+                          elevation: 0,
+                          minWidth: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Text(
+                            Language.getProductStrings('edit'),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w300,
+                            ),
+                          ),
+                          visualDensity: VisualDensity.comfortable,
+                        ),
+                        MaterialButton(
+                          onPressed: () {
+
+                          },
+                          height: 30,
+                          elevation: 0,
+                          minWidth: 0,
+                          shape: CircleBorder(),
+                          visualDensity: VisualDensity.comfortable,
+                          child: SvgPicture.asset('assets/images/xsinacircle.svg', width: 30, height: 30,),
+                        ),
                       ],
                     ),
-
                   ],
                 ),
               );
@@ -1419,7 +1458,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               onChanged: (val) {
 
               },
-              value: false,
+              value: !(state.productDetail.hidden ?? false),
             )
           ],
         ),
