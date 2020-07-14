@@ -22,6 +22,12 @@ import 'package:payever/shop/models/models.dart';
 bool _isPortrait;
 bool _isTablet;
 
+List<String> productTypes = [
+  'Service',
+  'Digital',
+  'Physical',
+];
+
 // ignore: must_be_immutable
 class ProductDetailScreen extends StatefulWidget {
 
@@ -208,14 +214,23 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         child: Column(
           children: <Widget>[
             ProductDetailHeaderView(
-              title: 'MAIN',
-              detail: 'Detail',
+              title: Language.getProductStrings('sections.main').toUpperCase(),
+              detail: '',
               isExpanded: false,
               onTap: () {
 
               },
             ),
             _getMainDetail(state),
+            ProductDetailHeaderView(
+              title: Language.getProductStrings('description.title').toUpperCase(),
+              detail: '',
+              isExpanded: false,
+              onTap: () {
+
+              },
+            ),
+            _getDescriptionDetail(state),
           ],
         ),
       ),
@@ -228,97 +243,302 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   Widget _getMainDetail(ProductsScreenState state) {
     String imgUrl = state.productDetail.images.length > 0 ? state.productDetail.images.first: '';
-      return Container(
-        child: Column(
-          children: <Widget>[
-            imgUrl != '' ? Container(
-              height: Measurements.width * 0.7,
-              child: CachedNetworkImage(
-                imageUrl: '${Env.storage}/products/$imgUrl}',
-                imageBuilder: (context, imageProvider) => Container(
-                  decoration: BoxDecoration(
+    return Container(
+      padding: EdgeInsets.only(top: 16, bottom: 16),
+      child: Column(
+        children: <Widget>[
+          imgUrl != '' ? Container(
+            height: Measurements.width * 0.7,
+            child: CachedNetworkImage(
+              imageUrl: '${Env.storage}/products/$imgUrl}',
+              imageBuilder: (context, imageProvider) => Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
+              placeholder: (context, url) => Container(
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+              errorWidget: (context, url, error) =>  Container(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    SvgPicture.asset('assets/images/insertimageicon.svg'),
+                    Padding(
+                      padding: EdgeInsets.only(top: 16),
+                    ),
+                    Text(
+                      'Upload images',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ): Container(
+            height: Measurements.width * 0.7,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(12.0)),
+            ),
+            alignment: Alignment.center,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                SvgPicture.asset('assets/images/insertimageicon.svg'),
+                Padding(
+                  padding: EdgeInsets.only(top: 16),
+                ),
+                Text(
+                  'Upload images',
+                  style: TextStyle(
                     color: Colors.white,
-                    borderRadius: BorderRadius.all(Radius.circular(12.0)),
-                    image: DecorationImage(
-                      image: imageProvider,
-                      fit: BoxFit.contain,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            height: 64,
+            color: Color(0x80111111),
+            padding: EdgeInsets.only(left: 16, right: 16),
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: TextField(
+                    onChanged: (String text) {},
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    decoration: InputDecoration(
+                      labelText: Language.getProductStrings('name.title'),
+                      labelStyle: TextStyle(
+                        fontWeight: FontWeight.w200,
+                      ),
+                      border: InputBorder.none,
                     ),
                   ),
                 ),
-                placeholder: (context, url) => Container(
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  ),
+                Padding(
+                  padding: EdgeInsets.only(left: 8),
                 ),
-                errorWidget: (context, url, error) =>  Container(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      SvgPicture.asset('assets/images/insertimageicon.svg'),
-                      Padding(
-                        padding: EdgeInsets.only(top: 16),
+                Row(
+                  children: <Widget>[
+                    Text(
+                      Language.getProductStrings('info.placeholders.inventory'),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w300,
                       ),
-                      Text(
-                        'Upload images',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w400,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 4),
+                    ),
+                    CupertinoSwitch(
+                      onChanged: (val) {
+
+                      },
+                      value: false,
+                    )
+                  ],
+                )
+              ],
+            ),
+          ),
+          Divider(
+            height: 0,
+            thickness: 0.5,
+            color: Color(0x80888888),
+          ),
+          Container(
+            height: 64,
+            color: Color(0x80111111),
+            padding: EdgeInsets.only(left: 16, right: 16),
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: TextField(
+                          onChanged: (String text) {},
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          decoration: InputDecoration(
+                            labelText: Language.getProductStrings('placeholders.price'),
+                            labelStyle: TextStyle(
+                              fontWeight: FontWeight.w200,
+                            ),
+                            border: InputBorder.none,
+                          ),
                         ),
                       ),
+                      Container(
+                        color: Color(0x80555555),
+                        padding: EdgeInsets.only(left: 4, right: 4, top: 8, bottom: 8),
+                        child: Text(
+                          'EUR',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w300,
+                            fontSize: 14,
+                          ),
+                        ),
+                      )
                     ],
                   ),
                 ),
-              ),
-            ): Container(
-              height: Measurements.width * 0.7,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(12.0)),
-              ),
-              alignment: Alignment.center,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  SvgPicture.asset('assets/images/insertimageicon.svg'),
-                  Padding(
-                    padding: EdgeInsets.only(top: 16),
+                Padding(
+                  padding: EdgeInsets.only(left: 8),
+                ),
+                Expanded(
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: TextField(
+                          onChanged: (String text) {},
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          decoration: InputDecoration(
+                            labelText: Language.getProductStrings('placeholders.salePrice'),
+                            labelStyle: TextStyle(
+                              fontWeight: FontWeight.w200,
+                            ),
+                            border: InputBorder.none,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        color: Color(0x80555555),
+                        padding: EdgeInsets.only(left: 4, right: 4, top: 8, bottom: 8),
+                        child: Text(
+                          'EUR',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w300,
+                            fontSize: 14,
+                          ),
+                        ),
+                      )
+                    ],
                   ),
-                  Text(
-                    'Upload images',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w400,
-                    ),
+                ),
+              ],
+            ),
+          ),
+          Divider(
+            height: 0,
+            thickness: 0.5,
+            color: Color(0x80888888),
+          ),
+          Container(
+            height: 64,
+            color: Color(0x80111111),
+            padding: EdgeInsets.only(left: 16, right: 16),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(top: 4),
+                ),
+                Text(
+                  'Product Type',
+                  style: TextStyle(
+                    color: Colors.white60,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w200,
                   ),
-                ],
+                ),
+                Expanded(
+                  child: DropdownButton<String>(
+                    icon: Container(),
+                    underline: Container(),
+                    isExpanded: true,
+                    value: productTypes[0],
+                    onChanged: (value) {
+                    },
+                    items: productTypes.map((label) => DropdownMenuItem(
+                      child: Text(
+                        label,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                      value: label,
+                    ))
+                        .toList(),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+
+  }
+  ///---------------------------------------------------------------------------
+  ///                   Product Details - Main
+  ///---------------------------------------------------------------------------
+
+  Widget _getDescriptionDetail(ProductsScreenState state) {
+    return Container(
+      height: 150,
+      margin: EdgeInsets.only(top: 16, bottom: 16),
+      color: Color(0x80111111),
+      alignment: Alignment.topLeft,
+      padding: EdgeInsets.only(left: 16, right: 16),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(top: 16),
+            child: Text(
+              Language.getProductStrings('description.title'),
+            ),
+          ),
+          Expanded(
+            child: TextField(
+              onChanged: (String text) {},
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),
+              maxLines: 10,
+              decoration: InputDecoration(
+                border: InputBorder.none,
               ),
             ),
-            Container(
-              height: 64,
-              color: Color(0xcc111111),
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: TextField(
-                      onChanged: (String text) {},
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      decoration: const InputDecoration(
-                        hintText: 'Product Name',
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            )
-          ],
-        ),
-      );
-
+          ),
+        ],
+      ),
+    );
   }
 }
 
