@@ -649,9 +649,11 @@ class GlobalUtils {
   static const String DB_PROD_MODEL_BARCODE = 'barcode';
   static const String DB_PROD_MODEL_CATEGORIES = 'categories';
   static const String DB_PROD_MODEL_CURRENCY = 'currency';
+  static const String DB_PROD_MODEL_VAT_RATE = 'vatRate';
   static const String DB_PROD_MODEL_DESCRIPTION = 'description';
   static const String DB_PROD_MODEL_ENABLE = 'enable';
   static const String DB_PROD_MODEL_HIDDEN = 'hidden';
+  static const String DB_PROD_MODEL_ACTIVE = 'active';
   static const String DB_PROD_MODEL_IMAGES = 'images';
   static const String DB_PROD_MODEL_PRICE = 'price';
   static const String DB_PROD_MODEL_SALE_PRICE = 'salePrice';

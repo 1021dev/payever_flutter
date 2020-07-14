@@ -80,6 +80,7 @@ class ProductsModel {
   String description;
   String id;
   bool hidden;
+  bool active;
   num price;
   num salePrice;
   String sku;
@@ -88,6 +89,7 @@ class ProductsModel {
   String type;
   bool enabled;
   bool onSales;
+  num vatRate;
   List<Categories> categories = List();
   List<ChannelSet> channels = List();
   List<Variants> variants = List();
@@ -99,11 +101,13 @@ class ProductsModel {
     title = obj[GlobalUtils.DB_PROD_MODEL_TITLE];
     description = obj[GlobalUtils.DB_PROD_MODEL_DESCRIPTION];
     hidden = obj[GlobalUtils.DB_PROD_MODEL_HIDDEN];
+    active = obj[GlobalUtils.DB_PROD_MODEL_ACTIVE];
     price = obj[GlobalUtils.DB_PROD_MODEL_PRICE];
     salePrice = obj[GlobalUtils.DB_PROD_MODEL_SALE_PRICE];
     sku = obj[GlobalUtils.DB_PROD_MODEL_SKU];
     barcode = obj[GlobalUtils.DB_PROD_MODEL_BARCODE];
     currency = obj[GlobalUtils.DB_PROD_MODEL_CURRENCY];
+    vatRate = obj[GlobalUtils.DB_PROD_MODEL_VAT_RATE];
     type = obj[GlobalUtils.DB_PROD_MODEL_TYPE];
     onSales = obj[GlobalUtils.DB_PROD_MODEL_SALES];
     enabled = obj[GlobalUtils.DB_PROD_MODEL_ENABLE];

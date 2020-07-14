@@ -396,7 +396,11 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
       }
     }
     yield state.copyWith(productDetail: model);
-    yield* getInventory(model.sku);
+    if (model.sku != null) {
+      yield* getInventory(model.sku);
+    } else {
+      yield* getProductCategories();
+    }
   }
 
   Stream<ProductsScreenState> getInventory(String sku) async* {

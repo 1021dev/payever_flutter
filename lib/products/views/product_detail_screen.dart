@@ -65,6 +65,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   bool buttonEnabled = false;
 
   int _selectedSectionIndex = 0;
+  bool posExpanded = true;
+  bool shopExpanded = true;
 
   TextEditingController _productNameController = TextEditingController();
   TextEditingController _priceController = TextEditingController();
@@ -248,6 +250,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   ///---------------------------------------------------------------------------
 
   Widget _getBody(ProductsScreenState state) {
+    List<Tax> taxes = state.taxes;
+    num vatRate = state.productDetail != null ? (state.productDetail.vatRate ?? 0): 0;
+    Tax tax;
+    if (state.taxes.length > 0) {
+      List<Tax> vats = taxes.where((element) => vatRate == element.rate).toList();
+      if (vats.length > 0) {
+        tax = vats.first;
+      }
+    }
     return Container(
       child: SingleChildScrollView(
         child: Column(
@@ -333,7 +344,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             state.productDetail.type == 'physical' ? _getShippingDetail(state): Container(),
             ProductDetailHeaderView(
               title: Language.getProductStrings('sections.taxes').toUpperCase(),
-              detail: '',
+              detail: tax != null
+                  ? '${tax.description} ${tax.rate}%'
+                  : '',
               isExpanded: _selectedSectionIndex == 7,
               onTap: () {
                 setState(() {
@@ -558,7 +571,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     ),
                     CupertinoSwitch(
                       onChanged: (val) {
-
+                        ProductsModel productModel = state.productDetail;
+                        productModel.enabled = val;
+                        widget.screenBloc.add(
+                            UpdateProductDetail(
+                              productsModel: productModel,
+                              increaseStock: state.increaseStock,
+                            )
+                        );
                       },
                       value: state.productDetail.enabled ?? false,
                     )
@@ -687,6 +707,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     isExpanded: true,
                     value: state.productDetail.type ?? 'physical',
                     onChanged: (value) {
+                      ProductsModel productModel = state.productDetail;
+                      productModel.type = value;
+                      widget.screenBloc.add(
+                          UpdateProductDetail(
+                            productsModel: productModel,
+                            increaseStock: state.increaseStock,
+                          )
+                      );
                     },
                     items: productTypes.map((label) => DropdownMenuItem(
                       child: Text(
@@ -993,7 +1021,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               if (variant.images.length > 0 ) {
                 imgUrl = variant.images.first;
               }
-              print(variant.price);
+              print('${Env.storage}/products/$imgUrl-thumbnail');
               return Container(
                 height: 60,
                 padding: EdgeInsets.only(left: 16),
@@ -1003,14 +1031,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     Row(
                       children: <Widget>[
                         imgUrl != '' ? CachedNetworkImage(
-                          imageUrl: '${Env.storage}/products/$imgUrl',
+                          imageUrl: '${Env.storage}/products/$imgUrl-thumbnail',
                           imageBuilder: (context, imageProvider) => Container(
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.all(Radius.circular(12.0)),
                               image: DecorationImage(
                                 image: imageProvider,
-                                fit: BoxFit.contain,
                               ),
                             ),
                           ),
@@ -1023,7 +1050,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             height: 50,
                             width: 50,
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4,),
+                              borderRadius: BorderRadius.circular(4),
                               color: Colors.white10,
                             ),
                             child: Center(
@@ -1061,15 +1088,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             text: '${variant.price} ${numberFormat.simpleCurrencySymbol(state.productDetail.currency)} ',
                             style: TextStyle(color: Colors.white, fontSize: 12),
                           ),
-                          new TextSpan(
-                            text: '${variant.price} ${numberFormat.simpleCurrencySymbol(state.productDetail.currency)}',
+                          variant.salePrice != null ? new TextSpan(
+                            text: '${variant.salePrice} ${numberFormat.simpleCurrencySymbol(state.productDetail.currency)}',
                             style: TextStyle(
                               color: Colors.white70,
                               fontSize: 12,
                               fontWeight: FontWeight.w300,
                               decoration: TextDecoration.lineThrough,
                             ),
-                          ),
+                          ): TextSpan(text: ''),
                         ],
                       ),
                     ),
@@ -1157,11 +1184,68 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         children: <Widget>[
           ProductDetailSubSectionHeaderView(
             onTap: () {
+              setState(() {
+                posExpanded = !posExpanded;
+              });
 
             },
-            isExpanded: false,
+            isExpanded: posExpanded,
             type: 'pos',
           ),
+          posExpanded ? ListView.separated(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemBuilder: (context, index) {
+              Terminal terminal = state.terminals[index];
+              String imgUrl = terminal.logo ?? '';
+              List<ChannelSet> channelSets = state.productDetail.channels ?? [];
+              List setList = channelSets.where((element) => element.id == terminal.channelSet).toList() ?? [];
+              bool isSet = setList.length > 0;
+              return Container(
+                height: 60,
+                padding: EdgeInsets.only(left: 16, right: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      terminal.name,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                      ),
+                    ),
+                    CupertinoSwitch(
+                      value: isSet,
+                      onChanged: (val) {
+                        ProductsModel productDetail = state.productDetail;
+                        List<ChannelSet> channelSets = productDetail.channels;
+                        if (val) {
+                          channelSets.add(ChannelSet(terminal.channelSet, terminal.name, 'pos'));
+                        } else {
+                          channelSets.removeWhere((element) => element.id == terminal.channelSet);
+                        }
+                        productDetail.channels = channelSets;
+                        widget.screenBloc.add(
+                            UpdateProductDetail(
+                              productsModel: productDetail,
+                              increaseStock: state.increaseStock,
+                            )
+                        );
+                      },
+                    )
+                  ],
+                ),
+              );
+            },
+            separatorBuilder: (context, index) {
+              return Divider(
+                height: 0,
+                thickness: 0,
+                color: Color(0x80888888),
+              );
+            },
+            itemCount: state.terminals.length,
+          ): Container(),
           Divider(
             height: 0,
             thickness: 0.5,
@@ -1169,10 +1253,70 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           ),
           ProductDetailSubSectionHeaderView(
             onTap: () {
-
+              setState(() {
+                shopExpanded = !shopExpanded;
+              });
             },
-            isExpanded: false,
+            isExpanded: shopExpanded,
             type: 'shop',
+          ),
+          shopExpanded ? ListView.separated(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemBuilder: (context, index) {
+              ShopModel shop = state.shops[index];
+              List<ChannelSet> channelSets = state.productDetail.channels ?? [];
+              List setList = channelSets.where((element) => element.id == shop.channelSet).toList() ?? [];
+              bool isSet = setList.length > 0;
+              return Container(
+                height: 60,
+                padding: EdgeInsets.only(left: 16, right: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      shop.name,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                      ),
+                    ),
+                    CupertinoSwitch(
+                      value: isSet,
+                      onChanged: (val) {
+                        ProductsModel productDetail = state.productDetail;
+                        List<ChannelSet> channelSets = productDetail.channels;
+                        if (val) {
+                          channelSets.add(ChannelSet(shop.channelSet, shop.name, 'shop'));
+                        } else {
+                          channelSets.removeWhere((element) => element.id == shop.channelSet);
+                        }
+                        productDetail.channels = channelSets;
+                        widget.screenBloc.add(
+                            UpdateProductDetail(
+                              productsModel: productDetail,
+                              increaseStock: state.increaseStock,
+                            )
+                        );
+                      },
+                    )
+                  ],
+                ),
+              );
+            },
+            separatorBuilder: (context, index) {
+              return Divider(
+                height: 0,
+                thickness: 0,
+                color: Color(0x80888888),
+              );
+            },
+            itemCount: state.shops.length,
+          ): Container(),
+          Divider(
+            height: 0,
+            thickness: 0.5,
+            color: Color(0x80888888),
           ),
         ],
       ),
@@ -1402,6 +1546,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   Widget _getTaxesDetail(ProductsScreenState state) {
     if (_selectedSectionIndex != 7) return Container();
+    List<Tax> taxes = state.taxes;
+    num vatRate = state.productDetail != null ? (state.productDetail.vatRate ?? 0): 0;
+    Tax tax;
+    if (state.taxes.length > 0) {
+      List<Tax> vats = taxes.where((element) => vatRate == element.rate).toList();
+      if (vats.length > 0) {
+        tax = vats.first;
+      }
+    }
     return Container(
       padding: EdgeInsets.only(top: 16, bottom: 16),
       child: Container(
@@ -1413,15 +1566,21 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           filled: false,
           titleText: '',
           hintText: Language.getProductStrings('price.headings.tax'),
-          value: '',
-          onSaved: (value) {
-          },
+          value: tax != null ? tax.rate: taxes.first.rate,
           onChanged: (value) {
+            ProductsModel productModel = state.productDetail;
+            productModel.vatRate = value;
+            widget.screenBloc.add(
+                UpdateProductDetail(
+                  productsModel: productModel,
+                  increaseStock: state.increaseStock,
+                )
+            );
           },
           dataSource: state.taxes.map((e) {
             return {
               'display': '${e.description} ${e.rate}%',
-              'value': '${e.description} ${e.rate}%',
+              'value': e.rate,
             };
           }).toList(),
           textField: 'display',
@@ -1456,9 +1615,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             ),
             CupertinoSwitch(
               onChanged: (val) {
-
+                ProductsModel productModel = state.productDetail;
+                productModel.active = val;
+                widget.screenBloc.add(
+                    UpdateProductDetail(
+                      productsModel: productModel,
+                      increaseStock: state.increaseStock,
+                    )
+                );
               },
-              value: !(state.productDetail.hidden ?? false),
+              value: state.productDetail.active ?? false,
             )
           ],
         ),
