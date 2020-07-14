@@ -96,3 +96,13 @@ class DeleteSingleProduct extends ProductsScreenEvent {
 
 @immutable
 class GetInventoriesEvent extends ProductsScreenEvent {}
+
+class GetProductDetails extends ProductsScreenEvent {
+  final ProductsModel productsModel;
+
+  GetProductDetails({this.productsModel});
+  @override
+  List<Object> get props => [
+    this.productsModel,
+  ];
+}

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:ui';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -53,10 +54,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   @override
   void initState() {
-//    if (widget.editShop != null) {
-//      terminalNameController.text = widget.editShop.name;
-//      widget.screenBloc.add(UpdateBlobImage(logo: widget.editTerminal.logo));
-//    }
+    if (widget.productsModel != null) {
+      widget.screenBloc.add(GetProductDetails(productsModel: widget.productsModel));
+    }
     super.initState();
   }
 
@@ -183,6 +183,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             key: formKey,
             autovalidate: false,
             child: Container(
+              color: Color(0xff2c2c2c),
               alignment: Alignment.center,
               child: Container(
                 width: Measurements.width,
@@ -203,7 +204,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   Widget _getBody(ProductsScreenState state) {
     return Container(
-      padding: EdgeInsets.only(top: 16),
       child: SingleChildScrollView(
         child: Column(
           children: <Widget>[
@@ -215,6 +215,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
               },
             ),
+            _getMainDetail(state),
           ],
         ),
       ),
@@ -225,14 +226,98 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   ///                   Product Details - Main
   ///---------------------------------------------------------------------------
 
-  Widget _egtMainDetail(ProductsScreenState state) {
-    return Container(
-      child: Column(
-        children: <Widget>[
-          
-        ],
-      ),
-    );
+  Widget _getMainDetail(ProductsScreenState state) {
+    String imgUrl = state.productDetail.images.length > 0 ? state.productDetail.images.first: '';
+      return Container(
+        child: Column(
+          children: <Widget>[
+            imgUrl != '' ? Container(
+              height: Measurements.width * 0.7,
+              child: CachedNetworkImage(
+                imageUrl: '${Env.storage}/products/$imgUrl}',
+                imageBuilder: (context, imageProvider) => Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                    image: DecorationImage(
+                      image: imageProvider,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+                placeholder: (context, url) => Container(
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+                errorWidget: (context, url, error) =>  Container(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      SvgPicture.asset('assets/images/insertimageicon.svg'),
+                      Padding(
+                        padding: EdgeInsets.only(top: 16),
+                      ),
+                      Text(
+                        'Upload images',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ): Container(
+              height: Measurements.width * 0.7,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(12.0)),
+              ),
+              alignment: Alignment.center,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  SvgPicture.asset('assets/images/insertimageicon.svg'),
+                  Padding(
+                    padding: EdgeInsets.only(top: 16),
+                  ),
+                  Text(
+                    'Upload images',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              height: 64,
+              color: Color(0xcc111111),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: TextField(
+                      onChanged: (String text) {},
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      decoration: const InputDecoration(
+                        hintText: 'Product Name',
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
+      );
 
   }
 }

@@ -23,7 +23,7 @@ class ProductDetailHeaderView extends StatelessWidget {
       child: Container(
         height: 50,
         padding: EdgeInsets.only(left: 16, right: 16),
-        color: Colors.black,
+        color: Color(0xf2111111),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[

@@ -50,6 +50,9 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
       yield* deleteCollectionProducts();
     } else if (event is DeleteSingleProduct) {
       yield* deleteSingleProduct(event.product);
+    } else if (event is GetProductDetails) {
+      yield state.copyWith(productDetail: event.productsModel);
+      yield* getProductDetail(event.productsModel.uuid);
     }
   }
 
