@@ -60,6 +60,8 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
 
     } else if (event is CreateProductEvent) {
 
+    } else if (event is UploadImageToProduct) {
+      yield* uploadImageToProducts(event.file);
     }
   }
 
@@ -494,5 +496,20 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
       });
     }
     yield state.copyWith(shops: shops);
+  }
+
+  Stream<ProductsScreenState> uploadImageToProducts(File file) async* {
+    yield state.copyWith(isUploading: true);
+    dynamic response = await api.uploadImageToProducts(file, state.businessId, GlobalUtils.activeToken.accessToken);
+    String blob = '';
+    if (response != null) {
+      blob = response['blobName'];
+    }
+    ProductsModel productsModel = state.productDetail;
+    if (blob != null) {
+      productsModel.images.add(blob);
+    }
+
+    yield state.copyWith(isUploading: false, productDetail: productsModel);
   }
 }

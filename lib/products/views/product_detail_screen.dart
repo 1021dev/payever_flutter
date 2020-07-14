@@ -9,9 +9,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_tags/flutter_tags.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
@@ -57,6 +59,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   String imageBase = Env.storage + '/images/';
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final formatter = new NumberFormat('###,###,###.00', 'en_US');
 
   String wallpaper;
   final TextEditingController shopNameController = TextEditingController();
@@ -273,6 +276,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 });
               },
             ),
+            Divider(
+              height: 0,
+              thickness: 0.5,
+              color: Color(0x80888888),
+            ),
             _getMainDetail(state),
             ProductDetailHeaderView(
               title: Language.getProductStrings('description.title').toUpperCase(),
@@ -283,6 +291,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   _selectedSectionIndex = _selectedSectionIndex == 1 ? -1 : 1;
                 });
               },
+            ),
+            Divider(
+              height: 0,
+              thickness: 0.5,
+              color: Color(0x80888888),
             ),
             _getDescriptionDetail(state),
             state.inventory != null ? ProductDetailHeaderView(
@@ -295,6 +308,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 });
               },
             ): Container(),
+            Divider(
+              height: 0,
+              thickness: 0.5,
+              color: Color(0x80888888),
+            ),
             state.inventory != null ? _getInventoryDetail(state): Container(),
             ProductDetailHeaderView(
               title: Language.getProductStrings('sections.category').toUpperCase(),
@@ -305,6 +323,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   _selectedSectionIndex = _selectedSectionIndex == 3 ? -1 : 3;
                 });
               },
+            ),
+            Divider(
+              height: 0,
+              thickness: 0.5,
+              color: Color(0x80888888),
             ),
             _getCategoryDetail(state),
             ProductDetailHeaderView(
@@ -317,6 +340,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 });
               },
             ),
+            Divider(
+              height: 0,
+              thickness: 0.5,
+              color: Color(0x80888888),
+            ),
             _getVariantsDetail(state),
             ProductDetailHeaderView(
               title: Language.getProductStrings('sections.channels').toUpperCase(),
@@ -327,6 +355,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   _selectedSectionIndex = _selectedSectionIndex == 5 ? -1 : 5;
                 });
               },
+            ),
+            Divider(
+              height: 0,
+              thickness: 0.5,
+              color: Color(0x80888888),
             ),
             _getChannelDetail(state),
             state.productDetail.type == 'physical' ? ProductDetailHeaderView(
@@ -341,6 +374,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 });
               },
             ): Container(),
+            Divider(
+              height: 0,
+              thickness: 0.5,
+              color: Color(0x80888888),
+            ),
             state.productDetail.type == 'physical' ? _getShippingDetail(state): Container(),
             ProductDetailHeaderView(
               title: Language.getProductStrings('sections.taxes').toUpperCase(),
@@ -354,6 +392,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 });
               },
             ),
+            Divider(
+              height: 0,
+              thickness: 0.5,
+              color: Color(0x80888888),
+            ),
             _getTaxesDetail(state),
             ProductDetailHeaderView(
               title: Language.getProductStrings('sections.visibility').toUpperCase(),
@@ -364,6 +407,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   _selectedSectionIndex = _selectedSectionIndex == 8 ? -1 : 8;
                 });
               },
+            ),
+            Divider(
+              height: 0,
+              thickness: 0.5,
+              color: Color(0x80888888),
             ),
             _getVisibilityDetail(state),
           ],
@@ -403,6 +451,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 ),
               ),
               errorWidget: (context, url, error) =>  Container(
+                height: Measurements.width * 0.7,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
@@ -424,7 +473,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             ),
           ): GestureDetector(
             onTap: () {
-
+              getImage(0);
             },
             child: Container(
               height: Measurements.width * 0.7,
@@ -432,7 +481,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 borderRadius: BorderRadius.all(Radius.circular(12.0)),
               ),
               alignment: Alignment.center,
-              child: Column(
+              child: state.isUploading ? Container(
+                child: Center(child: CircularProgressIndicator()),
+              ): Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   SvgPicture.asset('assets/images/insertimageicon.svg'),
@@ -501,7 +552,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         ),
                       ): GestureDetector(
                         onTap: () {
-
+                          getImage(0);
                         },
                         child: Container(
                           height: 64,
@@ -510,12 +561,19 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             borderRadius: BorderRadius.circular(8),
                             color: Colors.black12,
                           ),
-                          child: Icon(Icons.add),
+                          child: state.isUploading ? Container(
+                            child: Center(child: CircularProgressIndicator()),
+                          ): Icon(Icons.add),
                         ),
                       ),
                       img != '' ? InkWell(
                         onTap: () {
-
+                          ProductsModel productModel = state.productDetail;
+                          productModel.images.remove(img);
+                          widget.screenBloc.add(UpdateProductDetail(
+                            increaseStock: state.increaseStock,
+                            productsModel: productModel,
+                          ));
                         },
                         child: SvgPicture.asset('assets/images/xsinacircle.svg',),
                       ): Container(),
@@ -610,6 +668,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
                           ),
+                          keyboardType: TextInputType.numberWithOptions(decimal: true),
                           decoration: InputDecoration(
                             labelText: Language.getProductStrings('placeholders.price'),
                             labelStyle: TextStyle(
@@ -649,6 +708,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
                           ),
+                          keyboardType: TextInputType.numberWithOptions(decimal: true),
                           decoration: InputDecoration(
                             labelText: Language.getProductStrings('placeholders.salePrice'),
                             labelStyle: TextStyle(
@@ -1033,9 +1093,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         imgUrl != '' ? CachedNetworkImage(
                           imageUrl: '${Env.storage}/products/$imgUrl-thumbnail',
                           imageBuilder: (context, imageProvider) => Container(
+                            height: 50,
+                            width: 50,
                             decoration: BoxDecoration(
                               color: Colors.white,
-                              borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                              borderRadius: BorderRadius.all(Radius.circular(4.0)),
                               image: DecorationImage(
                                 image: imageProvider,
                               ),
@@ -1046,17 +1108,19 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               child: CircularProgressIndicator(),
                             ),
                           ),
-                          errorWidget: (context, url, error) => Container(
-                            height: 50,
-                            width: 50,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4),
-                              color: Colors.white10,
-                            ),
-                            child: Center(
-                              child: SvgPicture.asset('assets/images/noimage.svg', width: 20, height: 20,),
-                            ),
-                          ),
+                          errorWidget: (context, url, error) {
+                            return Container(
+                              height: 50,
+                              width: 50,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4),
+                                color: Colors.white10,
+                              ),
+                              child: Center(
+                                child: SvgPicture.asset('assets/images/noimage.svg', width: 20, height: 20,),
+                              ),
+                            );
+                          },
                         ) : Container(
                           height: 50,
                           width: 50,
@@ -1631,5 +1695,51 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       ),
     );
   }
-}
 
+  Future getImage(int type) async {
+    ImagePicker imagePicker = ImagePicker();
+    var image = await imagePicker.getImage(
+      source: type == 0 ? ImageSource.gallery : ImageSource.camera,
+    );
+    if (image != null) {
+      await _cropImage(File(image.path));
+    }
+  }
+
+  Future<Null> _cropImage(File imageFile) async {
+    File croppedFile = await ImageCropper.cropImage(
+        sourcePath: imageFile.path,
+        aspectRatioPresets: Platform.isAndroid
+            ? [
+          CropAspectRatioPreset.square,
+          CropAspectRatioPreset.ratio3x2,
+          CropAspectRatioPreset.original,
+          CropAspectRatioPreset.ratio4x3,
+          CropAspectRatioPreset.ratio16x9
+        ]
+            : [
+          CropAspectRatioPreset.original,
+          CropAspectRatioPreset.square,
+          CropAspectRatioPreset.ratio3x2,
+          CropAspectRatioPreset.ratio4x3,
+          CropAspectRatioPreset.ratio5x3,
+          CropAspectRatioPreset.ratio5x4,
+          CropAspectRatioPreset.ratio7x5,
+          CropAspectRatioPreset.ratio16x9
+        ],
+        androidUiSettings: AndroidUiSettings(
+            toolbarTitle: 'Cropper',
+            toolbarColor: Colors.deepOrange,
+            toolbarWidgetColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: false),
+        iosUiSettings: IOSUiSettings(
+          title: 'Cropper',
+        ));
+
+    if (croppedFile != null) {
+      widget.screenBloc.add(UploadImageToProduct(file: croppedFile));
+    }
+
+  }
+}

@@ -138,3 +138,14 @@ class CreateProductEvent extends ProductsScreenEvent {
     this.productsModel,
   ];
 }
+
+
+class UploadImageToProduct extends ProductsScreenEvent {
+  final File file;
+
+  UploadImageToProduct({this.file,});
+  @override
+  List<Object> get props => [
+    this.file,
+  ];
+}

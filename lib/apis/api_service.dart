@@ -1601,4 +1601,33 @@ class ApiService {
       return Future.error(e);
     }
   }
+
+  Future<dynamic> uploadImageToProducts(
+      File logo,
+      String business,
+      String token,
+      ) async {
+    print('$TAG - uploadImageToProducts()');
+    var headers = {
+      HttpHeaders.authorizationHeader: 'Bearer $token',
+      HttpHeaders.contentTypeHeader: '*/*',
+      HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+    };
+
+    String fileName = logo.path.split('/').last;
+    FormData formData = FormData.fromMap({
+      'file': await MultipartFile.fromFile(
+        logo.path,
+        filename: fileName,
+      ),
+    });
+
+    dynamic upload = await _client.postForm(
+        '$mediaBusiness$business/products',
+        body: formData,
+        headers: headers
+    );
+    return upload;
+  }
+
 }
