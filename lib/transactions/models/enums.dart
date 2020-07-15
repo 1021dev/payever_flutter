@@ -274,6 +274,31 @@ Map<String, String> filterConditionsByFilterType(String type) {
         'contains': 'Contains',
         'doesNotContain': 'Does not contain'
       };
+    case 'title':
+      return {
+        'is': 'Is',
+        'isNot': 'Is not',
+        'startsWith': 'Starts with',
+        'endsWith': 'Ends with',
+        'contains': 'Contains',
+        'doesNotContain': 'Does not contain'
+      };
+    case 'price':
+      return {
+        'is': 'Is',
+        'isNot': 'Is not',
+        'greaterThan': 'Greater than',
+        'lessThan': 'Less than',
+        'between': 'Between',
+      };
+    case 'weight':
+      return {
+        'is': 'Is',
+        'isNot': 'Is not',
+        'greaterThan': 'Greater than',
+        'lessThan': 'Less than',
+        'between': 'Between',
+      };
     default:
       return {};
   }
@@ -312,3 +337,16 @@ String getOptionString(String key) {
   }
   return null;
 }
+
+List<String> productConditionOptions = [
+  'No Conditions',
+  'All Conditions',
+  'Any Condition',
+];
+
+Map<String, String> conditionFields = {
+  'title': 'Title',
+  'type': 'Type',
+  'price': 'Price',
+  'weight': 'Weight',
+};

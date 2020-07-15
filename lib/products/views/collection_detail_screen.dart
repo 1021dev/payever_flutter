@@ -25,16 +25,10 @@ import 'package:payever/products/models/models.dart';
 import 'package:payever/products/widgets/product_detail_header.dart';
 import 'package:payever/products/widgets/product_detail_subsection_header.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/transactions/models/enums.dart';
 
 bool _isPortrait;
 bool _isTablet;
-
-List<String> productConditionOptions = [
-  'No Conditions',
-  'All Conditions',
-  'Any Condition',
-];
-final GlobalKey<TagsState> _tagStateKey = GlobalKey<TagsState>();
 
 // ignore: must_be_immutable
 class CollectionDetailScreen extends StatefulWidget {
@@ -294,6 +288,7 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
 
   Widget _getMainDetail(ProductsScreenState state) {
     if (_selectedSectionIndex != 0) return Container();
+
     String imgUrl = state.collectionDetail.image ?? '';
     return Container(
       padding: EdgeInsets.only(top: 16, bottom: 16),
@@ -402,15 +397,13 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
           Container(
             padding: EdgeInsets.only(left: 16, right: 16),
             child: Container(
-              color: Color(0x80111111),
+              color: Color(0x20111111),
               padding: EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
-              child: state.taxes.length == 0
-                  ? Container()
-                  : DropDownFormField(
+              child: DropDownFormField(
                 filled: false,
-                titleText: '',
+                titleText: Language.getProductStrings('Product must match'),
                 hintText: Language.getProductStrings('Product must match'),
-                value: '',
+                value: productConditionOptions.first,
                 onChanged: (value) {
                   ProductsModel productModel = state.productDetail;
                   productModel.vatRate = value;
@@ -421,14 +414,173 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
                       )
                   );
                 },
-                dataSource: state.taxes.map((e) {
+                dataSource: productConditionOptions.map((e) {
                   return {
-                    'display': '${e.description} ${e.rate}%',
-                    'value': e.rate,
+                    'display': e,
+                    'value': e,
                   };
                 }).toList(),
                 textField: 'display',
                 valueField: 'value',
+              ),
+            ),
+          ),
+          ListView.separated(
+            shrinkWrap: true,
+            padding: EdgeInsets.only(left: 16, right: 16),
+            itemBuilder: (context, index){
+              Map<String, String> filterConditions = {};
+              Filter filter = state.collectionDetail.automaticFillConditions.filters[index];
+              return Container(
+                color: Color(0x20111111),
+                padding: EdgeInsets.only(left: 16, right: 16),
+                height: 64,
+                child: Row(
+                  children: <Widget>[
+                    Flexible(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(top: 4),
+                          ),
+                          Text(
+                            'Title',
+                            style: TextStyle(
+                              color: Colors.white60,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w200,
+                            ),
+                          ),
+                          Expanded(
+                            child: DropdownButton<String>(
+                              icon: Container(),
+                              underline: Container(),
+                              isExpanded: true,
+                              value: filter.field,
+                              onChanged: (value) {
+                              },
+                              items: conditionFields.keys.map((label) => DropdownMenuItem(
+                                child: Text(
+                                  conditionFields[label],
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w300,
+                                  ),
+                                ),
+                                value: label,
+                              ))
+                                  .toList(),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Flexible(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(top: 4),
+                          ),
+                          Text(
+                            'Condition',
+                            style: TextStyle(
+                              color: Colors.white60,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w200,
+                            ),
+                          ),
+                          Expanded(
+                            child: DropdownButton<String>(
+                              icon: Container(),
+                              underline: Container(),
+                              isExpanded: true,
+                              value: filter.fieldCondition,
+                              onChanged: (value) {
+                              },
+                              items: filter_conditions.keys.map((String value) => DropdownMenuItem(
+                                child: Text(
+                                  filter_conditions[value],
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w300,
+                                  ),
+                                ),
+                                value: value,
+                              ))
+                                  .toList(),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Flexible(
+                      child: Row(
+                        children: <Widget>[
+                          Flexible(
+                            child: Container(
+                              height: 64,
+                              child: TextFormField(
+                                onChanged: (String text) {},
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                                decoration: InputDecoration(
+                                  labelText: Language.getProductStrings('Value'),
+                                  labelStyle: TextStyle(
+                                    fontWeight: FontWeight.w200,
+                                  ),
+                                  border: UnderlineInputBorder(),
+                                  contentPadding: EdgeInsets.all(8)
+                                ),
+                                initialValue: filter.value,
+                                maxLines: 1,
+                                minLines: 1,
+                                expands: false,
+                              ),
+                            ),),
+                          MaterialButton(
+                            onPressed: () {
+
+                            },
+                            height: 24,
+                            elevation: 0,
+                            minWidth: 0,
+                            shape: CircleBorder(),
+                            visualDensity: VisualDensity.comfortable,
+                            child: SvgPicture.asset('assets/images/xsinacircle.svg', width: 24, height: 24,),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+            separatorBuilder: (context, index) {
+              return Divider(
+                height: 0,
+                thickness: 0.5,
+                color: Color(0x80888888),
+              );
+            },
+            itemCount: state.collectionDetail != null ? state.collectionDetail.automaticFillConditions.filters.length : 0,
+          ),
+          Container(
+            alignment: Alignment.centerRight,
+            child: MaterialButton(
+              onPressed: () {
+
+              },
+              child: Text(
+                Language.getProductListStrings('+ Add Condition'),
               ),
             ),
           )
@@ -438,7 +590,7 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
   }
 
   ///---------------------------------------------------------------------------
-  ///                   Collection Detail - Main
+  ///                   Collection Detail - Description
   ///---------------------------------------------------------------------------
 
   Widget _getDescriptionDetail(ProductsScreenState state) {
@@ -446,7 +598,7 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
   }
 
   ///---------------------------------------------------------------------------
-  ///                   Collection Detail - Main
+  ///                   Collection Detail - Products
   ///---------------------------------------------------------------------------
 
   Widget _getProductsList(ProductsScreenState state) {

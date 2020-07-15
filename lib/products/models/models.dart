@@ -66,7 +66,7 @@ class Products {
 
   String get uuid => _uuid;
 
-  num get _v => __v;
+  num get v => __v;
 
   String get customId => __id;
 }
@@ -275,9 +275,9 @@ class InventoryModel {
 
   String get updatedAt => _updatedAt;
 
-  num get _v => __v;
+  num get v => __v;
 
-  String get _id => __id;
+  String get id => __id;
 }
 
 class VariantsRef {
@@ -341,6 +341,7 @@ class CollectionModel {
   String updatedAt;
   num v;
   String id;
+  FillCondition automaticFillConditions;
 
   CollectionModel.toMap(dynamic obj) {
     activeSince = obj['activeSince'];
@@ -357,6 +358,56 @@ class CollectionModel {
     if (channelObj != null) {
       channelObj.forEach((element) {
         channelSets.add(ChannelSet.toMap(element));
+      });
+    }
+    if (obj['automaticFillConditions'] != null) {
+      automaticFillConditions = FillCondition.toMap(obj['automaticFillConditions']);
+    }
+  }
+}
+
+class FillCondition {
+  List<Filter> filters = [];
+  List<ProductsModel> manualProductsList = [];
+  bool strict = false;
+  String id;
+
+  FillCondition.toMap(dynamic obj) {
+    List productsObj = obj['manualProductsList'];
+    if (productsObj != null) {
+      productsObj.forEach((element) {
+        manualProductsList.add(ProductsModel.toMap(element));
+      });
+    }
+    List filtersObj = obj['filters'];
+    if (filtersObj != null) {
+      filtersObj.forEach((element) {
+        filters.add(Filter.toMap(element));
+      });
+    }
+    strict = obj['strict'];
+    id = obj['_id'];
+  }
+}
+
+class Filter {
+  String field;
+  String fieldCondition;
+  String fieldType;
+  List<Filter> filters = [];
+  String value;
+  String id;
+
+  Filter.toMap(dynamic obj) {
+    value = obj['value'];
+    id = obj['_id'];
+    field = obj['field'];
+    fieldCondition = obj['fieldCondition'];
+    fieldType = obj['fieldType'];
+    List filtersObj = obj['filters'];
+    if (filtersObj != null) {
+      filtersObj.forEach((element) {
+        filters.add(Filter.toMap(element));
       });
     }
   }
