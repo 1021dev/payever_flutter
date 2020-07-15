@@ -815,6 +815,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
         child: SizedBox.expand(
           child: MaterialButton(
             onPressed: () {
+              Navigator.pop(context);
               Navigator.push(
                 context,
                 PageTransition(

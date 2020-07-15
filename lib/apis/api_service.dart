@@ -1630,4 +1630,21 @@ class ApiService {
     return upload;
   }
 
+  Future<dynamic> getCollection(String token, String businessId, String collectionId) async {
+    try {
+      print('$TAG - getCollection()');
+      dynamic response = await _client.getTypeless(
+          '${Env.products}/collections/$businessId/$collectionId',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
 }

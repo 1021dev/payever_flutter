@@ -62,6 +62,8 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
 
     } else if (event is UploadImageToProduct) {
       yield* uploadImageToProducts(event.file);
+    } else if (event is GetCollectionDetail) {
+      
     }
   }
 
@@ -511,5 +513,13 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
     }
 
     yield state.copyWith(isUploading: false, productDetail: productsModel);
+  }
+  
+  Stream<ProductsScreenState> getCollectionDetail(String collectionId) async* {
+
+    dynamic response = await api.getCollection(GlobalUtils.activeToken.accessToken, state.businessId, collectionId);
+    if (response != null) {
+
+    }
   }
 }

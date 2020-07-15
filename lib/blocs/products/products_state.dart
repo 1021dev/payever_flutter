@@ -18,11 +18,13 @@ class ProductsScreenState {
   final InventoryModel inventory;
   final List<Categories> categories;
   final ProductsModel productDetail;
+  final CollectionModel collectionDetail;
   final List<Tax> taxes;
   final List<Terminal> terminals;
   final List<ShopModel> shops;
   final dynamic billingSubscription;
   final num increaseStock;
+  final List<ProductsModel> collectionProducts;
 
   ProductsScreenState({
     this.isLoading = false,
@@ -44,6 +46,8 @@ class ProductsScreenState {
     this.shops = const [],
     this.billingSubscription,
     this.increaseStock = 0,
+    this.collectionDetail,
+    this.collectionProducts = const [],
   });
 
   List<Object> get props => [
@@ -66,6 +70,8 @@ class ProductsScreenState {
     this.shops,
     this.billingSubscription,
     this.increaseStock,
+    this.collectionDetail,
+    this.collectionProducts,
   ];
 
   ProductsScreenState copyWith({
@@ -88,6 +94,8 @@ class ProductsScreenState {
     List<ShopModel> shops,
     dynamic billingSubscription,
     num increaseStock,
+    List<ProductsModel> collectionProducts,
+    CollectionModel collectionDetail,
   }) {
     return ProductsScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -103,12 +111,14 @@ class ProductsScreenState {
       inventories: inventories ?? this.inventories,
       inventory: inventory ?? this.inventory,
       categories: categories ?? this.categories,
-      productDetail: productDetail ?? this.productDetail,
+      productDetail: productDetail,
       taxes: taxes ?? this.taxes,
       terminals: terminals ?? this.terminals,
       shops: shops ?? this.shops,
       billingSubscription: billingSubscription ?? this.billingSubscription,
       increaseStock: increaseStock ?? this.increaseStock,
+      collectionProducts: collectionProducts ?? this.collectionProducts,
+      collectionDetail: collectionDetail,
     );
   }
 }

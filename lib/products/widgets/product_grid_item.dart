@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/products/models/models.dart';
@@ -22,6 +23,25 @@ class ProductGridItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    String category = '';
+    List<Categories> categories = product.productsModel.categories;
+    if (categories.length > 0) {
+      category = categories.first.title;
+    }
+    bool isPos = false;
+    bool isShop = false;
+    List<ChannelSet> channelSets = product.productsModel.channels;
+    if (channelSets.length > 0) {
+      channelSets.forEach((element) {
+        if (element.type == 'pos') {
+          isPos = true;
+        }
+        if (element.type == 'shop') {
+          isShop = true;
+        }
+      });
+    }
     return Container(
       margin: EdgeInsets.only(left: 16, right: 16),
       decoration: BoxDecoration(
@@ -32,17 +52,34 @@ class ProductGridItem extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Container(
-              padding: EdgeInsets.only(top: 16, left: 24),
-              alignment: Alignment.centerLeft,
-              child: InkWell(
-                onTap: () {
-                  onCheck(product);
-                },
-                child: product.isChecked
-                    ? Icon(Icons.check_circle, color: Colors.white,)
-                    : Icon(Icons.radio_button_unchecked, color: Colors.white54,),
-              ) ,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.only(top: 16, left: 24),
+                  alignment: Alignment.centerLeft,
+                  child: InkWell(
+                    onTap: () {
+                      onCheck(product);
+                    },
+                    child: product.isChecked
+                        ? Icon(Icons.check_circle, color: Colors.white,)
+                        : Icon(Icons.radio_button_unchecked, color: Colors.white54,),
+                  ) ,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(right: 24, top: 16),
+                  child: Text(
+                    category,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
+              ],
             ),
             Expanded(
               child: Padding(
@@ -106,13 +143,28 @@ class ProductGridItem extends StatelessWidget {
             ),
             Container(
               height: 44,
-              alignment: Alignment.centerRight,
-              child: MaterialButton(
-                onPressed: (){
-                  onTapMenu(product);
-                },
-                child: Icon(Icons.more_vert),
-                minWidth: 0,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      isPos ? Padding(
+                        padding: EdgeInsets.only(left: 16),
+                        child: SvgPicture.asset('assets/images/pos.svg', width: 20, height: 20,),
+                      ) : Container(),
+                      isShop ? Padding(
+                        padding: EdgeInsets.only(left: 16),
+                        child: SvgPicture.asset('assets/images/shopicon.svg', width: 20, height: 20,),
+                      ) : Container(),
+                    ],
+                  ),
+                  MaterialButton(
+                    onPressed: (){
+                      onTapMenu(product);
+                    },
+                    child: Icon(Icons.more_vert),
+                    minWidth: 0,
+                  )                ],
               ),
             ),
           ],

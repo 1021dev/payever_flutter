@@ -139,7 +139,6 @@ class CreateProductEvent extends ProductsScreenEvent {
   ];
 }
 
-
 class UploadImageToProduct extends ProductsScreenEvent {
   final File file;
 
@@ -149,3 +148,14 @@ class UploadImageToProduct extends ProductsScreenEvent {
     this.file,
   ];
 }
+
+class GetCollectionDetail extends ProductsScreenEvent {
+  final CollectionModel collection;
+
+  GetCollectionDetail({this.collection});
+  @override
+  List<Object> get props => [
+    this.collection,
+  ];
+}
+
