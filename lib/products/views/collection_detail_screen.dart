@@ -71,11 +71,15 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
 
   @override
   void initState() {
+    widget.screenBloc.add(GetCollectionDetail(collection: widget.collection));
     if (widget.collection != null) {
-      widget.screenBloc.add(GetCollectionDetail(collection: widget.collection));
 
       _collectionTitleController.text = widget.collection.name;
       _descriptionTextController.text = widget.collection.description;
+
+      if (widget.collection.automaticFillConditions.filters.length > 0) {
+        conditionOption = 'Any Condition';
+      }
     }
     super.initState();
   }
@@ -291,7 +295,9 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
 
   Widget _getMainDetail(ProductsScreenState state) {
     if (_selectedSectionIndex != 0) return Container();
-
+    if (state.collectionDetail == null) {
+      return Container();
+    }
     String imgUrl = state.collectionDetail.image ?? '';
     return Container(
       padding: EdgeInsets.only(top: 16, bottom: 16),
@@ -423,12 +429,15 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
               ),
             ),
           ),
-          conditionOption == 'No Conditions' ? Container() : ListView.separated(
+          conditionOption == 'No Conditions' ? Container()
+              : ListView.separated(
             shrinkWrap: true,
             padding: EdgeInsets.only(left: 16, right: 16),
             itemBuilder: (context, index){
               Filter filter = state.collectionDetail.automaticFillConditions.filters[index];
+              print('${filter.value} ${filter.field} ${filter.fieldCondition}');
               Map<String, String> filterConditions = filterConditionsByFilterType(filter.field);
+              print(filterConditions);
               return Container(
                 color: Color(0x20111111),
                 padding: EdgeInsets.only(left: 16, right: 16),
@@ -458,6 +467,16 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
                               isExpanded: true,
                               value: filter.field,
                               onChanged: (value) {
+                                CollectionModel collection = state.collectionDetail;
+                                FillCondition fillCondition = collection.automaticFillConditions;
+                                Filter f = filter;
+                                f.field = value;
+                                Map<String, String> conditions = filterConditionsByFilterType(filter.field);
+                                print(conditions);
+                                f.fieldCondition = conditions.keys.first;
+                                fillCondition.filters[index] = f;
+                                collection.automaticFillConditions = fillCondition;
+                                widget.screenBloc.add(UpdateCollectionDetail(collectionModel: collection));
                               },
                               items: conditionFields.keys.map((label) => DropdownMenuItem(
                                 child: Text(
@@ -499,6 +518,13 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
                               isExpanded: true,
                               value: filter.fieldCondition,
                               onChanged: (value) {
+                                CollectionModel collection = state.collectionDetail;
+                                FillCondition fillCondition = collection.automaticFillConditions;
+                                Filter f = filter;
+                                f.fieldCondition = value;
+                                fillCondition.filters[index] = f;
+                                collection.automaticFillConditions = fillCondition;
+                                widget.screenBloc.add(UpdateCollectionDetail(collectionModel: collection));
                               },
                               items: filterConditions.keys.map((String value) => DropdownMenuItem(
                                 child: Text(
@@ -524,7 +550,14 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
                             child: Container(
                               height: 64,
                               child: TextFormField(
-                                onChanged: (String text) {},
+                                onChanged: (String text) {
+                                  CollectionModel collection = state.collectionDetail;
+                                  FillCondition fillCondition = collection.automaticFillConditions;
+                                  filter.value = text;
+                                  fillCondition.filters[index] = filter;
+                                  collection.automaticFillConditions = fillCondition;
+                                  widget.screenBloc.add(UpdateCollectionDetail(collectionModel: collection));
+                                },
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 15,
@@ -727,7 +760,9 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
                     ),
                     MaterialButton(
                       onPressed: () {
-
+                        List<ProductsModel> products = state.collectionProducts;
+                        products.remove(product);
+                        widget.screenBloc.add(UpdateCollectionDetail(collectionModel: state.collectionDetail, collectionProducts: products));
                       },
                       height: 30,
                       elevation: 0,

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:payever/commons/models/models.dart';
 import 'package:payever/products/models/models.dart';
+import 'package:payever/products/widgets/product_filter_content_view.dart';
 import 'package:payever/shop/models/models.dart';
 
 class ProductsScreenState {
@@ -25,6 +26,9 @@ class ProductsScreenState {
   final dynamic billingSubscription;
   final num increaseStock;
   final List<ProductsModel> collectionProducts;
+  final String searchText;
+  final List<FilterItem> filterTypes;
+  final String sortType;
 
   ProductsScreenState({
     this.isLoading = false,
@@ -48,6 +52,9 @@ class ProductsScreenState {
     this.increaseStock = 0,
     this.collectionDetail,
     this.collectionProducts = const [],
+    this.searchText,
+    this.filterTypes = const [],
+    this.sortType,
   });
 
   List<Object> get props => [
@@ -72,6 +79,9 @@ class ProductsScreenState {
     this.increaseStock,
     this.collectionDetail,
     this.collectionProducts,
+    this.searchText,
+    this.filterTypes,
+    this.sortType,
   ];
 
   ProductsScreenState copyWith({
@@ -96,6 +106,9 @@ class ProductsScreenState {
     num increaseStock,
     List<ProductsModel> collectionProducts,
     CollectionModel collectionDetail,
+    String searchText,
+    List<FilterItem> filterTypes,
+    String sortType,
   }) {
     return ProductsScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -111,14 +124,17 @@ class ProductsScreenState {
       inventories: inventories ?? this.inventories,
       inventory: inventory ?? this.inventory,
       categories: categories ?? this.categories,
-      productDetail: productDetail,
+      productDetail: productDetail ?? this.productDetail,
       taxes: taxes ?? this.taxes,
       terminals: terminals ?? this.terminals,
       shops: shops ?? this.shops,
       billingSubscription: billingSubscription ?? this.billingSubscription,
       increaseStock: increaseStock ?? this.increaseStock,
       collectionProducts: collectionProducts ?? this.collectionProducts,
-      collectionDetail: collectionDetail,
+      collectionDetail: collectionDetail ?? this.collectionDetail,
+      searchText: searchText ?? this.searchText,
+      filterTypes: filterTypes ?? this.filterTypes,
+      sortType: sortType ?? this.sortType,
     );
   }
 }

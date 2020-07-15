@@ -19,8 +19,10 @@ import 'package:payever/products/views/collection_detail_screen.dart';
 import 'package:payever/products/views/product_detail_screen.dart';
 import 'package:payever/products/widgets/collection_grid_item.dart';
 import 'package:payever/products/widgets/product_grid_item.dart';
+import 'package:payever/products/widgets/product_sort_content_view.dart';
 import 'package:payever/products/widgets/products_top_button.dart';
 import 'package:payever/transactions/views/filter_content_view.dart';
+import 'package:payever/transactions/views/sub_view/search_text_content_view.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -388,7 +390,17 @@ class _ProductsScreenState extends State<ProductsScreen> {
             index: 1,
             onTap: () {
               setState(() {
-                selectedIndex = 1;
+                Navigator.push(
+                  context,
+                  PageTransition(
+                    child: ProductDetailScreen(
+                      businessId: widget.globalStateModel.currentBusiness.id,
+                      screenBloc: screenBloc,
+                    ),
+                    type: PageTransitionType.fade,
+                    duration: Duration(milliseconds: 500),
+                  ),
+                );
               });
             },
           ),
@@ -420,7 +432,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                     ),
                     InkWell(
                       onTap: () {
-
+                        showSearchTextDialog(state);
                       },
                       child: Container(
                         padding: EdgeInsets.all(8),
@@ -429,7 +441,39 @@ class _ProductsScreenState extends State<ProductsScreen> {
                     ),
                     InkWell(
                       onTap: () {
-
+                        showCupertinoModalPopup(
+                            context: context,
+                            builder: (builder) {
+                              return FilterContentView(
+                                onSelected: (FilterItem val) {
+                                  Navigator.pop(context);
+                                  List<FilterItem> filterTypes = [];
+                                  filterTypes.addAll(state.filterTypes);
+                                  if (val != null) {
+                                    if (filterTypes.length > 0) {
+                                      int isExist = filterTypes.indexWhere((element) => element.type == val.type);
+                                      if (isExist > -1) {
+                                        filterTypes[isExist] = val;
+                                      } else {
+                                        filterTypes.add(val);
+                                      }
+                                    } else {
+                                      filterTypes.add(val);
+                                    }
+                                  } else {
+                                    if (filterTypes.length > 0) {
+                                      int isExist = filterTypes.indexWhere((element) => element.type == val.type);
+                                      if (isExist != null) {
+                                        filterTypes.removeAt(isExist);
+                                      }
+                                    }
+                                  }
+                                  screenBloc.add(
+                                      UpdateFilterTypes(filterTypes: filterTypes)
+                                  );
+                                },
+                              );
+                            });
                       },
                       child: Container(
                         padding: EdgeInsets.all(8),
@@ -508,7 +552,16 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   padding: EdgeInsets.only(right: 8),
                   child: InkWell(
                     onTap: () {
-
+                      showCupertinoModalPopup(
+                          context: context,
+                          builder: (builder) {
+                            return ProductSortContentView(
+                              selectedIndex: state.sortType ,
+                              onSelected: (val) {
+                                Navigator.pop(context);
+                              },
+                            );
+                          });
                     },
                     child: Container(
                       padding: EdgeInsets.all(8),
@@ -952,7 +1005,17 @@ class _ProductsScreenState extends State<ProductsScreen> {
             ),
             MaterialButton(
               onPressed: () {
-
+                Navigator.push(
+                  context,
+                  PageTransition(
+                    child: ProductDetailScreen(
+                      businessId: widget.globalStateModel.currentBusiness.id,
+                      screenBloc: screenBloc,
+                    ),
+                    type: PageTransitionType.fade,
+                    duration: Duration(milliseconds: 500),
+                  ),
+                );
               },
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(22),
@@ -1011,7 +1074,17 @@ class _ProductsScreenState extends State<ProductsScreen> {
             ),
             MaterialButton(
               onPressed: () {
-
+                Navigator.push(
+                  context,
+                  PageTransition(
+                    child: CollectionDetailScreen(
+                      businessId: widget.globalStateModel.currentBusiness.id,
+                      screenBloc: screenBloc,
+                    ),
+                    type: PageTransitionType.fade,
+                    duration: Duration(milliseconds: 500),
+                  ),
+                );
               },
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(22),
@@ -1085,6 +1158,26 @@ class _ProductsScreenState extends State<ProductsScreen> {
     await Future.delayed(Duration(seconds: 0, milliseconds: 1000));
     _collectionsRefreshController.refreshCompleted(resetFooterState: true);
   }
+
+  void showSearchTextDialog(ProductsScreenState state) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+          ),
+          content: SearchTextContentView(
+              searchText: 'state.searchText',
+              onSelected: (value) {
+                Navigator.pop(context);
+              }
+          ),
+        );
+      },
+    );
+  }
+
 
 }
 

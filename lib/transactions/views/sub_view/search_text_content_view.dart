@@ -24,7 +24,7 @@ class _SearchTextContentViewState extends State<SearchTextContentView> {
     return Container(
         height: 120,
         child: Container(
-          padding: EdgeInsets.fromLTRB(0 , 6, 0, 6),
+          padding: EdgeInsets.fromLTRB(0 , 6, 0, 0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

@@ -52,8 +52,13 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
     } else if (event is DeleteSingleProduct) {
       yield* deleteSingleProduct(event.product);
     } else if (event is GetProductDetails) {
-      yield state.copyWith(productDetail: event.productsModel);
-      yield* getProductDetail(event.productsModel.id);
+      if (event.productsModel != null) {
+        yield state.copyWith(productDetail: event.productsModel);
+        yield* getProductDetail(event.productsModel.id);
+      } else {
+        yield state.copyWith(productDetail: ProductsModel());
+        yield* getProductCategories();
+      }
     } else if (event is UpdateProductDetail) {
       yield state.copyWith(productDetail: event.productsModel, increaseStock: event.increaseStock);
     } else if (event is SaveProductDetail) {
@@ -63,10 +68,19 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
     } else if (event is UploadImageToProduct) {
       yield* uploadImageToProducts(event.file);
     } else if (event is GetCollectionDetail) {
-      yield state.copyWith(collectionDetail: event.collection);
-      yield* getCollectionDetail(event.collection.id);
+      if (event.collection != null) {
+        yield state.copyWith(collectionDetail: event.collection);
+        yield* getCollectionDetail(event.collection.id);
+      } else {
+        yield state.copyWith(collectionDetail: CollectionModel(),collectionProducts: []);
+        yield* getProductCategories();
+      }
     } else if (event is UpdateCollectionDetail) {
-      yield state.copyWith(collectionDetail: event.collectionModel);
+      if (event.collectionProducts != null) {
+        yield state.copyWith(collectionDetail: event.collectionModel, collectionProducts: event.collectionProducts);
+      } else {
+        yield state.copyWith(collectionDetail: event.collectionModel);
+      }
     } else if (event is SaveCollectionDetail) {
 
     } else if (event is CreateCollectionEvent) {

@@ -75,23 +75,24 @@ class ProductsModel {
   ProductsModel();
 
   List<String> images = List();
-  String uuid;
-  String title;
-  String description;
-  String id;
-  bool hidden;
-  bool active;
-  num price;
-  num salePrice;
-  String sku;
-  String barcode;
-  String currency;
-  String type;
-  bool enabled;
-  bool onSales;
-  num vatRate;
+  String uuid = '';
+  String title = '';
+  String description = '';
+  String id = '';
+  bool hidden = false;
+  bool active = false;
+  num price = 0;
+  num salePrice = 0;
+  String sku = '';
+  String barcode = '';
+  String currency = 'EUR';
+  String type = 'physical';
+  bool enabled = false;
+  bool onSales = false;
+  num vatRate = 0;
   List<Categories> categories = List();
   List<ChannelSet> channels = List();
+  List<CollectionModel> collections = List();
   List<Variants> variants = List();
   Shipping shipping = Shipping();
 
@@ -126,6 +127,10 @@ class ProductsModel {
     if (obj[GlobalUtils.DB_PROD_MODEL_VARIANTS] != null)
       obj[GlobalUtils.DB_PROD_MODEL_VARIANTS].forEach((variant) {
         variants.add(Variants.toMap(variant));
+      });
+    if (obj['collections'] != null)
+      obj['collections'].forEach((col) {
+        collections.add(CollectionModel.toMap(col));
       });
     if (obj[GlobalUtils.DB_PROD_MODEL_SHIPPING] != null)
       shipping = Shipping.toMap(obj[GlobalUtils.DB_PROD_MODEL_SHIPPING]);
@@ -184,12 +189,12 @@ class Variants {
 class Shipping {
   Shipping();
 
-  bool free;
-  bool general;
-  num weight;
-  num width;
-  num length;
-  num height;
+  bool free = false;
+  bool general = false;
+  num weight = 0;
+  num width = 0;
+  num length = 0;
+  num height = 0;
 
   Shipping.toMap(dynamic obj) {
     free = obj[GlobalUtils.DB_PROD_MODEL_SHIP_FREE];
@@ -330,18 +335,21 @@ class VariantOption {
 }
 
 class CollectionModel {
-  String activeSince;
-  String business;
+
+  CollectionModel();
+
+  String activeSince = '';
+  String business = '';
   List<ChannelSet> channelSets = [];
-  String createdAt;
-  String description;
-  String name;
-  String image;
-  String slug;
-  String updatedAt;
-  num v;
-  String id;
-  FillCondition automaticFillConditions;
+  String createdAt = '';
+  String description = '';
+  String name = '';
+  String image = '';
+  String slug = '';
+  String updatedAt = '';
+  num v = 0;
+  String id = '';
+  FillCondition automaticFillConditions = FillCondition();
 
   CollectionModel.toMap(dynamic obj) {
     activeSince = obj['activeSince'];
@@ -367,6 +375,8 @@ class CollectionModel {
 }
 
 class FillCondition {
+  FillCondition();
+
   List<Filter> filters = [];
   List<ProductsModel> manualProductsList = [];
   bool strict = false;

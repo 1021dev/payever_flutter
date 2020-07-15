@@ -88,8 +88,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   @override
   void initState() {
+    widget.screenBloc.add(GetProductDetails(productsModel: widget.productsModel));
     if (widget.productsModel != null) {
-      widget.screenBloc.add(GetProductDetails(productsModel: widget.productsModel));
       _productNameController.text = widget.productsModel.title ?? '';
       _descriptionController.text = widget.productsModel.description;
       _priceController.text = '${widget.productsModel.price ?? 0}';
@@ -426,7 +426,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   Widget _getMainDetail(ProductsScreenState state) {
     if (_selectedSectionIndex != 0) return Container();
-    String imgUrl = state.productDetail.images.length > 0 ? state.productDetail.images.first: '';
+    String imgUrl = '';
+    if (state.productDetail == null) {
+      return Container();
+    }
+    imgUrl = state.productDetail.images != null ? (state.productDetail.images.length > 0 ? state.productDetail.images.first: ''): '';
     return Container(
       padding: EdgeInsets.only(top: 16, bottom: 16),
       child: Column(
