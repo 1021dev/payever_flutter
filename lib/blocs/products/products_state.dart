@@ -56,7 +56,7 @@ class ProductsScreenState {
     this.collectionProducts = const [],
     this.searchText = '',
     this.filterTypes = const [],
-    this.sortType,
+    this.sortType = 'default',
   });
 
   List<Object> get props => [

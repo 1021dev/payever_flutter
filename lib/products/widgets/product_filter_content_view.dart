@@ -69,7 +69,12 @@ class _ProductFilterContentViewState extends State<ProductFilterContentView> {
               itemCount: filterProducts.keys.toList().length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  title: Text(filterProducts[filterProducts.keys.toList()[index]]),
+                  title: Text(
+                    filterProducts[filterProducts.keys.toList()[index]],
+                    style: TextStyle(
+                      color: Color(0xFFAAAAAA),
+                    ),
+                  ),
                   trailing: Icon(Icons.keyboard_arrow_right),
                   onTap: () {
                     showMeDialog(context, filterProducts.keys.toList()[index]);

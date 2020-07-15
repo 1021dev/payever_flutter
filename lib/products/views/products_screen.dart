@@ -566,6 +566,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
                             selectedIndex: state.sortType ,
                             onSelected: (val) {
                               Navigator.pop(context);
+                              screenBloc.add(
+                                  UpdateProductSortType(sortType: val)
+                              );
                             },
                           );
                         },
@@ -1240,6 +1243,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
               searchText: state.searchText,
               onSelected: (value) {
                 Navigator.pop(context);
+                screenBloc.add(
+                  UpdateProductSearchText(searchText: value)
+                );
               }
           ),
         );
