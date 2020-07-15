@@ -62,9 +62,9 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
     } else if (event is UpdateProductDetail) {
       yield state.copyWith(productDetail: event.productsModel, increaseStock: event.increaseStock);
     } else if (event is SaveProductDetail) {
-
+      yield* updateProduct(event.productsModel);
     } else if (event is CreateProductEvent) {
-
+      yield* createProduct(event.productsModel);
     } else if (event is UploadImageToProduct) {
       yield* uploadImageToProducts(event.file);
     } else if (event is GetCollectionDetail) {
@@ -257,6 +257,58 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
       productLists: productLists,
       productsInfo: productInfo,
     );
+  }
+
+  Stream<ProductsScreenState> updateProduct(ProductsModel model) async* {
+    Map<String, dynamic> body = {
+      'operationName': 'updateProduct',
+      'variables': {
+        'product': model.toDictionary(),
+      },
+      'query': 'mutation updateProduct(\$product: ProductUpdateInput!) {\n  updateProduct(product: \$product) {\n    title\n    id\n  }\n}\n'
+    };
+    dynamic response = await api.getProducts(GlobalUtils.activeToken.accessToken, body);
+    if (response != null) {
+
+    }
+    if (response != null) {
+      dynamic data = response['data'];
+      if (data != null) {
+        dynamic updateProduct = data['updateProduct'];
+        if (updateProduct != null) {
+          var id = updateProduct['id'];
+          print('Updates success  => $id');
+        }
+      }
+    }
+
+    yield ProductsScreenStateSuccess();
+  }
+
+  Stream<ProductsScreenState> createProduct(ProductsModel model) async* {
+    Map<String, dynamic> body = {
+      'operationName': 'createProduct',
+      'variables': {
+        'product': model.toDictionary(),
+      },
+      'query': 'mutation createProduct(\$product: ProductInput!) {\n  createProduct(product: \$product) {\n    title\n    id\n  }\n}\n'
+    };
+    dynamic response = await api.getProducts(GlobalUtils.activeToken.accessToken, body);
+    if (response != null) {
+
+    }
+    if (response != null) {
+      dynamic data = response['data'];
+      if (data != null) {
+        dynamic updateProduct = data['updateProduct'];
+        if (updateProduct != null) {
+          var id = updateProduct['id'];
+          print('Updates success  => $id');
+        }
+      }
+    }
+
+    yield ProductsScreenStateSuccess();
   }
 
   Stream<ProductsScreenState> selectProduct(ProductListModel model) async* {

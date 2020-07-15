@@ -642,7 +642,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                   ),
                                 ),
                                 Text(
-                                  templateModel.name,
+                                  templateModel.name ?? '',
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 16,

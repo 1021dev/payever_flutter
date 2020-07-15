@@ -101,6 +101,14 @@ class ChannelSet {
     _type = obj[GlobalUtils.DB_POS_CHANNEL_SET_TYPE];
   }
 
+  Map<String, dynamic> toDictionary() {
+    Map<String, dynamic> map = {};
+    map['name'] = name;
+    map['type'] = type;
+    map['id'] = id;
+    return map;
+  }
+
   String get checkout => _checkout;
 
   String get id => _id;

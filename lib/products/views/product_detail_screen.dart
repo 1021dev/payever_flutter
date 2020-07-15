@@ -90,18 +90,18 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   void initState() {
     widget.screenBloc.add(GetProductDetails(productsModel: widget.productsModel));
     if (widget.productsModel != null) {
-      _productNameController.text = widget.productsModel.title ?? '';
-      _descriptionController.text = widget.productsModel.description;
-      _priceController.text = '${widget.productsModel.price ?? 0}';
-      _salePriceController.text = '${widget.productsModel.salePrice ?? 0}';
-      _skuController.text = '${widget.productsModel.sku ?? ''}';
-      _barCodeController.text = '${widget.productsModel.barcode ?? ''}';
-      if (widget.productsModel.shipping != null) {
-        _weightController.text = '${widget.productsModel.shipping.weight}';
-        _widthController.text = '${widget.productsModel.shipping.width}';
-        _lengthController.text = '${widget.productsModel.shipping.length}';
-        _heightController.text = '${widget.productsModel.shipping.height}';
-      }
+//      _productNameController.text = widget.productsModel.title ?? '';
+//      _descriptionController.text = widget.productsModel.description;
+//      _priceController.text = '${widget.productsModel.price ?? 0}';
+//      _salePriceController.text = '${widget.productsModel.salePrice ?? 0}';
+//      _skuController.text = '${widget.productsModel.sku ?? ''}';
+//      _barCodeController.text = '${widget.productsModel.barcode ?? ''}';
+//      if (widget.productsModel.shipping != null) {
+//        _weightController.text = '${widget.productsModel.shipping.weight}';
+//        _widthController.text = '${widget.productsModel.shipping.width}';
+//        _lengthController.text = '${widget.productsModel.shipping.length}';
+//        _heightController.text = '${widget.productsModel.shipping.height}';
+//      }
     }
     super.initState();
   }
@@ -137,11 +137,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             ),
           );
         } else if (state is ProductsScreenStateSuccess) {
+
           if (widget.fromDashBoard) {
             Navigator.pop(context, 'refresh');
           } else {
             Navigator.pop(context);
           }
+          widget.screenBloc.add(ProductsScreenInitEvent(currentBusinessId: widget.businessId));
         }
       },
       child: BlocBuilder<ProductsScreenBloc, ProductsScreenState>(
@@ -207,6 +209,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             ),
             onPressed: () {
               Navigator.pop(context);
+              if (state.productDetail != null) {
+                if (state.productDetail.sku == '') {
+
+                } else {
+                  widget.screenBloc.add(SaveProductDetail(productsModel: state.productDetail));
+                }
+              }
             },
           ),
         ),
@@ -598,9 +607,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             child: Row(
               children: <Widget>[
                 Expanded(
-                  child: TextField(
-                    controller: _productNameController,
-                    onChanged: (String text) {},
+                  child: TextFormField(
+                    initialValue: state.productDetail.title ?? '',
+                    onChanged: (String text) {
+                      ProductsModel product = state.productDetail;
+                      product.title = text;
+                      widget.screenBloc.add(UpdateProductDetail(productsModel: product, increaseStock: state.increaseStock));
+                    },
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -664,9 +677,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   child: Row(
                     children: <Widget>[
                       Expanded(
-                        child: TextField(
-                          controller: _priceController,
-                          onChanged: (String text) {},
+                        child: TextFormField(
+                          initialValue: state.productDetail.price != null ? '${state.productDetail.price}': '0',
+                          onChanged: (String text) {
+                            ProductsModel product = state.productDetail;
+                            product.price = num.parse(text);
+                            widget.screenBloc.add(UpdateProductDetail(productsModel: product, increaseStock: state.increaseStock));
+                          },
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 16,
@@ -704,9 +721,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   child: Row(
                     children: <Widget>[
                       Expanded(
-                        child: TextField(
-                          controller: _salePriceController,
-                          onChanged: (String text) {},
+                        child: TextFormField(
+                          initialValue: state.productDetail.salePrice != null ? '${state.productDetail.salePrice}': '0',
+                          onChanged: (String text) {
+                            ProductsModel product = state.productDetail;
+                            product.salePrice = num.parse(text);
+                            widget.screenBloc.add(UpdateProductDetail(productsModel: product, increaseStock: state.increaseStock));
+                          },
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 16,
@@ -826,9 +847,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             ),
           ),
           Expanded(
-            child: TextField(
-              controller: _descriptionController,
-              onChanged: (String text) {},
+            child: TextFormField(
+              initialValue: state.productDetail.description ?? '',
+              onChanged: (String text) {
+                ProductsModel product = state.productDetail;
+                product.description = text;
+                widget.screenBloc.add(UpdateProductDetail(productsModel: product, increaseStock: state.increaseStock));
+              },
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 16,
@@ -864,9 +889,19 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             child: Row(
               children: <Widget>[
                 Expanded(
-                  child: TextField(
-                    controller: _skuController,
-                    onChanged: (String text) {},
+                  child: TextFormField(
+                    initialValue: state.productDetail.sku ?? '',
+                    onChanged: (String text) {
+                      ProductsModel product = state.productDetail;
+                      product.sku = text;
+                      widget.screenBloc.add(UpdateProductDetail(productsModel: product, increaseStock: state.increaseStock));
+                    },
+                    validator: (text) {
+                      if (text.isEmpty){
+                        return 'sku required';
+                      }
+                      return null;
+                    },
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -885,9 +920,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   padding: EdgeInsets.only(left: 8),
                 ),
                 Expanded(
-                  child: TextField(
-                    controller: _barCodeController,
-                    onChanged: (String text) {},
+                  child: TextFormField(
+                    onChanged: (String text) {
+                      ProductsModel product = state.productDetail;
+                      product.barcode = text;
+                      widget.screenBloc.add(UpdateProductDetail(productsModel: product, increaseStock: state.increaseStock));
+                    },
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -1409,9 +1447,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             child: Row(
               children: <Widget>[
                 Expanded(
-                  child: TextField(
-                    controller: _weightController,
-                    onChanged: (String text) {},
+                  child: TextFormField(
+                    initialValue: state.productDetail.shipping != null ? '${state.productDetail.shipping.weight ?? 0}': '0',
+                    onChanged: (String text) {
+                      ProductsModel product = state.productDetail;
+                      Shipping shipping = product.shipping ?? Shipping();
+                      shipping.weight = num.parse(text);
+                      product.shipping = shipping;
+                      widget.screenBloc.add(UpdateProductDetail(productsModel: product, increaseStock: state.increaseStock));
+                    },
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -1459,9 +1503,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             child: Row(
               children: <Widget>[
                 Expanded(
-                  child: TextField(
-                    controller: _widthController,
-                    onChanged: (String text) {},
+                  child: TextFormField(
+                    initialValue: state.productDetail.shipping != null ? '${state.productDetail.shipping.width ?? 0}': '0',
+                    onChanged: (String text) {
+                      ProductsModel product = state.productDetail;
+                      Shipping shipping = product.shipping ?? Shipping();
+                      shipping.width = num.parse(text);
+                      product.shipping = shipping;
+                      widget.screenBloc.add(UpdateProductDetail(productsModel: product, increaseStock: state.increaseStock));
+                    },
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -1509,9 +1559,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             child: Row(
               children: <Widget>[
                 Expanded(
-                  child: TextField(
-                    controller: _lengthController,
-                    onChanged: (String text) {},
+                  child: TextFormField(
+                    initialValue: state.productDetail.shipping != null ? '${state.productDetail.shipping.length ?? 0}': '0',
+                    onChanged: (String text) {
+                      ProductsModel product = state.productDetail;
+                      Shipping shipping = product.shipping ?? Shipping();
+                      shipping.length = num.parse(text);
+                      product.shipping = shipping;
+                      widget.screenBloc.add(UpdateProductDetail(productsModel: product, increaseStock: state.increaseStock));
+                    },
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -1559,9 +1615,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             child: Row(
               children: <Widget>[
                 Expanded(
-                  child: TextField(
-                    controller: _heightController,
-                    onChanged: (String text) {},
+                  child: TextFormField(
+                    initialValue: state.productDetail.shipping != null ? '${state.productDetail.shipping.height ?? 0}': '0',
+                    onChanged: (String text) {
+                      ProductsModel product = state.productDetail;
+                      Shipping shipping = product.shipping ?? Shipping();
+                      shipping.height = num.parse(text);
+                      product.shipping = shipping;
+                      widget.screenBloc.add(UpdateProductDetail(productsModel: product, increaseStock: state.increaseStock));
+                    },
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,

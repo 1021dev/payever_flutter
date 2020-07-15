@@ -80,7 +80,7 @@ class ProductsModel {
   String description = '';
   String id = '';
   bool hidden = false;
-  bool active = false;
+  bool active = true;
   num price = 0;
   num salePrice = 0;
   String sku = '';
@@ -90,6 +90,7 @@ class ProductsModel {
   bool enabled = false;
   bool onSales = false;
   num vatRate = 0;
+  String businessUuid = '';
   List<Categories> categories = List();
   List<ChannelSet> channels = List();
   List<CollectionModel> collections = List();
@@ -112,6 +113,8 @@ class ProductsModel {
     type = obj[GlobalUtils.DB_PROD_MODEL_TYPE];
     onSales = obj[GlobalUtils.DB_PROD_MODEL_SALES];
     enabled = obj[GlobalUtils.DB_PROD_MODEL_ENABLE];
+    businessUuid = obj[businessUuid];
+
     if (obj[GlobalUtils.DB_PROD_MODEL_IMAGES] != null)
       obj[GlobalUtils.DB_PROD_MODEL_IMAGES].forEach((img) {
         images.add(img);
@@ -135,6 +138,60 @@ class ProductsModel {
     if (obj[GlobalUtils.DB_PROD_MODEL_SHIPPING] != null)
       shipping = Shipping.toMap(obj[GlobalUtils.DB_PROD_MODEL_SHIPPING]);
   }
+  Map<String, dynamic> toDictionary() {
+    Map<String, dynamic> map = {};
+    map['id'] = id;
+    map['active'] = active;
+    map['onSales'] = onSales;
+    map['price'] = price;
+    map['salePrice'] = salePrice;
+    map['description'] = description;
+    map['vatRate'] = vatRate;
+    map['sku'] = sku;
+    map['title'] = title;
+    map['enabled'] = enabled;
+    map['type'] = type;
+    map['businessUuid'] = businessUuid;
+    map['currency'] = currency;
+
+    if (categories.length > 0) {
+      List categoryMapArr = [];
+      categories.forEach((element) {
+        categoryMapArr.add(element.toDictionary());
+      });
+      map['categories'] = categoryMapArr;
+    }
+
+    if (channels.length > 0) {
+      List channelArr = [];
+      channels.forEach((element) {
+        channelArr.add(element.toDictionary());
+      });
+      map['channelSets'] = channelArr;
+    }
+    map['images'] = images;
+
+    if (shipping != null) {
+      map['shipping'] = shipping.toDictionary();
+    }
+
+    if (collections.length > 0) {
+      List collectionsArr = [];
+      collections.forEach((element) {
+        collectionsArr.add(element.toDictionary());
+      });
+      map['collections'] = collectionsArr;
+    }
+
+    if (variants.length > 0) {
+      List variantsArr = [];
+      variants.forEach((element) {
+        variantsArr.add(element.toDictionary());
+      });
+      map['variants'] = variantsArr;
+    }
+    return map;
+  }
 }
 
 class Categories {
@@ -148,6 +205,15 @@ class Categories {
     slug = obj[GlobalUtils.DB_PROD_MODEL_CATEGORIES_SLUG];
     id = obj[GlobalUtils.DB_PROD_MODEL_CATEGORIES__ID];
     businessUuid = obj[GlobalUtils.DB_PROD_MODEL_CATEGORIES_BUSINESS_UUID];
+  }
+
+  Map<String, dynamic> toDictionary() {
+    Map<String, dynamic> map = {};
+    map['title'] = title;
+    map['slug'] = slug;
+    map['id'] = id;
+    map['businessUuid'] = businessUuid;
+    return map;
   }
 }
 
@@ -184,6 +250,29 @@ class Variants {
       });
     }
   }
+
+  Map<String, dynamic> toDictionary() {
+    Map<String, dynamic> map = {};
+    map['id'] = id;
+    map['title'] = title;
+    map['description'] = description;
+    map['hidden'] = hidden;
+    map['price'] = price;
+    map['salePrice'] = salePrice;
+    map['sku'] = sku;
+    map['barcode'] = barcode;
+    map['images'] = images;
+
+    if (options.length > 0) {
+      List optionsArr = [];
+      options.forEach((element) {
+        optionsArr.add(element.toDictionary());
+      });
+      map['options'] = optionsArr;
+    }
+
+    return map;
+  }
 }
 
 class Shipping {
@@ -203,6 +292,15 @@ class Shipping {
     width = obj[GlobalUtils.DB_PROD_MODEL_SHIP_WIDTH];
     length = obj[GlobalUtils.DB_PROD_MODEL_SHIP_LENGTH];
     height = obj[GlobalUtils.DB_PROD_MODEL_SHIP_HEIGHT];
+  }
+
+  Map<String, dynamic> toDictionary() {
+    Map<String, dynamic> map = {};
+    map['weight'] = weight;
+    map['width'] = width;
+    map['length'] = length;
+    map['height'] = height;
+    return map;
   }
 }
 
@@ -332,6 +430,13 @@ class VariantOption {
     name = obj['name'];
     value = obj['value'];
   }
+
+  Map<String, dynamic> toDictionary() {
+    Map<String, dynamic> map = {};
+    map['name'] = name;
+    map['value'] = value;
+    return map;
+  }
 }
 
 class CollectionModel {
@@ -371,6 +476,15 @@ class CollectionModel {
     if (obj['automaticFillConditions'] != null) {
       automaticFillConditions = FillCondition.toMap(obj['automaticFillConditions']);
     }
+  }
+
+  Map<String, dynamic> toDictionary() {
+    Map<String, dynamic> map = {};
+    map['_id'] = id;
+    map['name'] = name;
+    map['description'] = description;
+
+    return map;
   }
 }
 
