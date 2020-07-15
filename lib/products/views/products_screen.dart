@@ -756,6 +756,13 @@ class _ProductsScreenState extends State<ProductsScreen> {
   }
 
   Widget _getBody(ProductsScreenState state) {
+    if (state.isSearching) {
+      return Container(
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
     switch(_selectedIndexValue) {
       case 0:
         List<Widget> productsItems  = [];

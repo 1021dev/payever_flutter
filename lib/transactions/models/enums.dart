@@ -384,8 +384,8 @@ Map<String, String> conditionFields = {
 };
 
 Map<String, String> filterProducts = {
-  'product_id': 'Product ID',
-  'product_name': 'Product Name',
+  'id': 'Product ID',
+  'name': 'Product Name',
   'price': 'Price',
   'channel': 'Channel',
   'category': 'Category',

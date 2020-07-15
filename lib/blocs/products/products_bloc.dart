@@ -88,14 +88,14 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
     } else if (event is UploadImageToCollection) {
       yield* uploadImageToProducts(event.file);
     } else if (event is UpdateProductSearchText) {
-      yield state.copyWith(searchText: event.searchText, isSearching: true);
-//      yield* fetchTransactions(state.searchText, state.curSortType, state.filterTypes, state.page);
+      yield state.copyWith(searchText: event.searchText);
+      yield* searchProducts();
     } else if (event is UpdateProductFilterTypes) {
-      yield state.copyWith(filterTypes: event.filterTypes, isSearching: true);
-//      yield* fetchTransactions(state.searchText, state.curSortType, state.filterTypes, state.page);
+      yield state.copyWith(filterTypes: event.filterTypes);
+      yield* searchProducts();
     } else if (event is UpdateProductSortType) {
-      yield state.copyWith(sortType: event.sortType,isSearching: true);
-//      yield* fetchTransactions(state.searchText, state.curSortType, state.filterTypes, state.page);
+      yield state.copyWith(sortType: event.sortType);
+      yield* searchProducts();
     }
   }
 
@@ -106,7 +106,6 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
       'variables': {},
       'query': '{\n  getProducts(businessUuid: \"$activeBusinessId\", paginationLimit: 20, pageNumber: 1, orderBy: \"createdAt\", orderDirection: \"desc\", filterById: [], search: \"\", filters: []) {\n    products {\n      images\n      id\n      title\n      description\n      onSales\n      price\n      salePrice\n      vatRate\n      sku\n      barcode\n      currency\n      type\n      active\n      categories {\n        title\n      }\n      collections {\n        _id\n        name\n        description\n      }\n      variants {\n        id\n        images\n        options {\n          name\n          value\n        }\n        description\n        onSales\n        price\n        salePrice\n        sku\n        barcode\n      }\n      channelSets {\n        id\n        type\n        name\n      }\n      shipping {\n        weight\n        width\n        length\n        height\n      }\n    }\n    info {\n      pagination {\n        page\n        page_count\n        per_page\n        item_count\n      }\n    }\n  }\n}\n'
     };
-
     dynamic response = await api.getProducts(GlobalUtils.activeToken.accessToken, body);
     Info productInfo;
     List<ProductsModel> products = [];
@@ -184,6 +183,82 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
 
   }
 
+  Stream<ProductsScreenState> searchProducts() async* {
+    yield state.copyWith(isSearching: true);
+    String orderBy = 'default';
+    String orderDirection = 'asc';
+    if (state.sortType == 'default') {
+      orderBy = 'default';
+      orderDirection = 'asc';
+    } else if (state.sortType == 'name') {
+      orderBy = 'title';
+      orderDirection = 'desc';
+    } else if (state.sortType == 'price_low') {
+      orderBy = 'price';
+      orderDirection = 'asc';
+    } else if (state.sortType == 'price_high') {
+      orderBy = 'price';
+      orderDirection = 'desc';
+    } else if (state.sortType == 'name') {
+      orderBy = 'createdAt';
+      orderDirection = 'desc';
+    }
+    String filtersString = '';
+    if (state.filterTypes.length > 0) {
+      for (int i = 0; i < state.filterTypes.length; i++) {
+        FilterItem item = state.filterTypes[i];
+        String field = item.type;
+        String filterCondition = item.condition;
+        String filterValue = item.value;
+        String type = field == 'price' ? 'number': 'string';
+        String queryTemp = '{field: \"$field\", fieldType: \"$type\", fieldCondition: \"$filterCondition\", value: \"$filterValue\"}';
+        filtersString = filtersString == '' ? queryTemp : '$filtersString, $queryTemp';
+      }
+    }
+
+    Map<String, dynamic> body = {
+      'operationName': null,
+      'variables': {},
+      'query': '{\n  getProducts(businessUuid: \"${state.businessId}\", paginationLimit: 20, pageNumber: 1, orderBy: \"$orderBy\", orderDirection: \"$orderDirection\", filterById: [], search: \"${state.searchText}\", filters: [$filtersString]) {\n    products {\n      images\n      id\n      title\n      description\n      onSales\n      price\n      salePrice\n      vatRate\n      sku\n      barcode\n      currency\n      type\n      active\n      categories {\n        title\n      }\n      collections {\n        _id\n        name\n        description\n      }\n      variants {\n        id\n        images\n        options {\n          name\n          value\n        }\n        description\n        onSales\n        price\n        salePrice\n        sku\n        barcode\n      }\n      channelSets {\n        id\n        type\n        name\n      }\n      shipping {\n        weight\n        width\n        length\n        height\n      }\n    }\n    info {\n      pagination {\n        page\n        page_count\n        per_page\n        item_count\n      }\n    }\n  }\n}\n'
+    };
+
+    dynamic response = await api.getProducts(GlobalUtils.activeToken.accessToken, body);
+    Info productInfo;
+    List<ProductsModel> products = [];
+    List<ProductListModel> productLists = [];
+    if (response != null) {
+      dynamic data = response['data'];
+      if (data != null) {
+        dynamic getProducts = data['getProducts'];
+        if (getProducts != null) {
+          dynamic infoObj = getProducts['info'];
+          if (infoObj != null) {
+            print('infoObj => $infoObj');
+            dynamic pagination = infoObj['pagination'];
+            if (pagination != null) {
+              productInfo = Info.toMap(pagination);
+            }
+          }
+          List productsObj = getProducts['products'];
+          if (productsObj != null) {
+            productsObj.forEach((element) {
+              products.add(ProductsModel.toMap(element));
+              productLists.add(ProductListModel(productsModel: ProductsModel.toMap(element), isChecked: false));
+            });
+          }
+        }
+      }
+    }
+
+    yield state.copyWith(
+      isLoading: false,
+      isSearching: false,
+      products: products,
+      productLists: productLists,
+      productsInfo: productInfo,
+    );
+  }
+
   Stream<ProductsScreenState> selectProduct(ProductListModel model) async* {
     List<ProductListModel> productLists = state.productLists;
     int index = productLists.indexOf(model);
@@ -199,10 +274,41 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
   }
 
   Stream<ProductsScreenState> reloadProducts() async* {
+    String orderBy = 'default';
+    String orderDirection = 'asc';
+    if (state.sortType == 'default') {
+      orderBy = 'default';
+      orderDirection = 'asc';
+    } else if (state.sortType == 'name') {
+      orderBy = 'title';
+      orderDirection = 'desc';
+    } else if (state.sortType == 'price_low') {
+      orderBy = 'price';
+      orderDirection = 'asc';
+    } else if (state.sortType == 'price_high') {
+      orderBy = 'price';
+      orderDirection = 'desc';
+    } else if (state.sortType == 'name') {
+      orderBy = 'createdAt';
+      orderDirection = 'desc';
+    }
+    String filtersString = '';
+    if (state.filterTypes.length > 0) {
+      for (int i = 0; i < state.filterTypes.length; i++) {
+        FilterItem item = state.filterTypes[i];
+        String field = item.type;
+        String filterCondition = item.condition;
+        String filterValue = item.value;
+        String type = field == 'price' ? 'number': 'string';
+        String queryTemp = '{field: \"$field\", fieldType: \"$type\", fieldCondition: \"$filterCondition\", value: \"$filterValue\"}';
+        filtersString = filtersString == '' ? queryTemp : '$filtersString, $queryTemp';
+      }
+    }
+
     Map<String, dynamic> body = {
       'operationName': null,
       'variables': {},
-      'query': '{\n  getProducts(businessUuid: \"${state.businessId}\", paginationLimit: 20, pageNumber: 1, orderBy: \"createdAt\", orderDirection: \"desc\", filterById: [], search: \"\", filters: []) {\n    products {\n      images\n      id\n      title\n      description\n      onSales\n      price\n      salePrice\n      vatRate\n      sku\n      barcode\n      currency\n      type\n      active\n      categories {\n        title\n      }\n      collections {\n        _id\n        name\n        description\n      }\n      variants {\n        id\n        images\n        options {\n          name\n          value\n        }\n        description\n        onSales\n        price\n        salePrice\n        sku\n        barcode\n      }\n      channelSets {\n        id\n        type\n        name\n      }\n      shipping {\n        weight\n        width\n        length\n        height\n      }\n    }\n    info {\n      pagination {\n        page\n        page_count\n        per_page\n        item_count\n      }\n    }\n  }\n}\n'
+      'query': '{\n  getProducts(businessUuid: \"${state.businessId}\", paginationLimit: 20, pageNumber: 1, orderBy: \"$orderBy\", orderDirection: \"$orderDirection\", filterById: [], search: \"${state.searchText}\", filters: [$filtersString]) {\n    products {\n      images\n      id\n      title\n      description\n      onSales\n      price\n      salePrice\n      vatRate\n      sku\n      barcode\n      currency\n      type\n      active\n      categories {\n        title\n      }\n      collections {\n        _id\n        name\n        description\n      }\n      variants {\n        id\n        images\n        options {\n          name\n          value\n        }\n        description\n        onSales\n        price\n        salePrice\n        sku\n        barcode\n      }\n      channelSets {\n        id\n        type\n        name\n      }\n      shipping {\n        weight\n        width\n        length\n        height\n      }\n    }\n    info {\n      pagination {\n        page\n        page_count\n        per_page\n        item_count\n      }\n    }\n  }\n}\n'
     };
 
     dynamic response = await api.getProducts(GlobalUtils.activeToken.accessToken, body);
@@ -240,11 +346,42 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
   }
 
   Stream<ProductsScreenState> loadMoreProducts() async* {
+    String orderBy = 'default';
+    String orderDirection = 'asc';
+    if (state.sortType == 'default') {
+      orderBy = 'default';
+      orderDirection = 'asc';
+    } else if (state.sortType == 'name') {
+      orderBy = 'title';
+      orderDirection = 'desc';
+    } else if (state.sortType == 'price_low') {
+      orderBy = 'price';
+      orderDirection = 'asc';
+    } else if (state.sortType == 'price_high') {
+      orderBy = 'price';
+      orderDirection = 'desc';
+    } else if (state.sortType == 'name') {
+      orderBy = 'createdAt';
+      orderDirection = 'desc';
+    }
+    String filtersString = '';
+    if (state.filterTypes.length > 0) {
+      for (int i = 0; i < state.filterTypes.length; i++) {
+        FilterItem item = state.filterTypes[i];
+        String field = item.type;
+        String filterCondition = item.condition;
+        String filterValue = item.value;
+        String type = field == 'price' ? 'number': 'string';
+        String queryTemp = '{field: \"$field\", fieldType: \"$type\", fieldCondition: \"$filterCondition\", value: \"$filterValue\"}';
+        filtersString = filtersString == '' ? queryTemp : '$filtersString, $queryTemp';
+      }
+    }
+
     int page = state.productsInfo.page + 1;
     Map<String, dynamic> body = {
       'operationName': null,
       'variables': {},
-      'query': '{\n  getProducts(businessUuid: \"${state.businessId}\", paginationLimit: 20, pageNumber: $page, orderBy: \"createdAt\", orderDirection: \"desc\", filterById: [], search: \"\", filters: []) {\n    products {\n      images\n      id\n      title\n      description\n      onSales\n      price\n      salePrice\n      vatRate\n      sku\n      barcode\n      currency\n      type\n      active\n      categories {\n        title\n      }\n      collections {\n        _id\n        name\n        description\n      }\n      variants {\n        id\n        images\n        options {\n          name\n          value\n        }\n        description\n        onSales\n        price\n        salePrice\n        sku\n        barcode\n      }\n      channelSets {\n        id\n        type\n        name\n      }\n      shipping {\n        weight\n        width\n        length\n        height\n      }\n    }\n    info {\n      pagination {\n        page\n        page_count\n        per_page\n        item_count\n      }\n    }\n  }\n}\n'
+      'query': '{\n  getProducts(businessUuid: \"${state.businessId}\", paginationLimit: 20, pageNumber: $page, orderBy: \"$orderBy\", orderDirection: \"$orderDirection\", filterById: [], search: \"${state.searchText}\", filters: [$filtersString]) {\n    products {\n      images\n      id\n      title\n      description\n      onSales\n      price\n      salePrice\n      vatRate\n      sku\n      barcode\n      currency\n      type\n      active\n      categories {\n        title\n      }\n      collections {\n        _id\n        name\n        description\n      }\n      variants {\n        id\n        images\n        options {\n          name\n          value\n        }\n        description\n        onSales\n        price\n        salePrice\n        sku\n        barcode\n      }\n      channelSets {\n        id\n        type\n        name\n      }\n      shipping {\n        weight\n        width\n        length\n        height\n      }\n    }\n    info {\n      pagination {\n        page\n        page_count\n        per_page\n        item_count\n      }\n    }\n  }\n}\n'
     };
 
     dynamic response = await api.getProducts(GlobalUtils.activeToken.accessToken, body);
