@@ -65,6 +65,14 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
     } else if (event is GetCollectionDetail) {
       yield state.copyWith(collectionDetail: event.collection);
       yield* getCollectionDetail(event.collection.id);
+    } else if (event is UpdateCollectionDetail) {
+      yield state.copyWith(collectionDetail: event.collectionModel);
+    } else if (event is SaveCollectionDetail) {
+
+    } else if (event is CreateCollectionEvent) {
+
+    } else if (event is UploadImageToCollection) {
+      yield* uploadImageToProducts(event.file);
     }
   }
 
@@ -515,12 +523,51 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
 
     yield state.copyWith(isUploading: false, productDetail: productsModel);
   }
-  
-  Stream<ProductsScreenState> getCollectionDetail(String collectionId) async* {
 
+  Stream<ProductsScreenState> uploadImageToCollection(File file) async* {
+    yield state.copyWith(isUploading: true);
+    dynamic response = await api.uploadImageToProducts(file, state.businessId, GlobalUtils.activeToken.accessToken);
+    String blob = '';
+    if (response != null) {
+      blob = response['blobName'];
+    }
+    CollectionModel collectionModel = state.collectionDetail;
+    if (blob != null) {
+      collectionModel.image = blob;
+    }
+
+    yield state.copyWith(isUploading: false, collectionDetail: collectionModel);
+  }
+
+  Stream<ProductsScreenState> getCollectionDetail(String collectionId) async* {
+    CollectionModel model;
+    List<ProductsModel> products = [];
     dynamic response = await api.getCollection(GlobalUtils.activeToken.accessToken, state.businessId, collectionId);
     if (response != null) {
-
+      model = CollectionModel.toMap(response);
     }
+
+    Map<String, dynamic> body = {
+      'operationName': null,
+      'variables': {},
+      'query': '{\n  getProducts(businessUuid: \"${state.businessId}\", paginationLimit: 200, pageNumber: 1, orderBy: \"createdAt\", orderDirection: \"desc\", filterById: [], search: \"\", filters: [{field: \"collections\", fieldType: \"string\", fieldCondition: \"is\", value: \"$collectionId\"}]) {\n    products {\n      images\n      id\n      title\n      description\n      onSales\n      price\n      salePrice\n      vatRate\n      sku\n      barcode\n      currency\n      type\n      active\n      categories {\n        title\n      }\n      collections {\n        _id\n        name\n        description\n      }\n      variants {\n        id\n        images\n        options {\n          name\n          value\n        }\n        description\n        onSales\n        price\n        salePrice\n        sku\n        barcode\n      }\n      channelSets {\n        id\n        type\n        name\n      }\n      shipping {\n        weight\n        width\n        length\n        height\n      }\n    }\n    info {\n      pagination {\n        page\n        page_count\n        per_page\n        item_count\n      }\n    }\n  }\n}\n'
+    };
+
+    dynamic proRes = await api.getProducts(GlobalUtils.activeToken.accessToken, body);
+    if (proRes != null) {
+      dynamic data = proRes['data'];
+      if (data != null) {
+        dynamic getProducts = data['getProducts'];
+        if (getProducts != null) {
+          List productsObj = getProducts['products'];
+          if (productsObj != null) {
+            productsObj.forEach((element) {
+              products.add(ProductsModel.toMap(element));
+            });
+          }
+        }
+      }
+    }
+    yield state.copyWith(collectionDetail: model, collectionProducts: products);
   }
 }

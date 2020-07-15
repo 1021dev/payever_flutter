@@ -391,6 +391,8 @@ class FillCondition {
 }
 
 class Filter {
+
+  Filter({this.field, this.fieldCondition, this.fieldType, this.value});
   String field;
   String fieldCondition;
   String fieldType;

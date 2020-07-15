@@ -159,3 +159,45 @@ class GetCollectionDetail extends ProductsScreenEvent {
   ];
 }
 
+
+class UpdateCollectionDetail extends ProductsScreenEvent {
+  final CollectionModel collectionModel;
+
+  UpdateCollectionDetail({this.collectionModel, });
+  @override
+  List<Object> get props => [
+    this.collectionModel,
+  ];
+}
+
+class SaveCollectionDetail extends ProductsScreenEvent {
+  final CollectionModel collectionModel;
+
+  SaveCollectionDetail({this.collectionModel, });
+  @override
+  List<Object> get props => [
+    this.collectionModel,
+  ];
+}
+
+class CreateCollectionEvent extends ProductsScreenEvent {
+  final CollectionModel collectionModel;
+
+  CreateCollectionEvent({this.collectionModel, });
+  @override
+  List<Object> get props => [
+    this.collectionModel,
+  ];
+}
+
+class UploadImageToCollection extends ProductsScreenEvent {
+  final File file;
+
+  UploadImageToCollection({this.file,});
+  @override
+  List<Object> get props => [
+    this.file,
+  ];
+}
+
+

@@ -63,9 +63,11 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
   int _selectedSectionIndex = 0;
 
   TextEditingController _collectionTitleController = TextEditingController();
-  TextEditingController _priceController = TextEditingController();
+  TextEditingController _descriptionTextController = TextEditingController();
 
   NumberFormat numberFormat = NumberFormat();
+
+  String conditionOption = productConditionOptions.first;
 
   @override
   void initState() {
@@ -73,6 +75,7 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
       widget.screenBloc.add(GetCollectionDetail(collection: widget.collection));
 
       _collectionTitleController.text = widget.collection.name;
+      _descriptionTextController.text = widget.collection.description;
     }
     super.initState();
   }
@@ -403,16 +406,11 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
                 filled: false,
                 titleText: Language.getProductStrings('Product must match'),
                 hintText: Language.getProductStrings('Product must match'),
-                value: productConditionOptions.first,
+                value: conditionOption,
                 onChanged: (value) {
-                  ProductsModel productModel = state.productDetail;
-                  productModel.vatRate = value;
-                  widget.screenBloc.add(
-                      UpdateProductDetail(
-                        productsModel: productModel,
-                        increaseStock: state.increaseStock,
-                      )
-                  );
+                  setState(() {
+                    conditionOption = value;
+                  });
                 },
                 dataSource: productConditionOptions.map((e) {
                   return {
@@ -425,12 +423,12 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
               ),
             ),
           ),
-          ListView.separated(
+          conditionOption == 'No Conditions' ? Container() : ListView.separated(
             shrinkWrap: true,
             padding: EdgeInsets.only(left: 16, right: 16),
             itemBuilder: (context, index){
-              Map<String, String> filterConditions = {};
               Filter filter = state.collectionDetail.automaticFillConditions.filters[index];
+              Map<String, String> filterConditions = filterConditionsByFilterType(filter.field);
               return Container(
                 color: Color(0x20111111),
                 padding: EdgeInsets.only(left: 16, right: 16),
@@ -502,9 +500,9 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
                               value: filter.fieldCondition,
                               onChanged: (value) {
                               },
-                              items: filter_conditions.keys.map((String value) => DropdownMenuItem(
+                              items: filterConditions.keys.map((String value) => DropdownMenuItem(
                                 child: Text(
-                                  filter_conditions[value],
+                                  filterConditions[value],
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 14,
@@ -548,7 +546,11 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
                             ),),
                           MaterialButton(
                             onPressed: () {
-
+                              CollectionModel collection = state.collectionDetail;
+                              FillCondition fillCondition = collection.automaticFillConditions;
+                              fillCondition.filters.remove(filter);
+                              collection.automaticFillConditions = fillCondition;
+                              widget.screenBloc.add(UpdateCollectionDetail(collectionModel: collection));
                             },
                             height: 24,
                             elevation: 0,
@@ -572,12 +574,18 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
               );
             },
             itemCount: state.collectionDetail != null ? state.collectionDetail.automaticFillConditions.filters.length : 0,
+            physics: NeverScrollableScrollPhysics(),
           ),
-          Container(
+          conditionOption == 'No Conditions' ? Container() : Container(
             alignment: Alignment.centerRight,
             child: MaterialButton(
               onPressed: () {
-
+                CollectionModel collection = state.collectionDetail;
+                FillCondition fillCondition = collection.automaticFillConditions;
+                Filter filter = Filter(field: 'title', fieldCondition: 'is', fieldType: 'string', value: '');
+                fillCondition.filters.add(filter);
+                collection.automaticFillConditions = fillCondition;
+                widget.screenBloc.add(UpdateCollectionDetail(collectionModel: collection));
               },
               child: Text(
                 Language.getProductListStrings('+ Add Condition'),
@@ -594,7 +602,41 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
   ///---------------------------------------------------------------------------
 
   Widget _getDescriptionDetail(ProductsScreenState state) {
-    return Container();
+    if (_selectedSectionIndex != 1) return Container();
+    return Container(
+      height: 150,
+      margin: EdgeInsets.only(top: 16, bottom: 16),
+      color: Color(0x80111111),
+      alignment: Alignment.topLeft,
+      padding: EdgeInsets.only(left: 16, right: 16),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(top: 16),
+            child: Text(
+              Language.getProductStrings('description.title'),
+            ),
+          ),
+          Expanded(
+            child: TextField(
+              controller: _descriptionTextController,
+              onChanged: (String text) {},
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),
+              maxLines: 10,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   ///---------------------------------------------------------------------------
@@ -602,7 +644,114 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
   ///---------------------------------------------------------------------------
 
   Widget _getProductsList(ProductsScreenState state) {
-    return Container();
+    if (_selectedSectionIndex != 2) return Container();
+    return Container(
+      child: ListView.separated(
+        shrinkWrap: true,
+        itemBuilder: (context, index) {
+          ProductsModel product = state.collectionProducts[index];
+          String imgUrl = '';
+          if (product.images.length > 0 ) {
+            imgUrl = product.images.first;
+          }
+          return Container(
+            height: 60,
+            padding: EdgeInsets.only(left: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    imgUrl != '' ? CachedNetworkImage(
+                      imageUrl: '${Env.storage}/products/$imgUrl-thumbnail',
+                      imageBuilder: (context, imageProvider) => Container(
+                        height: 50,
+                        width: 50,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(4.0)),
+                          image: DecorationImage(
+                            image: imageProvider,
+                          ),
+                        ),
+                      ),
+                      placeholder: (context, url) => Container(
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      ),
+                      errorWidget: (context, url, error) {
+                        return Container(
+                          height: 50,
+                          width: 50,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4),
+                            color: Colors.white10,
+                          ),
+                          child: Center(
+                            child: SvgPicture.asset('assets/images/noimage.svg', width: 20, height: 20,),
+                          ),
+                        );
+                      },
+                    ) : Container(
+                      height: 50,
+                      width: 50,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(4,),
+                        color: Colors.white10,
+                      ),
+                      child: Center(
+                        child: SvgPicture.asset('assets/images/noimage.svg', width: 20, height: 20,),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 16),
+                    ),
+                    Text(
+                      product.title,
+                    )
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    RichText(
+                      textAlign: TextAlign.center,
+                      text: new TextSpan(
+                        children: [
+                          new TextSpan(
+                            text: '${product.price} ${numberFormat.simpleCurrencySymbol(product.currency)} ',
+                            style: TextStyle(color: Colors.white, fontSize: 12),
+                          ),
+                        ],
+                      ),
+                    ),
+                    MaterialButton(
+                      onPressed: () {
+
+                      },
+                      height: 30,
+                      elevation: 0,
+                      minWidth: 0,
+                      shape: CircleBorder(),
+                      visualDensity: VisualDensity.comfortable,
+                      child: SvgPicture.asset('assets/images/xsinacircle.svg', width: 30, height: 30,),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        },
+        separatorBuilder: (context, index) {
+          return Divider(
+            height: 0,
+            thickness: 0,
+            color: Color(0x80888888),
+          );
+        },
+        itemCount: state.collectionProducts.length,
+      ),
+    );
   }
 
 
