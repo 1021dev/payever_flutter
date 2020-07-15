@@ -299,6 +299,38 @@ Map<String, String> filterConditionsByFilterType(String type) {
         'lessThan': 'Less than',
         'between': 'Between',
       };
+    case 'product_id':
+      return {
+        'is': 'Is',
+        'isNot': 'Is not',
+        'startsWith': 'Starts with',
+        'endsWith': 'Ends with',
+        'contains': 'Contains',
+        'doesNotContain': 'Does not contain'
+      };
+    case 'product_name':
+      return {
+        'is': 'Is',
+        'isNot': 'Is not',
+        'startsWith': 'Starts with',
+        'endsWith': 'Ends with',
+        'contains': 'Contains',
+        'doesNotContain': 'Does not contain'
+      };
+    case 'variant_name':
+      return {
+        'is': 'Is',
+        'isNot': 'Is not',
+        'startsWith': 'Starts with',
+        'endsWith': 'Ends with',
+        'contains': 'Contains',
+        'doesNotContain': 'Does not contain'
+      };
+    case 'category':
+      return {
+        'is': 'Is',
+        'isNot': 'Is not',
+      };
     default:
       return {};
   }
@@ -349,4 +381,21 @@ Map<String, String> conditionFields = {
   'type': 'Type',
   'price': 'Price',
   'weight': 'Weight',
+};
+
+Map<String, String> filterProducts = {
+  'product_id': 'Product ID',
+  'product_name': 'Product Name',
+  'price': 'Price',
+  'channel': 'Channel',
+  'category': 'Category',
+  'variant_name': 'Variant Name',
+};
+
+Map<String, String> sortProducts = {
+  'default': 'Default',
+  'name': 'Name',
+  'price_low': 'Price Low to High',
+  'price_high': 'Price High to Low',
+  'date': 'By Date',
 };

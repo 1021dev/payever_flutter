@@ -87,6 +87,15 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
 
     } else if (event is UploadImageToCollection) {
       yield* uploadImageToProducts(event.file);
+    } else if (event is UpdateProductSearchText) {
+      yield state.copyWith(searchText: event.searchText, isSearching: true);
+//      yield* fetchTransactions(state.searchText, state.curSortType, state.filterTypes, state.page);
+    } else if (event is UpdateProductFilterTypes) {
+      yield state.copyWith(filterTypes: event.filterTypes, isSearching: true);
+//      yield* fetchTransactions(state.searchText, state.curSortType, state.filterTypes, state.page);
+    } else if (event is UpdateProductSortType) {
+      yield state.copyWith(sortType: event.sortType,isSearching: true);
+//      yield* fetchTransactions(state.searchText, state.curSortType, state.filterTypes, state.page);
     }
   }
 

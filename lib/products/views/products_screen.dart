@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_tags/flutter_tags.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
@@ -18,11 +18,13 @@ import 'package:payever/products/models/models.dart';
 import 'package:payever/products/views/collection_detail_screen.dart';
 import 'package:payever/products/views/product_detail_screen.dart';
 import 'package:payever/products/widgets/collection_grid_item.dart';
+import 'package:payever/products/widgets/product_filter_content_view.dart';
 import 'package:payever/products/widgets/product_grid_item.dart';
 import 'package:payever/products/widgets/product_sort_content_view.dart';
 import 'package:payever/products/widgets/products_top_button.dart';
-import 'package:payever/transactions/views/filter_content_view.dart';
+import 'package:payever/transactions/models/enums.dart';
 import 'package:payever/transactions/views/sub_view/search_text_content_view.dart';
+import 'package:payever/transactions/views/transactions_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -31,6 +33,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 bool _isPortrait;
 bool _isTablet;
 
+final GlobalKey<TagsState> _tagStateKey = GlobalKey<TagsState>();
 
 class ProductsInitScreen extends StatelessWidget {
 
@@ -67,6 +70,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
   InAppWebViewController webView;
   double progress = 0;
   String url = '';
+  List<TagItemModel> _filterItems;
+  int _searchTagIndex = -1;
 
   ProductsScreenBloc screenBloc = ProductsScreenBloc();
   String wallpaper;
@@ -356,6 +361,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
               children: <Widget>[
                 _topBar(state),
                 _toolBar(state),
+                _tagsBar(state),
                 Expanded(
                   child: _getBody(state),
                 ),
@@ -441,39 +447,40 @@ class _ProductsScreenState extends State<ProductsScreen> {
                     ),
                     InkWell(
                       onTap: () {
-                        showCupertinoModalPopup(
-                            context: context,
-                            builder: (builder) {
-                              return FilterContentView(
-                                onSelected: (FilterItem val) {
-                                  Navigator.pop(context);
-                                  List<FilterItem> filterTypes = [];
-                                  filterTypes.addAll(state.filterTypes);
-                                  if (val != null) {
-                                    if (filterTypes.length > 0) {
-                                      int isExist = filterTypes.indexWhere((element) => element.type == val.type);
-                                      if (isExist > -1) {
-                                        filterTypes[isExist] = val;
-                                      } else {
-                                        filterTypes.add(val);
-                                      }
+                        showModalBottomSheet<void>(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return ProductFilterContentView(
+                              onSelected: (FilterItem val) {
+                                Navigator.pop(context);
+                                List<FilterItem> filterTypes = [];
+                                filterTypes.addAll(state.filterTypes);
+                                if (val != null) {
+                                  if (filterTypes.length > 0) {
+                                    int isExist = filterTypes.indexWhere((element) => element.type == val.type);
+                                    if (isExist > -1) {
+                                      filterTypes[isExist] = val;
                                     } else {
                                       filterTypes.add(val);
                                     }
                                   } else {
-                                    if (filterTypes.length > 0) {
-                                      int isExist = filterTypes.indexWhere((element) => element.type == val.type);
-                                      if (isExist != null) {
-                                        filterTypes.removeAt(isExist);
-                                      }
+                                    filterTypes.add(val);
+                                  }
+                                } else {
+                                  if (filterTypes.length > 0) {
+                                    int isExist = filterTypes.indexWhere((element) => element.type == val.type);
+                                    if (isExist != null) {
+                                      filterTypes.removeAt(isExist);
                                     }
                                   }
-                                  screenBloc.add(
-                                      UpdateFilterTypes(filterTypes: filterTypes)
-                                  );
-                                },
-                              );
-                            });
+                                }
+                                screenBloc.add(
+                                    UpdateProductFilterTypes(filterTypes: filterTypes)
+                                );
+                              },
+                            );
+                          },
+                        );
                       },
                       child: Container(
                         padding: EdgeInsets.all(8),
@@ -552,16 +559,17 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   padding: EdgeInsets.only(right: 8),
                   child: InkWell(
                     onTap: () {
-                      showCupertinoModalPopup(
-                          context: context,
-                          builder: (builder) {
-                            return ProductSortContentView(
-                              selectedIndex: state.sortType ,
-                              onSelected: (val) {
-                                Navigator.pop(context);
-                              },
-                            );
-                          });
+                      showModalBottomSheet<void>(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return ProductSortContentView(
+                            selectedIndex: state.sortType ,
+                            onSelected: (val) {
+                              Navigator.pop(context);
+                            },
+                          );
+                        },
+                      );
                     },
                     child: Container(
                       padding: EdgeInsets.all(8),
@@ -659,6 +667,67 @@ class _ProductsScreenState extends State<ProductsScreen> {
         ): Container(width: 0, height: 0,),
       ],
     );
+  }
+
+  Widget _tagsBar(ProductsScreenState state) {
+    _filterItems = [];
+    if (state.filterTypes.length > 0) {
+      for (int i = 0; i < state.filterTypes.length; i++) {
+        String filterString = '${filterProducts[state.filterTypes[i].type]} ${filter_conditions[state.filterTypes[i].condition]}: ${state.filterTypes[i].disPlayName}';
+        TagItemModel item = TagItemModel(title: filterString, type: state.filterTypes[i].type);
+        _filterItems.add(item);
+      }
+    }
+    if (state.searchText.length > 0) {
+      _filterItems.add(TagItemModel(title: 'Search is: ${state.searchText}', type: null));
+      _searchTagIndex = _filterItems.length - 1;
+    }
+    return _filterItems.length > 0 ?
+    Container(
+        width: Device.width,
+        padding: EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8,),
+          child: Tags(
+            key: _tagStateKey,
+            itemCount: _filterItems.length,
+            alignment: WrapAlignment.start,
+            spacing: 4,
+            runSpacing: 8,
+            itemBuilder: (int index) {
+              return ItemTags(
+                key: Key('filterItem$index'),
+                index: index,
+                title: _filterItems[index].title,
+                color: Colors.white12,
+                activeColor: Colors.white12,
+                textActiveColor: Colors.white,
+                textColor: Colors.white,
+                elevation: 0,
+                padding: EdgeInsets.only(
+                  left: 16, top: 8, bottom: 8, right: 16,
+                ),
+                removeButton: ItemTagsRemoveButton(
+                    backgroundColor: Colors.transparent,
+                    onRemoved: () {
+                      if (index == _searchTagIndex) {
+                        _searchTagIndex = -1;
+                        screenBloc.add(
+                            UpdateProductSearchText(searchText: '')
+                        );
+                      } else {
+                        List<FilterItem> filterTypes = [];
+                        filterTypes.addAll(state.filterTypes);
+                        filterTypes.removeAt(index);
+                        screenBloc.add(
+                            UpdateProductFilterTypes(filterTypes: filterTypes)
+                        );
+                      }
+                      return true;
+                    }
+                ),
+              );
+            },
+          ),
+        ): Container();
   }
 
   Widget _bottomBar(ProductsScreenState state) {
@@ -1168,7 +1237,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
             borderRadius: BorderRadius.all(Radius.circular(10)),
           ),
           content: SearchTextContentView(
-              searchText: 'state.searchText',
+              searchText: state.searchText,
               onSelected: (value) {
                 Navigator.pop(context);
               }

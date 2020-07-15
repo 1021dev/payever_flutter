@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:payever/products/widgets/profuct_flter_range_content_view.dart';
+import 'package:payever/products/widgets/product_filter_range_content_view.dart';
 import 'package:payever/transactions/models/enums.dart';
 
 class ProductFilterContentView extends StatefulWidget {
@@ -11,8 +11,7 @@ class ProductFilterContentView extends StatefulWidget {
 
 class _ProductFilterContentViewState extends State<ProductFilterContentView> {
   void showMeDialog(BuildContext context, String filterType) {
-//    String selectedFilterItem = "Is";
-    String filtername = filter_labels[filterType];
+    String filtername = filterProducts[filterType];
     debugPrint('FilterTypeName => $filterType');
     showDialog(
         context: context,
@@ -39,67 +38,48 @@ class _ProductFilterContentViewState extends State<ProductFilterContentView> {
   Widget build(BuildContext context) {
 
     return Container(
-        height: MediaQuery.of(context).size.height - 145,
-        color: Colors.transparent, //could change this to Color(0xFF737373),
-        //so you don't have to change MaterialApp canvasColor
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          body: Container(
-              padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
-              decoration: BoxDecoration(
-                  color: Color(0xFF222222),
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(20.0),
-                      topRight: Radius.circular(20.0))),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 16,
-                      ),
-                      Text(
-                        'Filter by:',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Expanded(
-                    child: ListView.separated(
-                      separatorBuilder: (context, index) {
-                        return Divider(height: 0, thickness: 0, color: Colors.transparent,);
-                      },
-                      itemCount: filter_labels.keys.toList().length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          title: Text(filter_labels[filter_labels.keys.toList()[index]]),
-                          trailing: Icon(Icons.keyboard_arrow_right),
-                          onTap: () {
-                            showMeDialog(context, filter_labels.keys.toList()[index]);
-                          },
-                        );
-                      },
-                    ),
-                  )
-                ],
-              )),
-        ));
+      height: 400,
+      padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+      decoration: BoxDecoration(
+          color: Color(0xFF222222),
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20.0),
+              topRight: Radius.circular(20.0))),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              SizedBox(
+                width: 16,
+              ),
+              Text(
+                'Filter by:',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          Expanded(
+            child: ListView.separated(
+              separatorBuilder: (context, index) {
+                return Divider(height: 0, thickness: 0, color: Colors.transparent,);
+              },
+              itemCount: filterProducts.keys.toList().length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(filterProducts[filterProducts.keys.toList()[index]]),
+                  trailing: Icon(Icons.keyboard_arrow_right),
+                  onTap: () {
+                    showMeDialog(context, filterProducts.keys.toList()[index]);
+                  },
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
   }
-}
-
-class FilterItem {
-  final String type;
-  final String condition;
-  final String value;
-  final String disPlayName;
-
-  FilterItem({
-    this.type,
-    this.condition,
-    this.value,
-    this.disPlayName,
-  });
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:payever/transactions/models/enums.dart';
 
-import 'sub_view/flter_range_content_view.dart';
+import 'sub_view/filter_range_content_view.dart';
 
 class FilterContentView extends StatefulWidget {
   final Function onSelected;
@@ -89,18 +89,4 @@ class _FilterContentViewState extends State<FilterContentView> {
               )),
         ));
   }
-}
-
-class FilterItem {
-  final String type;
-  final String condition;
-  final String value;
-  final String disPlayName;
-
-  FilterItem({
-    this.type,
-    this.condition,
-    this.value,
-    this.disPlayName,
-  });
 }

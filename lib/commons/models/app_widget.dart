@@ -38,3 +38,16 @@ class AppWidget {
   }
 }
 
+class FilterItem {
+  final String type;
+  final String condition;
+  final String value;
+  final String disPlayName;
+
+  FilterItem({
+    this.type,
+    this.condition,
+    this.value,
+    this.disPlayName,
+  });
+}

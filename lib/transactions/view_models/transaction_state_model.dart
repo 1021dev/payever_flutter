@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:payever/transactions/views/filter_content_view.dart';
 
+import '../transactions.dart';
+
 class TransactionStateModel extends ChangeNotifier {
   
   String _searchField =""; 

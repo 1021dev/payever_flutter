@@ -1,8 +1,8 @@
-import 'dart:async';
 import 'dart:io';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:payever/commons/models/app_widget.dart';
 import 'package:payever/products/models/models.dart';
 
 abstract class ProductsScreenEvent extends Equatable {
@@ -203,3 +203,38 @@ class UploadImageToCollection extends ProductsScreenEvent {
 }
 
 
+class UpdateProductSearchText extends ProductsScreenEvent {
+  final String searchText;
+
+  UpdateProductSearchText({
+    this.searchText,
+  });
+
+  List<Object> get props => [
+    this.searchText,
+  ];
+}
+
+class UpdateProductFilterTypes extends ProductsScreenEvent {
+  final List<FilterItem> filterTypes;
+
+  UpdateProductFilterTypes({
+    this.filterTypes,
+  });
+
+  List<Object> get props => [
+    this.filterTypes,
+  ];
+}
+
+class UpdateProductSortType extends ProductsScreenEvent {
+  final String sortType;
+
+  UpdateProductSortType({
+    this.sortType,
+  });
+
+  List<Object> get props => [
+    this.sortType,
+  ];
+}

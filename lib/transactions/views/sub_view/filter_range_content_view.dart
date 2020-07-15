@@ -2,20 +2,20 @@ import 'dart:convert';
 
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
+import 'package:payever/commons/models/app_widget.dart';
 import 'package:payever/transactions/models/currency.dart';
 import 'package:payever/transactions/models/enums.dart';
-import 'package:payever/transactions/views/filter_content_view.dart';
 
-class ProductFilterRangeContentView extends StatefulWidget {
+class FilterRangeContentView extends StatefulWidget {
   final String type;
   final Function onSelected;
-  ProductFilterRangeContentView({this.type, this.onSelected});
+  FilterRangeContentView({this.type, this.onSelected});
 
   @override
-  _ProductFilterRangeContentViewState createState() => _ProductFilterRangeContentViewState();
+  _FilterRangeContentViewState createState() => _FilterRangeContentViewState();
 }
 
-class _ProductFilterRangeContentViewState extends State<ProductFilterRangeContentView> {
+class _FilterRangeContentViewState extends State<FilterRangeContentView> {
 
   DateTime selectedDate;
   String filterConditionName = '';
