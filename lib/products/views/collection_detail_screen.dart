@@ -29,10 +29,10 @@ import 'package:payever/shop/models/models.dart';
 bool _isPortrait;
 bool _isTablet;
 
-List<String> productTypes = [
-  'Service',
-  'Digital',
-  'Physical',
+List<String> productConditionOptions = [
+  'No Conditions',
+  'All Conditions',
+  'Any Condition',
 ];
 final GlobalKey<TagsState> _tagStateKey = GlobalKey<TagsState>();
 
@@ -68,7 +68,7 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
 
   int _selectedSectionIndex = 0;
 
-  TextEditingController _productNameController = TextEditingController();
+  TextEditingController _collectionTitleController = TextEditingController();
   TextEditingController _priceController = TextEditingController();
 
   NumberFormat numberFormat = NumberFormat();
@@ -77,6 +77,8 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
   void initState() {
     if (widget.collection != null) {
       widget.screenBloc.add(GetCollectionDetail(collection: widget.collection));
+
+      _collectionTitleController.text = widget.collection.name;
     }
     super.initState();
   }
@@ -251,10 +253,10 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
             ProductDetailHeaderView(
               title: Language.getProductStrings('description.title').toUpperCase(),
               detail: '',
-              isExpanded: _selectedSectionIndex == 0,
+              isExpanded: _selectedSectionIndex == 1,
               onTap: () {
                 setState(() {
-                  _selectedSectionIndex = _selectedSectionIndex == 0 ? -1 : 0;
+                  _selectedSectionIndex = _selectedSectionIndex == 1 ? -1 : 1;
                 });
               },
             ),
@@ -263,14 +265,14 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
               thickness: 0.5,
               color: Color(0x80888888),
             ),
-            _getMainDetail(state,),
+            _getDescriptionDetail(state,),
             ProductDetailHeaderView(
               title: Language.getProductListStrings('products').toUpperCase(),
               detail: '',
-              isExpanded: _selectedSectionIndex == 0,
+              isExpanded: _selectedSectionIndex == 2,
               onTap: () {
                 setState(() {
-                  _selectedSectionIndex = _selectedSectionIndex == 0 ? -1 : 0;
+                  _selectedSectionIndex = _selectedSectionIndex == 2 ? -1 : 2;
                 });
               },
             ),
@@ -279,7 +281,7 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
               thickness: 0.5,
               color: Color(0x80888888),
             ),
-            _getMainDetail(state,)
+            _getProductsList(state,)
           ],
         ),
       ),
@@ -291,6 +293,212 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
   ///---------------------------------------------------------------------------
 
   Widget _getMainDetail(ProductsScreenState state) {
+    if (_selectedSectionIndex != 0) return Container();
+    String imgUrl = state.collectionDetail.image ?? '';
+    return Container(
+      padding: EdgeInsets.only(top: 16, bottom: 16),
+      child: Column(
+        children: <Widget>[
+          imgUrl != '' ? Container(
+            height: Measurements.width,
+            child: CachedNetworkImage(
+              imageUrl: '${Env.storage}/products/$imgUrl',
+              imageBuilder: (context, imageProvider) => Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
+              placeholder: (context, url) => Container(
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+              errorWidget: (context, url, error) =>  Container(
+                height: Measurements.width,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    SvgPicture.asset('assets/images/insertimageicon.svg'),
+                    Padding(
+                      padding: EdgeInsets.only(top: 16),
+                    ),
+                    Text(
+                      'Upload images',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ): GestureDetector(
+            onTap: () {
+              getImage(0);
+            },
+            child: Container(
+              height: Measurements.width * 0.7,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(12.0)),
+              ),
+              alignment: Alignment.center,
+              child: state.isUploading ? Container(
+                child: Center(child: CircularProgressIndicator()),
+              ): Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  SvgPicture.asset('assets/images/insertimageicon.svg'),
+                  Padding(
+                    padding: EdgeInsets.only(top: 16),
+                  ),
+                  Text(
+                    'Upload image',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 16),
+          ),
+          Container(
+            height: 64,
+            color: Color(0x80111111),
+            padding: EdgeInsets.only(left: 16, right: 16),
+            child: TextField(
+              controller: _collectionTitleController,
+              onChanged: (String text) {},
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),
+              decoration: InputDecoration(
+                labelText: Language.getProductStrings('mainSection.form.title.label'),
+                labelStyle: TextStyle(
+                  fontWeight: FontWeight.w200,
+                ),
+                border: InputBorder.none,
+              ),
+            ),
+          ),
+          Divider(
+            height: 0,
+            thickness: 0.5,
+            color: Color(0x80888888),
+          ),
+          Container(
+            padding: EdgeInsets.only(left: 16, right: 16),
+            child: Container(
+              color: Color(0x80111111),
+              padding: EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
+              child: state.taxes.length == 0
+                  ? Container()
+                  : DropDownFormField(
+                filled: false,
+                titleText: '',
+                hintText: Language.getProductStrings('Product must match'),
+                value: '',
+                onChanged: (value) {
+                  ProductsModel productModel = state.productDetail;
+                  productModel.vatRate = value;
+                  widget.screenBloc.add(
+                      UpdateProductDetail(
+                        productsModel: productModel,
+                        increaseStock: state.increaseStock,
+                      )
+                  );
+                },
+                dataSource: state.taxes.map((e) {
+                  return {
+                    'display': '${e.description} ${e.rate}%',
+                    'value': e.rate,
+                  };
+                }).toList(),
+                textField: 'display',
+                valueField: 'value',
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  ///---------------------------------------------------------------------------
+  ///                   Collection Detail - Main
+  ///---------------------------------------------------------------------------
+
+  Widget _getDescriptionDetail(ProductsScreenState state) {
     return Container();
   }
+
+  ///---------------------------------------------------------------------------
+  ///                   Collection Detail - Main
+  ///---------------------------------------------------------------------------
+
+  Widget _getProductsList(ProductsScreenState state) {
+    return Container();
+  }
+
+
+  Future getImage(int type) async {
+    ImagePicker imagePicker = ImagePicker();
+    var image = await imagePicker.getImage(
+      source: type == 0 ? ImageSource.gallery : ImageSource.camera,
+    );
+    if (image != null) {
+      await _cropImage(File(image.path));
+    }
+  }
+
+  Future<Null> _cropImage(File imageFile) async {
+    File croppedFile = await ImageCropper.cropImage(
+        sourcePath: imageFile.path,
+        aspectRatioPresets: Platform.isAndroid
+            ? [
+          CropAspectRatioPreset.square,
+          CropAspectRatioPreset.ratio3x2,
+          CropAspectRatioPreset.original,
+          CropAspectRatioPreset.ratio4x3,
+          CropAspectRatioPreset.ratio16x9
+        ]
+            : [
+          CropAspectRatioPreset.original,
+          CropAspectRatioPreset.square,
+          CropAspectRatioPreset.ratio3x2,
+          CropAspectRatioPreset.ratio4x3,
+          CropAspectRatioPreset.ratio5x3,
+          CropAspectRatioPreset.ratio5x4,
+          CropAspectRatioPreset.ratio7x5,
+          CropAspectRatioPreset.ratio16x9
+        ],
+        androidUiSettings: AndroidUiSettings(
+            toolbarTitle: 'Cropper',
+            toolbarColor: Colors.deepOrange,
+            toolbarWidgetColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: false),
+        iosUiSettings: IOSUiSettings(
+          title: 'Cropper',
+        ));
+
+    if (croppedFile != null) {
+      widget.screenBloc.add(UploadImageToProduct(file: croppedFile));
+    }
+
+  }
+
 }

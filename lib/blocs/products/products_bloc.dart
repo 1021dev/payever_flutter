@@ -63,7 +63,8 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
     } else if (event is UploadImageToProduct) {
       yield* uploadImageToProducts(event.file);
     } else if (event is GetCollectionDetail) {
-      
+      yield state.copyWith(collectionDetail: event.collection);
+      yield* getCollectionDetail(event.collection.id);
     }
   }
 

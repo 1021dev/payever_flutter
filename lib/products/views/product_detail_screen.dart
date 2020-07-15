@@ -1261,7 +1261,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             physics: NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
               Terminal terminal = state.terminals[index];
-              String imgUrl = terminal.logo ?? '';
               List<ChannelSet> channelSets = state.productDetail.channels ?? [];
               List setList = channelSets.where((element) => element.id == terminal.channelSet).toList() ?? [];
               bool isSet = setList.length > 0;

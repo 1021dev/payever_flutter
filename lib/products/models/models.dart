@@ -339,8 +339,8 @@ class CollectionModel {
   String image;
   String slug;
   String updatedAt;
-  num __v;
-  String _id;
+  num v;
+  String id;
 
   CollectionModel.toMap(dynamic obj) {
     activeSince = obj['activeSince'];
@@ -351,8 +351,8 @@ class CollectionModel {
     image = obj['image'];
     slug = obj['activeSince'];
     updatedAt = obj['updatedAt'];
-    __v = obj['__v'];
-    _id = obj['_id'];
+    v = obj['__v'];
+    id = obj['_id'];
     List channelObj = obj['channelSets'];
     if (channelObj != null) {
       channelObj.forEach((element) {

@@ -15,6 +15,7 @@ import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/screens/dashboard/sub_view/dashboard_menu_view.dart';
 import 'package:payever/pos/widgets/pos_top_button.dart';
 import 'package:payever/products/models/models.dart';
+import 'package:payever/products/views/collection_detail_screen.dart';
 import 'package:payever/products/views/product_detail_screen.dart';
 import 'package:payever/products/widgets/collection_grid_item.dart';
 import 'package:payever/products/widgets/product_grid_item.dart';
@@ -722,24 +723,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
               ],
             ),
           ),
-//          child: RefreshIndicator(
-//            child: LoadMore(
-//              isFinish: state.productLists.length == state.productsInfo.itemCount,
-//              onLoadMore: _loadMoreProducts,
-//              child: GridView.count(
-//                crossAxisCount: 1,
-//                crossAxisSpacing: 12,
-//                mainAxisSpacing: 12,
-//                childAspectRatio: 0.7,
-//                padding: EdgeInsets.only(left: 16.0, top: 12.0, right: 16.0, bottom: 12.0),
-//                children: productsItems,
-//              ),
-//              whenEmptyLoad: false,
-//              delegate: DefaultLoadMoreDelegate(),
-//              textBuilder: DefaultLoadMoreTextBuilder.english,
-//            ),
-//            onRefresh: _refreshProducts,
-//          ),
         );
       case 1:
         List<Widget> collectionItems  = [];
@@ -750,6 +733,18 @@ class _ProductsScreenState extends State<ProductsScreen> {
               CollectionGridItem(
                 collection,
                 onTap: (CollectionListModel model) {
+                  Navigator.push(
+                    context,
+                    PageTransition(
+                      child: CollectionDetailScreen(
+                        businessId: widget.globalStateModel.currentBusiness.id,
+                        screenBloc: screenBloc,
+                        collection: model.collectionModel,
+                      ),
+                      type: PageTransitionType.fade,
+                      duration: Duration(milliseconds: 500),
+                    ),
+                  );
                 },
                 onCheck: (CollectionListModel model) {
                   screenBloc.add(CheckCollectionItem(model: model));
