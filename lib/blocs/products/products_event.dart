@@ -118,12 +118,14 @@ class GetProductDetails extends ProductsScreenEvent {
 class UpdateProductDetail extends ProductsScreenEvent {
   final ProductsModel productsModel;
   final num increaseStock;
+  InventoryModel inventoryModel;
 
-  UpdateProductDetail({this.productsModel, this.increaseStock,});
+  UpdateProductDetail({this.productsModel, this.increaseStock, this.inventoryModel,});
   @override
   List<Object> get props => [
     this.productsModel,
     this.increaseStock,
+    this.inventoryModel,
   ];
 }
 

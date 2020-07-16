@@ -339,53 +339,34 @@ class Info {
 }
 
 class InventoryModel {
-  String _barcode;
-  String _business;
-  String _createdAt;
-  bool _isNegativeStockAllowed;
-  bool _isTrackable;
-  String _sku;
-  num _stock;
-  num _reserved;
-  String _updatedAt;
-  num __v;
-  String __id;
+  InventoryModel();
+
+  String barcode = '';
+  String business = '';
+  String createdAt = '';
+  bool isNegativeStockAllowed = false;
+  bool isTrackable = false;
+  String sku = '';
+  num stock = 0;
+  num reserved = 0;
+  String updatedAt = '';
+  num v;
+  String id = '';
 
   InventoryModel.toMap(dynamic obj) {
-    _barcode = obj[GlobalUtils.DB_INV_MODEL_BARCODE];
-    _business = obj[GlobalUtils.DB_INV_MODEL_BUSINESS];
-    _createdAt = obj[GlobalUtils.DB_INV_MODEL_CREATED_AT];
-    _isNegativeStockAllowed = obj[GlobalUtils.DB_INV_MODEL_IS_NEGATIVE_ALLOW];
-    _isTrackable = obj[GlobalUtils.DB_INV_MODEL_IS_TRACKABLE];
-    _sku = obj[GlobalUtils.DB_INV_MODEL_SKU];
-    _stock = obj[GlobalUtils.DB_INV_MODEL_STOCK];
-    _reserved = obj[GlobalUtils.DB_INV_MODEL_RESERVED];
-    _updatedAt = obj[GlobalUtils.DB_INV_MODEL_UPDATE_AT];
-    __v = obj[GlobalUtils.DB_INV_MODEL_V];
-    __id = obj[GlobalUtils.DB_INV_MODEL_ID];
+    barcode = obj[GlobalUtils.DB_INV_MODEL_BARCODE] ?? '';
+    business = obj[GlobalUtils.DB_INV_MODEL_BUSINESS] ?? '';
+    createdAt = obj[GlobalUtils.DB_INV_MODEL_CREATED_AT] ?? '';
+    isNegativeStockAllowed = obj[GlobalUtils.DB_INV_MODEL_IS_NEGATIVE_ALLOW] ?? false;
+    isTrackable = obj[GlobalUtils.DB_INV_MODEL_IS_TRACKABLE] ?? false ;
+    sku = obj[GlobalUtils.DB_INV_MODEL_SKU] ?? '';
+    stock = obj[GlobalUtils.DB_INV_MODEL_STOCK] ?? 0;
+    reserved = obj[GlobalUtils.DB_INV_MODEL_RESERVED] ?? 0;
+    updatedAt = obj[GlobalUtils.DB_INV_MODEL_UPDATE_AT] ?? '';
+    v = obj[GlobalUtils.DB_INV_MODEL_V] ?? '';
+    id = obj[GlobalUtils.DB_INV_MODEL_ID] ?? '';
   }
 
-  String get barcode => _barcode;
-
-  String get business => _business;
-
-  String get createdAt => _createdAt;
-
-  bool get isNegativeStock => _isNegativeStockAllowed;
-
-  bool get isTrackable => _isTrackable;
-
-  String get sku => _sku;
-
-  num get stock => _stock;
-
-  num get reserved => _reserved;
-
-  String get updatedAt => _updatedAt;
-
-  num get v => __v;
-
-  String get id => __id;
 }
 
 class VariantsRef {

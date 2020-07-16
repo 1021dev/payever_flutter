@@ -22,6 +22,7 @@ import 'package:payever/blocs/shop/shop.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/products/models/models.dart';
+import 'package:payever/products/views/add_variant_screen.dart';
 import 'package:payever/products/widgets/product_detail_header.dart';
 import 'package:payever/products/widgets/product_detail_subsection_header.dart';
 import 'package:payever/shop/models/models.dart';
@@ -136,23 +137,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               type: PageTransitionType.fade,
             ),
           );
-        } else if (state is ProductsScreenStateSuccess) {
-
-//          if (widget.fromDashBoard) {
-//            Navigator.pop(context, 'refresh');
-//          } else {
-//            Navigator.pop(context);
-//          }
-//          widget.screenBloc.add(ProductsScreenInitEvent(currentBusinessId: widget.businessId));
-        }
-//        if (state.updateSuccess) {
-//          if (widget.fromDashBoard) {
-//            Navigator.pop(context, 'refresh');
-//          } else {
-//            Navigator.pop(context);
-//          }
-//          widget.screenBloc.add(ProductsScreenInitEvent(currentBusinessId: widget.businessId));
-//        }
+        } else if (state is ProductsScreenStateSuccess) {}
       },
       child: BlocBuilder<ProductsScreenBloc, ProductsScreenState>(
         bloc: widget.screenBloc,
@@ -230,6 +215,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               }
               if (state.productDetail != null) {
                 if (state.productDetail.sku == '') {
+                  setState(() {
+                    formKey.currentState.validate();
+                    _selectedSectionIndex = 2;
+                  });
+                  return;
+                }
+                if (state.productDetail.id == '') {
                   widget.screenBloc.add(CreateProductEvent(productsModel: state.productDetail));
                 } else {
                   widget.screenBloc.add(SaveProductDetail(productsModel: state.productDetail));
@@ -327,7 +319,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               color: Color(0x80888888),
             ),
             _getDescriptionDetail(state),
-            state.inventory != null ? ProductDetailHeaderView(
+            state.productDetail.variants.length == 0 ? ProductDetailHeaderView(
               title: Language.getProductStrings('sections.inventory').toUpperCase(),
               detail: '',
               isExpanded: _selectedSectionIndex == 2,
@@ -342,7 +334,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               thickness: 0.5,
               color: Color(0x80888888),
             ),
-            state.inventory != null ? _getInventoryDetail(state): Container(),
+            state.productDetail.variants.length == 0 ? _getInventoryDetail(state): Container(),
             ProductDetailHeaderView(
               title: Language.getProductStrings('sections.category').toUpperCase(),
               detail: state.productDetail.categories != null ? (state.productDetail.categories.length > 0 ? '${state.productDetail.categories.map((e) => e.title).toList().join(', ')}': ''): '',
@@ -662,7 +654,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           ProductsModel productModel = state.productDetail;
                           productModel.images.remove(img);
                           widget.screenBloc.add(UpdateProductDetail(
-                            increaseStock: state.increaseStock,
+                            inventoryModel: state.inventory,
                             productsModel: productModel,
                           ));
                         },
@@ -690,7 +682,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     onChanged: (String text) {
                       ProductsModel product = state.productDetail;
                       product.title = text;
-                      widget.screenBloc.add(UpdateProductDetail(productsModel: product, increaseStock: state.increaseStock));
+                      widget.screenBloc.add(UpdateProductDetail(productsModel: product, inventoryModel: state.inventory));
                     },
                     style: TextStyle(
                       color: Colors.white,
@@ -760,7 +752,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           onChanged: (String text) {
                             ProductsModel product = state.productDetail;
                             product.price = num.parse(text);
-                            widget.screenBloc.add(UpdateProductDetail(productsModel: product, increaseStock: state.increaseStock));
+                            widget.screenBloc.add(UpdateProductDetail(productsModel: product, inventoryModel: state.inventory));
                           },
                           style: TextStyle(
                             color: Colors.white,
@@ -804,7 +796,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           onChanged: (String text) {
                             ProductsModel product = state.productDetail;
                             product.salePrice = num.parse(text);
-                            widget.screenBloc.add(UpdateProductDetail(productsModel: product, increaseStock: state.increaseStock));
+                            widget.screenBloc.add(UpdateProductDetail(productsModel: product, inventoryModel: state.inventory));
                           },
                           style: TextStyle(
                             color: Colors.white,
@@ -875,7 +867,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       widget.screenBloc.add(
                           UpdateProductDetail(
                             productsModel: productModel,
-                            increaseStock: state.increaseStock,
+                            inventoryModel: state.inventory,
                           )
                       );
                     },
@@ -930,7 +922,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               onChanged: (String text) {
                 ProductsModel product = state.productDetail;
                 product.description = text;
-                widget.screenBloc.add(UpdateProductDetail(productsModel: product, increaseStock: state.increaseStock));
+                widget.screenBloc.add(UpdateProductDetail(productsModel: product, inventoryModel: state.inventory));
               },
               style: TextStyle(
                 color: Colors.white,
@@ -972,11 +964,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     onChanged: (String text) {
                       ProductsModel product = state.productDetail;
                       product.sku = text;
-                      widget.screenBloc.add(UpdateProductDetail(productsModel: product, increaseStock: state.increaseStock));
+                      InventoryModel inventory = state.inventory;
+                      inventory.sku = text;
+                      widget.screenBloc.add(UpdateProductDetail(productsModel: product, inventoryModel: inventory));
                     },
                     validator: (text) {
                       if (text.isEmpty){
-                        return 'sku required';
+                        return 'Code/SKU required';
                       }
                       return null;
                     },
@@ -1002,7 +996,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     onChanged: (String text) {
                       ProductsModel product = state.productDetail;
                       product.barcode = text;
-                      widget.screenBloc.add(UpdateProductDetail(productsModel: product, increaseStock: state.increaseStock));
+                      InventoryModel inventory = state.inventory;
+                      inventory.barcode = text;
+                      widget.screenBloc.add(UpdateProductDetail(productsModel: product, inventoryModel: inventory));
                     },
                     style: TextStyle(
                       color: Colors.white,
@@ -1037,7 +1033,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     children: <Widget>[
                       CupertinoSwitch(
                         onChanged: (val) {
-
+                          InventoryModel inventory = state.inventory;
+                          inventory.isTrackable = val;
+                          widget.screenBloc.add(UpdateProductDetail(inventoryModel: inventory));
                         },
                         value: state.inventory.isTrackable,
                       ),
@@ -1083,10 +1081,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           icon: Icon(Icons.remove_circle_outline),
                           onPressed: () {
                             ProductsModel product = state.productDetail;
-                            num stock = state.inventory.stock ?? 0 + state.increaseStock;
-                            if (stock > 0) {
+                            InventoryModel inventory = state.inventory;
+                            if (inventory.stock > 0) {
                               int increase = state.increaseStock - 1;
-                              widget.screenBloc.add(UpdateProductDetail(productsModel: product, increaseStock: increase));
+                              inventory.stock = inventory.stock - 1;
+                              widget.screenBloc.add(UpdateProductDetail(productsModel: product, inventoryModel: inventory, increaseStock: increase));
                             }
                           },
                         ),
@@ -1109,8 +1108,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           icon: Icon(Icons.add_circle_outline),
                           onPressed: () {
                             ProductsModel product = state.productDetail;
+                            InventoryModel inventory = state.inventory;
                             int increase = state.increaseStock + 1;
-                            widget.screenBloc.add(UpdateProductDetail(productsModel: product, increaseStock: increase));
+                            inventory.stock = inventory.stock + 1;
+                            widget.screenBloc.add(UpdateProductDetail(productsModel: product, inventoryModel: inventory, increaseStock: increase));
                           },
                         ),
                       ],
@@ -1345,10 +1346,17 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 ),
               ),
               onPressed: () {
-
+                Navigator.push(
+                  context,
+                  PageTransition(
+                    child: AddVariantScreen(),
+                    type: PageTransitionType.fade,
+                    duration: Duration(milliseconds: 500),
+                  ),
+                );
               },
             ),
-          )
+          ),
         ],
       ),
     );
@@ -1412,6 +1420,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             UpdateProductDetail(
                               productsModel: productDetail,
                               increaseStock: state.increaseStock,
+                              inventoryModel: state.inventory,
                             )
                         );
                       },

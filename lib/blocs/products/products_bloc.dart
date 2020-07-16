@@ -60,7 +60,11 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
         yield* getProductCategories();
       }
     } else if (event is UpdateProductDetail) {
-      yield state.copyWith(productDetail: event.productsModel, increaseStock: event.increaseStock);
+      if (event.increaseStock != null) {
+        yield state.copyWith(productDetail: event.productsModel, inventory: event.inventoryModel, increaseStock: event.increaseStock);
+      } else {
+        yield state.copyWith(productDetail: event.productsModel, inventory: event.inventoryModel,);
+      }
     } else if (event is SaveProductDetail) {
       yield* updateProduct(event.productsModel);
     } else if (event is CreateProductEvent) {
@@ -639,7 +643,7 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
   Stream<ProductsScreenState> getProductDetail(String id) async* {
     yield state.copyWith(
       increaseStock: 0,
-      inventory: null,
+      inventory: InventoryModel(),
       isLoading: true,
     );
     Map<String, dynamic> body = {
@@ -658,7 +662,7 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
         model = ProductsModel.toMap(getProduct);
       }
     }
-    yield state.copyWith(productDetail: model);
+    yield state.copyWith(productDetail: model, increaseStock: 0, inventory: new InventoryModel());
     if (model.sku != null) {
       yield* getInventory(model.sku);
     } else {
