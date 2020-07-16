@@ -271,30 +271,12 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
     Map<String, dynamic> body = {
       'operationName': 'updateProduct',
       'variables': {
-        'product': {
-          'active': true,
-          'barcode': "",
-          'businessUuid': "d0de55b4-5a2a-41a9-a0de-f38256f541ee",
-          'categories': [],
-          'channelSets': [],
-          'description': "",
-          'id': "2519bf82-8ffa-4766-b26a-d68b4717dea7",
-          'images': [],
-          'onSales': false,
-          'price': 10,
-          'salePrice': 10,
-          'shipping': {'weight': 0, 'width': 0, 'length': 0, 'height': 0},
-          'sku': "newProtest",
-          'title': "test Product",
-          'type': "physical",
-          'variants': [],
-          'vatRate': 16
-        }
+        'product': bodyObj,
       },
       'query': 'mutation updateProduct(\$product: ProductUpdateInput!) {\n  updateProduct(product: \$product) {\n    title\n    id\n  }\n}\n'
     };
     dynamic response = await api.getProducts(GlobalUtils.activeToken.accessToken, body);
-    if (response != null) {
+    if (response is Map) {
       dynamic data = response['data'];
       if (data != null) {
         dynamic updateProduct = data['updateProduct'];
@@ -309,10 +291,12 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
   }
 
   Stream<ProductsScreenState> createProduct(ProductsModel model) async* {
+    Map bodyObj = model.toDictionary();
+    bodyObj['businessUuid'] = state.businessId;
     Map<String, dynamic> body = {
       'operationName': 'createProduct',
       'variables': {
-        'product': model.toDictionary(),
+        'product': bodyObj,
       },
       'query': 'mutation createProduct(\$product: ProductInput!) {\n  createProduct(product: \$product) {\n    title\n    id\n  }\n}\n'
     };
@@ -323,7 +307,7 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
     if (response != null) {
       dynamic data = response['data'];
       if (data != null) {
-        dynamic updateProduct = data['updateProduct'];
+        dynamic updateProduct = data['createProduct'];
         if (updateProduct != null) {
           var id = updateProduct['id'];
           print('create success  => $id');

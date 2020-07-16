@@ -185,7 +185,7 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
               Language.getProductStrings('save'),
             ),
             onPressed: () {
-              Navigator.pop(context);
+              Future.delayed(Duration(milliseconds: 1000)).then((value) => Navigator.pop(context));
             },
           ),
         ),

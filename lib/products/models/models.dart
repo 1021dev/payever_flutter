@@ -87,7 +87,6 @@ class ProductsModel {
   String barcode = '';
   String currency = 'EUR';
   String type = 'physical';
-  bool enabled = false;
   bool onSales = false;
   num vatRate = 0;
   String businessUuid = '';
@@ -112,7 +111,6 @@ class ProductsModel {
     vatRate = obj[GlobalUtils.DB_PROD_MODEL_VAT_RATE];
     type = obj[GlobalUtils.DB_PROD_MODEL_TYPE];
     onSales = obj[GlobalUtils.DB_PROD_MODEL_SALES];
-    enabled = obj[GlobalUtils.DB_PROD_MODEL_ENABLE];
     businessUuid = obj[businessUuid];
 
     if (obj[GlobalUtils.DB_PROD_MODEL_IMAGES] != null)
@@ -149,7 +147,6 @@ class ProductsModel {
     map['vatRate'] = vatRate;
     map['sku'] = sku;
     map['title'] = title;
-    map['enabled'] = enabled;
     map['type'] = type;
     map['businessUuid'] = businessUuid;
     map['currency'] = currency;
@@ -160,6 +157,8 @@ class ProductsModel {
         categoryMapArr.add(element.toDictionary());
       });
       map['categories'] = categoryMapArr;
+    } else {
+      map['categories'] = [];
     }
 
     if (channels.length > 0) {
@@ -168,20 +167,26 @@ class ProductsModel {
         channelArr.add(element.toDictionary());
       });
       map['channelSets'] = channelArr;
+    } else {
+      map['channelSets'] = [];
     }
     map['images'] = images;
 
     if (shipping != null) {
       map['shipping'] = shipping.toDictionary();
+    } else {
+      map['shipping'] = {};
     }
 
-    if (collections.length > 0) {
-      List collectionsArr = [];
-      collections.forEach((element) {
-        collectionsArr.add(element.toDictionary());
-      });
-      map['collections'] = collectionsArr;
-    }
+//    if (collections.length > 0) {
+//      List collectionsArr = [];
+//      collections.forEach((element) {
+//        collectionsArr.add(element.toDictionary());
+//      });
+//      map['collections'] = collectionsArr;
+//    } else {
+//      map['collections'] = [];
+//    }
 
     if (variants.length > 0) {
       List variantsArr = [];
@@ -189,6 +194,8 @@ class ProductsModel {
         variantsArr.add(element.toDictionary());
       });
       map['variants'] = variantsArr;
+    } else {
+      map['variants'] = [];
     }
     return map;
   }

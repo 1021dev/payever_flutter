@@ -228,7 +228,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               if (state.isLoading) {
                 return;
               }
-              Navigator.pop(context);
               if (state.productDetail != null) {
                 if (state.productDetail.sku == '') {
 
@@ -236,6 +235,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   widget.screenBloc.add(SaveProductDetail(productsModel: state.productDetail));
                 }
               }
+              Future.delayed(Duration(milliseconds: 1000)).then((value) => Navigator.pop(context));
             },
           ),
         ),
@@ -666,16 +666,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     ),
                     CupertinoSwitch(
                       onChanged: (val) {
-                        ProductsModel productModel = state.productDetail;
-                        productModel.enabled = val;
-                        widget.screenBloc.add(
-                            UpdateProductDetail(
-                              productsModel: productModel,
-                              increaseStock: state.increaseStock,
-                            )
-                        );
+//                        ProductsModel productModel = state.productDetail;
+//                        productModel.enabled = val;
+//                        widget.screenBloc.add(
+//                            UpdateProductDetail(
+//                              productsModel: productModel,
+//                              increaseStock: state.increaseStock,
+//                            )
+//                        );
                       },
-                      value: state.productDetail.enabled ?? false,
+                      value: false,
                     )
                   ],
                 ),
