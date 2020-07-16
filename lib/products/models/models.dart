@@ -140,6 +140,7 @@ class ProductsModel {
     Map<String, dynamic> map = {};
     map['id'] = id;
     map['active'] = active;
+    map['barcode'] = barcode;
     map['onSales'] = onSales;
     map['price'] = price;
     map['salePrice'] = salePrice;
@@ -149,7 +150,6 @@ class ProductsModel {
     map['title'] = title;
     map['type'] = type;
     map['businessUuid'] = businessUuid;
-    map['currency'] = currency;
 
     if (categories.length > 0) {
       List categoryMapArr = [];

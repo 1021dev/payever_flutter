@@ -506,7 +506,36 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             ),
           ): GestureDetector(
             onTap: () {
-              getImage(0);
+              showCupertinoModalPopup(
+                context: context,
+                builder: (BuildContext context) => CupertinoActionSheet(
+                  title: const Text('Choose Photo'),
+                  message: const Text('Your options are '),
+                  actions: <Widget>[
+                    CupertinoActionSheetAction(
+                      child: const Text('Take a Picture'),
+                      onPressed: () {
+                        Navigator.pop(context, 'Take a Picture');
+                        getImage(0);
+                      },
+                    ),
+                    CupertinoActionSheetAction(
+                      child: const Text('Camera Roll'),
+                      onPressed: () {
+                        Navigator.pop(context, 'Camera Roll');
+                        getImage(1);
+                      },
+                    )
+                  ],
+                  cancelButton: CupertinoActionSheetAction(
+                    child: const Text('Cancel'),
+                    isDefaultAction: true,
+                    onPressed: () {
+                      Navigator.pop(context, 'Cancel');
+                    },
+                  ),
+                ),
+              );
             },
             child: Container(
               height: Measurements.width * 0.7,
@@ -558,7 +587,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     alignment: Alignment.topRight,
                     children: <Widget>[
                       img != '' ? CachedNetworkImage(
-                        imageUrl: '${Env.storage}/products/$imgUrl',
+                        imageUrl: '${Env.storage}/products/$img',
                         imageBuilder: (context, imageProvider) => Container(
                           decoration: BoxDecoration(
                             color: Colors.white,
@@ -585,7 +614,36 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         ),
                       ): GestureDetector(
                         onTap: () {
-                          getImage(0);
+                          showCupertinoModalPopup(
+                            context: context,
+                            builder: (BuildContext context) => CupertinoActionSheet(
+                              title: const Text('Choose Photo'),
+                              message: const Text('Your options are '),
+                              actions: <Widget>[
+                                CupertinoActionSheetAction(
+                                  child: const Text('Take a Picture'),
+                                  onPressed: () {
+                                    Navigator.pop(context, 'Take a Picture');
+                                    getImage(0);
+                                  },
+                                ),
+                                CupertinoActionSheetAction(
+                                  child: const Text('Camera Roll'),
+                                  onPressed: () {
+                                    Navigator.pop(context, 'Camera Roll');
+                                    getImage(1);
+                                  },
+                                )
+                              ],
+                              cancelButton: CupertinoActionSheetAction(
+                                child: const Text('Cancel'),
+                                isDefaultAction: true,
+                                onPressed: () {
+                                  Navigator.pop(context, 'Cancel');
+                                },
+                              ),
+                            ),
+                          );
                         },
                         child: Container(
                           height: 64,

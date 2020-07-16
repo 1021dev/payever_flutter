@@ -57,7 +57,7 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
       yield* deleteSingleProduct(event.product);
     } else if (event is GetProductDetails) {
       if (event.productsModel != null) {
-        yield state.copyWith(productDetail: event.productsModel, isLoading: true);
+        yield state.copyWith(productDetail: event.productsModel);
         yield* getProductDetail(event.productsModel.id);
       } else {
         yield state.copyWith(productDetail: ProductsModel(), isLoading: true);
@@ -90,7 +90,7 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
     } else if (event is CreateCollectionEvent) {
 
     } else if (event is UploadImageToCollection) {
-      yield* uploadImageToProducts(event.file);
+      yield* uploadImageToCollection(event.file);
     } else if (event is UpdateProductSearchText) {
       yield state.copyWith(searchText: event.searchText);
       yield* searchProducts();
@@ -101,7 +101,15 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
       yield state.copyWith(sortType: event.sortType);
       yield* searchProducts();
     } else if (event is CancelProductEdit) {
-      yield state.copyWith(isLoading: false, isUploading: false, isSearching: false, isUpdating: false);
+      yield state.copyWith(
+        isLoading: false,
+        isUploading: false,
+        isSearching: false,
+        isUpdating: false,
+        productDetail: ProductsModel(),
+        collectionDetail: CollectionModel(),
+        collectionProducts: [],
+      );
     }
   }
 
@@ -150,7 +158,7 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
     };
     
     dynamic colResponse = await api.getCollections(GlobalUtils.activeToken.accessToken, activeBusinessId, queryParams);
-    if (colResponse != null) {
+    if (colResponse is Map) {
       dynamic infoObj = colResponse['info'];
       if (infoObj != null) {
         dynamic pagination = infoObj['pagination'];
@@ -266,8 +274,9 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
   }
 
   Stream<ProductsScreenState> updateProduct(ProductsModel model) async* {
+    String businessId = state.businessId;
     Map bodyObj = model.toDictionary();
-    bodyObj['businessUuid'] = state.businessId;
+    bodyObj['businessUuid'] = businessId;
     Map<String, dynamic> body = {
       'operationName': 'updateProduct',
       'variables': {
@@ -286,13 +295,15 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
         }
       }
     }
-    yield state.copyWith(updateSuccess: true);
-    yield* fetchProducts(state.businessId);
+    yield ProductsScreenState(businessId: businessId);
+    yield state.copyWith(updateSuccess: true, businessId: businessId);
+    yield* fetchProducts(businessId);
   }
 
   Stream<ProductsScreenState> createProduct(ProductsModel model) async* {
+    String businessId = state.businessId;
     Map bodyObj = model.toDictionary();
-    bodyObj['businessUuid'] = state.businessId;
+    bodyObj['businessUuid'] = businessId;
     Map<String, dynamic> body = {
       'operationName': 'createProduct',
       'variables': {
@@ -315,8 +326,9 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
       }
     }
 
-    yield state.copyWith(updateSuccess: true);
-    yield* fetchProducts(state.businessId);
+    yield ProductsScreenState(businessId: businessId);
+    yield state.copyWith(updateSuccess: true, businessId: businessId);
+    yield* fetchProducts(businessId);
   }
 
   Stream<ProductsScreenState> selectProduct(ProductListModel model) async* {
@@ -691,7 +703,7 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
 
   Stream<ProductsScreenState> getBusinessBillingSubscription(String businessId) async* {
     dynamic response = await api.getBusinessBillingSubscription(GlobalUtils.activeToken.accessToken, state.businessId);
-    if (response == Map) {
+    if (response is Map) {
       if (response['installed'] != null) {
         if (response['installed'] == false) {
           yield* getBillingSubscriptions();
