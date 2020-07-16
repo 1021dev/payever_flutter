@@ -164,6 +164,7 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
               Language.getProductStrings('cancel'),
             ),
             onPressed: () {
+              widget.screenBloc.add(CancelProductEdit());
               Navigator.pop(context);
             },
           ),

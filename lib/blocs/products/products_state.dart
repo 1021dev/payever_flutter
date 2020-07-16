@@ -30,6 +30,7 @@ class ProductsScreenState {
   final String searchText;
   final List<FilterItem> filterTypes;
   final String sortType;
+  final bool updateSuccess;
 
   ProductsScreenState({
     this.isLoading = false,
@@ -57,6 +58,7 @@ class ProductsScreenState {
     this.searchText = '',
     this.filterTypes = const [],
     this.sortType = 'default',
+    this.updateSuccess = false,
   });
 
   List<Object> get props => [
@@ -85,6 +87,7 @@ class ProductsScreenState {
     this.searchText,
     this.filterTypes,
     this.sortType,
+    this.updateSuccess,
   ];
 
   ProductsScreenState copyWith({
@@ -113,6 +116,7 @@ class ProductsScreenState {
     String searchText,
     List<FilterItem> filterTypes,
     String sortType,
+    bool updateSuccess,
   }) {
     return ProductsScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -140,11 +144,16 @@ class ProductsScreenState {
       searchText: searchText ?? this.searchText,
       filterTypes: filterTypes ?? this.filterTypes,
       sortType: sortType ?? this.sortType,
+      updateSuccess: updateSuccess ?? this.updateSuccess,
     );
   }
 }
 
-class ProductsScreenStateSuccess extends ProductsScreenState {}
+class ProductsScreenStateSuccess extends ProductsScreenState {
+  final bool isLoading;
+
+  ProductsScreenStateSuccess({this.isLoading = true});
+}
 
 class ProductsScreenStateFailure extends ProductsScreenState {
   final String error;

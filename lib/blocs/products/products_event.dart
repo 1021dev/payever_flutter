@@ -238,3 +238,11 @@ class UpdateProductSortType extends ProductsScreenEvent {
     this.sortType,
   ];
 }
+
+class CancelProductEdit extends ProductsScreenEvent {
+
+  CancelProductEdit();
+
+  List<Object> get props => [
+  ];
+}

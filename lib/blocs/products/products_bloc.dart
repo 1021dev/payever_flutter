@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:math';
 
 import 'package:bloc/bloc.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/products/models/models.dart';
@@ -21,7 +19,13 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
   @override
   Stream<ProductsScreenState> mapEventToState(ProductsScreenEvent event) async* {
     if (event is ProductsScreenInitEvent) {
-      yield state.copyWith(businessId: event.currentBusinessId);
+      yield state.copyWith(
+        businessId: event.currentBusinessId,
+        isLoading: true,
+        updateSuccess: false,
+        isUpdating: false,
+        isSearching: false,
+      );
       yield* fetchProducts(event.currentBusinessId);
     } else if (event is CheckProductItem) {
       yield* selectProduct(event.model);
@@ -53,10 +57,10 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
       yield* deleteSingleProduct(event.product);
     } else if (event is GetProductDetails) {
       if (event.productsModel != null) {
-        yield state.copyWith(productDetail: event.productsModel);
+        yield state.copyWith(productDetail: event.productsModel, isLoading: true);
         yield* getProductDetail(event.productsModel.id);
       } else {
-        yield state.copyWith(productDetail: ProductsModel());
+        yield state.copyWith(productDetail: ProductsModel(), isLoading: true);
         yield* getProductCategories();
       }
     } else if (event is UpdateProductDetail) {
@@ -96,6 +100,8 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
     } else if (event is UpdateProductSortType) {
       yield state.copyWith(sortType: event.sortType);
       yield* searchProducts();
+    } else if (event is CancelProductEdit) {
+      yield state.copyWith(isLoading: false, isUploading: false, isSearching: false, isUpdating: false);
     }
   }
 
@@ -260,17 +266,34 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
   }
 
   Stream<ProductsScreenState> updateProduct(ProductsModel model) async* {
+    Map bodyObj = model.toDictionary();
+    bodyObj['businessUuid'] = state.businessId;
     Map<String, dynamic> body = {
       'operationName': 'updateProduct',
       'variables': {
-        'product': model.toDictionary(),
+        'product': {
+          'active': true,
+          'barcode': "",
+          'businessUuid': "d0de55b4-5a2a-41a9-a0de-f38256f541ee",
+          'categories': [],
+          'channelSets': [],
+          'description': "",
+          'id': "2519bf82-8ffa-4766-b26a-d68b4717dea7",
+          'images': [],
+          'onSales': false,
+          'price': 10,
+          'salePrice': 10,
+          'shipping': {'weight': 0, 'width': 0, 'length': 0, 'height': 0},
+          'sku': "newProtest",
+          'title': "test Product",
+          'type': "physical",
+          'variants': [],
+          'vatRate': 16
+        }
       },
       'query': 'mutation updateProduct(\$product: ProductUpdateInput!) {\n  updateProduct(product: \$product) {\n    title\n    id\n  }\n}\n'
     };
     dynamic response = await api.getProducts(GlobalUtils.activeToken.accessToken, body);
-    if (response != null) {
-
-    }
     if (response != null) {
       dynamic data = response['data'];
       if (data != null) {
@@ -281,8 +304,8 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
         }
       }
     }
-
-    yield ProductsScreenStateSuccess();
+    yield state.copyWith(updateSuccess: true);
+    yield* fetchProducts(state.businessId);
   }
 
   Stream<ProductsScreenState> createProduct(ProductsModel model) async* {
@@ -303,12 +326,13 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
         dynamic updateProduct = data['updateProduct'];
         if (updateProduct != null) {
           var id = updateProduct['id'];
-          print('Updates success  => $id');
+          print('create success  => $id');
         }
       }
     }
 
-    yield ProductsScreenStateSuccess();
+    yield state.copyWith(updateSuccess: true);
+    yield* fetchProducts(state.businessId);
   }
 
   Stream<ProductsScreenState> selectProduct(ProductListModel model) async* {
@@ -603,6 +627,7 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
     yield state.copyWith(
       increaseStock: 0,
       inventory: null,
+      isLoading: true,
     );
     Map<String, dynamic> body = {
       'operationName': 'getProducts',
@@ -630,7 +655,7 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
 
   Stream<ProductsScreenState> getInventory(String sku) async* {
     dynamic response = await api.getInventory(GlobalUtils.activeToken.accessToken, state.businessId, sku);
-    if (response != null) {
+    if (response is Map) {
       InventoryModel inventoryModel = InventoryModel.toMap(response);
       print(inventoryModel);
       yield state.copyWith(inventory: inventoryModel);
@@ -651,7 +676,7 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
     };
     List<Categories> categories = [];
     dynamic response = await api.getProducts(GlobalUtils.activeToken.accessToken, body);
-    if (response != null) {
+    if (response is Map) {
       dynamic data = response['data'];
       if (data != null) {
         List getCategories = data['getCategories'];
@@ -682,7 +707,7 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
 
   Stream<ProductsScreenState> getBusinessBillingSubscription(String businessId) async* {
     dynamic response = await api.getBusinessBillingSubscription(GlobalUtils.activeToken.accessToken, state.businessId);
-    if (response != null) {
+    if (response == Map) {
       if (response['installed'] != null) {
         if (response['installed'] == false) {
           yield* getBillingSubscriptions();
@@ -718,7 +743,7 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
         shops.add(ShopModel.toMap(element));
       });
     }
-    yield state.copyWith(shops: shops);
+    yield state.copyWith(shops: shops, isLoading: false);
   }
 
   Stream<ProductsScreenState> uploadImageToProducts(File file) async* {

@@ -138,13 +138,21 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           );
         } else if (state is ProductsScreenStateSuccess) {
 
-          if (widget.fromDashBoard) {
-            Navigator.pop(context, 'refresh');
-          } else {
-            Navigator.pop(context);
-          }
-          widget.screenBloc.add(ProductsScreenInitEvent(currentBusinessId: widget.businessId));
+//          if (widget.fromDashBoard) {
+//            Navigator.pop(context, 'refresh');
+//          } else {
+//            Navigator.pop(context);
+//          }
+//          widget.screenBloc.add(ProductsScreenInitEvent(currentBusinessId: widget.businessId));
         }
+//        if (state.updateSuccess) {
+//          if (widget.fromDashBoard) {
+//            Navigator.pop(context, 'refresh');
+//          } else {
+//            Navigator.pop(context);
+//          }
+//          widget.screenBloc.add(ProductsScreenInitEvent(currentBusinessId: widget.businessId));
+//        }
       },
       child: BlocBuilder<ProductsScreenBloc, ProductsScreenState>(
         bloc: widget.screenBloc,
@@ -188,6 +196,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               Language.getProductStrings('cancel'),
             ),
             onPressed: () {
+              widget.screenBloc.add(CancelProductEdit());
               Navigator.pop(context);
             },
           ),
@@ -204,10 +213,21 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             elevation: 0,
             minWidth: 0,
             color: Colors.white24,
-            child: Text(
+            child: state.isLoading ? Center(
+              child: Container(
+                width: 16,
+                height: 16,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                ),
+              ),
+            ) : Text(
               Language.getProductStrings('save'),
             ),
             onPressed: () {
+              if (state.isLoading) {
+                return;
+              }
               Navigator.pop(context);
               if (state.productDetail != null) {
                 if (state.productDetail.sku == '') {
@@ -374,7 +394,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             state.productDetail.type == 'physical' ? ProductDetailHeaderView(
               title: Language.getProductStrings('sections.shipping').toUpperCase(),
               detail: state.productDetail.shipping != null
-                  ? '${state.productDetail.shipping.weight} ${Language.getProductStrings('shipping.placeholders.weight')} (${state.productDetail.shipping.width} * ${state.productDetail.shipping.length} * ${state.productDetail.shipping.height})'
+                  ? '${state.productDetail.shipping.weight} ${Language.getProductStrings('shippingSection.measure.kg')} (${state.productDetail.shipping.width} * ${state.productDetail.shipping.length} * ${state.productDetail.shipping.height})'
                   : '',
               isExpanded: _selectedSectionIndex == 6,
               onTap: () {
