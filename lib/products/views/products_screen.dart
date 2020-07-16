@@ -109,7 +109,98 @@ class _ProductsScreenState extends State<ProductsScreen> {
       OverflowMenuItem(
         title: 'Delete Products',
         onTap: () {
-        },
+          showCupertinoDialog(
+            context: context,
+            builder: (builder) {
+              return Dialog(
+                backgroundColor: Colors.transparent,
+                child: Container(
+                  height: 216,
+                  child: BlurEffectView(
+                    color: Color.fromRGBO(50, 50, 50, 0.4),
+                    padding: EdgeInsets.all(16),
+                    child: Column(
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(top: 16),
+                        ),
+                        Icon(Icons.info),
+                        Padding(
+                          padding: EdgeInsets.only(top: 16),
+                        ),
+                        Text(
+                          Language.getPosStrings('Deleting Products'),
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w300,
+                              color: Colors.white
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 16),
+                        ),
+                        Text(
+                          Language.getPosStrings('Do you really want to delete your products?'),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w300,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 16),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            MaterialButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              height: 24,
+                              elevation: 0,
+                              minWidth: 0,
+                              color: Colors.white10,
+                              child: Text(
+                                Language.getPosStrings('actions.no'),
+                              ),
+                            ),
+                            MaterialButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                                List<ProductsModel> deletes = [];
+                                state.productLists.forEach((element) {
+                                  if (element.isChecked) {
+                                    deletes.add(element.productsModel);
+                                  }
+                                });
+                                screenBloc.add(DeleteProductsEvent(models: deletes));
+                              },
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              height: 24,
+                              elevation: 0,
+                              minWidth: 0,
+                              color: Colors.white10,
+                              child: Text(
+                                Language.getPosStrings('actions.yes'),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+          },
       ),
     ];
   }
@@ -129,9 +220,94 @@ class _ProductsScreenState extends State<ProductsScreen> {
         },
       ),
       OverflowMenuItem(
-        title: 'Delete Products',
+        title: 'Delete Collections',
         onTap: () {
-        },
+          showCupertinoDialog(
+            context: context,
+            builder: (builder) {
+              return Dialog(
+                backgroundColor: Colors.transparent,
+                child: Container(
+                  height: 216,
+                  child: BlurEffectView(
+                    color: Color.fromRGBO(50, 50, 50, 0.4),
+                    padding: EdgeInsets.all(16),
+                    child: Column(
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(top: 16),
+                        ),
+                        Icon(Icons.info),
+                        Padding(
+                          padding: EdgeInsets.only(top: 16),
+                        ),
+                        Text(
+                          Language.getPosStrings('Deleting Collections'),
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w300,
+                              color: Colors.white
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 16),
+                        ),
+                        Text(
+                          Language.getPosStrings('Do you really want to delete your collections?'),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w300,
+                              color: Colors.white
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 16),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            MaterialButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              height: 24,
+                              elevation: 0,
+                              minWidth: 0,
+                              color: Colors.white10,
+                              child: Text(
+                                Language.getPosStrings('actions.no'),
+                              ),
+                            ),
+                            MaterialButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                                screenBloc.add(DeleteCollectionProductsEvent());
+                              },
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              height: 24,
+                              elevation: 0,
+                              minWidth: 0,
+                              color: Colors.white10,
+                              child: Text(
+                                Language.getPosStrings('actions.yes'),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+          },
       ),
     ];
   }
@@ -1031,6 +1207,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                 MaterialButton(
                                   onPressed: () {
                                     Navigator.pop(context);
+                                    screenBloc.add(DeleteProductsEvent(models: [model.productsModel]));
                                   },
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12),

@@ -230,7 +230,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               }
               if (state.productDetail != null) {
                 if (state.productDetail.sku == '') {
-
+                  widget.screenBloc.add(CreateProductEvent(productsModel: state.productDetail));
                 } else {
                   widget.screenBloc.add(SaveProductDetail(productsModel: state.productDetail));
                 }
@@ -345,7 +345,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             state.inventory != null ? _getInventoryDetail(state): Container(),
             ProductDetailHeaderView(
               title: Language.getProductStrings('sections.category').toUpperCase(),
-              detail: state.productDetail.categories.length > 0 ? '${state.productDetail.categories.map((e) => e.title).toList().join(', ')}': '',
+              detail: state.productDetail.categories != null ? (state.productDetail.categories.length > 0 ? '${state.productDetail.categories.map((e) => e.title).toList().join(', ')}': ''): '',
               isExpanded: _selectedSectionIndex == 3,
               onTap: () {
                 setState(() {

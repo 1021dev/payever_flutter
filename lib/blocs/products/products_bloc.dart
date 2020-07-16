@@ -46,13 +46,13 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
     } else if (event is AddToCollectionEvent) {
       yield* addToCollectionProducts();
     } else if (event is DeleteProductsEvent) {
-      yield* deleteProducts();
+      yield* deleteProducts(event.models);
     } else if (event is SelectAllCollectionsEvent) {
       yield* selectAllCollections();
     } else if (event is UnSelectCollectionsEvent) {
       yield* unSelectCollections();
     } else if (event is DeleteCollectionProductsEvent) {
-      yield* deleteCollectionProducts();
+      yield* deleteCollections();
     } else if (event is DeleteSingleProduct) {
       yield* deleteSingleProduct(event.product);
     } else if (event is GetProductDetails) {
@@ -304,18 +304,22 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
     String businessId = state.businessId;
     Map bodyObj = model.toDictionary();
     bodyObj['businessUuid'] = businessId;
+    if (bodyObj.containsKey('sku')) {
+      bodyObj['sku'] = model.title;
+    }
+    bodyObj.remove('id');
     Map<String, dynamic> body = {
       'operationName': 'createProduct',
       'variables': {
         'product': bodyObj,
       },
-      'query': 'mutation createProduct(\$product: ProductInput!) {\n  createProduct(product: \$product) {\n    title\n    id\n  }\n}\n'
+      'query': 'mutation createProduct(\$product: ProductInput!) {\n  createProduct(product: \$product) {\n    titlen\n    id\n  }\n}\n'
     };
     dynamic response = await api.getProducts(GlobalUtils.activeToken.accessToken, body);
     if (response != null) {
 
     }
-    if (response != null) {
+    if (response is Map) {
       dynamic data = response['data'];
       if (data != null) {
         dynamic updateProduct = data['createProduct'];
@@ -328,6 +332,25 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
 
     yield ProductsScreenState(businessId: businessId);
     yield state.copyWith(updateSuccess: true, businessId: businessId);
+    yield* fetchProducts(businessId);
+  }
+
+
+  Stream<ProductsScreenState> deleteProducts(List<ProductsModel> models) async* {
+    String businessId = state.businessId;
+
+    List<String> ids = [];
+    models.forEach((element) {
+      ids.add(element.id);
+    });
+    Map<String, dynamic> body = {
+      'operationName': 'deleteProduct',
+      'variables': {
+        'ids': ids,
+      },
+      'query': 'mutation deleteProduct(\$ids: [String]) {\n  deleteProduct(ids: \$ids)\n}\n'
+    };
+    dynamic response = await api.getProducts(GlobalUtils.activeToken.accessToken, body);
     yield* fetchProducts(businessId);
   }
 
@@ -586,10 +609,6 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
   }
 
   Stream<ProductsScreenState> addToCollectionProducts() async* {
-
-  }
-
-  Stream<ProductsScreenState> deleteProducts() async* {
 
   }
 
