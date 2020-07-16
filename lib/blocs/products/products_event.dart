@@ -159,11 +159,13 @@ class UploadImageToProduct extends ProductsScreenEvent {
 
 class GetCollectionDetail extends ProductsScreenEvent {
   final CollectionModel collection;
+  final List<ProductsModel> addProducts;
 
-  GetCollectionDetail({this.collection});
+  GetCollectionDetail({this.collection, this.addProducts});
   @override
   List<Object> get props => [
     this.collection,
+    this.addProducts,
   ];
 }
 

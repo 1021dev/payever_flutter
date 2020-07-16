@@ -104,6 +104,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
       OverflowMenuItem(
         title: 'Add to Collection',
         onTap: () {
+          screenBloc.add(AddToCollectionEvent());
         },
       ),
       OverflowMenuItem(
@@ -939,6 +940,83 @@ class _ProductsScreenState extends State<ProductsScreen> {
         ),
       );
     }
+    if (state.addToCollection) {
+      List<Widget> collectionItems  = [];
+      collectionItems.add(getAddCollectionItem(state));
+      print(state.collections);
+      state.collectionLists.forEach ((collection) {
+        collectionItems.add(
+            CollectionGridItem(
+              collection,
+              addCollection: state.addToCollection,
+              onTap: (CollectionListModel model) {
+                Navigator.push(
+                  context,
+                  PageTransition(
+                    child: CollectionDetailScreen(
+                      businessId: widget.globalStateModel.currentBusiness.id,
+                      screenBloc: screenBloc,
+                      addProducts: state.addToCollection,
+                      collection: model.collectionModel,
+                    ),
+                    type: PageTransitionType.fade,
+                    duration: Duration(milliseconds: 500),
+                  ),
+                );
+              },
+              onCheck: (CollectionListModel model) {
+                screenBloc.add(CheckCollectionItem(model: model));
+              },
+            ));
+      });
+      return Container(
+        child: SmartRefresher(
+          enablePullDown: true,
+          enablePullUp: true,
+          header: MaterialClassicHeader(backgroundColor: Colors.black,semanticsLabel: '',),
+          footer: CustomFooter(
+            loadStyle: LoadStyle.ShowWhenLoading,
+            height: 1,
+            builder: (context, status) {
+              return Container();
+            },
+          ),
+          controller: _collectionsRefreshController,
+          onRefresh: () {
+            _refreshCollections();
+          },
+          onLoading: () {
+            _loadMoreCollections(state);
+          },
+          child: CustomScrollView(
+            slivers: <Widget>[
+              SliverGrid.count(
+                crossAxisCount: 1,
+                crossAxisSpacing: 12,
+                mainAxisSpacing: 12,
+                childAspectRatio: 1,
+                children: List.generate(
+                  collectionItems.length,
+                      (index) {
+                    return collectionItems[index];
+                  },
+                ),
+              ),
+              new SliverToBoxAdapter(
+                child: state.collectionLists.length < state.collectionInfo.itemCount ? Container(
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                ) : Container(),
+              )
+            ],
+          ),
+        ),
+      );
+    }
     switch(_selectedIndexValue) {
       case 0:
         List<Widget> productsItems  = [];
@@ -1336,6 +1414,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                     child: CollectionDetailScreen(
                       businessId: widget.globalStateModel.currentBusiness.id,
                       screenBloc: screenBloc,
+                      addProducts: state.addToCollection,
                     ),
                     type: PageTransitionType.fade,
                     duration: Duration(milliseconds: 500),

@@ -43,8 +43,6 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
       yield* selectAllProducts();
     } else if (event is UnSelectProductsEvent) {
       yield* unSelectProducts();
-    } else if (event is AddToCollectionEvent) {
-      yield* addToCollectionProducts();
     } else if (event is DeleteProductsEvent) {
       yield* deleteProducts(event.models);
     } else if (event is SelectAllCollectionsEvent) {
@@ -53,8 +51,6 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
       yield* unSelectCollections();
     } else if (event is DeleteCollectionProductsEvent) {
       yield* deleteCollections();
-    } else if (event is DeleteSingleProduct) {
-      yield* deleteSingleProduct(event.product);
     } else if (event is GetProductDetails) {
       if (event.productsModel != null) {
         yield state.copyWith(productDetail: event.productsModel);
@@ -77,7 +73,6 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
         yield* getCollectionDetail(event.collection.id);
       } else {
         yield state.copyWith(collectionDetail: new CollectionModel(),collectionProducts: [], deleteList: []);
-        yield* getProductCategories();
       }
     } else if (event is UpdateCollectionDetail) {
       if (event.collectionProducts != null) {
@@ -110,7 +105,9 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
         collectionDetail: CollectionModel(),
         collectionProducts: [],
       );
-    }
+    } else if (event is AddToCollectionEvent) {
+      yield state.copyWith(addToCollection: true);
+  }
   }
 
   Stream<ProductsScreenState> fetchProducts(String activeBusinessId) async* {
@@ -605,11 +602,20 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
     productList.forEach((element) {
       element.isChecked = false;
     });
-    yield state.copyWith(productLists: productList);
+    yield state.copyWith(productLists: productList, addToCollection: false);
   }
 
-  Stream<ProductsScreenState> addToCollectionProducts() async* {
+  Stream<ProductsScreenState> addToCollectionProducts(String collectionId) async* {
+    List<String> ids = [];
+    state.collectionProducts.forEach((element) {
+      ids.add(element.id);
+    });
+    Map<String, dynamic> body = {
+      'ids': ids
+    };
 
+    dynamic response = await api.addToCollection(GlobalUtils.activeToken.accessToken, state.businessId, collectionId, body);
+    yield* fetchProducts(state.businessId);
   }
 
   Stream<ProductsScreenState> selectAllCollections() async* {
@@ -628,14 +634,6 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
       element.isChecked = false;
     });
     yield state.copyWith(collectionLists: collectionList);
-  }
-
-  Stream<ProductsScreenState> deleteCollectionProducts() async* {
-
-  }
-
-  Stream<ProductsScreenState> deleteSingleProduct(ProductListModel model) async* {
-
   }
 
   Stream<ProductsScreenState> getProductDetail(String id) async* {
@@ -820,7 +818,21 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
         }
       }
     }
+    if (state.addToCollection) {
+      state.productLists.forEach((element) {
+        bool isContain = false;
+        products.forEach((product) {
+          if (product.id == element.productsModel.id) {
+            isContain = true;
+          }
+        });
+        if (!isContain) {
+          products.add(element.productsModel);
+        }
+      });
+    }
     yield state.copyWith(collectionDetail: model, collectionProducts: products);
+    yield* unSelectProducts();
   }
 
 
@@ -852,7 +864,7 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
       };
       dynamic res = await api.getProducts(GlobalUtils.activeToken.accessToken, body);
     });
-    yield* fetchProducts(businessId);
+    yield* addToCollectionProducts(model.id);
   }
 
   Stream<ProductsScreenState> createCollection(CollectionModel model) async* {

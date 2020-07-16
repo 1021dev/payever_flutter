@@ -28,10 +28,12 @@ class ProductsScreenState {
   final num increaseStock;
   final List<ProductsModel> collectionProducts;
   final List<ProductsModel> deleteList;
+  final List<ProductsModel> addList;
   final String searchText;
   final List<FilterItem> filterTypes;
   final String sortType;
   final bool updateSuccess;
+  final bool addToCollection;
 
   ProductsScreenState({
     this.isLoading = false,
@@ -57,10 +59,12 @@ class ProductsScreenState {
     this.collectionDetail,
     this.collectionProducts = const [],
     this.deleteList = const [],
+    this.addList = const [],
     this.searchText = '',
     this.filterTypes = const [],
     this.sortType = 'default',
     this.updateSuccess = false,
+    this.addToCollection = false,
   });
 
   List<Object> get props => [
@@ -91,6 +95,8 @@ class ProductsScreenState {
     this.sortType,
     this.updateSuccess,
     this.deleteList,
+    this.addList,
+    this.addToCollection,
   ];
 
   ProductsScreenState copyWith({
@@ -116,11 +122,13 @@ class ProductsScreenState {
     num increaseStock,
     List<ProductsModel> collectionProducts,
     List<ProductsModel> deleteList,
+    List<ProductsModel> addList,
     CollectionModel collectionDetail,
     String searchText,
     List<FilterItem> filterTypes,
     String sortType,
     bool updateSuccess,
+    bool addToCollection,
   }) {
     return ProductsScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -145,11 +153,13 @@ class ProductsScreenState {
       increaseStock: increaseStock ?? this.increaseStock,
       collectionProducts: collectionProducts ?? this.collectionProducts,
       deleteList: deleteList ?? this.deleteList,
+      addList: addList ?? this.addList,
       collectionDetail: collectionDetail ?? this.collectionDetail,
       searchText: searchText ?? this.searchText,
       filterTypes: filterTypes ?? this.filterTypes,
       sortType: sortType ?? this.sortType,
       updateSuccess: updateSuccess ?? this.updateSuccess,
+      addToCollection: addToCollection ?? this.addToCollection,
     );
   }
 }

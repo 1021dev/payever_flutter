@@ -600,6 +600,25 @@ class ApiService {
     }
   }
 
+
+  Future<dynamic> addToCollection(String token, String businessId, String collectionId, Map<String, dynamic> body) async {
+    try {
+      print('$TAG - addToCollection()');
+      print('Product Payload body => $body');
+      dynamic response = await _client.putTypeless(
+          '${Env.products}/collections/$businessId/$collectionId/products/associate',
+          body: body,
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
   Future<dynamic> deleteCollections(String token, String idBusiness, Map body) async {
     try {
       print('$TAG - updateCollection()');

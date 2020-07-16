@@ -39,10 +39,10 @@ final GlobalKey<TagsState> _tagStateKey = GlobalKey<TagsState>();
 // ignore: must_be_immutable
 class ProductDetailScreen extends StatefulWidget {
 
-  ProductsScreenBloc screenBloc;
-  String businessId;
-  ProductsModel productsModel;
-  bool fromDashBoard;
+  final ProductsScreenBloc screenBloc;
+  final String businessId;
+  final ProductsModel productsModel;
+  final bool fromDashBoard;
 
   ProductDetailScreen({
     this.screenBloc,
@@ -1842,7 +1842,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   Future getImage(int type) async {
     ImagePicker imagePicker = ImagePicker();
     var image = await imagePicker.getImage(
-      source: type == 0 ? ImageSource.gallery : ImageSource.camera,
+      source: type == 1 ? ImageSource.gallery : ImageSource.camera,
     );
     if (image != null) {
       await _cropImage(File(image.path));

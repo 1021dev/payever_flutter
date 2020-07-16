@@ -10,6 +10,7 @@ class CollectionGridItem extends StatelessWidget {
   final CollectionListModel collection;
   final Function onTap;
   final Function onCheck;
+  final bool addCollection;
 
   final formatter = new NumberFormat('###,###,###.00', 'en_US');
 
@@ -17,6 +18,7 @@ class CollectionGridItem extends StatelessWidget {
       this.collection, {
         this.onTap,
         this.onCheck,
+        this.addCollection = false,
       });
 
   @override
@@ -31,7 +33,7 @@ class CollectionGridItem extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Container(
+            addCollection ? Container() : Container(
               padding: EdgeInsets.only(top: 16, left: 24),
               alignment: Alignment.centerLeft,
               child: InkWell(

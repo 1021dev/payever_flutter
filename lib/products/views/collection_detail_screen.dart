@@ -25,16 +25,18 @@ bool _isTablet;
 // ignore: must_be_immutable
 class CollectionDetailScreen extends StatefulWidget {
 
-  ProductsScreenBloc screenBloc;
-  String businessId;
-  CollectionModel collection;
-  bool fromDashBoard;
+  final ProductsScreenBloc screenBloc;
+  final String businessId;
+  final CollectionModel collection;
+  final bool fromDashBoard;
+  final bool addProducts;
 
   CollectionDetailScreen({
     this.screenBloc,
     this.businessId,
     this.collection,
     this.fromDashBoard = false,
+    this.addProducts = false,
   });
 
   @override
@@ -726,127 +728,126 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
 
   Widget _getProductsList(ProductsScreenState state) {
     if (_selectedSectionIndex != 2) return Container();
-    return Container(
-      child: ListView.separated(
-        shrinkWrap: true,
-        itemBuilder: (context, index) {
-          ProductsModel product = state.collectionProducts[index];
-          String imgUrl = '';
-          if (product.images.length > 0 ) {
-            imgUrl = product.images.first;
-          }
-          return Container(
-            height: 60,
-            padding: EdgeInsets.only(left: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Expanded(child: Row(
-                  children: <Widget>[
-                    imgUrl != '' ? CachedNetworkImage(
-                      imageUrl: '${Env.storage}/products/$imgUrl',
-                      imageBuilder: (context, imageProvider) => Container(
-                        height: 50,
-                        width: 50,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(Radius.circular(4.0)),
-                          image: DecorationImage(
-                            image: imageProvider,
-                          ),
-                        ),
-                      ),
-                      placeholder: (context, url) => Container(
-                        child: Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                      ),
-                      errorWidget: (context, url, error) {
-                        return Container(
-                          height: 50,
-                          width: 50,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4),
-                            color: Colors.white10,
-                          ),
-                          child: Center(
-                            child: SvgPicture.asset('assets/images/noimage.svg', width: 20, height: 20,),
-                          ),
-                        );
-                      },
-                    ) : Container(
+    return ListView.separated(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      itemBuilder: (context, index) {
+        ProductsModel product = state.collectionProducts[index];
+        String imgUrl = '';
+        if (product.images.length > 0 ) {
+          imgUrl = product.images.first;
+        }
+        return Container(
+          height: 60,
+          padding: EdgeInsets.only(left: 16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Expanded(child: Row(
+                children: <Widget>[
+                  imgUrl != '' ? CachedNetworkImage(
+                    imageUrl: '${Env.storage}/products/$imgUrl',
+                    imageBuilder: (context, imageProvider) => Container(
                       height: 50,
                       width: 50,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(4,),
-                        color: Colors.white10,
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(4.0)),
+                        image: DecorationImage(
+                          image: imageProvider,
+                        ),
                       ),
+                    ),
+                    placeholder: (context, url) => Container(
                       child: Center(
-                        child: SvgPicture.asset('assets/images/noimage.svg', width: 20, height: 20,),
+                        child: CircularProgressIndicator(),
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 16),
+                    errorWidget: (context, url, error) {
+                      return Container(
+                        height: 50,
+                        width: 50,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4),
+                          color: Colors.white10,
+                        ),
+                        child: Center(
+                          child: SvgPicture.asset('assets/images/noimage.svg', width: 20, height: 20,),
+                        ),
+                      );
+                    },
+                  ) : Container(
+                    height: 50,
+                    width: 50,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4,),
+                      color: Colors.white10,
                     ),
-                    Flexible(
-                      child: Text(
-                        product.title,
-                      ),
+                    child: Center(
+                      child: SvgPicture.asset('assets/images/noimage.svg', width: 20, height: 20,),
                     ),
-                  ],
-                ),
-                ),
-                Row(
-                  children: <Widget>[
-                    RichText(
-                      textAlign: TextAlign.center,
-                      text: new TextSpan(
-                        children: [
-                          new TextSpan(
-                            text: '${product.price} ${numberFormat.simpleCurrencySymbol(product.currency)} ',
-                            style: TextStyle(color: Colors.white, fontSize: 12),
-                          ),
-                        ],
-                      ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 16),
+                  ),
+                  Flexible(
+                    child: Text(
+                      product.title,
                     ),
-                    MaterialButton(
-                      onPressed: () {
-                        List<ProductsModel> products = state.collectionProducts;
-                        List<ProductsModel> deletes = [];
-                        deletes.addAll(state.deleteList);
-                        products.remove(product);
-                        deletes.add(product);
-                        widget.screenBloc.add(UpdateCollectionDetail(collectionModel: state.collectionDetail, collectionProducts: products, deleteList: deletes));
-                      },
-                      height: 30,
-                      elevation: 0,
-                      minWidth: 0,
-                      shape: CircleBorder(),
-                      visualDensity: VisualDensity.comfortable,
-                      child: SvgPicture.asset('assets/images/xsinacircle.svg', width: 30, height: 30,),
+                  ),
+                ],
+              ),
+              ),
+              Row(
+                children: <Widget>[
+                  RichText(
+                    textAlign: TextAlign.center,
+                    text: new TextSpan(
+                      children: [
+                        new TextSpan(
+                          text: '${product.price} ${numberFormat.simpleCurrencySymbol(product.currency)} ',
+                          style: TextStyle(color: Colors.white, fontSize: 12),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ],
-            ),
-          );
-        },
-        separatorBuilder: (context, index) {
-          return Divider(
-            height: 0,
-            thickness: 0,
-            color: Color(0x80888888),
-          );
-        },
-        itemCount: state.collectionProducts.length,
-      ),
+                  ),
+                  MaterialButton(
+                    onPressed: () {
+                      List<ProductsModel> products = state.collectionProducts;
+                      List<ProductsModel> deletes = [];
+                      deletes.addAll(state.deleteList);
+                      products.remove(product);
+                      deletes.add(product);
+                      widget.screenBloc.add(UpdateCollectionDetail(collectionModel: state.collectionDetail, collectionProducts: products, deleteList: deletes));
+                    },
+                    height: 30,
+                    elevation: 0,
+                    minWidth: 0,
+                    shape: CircleBorder(),
+                    visualDensity: VisualDensity.comfortable,
+                    child: SvgPicture.asset('assets/images/xsinacircle.svg', width: 30, height: 30,),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+      separatorBuilder: (context, index) {
+        return Divider(
+          height: 0,
+          thickness: 0,
+          color: Color(0x80888888),
+        );
+      },
+      itemCount: state.collectionProducts.length,
     );
   }
 
   Future getImage(int type) async {
     ImagePicker imagePicker = ImagePicker();
     var image = await imagePicker.getImage(
-      source: type == 0 ? ImageSource.gallery : ImageSource.camera,
+      source: type == 1 ? ImageSource.gallery : ImageSource.camera,
     );
     if (image != null) {
       await _cropImage(File(image.path));
