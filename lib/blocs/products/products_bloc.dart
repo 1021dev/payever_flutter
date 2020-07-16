@@ -75,10 +75,10 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
       yield* uploadImageToProducts(event.file);
     } else if (event is GetCollectionDetail) {
       if (event.collection != null) {
-        yield state.copyWith(collectionDetail: event.collection);
+        yield state.copyWith(collectionDetail: event.collection, deleteList: [], collectionProducts: []);
         yield* getCollectionDetail(event.collection.id);
       } else {
-        yield state.copyWith(collectionDetail: CollectionModel(),collectionProducts: []);
+        yield state.copyWith(collectionDetail: new CollectionModel(),collectionProducts: [], deleteList: []);
         yield* getProductCategories();
       }
     } else if (event is UpdateCollectionDetail) {
@@ -816,7 +816,7 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
     }
 
     deleteList.forEach((element) async {
-      Map bodyObj = model.toDictionary();
+      Map bodyObj = element.toDictionary();
       bodyObj['businessUuid'] = businessId;
       bodyObj['collections'] = [];
       Map<String, dynamic> body = {

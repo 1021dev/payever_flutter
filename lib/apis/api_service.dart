@@ -584,7 +584,7 @@ class ApiService {
 
   Future<dynamic> updateCollection(String token, String idBusiness, Map body, String id) async {
     try {
-      print('$TAG - updateCollection()');
+      print('$TAG - updateCollection() => $body');
       dynamic response = await _client.patchTypeless(
           '$productBase/collections/$idBusiness/$id',
           body: body,

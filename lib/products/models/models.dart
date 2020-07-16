@@ -494,11 +494,14 @@ class CollectionModel {
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> map = {};
-    String dateString = DateFormat("yyyy-MM-dd'T'hh:mm:ss.ZZZZ").format(DateTime.now());
+    String dateString = DateFormat("yyyy-MM-dd'T'hh:mm:ss").format(DateTime.now());
     map['name'] = name;
     map['activeSince'] = dateString;
     map['slug'] = slug;
     map['description'] = description;
+    if (image != null) {
+      map['image'] = image;
+    }
     List channelSetsArr = [];
     channelSets.forEach((element) {
       channelSetsArr.add(element.toDictionary());
@@ -540,12 +543,11 @@ class FillCondition {
   Map<String, dynamic> toDictionary() {
     Map<String, dynamic> map = {};
     map['strict'] = strict;
-    if (filters.length > 0) {
-      List filtersObj = [];
-      filters.forEach((element) {
-        filtersObj.add(element.toDictionary());
-      });
-    }
+    List filtersObj = [];
+    filters.forEach((element) {
+      filtersObj.add(element.toDictionary());
+    });
+    map['filters'] = filtersObj;
     return map;
   }
 }

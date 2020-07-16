@@ -840,7 +840,8 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
                     MaterialButton(
                       onPressed: () {
                         List<ProductsModel> products = state.collectionProducts;
-                        List<ProductsModel> deletes = state.deleteList;
+                        List<ProductsModel> deletes = [];
+                        deletes.addAll(state.deleteList);
                         products.remove(product);
                         deletes.add(product);
                         widget.screenBloc.add(UpdateCollectionDetail(collectionModel: state.collectionDetail, collectionProducts: products, deleteList: deletes));
