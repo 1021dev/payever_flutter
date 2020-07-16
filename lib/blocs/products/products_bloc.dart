@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
+import 'package:date_format/date_format.dart';
+import 'package:intl/intl.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/products/models/models.dart';
@@ -81,14 +83,14 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
       }
     } else if (event is UpdateCollectionDetail) {
       if (event.collectionProducts != null) {
-        yield state.copyWith(collectionDetail: event.collectionModel, collectionProducts: event.collectionProducts);
+        yield state.copyWith(collectionDetail: event.collectionModel, collectionProducts: event.collectionProducts, deleteList: event.deleteList);
       } else {
         yield state.copyWith(collectionDetail: event.collectionModel);
       }
     } else if (event is SaveCollectionDetail) {
-
+      yield* updateCollection(event.collectionModel, event.deleteList);
     } else if (event is CreateCollectionEvent) {
-
+      yield* createCollection(event.collectionModel);
     } else if (event is UploadImageToCollection) {
       yield* uploadImageToCollection(event.file);
     } else if (event is UpdateProductSearchText) {
@@ -802,5 +804,57 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
       }
     }
     yield state.copyWith(collectionDetail: model, collectionProducts: products);
+  }
+
+
+  Stream<ProductsScreenState> updateCollection(CollectionModel model, List<ProductsModel> deleteList) async* {
+    String businessId = state.businessId;
+    dynamic response = await api.updateCollection(GlobalUtils.activeToken.accessToken, state.businessId, model.toJson(), model.id);
+    if (response is Map) {
+      CollectionModel collectionModel = CollectionModel.toMap(response);
+      print(collectionModel.toJson());
+    }
+
+    deleteList.forEach((element) async {
+      Map bodyObj = model.toDictionary();
+      bodyObj['businessUuid'] = businessId;
+      bodyObj['collections'] = [];
+      Map<String, dynamic> body = {
+        'operationName': 'updateProduct',
+        'variables': {
+          'product': bodyObj,
+        },
+        'query': 'mutation updateProduct(\$product: ProductUpdateInput!) {\n  updateProduct(product: \$product) {\n    title\n    id\n  }\n}\n'
+      };
+      dynamic res = await api.getProducts(GlobalUtils.activeToken.accessToken, body);
+    });
+    yield* fetchProducts(businessId);
+  }
+
+  Stream<ProductsScreenState> createCollection(CollectionModel model) async* {
+
+    String businessId = state.businessId;
+    dynamic response = await api.createCollection(GlobalUtils.activeToken.accessToken, state.businessId, model.toJson());
+    if (response is Map) {
+      CollectionModel collectionModel = CollectionModel.toMap(response);
+      print(collectionModel.toJson());
+    }
+    yield ProductsScreenState(businessId: businessId);
+    yield state.copyWith(updateSuccess: true, businessId: businessId);
+    yield* fetchProducts(businessId);
+  }
+
+  Stream<ProductsScreenState> deleteCollections() async* {
+
+    List<String> list = [];
+    List<CollectionListModel> collections = state.collectionLists;
+    collections.forEach((element) {
+      if (element.isChecked) {
+        list.add(element.collectionModel.id);
+      }
+    });
+    Map<String, dynamic> body = {'ids': list};
+    dynamic response = await api.deleteCollections(GlobalUtils.activeToken.accessToken, state.businessId, body);
+    yield* reloadCollections();
   }
 }

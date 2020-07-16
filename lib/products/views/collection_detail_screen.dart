@@ -1,30 +1,21 @@
 import 'dart:io';
 import 'dart:ui';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:date_format/date_format.dart';
 import 'package:dropdown_formfield/dropdown_formfield.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:flutter_tags/flutter_tags.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
-import 'package:payever/blocs/shop/shop.dart';
 import 'package:payever/commons/commons.dart';
-import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/products/models/models.dart';
 import 'package:payever/products/widgets/product_detail_header.dart';
-import 'package:payever/products/widgets/product_detail_subsection_header.dart';
-import 'package:payever/shop/models/models.dart';
 import 'package:payever/transactions/models/enums.dart';
 
 bool _isPortrait;
@@ -73,7 +64,6 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
   void initState() {
     widget.screenBloc.add(GetCollectionDetail(collection: widget.collection));
     if (widget.collection != null) {
-
       _collectionTitleController.text = widget.collection.name;
       _descriptionTextController.text = widget.collection.description;
 
@@ -94,13 +84,27 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
+    _isPortrait = Orientation.portrait == MediaQuery
+        .of(context)
+        .orientation;
     Measurements.height = (_isPortrait
-        ? MediaQuery.of(context).size.height
-        : MediaQuery.of(context).size.width);
+        ? MediaQuery
+        .of(context)
+        .size
+        .height
+        : MediaQuery
+        .of(context)
+        .size
+        .width);
     Measurements.width = (_isPortrait
-        ? MediaQuery.of(context).size.width
-        : MediaQuery.of(context).size.height);
+        ? MediaQuery
+        .of(context)
+        .size
+        .width
+        : MediaQuery
+        .of(context)
+        .size
+        .height);
     _isTablet = Measurements.width < 600 ? false : true;
 
     return BlocListener(
@@ -140,7 +144,9 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
       title: Row(
         children: <Widget>[
           Text(
-            widget.collection != null ? Language.getProductStrings('Edit Collection'): Language.getProductStrings('Add Collection'),
+            widget.collection != null ? Language.getProductStrings(
+                'Edit Collection') : Language.getProductStrings(
+                'Add Collection'),
             style: TextStyle(
               color: Colors.white,
               fontSize: 16,
@@ -185,7 +191,16 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
               Language.getProductStrings('save'),
             ),
             onPressed: () {
-              Future.delayed(Duration(milliseconds: 1000)).then((value) => Navigator.pop(context));
+              if (state.collectionDetail.id == '') {
+                widget.screenBloc.add(CreateCollectionEvent(
+                  collectionModel: state.collectionDetail,));
+              } else {
+                widget.screenBloc.add(SaveCollectionDetail(
+                    collectionModel: state.collectionDetail,
+                    deleteList: state.deleteList));
+              }
+              Future.delayed(Duration(milliseconds: 1000)).then((value) =>
+                  Navigator.pop(context));
             },
           ),
         ),
@@ -253,7 +268,8 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
             ),
             _getMainDetail(state,),
             ProductDetailHeaderView(
-              title: Language.getProductStrings('description.title').toUpperCase(),
+              title: Language.getProductStrings('description.title')
+                  .toUpperCase(),
               detail: '',
               isExpanded: _selectedSectionIndex == 1,
               onTap: () {
@@ -268,7 +284,7 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
               color: Color(0x80888888),
             ),
             _getDescriptionDetail(state,),
-            ProductDetailHeaderView(
+            state.collectionDetail.id != '' ? ProductDetailHeaderView(
               title: Language.getProductListStrings('products').toUpperCase(),
               detail: '',
               isExpanded: _selectedSectionIndex == 2,
@@ -277,13 +293,15 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
                   _selectedSectionIndex = _selectedSectionIndex == 2 ? -1 : 2;
                 });
               },
-            ),
+            ) : Container(),
             Divider(
               height: 0,
               thickness: 0.5,
               color: Color(0x80888888),
             ),
-            _getProductsList(state,)
+            state.collectionDetail.id != ''
+                ? _getProductsList(state,)
+                : Container(),
           ],
         ),
       ),
@@ -308,43 +326,46 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
             height: Measurements.width,
             child: CachedNetworkImage(
               imageUrl: '${Env.storage}/products/$imgUrl',
-              imageBuilder: (context, imageProvider) => Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(12.0)),
-                  image: DecorationImage(
-                    image: imageProvider,
-                    fit: BoxFit.contain,
-                  ),
-                ),
-              ),
-              placeholder: (context, url) => Container(
-                child: Center(
-                  child: CircularProgressIndicator(),
-                ),
-              ),
-              errorWidget: (context, url, error) =>  Container(
-                height: Measurements.width,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SvgPicture.asset('assets/images/insertimageicon.svg'),
-                    Padding(
-                      padding: EdgeInsets.only(top: 16),
-                    ),
-                    Text(
-                      'Upload images',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w400,
+              imageBuilder: (context, imageProvider) =>
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                      image: DecorationImage(
+                        image: imageProvider,
+                        fit: BoxFit.contain,
                       ),
                     ),
-                  ],
-                ),
-              ),
+                  ),
+              placeholder: (context, url) =>
+                  Container(
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+              errorWidget: (context, url, error) =>
+                  Container(
+                    height: Measurements.width,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        SvgPicture.asset('assets/images/insertimageicon.svg'),
+                        Padding(
+                          padding: EdgeInsets.only(top: 16),
+                        ),
+                        Text(
+                          'Upload images',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
             ),
-          ): GestureDetector(
+          ) : GestureDetector(
             onTap: () {
               getImage(0);
             },
@@ -356,7 +377,7 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
               alignment: Alignment.center,
               child: state.isUploading ? Container(
                 child: Center(child: CircularProgressIndicator()),
-              ): Column(
+              ) : Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   SvgPicture.asset('assets/images/insertimageicon.svg'),
@@ -382,16 +403,24 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
             height: 64,
             color: Color(0x80111111),
             padding: EdgeInsets.only(left: 16, right: 16),
-            child: TextField(
-              controller: _collectionTitleController,
-              onChanged: (String text) {},
+            child: TextFormField(
+              initialValue: widget.collection != null ? widget
+                  .collection.name : '',
+              onChanged: (String text) {
+                CollectionModel model = state.collectionDetail;
+                model.name = text;
+                model.slug = text;
+                widget.screenBloc.add(
+                    UpdateCollectionDetail(collectionModel: model));
+              },
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
               ),
               decoration: InputDecoration(
-                labelText: Language.getProductStrings('mainSection.form.title.label'),
+                labelText: Language.getProductStrings(
+                    'mainSection.form.title.label'),
                 labelStyle: TextStyle(
                   fontWeight: FontWeight.w200,
                 ),
@@ -417,6 +446,16 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
                 onChanged: (value) {
                   setState(() {
                     conditionOption = value;
+                    if (conditionOption != 'No Conditions') {
+                      CollectionModel collection = state.collectionDetail;
+                      FillCondition fillCondition = collection
+                          .automaticFillConditions;
+                      fillCondition.strict =
+                          conditionOption == 'All Conditions';
+                      collection.automaticFillConditions = fillCondition;
+                      widget.screenBloc.add(
+                          UpdateCollectionDetail(collectionModel: collection));
+                    }
                   });
                 },
                 dataSource: productConditionOptions.map((e) {
@@ -434,10 +473,13 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
               : ListView.separated(
             shrinkWrap: true,
             padding: EdgeInsets.only(left: 16, right: 16),
-            itemBuilder: (context, index){
-              Filter filter = state.collectionDetail.automaticFillConditions.filters[index];
+            itemBuilder: (context, index) {
+              Filter filter = state.collectionDetail.automaticFillConditions
+                  .filters[index];
               print('${filter.value} ${filter.field} ${filter.fieldCondition}');
-              Map<String, String> filterConditions = filterConditionsByFilterType(filter.field);
+              Map<String,
+                  String> filterConditions = filterConditionsByFilterType(
+                  filter.field);
               print(filterConditions);
               return Container(
                 color: Color(0x20111111),
@@ -468,28 +510,35 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
                               isExpanded: true,
                               value: filter.field,
                               onChanged: (value) {
-                                CollectionModel collection = state.collectionDetail;
-                                FillCondition fillCondition = collection.automaticFillConditions;
+                                CollectionModel collection = state
+                                    .collectionDetail;
+                                FillCondition fillCondition = collection
+                                    .automaticFillConditions;
                                 Filter f = filter;
                                 f.field = value;
-                                Map<String, String> conditions = filterConditionsByFilterType(filter.field);
+                                Map<String,
+                                    String> conditions = filterConditionsByFilterType(
+                                    filter.field);
                                 print(conditions);
                                 f.fieldCondition = conditions.keys.first;
                                 fillCondition.filters[index] = f;
-                                collection.automaticFillConditions = fillCondition;
-                                widget.screenBloc.add(UpdateCollectionDetail(collectionModel: collection));
+                                collection.automaticFillConditions =
+                                    fillCondition;
+                                widget.screenBloc.add(UpdateCollectionDetail(
+                                    collectionModel: collection));
                               },
-                              items: conditionFields.keys.map((label) => DropdownMenuItem(
-                                child: Text(
-                                  conditionFields[label],
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w300,
-                                  ),
-                                ),
-                                value: label,
-                              ))
+                              items: conditionFields.keys.map((label) =>
+                                  DropdownMenuItem(
+                                    child: Text(
+                                      conditionFields[label],
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w300,
+                                      ),
+                                    ),
+                                    value: label,
+                                  ))
                                   .toList(),
                             ),
                           ),
@@ -519,25 +568,30 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
                               isExpanded: true,
                               value: filter.fieldCondition,
                               onChanged: (value) {
-                                CollectionModel collection = state.collectionDetail;
-                                FillCondition fillCondition = collection.automaticFillConditions;
+                                CollectionModel collection = state
+                                    .collectionDetail;
+                                FillCondition fillCondition = collection
+                                    .automaticFillConditions;
                                 Filter f = filter;
                                 f.fieldCondition = value;
                                 fillCondition.filters[index] = f;
-                                collection.automaticFillConditions = fillCondition;
-                                widget.screenBloc.add(UpdateCollectionDetail(collectionModel: collection));
+                                collection.automaticFillConditions =
+                                    fillCondition;
+                                widget.screenBloc.add(UpdateCollectionDetail(
+                                    collectionModel: collection));
                               },
-                              items: filterConditions.keys.map((String value) => DropdownMenuItem(
-                                child: Text(
-                                  filterConditions[value],
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w300,
-                                  ),
-                                ),
-                                value: value,
-                              ))
+                              items: filterConditions.keys.map((String value) =>
+                                  DropdownMenuItem(
+                                    child: Text(
+                                      filterConditions[value],
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w300,
+                                      ),
+                                    ),
+                                    value: value,
+                                  ))
                                   .toList(),
                             ),
                           ),
@@ -552,12 +606,16 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
                               height: 64,
                               child: TextFormField(
                                 onChanged: (String text) {
-                                  CollectionModel collection = state.collectionDetail;
-                                  FillCondition fillCondition = collection.automaticFillConditions;
+                                  CollectionModel collection = state
+                                      .collectionDetail;
+                                  FillCondition fillCondition = collection
+                                      .automaticFillConditions;
                                   filter.value = text;
                                   fillCondition.filters[index] = filter;
-                                  collection.automaticFillConditions = fillCondition;
-                                  widget.screenBloc.add(UpdateCollectionDetail(collectionModel: collection));
+                                  collection.automaticFillConditions =
+                                      fillCondition;
+                                  widget.screenBloc.add(UpdateCollectionDetail(
+                                      collectionModel: collection));
                                 },
                                 style: TextStyle(
                                   color: Colors.white,
@@ -565,12 +623,13 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
                                   fontWeight: FontWeight.w400,
                                 ),
                                 decoration: InputDecoration(
-                                  labelText: Language.getProductStrings('Value'),
-                                  labelStyle: TextStyle(
-                                    fontWeight: FontWeight.w200,
-                                  ),
-                                  border: UnderlineInputBorder(),
-                                  contentPadding: EdgeInsets.all(8)
+                                    labelText: Language.getProductStrings(
+                                        'Value'),
+                                    labelStyle: TextStyle(
+                                      fontWeight: FontWeight.w200,
+                                    ),
+                                    border: UnderlineInputBorder(),
+                                    contentPadding: EdgeInsets.all(8)
                                 ),
                                 initialValue: filter.value,
                                 maxLines: 1,
@@ -580,18 +639,24 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
                             ),),
                           MaterialButton(
                             onPressed: () {
-                              CollectionModel collection = state.collectionDetail;
-                              FillCondition fillCondition = collection.automaticFillConditions;
+                              CollectionModel collection = state
+                                  .collectionDetail;
+                              FillCondition fillCondition = collection
+                                  .automaticFillConditions;
                               fillCondition.filters.remove(filter);
-                              collection.automaticFillConditions = fillCondition;
-                              widget.screenBloc.add(UpdateCollectionDetail(collectionModel: collection));
+                              collection.automaticFillConditions =
+                                  fillCondition;
+                              widget.screenBloc.add(UpdateCollectionDetail(
+                                  collectionModel: collection));
                             },
                             height: 24,
                             elevation: 0,
                             minWidth: 0,
                             shape: CircleBorder(),
                             visualDensity: VisualDensity.comfortable,
-                            child: SvgPicture.asset('assets/images/xsinacircle.svg', width: 24, height: 24,),
+                            child: SvgPicture.asset(
+                              'assets/images/xsinacircle.svg', width: 24,
+                              height: 24,),
                           ),
                         ],
                       ),
@@ -607,7 +672,8 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
                 color: Color(0x80888888),
               );
             },
-            itemCount: state.collectionDetail != null ? state.collectionDetail.automaticFillConditions.filters.length : 0,
+            itemCount: state.collectionDetail != null ? state.collectionDetail
+                .automaticFillConditions.filters.length : 0,
             physics: NeverScrollableScrollPhysics(),
           ),
           conditionOption == 'No Conditions' ? Container() : Container(
@@ -615,11 +681,17 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
             child: MaterialButton(
               onPressed: () {
                 CollectionModel collection = state.collectionDetail;
-                FillCondition fillCondition = collection.automaticFillConditions;
-                Filter filter = Filter(field: 'title', fieldCondition: 'is', fieldType: 'string', value: '');
+                FillCondition fillCondition = collection
+                    .automaticFillConditions;
+                fillCondition.strict = conditionOption == 'All Conditions';
+                Filter filter = Filter(field: 'title',
+                  fieldCondition: 'is',
+                  fieldType: 'string',
+                  value: '',);
                 fillCondition.filters.add(filter);
                 collection.automaticFillConditions = fillCondition;
-                widget.screenBloc.add(UpdateCollectionDetail(collectionModel: collection));
+                widget.screenBloc.add(
+                    UpdateCollectionDetail(collectionModel: collection));
               },
               child: Text(
                 Language.getProductListStrings('+ Add Condition'),
@@ -654,9 +726,15 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
             ),
           ),
           Expanded(
-            child: TextField(
-              controller: _descriptionTextController,
-              onChanged: (String text) {},
+            child: TextFormField(
+              initialValue: state.collectionDetail != null ? state
+                  .collectionDetail.description : '',
+              onChanged: (String text) {
+                CollectionModel model = state.collectionDetail;
+                model.description = text;
+                widget.screenBloc.add(
+                    UpdateCollectionDetail(collectionModel: model));
+              },
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 16,
@@ -762,8 +840,10 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
                     MaterialButton(
                       onPressed: () {
                         List<ProductsModel> products = state.collectionProducts;
+                        List<ProductsModel> deletes = state.deleteList;
                         products.remove(product);
-                        widget.screenBloc.add(UpdateCollectionDetail(collectionModel: state.collectionDetail, collectionProducts: products));
+                        deletes.add(product);
+                        widget.screenBloc.add(UpdateCollectionDetail(collectionModel: state.collectionDetail, collectionProducts: products, deleteList: deletes));
                       },
                       height: 30,
                       elevation: 0,
@@ -789,7 +869,6 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
       ),
     );
   }
-
 
   Future getImage(int type) async {
     ImagePicker imagePicker = ImagePicker();

@@ -27,6 +27,7 @@ class ProductsScreenState {
   final dynamic billingSubscription;
   final num increaseStock;
   final List<ProductsModel> collectionProducts;
+  final List<ProductsModel> deleteList;
   final String searchText;
   final List<FilterItem> filterTypes;
   final String sortType;
@@ -55,6 +56,7 @@ class ProductsScreenState {
     this.increaseStock = 0,
     this.collectionDetail,
     this.collectionProducts = const [],
+    this.deleteList = const [],
     this.searchText = '',
     this.filterTypes = const [],
     this.sortType = 'default',
@@ -88,6 +90,7 @@ class ProductsScreenState {
     this.filterTypes,
     this.sortType,
     this.updateSuccess,
+    this.deleteList,
   ];
 
   ProductsScreenState copyWith({
@@ -112,6 +115,7 @@ class ProductsScreenState {
     dynamic billingSubscription,
     num increaseStock,
     List<ProductsModel> collectionProducts,
+    List<ProductsModel> deleteList,
     CollectionModel collectionDetail,
     String searchText,
     List<FilterItem> filterTypes,
@@ -140,6 +144,7 @@ class ProductsScreenState {
       billingSubscription: billingSubscription ?? this.billingSubscription,
       increaseStock: increaseStock ?? this.increaseStock,
       collectionProducts: collectionProducts ?? this.collectionProducts,
+      deleteList: deleteList ?? this.deleteList,
       collectionDetail: collectionDetail ?? this.collectionDetail,
       searchText: searchText ?? this.searchText,
       filterTypes: filterTypes ?? this.filterTypes,

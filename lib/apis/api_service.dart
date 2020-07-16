@@ -564,6 +564,60 @@ class ApiService {
     }
   }
 
+  Future<dynamic> createCollection(String token, String idBusiness, Map body) async {
+    try {
+      print('$TAG - createCollection()');
+      dynamic response = await _client.postTypeLess(
+          '$productBase/collections/$idBusiness',
+          body: body,
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> updateCollection(String token, String idBusiness, Map body, String id) async {
+    try {
+      print('$TAG - updateCollection()');
+      dynamic response = await _client.patchTypeless(
+          '$productBase/collections/$idBusiness/$id',
+          body: body,
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> deleteCollections(String token, String idBusiness, Map body) async {
+    try {
+      print('$TAG - updateCollection()');
+      dynamic response = await _client.deleteTypeless(
+          '$productBase/collections/$idBusiness/list',
+          body: body,
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<dynamic> getShops(String idBusiness, String token) async {
     try {
       print('$TAG - getShops()');
@@ -1348,7 +1402,6 @@ class ApiService {
       dynamic response = await _client.postTypeLess(
           '$shopBase/api/business/$idBusiness/shop',
           body: {
-//            'logo': logo,
             'name': name,
           },
           headers: {

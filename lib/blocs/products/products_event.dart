@@ -163,22 +163,26 @@ class GetCollectionDetail extends ProductsScreenEvent {
 class UpdateCollectionDetail extends ProductsScreenEvent {
   final CollectionModel collectionModel;
   final List<ProductsModel> collectionProducts;
+  final List<ProductsModel> deleteList;
 
-  UpdateCollectionDetail({this.collectionModel, this.collectionProducts});
+  UpdateCollectionDetail({this.collectionModel, this.collectionProducts, this.deleteList});
   @override
   List<Object> get props => [
     this.collectionModel,
     this.collectionProducts,
+    this.deleteList,
   ];
 }
 
 class SaveCollectionDetail extends ProductsScreenEvent {
   final CollectionModel collectionModel;
+  final List<ProductsModel> deleteList;
 
-  SaveCollectionDetail({this.collectionModel, });
+  SaveCollectionDetail({this.collectionModel, this.deleteList});
   @override
   List<Object> get props => [
     this.collectionModel,
+    this.deleteList,
   ];
 }
 

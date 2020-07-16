@@ -29,11 +29,13 @@ class BaseClient {
       String path, {
         Map<String, dynamic> queryParameters,
         Map<String, dynamic> headers,
+        Map<String, dynamic> body,
       }) async {
     return _requestTypeless(
       path,
       RestCallType.delete,
       queryParameters: queryParameters,
+      data: body,
       headers: headers,
     );
   }
@@ -370,6 +372,7 @@ class BaseClient {
           response = await _dio.delete(
             path,
             queryParameters: queryParameters,
+            data: data,
             options: Options(
               headers: headers,
               followRedirects: false,

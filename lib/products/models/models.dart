@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
@@ -490,6 +491,25 @@ class CollectionModel {
 
     return map;
   }
+
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> map = {};
+    String dateString = DateFormat("yyyy-MM-dd'T'hh:mm:ss.ZZZZ").format(DateTime.now());
+    map['name'] = name;
+    map['activeSince'] = dateString;
+    map['slug'] = slug;
+    map['description'] = description;
+    List channelSetsArr = [];
+    channelSets.forEach((element) {
+      channelSetsArr.add(element.toDictionary());
+    });
+    map['channelSets'] = channelSetsArr;
+    if (automaticFillConditions != null) {
+      map['automaticFillConditions'] = automaticFillConditions.toDictionary();
+    }
+
+    return map;
+  }
 }
 
 class FillCondition {
@@ -516,6 +536,18 @@ class FillCondition {
     strict = obj['strict'];
     id = obj['_id'];
   }
+
+  Map<String, dynamic> toDictionary() {
+    Map<String, dynamic> map = {};
+    map['strict'] = strict;
+    if (filters.length > 0) {
+      List filtersObj = [];
+      filters.forEach((element) {
+        filtersObj.add(element.toDictionary());
+      });
+    }
+    return map;
+  }
 }
 
 class Filter {
@@ -540,6 +572,15 @@ class Filter {
         filters.add(Filter.toMap(element));
       });
     }
+  }
+
+  Map<String, dynamic> toDictionary() {
+    Map<String, dynamic> map = {};
+    map['field'] = field;
+    map['fieldCondition'] = fieldCondition;
+    map['fieldType'] = fieldType;
+    map['value'] = value;
+    return map;
   }
 }
 
