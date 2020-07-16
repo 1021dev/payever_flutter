@@ -15,6 +15,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/products/models/models.dart';
+import 'package:payever/products/widgets/collection_detail_image_view.dart';
 import 'package:payever/products/widgets/product_detail_header.dart';
 import 'package:payever/transactions/models/enums.dart';
 
@@ -322,79 +323,47 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
       padding: EdgeInsets.only(top: 16, bottom: 16),
       child: Column(
         children: <Widget>[
-          imgUrl != '' ? Container(
+          Container(
             height: Measurements.width,
-            child: CachedNetworkImage(
-              imageUrl: '${Env.storage}/products/$imgUrl',
-              imageBuilder: (context, imageProvider) =>
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(12.0)),
-                      image: DecorationImage(
-                        image: imageProvider,
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),
-              placeholder: (context, url) =>
-                  Container(
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  ),
-              errorWidget: (context, url, error) =>
-                  Container(
-                    height: Measurements.width,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        SvgPicture.asset('assets/images/insertimageicon.svg'),
-                        Padding(
-                          padding: EdgeInsets.only(top: 16),
-                        ),
-                        Text(
-                          'Upload images',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-            ),
-          ) : GestureDetector(
+            child: GestureDetector(
             onTap: () {
-              getImage(0);
-            },
-            child: Container(
-              height: Measurements.width * 0.7,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(12.0)),
-              ),
-              alignment: Alignment.center,
-              child: state.isUploading ? Container(
-                child: Center(child: CircularProgressIndicator()),
-              ) : Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  SvgPicture.asset('assets/images/insertimageicon.svg'),
-                  Padding(
-                    padding: EdgeInsets.only(top: 16),
-                  ),
-                  Text(
-                    'Upload image',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w400,
+              showCupertinoModalPopup(
+                context: context,
+                builder: (BuildContext context) => CupertinoActionSheet(
+                  title: const Text('Choose Photo'),
+                  message: const Text('Your options are '),
+                  actions: <Widget>[
+                    CupertinoActionSheetAction(
+                      child: const Text('Take a Picture'),
+                      onPressed: () {
+                        Navigator.pop(context, 'Take a Picture');
+                        getImage(0);
+                      },
                     ),
+                    CupertinoActionSheetAction(
+                      child: const Text('Camera Roll'),
+                      onPressed: () {
+                        Navigator.pop(context, 'Camera Roll');
+                        getImage(1);
+                      },
+                    )
+                  ],
+                  cancelButton: CupertinoActionSheetAction(
+                    child: const Text('Cancel'),
+                    isDefaultAction: true,
+                    onPressed: () {
+                      Navigator.pop(context, 'Cancel');
+                    },
                   ),
-                ],
-              ),
+                ),
+              );
+            },
+            child: CollectionDetailImageView(
+              imgUrl,
+              products: state.collectionProducts,
+              isUploading: state.isUploading,
             ),
+          ),
           ),
           Padding(
             padding: EdgeInsets.only(top: 16),
@@ -772,10 +741,10 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Row(
+                Expanded(child: Row(
                   children: <Widget>[
                     imgUrl != '' ? CachedNetworkImage(
-                      imageUrl: '${Env.storage}/products/$imgUrl-thumbnail',
+                      imageUrl: '${Env.storage}/products/$imgUrl',
                       imageBuilder: (context, imageProvider) => Container(
                         height: 50,
                         width: 50,
@@ -819,10 +788,13 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
                     Padding(
                       padding: EdgeInsets.only(left: 16),
                     ),
-                    Text(
-                      product.title,
-                    )
+                    Flexible(
+                      child: Text(
+                        product.title,
+                      ),
+                    ),
                   ],
+                ),
                 ),
                 Row(
                   children: <Widget>[
@@ -913,7 +885,7 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
         ));
 
     if (croppedFile != null) {
-      widget.screenBloc.add(UploadImageToProduct(file: croppedFile));
+      widget.screenBloc.add(UploadImageToCollection(file: croppedFile));
     }
 
   }

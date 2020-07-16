@@ -2,8 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
-import 'package:date_format/date_format.dart';
-import 'package:intl/intl.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/products/models/models.dart';
@@ -809,6 +807,13 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
 
   Stream<ProductsScreenState> updateCollection(CollectionModel model, List<ProductsModel> deleteList) async* {
     String businessId = state.businessId;
+    if (model.image == null || model.image == '' ) {
+      ProductsModel imageModel = state.collectionProducts.firstWhere((element) => element.images.length > 0);
+      if (imageModel != null) {
+        model.image = imageModel.images.first;
+      }
+    }
+    print(model.image);
     dynamic response = await api.updateCollection(GlobalUtils.activeToken.accessToken, state.businessId, model.toJson(), model.id);
     if (response is Map) {
       CollectionModel collectionModel = CollectionModel.toMap(response);
