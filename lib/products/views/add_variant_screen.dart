@@ -6,6 +6,7 @@ import 'package:flutter_tags/flutter_tags.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
+import 'package:payever/library/material_tag_editor.dart';
 import 'package:payever/products/widgets/reorderable_variant_item.dart';
 
 import 'add_variant_option_screen.dart';
@@ -28,13 +29,27 @@ class _AddVariantScreenState extends State<AddVariantScreen> {
   List<TagVariantItem> _children = [];
   final scaffoldKey = new GlobalKey<ScaffoldState>();
   final formKey = new GlobalKey<FormState>();
-
+  
+  List<VariantColorOption> colorOptions = [];
+  Map<String, Color> colorsMap = {
+    'Blue': Color(0xff0084ff),
+    'Green': Color(0xff81d552),
+    'Yellow': Color(0xffeebd40),
+    'Pink': Color(0xffde68a5),
+    'Brown': Color(0xff594139),
+    'Black': Color(0xff000000),
+    'White': Color(0xffffffff),
+    'Grey': Color(0xff434243),
+  };
   @override
   void initState() {
     super.initState();
-    _children.add(TagVariantItem(name: 'Default', type: 'String', values: [], key: '${_children.length}'));
+    colorsMap.map((key, value) {
+      colorOptions.add(VariantColorOption(title: key, color: value, checked: false));
+      return;
+    });
+    _children.add(TagVariantItem(name: 'Default', type: 'string', values: [], key: '${_children.length}'));
   }
-
 
   int _oldIndexOfKey(Key key) {
     return _children.indexWhere((TagVariantItem w) => Key(w.key) == key);
@@ -43,7 +58,6 @@ class _AddVariantScreenState extends State<AddVariantScreen> {
   int _indexOfKey(Key key) {
     return _children.indexWhere((TagVariantItem w) => Key(w.key) == key);
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -233,7 +247,7 @@ class _AddVariantScreenState extends State<AddVariantScreen> {
                             });
                           } else if (result == 'other') {
                             setState(() {
-                              _children.add(TagVariantItem(name: 'Default', type: 'String', values: [], key: '${_children.length}'));
+                              _children.add(TagVariantItem(name: 'Default', type: 'string', values: [], key: '${_children.length}'));
                             });
                           }
                         }
@@ -289,11 +303,12 @@ class _AddVariantScreenState extends State<AddVariantScreen> {
               ),
             ),
             Flexible(
-              child:Container(
+              child: Container(
                 padding: EdgeInsets.only(
                   left: 4, right: 4, top: 8, bottom: 8,
                 ),
-                child: Tags(
+                child: _children[index].type == 'string'
+                    ? Tags(
                   itemCount: _children[index].values.length,
                   alignment: WrapAlignment.start,
                   spacing: 4,
@@ -342,7 +357,67 @@ class _AddVariantScreenState extends State<AddVariantScreen> {
                       });
                     },
                   ),
+                ): GestureDetector(
+                  onTap: () {
+                    showModalBottomSheet<void>(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return Container(
+                          child: ListView.separated(
+                              itemBuilder: (context, i) {
+                                return ListTile(
+                                  onTap: () {
 
+                                  },
+                                  title: Row(
+                                    children: <Widget>[
+                                      Icon(Icons.check_box_outline_blank),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 4),
+                                      ),
+                                      Text(
+                                        colorOptions[i].title,
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                              separatorBuilder: (context, i) {
+                                return Divider();
+                              },
+                              itemCount: colorOptions.length,
+                          ),
+                        );
+                      },
+                    );
+                  },
+                  child: Tags(
+                  itemCount: _children[index].values.length,
+                  alignment: WrapAlignment.start,
+                  spacing: 4,
+                  runSpacing: 8,
+                  itemBuilder: (int i) {
+                    return ItemTags(
+                      key: Key('filterItem$i'),
+                      index: i,
+                      title: _children[index].values[i],
+                      color: Colors.white12,
+                      activeColor: Colors.white12,
+                      textActiveColor: Colors.white,
+                      textColor: Colors.white,
+                      elevation: 0,
+                      padding: EdgeInsets.only(
+                        left: 8, top: 4, bottom: 4, right: 8,
+                      ),
+                      removeButton: ItemTagsRemoveButton(
+                          backgroundColor: Colors.transparent,
+                          onRemoved: () {
+                            return true;
+                          }
+                      ),
+                    );
+                  },
+                ),
                 ),
               ),
             ),
@@ -361,8 +436,20 @@ class TagVariantItem {
     this.values = const [],
     this.key,
   });
-  String key;
-  String name;
-  String type;
+  final String key;
+  final String name;
+  final String type;
   List<String> values;
+}
+
+class VariantColorOption {
+  final String title;
+  final Color color;
+  final bool checked;
+  
+  VariantColorOption({
+    this.title,
+    this.color,
+    this.checked,
+  });
 }
