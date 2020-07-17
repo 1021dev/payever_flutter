@@ -2,10 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
+import 'package:payever/products/models/models.dart';
 
 class EditVariantScreen extends StatefulWidget {
 
-  EditVariantScreen();
+  final Variants variants;
+
+  EditVariantScreen({this.variants});
 
   @override
   State<StatefulWidget> createState() {

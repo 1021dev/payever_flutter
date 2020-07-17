@@ -24,6 +24,7 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/products/models/models.dart';
 import 'package:payever/products/views/add_variant_screen.dart';
+import 'package:payever/products/views/edit_variant_screen.dart';
 import 'package:payever/products/widgets/product_detail_header.dart';
 import 'package:payever/products/widgets/product_detail_subsection_header.dart';
 import 'package:payever/shop/models/models.dart';
@@ -1363,7 +1364,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       children: <Widget>[
                         MaterialButton(
                           onPressed: () {
-
+                            Navigator.push(
+                              context,
+                              PageTransition(
+                                child: EditVariantScreen(),
+                                type: PageTransitionType.fade,
+                                duration: Duration(milliseconds: 500),
+                              ),
+                            );
                           },
                           color: Colors.black26,
                           height: 30,
