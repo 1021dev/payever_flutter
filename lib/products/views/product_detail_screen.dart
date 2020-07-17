@@ -12,6 +12,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutter_tagging/flutter_tagging.dart';
 import 'package:flutter_tags/flutter_tags.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -1132,6 +1133,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   Widget _getCategoryDetail(ProductsScreenState state) {
     if (_selectedSectionIndex != 3) return Container();
+
+    List<CategoryTag> tags = [];
+    tags = state.productDetail.categories.map((element) {
+      return CategoryTag(
+        name: element.title,
+        position: state.categories.length,
+        category: element,
+      );
+    }).toList();
     return Container(
       padding: EdgeInsets.only(top: 16, bottom: 16),
       child: Column(
@@ -1141,41 +1151,100 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           Container(
             color: Color(0x80111111),
             padding: EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
-            child: Tags(
-              key: _tagStateKey,
-              textField: TagsTextField(
-                hintText: 'Please enter to add a category',
-                suggestions: state.categories.map((e) {
-                  return e.title;
-                }).toList(),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: FlutterTagging<CategoryTag>(
+                  initialItems: tags,
+                  textFieldConfiguration: TextFieldConfiguration(
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: 'Search Tags',
+                    ),
+                  ),
+                  findSuggestions: CategorySuggestService(
+                    categories: state.categories,
+                    addedCategories: state.productDetail.categories,
+                  ).getCategories,
+                  additionCallback: (value) {
+                    return CategoryTag(
+                      name: value,
+                      position: state.categories.length,
+                    );
+                  },
+                  onAdded: (language) {
+                    // api calls here, triggered when add to tag button is pressed
+                    return CategoryTag();
+                  },
+                  configureChip: (lang) {
+                    return ChipConfiguration(
+                      label: Text(lang.name),
+                      labelStyle: TextStyle(color: Colors.white),
+                      deleteIconColor: Colors.white,
+                    );
+                  },
+                  onChanged: () {
 
+                  },
+                  configureSuggestion: (CategoryTag tag ) {
+                    return SuggestionConfiguration(
+                      title: Text(tag.name),
+                      subtitle: Text(tag.position.toString()),
+                      additionWidget: Chip(
+                        avatar: Icon(
+                          Icons.add_circle,
+                          color: Colors.white,
+                        ),
+                        label: Text('Add New Tag'),
+                        labelStyle: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.w300,
+                        ),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+                  },
+                ),
               ),
-              itemCount: state.productDetail.categories.length,
-              alignment: WrapAlignment.start,
-              spacing: 4,
-              runSpacing: 8,
-              itemBuilder: (int index) {
-                return ItemTags(
-                  key: Key('filterItem$index'),
-                  index: index,
-                  title: state.productDetail.categories[index].title,
-                  color: Colors.white12,
-                  activeColor: Colors.white12,
-                  textActiveColor: Colors.white,
-                  textColor: Colors.white,
-                  elevation: 0,
-                  padding: EdgeInsets.only(
-                    left: 16, top: 8, bottom: 8, right: 16,
-                  ),
-                  removeButton: ItemTagsRemoveButton(
-                      backgroundColor: Colors.transparent,
-                      onRemoved: () {
-                        return true;
-                      }
-                  ),
-                );
-              },
-            ),
+
+//            Tags(
+//              key: _tagStateKey,
+//              textField: TagsTextField(
+//                hintText: 'Please enter to add a category',
+//                suggestions: state.categories.map((e) {
+//                  return e.title;
+//                }).toList(),
+//
+//              ),
+//              itemCount: state.productDetail.categories.length,
+//              alignment: WrapAlignment.start,
+//              spacing: 4,
+//              runSpacing: 8,
+//              itemBuilder: (int index) {
+//                return ItemTags(
+//                  key: Key('filterItem$index'),
+//                  index: index,
+//                  title: state.productDetail.categories[index].title,
+//                  color: Colors.white12,
+//                  activeColor: Colors.white12,
+//                  textActiveColor: Colors.white,
+//                  textColor: Colors.white,
+//                  elevation: 0,
+//                  padding: EdgeInsets.only(
+//                    left: 16, top: 8, bottom: 8, right: 16,
+//                  ),
+//                  removeButton: ItemTagsRemoveButton(
+//                      backgroundColor: Colors.transparent,
+//                      onRemoved: () {
+//                        return true;
+//                      }
+//                  ),
+//                );
+//              },
+//            ),
+          ),
           ),
         ],
       ),
@@ -1894,4 +1963,62 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     }
 
   }
+}
+
+/// CategorySuggestService
+class CategorySuggestService {
+  final List<Categories> categories;
+  final List<Categories> addedCategories;
+  CategorySuggestService( {this.categories = const [], this.addedCategories = const [],});
+
+  Future<List<CategoryTag>> getCategories(String query) async {
+    List list = categories.where((element) {
+      bool isadded = false;
+      addedCategories.forEach((e) {
+        if (e.slug == element.slug) {
+          isadded = true;
+        }
+      });
+      return !isadded;
+    }).toList();
+
+    List<CategoryTag> categoryTags = [];
+    list.forEach((element) {
+      categoryTags.add(CategoryTag(
+        name: element.title,
+        position: categoryTags.length,
+        category: element,
+      ));
+    });
+    print(categoryTags.length);
+      return categoryTags;
+//    return categoryTags
+//        .where((e) => e.name.toLowerCase().contains(query.toLowerCase()))
+//        .toList();
+  }
+}
+/// CategoryTag Class
+class CategoryTag extends Taggable {
+  ///
+  final String name;
+
+  final Categories category;
+  ///
+  final int position;
+
+  /// Creates Language
+  CategoryTag({
+    this.name,
+    this.category,
+    this.position,
+  });
+
+  @override
+  List<Object> get props => [name];
+
+  /// Converts the class to json string.
+  String toJson() => '''  {
+    "name": $name,\n
+    "position": $position\n
+  }''';
 }

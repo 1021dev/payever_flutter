@@ -55,6 +55,7 @@ dependencies:
   dropdown_formfield: 0.1.2
   image_cropper: ^1.2.3
   flutter_reorderable_list: ^0.1.4
+  flutter_tagging: ^2.2.0+3
 dev_dependencies:
   flutter_test:
     sdk: flutter

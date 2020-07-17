@@ -11,6 +11,7 @@ import 'package:payever/commons/views/screens/login/login_page.dart';
 import 'package:payever/commons/views/screens/switcher/switcher_page.dart';
 import 'package:payever/pos/views/pos_create_terminal_screen.dart';
 import 'package:payever/pos/views/pos_screen.dart';
+import 'package:payever/products/models/models.dart';
 import 'package:payever/products/views/products_screen.dart';
 import 'package:payever/search/views/search_screen.dart';
 import 'package:payever/shop/views/shop_screen.dart';
@@ -298,15 +299,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
           p.setString(GlobalUtils.DB_TOKEN_RFS, '');
         });
         Navigator.pushReplacement(
-            context,
-            PageTransition(
-                child: LoginScreen(), type: PageTransitionType.fade));
+          context,
+          PageTransition(
+            child: LoginScreen(),
+            type: PageTransitionType.fade,
+          ),
+        );
       },
       onSwitchBusiness: () {
         Navigator.pushReplacement(
-            context,
-            PageTransition(
-                child: SwitcherScreen(), type: PageTransitionType.fade));
+          context,
+          PageTransition(
+            child: SwitcherScreen(),
+            type: PageTransitionType.fade,
+          ),
+        );
       },
       onPersonalInfo: () {
 
@@ -419,6 +426,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 context,
                 PageTransition(
                   child: ShopInitScreen(),
+                  type: PageTransitionType.fade,
+                  duration: Duration(milliseconds: 50),
+                ),
+              );
+            } else if (aw.type.contains('products')) {
+              Navigator.push(
+                context,
+                PageTransition(
+                  child: ProductsInitScreen(),
                   type: PageTransitionType.fade,
                   duration: Duration(milliseconds: 50),
                 ),
@@ -609,7 +625,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
               );
             },
-            onSelect: () async {
+            onSelect: (Products product) async {
               Provider.of<GlobalStateModel>(context,listen: false)
                   .setCurrentBusiness(state.activeBusiness);
               Provider.of<GlobalStateModel>(context,listen: false)
@@ -627,7 +643,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 //                screenBloc.add(FetchPosEvent(business: state.activeBusiness));
               }
             },
-          )
+          ),
       );
     }
 
