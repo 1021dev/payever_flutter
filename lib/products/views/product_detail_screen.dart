@@ -1277,7 +1277,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               if (variant.images.length > 0 ) {
                 imgUrl = variant.images.first;
               }
-              print('${Env.storage}/products/$imgUrl-thumbnail');
               return Container(
                 height: 60,
                 padding: EdgeInsets.only(left: 16),
@@ -1287,7 +1286,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     Row(
                       children: <Widget>[
                         imgUrl != '' ? CachedNetworkImage(
-                          imageUrl: '${Env.storage}/products/$imgUrl-thumbnail',
+                          imageUrl: '${Env.storage}/products/$imgUrl',
                           imageBuilder: (context, imageProvider) => Container(
                             height: 50,
                             width: 50,
