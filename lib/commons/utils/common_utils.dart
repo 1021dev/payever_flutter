@@ -309,6 +309,9 @@ class Measurements {
     return displayName = displayName.toUpperCase();
   }
 }
+Color hexToColor(String code) {
+  return new Color(int.parse(code.substring(1, 9), radix: 16) + 0xFF000000);
+}
 
 class GlobalUtils {
   static Token activeToken;

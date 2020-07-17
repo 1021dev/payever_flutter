@@ -17,7 +17,7 @@ class TagEditor<T> extends StatefulWidget {
     this.delimeters = const [],
     this.icon,
     this.enabled = true,
-    this.options = const [],
+    this.options,
     this.selected = const [],
     @required this.onTap,
   });
@@ -28,7 +28,7 @@ class TagEditor<T> extends StatefulWidget {
   final List<String> delimeters;
   final IconData icon;
   final bool enabled;
-  final List<T> options;
+  final Map<String, Color> options;
   final List<T> selected;
   final Function onTap;
 
@@ -39,19 +39,19 @@ class TagEditor<T> extends StatefulWidget {
 class _TagEditorState extends State<TagEditor> {
 
   List<TagPopupItem> popUpActions(BuildContext context){
-    return widget.options.map((option) {
+    return widget.options.keys.map((key) {
       bool checked = false;
       widget.selected.forEach((sel) {
-        if (option == sel) {
+        if (key == sel) {
           checked = true;
         }
       });
       return TagPopupItem(
-          title: option,
+          title: key,
           check: checked,
-          value: option,
+          value: key,
           onTap: (t) {
-            widget.onTap(t.value);
+            widget.onTap(t);
           }      );
     }).toList();
   }
@@ -59,12 +59,6 @@ class _TagEditorState extends State<TagEditor> {
   @override
   void initState() {
     super.initState();
-  }
-
-
-  void _onTagChanged(String string) {
-    if (string.isNotEmpty) {
-    }
   }
 
   /// Shamelessly copied from [InputDecorator]
@@ -112,11 +106,13 @@ class _TagEditorState extends State<TagEditor> {
                 child: PopupMenuButton<TagPopupItem>(
                   icon: Icon(Icons.add),
                   offset: Offset(0, 100),
-                  onSelected: (TagPopupItem item) => item.onTap(item),
+                  onSelected: (TagPopupItem item) {
+                    item.onTap(item);
+                  },
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  color: Colors.black87,
+                  color: Colors.black54,
                   itemBuilder: (BuildContext context) {
                     return popUpActions(context).map((item) {
                       return PopupMenuItem<TagPopupItem>(
@@ -131,7 +127,7 @@ class _TagEditorState extends State<TagEditor> {
                               child: Container(
                                 width: 16,
                                 height: 16,
-                                color: Colors.red,
+                                color: widget.options[item.value],
                               ),
                             ),
                             Padding(

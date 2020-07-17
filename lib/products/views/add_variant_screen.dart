@@ -7,6 +7,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/library/material_tag_editor.dart';
+import 'package:payever/library/multi_select_formfield.dart';
 import 'package:payever/products/widgets/reorderable_variant_item.dart';
 
 import 'add_variant_option_screen.dart';
@@ -29,8 +30,7 @@ class _AddVariantScreenState extends State<AddVariantScreen> {
   List<TagVariantItem> _children = [];
   final scaffoldKey = new GlobalKey<ScaffoldState>();
   final formKey = new GlobalKey<FormState>();
-  
-  List<VariantColorOption> colorOptions = [];
+  bool isShownColorPicker = false;
   Map<String, Color> colorsMap = {
     'Blue': Color(0xff0084ff),
     'Green': Color(0xff81d552),
@@ -41,13 +41,10 @@ class _AddVariantScreenState extends State<AddVariantScreen> {
     'White': Color(0xffffffff),
     'Grey': Color(0xff434243),
   };
+
   @override
   void initState() {
     super.initState();
-    colorsMap.map((key, value) {
-      colorOptions.add(VariantColorOption(title: key, color: value, checked: false));
-      return;
-    });
     _children.add(TagVariantItem(name: 'Default', type: 'string', values: [], key: '${_children.length}'));
   }
 
@@ -283,6 +280,13 @@ class _AddVariantScreenState extends State<AddVariantScreen> {
           children: <Widget>[
             Flexible(
               child: TextFormField(
+                onTap: () {
+                  if (isShownColorPicker)
+                    Navigator.pop(context);
+                  setState(() {
+                    isShownColorPicker = false;
+                  });
+                },
                 onChanged: (val) {
 
                 },
@@ -337,6 +341,14 @@ class _AddVariantScreenState extends State<AddVariantScreen> {
                   textField: TagsTextField(
                     hintText: '',
                     autofocus: false,
+                    onChanged: (val) {
+                      if (isShownColorPicker)
+                        Navigator.pop(context);
+                      setState(() {
+                        isShownColorPicker = false;
+                      });
+
+                    },
                     textStyle: TextStyle(
                       fontSize: 14,
                       //height: 1
@@ -357,67 +369,30 @@ class _AddVariantScreenState extends State<AddVariantScreen> {
                       });
                     },
                   ),
-                ): GestureDetector(
-                  onTap: () {
-                    showModalBottomSheet<void>(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return Container(
-                          child: ListView.separated(
-                              itemBuilder: (context, i) {
-                                return ListTile(
-                                  onTap: () {
-
-                                  },
-                                  title: Row(
-                                    children: <Widget>[
-                                      Icon(Icons.check_box_outline_blank),
-                                      Padding(
-                                        padding: EdgeInsets.only(left: 4),
-                                      ),
-                                      Text(
-                                        colorOptions[i].title,
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                              separatorBuilder: (context, i) {
-                                return Divider();
-                              },
-                              itemCount: colorOptions.length,
-                          ),
-                        );
-                      },
-                    );
-                  },
-                  child: Tags(
-                  itemCount: _children[index].values.length,
-                  alignment: WrapAlignment.start,
-                  spacing: 4,
-                  runSpacing: 8,
-                  itemBuilder: (int i) {
-                    return ItemTags(
-                      key: Key('filterItem$i'),
-                      index: i,
-                      title: _children[index].values[i],
-                      color: Colors.white12,
-                      activeColor: Colors.white12,
-                      textActiveColor: Colors.white,
-                      textColor: Colors.white,
-                      elevation: 0,
-                      padding: EdgeInsets.only(
-                        left: 8, top: 4, bottom: 4, right: 8,
-                      ),
-                      removeButton: ItemTagsRemoveButton(
-                          backgroundColor: Colors.transparent,
-                          onRemoved: () {
-                            return true;
-                          }
-                      ),
-                    );
-                  },
-                ),
+                ): Container(
+                  child: MultiSelectFormField(
+                    autovalidate: false,
+                    titleText: 'Color options',
+                    colorMaps: colorsMap,
+                    dataSource: colorsMap.keys.toList().map((e) {
+                      return {
+                        'display': e,
+                        'value': e,
+                      };
+                    }).toList(),
+                    textField: 'display',
+                    valueField: 'value',
+                    okButtonLabel: 'OK',
+                    cancelButtonLabel: 'CANCEL',
+                    // required: true,
+                    hintText: 'Please choose one or more',
+                    initialValue: _children[index].values,
+                    onSaved: (value) {
+                      if (value == null) return;
+                      setState(() {
+                      });
+                    },
+                  ),
                 ),
               ),
             ),

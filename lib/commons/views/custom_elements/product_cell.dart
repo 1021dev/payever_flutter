@@ -46,7 +46,7 @@ class ProductCell extends StatelessWidget {
           Text(
             product.name,
             softWrap: true,
-            maxLines: 2,
+            maxLines: 1,
             textAlign: TextAlign.center,
             style: TextStyle(
                 fontSize: 12,
