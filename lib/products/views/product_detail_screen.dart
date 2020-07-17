@@ -1160,7 +1160,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   textFieldConfiguration: TextFieldConfiguration(
                     decoration: InputDecoration(
                       border: InputBorder.none,
-                      hintText: 'Search Tags',
+                      hintText: 'Search Category',
                     ),
                   ),
                   findSuggestions: CategorySuggestService(
@@ -1185,18 +1185,24 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     );
                   },
                   onChanged: () {
-
+                     List cates = tags.map((e) {
+                      return e.category;
+                    }).toList();
+                     ProductsModel model = state.productDetail;
+                     model.categories = cates;
+                     widget.screenBloc.add(UpdateProductDetail(
+                       productsModel: model,
+                     ));
                   },
                   configureSuggestion: (CategoryTag tag ) {
                     return SuggestionConfiguration(
                       title: Text(tag.name),
-                      subtitle: Text(tag.position.toString()),
                       additionWidget: Chip(
                         avatar: Icon(
                           Icons.add_circle,
                           color: Colors.white,
                         ),
-                        label: Text('Add New Tag'),
+                        label: Text('Add New Category'),
                         labelStyle: TextStyle(
                           color: Colors.white,
                           fontSize: 14.0,

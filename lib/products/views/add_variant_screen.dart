@@ -135,75 +135,97 @@ class _AddVariantScreenState extends State<AddVariantScreen> {
   }
 
   Widget _getBody() {
-    return SingleChildScrollView(
-         child: Container(
-           padding: EdgeInsets.all(16),
-           child: BlurEffectView(
-             color: Color.fromRGBO(20, 20, 20, 0.4),
-             padding: EdgeInsets.only(top: 12),
-             blur: 12,
-             radius: 16,
-             child: Column(
-               children: <Widget>[
-                 ReorderableList(
-                   child: ListView.builder(
-                     padding: EdgeInsets.all(4),
-                     itemCount: 5,
-                     itemBuilder: (BuildContext context, int index) {
-                       return _buildReorderableItem(context, index);
-                     },
-                   ),
-                   onReorder: (Key draggedItem, Key newPosition) {
-                     int draggingIndex = _indexOfKey(draggedItem);
-                     int newPositionIndex = _indexOfKey(newPosition);
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Container(
+          padding: EdgeInsets.all(16),
+          child: BlurEffectView(
+            color: Color.fromRGBO(20, 20, 20, 0.4),
+            padding: EdgeInsets.only(top: 12),
+            blur: 12,
+            radius: 16,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Wrap(
+                  children: <Widget>[
+                    ReorderableList(
+                      child: ListView.separated(
+                        padding: EdgeInsets.all(4),
+                        itemCount: 5,
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemBuilder: (BuildContext context, int index) {
+                          return _buildReorderableItem(context, index);
+                        },
+                        separatorBuilder: (context, index) {
+                          return Divider(
+                            height: 0,
+                            color: Colors.transparent,
+                          );
+                        },
+                      ),
+                      onReorder: (Key draggedItem, Key newPosition) {
+                        int draggingIndex = _indexOfKey(draggedItem);
+                        int newPositionIndex = _indexOfKey(newPosition);
 
-                     final item = _children[draggingIndex];
-                     setState(() {
-                       _newIndex = newPositionIndex;
-                       _children.removeAt(draggingIndex);
-                       _children.insert(newPositionIndex, item);
-                     });
+                        final item = _children[draggingIndex];
+                        setState(() {
+                          _newIndex = newPositionIndex;
+                          _children.removeAt(draggingIndex);
+                          _children.insert(newPositionIndex, item);
+                        });
 
-                     return true;
-                   },
-                   onReorderDone: (Key draggedItem) {
-                     int oldIndex = _oldIndexOfKey(draggedItem);
+                        return true;
+                      },
+                      onReorderDone: (Key draggedItem) {
+                        int oldIndex = _oldIndexOfKey(draggedItem);
 //                     if (_newIndex != null) widget.onReorder(oldIndex, _newIndex);
-                     _newIndex = null;
-                   },
-                 ),
-                 Divider(
-                   height: 0,
-                   thickness: 0.5,
-                   color: Color(0x80888888),
-                 ),
-                 Container(
-                   padding: EdgeInsets.only(bottom: 8, right: 8),
-                   alignment: Alignment.centerRight,
-                   child: MaterialButton(
-                     child: Text(
-                       Language.getProductStrings('+ Add option'),
-                       style: TextStyle(
-                         color: Colors.white,
-                         fontSize: 14,
-                         fontWeight: FontWeight.w400,
-                       ),
-                     ),
-                     onPressed: () {
-                     },
-                   ),
-                 )
-               ],
-             ),
-           ),
-         ),
+                        _newIndex = null;
+                      },
+                    ),
+                  ],
+                ),
+                Divider(
+                  height: 0,
+                  thickness: 0.5,
+                  color: Color(0x80888888),
+                ),
+                Container(
+                  height: 64,
+                  padding: EdgeInsets.only(bottom: 8, right: 8),
+                  alignment: Alignment.centerRight,
+                  child: MaterialButton(
+                    child: Text(
+                      Language.getProductStrings('+ Add option'),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    onPressed: () {
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 
   Widget _buildReorderableItem(BuildContext context, int index) {
     return ReorderableVariantItem(
+      childrenAlreadyHaveListener: false,
       key: Key('$index'),
       innerItem: Container(
+        height: 64,
+        color: Colors.transparent,
         child: Row(
           children: <Widget>[
 

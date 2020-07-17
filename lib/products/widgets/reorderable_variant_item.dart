@@ -67,7 +67,7 @@ class ReorderableVariantItem extends StatelessWidget {
   BoxDecoration _decoration(BuildContext context, ReorderableItemState state) {
     if (state == ReorderableItemState.dragProxy ||
         state == ReorderableItemState.dragProxyFinished) {
-      return BoxDecoration(color: Color(0xD0FFFFFF));
+      return BoxDecoration(color: Color(0x40808080));
     } else {
       bool placeholder = state == ReorderableItemState.placeholder;
       return BoxDecoration(
@@ -78,7 +78,7 @@ class ReorderableVariantItem extends StatelessWidget {
               bottom: placeholder
                   ? BorderSide.none
                   : Divider.createBorderSide(context)),
-          color: placeholder ? null : Colors.white);
+          color: placeholder ? null : Colors.transparent);
     }
   }
 
