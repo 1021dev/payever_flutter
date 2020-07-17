@@ -7,7 +7,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/library/material_tag_editor.dart';
-import 'package:payever/library/multi_select_formfield.dart';
+import 'package:payever/products/widgets/multi_select_formfield.dart';
 import 'package:payever/products/widgets/reorderable_variant_item.dart';
 
 import 'add_variant_option_screen.dart';
@@ -111,7 +111,91 @@ class _AddVariantScreenState extends State<AddVariantScreen> {
               Language.getProductStrings('cancel'),
             ),
             onPressed: () {
-              Navigator.pop(context);
+              showCupertinoDialog(
+                context: context,
+                builder: (builder) {
+                  return Dialog(
+                    backgroundColor: Colors.transparent,
+                    child: Container(
+                      height: 250,
+                      child: BlurEffectView(
+                        color: Color.fromRGBO(50, 50, 50, 0.4),
+                        padding: EdgeInsets.all(16),
+                        child: Column(
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.only(top: 16),
+                            ),
+                            Icon(Icons.info),
+                            Padding(
+                              padding: EdgeInsets.only(top: 16),
+                            ),
+                            Text(
+                              Language.getPosStrings('Editing Variants'),
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w300,
+                                  color: Colors.white
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 16),
+                            ),
+                            Text(
+                              Language.getPosStrings('Do you really want to close editing a Variant? Because all data will be lost when unsaved and you will not be able to restore it?'),
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w300,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 16),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
+                                MaterialButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  height: 24,
+                                  elevation: 0,
+                                  minWidth: 0,
+                                  color: Colors.white10,
+                                  child: Text(
+                                    Language.getPosStrings('actions.no'),
+                                  ),
+                                ),
+                                MaterialButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                  },
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  height: 24,
+                                  elevation: 0,
+                                  minWidth: 0,
+                                  color: Colors.white10,
+                                  child: Text(
+                                    Language.getPosStrings('actions.yes'),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              );
             },
           ),
         ),
@@ -373,20 +457,11 @@ class _AddVariantScreenState extends State<AddVariantScreen> {
                   child: MultiSelectFormField(
                     autovalidate: false,
                     titleText: 'Color options',
-                    colorMaps: colorsMap,
-                    dataSource: colorsMap.keys.toList().map((e) {
-                      return {
-                        'display': e,
-                        'value': e,
-                      };
-                    }).toList(),
-                    textField: 'display',
-                    valueField: 'value',
                     okButtonLabel: 'OK',
                     cancelButtonLabel: 'CANCEL',
                     // required: true,
                     hintText: 'Please choose one or more',
-                    initialValue: _children[index].values,
+                    initialValue: [_children[index].values, colorsMap],
                     onSaved: (value) {
                       if (value == null) return;
                       setState(() {

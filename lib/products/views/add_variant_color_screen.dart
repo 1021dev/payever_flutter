@@ -8,7 +8,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/library/material_tag_editor.dart';
-import 'package:payever/library/multi_select_formfield.dart';
+import 'package:payever/products/widgets/multi_select_formfield.dart';
 import 'package:payever/products/widgets/reorderable_variant_item.dart';
 
 import 'add_variant_option_screen.dart';

@@ -69,14 +69,21 @@ class _MultiSelectDialogState extends State<MultiSelectDialog> {
       ),
     );
 
-    print(result);
 
     if (result != null) {
       if (result is Map) {
         Color color = result['color'];
         String name = result['name'];
         setState(() {
+          if (colorMaps.containsKey(name)) {
+
+          } else {
+            print(result);
+            items.add(MultiSelectDialogItem(name, name));
+            print(items);
+          }
           colorMaps[name] = color;
+
         });
       }
     }
@@ -84,7 +91,7 @@ class _MultiSelectDialogState extends State<MultiSelectDialog> {
   }
 
   void _onSubmitTap() {
-    Navigator.pop(context, _selectedValues);
+    Navigator.pop(context, [_selectedValues, colorMaps]);
   }
 
   @override
