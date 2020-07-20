@@ -57,20 +57,23 @@ class MultiSelectFormField extends FormField<dynamic> {
           }
           state.value[0].forEach((item) {
             var existingItem = state.value[1].keys.toList().singleWhere((itm) => itm == item, orElse: () => null);
-            selectedOptions.add(Chip(
-              label: Container(
-                height: 20,
-                width: 20,
-                decoration: BoxDecoration(
-                    color: state.value[1][existingItem],
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: Colors.white,
-                      width: 1,
-                    )
+            selectedOptions.add(
+              Chip(
+                padding: EdgeInsets.all(0),
+                label: Container(
+                  height: 20,
+                  width: 20,
+                  decoration: BoxDecoration(
+                      color: state.value[1][existingItem],
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Colors.white,
+                        width: 1,
+                      )
+                  ),
                 ),
               ),
-            ));
+            );
           });
         }
 
@@ -107,29 +110,30 @@ class MultiSelectFormField extends FormField<dynamic> {
             filled: true,
             errorText: state.hasError ? state.errorText : null,
             errorMaxLines: 4,
-            fillColor: fillColor ?? Theme.of(state.context).canvasColor,
+            fillColor: Colors.transparent,
             border: border ?? UnderlineInputBorder(),
           ),
           isEmpty: state.value == null || state.value == '',
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Padding(
-                padding: EdgeInsets.fromLTRB(0, 2, 0, 0),
+                padding: EdgeInsets.all(0),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Expanded(
                         child: Text(
                           titleText,
-                          style: TextStyle(fontSize: 13.0,),
+                          style: TextStyle(fontSize: 12.0,),
                         )),
                     required
                         ? Padding(padding:EdgeInsets.only(top:5, right: 5), child: Text(
                       ' *',
                       style: TextStyle(
                         color: Colors.red.shade700,
-                        fontSize: 17.0,
+                        fontSize: 14.0,
                       ),
                     ),
                     )
@@ -141,22 +145,24 @@ class MultiSelectFormField extends FormField<dynamic> {
                   ],
                 ),
               ),
-              state.value != null && state.value.length > 0
-                  ? Wrap(
-                spacing: 8.0,
-                runSpacing: 0.0,
-                children: _buildSelectedOptions(state),
-              )
-                  : new Container(
-                padding: EdgeInsets.only(top: 4),
-                child: Text(
-                  hintText,
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey.shade500,
+              Flexible(
+                child: state.value != null && state.value.length > 0
+                    ? Wrap(
+                  spacing: 4.0,
+                  runSpacing: 0.0,
+                  children: _buildSelectedOptions(state),
+                )
+                    : new Container(
+                  padding: EdgeInsets.only(top: 4),
+                  child: Text(
+                    hintText,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey.shade500,
+                    ),
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),

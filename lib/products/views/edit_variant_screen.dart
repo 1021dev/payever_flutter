@@ -130,7 +130,91 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
               Language.getProductStrings('cancel'),
             ),
             onPressed: () {
-              Navigator.pop(context);
+              showCupertinoDialog(
+                context: context,
+                builder: (builder) {
+                  return Dialog(
+                    backgroundColor: Colors.transparent,
+                    child: Container(
+                      height: 250,
+                      child: BlurEffectView(
+                        color: Color.fromRGBO(50, 50, 50, 0.4),
+                        padding: EdgeInsets.all(16),
+                        child: Column(
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.only(top: 16),
+                            ),
+                            Icon(Icons.info),
+                            Padding(
+                              padding: EdgeInsets.only(top: 16),
+                            ),
+                            Text(
+                              Language.getPosStrings('Editing Variants'),
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w300,
+                                  color: Colors.white
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 16),
+                            ),
+                            Text(
+                              Language.getPosStrings('Do you really want to close editing a Variant? Because all data will be lost when unsaved and you will not be able to restore it?'),
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w300,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 16),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
+                                MaterialButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  height: 24,
+                                  elevation: 0,
+                                  minWidth: 0,
+                                  color: Colors.white10,
+                                  child: Text(
+                                    Language.getPosStrings('actions.no'),
+                                  ),
+                                ),
+                                MaterialButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                  },
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  height: 24,
+                                  elevation: 0,
+                                  minWidth: 0,
+                                  color: Colors.white10,
+                                  child: Text(
+                                    Language.getPosStrings('actions.yes'),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              );
             },
           ),
         ),
@@ -714,22 +798,25 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                           color: Color(0x80222222),
                           borderRadius: BorderRadius.only(topRight: Radius.circular(8), topLeft: Radius.circular(8)),
                         ),
+                        alignment: Alignment.topLeft,
                         child: TextFormField(
                           onTap: () {
                           },
                           onChanged: (val) {
 
                           },
+                          minLines: 1,
+                          maxLines: 10,
                           initialValue: state.variants.description ?? '',
                           textInputAction: TextInputAction.newline,
-                          maxLines: 10,
+                          textAlignVertical: TextAlignVertical.top,
+                          textAlign: TextAlign.start,
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
                           ),
                           decoration: InputDecoration(
-                              fillColor: Color(0x80111111),
                               labelText: Language.getProductStrings('Variant description'),
                               labelStyle: TextStyle(
                                 fontWeight: FontWeight.w200,

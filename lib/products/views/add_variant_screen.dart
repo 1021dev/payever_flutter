@@ -259,7 +259,7 @@ class _AddVariantScreenState extends State<AddVariantScreen> {
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
                       itemBuilder: (BuildContext context, int index) {
-                        return _buildReorderableItem(context, index);
+                        return _buildOptionItems(context, index);
                       },
                       separatorBuilder: (context, index) {
                         return Divider(
@@ -346,92 +346,148 @@ class _AddVariantScreenState extends State<AddVariantScreen> {
   }
 
   Widget _buildOptionItems(BuildContext context, int index) {
-    return Container(
-      margin: EdgeInsets.only(left: 8, top: 4, bottom: 4),
-      child: Row(
-        children: <Widget>[
-          Flexible(
-            child: Container(
-              padding: EdgeInsets.only(left: 8, right: 8),
-              margin: EdgeInsets.all(1),
-              decoration: BoxDecoration(
-                color: Color(0x80222222),
-                borderRadius: BorderRadius.only(bottomLeft: Radius.circular(8)),
-              ),
-              child: TextFormField(
-                onTap: () {
-//                if (isShownColorPicker)
-//                  Navigator.pop(context);
-//                setState(() {
-//                  isShownColorPicker = false;
-//                });
-                },
-                onChanged: (val) {
-
-                },
-                initialValue: _children[index].name,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
+    return IntrinsicHeight(
+      child: Container(
+        alignment: Alignment.center,
+        margin: EdgeInsets.only(left: 8, top: 4, bottom: 4),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Flexible(
+              child: Container(
+                padding: EdgeInsets.only(left: 8, right: 8),
+                margin: EdgeInsets.all(1),
+                constraints: BoxConstraints.expand(),
+                decoration: BoxDecoration(
+                  color: Color(0x80222222),
+                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(8)),
                 ),
-                decoration: InputDecoration(
-                    fillColor: Color(0x80111111),
-                    labelText: Language.getProductStrings('Option name'),
-                    labelStyle: TextStyle(
-                      fontWeight: FontWeight.w200,
+                alignment: Alignment.center,
+                child: TextFormField(
+                  onTap: () {
+                    if (isShownColorPicker)
+                      Navigator.pop(context);
+                    setState(() {
+                      isShownColorPicker = false;
+                    });
+                  },
+                  onChanged: (val) {
+
+                  },
+                  initialValue: _children[index].name,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  decoration: InputDecoration(
+                      labelText: Language.getProductStrings('Option name'),
+                      labelStyle: TextStyle(
+                        fontWeight: FontWeight.w200,
+                      ),
+                      border: InputBorder.none
+                  ),
+                ),
+              ),
+            ),
+            Flexible(
+              child: Container(
+                padding: EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 8),
+                margin: EdgeInsets.all(1),
+                decoration: BoxDecoration(
+                  color: Color(0x80222222),
+                  borderRadius: BorderRadius.only(topRight: Radius.circular(8), bottomRight: Radius.circular(8)),
+                ),
+                child: _children[index].type == 'string'
+                    ? Tags(
+                  itemCount: _children[index].values.length,
+                  alignment: WrapAlignment.start,
+                  spacing: 4,
+                  runSpacing: 8,
+                  itemBuilder: (int i) {
+                    return ItemTags(
+                      key: Key('filterItem$i'),
+                      index: i,
+                      title: _children[index].values[i],
+                      color: Colors.white12,
+                      activeColor: Colors.white12,
+                      textActiveColor: Colors.white,
+                      textColor: Colors.white,
+                      elevation: 0,
+                      padding: EdgeInsets.only(
+                        left: 8, top: 4, bottom: 4, right: 8,
+                      ),
+                      removeButton: ItemTagsRemoveButton(
+                          backgroundColor: Colors.transparent,
+                          onRemoved: () {
+                            return true;
+                          }
+                      ),
+                    );
+                  },
+                  textField: TagsTextField(
+                    hintText: '',
+                    autofocus: false,
+                    onChanged: (val) {
+                      if (isShownColorPicker)
+                        Navigator.pop(context);
+                      setState(() {
+                        isShownColorPicker = false;
+                      });
+                    },
+                    textStyle: TextStyle(
+                      fontSize: 14,
+                      //height: 1
                     ),
-                    border: InputBorder.none
-                ),
-              ),
-            ),
-          ),
-          Flexible(
-            child: Container(
-              padding: EdgeInsets.only(left: 8, right: 8),
-              margin: EdgeInsets.all(1),
-              decoration: BoxDecoration(
-                color: Color(0x80222222),
-                borderRadius: BorderRadius.only(topRight: Radius.circular(8), bottomRight: Radius.circular(8)),
-              ),
-              child: TextFormField(
-                onTap: () {
-//                if (isShownColorPicker)
-//                  Navigator.pop(context);
-//                setState(() {
-//                  isShownColorPicker = false;
-//                });
-                },
-                onChanged: (val) {
-
-                },
-                initialValue: _children[index].values.value,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
-                decoration: InputDecoration(
-                    fillColor: Color(0x80111111),
-                    labelText: Language.getProductStrings('Option value'),
-                    labelStyle: TextStyle(
-                      fontWeight: FontWeight.w200,
+                    enabled: true,
+                    inputDecoration: InputDecoration(
+                      hintText: '',
+                      labelText: 'Option value',
+                      border: InputBorder.none,
                     ),
-                    border: InputBorder.none
+                    constraintSuggestion: false,
+                    suggestions: null,
+                    onSubmitted: (String str) {
+                      setState(() {
+                        List<String> values = _children[index].values;
+                        values.add(str);
+                        _children[index].values = values;
+                      });
+                    },
+                  ),
+                ): Container(
+                  child: MultiSelectFormField(
+                    autovalidate: false,
+                    titleText: 'Color options',
+                    okButtonLabel: 'OK',
+                    cancelButtonLabel: 'CANCEL',
+                    // required: true,
+                    hintText: 'Please choose one or more',
+                    initialValue: [_children[index].values, colorsMap],
+                    onSaved: (value) {
+                      if (value == null) return;
+                      setState(() {
+                      });
+                    },
+                  ),
                 ),
               ),
             ),
-          ),
-          MaterialButton(
-            onPressed: () {
+            Container(
+              alignment: Alignment.center,
+              child: MaterialButton(
+                onPressed: () {
 
-            },
-            minWidth: 0,
-            child: SvgPicture.asset(
-              'assets/images/xsinacircle.svg',
+                },
+                minWidth: 0,
+                child: SvgPicture.asset(
+                  'assets/images/xsinacircle.svg',
+                ),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
