@@ -6,7 +6,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:flutter_tags/flutter_tags.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:page_transition/page_transition.dart';
@@ -15,7 +14,6 @@ import 'package:payever/blocs/products/variants/variants.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/products/models/models.dart';
-import 'package:payever/products/widgets/multi_select_dialog.dart';
 import 'package:payever/products/widgets/single_choice_dialog.dart';
 
 import 'add_variant_option_screen.dart';
@@ -50,15 +48,15 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
 
   @override
   void initState() {
-    screenBloc = VariantsScreenBloc(productsScreenBloc: widget.productsScreenBloc);
-    screenBloc.add(VariantsScreenInitEvent(variants: widget.variants));
     super.initState();
+    screenBloc = new VariantsScreenBloc(productsScreenBloc: widget.productsScreenBloc);
+    screenBloc.add(VariantsScreenInitEvent(variants: widget.variants));
   }
 
   @override
   void dispose() {
-    screenBloc.close();
     super.dispose();
+    screenBloc.close();
   }
 
   @override
@@ -66,15 +64,15 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
     return BlocListener(
       bloc: screenBloc,
       listener: (BuildContext context, VariantsScreenState state) async {
-        if (state is ProductsScreenStateFailure) {
-          Navigator.pushReplacement(
-            context,
-            PageTransition(
-              child: LoginScreen(),
-              type: PageTransitionType.fade,
-            ),
-          );
-        } else if (state is ProductsScreenStateSuccess) {}
+//        if (state is ProductsScreenStateFailure) {
+//          Navigator.pushReplacement(
+//            context,
+//            PageTransition(
+//              child: LoginScreen(),
+//              type: PageTransitionType.fade,
+//            ),
+//          );
+//        } else if (state is ProductsScreenStateSuccess) {}
       },
       child: BlocBuilder<VariantsScreenBloc, VariantsScreenState>(
         bloc: screenBloc,
@@ -866,6 +864,7 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
 
   Widget _buildOptionItems(BuildContext context, int index, VariantsScreenState state) {
     VariantOption option = state.variants.options[index];
+    TextEditingController valueEdit = TextEditingController(text: option.value);
     return Container(
       margin: EdgeInsets.only(left: 8, top: 4, bottom: 4),
       child: Row(
@@ -915,6 +914,7 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                 borderRadius: BorderRadius.only(topRight: Radius.circular(8), bottomRight: Radius.circular(8)),
               ),
               child: TextFormField(
+                controller: valueEdit,
                 key: Key('option$index'),
                 onTap: option.name == 'Color' ?  () async {
                   List result = await showDialog<List>(
@@ -947,7 +947,6 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                 onChanged: (val) {
                   print(val);
                 },
-                initialValue: option.value,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 16,

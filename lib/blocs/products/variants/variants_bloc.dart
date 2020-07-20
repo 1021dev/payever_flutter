@@ -19,10 +19,10 @@ class VariantsScreenBloc extends Bloc<VariantsScreenEvent, VariantsScreenState> 
   VariantsScreenState get initialState => VariantsScreenState();
 
   @override
-  Stream<VariantsScreenState> mapEventToState(
-      VariantsScreenEvent event) async* {
+  Stream<VariantsScreenState> mapEventToState(VariantsScreenEvent event) async* {
     if (event is VariantsScreenInitEvent) {
       yield state.copyWith(variants: event.variants ?? new Variants(), businessId: productsScreenBloc.state.businessId);
+      print(event.variants.toDictionary());
       if (event.variants != null) {
           InventoryModel inventoryModel = productsScreenBloc.state.inventories.singleWhere((element) => element.sku == event.variants.sku);
           if (inventoryModel != null) {
@@ -33,6 +33,10 @@ class VariantsScreenBloc extends Bloc<VariantsScreenEvent, VariantsScreenState> 
       yield state.copyWith(variants: event.variants, inventory: event.inventoryModel, increaseStock: event.increaseStock,);
     } else if (event is UploadVariantImageToProduct) {
       yield* uploadVariantImageToProduct(event.file);
+    } else if (event is CreateVariantsEvent) {
+
+    } else if (event is SaveVariantsEvent) {
+
     }
   }
 

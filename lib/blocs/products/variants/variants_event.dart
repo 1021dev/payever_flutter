@@ -47,3 +47,22 @@ class UploadVariantImageToProduct extends VariantsScreenEvent {
   ];
 }
 
+class SaveVariantsEvent extends VariantsScreenEvent {
+  final Variants variants;
+
+  SaveVariantsEvent({this.variants,});
+  @override
+  List<Object> get props => [
+    this.variants,
+  ];
+}
+
+class CreateVariantsEvent extends VariantsScreenEvent {
+  final Variants variants;
+
+  CreateVariantsEvent({this.variants,});
+  @override
+  List<Object> get props => [
+    this.variants,
+  ];
+}

@@ -7,3 +7,4 @@ export './search/search.dart';
 export './shop/shop.dart';
 export './switcher/switcher.dart';
 export './products/products.dart';
+export './products/variants/variants.dart';

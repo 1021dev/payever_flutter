@@ -1,13 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_reorderable_list/flutter_reorderable_list.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_tags/flutter_tags.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
-import 'package:payever/library/material_tag_editor.dart';
 import 'package:payever/products/widgets/multi_select_formfield.dart';
 import 'package:payever/products/widgets/reorderable_variant_item.dart';
 
@@ -15,7 +16,9 @@ import 'add_variant_option_screen.dart';
 
 class AddVariantScreen extends StatefulWidget {
 
-  AddVariantScreen();
+  final ProductsScreenBloc productsScreenBloc;
+
+  AddVariantScreen({this.productsScreenBloc});
 
   @override
   State<StatefulWidget> createState() {
@@ -26,7 +29,8 @@ class AddVariantScreen extends StatefulWidget {
 
 class _AddVariantScreenState extends State<AddVariantScreen> {
 
-  bool isLoading = false;
+  VariantsScreenBloc screenBloc;
+
   int _newIndex;
   List<TagVariantItem> _children = [];
   final scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -46,6 +50,8 @@ class _AddVariantScreenState extends State<AddVariantScreen> {
   @override
   void initState() {
     super.initState();
+    screenBloc = new VariantsScreenBloc(productsScreenBloc: widget.productsScreenBloc);
+    screenBloc.add(VariantsScreenInitEvent());
     _children.add(TagVariantItem(name: 'Default', type: 'string', values: [], key: '${_children.length}'));
   }
 
@@ -59,27 +65,45 @@ class _AddVariantScreenState extends State<AddVariantScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    return Scaffold(
-      key: scaffoldKey,
-      backgroundColor: Colors.black,
-      appBar: _appBar(),
-      body: SafeArea(
-        child: BackgroundBase(
-          true,
-          body: Form(
-            key: formKey,
-            autovalidate: false,
-            child: Container(
-              child: _getBody(),
+    return BlocListener(
+      bloc: screenBloc,
+      listener: (BuildContext context, VariantsScreenState state) async {
+//        if (state is ProductsScreenStateFailure) {
+//          Navigator.pushReplacement(
+//            context,
+//            PageTransition(
+//              child: LoginScreen(),
+//              type: PageTransitionType.fade,
+//            ),
+//          );
+//        } else if (state is ProductsScreenStateSuccess) {}
+      },
+      child: BlocBuilder<VariantsScreenBloc, VariantsScreenState>(
+        bloc: screenBloc,
+        builder: (BuildContext context, VariantsScreenState state) {
+          return Scaffold(
+            key: scaffoldKey,
+            backgroundColor: Colors.black,
+            appBar: _appBar(state),
+            body: SafeArea(
+              child: BackgroundBase(
+                true,
+                body: Form(
+                  key: formKey,
+                  autovalidate: false,
+                  child: Container(
+                    child: _getBody(state),
+                  ),
+                ),
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
 
-  Widget _appBar() {
+  Widget _appBar(VariantsScreenState state) {
     return AppBar(
       centerTitle: false,
       elevation: 0,
@@ -212,7 +236,7 @@ class _AddVariantScreenState extends State<AddVariantScreen> {
             elevation: 0,
             minWidth: 0,
             color: Colors.white24,
-            child: isLoading ? Center(
+            child: state.isLoading ? Center(
               child: Container(
                 width: 16,
                 height: 16,
@@ -235,7 +259,7 @@ class _AddVariantScreenState extends State<AddVariantScreen> {
     );
   }
 
-  Widget _getBody() {
+  Widget _getBody(VariantsScreenState state) {
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -259,7 +283,7 @@ class _AddVariantScreenState extends State<AddVariantScreen> {
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
                       itemBuilder: (BuildContext context, int index) {
-                        return _buildOptionItems(context, index);
+                        return _buildOptionItems(context, index, state);
                       },
                       separatorBuilder: (context, index) {
                         return Divider(
@@ -345,7 +369,7 @@ class _AddVariantScreenState extends State<AddVariantScreen> {
     );
   }
 
-  Widget _buildOptionItems(BuildContext context, int index) {
+  Widget _buildOptionItems(BuildContext context, int index, VariantsScreenState state) {
     return IntrinsicHeight(
       child: Container(
         alignment: Alignment.center,

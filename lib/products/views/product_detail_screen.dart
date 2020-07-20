@@ -1367,8 +1367,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     Row(
                       children: <Widget>[
                         MaterialButton(
-                          onPressed: () {
-                            Navigator.push(
+                          onPressed: () async {
+                            final result = await Navigator.push(
                               context,
                               PageTransition(
                                 child: EditVariantScreen(
@@ -1379,6 +1379,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 duration: Duration(milliseconds: 500),
                               ),
                             );
+
+                            print(result);
                           },
                           color: Colors.black26,
                           height: 30,
