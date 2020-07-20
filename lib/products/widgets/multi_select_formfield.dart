@@ -107,7 +107,6 @@ class MultiSelectFormField extends FormField<dynamic> {
         },
         child: InputDecorator(
           decoration: InputDecoration(
-            filled: true,
             errorText: state.hasError ? state.errorText : null,
             errorMaxLines: 4,
             fillColor: Colors.transparent,
@@ -115,8 +114,8 @@ class MultiSelectFormField extends FormField<dynamic> {
           ),
           isEmpty: state.value == null || state.value == '',
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               Padding(
                 padding: EdgeInsets.all(0),
@@ -124,20 +123,11 @@ class MultiSelectFormField extends FormField<dynamic> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Expanded(
-                        child: Text(
-                          titleText,
-                          style: TextStyle(fontSize: 12.0,),
-                        )),
-                    required
-                        ? Padding(padding:EdgeInsets.only(top:5, right: 5), child: Text(
-                      ' *',
-                      style: TextStyle(
-                        color: Colors.red.shade700,
-                        fontSize: 14.0,
+                      child: Text(
+                        titleText,
+                        style: TextStyle(fontSize: 12.0,),
                       ),
                     ),
-                    )
-                        : Container(),
                     Icon(
                       Icons.keyboard_arrow_down,
                       size: 16,
@@ -145,7 +135,7 @@ class MultiSelectFormField extends FormField<dynamic> {
                   ],
                 ),
               ),
-              Flexible(
+              Expanded(
                 child: state.value != null && state.value.length > 0
                     ? Wrap(
                   spacing: 4.0,

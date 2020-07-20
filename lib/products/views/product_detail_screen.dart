@@ -1272,6 +1272,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         children: <Widget>[
           ListView.separated(
             shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
               Variants variant = state.productDetail.variants[index];
               String imgUrl = '';
@@ -1280,7 +1281,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               }
               InventoryModel inventory;
               if (state.inventories.length > 0) {
-                inventory = state.inventories.singleWhere((element) => element.sku == variant.sku);
+                List its = state.inventories.where((element) => element.sku == variant.sku).toList();
+                if (its.length > 0) {
+                  inventory = its.first;
+                }
               }
               return Container(
                 height: 60,
@@ -1401,7 +1405,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         ),
                         MaterialButton(
                           onPressed: () {
-
+                            ProductsModel product = state.productDetail;
+                            List<Variants> variants = product.variants;
+                            variants.removeAt(index);
+                            product.variants = variants;
+                            widget.screenBloc.add(UpdateProductDetail(productsModel: product, inventoryModel: state.inventory,));
                           },
                           height: 30,
                           elevation: 0,
@@ -1440,7 +1448,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 Navigator.push(
                   context,
                   PageTransition(
-                    child: AddVariantScreen(),
+                    child: AddVariantScreen(
+                      productsScreenBloc: widget.screenBloc,
+                    ),
                     type: PageTransitionType.fade,
                     duration: Duration(milliseconds: 500),
                   ),

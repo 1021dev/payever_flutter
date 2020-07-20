@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:equatable/equatable.dart';
 import 'package:payever/products/models/models.dart';
+import 'package:payever/products/views/add_variant_screen.dart';
 
 abstract class VariantsScreenEvent extends Equatable {
   VariantsScreenEvent();
@@ -64,5 +65,25 @@ class CreateVariantsEvent extends VariantsScreenEvent {
   @override
   List<Object> get props => [
     this.variants,
+  ];
+}
+
+class AddOptionEvent extends VariantsScreenEvent {
+  final TagVariantItem item;
+
+  AddOptionEvent({this.item,});
+  @override
+  List<Object> get props => [
+    this.item,
+  ];
+}
+
+class UpdateTagVariantItems extends VariantsScreenEvent {
+  final List<TagVariantItem> items;
+
+  UpdateTagVariantItems({this.items,});
+  @override
+  List<Object> get props => [
+    this.items,
   ];
 }

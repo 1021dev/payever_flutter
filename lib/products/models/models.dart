@@ -235,7 +235,7 @@ class Variants {
   bool hidden = false;
   bool onSales = false;
   num price = 0;
-  num salePrice = 0;
+  num salePrice;
   String sku = '';
   String barcode = '';
   List<VariantOption> options = [];
