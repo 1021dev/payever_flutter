@@ -1367,7 +1367,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             Navigator.push(
                               context,
                               PageTransition(
-                                child: EditVariantScreen(),
+                                child: EditVariantScreen(
+                                  variants: variant,
+                                ),
                                 type: PageTransitionType.fade,
                                 duration: Duration(milliseconds: 500),
                               ),
