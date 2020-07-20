@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_reorderable_list/flutter_reorderable_list.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:flutter_tags/flutter_tags.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/commons/commons.dart';
@@ -337,6 +338,97 @@ class _AddVariantScreenState extends State<AddVariantScreen> {
                   ),
                 ],
               ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildOptionItems(BuildContext context, int index) {
+    return Container(
+      margin: EdgeInsets.only(left: 8, top: 4, bottom: 4),
+      child: Row(
+        children: <Widget>[
+          Flexible(
+            child: Container(
+              padding: EdgeInsets.only(left: 8, right: 8),
+              margin: EdgeInsets.all(1),
+              decoration: BoxDecoration(
+                color: Color(0x80222222),
+                borderRadius: BorderRadius.only(bottomLeft: Radius.circular(8)),
+              ),
+              child: TextFormField(
+                onTap: () {
+//                if (isShownColorPicker)
+//                  Navigator.pop(context);
+//                setState(() {
+//                  isShownColorPicker = false;
+//                });
+                },
+                onChanged: (val) {
+
+                },
+                initialValue: _children[index].name,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+                decoration: InputDecoration(
+                    fillColor: Color(0x80111111),
+                    labelText: Language.getProductStrings('Option name'),
+                    labelStyle: TextStyle(
+                      fontWeight: FontWeight.w200,
+                    ),
+                    border: InputBorder.none
+                ),
+              ),
+            ),
+          ),
+          Flexible(
+            child: Container(
+              padding: EdgeInsets.only(left: 8, right: 8),
+              margin: EdgeInsets.all(1),
+              decoration: BoxDecoration(
+                color: Color(0x80222222),
+                borderRadius: BorderRadius.only(topRight: Radius.circular(8), bottomRight: Radius.circular(8)),
+              ),
+              child: TextFormField(
+                onTap: () {
+//                if (isShownColorPicker)
+//                  Navigator.pop(context);
+//                setState(() {
+//                  isShownColorPicker = false;
+//                });
+                },
+                onChanged: (val) {
+
+                },
+                initialValue: _children[index].values.value,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+                decoration: InputDecoration(
+                    fillColor: Color(0x80111111),
+                    labelText: Language.getProductStrings('Option value'),
+                    labelStyle: TextStyle(
+                      fontWeight: FontWeight.w200,
+                    ),
+                    border: InputBorder.none
+                ),
+              ),
+            ),
+          ),
+          MaterialButton(
+            onPressed: () {
+
+            },
+            minWidth: 0,
+            child: SvgPicture.asset(
+              'assets/images/xsinacircle.svg',
             ),
           ),
         ],
