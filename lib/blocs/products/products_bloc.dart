@@ -130,7 +130,7 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
     List<CollectionModel> collections = [];
     List<CollectionListModel> collectionLists = [];
     List<InventoryModel> inventories = [];
-    if (response != null) {
+    if (response is Map) {
       dynamic data = response['data'];
       if (data != null) {
         dynamic getProducts = data['getProducts'];

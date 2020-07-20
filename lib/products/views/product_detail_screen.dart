@@ -1369,6 +1369,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               PageTransition(
                                 child: EditVariantScreen(
                                   variants: variant,
+                                  productsScreenBloc: widget.screenBloc,
                                 ),
                                 type: PageTransitionType.fade,
                                 duration: Duration(milliseconds: 500),

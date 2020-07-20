@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:payever/products/models/models.dart';
 
 abstract class VariantsScreenEvent extends Equatable {
   VariantsScreenEvent();
@@ -8,14 +9,14 @@ abstract class VariantsScreenEvent extends Equatable {
 }
 
 class VariantsScreenInitEvent extends VariantsScreenEvent {
-  final String businessId;
+  final Variants variants;
 
   VariantsScreenInitEvent({
-    this.businessId,
+    this.variants,
   });
 
   @override
   List<Object> get props => [
-    this.businessId,
+    this.variants,
   ];
 }

@@ -46,7 +46,7 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     String version = packageInfo.version;
     var environment = await api.getEnv();
-    if (environment != null) {
+    if (environment is Map) {
       Env.map(environment);
     } else {
       add(DashboardScreenInitEvent(wallpaper: wallpaper));

@@ -19,6 +19,7 @@ class VariantsScreenBloc extends Bloc<VariantsScreenEvent, VariantsScreenState> 
   Stream<VariantsScreenState> mapEventToState(
       VariantsScreenEvent event) async* {
     if (event is VariantsScreenInitEvent) {
+      yield state.copyWith(variants: event.variants, businessId: productsScreenBloc.state.businessId);
     }
   }
 }
