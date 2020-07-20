@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
+import 'package:payever/products/models/models.dart';
 
 import 'variants.dart';
 
@@ -19,7 +20,15 @@ class VariantsScreenBloc extends Bloc<VariantsScreenEvent, VariantsScreenState> 
   Stream<VariantsScreenState> mapEventToState(
       VariantsScreenEvent event) async* {
     if (event is VariantsScreenInitEvent) {
-      yield state.copyWith(variants: event.variants, businessId: productsScreenBloc.state.businessId);
+      yield state.copyWith(variants: event.variants ?? new Variants(), businessId: productsScreenBloc.state.businessId);
+      if (event.variants != null) {
+          InventoryModel inventoryModel = productsScreenBloc.state.inventories.singleWhere((element) => element.sku == event.variants.sku);
+          if (inventoryModel != null) {
+            yield state.copyWith(inventory: inventoryModel);
+          }
+      }
+    } else if (event is UpdateVariantDetail) {
+      yield state.copyWith(variants: event.variants, inventory: event.inventoryModel, increaseStock: event.increaseStock,);
     }
   }
 }

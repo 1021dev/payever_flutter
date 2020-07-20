@@ -254,6 +254,9 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
   }
 
   Widget _getBody(VariantsScreenState state) {
+    if (state.variants == null) {
+      return Container();
+    }
     String imgUrl = '';
     if (state.variants.images.length > 0) {
       imgUrl = widget.variants.images.first;
@@ -720,9 +723,11 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                                   ),
                                   CupertinoSwitch(
                                     onChanged: (val) {
-
+                                      InventoryModel inventory = state.inventory ?? InventoryModel();
+                                      inventory.isTrackable = !inventory.isTrackable;
+                                      screenBloc.add(UpdateVariantDetail(increaseStock: state.increaseStock, variants: state.variants, inventoryModel: inventory));
                                     },
-                                    value: false,
+                                    value: state.inventory != null ? state.inventory.isTrackable: false,
                                   )
                                 ],
                               ),
@@ -761,11 +766,15 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                                           minWidth: 0,
                                           child: Icon(Icons.remove_circle_outline),
                                           onPressed: () {
+                                            num increase = state.increaseStock;
+                                            if (increase > 0) {
+                                              screenBloc.add(UpdateVariantDetail(increaseStock: increase - 1, variants: state.variants, inventoryModel: state.inventory));
+                                            }
                                           },
                                         ),
                                         Flexible(
                                           child: AutoSizeText(
-                                            '0',
+                                            '${state.inventory != null ? state.inventory.stock + state.increaseStock: state.increaseStock}',
                                             minFontSize: 12,
                                             style: TextStyle(
                                               color: Colors.white,
@@ -779,6 +788,8 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                                           minWidth: 0,
                                           child: Icon(Icons.add_circle_outline),
                                           onPressed: () {
+                                            num increase = state.increaseStock;
+                                            screenBloc.add(UpdateVariantDetail(increaseStock: increase + 1, variants: state.variants, inventoryModel: state.inventory));
                                           },
                                         ),
                                       ],

@@ -20,3 +20,17 @@ class VariantsScreenInitEvent extends VariantsScreenEvent {
     this.variants,
   ];
 }
+
+class UpdateVariantDetail extends VariantsScreenEvent {
+  final Variants variants;
+  final num increaseStock;
+  final InventoryModel inventoryModel;
+
+  UpdateVariantDetail({this.variants, this.increaseStock, this.inventoryModel,});
+  @override
+  List<Object> get props => [
+    this.variants,
+    this.increaseStock,
+    this.inventoryModel,
+  ];
+}

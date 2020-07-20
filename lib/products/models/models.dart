@@ -228,16 +228,16 @@ class Categories {
 class Variants {
   Variants();
 
-  String id;
-  List<String> images = List();
-  String title;
-  String description;
-  bool hidden;
-  bool onSales;
-  num price;
-  num salePrice;
-  String sku;
-  String barcode;
+  String id = '';
+  List<String> images = [];
+  String title = '';
+  String description = '';
+  bool hidden = false;
+  bool onSales = false;
+  num price = 0;
+  num salePrice = 0;
+  String sku = '';
+  String barcode = '';
   List<VariantOption> options = [];
 
   Variants.toMap(dynamic obj) {

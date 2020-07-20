@@ -1278,6 +1278,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               if (variant.images.length > 0 ) {
                 imgUrl = variant.images.first;
               }
+              InventoryModel inventory;
+              if (state.inventories.length > 0) {
+                inventory = state.inventories.singleWhere((element) => element.sku == variant.sku);
+              }
               return Container(
                 height: 60,
                 padding: EdgeInsets.only(left: 16),
@@ -1332,7 +1336,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           padding: EdgeInsets.only(left: 8),
                         ),
                         Text(
-                          '${variant.options.length} item${variant.options.length > 1 ? 's': ''}',
+                          '${inventory != null ? inventory.stock: 0} item${(inventory != null ? inventory.stock: 0) > 1 ? 's': ''}',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 14,
