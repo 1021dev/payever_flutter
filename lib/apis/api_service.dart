@@ -1638,6 +1638,42 @@ class ApiService {
     }
   }
 
+  Future<dynamic> updateInventory(String token, String businessId, String sku, Map<String, dynamic> body) async {
+    try {
+      print('$TAG - updateInventory()');
+      dynamic response = await _client.patchTypeless(
+          '${Env.inventory}/api/business/$businessId/inventory/sku/$sku',
+          body: body,
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> addStockToInventory(String token, String businessId, String sku, Map<String, dynamic> body, String method) async {
+    try {
+      print('$TAG - addStockToInventory()');
+      dynamic response = await _client.patchTypeless(
+          '${Env.inventory}/api/business/$businessId/inventory/sku/$sku/$method',
+          body: body,
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<dynamic> getProductCategories(String token, String businessId, Map<String, dynamic> body) async {
     try {
       print('$TAG - getProductCategories()');

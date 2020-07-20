@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/commons/commons.dart';
@@ -61,10 +63,17 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
         yield* getProductCategories();
       }
     } else if (event is UpdateProductDetail) {
+      if (event.productsModel != null) {
+        yield state.copyWith(productDetail: event.productsModel,);
+      }
       if (event.increaseStock != null) {
-        yield state.copyWith(productDetail: event.productsModel, inventory: event.inventoryModel, increaseStock: event.increaseStock);
-      } else {
-        yield state.copyWith(productDetail: event.productsModel, inventory: event.inventoryModel,);
+        yield state.copyWith(increaseStock: event.increaseStock,);
+      }
+      if (event.inventoryModel != null) {
+        yield state.copyWith(inventory: event.inventoryModel,);
+      }
+      if (event.inventories != null) {
+        yield state.copyWith(updatedInventories: event.inventories,);
       }
     } else if (event is SaveProductDetail) {
       yield* updateProduct(event.productsModel);
@@ -276,6 +285,7 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
   }
 
   Stream<ProductsScreenState> updateProduct(ProductsModel model) async* {
+    yield state.copyWith(isLoading: true);
     String businessId = state.businessId;
     Map bodyObj = model.toDictionary();
     bodyObj['businessUuid'] = businessId;
@@ -297,6 +307,28 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
         }
       }
     }
+    List<InventoryModel> inventories = state.inventories;
+    List<InventoryModel> updated = state.updatedInventories;
+    updated.forEach((update) {
+      InventoryModel inventoryModel = inventories.singleWhere((element) => element.sku == update.sku);
+      if (inventoryModel != null) {
+        Map<String, dynamic> body = {
+          'barcode': update.barcode ?? '',
+          'isTrackable': update.isTrackable ?? false,
+          'sku': update.sku ?? ''
+        };
+        dynamic res = api.updateInventory(token, state.businessId, inventoryModel.sku, body);
+        print(res);
+        if (update.stock != inventoryModel.stock) {
+          int increase = update.stock - inventoryModel.stock;
+          Map<String, dynamic> body1 = {
+            'quantity': increase > 0 ? increase : -increase,
+          };
+          dynamic res1 = api.addStockToInventory(token, state.businessId, inventoryModel.sku, body1, increase > 0 ? 'add': 'subtract');
+          print(res1);
+        }
+      }
+    });
     yield ProductsScreenState(businessId: businessId);
     yield state.copyWith(updateSuccess: true, businessId: businessId);
     yield* fetchProducts(businessId);

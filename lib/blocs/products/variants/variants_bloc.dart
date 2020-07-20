@@ -1,6 +1,7 @@
 import 'dart:core';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/blocs/bloc.dart';
@@ -25,7 +26,6 @@ class VariantsScreenBloc extends Bloc<VariantsScreenEvent, VariantsScreenState> 
     if (event is VariantsScreenInitEvent) {
       yield state.copyWith(variants: event.variants ?? new Variants(), businessId: productsScreenBloc.state.businessId);
       if (event.variants != null) {
-        print(event.variants.toDictionary());
         InventoryModel inventoryModel = productsScreenBloc.state.inventories.singleWhere((element) => element.sku == event.variants.sku);
         if (inventoryModel != null) {
           yield state.copyWith(inventory: inventoryModel);
@@ -43,7 +43,21 @@ class VariantsScreenBloc extends Bloc<VariantsScreenEvent, VariantsScreenState> 
     } else if (event is CreateVariantsEvent) {
       yield* getAllCombinations();
     } else if (event is SaveVariantsEvent) {
+      ProductsModel productsModel = productsScreenBloc.state.productDetail;
+      List<Variants> variants = productsModel.variants;
+      int index = variants.indexWhere((element) => element.sku == state.variants.sku);
+      variants[index] = state.variants;
+      productsModel.variants = variants;
 
+      List<InventoryModel> updated = productsScreenBloc.state.updatedInventories;
+      InventoryModel inventoryModel = state.inventory;
+      List<InventoryModel> contains = updated.where((element) => element.sku == state.inventory.sku).toList();
+      inventoryModel.stock = inventoryModel.stock + state.increaseStock;
+      if (contains.length == 0) {
+        updated.add(inventoryModel);
+      }
+      productsScreenBloc.add(UpdateProductDetail(productsModel: productsModel, inventories: updated));
+      yield VariantsScreenStateSuccess();
     } else if (event is UpdateTagVariantItems) {
       yield state.copyWith(children: event.items);
     }

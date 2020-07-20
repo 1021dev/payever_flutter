@@ -64,15 +64,9 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
     return BlocListener(
       bloc: screenBloc,
       listener: (BuildContext context, VariantsScreenState state) async {
-//        if (state is ProductsScreenStateFailure) {
-//          Navigator.pushReplacement(
-//            context,
-//            PageTransition(
-//              child: LoginScreen(),
-//              type: PageTransitionType.fade,
-//            ),
-//          );
-//        } else if (state is ProductsScreenStateSuccess) {}
+        if (state is VariantsScreenStateSuccess) {
+          Navigator.pop(context);
+        }
       },
       child: BlocBuilder<VariantsScreenBloc, VariantsScreenState>(
         bloc: screenBloc,
@@ -254,7 +248,7 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
               Language.getProductStrings('save'),
             ),
             onPressed: () {
-              Navigator.pop(context);
+              screenBloc.add(SaveVariantsEvent());
             },
           ),
         ),
@@ -571,7 +565,13 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                         ),
                         child: TextFormField(
                           onChanged: (val) {
-
+                            Variants variants = state.variants;
+                            variants.price = int.parse(val) ?? 0;
+                            screenBloc.add(UpdateVariantDetail(
+                              inventoryModel: state.inventory,
+                              variants: variants,
+                              increaseStock: state.increaseStock,
+                            ));
                           },
                           initialValue: '${state.variants.price ?? 0}',
                           style: TextStyle(
@@ -602,7 +602,13 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                               ),
                               child: TextFormField(
                                 onChanged: (val) {
-
+                                  Variants variants = state.variants;
+                                  variants.salePrice = int.parse(val) ?? 0;
+                                  screenBloc.add(UpdateVariantDetail(
+                                    inventoryModel: state.inventory,
+                                    variants: variants,
+                                    increaseStock: state.increaseStock,
+                                  ));
                                 },
                                 initialValue: '${state.variants.salePrice ?? 0}',
                                 style: TextStyle(
@@ -660,10 +666,14 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                                 color: Color(0x80222222),
                               ),
                               child: TextFormField(
-                                onTap: () {
-                                },
                                 onChanged: (val) {
-
+                                  Variants variants = state.variants;
+                                  variants.sku = val;
+                                  screenBloc.add(UpdateVariantDetail(
+                                    inventoryModel: state.inventory,
+                                    variants: variants,
+                                    increaseStock: state.increaseStock,
+                                  ));
                                 },
                                 initialValue: state.variants.sku ?? '',
                                 style: TextStyle(
@@ -692,10 +702,14 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                                 color: Color(0x80222222),
                               ),
                               child: TextFormField(
-                                onTap: () {
-                                },
                                 onChanged: (val) {
-
+                                  Variants variants = state.variants;
+                                  variants.barcode = val;
+                                  screenBloc.add(UpdateVariantDetail(
+                                    inventoryModel: state.inventory,
+                                    variants: variants,
+                                    increaseStock: state.increaseStock,
+                                  ));
                                 },
                                 initialValue: state.variants.barcode ?? '',
                                 style: TextStyle(
@@ -826,10 +840,14 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                         ),
                         alignment: Alignment.topLeft,
                         child: TextFormField(
-                          onTap: () {
-                          },
                           onChanged: (val) {
-
+                            Variants variants = state.variants;
+                            variants.description = val;
+                            screenBloc.add(UpdateVariantDetail(
+                              inventoryModel: state.inventory,
+                              variants: variants,
+                              increaseStock: state.increaseStock,
+                            ));
                           },
                           minLines: 1,
                           maxLines: 10,
@@ -878,15 +896,15 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                 borderRadius: BorderRadius.only(bottomLeft: Radius.circular(8)),
               ),
               child: TextFormField(
-                onTap: () {
-//                if (isShownColorPicker)
-//                  Navigator.pop(context);
-//                setState(() {
-//                  isShownColorPicker = false;
-//                });
-                },
                 onChanged: (val) {
-
+                  Variants variants = state.variants;
+                  option.name = val;
+                  variants.options[index] = option;
+                  screenBloc.add(UpdateVariantDetail(
+                    inventoryModel: state.inventory,
+                    variants: variants,
+                    increaseStock: state.increaseStock,
+                  ));
                 },
                 initialValue: option.name,
                 style: TextStyle(
@@ -945,7 +963,14 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                 }: null,
                 readOnly: option.name == 'Color' ? true: false,
                 onChanged: (val) {
-                  print(val);
+                  Variants variants = state.variants;
+                  option.value = val;
+                  variants.options[index] = option;
+                  screenBloc.add(UpdateVariantDetail(
+                    inventoryModel: state.inventory,
+                    variants: variants,
+                    increaseStock: state.increaseStock,
+                  ));
                 },
                 style: TextStyle(
                   color: Colors.white,
@@ -965,7 +990,15 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
           ),
           MaterialButton(
             onPressed: () {
-
+              Variants variants = state.variants;
+              if (variants.options.length > 1) {
+                variants.options.removeAt(index);
+                screenBloc.add(UpdateVariantDetail(
+                  inventoryModel: state.inventory,
+                  variants: variants,
+                  increaseStock: state.increaseStock,
+                ));
+              }
             },
             minWidth: 0,
             child: SvgPicture.asset(

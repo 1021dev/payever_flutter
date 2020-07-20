@@ -17,6 +17,7 @@ class ProductsScreenState {
   final Info productsInfo;
   final Info collectionInfo;
   final List<InventoryModel> inventories;
+  final List<InventoryModel> updatedInventories;
   final InventoryModel inventory;
   final List<Categories> categories;
   final ProductsModel productDetail;
@@ -48,6 +49,7 @@ class ProductsScreenState {
     this.productsInfo,
     this.collectionInfo,
     this.inventories = const [],
+    this.updatedInventories = const [],
     this.inventory,
     this.categories = const [],
     this.productDetail,
@@ -81,6 +83,7 @@ class ProductsScreenState {
     this.collectionInfo,
     this.inventories,
     this.inventory,
+    this.updatedInventories,
     this.categories,
     this.productDetail,
     this.taxes,
@@ -112,6 +115,7 @@ class ProductsScreenState {
     Info productsInfo,
     Info collectionInfo,
     List<InventoryModel> inventories,
+    List<InventoryModel> updatedInventories,
     InventoryModel inventory,
     List<Categories> categories,
     ProductsModel productDetail,
@@ -143,6 +147,7 @@ class ProductsScreenState {
       productsInfo: productsInfo ?? this.productsInfo,
       collectionInfo: collectionInfo ?? this.collectionInfo,
       inventories: inventories ?? this.inventories,
+      updatedInventories: updatedInventories ?? this.updatedInventories,
       inventory: inventory ?? this.inventory,
       categories: categories ?? this.categories,
       productDetail: productDetail ?? this.productDetail,
