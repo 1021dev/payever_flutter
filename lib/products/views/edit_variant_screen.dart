@@ -15,6 +15,10 @@ import 'package:payever/blocs/products/variants/variants.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/products/models/models.dart';
+import 'package:payever/products/widgets/multi_select_dialog.dart';
+import 'package:payever/products/widgets/single_choice_dialog.dart';
+
+import 'add_variant_option_screen.dart';
 
 class EditVariantScreen extends StatefulWidget {
 
@@ -33,6 +37,16 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
 
   VariantsScreenBloc screenBloc;
   bool isLoading = false;
+  Map<String, Color> colorsMap = {
+    'Blue': Color(0xff0084ff),
+    'Green': Color(0xff81d552),
+    'Yellow': Color(0xffeebd40),
+    'Pink': Color(0xffde68a5),
+    'Brown': Color(0xff594139),
+    'Black': Color(0xff000000),
+    'White': Color(0xffffffff),
+    'Grey': Color(0xff434243),
+  };
 
   @override
   void initState() {
@@ -460,18 +474,23 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                                         color: Colors.black12,
                                       ),
                                       child: state.isUploading ? Container(
-                                        child: Center(child: CircularProgressIndicator()),
+                                        child: Center(
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                          ),
+                                        ),
                                       ): Icon(Icons.add),
                                     ),
                                   ),
                                   img != '' ? InkWell(
                                     onTap: () {
-//                                      ProductsModel productModel = state.productDetail;
-//                                      productModel.images.remove(img);
-//                                      widget.screenBloc.add(UpdateProductDetail(
-//                                        inventoryModel: state.inventory,
-//                                        productsModel: productModel,
-//                                      ));
+                                      Variants variants = state.variants;
+                                      variants.images.remove(img);
+                                      screenBloc.add(UpdateVariantDetail(
+                                        inventoryModel: state.inventory,
+                                        variants: variants,
+                                        increaseStock: state.increaseStock,
+                                      ));
                                     },
                                     child: SvgPicture.asset('assets/images/xsinacircle.svg',),
                                   ): Container(),
@@ -490,7 +509,7 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
                         itemBuilder: (BuildContext context, int index) {
-                          return _buildOptionItems(context, index);
+                          return _buildOptionItems(context, index, state);
                         },
                         separatorBuilder: (context, index) {
                           return Divider(
@@ -519,26 +538,28 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                             ),
                           ),
                           onPressed: () async {
-//                            final result = await Navigator.push(
-//                              context,
-//                              PageTransition(
-//                                child: AddVariantOptionScreen(),
-//                                type: PageTransitionType.fade,
-//                                duration: Duration(milliseconds: 500),
-//                              ),
-//                            );
-//
-//                            if (result != null) {
-//                              if (result == 'color') {
-//                                setState(() {
-//                                  _children.add(TagVariantItem(name: 'Color', type: 'color', values: [], key: '${_children.length}'));
-//                                });
-//                              } else if (result == 'other') {
-//                                setState(() {
-//                                  _children.add(TagVariantItem(name: 'Default', type: 'string', values: [], key: '${_children.length}'));
-//                                });
-//                              }
-//                            }
+                            final result = await Navigator.push(
+                              context,
+                              PageTransition(
+                                child: AddVariantOptionScreen(),
+                                type: PageTransitionType.fade,
+                                duration: Duration(milliseconds: 500),
+                              ),
+                            );
+
+                            if (result != null) {
+                              if (result == 'color') {
+                                VariantOption option = VariantOption(name: 'Color', value: '');
+                                Variants variants = state.variants;
+                                variants.options.add(option);
+                                screenBloc.add(UpdateVariantDetail(variants: variants, inventoryModel: state.inventory, increaseStock: state.increaseStock,));
+                              } else if (result == 'other') {
+                                VariantOption option = VariantOption(name: 'Default', value: '');
+                                Variants variants = state.variants;
+                                variants.options.add(option);
+                                screenBloc.add(UpdateVariantDetail(variants: variants, inventoryModel: state.inventory, increaseStock: state.increaseStock,));
+                              }
+                            }
                           },
                         ),
                       ),
@@ -551,8 +572,6 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                           borderRadius: BorderRadius.only(topRight: Radius.circular(8), topLeft: Radius.circular(8)),
                         ),
                         child: TextFormField(
-                          onTap: () {
-                          },
                           onChanged: (val) {
 
                           },
@@ -584,8 +603,6 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                                 color: Color(0x80222222),
                               ),
                               child: TextFormField(
-                                onTap: () {
-                                },
                                 onChanged: (val) {
 
                                 },
@@ -743,7 +760,7 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                                 borderRadius: BorderRadius.only(bottomRight: Radius.circular(8)),
                               ),
                               child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Padding(
@@ -758,41 +775,41 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                                     ),
                                   ),
                                   Flexible(
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        MaterialButton(
-                                          padding: EdgeInsets.all(0),
-                                          minWidth: 0,
-                                          child: Icon(Icons.remove_circle_outline),
-                                          onPressed: () {
-                                            num increase = state.increaseStock;
-                                            if (increase > 0) {
-                                              screenBloc.add(UpdateVariantDetail(increaseStock: increase - 1, variants: state.variants, inventoryModel: state.inventory));
-                                            }
-                                          },
-                                        ),
-                                        Flexible(
-                                          child: AutoSizeText(
-                                            '${state.inventory != null ? state.inventory.stock + state.increaseStock: state.increaseStock}',
-                                            minFontSize: 12,
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w400,
-                                              fontSize: 18,
+                                    child: Container(
+                                      padding: EdgeInsets.only(left: 8, right: 8),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: <Widget>[
+                                          InkWell(
+                                            child: Icon(Icons.remove_circle_outline,),
+                                            onTap: () {
+                                              num increase = state.increaseStock;
+                                              if (state.inventory.stock + increase > 0) {
+                                                screenBloc.add(UpdateVariantDetail(increaseStock: increase - 1, variants: state.variants, inventoryModel: state.inventory));
+                                              }
+                                            },
+                                          ),
+                                          Flexible(
+                                            child: AutoSizeText(
+                                              '${state.inventory != null ? state.inventory.stock + state.increaseStock: state.increaseStock}',
+                                              minFontSize: 10,
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 18,
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        MaterialButton(
-                                          padding: EdgeInsets.all(0),
-                                          minWidth: 0,
-                                          child: Icon(Icons.add_circle_outline),
-                                          onPressed: () {
-                                            num increase = state.increaseStock;
-                                            screenBloc.add(UpdateVariantDetail(increaseStock: increase + 1, variants: state.variants, inventoryModel: state.inventory));
-                                          },
-                                        ),
-                                      ],
+                                          InkWell(
+                                            child: Icon(Icons.add_circle_outline,),
+                                            onTap: () {
+                                              num increase = state.increaseStock;
+                                              screenBloc.add(UpdateVariantDetail(increaseStock: increase + 1, variants: state.variants, inventoryModel: state.inventory));
+                                            },
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -847,8 +864,8 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
     );
   }
 
-  Widget _buildOptionItems(BuildContext context, int index) {
-    VariantOption option = widget.variants.options[index];
+  Widget _buildOptionItems(BuildContext context, int index, VariantsScreenState state) {
+    VariantOption option = state.variants.options[index];
     return Container(
       margin: EdgeInsets.only(left: 8, top: 4, bottom: 4),
       child: Row(
@@ -898,15 +915,37 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                 borderRadius: BorderRadius.only(topRight: Radius.circular(8), bottomRight: Radius.circular(8)),
               ),
               child: TextFormField(
-                onTap: () {
-//                if (isShownColorPicker)
-//                  Navigator.pop(context);
-//                setState(() {
-//                  isShownColorPicker = false;
-//                });
-                },
-                onChanged: (val) {
+                key: Key('option$index'),
+                onTap: option.name == 'Color' ?  () async {
+                  List result = await showDialog<List>(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return SingleChoiceConfirmationDialog(
+                        title: 'Color options',
+                        okButtonLabel: 'OK',
+                        cancelButtonLabel: 'CANCEL',
+                        initialSelectedValues: option.value,
+                        colorMaps: colorsMap,
+                        addButtonLabel: 'Add Color',
+                      );
+                    },
+                  );
 
+                  if (result != null) {
+                    setState(() {
+                      Variants variants = state.variants;
+                      VariantOption option = variants.options[index];
+                      colorsMap = result[1];
+                      String value = result[0];
+                      option.value = value;
+                      variants.options[index] = option;
+                      screenBloc.add(UpdateVariantDetail(increaseStock: state.increaseStock, variants: variants, inventoryModel: state.inventory));
+                    });
+                  }
+                }: null,
+                readOnly: option.name == 'Color' ? true: false,
+                onChanged: (val) {
+                  print(val);
                 },
                 initialValue: option.value,
                 style: TextStyle(
@@ -981,7 +1020,7 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
         ));
 
     if (croppedFile != null) {
-//      widget.screenBloc.add(UploadImageToProduct(file: croppedFile));
+      screenBloc.add(UploadVariantImageToProduct(file: croppedFile));
     }
 
   }

@@ -409,6 +409,8 @@ class VariantType {
 }
 
 class VariantOption {
+
+  VariantOption({this.name = '', this.value = ''});
   String name;
   String value;
 

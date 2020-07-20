@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:equatable/equatable.dart';
 import 'package:payever/products/models/models.dart';
 
@@ -34,3 +36,14 @@ class UpdateVariantDetail extends VariantsScreenEvent {
     this.inventoryModel,
   ];
 }
+
+class UploadVariantImageToProduct extends VariantsScreenEvent {
+  final File file;
+
+  UploadVariantImageToProduct({this.file,});
+  @override
+  List<Object> get props => [
+    this.file,
+  ];
+}
+
