@@ -8,3 +8,5 @@ export './shop/shop.dart';
 export './switcher/switcher.dart';
 export './products/products.dart';
 export './products/variants/variants.dart';
+export './welcome/welcome.dart';
+export './notifications/notifications.dart';

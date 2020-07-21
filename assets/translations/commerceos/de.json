@@ -297,5 +297,6 @@
     "forms.login.twoFA.no_code": "Verifizierungscode erhalten?",
     "forms.login.twoFA.send_code": "Senden",
     "forms.login.twoFA.submit_code": "Senden",
-    "actions.other": "Other account"
+    "actions.other": "Other account",
+    "info_boxes.notifications.messages.legalDocuments.review\t": "Review legal documents"
 }

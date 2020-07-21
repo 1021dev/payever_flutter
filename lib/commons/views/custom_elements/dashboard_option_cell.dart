@@ -1,10 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:payever/apis/api_service.dart';
+import 'package:payever/commons/models/models.dart';
 import 'package:payever/commons/utils/translations.dart';
 
 class DashboardOptionCell extends StatelessWidget {
+  final NotificationModel notificationModel;
+  DashboardOptionCell({this.notificationModel});
   @override
   Widget build(BuildContext context) {
+    String actionKey = notificationModel.message.replaceAll('notification.', '');
+    String message = 'info_boxes.notifications.messages.$actionKey';
     return Column(
       children: [
         Container(
@@ -29,7 +35,7 @@ class DashboardOptionCell extends StatelessWidget {
                   ),
                   SizedBox(width: 12),
                   Text(
-                    "Get a quick tour around products",
+                    Language.getCommerceOSStrings(message),
                     softWrap: true,
                     style: TextStyle(
                         color: Colors.white, fontSize: 12),

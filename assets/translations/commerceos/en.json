@@ -297,5 +297,6 @@
     "forms.login.twoFA.no_code": "Did not get a verification code?",
     "forms.login.twoFA.send_code": "Send",
     "forms.login.twoFA.submit_code": "Send",
-    "actions.other": "Other account"
+    "actions.other": "Other account",
+    "info_boxes.notifications.messages.legalDocuments.review\t": "Review legal documents"
 }

@@ -9,6 +9,7 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/views/screens/login/login_page.dart';
 import 'package:payever/commons/views/screens/switcher/switcher_page.dart';
+import 'package:payever/notifications/notifications_screen.dart';
 import 'package:payever/pos/views/pos_create_terminal_screen.dart';
 import 'package:payever/pos/views/pos_screen.dart';
 import 'package:payever/products/models/models.dart';
@@ -255,8 +256,30 @@ class _DashboardScreenState extends State<DashboardScreen> {
             color: Colors.white,
             size: 24,
           ),
-          onPressed: () {
+          onPressed: () async {
+            Provider.of<GlobalStateModel>(context,listen: false)
+                .setCurrentBusiness(state.activeBusiness);
+            Provider.of<GlobalStateModel>(context,listen: false)
+                .setCurrentWallpaper(state.curWall);
 
+            await showGeneralDialog(
+                barrierColor: null,
+                transitionBuilder: (context, a1, a2, widget) {
+                  final curvedValue = Curves.ease.transform(a1.value) -   1.0;
+                  return Transform(
+                    transform: Matrix4.translationValues(-curvedValue * 200, 0.0, 0),
+                    child: NotificationsScreen(
+                      business: state.activeBusiness,
+                      businessApps: state.businessWidgets,
+                      dashboardScreenBloc: screenBloc,
+                    ),
+                  );
+                },
+                transitionDuration: Duration(milliseconds: 200),
+                barrierDismissible: true,
+                barrierLabel: '',
+                context: context,
+                pageBuilder: (context, animation1, animation2) {});
           },
         ),
         IconButton(
@@ -613,6 +636,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       appWidget = widgets.where((element) => element.type == 'products' ).toList().first;
       businessApp = businessApps.where((element) => element.code == 'products' ).toList().length > 0
           ? businessApps.where((element) => element.code == 'products' ).toList().first : null;
+      print('product-notifications = > ${state.notifications.containsKey('products-aware') ? state.notifications['products-aware']: []}');
       dashboardWidgets.add(
           DashboardProductsView(
             businessApps: businessApp,
