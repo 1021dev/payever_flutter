@@ -8,8 +8,13 @@ import '../../../custom_elements/blur_effect_view.dart';
 class DashboardAdvertisingView extends StatefulWidget {
   final AppWidget appWidget;
   final BusinessApps businessApps;
+  final List<NotificationModel> notifications;
 
-  DashboardAdvertisingView({ this.appWidget, this.businessApps});
+  DashboardAdvertisingView({
+    this.appWidget,
+    this.businessApps,
+    this.notifications = const [],
+  });
   @override
   _DashboardAdvertisingViewState createState() => _DashboardAdvertisingViewState();
 }

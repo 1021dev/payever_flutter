@@ -9,8 +9,14 @@ class DashboardContactView extends StatefulWidget {
   final VoidCallback onOpen;
   final BusinessApps businessApps;
   final AppWidget appWidget;
+  final List<NotificationModel> notifications;
 
-  DashboardContactView({this.onOpen, this.businessApps, this.appWidget});
+  DashboardContactView({
+    this.onOpen,
+    this.businessApps,
+    this.appWidget,
+    this.notifications = const [],
+  });
   @override
   _DashboardContactViewState createState() => _DashboardContactViewState();
 }

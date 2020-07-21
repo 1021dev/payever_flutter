@@ -10,10 +10,12 @@ import '../../../custom_elements/blur_effect_view.dart';
 class DashboardConnectView extends StatefulWidget {
   final AppWidget appWidget;
   final BusinessApps businessApps;
+  final List<NotificationModel> notifications;
 
   DashboardConnectView({
     this.appWidget,
     this.businessApps,
+    this.notifications = const [],
   });
   @override
   _DashboardConnectViewState createState() => _DashboardConnectViewState();

@@ -421,12 +421,22 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
   }
 
   Stream<DashboardScreenState> fetchNotifications() async* {
-    List<dynamic> notifications = [];
-    state.businessWidgets.forEach((element) async {
+    state.businessWidgets.forEach((element) {
       String appName = element.code;
-      dynamic response = await api.getNotifications(GlobalUtils.activeToken.accessToken, 'business', state.activeBusiness.id, '$appName-aware');
+      dynamic response = api.getNotifications(GlobalUtils.activeToken.accessToken, 'business', state.activeBusiness.id, '$appName-aware');
       print('Notifications => $response');
+      if (response is List) {
+        List<NotificationModel> notiArr = [];
+        response.forEach((noti) {
+          notiArr.add(NotificationModel.fromMap(noti));
+        });
+        Map<String, List<NotificationModel>> notifications = {};
+        notifications.addAll(state.notifications);
+        if (notiArr.length > 0) {
+          notifications[notiArr.first.app] = notiArr;
+        }
+        state.copyWith(notifications: notifications);
+      }
     });
-
   }
 }

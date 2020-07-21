@@ -9,8 +9,14 @@ class DashboardStudioView extends StatefulWidget {
   final VoidCallback onOpen;
   final AppWidget appWidget;
   final BusinessApps businessApps;
+  final List<NotificationModel> notifications;
 
-  DashboardStudioView({this.onOpen, this.appWidget, this.businessApps});
+  DashboardStudioView({
+    this.onOpen,
+    this.appWidget,
+    this.businessApps,
+    this.notifications = const [],
+  });
   @override
   _DashboardStudioViewState createState() => _DashboardStudioViewState();
 }

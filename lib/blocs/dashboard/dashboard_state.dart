@@ -32,7 +32,7 @@ class DashboardScreenState {
   final List<Products> lastSalesRandom;
   final List<ConnectModel> connects;
   final List<ShopModel> shops;
-  final List<dynamic> notifications;
+  final Map<String, List<NotificationModel>> notifications;
 
   DashboardScreenState({
     this.isLoading = false,
@@ -61,7 +61,7 @@ class DashboardScreenState {
     this.connects = const [],
     this.shops = const [],
     this.activeShop,
-    this.notifications = const [],
+    this.notifications = const {},
   });
 
   List<Object> get props => [
@@ -121,7 +121,7 @@ class DashboardScreenState {
     List<ConnectModel> connects,
     List<ShopModel> shops,
     ShopModel activeShop,
-    List<dynamic> notifications,
+    Map<String, List<NotificationModel>> notifications,
   }) {
     return DashboardScreenState(
       isLoading: isLoading ?? this.isLoading,

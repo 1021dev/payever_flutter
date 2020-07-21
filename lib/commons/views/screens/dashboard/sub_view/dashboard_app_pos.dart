@@ -13,6 +13,7 @@ class DashboardAppPosView extends StatefulWidget {
   final bool isLoading;
   final Function onTapOpen;
   final Function onTapEditTerminal;
+  final List<NotificationModel> notifications;
   DashboardAppPosView({
     this.appWidget,
     this.businessApps,
@@ -21,6 +22,7 @@ class DashboardAppPosView extends StatefulWidget {
     this.activeTerminal,
     this.onTapEditTerminal,
     this.onTapOpen,
+    this.notifications = const [],
   });
   @override
   _DashboardAppPosViewState createState() => _DashboardAppPosViewState();
@@ -30,6 +32,7 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
   String uiKit = '${Env.cdnIcon}icons-apps-white/icon-apps-white-';
   String imageBase = Env.storage + '/images/';
 
+  bool isExpanded = false;
   @override
   Widget build(BuildContext context) {
     List<Terminal> terminals = widget.terminals;
@@ -164,24 +167,79 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                     )
                   ],
                 ),
-                InkWell(
-                  onTap: widget.onTapOpen,
-                  child: Container(
-                    height: 20,
-                    width: 40,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.black.withOpacity(0.4)
-                    ),
-                    child: Center(
-                      child: Text('Open',
-                        style: TextStyle(
-                            fontSize: 10,
-                            color: Colors.white
+                Row(
+                  children: <Widget>[
+                    InkWell(
+                      onTap: widget.onTapOpen,
+                      child: Container(
+                        height: 20,
+                        width: 40,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.black.withOpacity(0.4)
+                        ),
+                        child: Center(
+                          child: Text('Open',
+                            style: TextStyle(
+                                fontSize: 10,
+                                color: Colors.white
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
+                    widget.notifications.length > 0 ?
+                    SizedBox(width: 8) : Container(),
+                    widget.notifications.length > 0 ? Container(
+                      height: 20,
+                      width: 40,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white10
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: Center(
+                              child: Text(
+                                '2',
+                                style: TextStyle(
+                                    fontSize: 10,
+                                    color: Colors.white
+                                ),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: InkWell(
+                              onTap: () {
+                                setState(() {
+                                  isExpanded = !isExpanded;
+                                });
+                              },
+                              child: Container(
+                                width: 21,
+                                height: 21,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10.5),
+                                    color: Colors.black45
+                                ),
+                                child: Center(
+                                  child: Icon(
+                                    isExpanded ? Icons.clear : Icons.add,
+                                    color: Colors.white,
+                                    size: 12,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ): Container(),
+                  ],
                 ),
               ],
             ),

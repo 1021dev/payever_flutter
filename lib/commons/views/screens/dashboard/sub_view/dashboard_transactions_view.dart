@@ -21,6 +21,7 @@ class DashboardTransactionsView extends StatefulWidget {
   final Function onTapGetStarted;
   final Function onTapContinueSetup;
   final Function onTapLearnMore;
+  final List<NotificationModel> notifications;
 
   DashboardTransactionsView({
     this.onOpen,
@@ -34,6 +35,7 @@ class DashboardTransactionsView extends StatefulWidget {
     this.onTapGetStarted,
     this.onTapContinueSetup,
     this.onTapLearnMore,
+    this.notifications = const [],
   });
   @override
   _DashboardTransactionsViewState createState() => _DashboardTransactionsViewState();
@@ -104,8 +106,8 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                               ),
                             ),
                           ),
-                          SizedBox(width: 8),
-                          Container(
+                          widget.notifications.length > 0 ? SizedBox(width: 8): Container(),
+                          widget.notifications.length > 0 ? Container(
                             height: 20,
                             width: 40,
                             decoration: BoxDecoration(
@@ -118,7 +120,7 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                                   flex: 1,
                                   child: Center(
                                     child: Text(
-                                      '1',
+                                      '{widget.notifications.length}',
                                       style: TextStyle(
                                           fontSize: 10,
                                           color: Colors.white
@@ -153,7 +155,7 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                                 ),
                               ],
                             ),
-                          )
+                          ): Container(),
                         ],
                       )
                     ],

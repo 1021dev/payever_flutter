@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/commons/models/app_widget.dart';
 import 'package:payever/commons/models/business_apps.dart';
+import 'package:payever/commons/models/models.dart';
 import 'package:payever/commons/utils/env.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/views/custom_elements/dashboard_option_cell.dart';
@@ -13,8 +14,14 @@ class DashboardMailView extends StatefulWidget {
   final VoidCallback onOpen;
   final BusinessApps businessApps;
   final AppWidget appWidget;
+  final List<NotificationModel> notifications;
 
-  DashboardMailView({this.onOpen, this.businessApps, this.appWidget});
+  DashboardMailView({
+    this.onOpen,
+    this.businessApps,
+    this.appWidget,
+    this.notifications = const [],
+  });
   @override
   _DashboardMailViewState createState() => _DashboardMailViewState();
 }

@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/commons/models/app_widget.dart';
 import 'package:payever/commons/models/business_apps.dart';
+import 'package:payever/commons/models/models.dart';
 import 'package:payever/commons/utils/env.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/views/custom_elements/dashboard_option_cell.dart';
@@ -19,6 +20,7 @@ class DashboardShopView extends StatefulWidget {
   final ShopModel shopModel;
   final bool isLoading;
   final Function onTapEditShop;
+  final List<NotificationModel> notifications;
 
   DashboardShopView({
     this.onOpen,
@@ -28,6 +30,7 @@ class DashboardShopView extends StatefulWidget {
     this.shops = const [],
     this.isLoading = false,
     this.onTapEditShop,
+    this.notifications = const [],
   });
   @override
   _DashboardShopViewState createState() => _DashboardShopViewState();

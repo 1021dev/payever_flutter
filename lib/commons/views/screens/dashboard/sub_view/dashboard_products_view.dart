@@ -15,6 +15,7 @@ class DashboardProductsView extends StatefulWidget {
   final Business business;
   final Function onOpen;
   final Function onSelect;
+  final List<NotificationModel> notifications;
 
   DashboardProductsView({
     this.appWidget,
@@ -23,6 +24,7 @@ class DashboardProductsView extends StatefulWidget {
     this.business,
     this.onOpen,
     this.onSelect,
+    this.notifications = const [],
   });
   @override
   _DashboardProductsViewState createState() => _DashboardProductsViewState();
@@ -88,8 +90,9 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
                               ),
                             ),
                           ),
-                          SizedBox(width: 8),
-                          Container(
+                          widget.notifications.length > 0 ?
+                          SizedBox(width: 8) : Container(),
+                          widget.notifications.length > 0 ? Container(
                             height: 20,
                             width: 40,
                             decoration: BoxDecoration(
@@ -137,7 +140,7 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
                                 ),
                               ],
                             ),
-                          )
+                          ): Container(),
                         ],
                       )
                     ],
