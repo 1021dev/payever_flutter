@@ -211,7 +211,6 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                 ),
                 child: ListView.builder(itemBuilder: _itemBuilderDDetails, itemCount: 1,physics: NeverScrollableScrollPhysics(),),
               )
-
           ],
         ),
       );
@@ -298,7 +297,7 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
             )
           ],
         ),
-      );
+    );
     }
   }
   Widget _itemBuilderDDetails(BuildContext context, int index) {

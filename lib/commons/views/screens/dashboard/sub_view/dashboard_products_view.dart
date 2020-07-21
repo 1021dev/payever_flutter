@@ -147,7 +147,7 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
                   ),
                   SizedBox(height: 8),
                   Container(
-                    height: 116,
+                    height: 92,
                     child: ListView.builder(
                       itemBuilder: _itemBuilder,
                       itemCount: widget.lastSales.length > 3 ? 3: widget.lastSales.length,

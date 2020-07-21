@@ -107,7 +107,7 @@ class _DashboardShopViewState extends State<DashboardShopView> {
                               ),
                             ),
                           ),
-                          isExpanded ? Container(
+                          widget.notifications.length > 0 ? Container(
                             height: 20,
                             width: 40,
                             decoration: BoxDecoration(
@@ -120,7 +120,8 @@ class _DashboardShopViewState extends State<DashboardShopView> {
                                 Expanded(
                                   flex: 1,
                                   child: Center(
-                                    child: Text('1',
+                                    child: Text(
+                                      '1',
                                       style: TextStyle(
                                           fontSize: 10,
                                           color: Colors.white
@@ -157,7 +158,7 @@ class _DashboardShopViewState extends State<DashboardShopView> {
                             ),
                           ): Container(),
                         ],
-                      )
+                      ),
                     ],
                   ),
                 ],

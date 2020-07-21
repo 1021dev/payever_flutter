@@ -35,10 +35,10 @@ class ProductCell extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(4),
-                image: DecorationImage(
+                image:product.thumbnail != null ? DecorationImage(
                   image: NetworkImage('${Env.storage}/products/${product.thumbnail}'),
                   fit: BoxFit.contain,
-                ),
+                ): null,
               ),
             ),
           ),

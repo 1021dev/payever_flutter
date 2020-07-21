@@ -83,8 +83,8 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                               ),
                             ),
                           ),
-                          SizedBox(width: 8),
-                          Container(
+                          widget.notifications.length > 0 ? SizedBox(width: 8): Container(),
+                          widget.notifications.length > 0 ? Container(
                             height: 20,
                             width: 40,
                             decoration: BoxDecoration(
@@ -131,7 +131,7 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                                 ),
                               ],
                             ),
-                          )
+                          ): Container(),
                         ],
                       )
                     ],

@@ -390,6 +390,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             },
             onTapGetStarted: () {},
             onTapLearnMore: () {},
+            notifications: state.notifications.containsKey('transactions-aware') ? state.notifications['transactions-aware']: [],
           )
       );
     }
@@ -483,6 +484,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
               );
             },
+            notifications: state.notifications.containsKey('shop-aware') ? state.notifications['shop-aware']: [],
           ),
       );
     }
@@ -531,6 +533,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
               );
             },
+            notifications: state.notifications.containsKey('pos-aware') ? state.notifications['pos-aware']: [],
           )
       );
     }
@@ -544,6 +547,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             DashboardCheckoutView(
               businessApps: businessApp,
               appWidget: appWidget,
+              notifications: state.notifications.containsKey('checkout-aware') ? state.notifications['checkout-aware']: [],
             )
         );
       }
@@ -557,6 +561,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           DashboardMailView(
             businessApps: businessApp,
             appWidget: appWidget,
+            notifications: state.notifications.containsKey('marketing-aware') ? state.notifications['marketing-aware']: [],
           )
       );
     }
@@ -570,6 +575,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           DashboardStudioView(
             businessApps: businessApp,
             appWidget: appWidget,
+            notifications: state.notifications.containsKey('studio-aware') ? state.notifications['studio-aware']: [],
           )
       );
     }
@@ -583,6 +589,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           DashboardAdvertisingView(
             businessApps: businessApp,
             appWidget: appWidget,
+            notifications: state.notifications.containsKey('ads-aware') ? state.notifications['ads-aware']: [],
           )
       );
     }
@@ -596,6 +603,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           DashboardContactView(
             businessApps: businessApp,
             appWidget: appWidget,
+            notifications: state.notifications.containsKey('contacts-aware') ? state.notifications['contacts-aware']: [],
           )
       );
     }
@@ -643,6 +651,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 //                screenBloc.add(FetchPosEvent(business: state.activeBusiness));
               }
             },
+            notifications: state.notifications.containsKey('products-aware') ? state.notifications['products-aware']: [],
           ),
       );
     }
@@ -656,6 +665,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           DashboardConnectView(
             businessApps: businessApp,
             appWidget: appWidget,
+            notifications: state.notifications.containsKey('connect-aware') ? state.notifications['connect-aware']: [],
           )
       );
     }
@@ -668,6 +678,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           DashboardSettingsView(
             businessApps: businessApp,
             appWidget: appWidget,
+            notifications: state.notifications.containsKey('settings-aware') ? state.notifications['settings-aware']: [],
           )
       );
     }
