@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:page_transition/page_transition.dart';
@@ -74,7 +75,7 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
           return Scaffold(
             backgroundColor: Colors.black,
             resizeToAvoidBottomPadding: false,
-            appBar: _appBar(),
+            appBar: _appBar(state),
             body: SafeArea(
               child: BackgroundBase(
                 true,
@@ -103,7 +104,7 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
     );
   }
 
-  Widget _appBar() {
+  Widget _appBar(VariantsScreenState state) {
     return AppBar(
       centerTitle: false,
       elevation: 0,
@@ -248,7 +249,53 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
               Language.getProductStrings('save'),
             ),
             onPressed: () {
-              screenBloc.add(SaveVariantsEvent());
+              bool valid = true;
+              state.variants.options.forEach((element) {
+                if (element.name == '') {
+                  Fluttertoast.showToast(
+                    msg: 'Option name is not valid',
+                    toastLength: Toast.LENGTH_SHORT,
+                    textColor: Colors.red,
+                    fontSize: 14,
+                  );
+                  valid = false;
+                  return;
+                } else if (element.value == '') {
+                  Fluttertoast.showToast(
+                    msg: "Option value is required",
+                    toastLength: Toast.LENGTH_SHORT,
+                    textColor: Colors.red,
+                    fontSize: 14,
+                  );
+                  valid = false;
+                  return;
+                } else {
+                  List list = state.children.where((e) => element.name == e.name).toList();
+                  if (list.length > 1) {
+                    Fluttertoast.showToast(
+                      msg: "Option name is not valid",
+                      toastLength: Toast.LENGTH_SHORT,
+                      textColor: Colors.red,
+                      fontSize: 14,
+                    );
+                    valid = false;
+                    return;
+                  }
+                }
+              });
+              if (state.variants.sku == '') {
+                Fluttertoast.showToast(
+                  msg: "SKU is required",
+                  toastLength: Toast.LENGTH_SHORT,
+                  textColor: Colors.red,
+                  fontSize: 14,
+                );
+                valid = false;
+                return;
+              }
+              if (valid) {
+                screenBloc.add(SaveVariantsEvent());
+              }
             },
           ),
         ),

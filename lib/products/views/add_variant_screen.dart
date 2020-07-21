@@ -220,13 +220,42 @@ class _AddVariantScreenState extends State<AddVariantScreen> {
               Language.getProductStrings('save'),
             ),
             onPressed: () {
-              if (formKey.currentState.validate()) {
-                screenBloc.add(CreateVariantsEvent());
-              } else {
-                Fluttertoast.showToast(
-                    msg: "This is Center Short Toast",
+              bool valid = true;
+              state.children.forEach((element) {
+                if (element.name == '') {
+                  Fluttertoast.showToast(
+                    msg: 'Option name is not valid',
                     toastLength: Toast.LENGTH_SHORT,
-                );
+                    textColor: Colors.red,
+                    fontSize: 14,
+                  );
+                  valid = false;
+                  return;
+                } else if (element.values.length == 0) {
+                  Fluttertoast.showToast(
+                    msg: "Option value is required",
+                    toastLength: Toast.LENGTH_SHORT,
+                    textColor: Colors.red,
+                    fontSize: 14,
+                  );
+                  valid = false;
+                  return;
+                } else {
+                  List list = state.children.where((e) => element.name == e.name).toList();
+                  if (list.length > 1) {
+                    Fluttertoast.showToast(
+                      msg: "Option name is not valid",
+                      toastLength: Toast.LENGTH_SHORT,
+                      textColor: Colors.red,
+                      fontSize: 14,
+                    );
+                    valid = false;
+                    return;
+                  }
+                }
+              });
+              if (valid) {
+                screenBloc.add(CreateVariantsEvent());
               }
             },
           ),
