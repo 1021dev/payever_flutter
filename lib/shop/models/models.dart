@@ -182,5 +182,4 @@ class ThemeResponse {
     type = obj['type'];
     versions = obj['versions'];
   }
-
 }

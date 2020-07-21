@@ -17,3 +17,27 @@ export 'transaction.dart';
 export 'user.dart';
 export 'version.dart';
 export 'wallpaper.dart';
+
+class NotificationModel {
+  String id;
+  String app;
+  String kind;
+  String entity;
+  String message;
+  String hash;
+  String createdAt;
+  String updatedAt;
+  num v;
+
+  NotificationModel.fromMap(dynamic obj) {
+    id = obj['_id'];
+    app = obj['app'];
+    entity = obj['entity'];
+    kind = obj['kind'];
+    message = obj['message'];
+    createdAt = obj['createdAt'];
+    updatedAt = obj['updatedAt'];
+    hash = obj['hash'];
+    v = obj['__v'];
+  }
+}

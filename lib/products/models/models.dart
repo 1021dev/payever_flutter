@@ -311,6 +311,7 @@ class Shipping {
 }
 
 class Info {
+  Info();
   num page = 0;
   num pageCount = 0;
   num perPage = 0;

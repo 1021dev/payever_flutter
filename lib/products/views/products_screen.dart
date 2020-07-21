@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -675,52 +676,59 @@ class _ProductsScreenState extends State<ProductsScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          MaterialButton(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(12),
-                                bottomLeft: Radius.circular(12),
+                          Expanded(
+                            child: MaterialButton(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(12),
+                                  bottomLeft: Radius.circular(12),
+                                ),
                               ),
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                _selectedIndexValue = 0;
-                              });
-                            },
-                            color: _selectedIndexValue == 0 ? Color(0xFF2a2a2a): Color(0xFF1F1F1F),
-                            height: 24,
-                            elevation: 0,
-                            child: Text(
-                              Language.getProductStrings('Products'),
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
+                              onPressed: () {
+                                setState(() {
+                                  _selectedIndexValue = 0;
+                                });
+                              },
+                              color: _selectedIndexValue == 0 ? Color(0xFF2a2a2a): Color(0xFF1F1F1F),
+                              height: 24,
+                              elevation: 0,
+                              child: AutoSizeText(
+                                Language.getProductStrings('Products'),
+                                minFontSize: 8,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),
                           Padding(
                             padding: EdgeInsets.only(left: 2),
                           ),
-                          MaterialButton(
-                            onPressed: () {
-                              setState(() {
-                                _selectedIndexValue = 1;
-                              });
-                            },
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(12),
-                                bottomRight: Radius.circular(12),
+                          Expanded(
+                            child: MaterialButton(
+                              onPressed: () {
+                                setState(() {
+                                  _selectedIndexValue = 1;
+                                });
+                              },
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(12),
+                                  bottomRight: Radius.circular(12),
+                                ),
                               ),
-                            ),
-                            color: _selectedIndexValue == 1 ? Color(0xFF2a2a2a): Color(0xFF1F1F1F),
-                            elevation: 0,
-                            height: 24,
-                            child: Text(
-                              Language.getProductStrings('Collections'),
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
+                              color: _selectedIndexValue == 1 ? Color(0xFF2a2a2a): Color(0xFF1F1F1F),
+                              elevation: 0,
+                              height: 24,
+                              child: AutoSizeText(
+                                Language.getProductStrings('Collections'),
+                                maxLines: 1,
+                                minFontSize: 8,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),

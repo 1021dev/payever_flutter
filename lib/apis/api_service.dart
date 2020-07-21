@@ -1535,11 +1535,11 @@ class ApiService {
     }
   }
 
-  Future<dynamic> getNotifications(String token) async {
+  Future<dynamic> getNotifications(String token, String kind, String entity, String app) async {
     try {
       print('$TAG - getNotifications()');
       dynamic response = await _client.getTypeless(
-          '${Env.notifications}/',
+          '${Env.notifications}/api/notification/kind/$kind/entity/$entity/app/$app',
           headers: {
             HttpHeaders.authorizationHeader: 'Bearer $token',
             HttpHeaders.contentTypeHeader: 'application/json',
