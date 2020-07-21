@@ -636,7 +636,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       appWidget = widgets.where((element) => element.type == 'products' ).toList().first;
       businessApp = businessApps.where((element) => element.code == 'products' ).toList().length > 0
           ? businessApps.where((element) => element.code == 'products' ).toList().first : null;
-      print('product-notifications = > ${state.notifications.containsKey('products-aware') ? state.notifications['products-aware']: []}');
       dashboardWidgets.add(
           DashboardProductsView(
             businessApps: businessApp,

@@ -25,7 +25,7 @@ class _NotificationCellState extends State<NotificationCell> {
   Widget build(BuildContext context) {
 
     return BlurEffectView(
-      padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
+      padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
       child: Column(
         children: [
           Row(
@@ -98,6 +98,7 @@ class _NotificationCellState extends State<NotificationCell> {
           ),
           ListView.separated(
             shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
               return DashboardOptionCell(
                 notificationModel: widget.notifications[index],
@@ -107,7 +108,7 @@ class _NotificationCellState extends State<NotificationCell> {
               return Divider(
                 height: 0,
                 thickness: 0,
-                color: Colors.transparent,
+                color: Colors.black,
               );
             },
             itemCount: isExpanded ? widget.notifications.length : 1,

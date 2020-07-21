@@ -298,5 +298,5 @@
     "forms.login.twoFA.send_code": "Send",
     "forms.login.twoFA.submit_code": "Send",
     "actions.other": "Other account",
-    "info_boxes.notifications.messages.legalDocuments.review\t": "Review legal documents"
+    "info_boxes.notifications.messages.legalDocuments.review": "Review legal documents"
 }

@@ -421,10 +421,13 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
   }
 
   Stream<DashboardScreenState> fetchNotifications() async* {
+    yield state.copyWith(notifications: {});
     Map<String, List<NotificationModel>> notifications = {};
-    notifications.addAll(state.notifications);
-    state.businessWidgets.forEach((element) async {
-      String appName = element.code;
+    state.currentWidgets.forEach((element) async {
+      String appName = element.type;
+      if (appName == 'shop') {
+        appName = 'shops';
+      }
       dynamic response = await api.getNotifications(GlobalUtils.activeToken.accessToken, 'business', state.activeBusiness.id, '$appName');
       if (response is List) {
         List<NotificationModel> notiArr = [];
@@ -432,12 +435,11 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
           notiArr.add(NotificationModel.fromMap(noti));
         });
         if (notiArr.length > 0) {
-          print('Notifications $appName => $notiArr');
           notifications[notiArr.first.app] = notiArr;
         }
+        state.copyWith(notifications: notifications);
+        print('Notifications ${notifications.keys} => ${notifications.values}');
       }
     });
-    print('Notifications ${notifications.keys} => $notifications');
-    yield state.copyWith(notifications: notifications);
   }
 }
