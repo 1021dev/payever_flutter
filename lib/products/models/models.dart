@@ -262,9 +262,7 @@ class Variants {
   Map<String, dynamic> toDictionary() {
     Map<String, dynamic> map = {};
     map['id'] = id;
-    map['title'] = title;
     map['description'] = description;
-    map['hidden'] = hidden;
     map['price'] = price;
     map['salePrice'] = salePrice;
     map['sku'] = sku;
@@ -313,10 +311,10 @@ class Shipping {
 }
 
 class Info {
-  num page;
-  num pageCount;
-  num perPage;
-  num itemCount;
+  num page = 0;
+  num pageCount = 0;
+  num perPage = 0;
+  num itemCount = 0;
 
   Info.toMap(dynamic obj) {
     page = obj['page'];

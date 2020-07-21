@@ -49,7 +49,8 @@ class VariantsScreenBloc extends Bloc<VariantsScreenEvent, VariantsScreenState> 
       variants[index] = state.variants;
       productsModel.variants = variants;
 
-      List<InventoryModel> updated = productsScreenBloc.state.updatedInventories;
+      List<InventoryModel> updated = [];
+      updated.addAll(productsScreenBloc.state.updatedInventories);
       InventoryModel inventoryModel = state.inventory;
       List<InventoryModel> contains = updated.where((element) => element.sku == state.inventory.sku).toList();
       inventoryModel.stock = inventoryModel.stock + state.increaseStock;

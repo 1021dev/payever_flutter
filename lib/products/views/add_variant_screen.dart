@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_tags/flutter_tags.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
@@ -219,8 +220,14 @@ class _AddVariantScreenState extends State<AddVariantScreen> {
               Language.getProductStrings('save'),
             ),
             onPressed: () {
-              screenBloc.add(CreateVariantsEvent());
-//              Navigator.pop(context);
+              if (formKey.currentState.validate()) {
+                screenBloc.add(CreateVariantsEvent());
+              } else {
+                Fluttertoast.showToast(
+                    msg: "This is Center Short Toast",
+                    toastLength: Toast.LENGTH_SHORT,
+                );
+              }
             },
           ),
         ),
@@ -443,6 +450,12 @@ class _AddVariantScreenState extends State<AddVariantScreen> {
                     cancelButtonLabel: 'CANCEL',
                     hintText: 'Please choose one or more',
                     initialValue: [state.children[index].values, state.colorsMap],
+                    validator: (val) {
+                      if (val[0].length == 0) {
+                        return 'Option value is required';
+                      }
+                      return null;
+                    },
                     onSaved: (value) {
                       if (value == null) return;
                       List<TagVariantItem> children = [];

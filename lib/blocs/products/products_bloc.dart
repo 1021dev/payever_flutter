@@ -56,10 +56,10 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
       yield* deleteCollections();
     } else if (event is GetProductDetails) {
       if (event.productsModel != null) {
-        yield state.copyWith(productDetail: event.productsModel);
+        yield state.copyWith(productDetail: event.productsModel, updatedInventories: [], increaseStock: 0);
         yield* getProductDetail(event.productsModel.id);
       } else {
-        yield state.copyWith(productDetail: ProductsModel(), isLoading: true);
+        yield state.copyWith(productDetail: ProductsModel(), isLoading: true, updatedInventories: [], increaseStock: 0);
         yield* getProductCategories();
       }
     } else if (event is UpdateProductDetail) {
@@ -125,7 +125,15 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
   }
 
   Stream<ProductsScreenState> fetchProducts(String activeBusinessId) async* {
-    yield state.copyWith(isLoading: true);
+    yield state.copyWith(
+      isLoading: true,
+      inventories: [],
+      increaseStock: 0,
+      inventory: InventoryModel(),
+      productDetail: ProductsModel(),
+      updatedInventories: [],
+      searchText: '',
+    );
     Map<String, dynamic> body = {
       'operationName': null,
       'variables': {},
@@ -321,6 +329,7 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
         print(res);
         if (update.stock != inventoryModel.stock) {
           int increase = update.stock - inventoryModel.stock;
+          print('increase stock => $increase');
           Map<String, dynamic> body1 = {
             'quantity': increase > 0 ? increase : -increase,
           };
@@ -677,6 +686,7 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
     yield state.copyWith(
       increaseStock: 0,
       inventory: InventoryModel(),
+      updatedInventories: [],
       isLoading: true,
     );
     Map<String, dynamic> body = {

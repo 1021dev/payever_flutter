@@ -74,37 +74,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   bool posExpanded = true;
   bool shopExpanded = true;
 
-  TextEditingController _productNameController = TextEditingController();
-  TextEditingController _priceController = TextEditingController();
-  TextEditingController _salePriceController = TextEditingController();
-  TextEditingController _descriptionController = TextEditingController();
-  TextEditingController _skuController = TextEditingController();
-  TextEditingController _barCodeController = TextEditingController();
-  TextEditingController _categoryController = TextEditingController();
-  TextEditingController _weightController = TextEditingController();
-  TextEditingController _widthController = TextEditingController();
-  TextEditingController _lengthController = TextEditingController();
-  TextEditingController _heightController = TextEditingController();
-  TextEditingController _taxController = TextEditingController();
-
   NumberFormat numberFormat = NumberFormat();
 
   @override
   void initState() {
     widget.screenBloc.add(GetProductDetails(productsModel: widget.productsModel));
     if (widget.productsModel != null) {
-//      _productNameController.text = widget.productsModel.title ?? '';
-//      _descriptionController.text = widget.productsModel.description;
-//      _priceController.text = '${widget.productsModel.price ?? 0}';
-//      _salePriceController.text = '${widget.productsModel.salePrice ?? 0}';
-//      _skuController.text = '${widget.productsModel.sku ?? ''}';
-//      _barCodeController.text = '${widget.productsModel.barcode ?? ''}';
-//      if (widget.productsModel.shipping != null) {
-//        _weightController.text = '${widget.productsModel.shipping.weight}';
-//        _widthController.text = '${widget.productsModel.shipping.width}';
-//        _lengthController.text = '${widget.productsModel.shipping.length}';
-//        _heightController.text = '${widget.productsModel.shipping.height}';
-//      }
     }
     super.initState();
   }

@@ -57,6 +57,8 @@ dependencies:
   flutter_reorderable_list: ^0.1.4
   flutter_tagging: ^2.2.0+3
   flutter_colorpicker: ^0.3.4
+  fluttertoast: ^7.0.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
