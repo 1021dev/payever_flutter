@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:payever/apis/api_service.dart';
+import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/products/models/models.dart';
 import 'package:payever/shop/models/models.dart';
@@ -13,7 +14,8 @@ import 'package:payever/shop/models/models.dart';
 import 'products.dart';
 
 class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> {
-  ProductsScreenBloc();
+  final DashboardScreenBloc dashboardScreenBloc;
+  ProductsScreenBloc({this.dashboardScreenBloc});
   ApiService api = ApiService();
   String token = GlobalUtils.activeToken.accessToken;
   @override
@@ -55,6 +57,9 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
     } else if (event is DeleteCollectionProductsEvent) {
       yield* deleteCollections();
     } else if (event is GetProductDetails) {
+      if (state.businessId == null || state.businessId == '') {
+        yield state.copyWith(businessId: event.businessId);
+      }
       if (event.productsModel != null) {
         yield state.copyWith(productDetail: event.productsModel, updatedInventories: [], increaseStock: 0);
         yield* getProductDetail(event.productsModel.id);
@@ -705,28 +710,37 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
         model = ProductsModel.toMap(getProduct);
       }
     }
-    yield state.copyWith(productDetail: model, increaseStock: 0, inventory: new InventoryModel());
-    if (model.sku != null) {
-      InventoryModel inventoryModel = state.inventories.singleWhere((element) => element.sku == model.sku);
-      yield state.copyWith(inventory: inventoryModel);
+    if (model == null) {
+      yield state.copyWith(isLoading: false);
+      yield ProductsNotExist(error: 'Product not exist');
+    } else {
+      yield state.copyWith(productDetail: model, increaseStock: 0, inventory: new InventoryModel());
+      if (model.sku != null) {
+        if (state.inventories.length == 0) {
+          List<InventoryModel> inventories = [];
+          dynamic inventoryResponse = await api.getInventories(token, state.businessId);
+          if (inventoryResponse != null) {
+            if (inventoryResponse is List) {
+              inventoryResponse.forEach((element) {
+                inventories.add(InventoryModel.toMap(element));
+              });
+            }
+          }
+          InventoryModel inventoryModel = inventories.singleWhere((element) => element.sku == model.sku);
+          if (inventoryModel != null) {
+            yield state.copyWith(inventory: inventoryModel, inventories: inventories);
+          } else {
+            yield state.copyWith(inventories: inventories);
+          }
+        } else {
+          InventoryModel inventoryModel = state.inventories.singleWhere((element) => element.sku == model.sku);
+          if (inventoryModel != null) {
+            yield state.copyWith(inventory: inventoryModel);
+          }
+        }
+      }
+      yield* getProductCategories();
     }
-    yield* getProductCategories();
-
-//    if (model.variants.length > 0) {
-//      List<InventoryModel> inventories = [];
-//      model.variants.forEach((element) async {
-//        dynamic res = await api.getInventory(token, state.businessId, element.sku);
-//        inventories.add(InventoryModel.toMap(res));
-//      });
-//      yield state.copyWith(inventories: inventories);
-//      yield* getProductCategories();
-//    } else {
-//      if (model.sku != null) {
-//        yield* getInventory(model.sku);
-//      } else {
-//        yield* getProductCategories();
-//      }
-//    }
   }
 
   Stream<ProductsScreenState> getInventory(String sku) async* {

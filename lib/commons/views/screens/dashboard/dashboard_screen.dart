@@ -13,6 +13,7 @@ import 'package:payever/notifications/notifications_screen.dart';
 import 'package:payever/pos/views/pos_create_terminal_screen.dart';
 import 'package:payever/pos/views/pos_screen.dart';
 import 'package:payever/products/models/models.dart';
+import 'package:payever/products/views/product_detail_screen.dart';
 import 'package:payever/products/views/products_screen.dart';
 import 'package:payever/search/views/search_screen.dart';
 import 'package:payever/shop/views/shop_screen.dart';
@@ -702,6 +703,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
               );
             },
             onSelect: (Products product) async {
+              ProductsModel productsModel = new ProductsModel();
+              productsModel.id = product.id;
+              productsModel.title = product.name;
+              List<String> images = [];
+              if (product.thumbnail != null) {
+                images.add(product.thumbnail);
+              }
+              productsModel.images = images;
+              productsModel.businessUuid = product.business;
+              productsModel.price = product.price;
+              productsModel.salePrice = product.salePrice;
+              productsModel.uuid = product.uuid;
+
               Provider.of<GlobalStateModel>(context,listen: false)
                   .setCurrentBusiness(state.activeBusiness);
               Provider.of<GlobalStateModel>(context,listen: false)
@@ -709,14 +723,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
               final result = await Navigator.push(
                 context,
                 PageTransition(
-                  child: ProductsInitScreen(),
+                  child: ProductDetailScreen(
+                    productsModel: productsModel,
+                    businessId: globalStateModel.currentBusiness.id,
+                    fromDashBoard: true,
+                    screenBloc: ProductsScreenBloc(dashboardScreenBloc: screenBloc),
+                  ),
                   type: PageTransitionType.fade,
                   duration: Duration(milliseconds: 500),
                 ),
               );
               print('Products Update Result => $result');
               if ((result != null) && (result == 'Terminal Updated')) {
-                screenBloc.add(FetchPosEvent(business: state.activeBusiness));
+//                screenBloc.add(FetchPosEvent(business: state.activeBusiness));
               }
             },
             notifications: notifications,

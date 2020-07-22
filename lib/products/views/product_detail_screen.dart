@@ -14,6 +14,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_tagging/flutter_tagging.dart';
 import 'package:flutter_tags/flutter_tags.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -78,7 +79,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   @override
   void initState() {
-    widget.screenBloc.add(GetProductDetails(productsModel: widget.productsModel));
+    widget.screenBloc.add(
+        GetProductDetails(
+          productsModel: widget.productsModel,
+          businessId: widget.businessId,
+        )
+    );
     if (widget.productsModel != null) {
     }
     super.initState();
@@ -114,7 +120,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               type: PageTransitionType.fade,
             ),
           );
-        } else if (state is ProductsScreenStateSuccess) {}
+        } else if (state is ProductsScreenStateSuccess) {
+
+        } else if (state is ProductsNotExist) {
+          Fluttertoast.showToast(msg: state.error);
+          Navigator.pop(context);
+        }
       },
       child: BlocBuilder<ProductsScreenBloc, ProductsScreenState>(
         bloc: widget.screenBloc,
@@ -251,6 +262,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   ///---------------------------------------------------------------------------
 
   Widget _getBody(ProductsScreenState state) {
+    if (state.productDetail == null) {
+      return Container();
+    }
     List<Tax> taxes = state.taxes;
     num vatRate = state.productDetail != null ? (state.productDetail.vatRate ?? 0): 0;
     Tax tax;

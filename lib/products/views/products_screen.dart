@@ -37,9 +37,10 @@ bool _isTablet;
 final GlobalKey<TagsState> _tagStateKey = GlobalKey<TagsState>();
 
 class ProductsInitScreen extends StatelessWidget {
+  final ProductsModel productModel;
+  final DashboardScreenBloc dashboardScreenBloc;
 
-
-  ProductsInitScreen();
+  ProductsInitScreen({this.productModel, this.dashboardScreenBloc});
 
   @override
   Widget build(BuildContext context) {
@@ -47,16 +48,22 @@ class ProductsInitScreen extends StatelessWidget {
 
     return ProductsScreen(
       globalStateModel: globalStateModel,
+      productModel: productModel,
+      dashboardScreenBloc: dashboardScreenBloc,
     );
   }
 }
 
 class ProductsScreen extends StatefulWidget {
 
+  final ProductsModel productModel;
+  final DashboardScreenBloc dashboardScreenBloc;
   GlobalStateModel globalStateModel;
 
   ProductsScreen({
     this.globalStateModel,
+    this.productModel,
+    this.dashboardScreenBloc,
   });
 
   @override
@@ -74,10 +81,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
   List<TagItemModel> _filterItems;
   int _searchTagIndex = -1;
 
-  ProductsScreenBloc screenBloc = ProductsScreenBloc();
+  ProductsScreenBloc screenBloc;
   String wallpaper;
   int selectedIndex = 0;
-  bool isShowCommunications = false;
   List<FilterItem> filterTypes = [];
   int selectedTypes = 0;
   int _selectedIndexValue = 0;
@@ -317,11 +323,31 @@ class _ProductsScreenState extends State<ProductsScreen> {
   @override
   void initState() {
     super.initState();
+    screenBloc = ProductsScreenBloc(dashboardScreenBloc: widget.dashboardScreenBloc);
     screenBloc.add(
         ProductsScreenInitEvent(
           currentBusinessId: widget.globalStateModel.currentBusiness.id,
         )
     );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (widget.productModel != null) {
+      Navigator.push(
+        context,
+        PageTransition(
+          child: ProductDetailScreen(
+            businessId: widget.globalStateModel.currentBusiness.id,
+            screenBloc: screenBloc,
+            productsModel: widget.productModel,
+          ),
+          type: PageTransitionType.fade,
+          duration: Duration(milliseconds: 500),
+        ),
+      );
+    }
   }
 
   @override

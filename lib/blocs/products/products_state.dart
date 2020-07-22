@@ -185,3 +185,14 @@ class ProductsScreenStateFailure extends ProductsScreenState {
     return 'ProductsScreenStateFailure { error $error }';
   }
 }
+
+class ProductsNotExist extends ProductsScreenState {
+  final String error;
+
+  ProductsNotExist({@required this.error}) : super();
+
+  @override
+  String toString() {
+    return 'ProductsNotExist { error $error }';
+  }
+}

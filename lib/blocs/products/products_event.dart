@@ -107,11 +107,13 @@ class GetInventoriesEvent extends ProductsScreenEvent {}
 
 class GetProductDetails extends ProductsScreenEvent {
   final ProductsModel productsModel;
+  final String businessId;
 
-  GetProductDetails({this.productsModel});
+  GetProductDetails({this.productsModel, this.businessId});
   @override
   List<Object> get props => [
     this.productsModel,
+    this.businessId,
   ];
 }
 
