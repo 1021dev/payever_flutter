@@ -87,3 +87,13 @@ class FetchShops extends DashboardScreenEvent {
 class FetchNotifications extends DashboardScreenEvent {
 
 }
+class DeleteNotification extends DashboardScreenEvent {
+  final String notificationId;
+
+  DeleteNotification({this.notificationId});
+
+  @override
+  List<Object> get props => [
+    this.notificationId,
+  ];
+}

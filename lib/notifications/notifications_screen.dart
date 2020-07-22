@@ -72,10 +72,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         color: Colors.transparent,
         child: SafeArea(
           child: Container(
-            padding: EdgeInsets.only(left: 16, right: 16),
-            alignment: Alignment.center,
-            child: ListView.separated(
-              padding: EdgeInsets.only(top: 16, bottom: 16),
+            padding: EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 16),
+            child: widget.dashboardScreenBloc.state.notifications.keys.toList().length > 0 ? ListView.separated(
               separatorBuilder: (context, index) {
                 return Divider(color: Colors.transparent,);
               },
@@ -99,6 +97,36 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 );
               },
               itemCount: widget.dashboardScreenBloc.state.notifications.keys.toList().length,
+            ): BlurEffectView(
+              child: Container(
+                height: 49,
+                padding: EdgeInsets.fromLTRB(12, 0, 12, 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          width: 4,
+                          height: 4,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(2),
+                              color: Colors.white
+                          ),
+                        ),
+                        SizedBox(width: 12),
+                        Text(
+                          Language.getCommerceOSStrings('No notifications'),
+                          softWrap: true,
+                          style: TextStyle(
+                              color: Colors.white, fontSize: 12),
+                        ),
+                        SizedBox(width: 12),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         ),

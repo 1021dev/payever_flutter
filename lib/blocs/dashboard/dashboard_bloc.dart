@@ -38,6 +38,8 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
       yield* getShops(event.business);
     } else if (event is FetchNotifications) {
       yield* fetchNotifications();
+    } else if (event is DeleteNotification) {
+      yield* deleteNotification(event.notificationId);
     }
   }
 
@@ -428,6 +430,8 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
       if (appName == 'shop') {
         appName = 'shops';
       }
+      dynamic response1 = await api.busTest(GlobalUtils.activeToken.accessToken, 'business', state.activeBusiness.id, '$appName-aware');
+      print(response1);
       dynamic response = await api.getNotifications(GlobalUtils.activeToken.accessToken, 'business', state.activeBusiness.id, '$appName-aware');
       if (response is List) {
         List<NotificationModel> notiArr = [];
@@ -441,5 +445,11 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
         print('Notifications ${notifications.keys} => ${notifications.values}');
       }
     }
+    yield state.copyWith(notifications: notifications);
+  }
+
+  Stream<DashboardScreenState> deleteNotification(String notificationId) async* {
+    dynamic response = await api.deleteNotification(GlobalUtils.activeToken.accessToken, notificationId);
+    fetchNotifications();
   }
 }

@@ -168,6 +168,8 @@ class ApiService {
   Future<dynamic> getUser(String token) async {
     try {
       print('TAG - getUser()');
+      print('Bearer $token');
+      print('${GlobalUtils.fingerprint}');
       dynamic response = await _client.getTypeless(
           userUrl,
           headers: {
@@ -1535,11 +1537,45 @@ class ApiService {
     }
   }
 
+  Future<dynamic> busTest(String token, String kind, String entity, String app) async {
+    try {
+      print('$TAG - busTest() ->> $app');
+      dynamic response = await _client.postTypeLess(
+          '${Env.notifications}/bus-test/notification/$kind/$entity/$app',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<dynamic> getNotifications(String token, String kind, String entity, String app) async {
     try {
       print('$TAG - getNotifications() ->> $app');
       dynamic response = await _client.getTypeless(
           '${Env.notifications}/api/notification/kind/$kind/entity/$entity/app/$app',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> deleteNotification(String token, String id) async {
+    try {
+      print('$TAG - deleteNotification() ->> $id');
+      dynamic response = await _client.deleteTypeless(
+          '${Env.notifications}/api/notification/$id',
           headers: {
             HttpHeaders.authorizationHeader: 'Bearer $token',
             HttpHeaders.contentTypeHeader: 'application/json',
