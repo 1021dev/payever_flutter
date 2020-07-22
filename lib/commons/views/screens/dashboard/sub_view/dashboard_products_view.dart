@@ -20,7 +20,7 @@ class DashboardProductsView extends StatefulWidget {
   DashboardProductsView({
     this.appWidget,
     this.businessApps,
-    this.lastSales = const [],
+    this.lastSales,
     this.business,
     this.onOpen,
     this.onSelect,
@@ -146,14 +146,26 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
                     ],
                   ),
                   SizedBox(height: 8),
-                  Container(
+                  widget.lastSales != null
+                      ? Container(
                     height: 92,
                     child: ListView.builder(
                       itemBuilder: _itemBuilder,
                       itemCount: widget.lastSales.length > 3 ? 3: widget.lastSales.length,
                       scrollDirection: Axis.horizontal,
                     ),
-                  )
+                  ): Container(
+                    height: 92,
+                    child: Center(
+                      child: Container(
+                        width: 32,
+                        height: 32,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),

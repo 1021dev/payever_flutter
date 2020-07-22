@@ -15,10 +15,11 @@ class DashboardAppPosView extends StatefulWidget {
   final Function onTapOpen;
   final Function onTapEditTerminal;
   final List<NotificationModel> notifications;
+
   DashboardAppPosView({
     this.appWidget,
     this.businessApps,
-    this.terminals = const [],
+    this.terminals,
     this.isLoading,
     this.activeTerminal,
     this.onTapEditTerminal,
@@ -48,95 +49,7 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
         avatarName = avatarName.toUpperCase();
       }
     }
-    if (terminals.length == 0) {
-      return BlurEffectView(
-        padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
-        child: Column(
-          children: [
-            Container(
-              padding: EdgeInsets.fromLTRB(12, 0, 12, 0),
-              child: Column(
-                children: [
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: NetworkImage('${Env.cdnIcon}icon-comerceos-pos-not-installed.png'),
-                            fit: BoxFit.fitWidth)),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    Language.getCommerceOSStrings(widget.businessApps.dashboardInfo.title),
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold
-                    ),
-                  ),
-                  SizedBox(height: 4),
-                  Text(
-                    Language.getWidgetStrings('widgets.${widget.businessApps.code}.install-app'),
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 10,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 12),
-            Container(
-              height: 40,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(6), bottomRight: Radius.circular(6)),
-                  color: Colors.black38
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: InkWell(
-                      onTap: () {
-
-                      },
-                      child: Center(
-                        child: Text(
-                          widget.businessApps.installed ? 'Get started' : 'Continue setup process',
-                          softWrap: true,
-                          style: TextStyle(
-                              color: Colors.white, fontSize: 12),
-                        ),
-                      ),
-                    ),
-                  ),
-                  if (widget.businessApps.installed) Container(
-                    width: 1,
-                    color: Colors.white12,
-                  ),
-                  if (widget.businessApps.installed) Expanded(
-                    flex: 1,
-                    child: InkWell(
-                      onTap: () {
-
-                      },
-                      child: Center(
-                        child: Text(
-                          'Learn more',
-                          softWrap: true,
-                          style: TextStyle(
-                              color: Colors.white, fontSize: 12),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            )
-          ],
-        ),
-      );
-    } else {
+    if (widget.businessApps.setupStatus == 'completed') {
       return BlurEffectView(
         child: Column(
           children: [
@@ -250,10 +163,16 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                   Padding(
                     padding: EdgeInsets.only(top: 8),
                   ),
-                  widget.isLoading ? Container(
-                    height: 50,
+                  widget.activeTerminal == null ? Container(
+                    height: 72,
                     child: Center(
-                      child: CircularProgressIndicator(),
+                      child: Container(
+                        width: 32,
+                        height: 32,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                        ),
+                      ),
                     ),
                   ):
                   Row(
@@ -357,6 +276,94 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                   physics: NeverScrollableScrollPhysics(),
                 ),
               ),
+          ],
+        ),
+      );
+    } else {
+      return BlurEffectView(
+        padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
+        child: Column(
+          children: [
+            Container(
+              padding: EdgeInsets.fromLTRB(12, 0, 12, 0),
+              child: Column(
+                children: [
+                  Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: NetworkImage('${Env.cdnIcon}icon-comerceos-pos-not-installed.png'),
+                            fit: BoxFit.fitWidth)),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    Language.getCommerceOSStrings(widget.businessApps.dashboardInfo.title),
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold
+                    ),
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    Language.getWidgetStrings('widgets.${widget.businessApps.code}.install-app'),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 10,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 12),
+            Container(
+              height: 40,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(6), bottomRight: Radius.circular(6)),
+                  color: Colors.black38
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: InkWell(
+                      onTap: () {
+
+                      },
+                      child: Center(
+                        child: Text(
+                          widget.businessApps.installed ? 'Get started' : 'Continue setup process',
+                          softWrap: true,
+                          style: TextStyle(
+                              color: Colors.white, fontSize: 12),
+                        ),
+                      ),
+                    ),
+                  ),
+                  if (widget.businessApps.installed) Container(
+                    width: 1,
+                    color: Colors.white12,
+                  ),
+                  if (widget.businessApps.installed) Expanded(
+                    flex: 1,
+                    child: InkWell(
+                      onTap: () {
+
+                      },
+                      child: Center(
+                        child: Text(
+                          'Learn more',
+                          softWrap: true,
+                          style: TextStyle(
+                              color: Colors.white, fontSize: 12),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            )
           ],
         ),
       );

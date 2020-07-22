@@ -260,8 +260,7 @@ class _DashboardShopViewState extends State<DashboardShopView> {
                           ),
                         ],
                       )
-                  )
-                      : Container(
+                  ) : Container(
                     alignment: Alignment.centerLeft,
                     height: 50,
                     child: Text(

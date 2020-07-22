@@ -160,10 +160,16 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                       )
                     ],
                   ),
-                  widget.isLoading ? Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(24),
-                      child: CircularProgressIndicator(),
+                  widget.isLoading ? Container(
+                    height: 64,
+                    child: Center(
+                      child: Container(
+                        width: 32,
+                        height: 32,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                        ),
+                      ),
                     ),
                   ):
                   SizedBox(height: 8),
