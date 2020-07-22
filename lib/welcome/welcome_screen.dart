@@ -4,6 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/welcome/welcome_bloc.dart';
 import 'package:payever/blocs/welcome/welcome_event.dart';
 import 'package:payever/blocs/welcome/welcome_state.dart';
@@ -18,8 +19,13 @@ bool _isTablet;
 class WelcomeScreen extends StatefulWidget {
   final BusinessApps businessApps;
   final Business business;
+  final DashboardScreenBloc dashboardScreenBloc;
 
-  WelcomeScreen({this.business, this.businessApps,});
+  WelcomeScreen({
+    this.business,
+    this.businessApps,
+    this.dashboardScreenBloc,
+  });
 
   @override
   _WelcomeScreenState createState() => _WelcomeScreenState();
@@ -28,9 +34,12 @@ class WelcomeScreen extends StatefulWidget {
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
 
-  WelcomeScreenBloc screenBloc = WelcomeScreenBloc();
+  WelcomeScreenBloc screenBloc;
   @override
   void initState() {
+    screenBloc = WelcomeScreenBloc(
+      dashboardScreenBloc: widget.dashboardScreenBloc
+    );
     screenBloc.add(WelcomeScreenInitEvent(businessId: widget.business.id, uuid: widget.businessApps.microUuid,));
     super.initState();
   }
@@ -69,7 +78,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           Navigator.pushReplacement(
             context,
             PageTransition(
-              child: TransactionScreenInit(),
+              child: TransactionScreenInit(
+                dashboardScreenBloc: widget.dashboardScreenBloc,
+              ),
               type: PageTransitionType.fade,
             ),
           );

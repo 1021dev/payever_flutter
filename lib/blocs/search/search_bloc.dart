@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:payever/apis/api_service.dart';
+import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/search/search_event.dart';
 import 'package:payever/blocs/search/search_state.dart';
 import 'package:payever/commons/commons.dart';
@@ -10,7 +11,8 @@ import 'package:payever/commons/utils/env.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SearchScreenBloc extends Bloc<SearchScreenEvent, SearchScreenState> {
-  SearchScreenBloc();
+  final DashboardScreenBloc dashboardScreenBloc;
+  SearchScreenBloc({this.dashboardScreenBloc});
 
   ApiService api = ApiService();
   String uiKit = '${Env.commerceOs}/assets/ui-kit/icons-png/';

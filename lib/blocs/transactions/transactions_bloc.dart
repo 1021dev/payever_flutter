@@ -7,7 +7,8 @@ import 'package:payever/transactions/views/filter_content_view.dart';
 import '../bloc.dart';
 
 class TransactionsScreenBloc extends Bloc<TransactionsScreenEvent, TransactionsScreenState> {
-  TransactionsScreenBloc();
+  final DashboardScreenBloc dashboardScreenBloc;
+  TransactionsScreenBloc({this.dashboardScreenBloc});
   TransactionsApi api = TransactionsApi();
 
   @override

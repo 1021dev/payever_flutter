@@ -12,7 +12,8 @@ import 'package:payever/pos/models/models.dart';
 import '../bloc.dart';
 
 class PosScreenBloc extends Bloc<PosScreenEvent, PosScreenState> {
-  PosScreenBloc();
+  final DashboardScreenBloc dashboardScreenBloc;
+  PosScreenBloc({this.dashboardScreenBloc});
   ApiService api = ApiService();
 
   @override

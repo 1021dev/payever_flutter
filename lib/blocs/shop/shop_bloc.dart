@@ -4,13 +4,15 @@ import 'dart:math';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:payever/apis/api_service.dart';
+import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/shop/models/models.dart';
 
 import 'shop.dart';
 
 class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
-  ShopScreenBloc();
+  final DashboardScreenBloc dashboardScreenBloc;
+  ShopScreenBloc({this.dashboardScreenBloc});
   ApiService api = ApiService();
 
   @override

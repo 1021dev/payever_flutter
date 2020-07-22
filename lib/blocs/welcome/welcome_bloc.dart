@@ -1,12 +1,14 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:payever/apis/api_service.dart';
+import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/welcome/welcome_event.dart';
 import 'package:payever/blocs/welcome/welcome_state.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/env.dart';
 
 class WelcomeScreenBloc extends Bloc<WelcomeScreenEvent, WelcomeScreenState> {
-  WelcomeScreenBloc();
+  final DashboardScreenBloc dashboardScreenBloc;
+  WelcomeScreenBloc({this.dashboardScreenBloc});
 
   ApiService api = ApiService();
   String uiKit = '${Env.commerceOs}/assets/ui-kit/icons-png/';

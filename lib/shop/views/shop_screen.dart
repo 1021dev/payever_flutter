@@ -7,10 +7,12 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/shop/shop.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/screens/dashboard/sub_view/dashboard_menu_view.dart';
+import 'package:payever/notifications/notifications_screen.dart';
 import 'package:payever/pos/widgets/pos_top_button.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/create_shop_screen.dart';
@@ -34,12 +36,14 @@ bool _isTablet;
 
 class ShopInitScreen extends StatelessWidget {
 
-  List<ShopModel> shopModels;
-  ShopModel activeShop;
+  final List<ShopModel> shopModels;
+  final ShopModel activeShop;
+  final DashboardScreenBloc dashboardScreenBloc;
 
   ShopInitScreen({
     this.shopModels,
     this.activeShop,
+    this.dashboardScreenBloc,
   });
 
   @override
@@ -50,20 +54,23 @@ class ShopInitScreen extends StatelessWidget {
       globalStateModel: globalStateModel,
       shopModels: shopModels,
       activeShop: activeShop,
+      dashboardScreenBloc: dashboardScreenBloc,
     );
   }
 }
 
 class ShopScreen extends StatefulWidget {
 
-  GlobalStateModel globalStateModel;
-  List<ShopModel> shopModels;
-  ShopModel activeShop;
+  final GlobalStateModel globalStateModel;
+  final List<ShopModel> shopModels;
+  final ShopModel activeShop;
+  final DashboardScreenBloc dashboardScreenBloc;
 
   ShopScreen({
     this.globalStateModel,
     this.shopModels,
     this.activeShop,
+    this.dashboardScreenBloc,
   });
 
   @override
@@ -79,7 +86,7 @@ class _ShopScreenState extends State<ShopScreen> {
   double progress = 0;
   String url = '';
 
-  ShopScreenBloc screenBloc = ShopScreenBloc();
+  ShopScreenBloc screenBloc;
   String wallpaper;
   int selectedIndex = 0;
   bool isShowCommunications = false;
@@ -152,6 +159,9 @@ class _ShopScreenState extends State<ShopScreen> {
   @override
   void initState() {
     super.initState();
+    screenBloc = ShopScreenBloc(
+      dashboardScreenBloc: widget.dashboardScreenBloc,
+    );
     filterTypes.add(FilterItem(disPlayName: 'All themes', value: 'All themes'));
     filterTypes.add(FilterItem(disPlayName: 'Own themes', value: 'Own themes'));
     screenBloc.add(
@@ -319,8 +329,33 @@ class _ShopScreenState extends State<ShopScreen> {
             color: Colors.white,
             size: 24,
           ),
-          onPressed: () {
+          onPressed: () async{
+            Provider.of<GlobalStateModel>(context,listen: false)
+                .setCurrentBusiness(widget.dashboardScreenBloc.state.activeBusiness);
+            Provider.of<GlobalStateModel>(context,listen: false)
+                .setCurrentWallpaper(widget.dashboardScreenBloc.state.curWall);
 
+            await showGeneralDialog(
+              barrierColor: null,
+              transitionBuilder: (context, a1, a2, wg) {
+                final curvedValue = Curves.ease.transform(a1.value) -   1.0;
+                return Transform(
+                  transform: Matrix4.translationValues(-curvedValue * 200, 0.0, 0),
+                  child: NotificationsScreen(
+                    business: widget.dashboardScreenBloc.state.activeBusiness,
+                    businessApps: widget.dashboardScreenBloc.state.businessWidgets,
+                    dashboardScreenBloc: widget.dashboardScreenBloc,
+                  ),
+                );
+              },
+              transitionDuration: Duration(milliseconds: 200),
+              barrierDismissible: true,
+              barrierLabel: '',
+              context: context,
+              pageBuilder: (context, animation1, animation2) {
+                return null;
+              },
+            );
           },
         ),
         IconButton(

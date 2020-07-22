@@ -7,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
+import 'package:payever/commons/views/custom_elements/payever_app_bar.dart';
 import 'package:payever/commons/views/screens/login/login_page.dart';
 import 'package:payever/commons/views/screens/switcher/switcher_page.dart';
 import 'package:payever/notifications/notifications_screen.dart';
@@ -396,7 +397,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Navigator.push(
                 context,
                 PageTransition(
-                  child: TransactionScreenInit(),
+                  child: TransactionScreenInit(
+                    dashboardScreenBloc: screenBloc,
+                  ),
                   type: PageTransitionType.fade,
                 ),
               );
@@ -410,6 +413,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 context,
                 PageTransition(
                   child: WelcomeScreen(
+                    dashboardScreenBloc: screenBloc,
                     business: state.activeBusiness,
                     businessApps: app,
                   ),
@@ -438,7 +442,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Navigator.push(
                 context,
                 PageTransition(
-                  child: TransactionScreenInit(),
+                  child: TransactionScreenInit(
+                    dashboardScreenBloc: screenBloc,
+                  ),
                   type: PageTransitionType.fade,
                 ),
               );
@@ -446,7 +452,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Navigator.push(
                 context,
                 PageTransition(
-                  child: PosInitScreen(),
+                  child: PosInitScreen(
+                    dashboardScreenBloc: screenBloc,
+                  ),
                   type: PageTransitionType.fade,
                   duration: Duration(milliseconds: 50),
                 ),
@@ -455,7 +463,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Navigator.push(
                 context,
                 PageTransition(
-                  child: ShopInitScreen(),
+                  child: ShopInitScreen(
+                    dashboardScreenBloc: screenBloc,
+                  ),
                   type: PageTransitionType.fade,
                   duration: Duration(milliseconds: 50),
                 ),
@@ -498,7 +508,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Navigator.push(
                 context,
                 PageTransition(
-                  child: ShopInitScreen(),
+                  child: ShopInitScreen(
+                    dashboardScreenBloc: screenBloc,
+                  ),
                   type: PageTransitionType.fade,
                   duration: Duration(milliseconds: 50),
                 ),
@@ -512,7 +524,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Navigator.push(
                 context,
                 PageTransition(
-                  child: ShopInitScreen(),
+                  child: ShopInitScreen(
+                    dashboardScreenBloc: screenBloc,
+                  ),
                   type: PageTransitionType.fade,
                   duration: Duration(milliseconds: 50),
                 ),
@@ -546,7 +560,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   child: PosCreateTerminalScreen(
                     fromDashBoard: true,
                     businessId: globalStateModel.currentBusiness.id,
-                    screenBloc: PosScreenBloc(),
+                    screenBloc: PosScreenBloc(
+                      dashboardScreenBloc: screenBloc,
+                    ),
                     editTerminal: state.activeTerminal,
                   ),
                   type: PageTransitionType.fade,
@@ -566,7 +582,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Navigator.push(
                 context,
                 PageTransition(
-                  child: PosInitScreen(),
+                  child: PosInitScreen(
+                    dashboardScreenBloc: screenBloc,
+                  ),
                   type: PageTransitionType.fade,
                   duration: Duration(milliseconds: 50),
                 ),
@@ -961,6 +979,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           context,
                           PageTransition(
                             child: SearchScreen(
+                              dashboardScreenBloc: screenBloc,
                               businessId: state.activeBusiness.id,
                               searchQuery: searchController.text,
                               appWidgets: state.currentWidgets,
@@ -1015,6 +1034,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         context,
                         PageTransition(
                           child: SearchScreen(
+                            dashboardScreenBloc: screenBloc,
                             businessId: state.activeBusiness.id,
                             searchQuery: searchController.text,
                             appWidgets: state.currentWidgets,

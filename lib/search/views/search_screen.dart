@@ -24,6 +24,7 @@ class SearchScreen extends StatefulWidget {
   final List<AppWidget> appWidgets;
   final Business activeBusiness;
   final String currentWall;
+  final DashboardScreenBloc dashboardScreenBloc;
 
   SearchScreen({
     this.businessId,
@@ -31,6 +32,7 @@ class SearchScreen extends StatefulWidget {
     this.appWidgets,
     this.activeBusiness,
     this.currentWall,
+    this.dashboardScreenBloc,
   });
 
   @override
@@ -39,12 +41,15 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
 
-  SearchScreenBloc screenBloc = SearchScreenBloc();
+  SearchScreenBloc screenBloc;
   TextEditingController searchController = TextEditingController();
   String searchString = '';
 
   @override
   void initState() {
+    screenBloc = SearchScreenBloc(
+      dashboardScreenBloc: widget.dashboardScreenBloc,
+    );
     if (widget.searchQuery != '') {
       searchString = widget.searchQuery;
       searchController.text = widget.searchQuery;
@@ -303,7 +308,9 @@ class _SearchScreenState extends State<SearchScreen> {
                             Navigator.pushReplacement(
                               context,
                               PageTransition(
-                                child: TransactionScreenInit(),
+                                child: TransactionScreenInit(
+                                  dashboardScreenBloc: widget.dashboardScreenBloc,
+                                ),
                                 type: PageTransitionType.fade,
                               ),
                             );
