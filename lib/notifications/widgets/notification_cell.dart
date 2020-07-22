@@ -7,10 +7,12 @@ class NotificationCell extends StatefulWidget {
   final List<NotificationModel> notifications;
   final BusinessApps businessApps;
   final Function tapOpen;
+  final Function tapDelete;
   NotificationCell({
     this.notifications = const [],
     this.businessApps,
     this.tapOpen,
+    this.tapDelete
   });
   @override
   _NotificationCellState createState() => _NotificationCellState();
@@ -102,6 +104,12 @@ class _NotificationCellState extends State<NotificationCell> {
             itemBuilder: (context, index) {
               return DashboardOptionCell(
                 notificationModel: widget.notifications[index],
+                onTapOpen: (NotificationModel notification) {
+                  widget.tapOpen(notification);
+                },
+                onTapDelete: (NotificationModel notification) {
+                  widget.tapDelete(notification);
+                },
               );
             },
             separatorBuilder: (context, index) {

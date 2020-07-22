@@ -16,6 +16,8 @@ class DashboardProductsView extends StatefulWidget {
   final Function onOpen;
   final Function onSelect;
   final List<NotificationModel> notifications;
+  final Function openNotification;
+  final Function deleteNotification;
 
   DashboardProductsView({
     this.appWidget,
@@ -25,6 +27,8 @@ class DashboardProductsView extends StatefulWidget {
     this.onOpen,
     this.onSelect,
     this.notifications = const [],
+    this.openNotification,
+    this.deleteNotification,
   });
   @override
   _DashboardProductsViewState createState() => _DashboardProductsViewState();
@@ -289,6 +293,12 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
   Widget _itemBuilderDDetails(BuildContext context, int index) {
     return DashboardOptionCell(
       notificationModel: widget.notifications[index],
+      onTapDelete: (NotificationModel model) {
+        widget.deleteNotification(model);
+      },
+      onTapOpen: (NotificationModel model) {
+        widget.openNotification(model);
+      },
     );
   }
 

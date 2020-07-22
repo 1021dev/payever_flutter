@@ -21,6 +21,8 @@ class DashboardShopView extends StatefulWidget {
   final bool isLoading;
   final Function onTapEditShop;
   final List<NotificationModel> notifications;
+  final Function openNotification;
+  final Function deleteNotification;
 
   DashboardShopView({
     this.onOpen,
@@ -31,6 +33,8 @@ class DashboardShopView extends StatefulWidget {
     this.isLoading = false,
     this.onTapEditShop,
     this.notifications = const [],
+    this.openNotification,
+    this.deleteNotification,
   });
   @override
   _DashboardShopViewState createState() => _DashboardShopViewState();
@@ -385,6 +389,12 @@ class _DashboardShopViewState extends State<DashboardShopView> {
   Widget _itemBuilderDDetails(BuildContext context, int index) {
     return DashboardOptionCell(
       notificationModel: widget.notifications[index],
+      onTapDelete: (NotificationModel model) {
+        widget.deleteNotification(model);
+      },
+      onTapOpen: (NotificationModel model) {
+        widget.openNotification(model);
+      },
     );
   }
 

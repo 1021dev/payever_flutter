@@ -28,6 +28,7 @@ class NotificationModel {
   String createdAt;
   String updatedAt;
   num v;
+  dynamic data;
 
   NotificationModel.fromMap(dynamic obj) {
     id = obj['_id'];
@@ -39,5 +40,8 @@ class NotificationModel {
     updatedAt = obj['updatedAt'];
     hash = obj['hash'];
     v = obj['__v'];
+    if (obj['data'] != null) {
+      data = obj['data'];
+    }
   }
 }

@@ -6,7 +6,13 @@ import 'package:payever/commons/utils/translations.dart';
 
 class DashboardOptionCell extends StatelessWidget {
   final NotificationModel notificationModel;
-  DashboardOptionCell({this.notificationModel});
+  final Function onTapOpen;
+  final Function onTapDelete;
+  DashboardOptionCell({
+    this.notificationModel,
+    this.onTapOpen,
+    this.onTapDelete,
+  });
   @override
   Widget build(BuildContext context) {
     String actionKey = notificationModel.message.replaceAll('notification.', '');
@@ -47,7 +53,7 @@ class DashboardOptionCell extends StatelessWidget {
                 children: [
                   InkWell(
                     onTap: () {
-
+                      onTapOpen(notificationModel);
                     },
                     child: Container(
                       height: 20,
@@ -70,7 +76,7 @@ class DashboardOptionCell extends StatelessWidget {
                   SizedBox(width: 8),
                   InkWell(
                     onTap: () {
-
+                      onTapDelete(notificationModel);
                     },
                     child: Container(
                       width: 21,

@@ -73,7 +73,7 @@ class Products {
 }
 
 class ProductsModel {
-  ProductsModel();
+  ProductsModel({this.id});
 
   List<String> images = List();
   String uuid = '';

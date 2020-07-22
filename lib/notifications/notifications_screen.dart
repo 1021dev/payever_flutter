@@ -91,8 +91,11 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 return NotificationCell(
                   notifications: notis,
                   businessApps: businessApps,
-                  tapOpen: () {
+                  tapOpen: (NotificationModel model) {
 
+                  },
+                  tapDelete: (NotificationModel model) {
+                    widget.dashboardScreenBloc.add(DeleteNotification(notificationId: model.id));
                   },
                 );
               },

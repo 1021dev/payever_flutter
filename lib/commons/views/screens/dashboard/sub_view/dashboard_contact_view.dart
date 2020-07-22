@@ -10,12 +10,16 @@ class DashboardContactView extends StatefulWidget {
   final BusinessApps businessApps;
   final AppWidget appWidget;
   final List<NotificationModel> notifications;
+  final Function openNotification;
+  final Function deleteNotification;
 
   DashboardContactView({
     this.onOpen,
     this.businessApps,
     this.appWidget,
     this.notifications = const [],
+    this.openNotification,
+    this.deleteNotification,
   });
   @override
   _DashboardContactViewState createState() => _DashboardContactViewState();
@@ -332,6 +336,12 @@ class _DashboardContactViewState extends State<DashboardContactView> {
   Widget _itemBuilderDDetails(BuildContext context, int index) {
     return DashboardOptionCell(
       notificationModel: widget.notifications[index],
+      onTapDelete: (NotificationModel model) {
+        widget.deleteNotification(model);
+      },
+      onTapOpen: (NotificationModel model) {
+        widget.openNotification(model);
+      },
     );
   }
 }

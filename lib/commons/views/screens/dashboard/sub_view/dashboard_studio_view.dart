@@ -10,12 +10,16 @@ class DashboardStudioView extends StatefulWidget {
   final AppWidget appWidget;
   final BusinessApps businessApps;
   final List<NotificationModel> notifications;
+  final Function openNotification;
+  final Function deleteNotification;
 
   DashboardStudioView({
     this.onOpen,
     this.appWidget,
     this.businessApps,
     this.notifications = const [],
+    this.openNotification,
+    this.deleteNotification,
   });
   @override
   _DashboardStudioViewState createState() => _DashboardStudioViewState();

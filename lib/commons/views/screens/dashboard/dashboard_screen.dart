@@ -7,7 +7,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
-import 'package:payever/commons/views/custom_elements/payever_app_bar.dart';
 import 'package:payever/commons/views/screens/login/login_page.dart';
 import 'package:payever/commons/views/screens/switcher/switcher_page.dart';
 import 'package:payever/notifications/notifications_screen.dart';
@@ -424,6 +423,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
             onTapGetStarted: () {},
             onTapLearnMore: () {},
             notifications: notifications,
+            openNotification: (NotificationModel model) {
+            },
+            deleteNotification: (NotificationModel model) {
+              screenBloc.add(DeleteNotification(notificationId: model.id));
+            },
           )
       );
     }
@@ -456,7 +460,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     dashboardScreenBloc: screenBloc,
                   ),
                   type: PageTransitionType.fade,
-                  duration: Duration(milliseconds: 50),
+                  duration: Duration(milliseconds: 500),
                 ),
               );
             } else if (aw.type.contains('shop')) {
@@ -467,7 +471,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     dashboardScreenBloc: screenBloc,
                   ),
                   type: PageTransitionType.fade,
-                  duration: Duration(milliseconds: 50),
+                  duration: Duration(milliseconds: 500),
                 ),
               );
             } else if (aw.type.contains('products')) {
@@ -476,7 +480,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 PageTransition(
                   child: ProductsInitScreen(),
                   type: PageTransitionType.fade,
-                  duration: Duration(milliseconds: 50),
+                  duration: Duration(milliseconds: 500),
                 ),
               );
             }
@@ -512,7 +516,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     dashboardScreenBloc: screenBloc,
                   ),
                   type: PageTransitionType.fade,
-                  duration: Duration(milliseconds: 50),
+                  duration: Duration(milliseconds: 500),
                 ),
               );
             },
@@ -528,11 +532,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     dashboardScreenBloc: screenBloc,
                   ),
                   type: PageTransitionType.fade,
-                  duration: Duration(milliseconds: 50),
+                  duration: Duration(milliseconds: 500),
                 ),
               );
             },
             notifications: notifications,
+            openNotification: (NotificationModel model) {
+            },
+            deleteNotification: (NotificationModel model) {
+              screenBloc.add(DeleteNotification(notificationId: model.id));
+            },
           ),
       );
     }
@@ -586,11 +595,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     dashboardScreenBloc: screenBloc,
                   ),
                   type: PageTransitionType.fade,
-                  duration: Duration(milliseconds: 50),
+                  duration: Duration(milliseconds: 500),
                 ),
               );
             },
             notifications: notifications,
+            openNotification: (NotificationModel model) {
+            },
+            deleteNotification: (NotificationModel model) {
+              screenBloc.add(DeleteNotification(notificationId: model.id));
+            },
           )
       );
     }
@@ -610,6 +624,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
               businessApps: businessApp,
               appWidget: appWidget,
               notifications: notifications,
+              openNotification: (NotificationModel model) {
+              },
+              deleteNotification: (NotificationModel model) {
+                screenBloc.add(DeleteNotification(notificationId: model.id));
+              },
             )
         );
       }
@@ -629,6 +648,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
             businessApps: businessApp,
             appWidget: appWidget,
             notifications: notifications,
+            openNotification: (NotificationModel model) {
+            },
+            deleteNotification: (NotificationModel model) {
+              screenBloc.add(DeleteNotification(notificationId: model.id));
+            },
           )
       );
     }
@@ -648,6 +672,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
             businessApps: businessApp,
             appWidget: appWidget,
             notifications: notifications,
+            openNotification: (NotificationModel model) {
+            },
+            deleteNotification: (NotificationModel model) {
+              screenBloc.add(DeleteNotification(notificationId: model.id));
+            },
           )
       );
     }
@@ -667,6 +696,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
             businessApps: businessApp,
             appWidget: appWidget,
             notifications: notifications,
+            openNotification: (NotificationModel model) {
+            },
+            deleteNotification: (NotificationModel model) {
+              screenBloc.add(DeleteNotification(notificationId: model.id));
+            },
           )
       );
     }
@@ -686,6 +720,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
             businessApps: businessApp,
             appWidget: appWidget,
             notifications: notifications,
+            openNotification: (NotificationModel model) {
+            },
+            deleteNotification: (NotificationModel model) {
+              screenBloc.add(DeleteNotification(notificationId: model.id));
+            },
           )
       );
     }
@@ -714,7 +753,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Navigator.push(
                 context,
                 PageTransition(
-                  child: ProductsInitScreen(),
+                  child: ProductsInitScreen(
+                    dashboardScreenBloc: screenBloc,
+                  ),
                   type: PageTransitionType.fade,
                   duration: Duration(milliseconds: 500),
                 ),
@@ -756,6 +797,38 @@ class _DashboardScreenState extends State<DashboardScreen> {
               }
             },
             notifications: notifications,
+            openNotification: (NotificationModel model) {
+              if (model.message.contains('missing')) {
+                String productId = '';
+                if (model.data != null) {
+                  if (model.data['productId'] != null) {
+                    productId = model.data['productId'];
+                  }
+                }
+                if (productId != '') {
+                  Provider.of<GlobalStateModel>(context,listen: false)
+                      .setCurrentBusiness(state.activeBusiness);
+                  Provider.of<GlobalStateModel>(context,listen: false)
+                      .setCurrentWallpaper(state.curWall);
+                  Navigator.push(
+                    context,
+                    PageTransition(
+                      child: ProductDetailScreen(
+                        productsModel: ProductsModel(id: productId),
+                        businessId: globalStateModel.currentBusiness.id,
+                        fromDashBoard: true,
+                        screenBloc: ProductsScreenBloc(dashboardScreenBloc: screenBloc),
+                      ),
+                      type: PageTransitionType.fade,
+                      duration: Duration(milliseconds: 500),
+                    ),
+                  );
+                }
+              }
+            },
+            deleteNotification: (NotificationModel model) {
+              screenBloc.add(DeleteNotification(notificationId: model.id));
+            },
           ),
       );
     }
@@ -775,6 +848,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
             businessApps: businessApp,
             appWidget: appWidget,
             notifications: notifications,
+            openNotification: (NotificationModel model) {
+            },
+            deleteNotification: (NotificationModel model) {
+              screenBloc.add(DeleteNotification(notificationId: model.id));
+            },
           )
       );
     }
@@ -793,6 +871,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
             businessApps: businessApp,
             appWidget: appWidget,
             notifications: notifications,
+            openNotification: (NotificationModel model) {
+            },
+            deleteNotification: (NotificationModel model) {
+              screenBloc.add(DeleteNotification(notificationId: model.id));
+            },
           )
       );
     }
@@ -801,6 +884,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
     dashboardWidgets.add(
         DashboardTutorialView(
           tutorials: state.tutorials,
+          onWatchTutorial: (Tutorial tutorial) {
+
+          },
         )
     );
 
@@ -987,7 +1073,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               currentWall: state.curWall,
                             ),
                             type: PageTransitionType.fade,
-                            duration: Duration(milliseconds: 50),
+                            duration: Duration(milliseconds: 500),
                           ),
                         );
                         if ((result != null) && (result == 'changed')) {
@@ -1042,7 +1128,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             currentWall: state.curWall,
                           ),
                           type: PageTransitionType.fade,
-                          duration: Duration(milliseconds: 50),
+                          duration: Duration(milliseconds: 500),
                         ),
                       );
                       if ((result != null) && (result == 'changed')) {

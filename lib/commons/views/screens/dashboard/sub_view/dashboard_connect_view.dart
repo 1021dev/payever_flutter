@@ -11,11 +11,15 @@ class DashboardConnectView extends StatefulWidget {
   final AppWidget appWidget;
   final BusinessApps businessApps;
   final List<NotificationModel> notifications;
+  final Function openNotification;
+  final Function deleteNotification;
 
   DashboardConnectView({
     this.appWidget,
     this.businessApps,
     this.notifications = const [],
+    this.openNotification,
+    this.deleteNotification,
   });
   @override
   _DashboardConnectViewState createState() => _DashboardConnectViewState();
@@ -360,6 +364,12 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
   Widget _itemBuilderDDetails(BuildContext context, int index) {
     return DashboardOptionCell(
       notificationModel: widget.notifications[index],
+      onTapDelete: (NotificationModel model) {
+        widget.deleteNotification(model);
+      },
+      onTapOpen: (NotificationModel model) {
+        widget.openNotification(model);
+      },
     );
   }
 }

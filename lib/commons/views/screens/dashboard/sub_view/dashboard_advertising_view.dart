@@ -9,11 +9,15 @@ class DashboardAdvertisingView extends StatefulWidget {
   final AppWidget appWidget;
   final BusinessApps businessApps;
   final List<NotificationModel> notifications;
+  final Function openNotification;
+  final Function deleteNotification;
 
   DashboardAdvertisingView({
     this.appWidget,
     this.businessApps,
     this.notifications = const [],
+    this.openNotification,
+    this.deleteNotification,
   });
   @override
   _DashboardAdvertisingViewState createState() => _DashboardAdvertisingViewState();

@@ -15,6 +15,8 @@ class DashboardAppPosView extends StatefulWidget {
   final Function onTapOpen;
   final Function onTapEditTerminal;
   final List<NotificationModel> notifications;
+  final Function openNotification;
+  final Function deleteNotification;
 
   DashboardAppPosView({
     this.appWidget,
@@ -25,6 +27,8 @@ class DashboardAppPosView extends StatefulWidget {
     this.onTapEditTerminal,
     this.onTapOpen,
     this.notifications = const [],
+    this.openNotification,
+    this.deleteNotification,
   });
   @override
   _DashboardAppPosViewState createState() => _DashboardAppPosViewState();
@@ -373,6 +377,12 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
   Widget _itemBuilderDDetails(BuildContext context, int index) {
     return DashboardOptionCell(
       notificationModel: widget.notifications[index],
+      onTapDelete: (NotificationModel model) {
+        widget.deleteNotification(model);
+      },
+      onTapOpen: (NotificationModel model) {
+        widget.openNotification(model);
+      },
     );
   }
 

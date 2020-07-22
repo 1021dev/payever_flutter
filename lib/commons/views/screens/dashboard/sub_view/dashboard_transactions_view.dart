@@ -22,6 +22,8 @@ class DashboardTransactionsView extends StatefulWidget {
   final Function onTapContinueSetup;
   final Function onTapLearnMore;
   final List<NotificationModel> notifications;
+  final Function openNotification;
+  final Function deleteNotification;
 
   DashboardTransactionsView({
     this.onOpen,
@@ -36,6 +38,8 @@ class DashboardTransactionsView extends StatefulWidget {
     this.onTapContinueSetup,
     this.onTapLearnMore,
     this.notifications = const [],
+    this.openNotification,
+    this.deleteNotification,
   });
   @override
   _DashboardTransactionsViewState createState() => _DashboardTransactionsViewState();
@@ -313,6 +317,12 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
   Widget _itemBuilderDDetails(BuildContext context, int index) {
     return DashboardOptionCell(
       notificationModel: widget.notifications[index],
+      onTapDelete: (NotificationModel model) {
+        widget.deleteNotification(model);
+      },
+      onTapOpen: (NotificationModel model) {
+        widget.openNotification(model);
+      },
     );
   }
 

@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/commons/commons.dart';
-import 'package:payever/commons/models/app_widget.dart';
 import 'package:payever/commons/utils/env.dart';
 import 'package:payever/commons/views/custom_elements/tutorial_cell.dart';
 
@@ -9,7 +8,11 @@ import '../../../custom_elements/blur_effect_view.dart';
 
 class DashboardTutorialView extends StatefulWidget {
   final List<Tutorial> tutorials;
-  DashboardTutorialView({this.tutorials});
+  final Function onWatchTutorial;
+  DashboardTutorialView({
+    this.tutorials,
+    this.onWatchTutorial,
+  });
   @override
   _DashboardTutorialViewState createState() => _DashboardTutorialViewState();
 }
@@ -81,6 +84,9 @@ class _DashboardTutorialViewState extends State<DashboardTutorialView> {
                     return TutorialCell(
                       tutorial: widget.tutorials[index],
                       showUnderline: index == 0,
+                      watchTutorial: (Tutorial tutorial) {
+                        widget.onWatchTutorial(tutorial);
+                      },
                     );
                   }, itemCount: widget.tutorials.length > 0 ? 2: 0,
                     physics: NeverScrollableScrollPhysics(),),
@@ -113,6 +119,9 @@ class _DashboardTutorialViewState extends State<DashboardTutorialView> {
       child: TutorialCell(
         tutorial: widget.tutorials[index + 2],
         showUnderline: index != widget.tutorials.length - 3,
+        watchTutorial: (Tutorial tutorial) {
+          widget.onWatchTutorial(tutorial);
+        },
       ),
     );
   }

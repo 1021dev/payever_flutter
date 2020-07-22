@@ -6,8 +6,9 @@ import 'package:payever/commons/commons.dart';
 class TutorialCell extends StatelessWidget {
   final Tutorial tutorial;
   final bool showUnderline;
+  final Function watchTutorial;
 
-  TutorialCell({this.tutorial, this.showUnderline = false});
+  TutorialCell({this.tutorial, this.showUnderline = false, this.watchTutorial,});
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -46,7 +47,7 @@ class TutorialCell extends StatelessWidget {
                   ): Container(),
                   InkWell(
                     onTap: () {
-
+                      watchTutorial(tutorial);
                     },
                     child: Container(
                       height: 20,
