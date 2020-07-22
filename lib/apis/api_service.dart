@@ -1537,7 +1537,7 @@ class ApiService {
 
   Future<dynamic> getNotifications(String token, String kind, String entity, String app) async {
     try {
-      print('$TAG - getNotifications() ->> app');
+      print('$TAG - getNotifications() ->> $app');
       dynamic response = await _client.getTypeless(
           '${Env.notifications}/api/notification/kind/$kind/entity/$entity/app/$app',
           headers: {

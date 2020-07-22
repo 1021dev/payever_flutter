@@ -373,6 +373,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
     BusinessApps businessApp = businessApps.where((element) => element.code == 'transactions').toList().first;
     if (appWidget != null) {
+      List<NotificationModel> notifications = [];
+      if (state.notifications.containsKey('transactions-aware')){
+        notifications = state.notifications['transactions-aware'];
+        print('transactions- notifications => $notifications');
+      }
       dashboardWidgets.add(
           DashboardTransactionsView(
             appWidget: appWidget,
@@ -413,7 +418,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             },
             onTapGetStarted: () {},
             onTapLearnMore: () {},
-            notifications: state.notifications.containsKey('transactions-aware') ? state.notifications['transactions-aware']: [],
+            notifications: notifications,
           )
       );
     }
@@ -472,6 +477,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
     if (widgets.where((element) => element.type == 'shop' ).toList().length > 0) {
       appWidget = widgets.where((element) => element.type == 'shop' ).toList().first;
       businessApp = businessApps.where((element) => element.code == 'shop' ).toList().first;
+      List<NotificationModel> notifications = [];
+      if (state.notifications.containsKey('shops-aware')){
+        notifications = state.notifications['shops-aware'];
+        print('shops- notifications => $notifications');
+      }
       dashboardWidgets.add(
           DashboardShopView(
             businessApps: businessApp,
@@ -507,7 +517,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
               );
             },
-            notifications: state.notifications.containsKey('shop-aware') ? state.notifications['shop-aware']: [],
+            notifications: notifications,
           ),
       );
     }
@@ -516,6 +526,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
     if (widgets.where((element) => element.type == 'pos' ).toList().length > 0) {
       appWidget = widgets.where((element) => element.type == 'pos' ).toList().first;
       businessApp = businessApps.where((element) => element.code == 'pos' ).toList().first;
+      List<NotificationModel> notifications = [];
+      if (state.notifications.containsKey('pos-aware')){
+        notifications = state.notifications['pos-aware'];
+        print('pos- notifications => $notifications');
+      }
       dashboardWidgets.add(
           DashboardAppPosView(
             isLoading: state.isPosLoading,
@@ -556,7 +571,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
               );
             },
-            notifications: state.notifications.containsKey('pos-aware') ? state.notifications['pos-aware']: [],
+            notifications: notifications,
           )
       );
     }
@@ -566,11 +581,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
       appWidget = widgets.where((element) => element.type == 'checkout' ).toList().first;
       businessApp = businessApps.where((element) => element.code == 'checkout' ).toList().first;
       if (appWidget != null) {
+        List<NotificationModel> notifications = [];
+        if (state.notifications.containsKey('checkout-aware')){
+          notifications = state.notifications['checkout-aware'];
+          print('checkout- notifications => $notifications');
+        }
         dashboardWidgets.add(
             DashboardCheckoutView(
               businessApps: businessApp,
               appWidget: appWidget,
-              notifications: state.notifications.containsKey('checkout-aware') ? state.notifications['checkout-aware']: [],
+              notifications: notifications,
             )
         );
       }
@@ -580,11 +600,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
     if (widgets.where((element) => element.type == 'marketing' ).toList().length > 0) {
       appWidget = widgets.where((element) => element.type == 'marketing' ).toList().first;
       businessApp = businessApps.where((element) => element.code == 'marketing' ).toList().first;
+      List<NotificationModel> notifications = [];
+      if (state.notifications.containsKey('marketing-aware')){
+        notifications = state.notifications['marketing-aware'];
+        print('marketing- notifications => $notifications');
+      }
       dashboardWidgets.add(
           DashboardMailView(
             businessApps: businessApp,
             appWidget: appWidget,
-            notifications: state.notifications.containsKey('marketing-aware') ? state.notifications['marketing-aware']: [],
+            notifications: notifications,
           )
       );
     }
@@ -594,11 +619,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
       appWidget = widgets.where((element) => element.type == 'studio' ).toList().first;
       businessApp = businessApps.where((element) => element.code == 'studio' ).toList().length > 0
           ? businessApps.where((element) => element.code == 'studio' ).toList().first : null;
+      List<NotificationModel> notifications = [];
+      if (state.notifications.containsKey('studio-aware')){
+        notifications = state.notifications['studio-aware'];
+        print('studio- notifications => $notifications');
+      }
       dashboardWidgets.add(
           DashboardStudioView(
             businessApps: businessApp,
             appWidget: appWidget,
-            notifications: state.notifications.containsKey('studio-aware') ? state.notifications['studio-aware']: [],
+            notifications: notifications,
           )
       );
     }
@@ -608,11 +638,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
       appWidget = widgets.where((element) => element.type == 'ads' ).toList().first;
       businessApp = businessApps.where((element) => element.code == 'ads' ).toList().length > 0
           ? businessApps.where((element) => element.code == 'ads' ).toList().first : null;
+      List<NotificationModel> notifications = [];
+      if (state.notifications.containsKey('ads-aware')){
+        notifications = state.notifications['ads-aware'];
+        print('ads- notifications => $notifications');
+      }
       dashboardWidgets.add(
           DashboardAdvertisingView(
             businessApps: businessApp,
             appWidget: appWidget,
-            notifications: state.notifications.containsKey('ads-aware') ? state.notifications['ads-aware']: [],
+            notifications: notifications,
           )
       );
     }
@@ -622,11 +657,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
       appWidget = widgets.where((element) => element.type == 'contacts' ).toList().first;
       businessApp = businessApps.where((element) => element.code == 'contacts' ).toList().length > 0
           ? businessApps.where((element) => element.code == 'contacts' ).toList().first : null;
+      List<NotificationModel> notifications = [];
+      if (state.notifications.containsKey('contacts-aware')){
+        notifications = state.notifications['contacts-aware'];
+        print('contacts- notifications => $notifications');
+      }
       dashboardWidgets.add(
           DashboardContactView(
             businessApps: businessApp,
             appWidget: appWidget,
-            notifications: state.notifications.containsKey('contacts-aware') ? state.notifications['contacts-aware']: [],
+            notifications: notifications,
           )
       );
     }
@@ -636,6 +676,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
       appWidget = widgets.where((element) => element.type == 'products' ).toList().first;
       businessApp = businessApps.where((element) => element.code == 'products' ).toList().length > 0
           ? businessApps.where((element) => element.code == 'products' ).toList().first : null;
+      List<NotificationModel> notifications = [];
+      if (state.notifications.keys.toList().contains('products-aware')){
+        notifications = state.notifications['products-aware'];
+        print('products- notifications => $notifications');
+      }
       dashboardWidgets.add(
           DashboardProductsView(
             businessApps: businessApp,
@@ -671,10 +716,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
               );
               print('Products Update Result => $result');
               if ((result != null) && (result == 'Terminal Updated')) {
-//                screenBloc.add(FetchPosEvent(business: state.activeBusiness));
+                screenBloc.add(FetchPosEvent(business: state.activeBusiness));
               }
             },
-            notifications: state.notifications.containsKey('products-aware') ? state.notifications['products-aware']: [],
+            notifications: notifications,
           ),
       );
     }
@@ -684,11 +729,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
       appWidget = widgets.where((element) => element.type == 'connect' ).toList().first;
       businessApp = businessApps.where((element) => element.code == 'connect' ).toList().length > 0
           ? businessApps.where((element) => element.code == 'connect' ).toList().first : null;
+      List<NotificationModel> notifications = [];
+      if (state.notifications.containsKey('connect-aware')){
+        notifications = state.notifications['connect-aware'];
+        print('connect- notifications => $notifications');
+      }
       dashboardWidgets.add(
           DashboardConnectView(
             businessApps: businessApp,
             appWidget: appWidget,
-            notifications: state.notifications.containsKey('connect-aware') ? state.notifications['connect-aware']: [],
+            notifications: notifications,
           )
       );
     }
@@ -697,11 +747,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
     if (widgets.where((element) => element.type == 'settings' ).toList().length > 0) {
       appWidget = widgets.where((element) => element.type == 'settings' ).toList().first;
       businessApp = businessApps.where((element) => element.code == 'settings' ).toList().first;
+      List<NotificationModel> notifications = [];
+      if (state.notifications.containsKey('settings-aware')){
+        notifications = state.notifications['settings-aware'];
+        print('settings- notifications => $notifications');
+      }
       dashboardWidgets.add(
           DashboardSettingsView(
             businessApps: businessApp,
             appWidget: appWidget,
-            notifications: state.notifications.containsKey('settings-aware') ? state.notifications['settings-aware']: [],
+            notifications: notifications,
           )
       );
     }

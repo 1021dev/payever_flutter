@@ -105,7 +105,7 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
                                   flex: 1,
                                   child: Center(
                                     child: Text(
-                                      '2',
+                                      '${widget.notifications.length}',
                                       style: TextStyle(
                                           fontSize: 10,
                                           color: Colors.white

@@ -1,7 +1,5 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/models/business.dart';
@@ -9,8 +7,6 @@ import 'package:payever/commons/models/business_apps.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/notifications/widgets/notification_cell.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:video_player/video_player.dart';
 
 bool _isPortrait;
 bool _isTablet;
@@ -87,7 +83,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 String key = widget.dashboardScreenBloc.state.notifications.keys.toList()[index];
                 List<NotificationModel> notis = widget.dashboardScreenBloc.state.notifications.containsKey(key) ? widget.dashboardScreenBloc.state.notifications[key]: [];
                 List<BusinessApps> bList = widget.businessApps.where((element) {
-                  return element.code == getKind(key);
+                  return element.code == getKind(key.replaceAll('-aware', ''));
                 }).toList();
                 BusinessApps businessApps;
                 if (bList.length > 0) {

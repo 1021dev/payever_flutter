@@ -24,13 +24,8 @@ class NotificationsScreenBloc extends Bloc<NotificationsScreenEvent, Notificatio
   }
 
   Stream<NotificationsScreenState> init(String uuid, String businessId) async* {
-    dynamic response = await api.toggleInstalled(GlobalUtils.activeToken.accessToken, businessId, uuid);
   }
 
   Stream<NotificationsScreenState> toggleStatus(String type, String businessId) async* {
-    yield state.copyWith(isLoading: true);
-    dynamic response = await api.toggleSetUpStatus(GlobalUtils.activeToken.accessToken, businessId, type);
-    yield state.copyWith(isLoading: false);
-    yield NotificationsScreenStateSuccess();
   }
 }
