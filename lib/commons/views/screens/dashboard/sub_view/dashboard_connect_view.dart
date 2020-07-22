@@ -45,9 +45,11 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                             width: 16,
                             height: 16,
                             decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    image: NetworkImage('${Env.cdnIcon}icons-apps-white/icon-apps-white-connect.png'),
-                                    fit: BoxFit.fitWidth)),
+                              image: DecorationImage(
+                                image: NetworkImage('${Env.cdnIcon}icons-apps-white/icon-apps-white-connect.png'),
+                                fit: BoxFit.fitWidth,
+                              ),
+                            ),
                           ),
                           SizedBox(width: 8,),
                           Text(
@@ -69,15 +71,15 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                               height: 20,
                               width: 40,
                               decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Colors.black.withAlpha(100)
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.black.withAlpha(100),
                               ),
                               child: Center(
                                 child: Text(
                                   Language.getCommerceOSStrings('actions.open'),
                                   style: TextStyle(
-                                      fontSize: 10,
-                                      color: Colors.white
+                                    fontSize: 10,
+                                    color: Colors.white,
                                   ),
                                 ),
                               ),
@@ -88,18 +90,19 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                             height: 20,
                             width: 40,
                             decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.white10
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.white10,
                             ),
                             child: Row(
                               children: [
                                 Expanded(
                                   flex: 1,
                                   child: Center(
-                                    child: Text('2',
+                                    child: Text(
+                                      '${widget.notifications.length}',
                                       style: TextStyle(
-                                          fontSize: 10,
-                                          color: Colors.white
+                                        fontSize: 10,
+                                        color: Colors.white,
                                       ),
                                     ),
                                   ),
@@ -147,8 +150,8 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                             Text(
                               'Top rated',
                               style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.white.withAlpha(150)
+                                fontSize: 12,
+                                color: Colors.white.withAlpha(150),
                               ),
                             ),
                             SizedBox(height: 4),
@@ -160,10 +163,12 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                                   padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
                                   child: Container(
                                     decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                            image: NetworkImage(Env.commerceOs +
-                                                '/assets/ui-kit/icons-png/icon-commerceos-store-64.png'),
-                                            fit: BoxFit.fitWidth)),
+                                      image: DecorationImage(
+                                        image: NetworkImage(Env.commerceOs +
+                                            '/assets/ui-kit/icons-png/icon-commerceos-store-64.png'),
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ),
                                   ),
                                 ),
                                 Container(
@@ -175,7 +180,7 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                                         image: DecorationImage(
                                             image: NetworkImage(Env.commerceOs +
                                                 '/assets/ui-kit/icons-png/icon-commerceos-store-64.png'),
-                                            fit: BoxFit.fitWidth)),
+                                            fit: BoxFit.contain)),
                                   ),
                                 ),
                                 Container(
@@ -187,7 +192,7 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                                         image: DecorationImage(
                                             image: NetworkImage(Env.commerceOs +
                                                 '/assets/ui-kit/icons-png/icon-commerceos-store-64.png'),
-                                            fit: BoxFit.fitWidth)),
+                                            fit: BoxFit.contain)),
                                   ),
                                 ),
                                 Container(
@@ -199,7 +204,7 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                                         image: DecorationImage(
                                             image: NetworkImage(Env.commerceOs +
                                                 '/assets/ui-kit/icons-png/icon-commerceos-store-64.png'),
-                                            fit: BoxFit.fitWidth)),
+                                            fit: BoxFit.contain)),
                                   ),
                                 ),
                               ],
@@ -217,15 +222,17 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                             child: Container(
                               height: 50,
                               decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(6),
-                                  color: Colors.black26
+                                borderRadius: BorderRadius.circular(6),
+                                color: Colors.black26,
                               ),
                               child: Center(
                                 child: Text(
                                   'Connect',
                                   softWrap: true,
                                   style: TextStyle(
-                                      color: Colors.white, fontSize: 16),
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                  ),
                                 ),
                               ),
                             ),
@@ -240,13 +247,20 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
             ),
             if (isExpanded)
               Container(
-                height: 50.0 * 2,
+                height: 50.0 * widget.notifications.length,
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(6), bottomRight: Radius.circular(6)),
-                    color: Colors.black38
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(6),
+                    bottomRight: Radius.circular(6),
+                  ),
+                  color: Colors.black38,
                 ),
-                child: ListView.builder(itemBuilder: _itemBuilderDDetails, itemCount: 2,physics: NeverScrollableScrollPhysics(),),
-              )
+                child: ListView.builder(
+                  itemBuilder: _itemBuilderDDetails,
+                  itemCount: widget.notifications.length,
+                  physics: NeverScrollableScrollPhysics(),
+                ),
+              ),
           ],
         ),
       );
@@ -264,17 +278,18 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                     height: 40,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                          image: NetworkImage('${Env.cdnIcon}icon-comerceos-connect-not-installed.png'),
-                          fit: BoxFit.contain),
+                        image: NetworkImage('${Env.cdnIcon}icon-comerceos-connect-not-installed.png'),
+                        fit: BoxFit.contain,
+                      ),
                     ),
                   ),
                   SizedBox(height: 8),
                   Text(
                     Language.getWidgetStrings(widget.appWidget.title),
                     style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   SizedBox(height: 4),
@@ -285,7 +300,10 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
             Container(
               height: 40,
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(6), bottomRight: Radius.circular(6)),
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(6),
+                    bottomRight: Radius.circular(6),
+                  ),
                   color: Colors.black38
               ),
               child: Row(
@@ -301,7 +319,9 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                           !widget.businessApps.installed ? 'Get started' : 'Continue setup process',
                           softWrap: true,
                           style: TextStyle(
-                              color: Colors.white, fontSize: 12),
+                            color: Colors.white,
+                            fontSize: 12,
+                          ),
                         ),
                       ),
                     ),
@@ -321,20 +341,25 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                           'Learn more',
                           softWrap: true,
                           style: TextStyle(
-                              color: Colors.white, fontSize: 12),
+                            color: Colors.white,
+                            fontSize: 12,
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ],
               ),
-            )
+            ),
           ],
         ),
       );
     }
   }
+
   Widget _itemBuilderDDetails(BuildContext context, int index) {
-    return DashboardOptionCell();
+    return DashboardOptionCell(
+      notificationModel: widget.notifications[index],
+    );
   }
 }

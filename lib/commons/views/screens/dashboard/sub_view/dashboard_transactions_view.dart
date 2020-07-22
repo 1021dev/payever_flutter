@@ -120,7 +120,7 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                                   flex: 1,
                                   child: Center(
                                     child: Text(
-                                      '{widget.notifications.length}',
+                                      '${widget.notifications.length}',
                                       style: TextStyle(
                                           fontSize: 10,
                                           color: Colors.white
@@ -204,13 +204,17 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
             ),
             if (isExpanded)
               Container(
-                height: 50.0 * 1,
+                height: 50.0 * widget.notifications.length,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(bottomLeft: Radius.circular(6), bottomRight: Radius.circular(6)),
                     color: Colors.black38
                 ),
-                child: ListView.builder(itemBuilder: _itemBuilderDDetails, itemCount: 1,physics: NeverScrollableScrollPhysics(),),
-              )
+                child: ListView.builder(
+                  itemBuilder: _itemBuilderDDetails,
+                  itemCount: widget.notifications.length,
+                  physics: NeverScrollableScrollPhysics(),
+                ),
+              ),
           ],
         ),
       );
@@ -301,7 +305,9 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
     }
   }
   Widget _itemBuilderDDetails(BuildContext context, int index) {
-    return DashboardOptionCell();
+    return DashboardOptionCell(
+      notificationModel: widget.notifications[index],
+    );
   }
 
 }
