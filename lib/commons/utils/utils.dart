@@ -29,8 +29,16 @@ String getKind(String key) {
       return 'connect';
     case 'transactions':
       return 'transactions';
-    case 'shop':
+    case 'shops':
       return 'shop';
+  }
+  return key;
+}
+
+String getIconsOfKind(String key) {
+  switch(key) {
+    case 'shop':
+      return 'store';
   }
   return key;
 }

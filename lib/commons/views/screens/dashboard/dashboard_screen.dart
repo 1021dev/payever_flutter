@@ -374,8 +374,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     BusinessApps businessApp = businessApps.where((element) => element.code == 'transactions').toList().first;
     if (appWidget != null) {
       List<NotificationModel> notifications = [];
-      if (state.notifications.containsKey('transactions-aware')){
-        notifications = state.notifications['transactions-aware'];
+      if (state.notifications.containsKey('transactions')){
+        notifications = state.notifications['transactions'];
         print('transactions- notifications => $notifications');
       }
       dashboardWidgets.add(
@@ -478,8 +478,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       appWidget = widgets.where((element) => element.type == 'shop' ).toList().first;
       businessApp = businessApps.where((element) => element.code == 'shop' ).toList().first;
       List<NotificationModel> notifications = [];
-      if (state.notifications.containsKey('shops-aware')){
-        notifications = state.notifications['shops-aware'];
+      if (state.notifications.containsKey('shops')){
+        notifications = state.notifications['shops'];
         print('shops- notifications => $notifications');
       }
       dashboardWidgets.add(
@@ -527,8 +527,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       appWidget = widgets.where((element) => element.type == 'pos' ).toList().first;
       businessApp = businessApps.where((element) => element.code == 'pos' ).toList().first;
       List<NotificationModel> notifications = [];
-      if (state.notifications.containsKey('pos-aware')){
-        notifications = state.notifications['pos-aware'];
+      if (state.notifications.containsKey('pos')){
+        notifications = state.notifications['pos'];
         print('pos- notifications => $notifications');
       }
       dashboardWidgets.add(
@@ -582,8 +582,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       businessApp = businessApps.where((element) => element.code == 'checkout' ).toList().first;
       if (appWidget != null) {
         List<NotificationModel> notifications = [];
-        if (state.notifications.containsKey('checkout-aware')){
-          notifications = state.notifications['checkout-aware'];
+        if (state.notifications.containsKey('checkout')){
+          notifications = state.notifications['checkout'];
           print('checkout- notifications => $notifications');
         }
         dashboardWidgets.add(
@@ -601,8 +601,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       appWidget = widgets.where((element) => element.type == 'marketing' ).toList().first;
       businessApp = businessApps.where((element) => element.code == 'marketing' ).toList().first;
       List<NotificationModel> notifications = [];
-      if (state.notifications.containsKey('marketing-aware')){
-        notifications = state.notifications['marketing-aware'];
+      if (state.notifications.containsKey('marketing')){
+        notifications = state.notifications['marketing'];
         print('marketing- notifications => $notifications');
       }
       dashboardWidgets.add(
@@ -620,8 +620,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       businessApp = businessApps.where((element) => element.code == 'studio' ).toList().length > 0
           ? businessApps.where((element) => element.code == 'studio' ).toList().first : null;
       List<NotificationModel> notifications = [];
-      if (state.notifications.containsKey('studio-aware')){
-        notifications = state.notifications['studio-aware'];
+      if (state.notifications.containsKey('studio')){
+        notifications = state.notifications['studio'];
         print('studio- notifications => $notifications');
       }
       dashboardWidgets.add(
@@ -639,8 +639,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       businessApp = businessApps.where((element) => element.code == 'ads' ).toList().length > 0
           ? businessApps.where((element) => element.code == 'ads' ).toList().first : null;
       List<NotificationModel> notifications = [];
-      if (state.notifications.containsKey('ads-aware')){
-        notifications = state.notifications['ads-aware'];
+      if (state.notifications.containsKey('ads')){
+        notifications = state.notifications['ads'];
         print('ads- notifications => $notifications');
       }
       dashboardWidgets.add(
@@ -658,8 +658,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       businessApp = businessApps.where((element) => element.code == 'contacts' ).toList().length > 0
           ? businessApps.where((element) => element.code == 'contacts' ).toList().first : null;
       List<NotificationModel> notifications = [];
-      if (state.notifications.containsKey('contacts-aware')){
-        notifications = state.notifications['contacts-aware'];
+      if (state.notifications.containsKey('contacts')){
+        notifications = state.notifications['contacts'];
         print('contacts- notifications => $notifications');
       }
       dashboardWidgets.add(
@@ -677,8 +677,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       businessApp = businessApps.where((element) => element.code == 'products' ).toList().length > 0
           ? businessApps.where((element) => element.code == 'products' ).toList().first : null;
       List<NotificationModel> notifications = [];
-      if (state.notifications.keys.toList().contains('products-aware')){
-        notifications = state.notifications['products-aware'];
+      if (state.notifications.keys.toList().contains('products')){
+        notifications = state.notifications['products'];
         print('products- notifications => $notifications');
       }
       dashboardWidgets.add(
@@ -730,8 +730,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       businessApp = businessApps.where((element) => element.code == 'connect' ).toList().length > 0
           ? businessApps.where((element) => element.code == 'connect' ).toList().first : null;
       List<NotificationModel> notifications = [];
-      if (state.notifications.containsKey('connect-aware')){
-        notifications = state.notifications['connect-aware'];
+      if (state.notifications.containsKey('connect')){
+        notifications = state.notifications['connect'];
         print('connect- notifications => $notifications');
       }
       dashboardWidgets.add(
@@ -748,8 +748,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       appWidget = widgets.where((element) => element.type == 'settings' ).toList().first;
       businessApp = businessApps.where((element) => element.code == 'settings' ).toList().first;
       List<NotificationModel> notifications = [];
-      if (state.notifications.containsKey('settings-aware')){
-        notifications = state.notifications['settings-aware'];
+      if (state.notifications.containsKey('settings')){
+        notifications = state.notifications['settings'];
         print('settings- notifications => $notifications');
       }
       dashboardWidgets.add(

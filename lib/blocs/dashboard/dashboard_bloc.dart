@@ -425,27 +425,56 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
   Stream<DashboardScreenState> fetchNotifications() async* {
     yield state.copyWith(notifications: {});
     Map<String, List<NotificationModel>> notifications = {};
-    for(AppWidget widget in state.currentWidgets) {
-      String appName = widget.type;
-      if (appName == 'shop') {
-        appName = 'shops';
+    dynamic response = await api.getNotifications(GlobalUtils.activeToken.accessToken, 'business', state.activeBusiness.id, 'dashboard');
+    response.forEach((noti) {
+      NotificationModel notificationModel = NotificationModel.fromMap(noti);
+      String app = notificationModel.app;
+      if (notifications.containsKey(app)) {
+        List<NotificationModel> list = [];
+        list.addAll(notifications[app]);
+        list.add(notificationModel);
+        notifications[app] = list;
+      } else {
+        notifications[app] = [notificationModel];
       }
-      dynamic response1 = await api.busTest(GlobalUtils.activeToken.accessToken, 'business', state.activeBusiness.id, '$appName-aware');
-      print(response1);
-      dynamic response = await api.getNotifications(GlobalUtils.activeToken.accessToken, 'business', state.activeBusiness.id, '$appName-aware');
-      if (response is List) {
-        List<NotificationModel> notiArr = [];
-        response.forEach((noti) {
-          notiArr.add(NotificationModel.fromMap(noti));
-        });
-        if (notiArr.length > 0) {
-          notifications[notiArr.first.app] = notiArr;
-        }
-        yield state.copyWith(notifications: notifications);
-        print('Notifications ${notifications.keys} => ${notifications.values}');
-      }
-    }
+    });
     yield state.copyWith(notifications: notifications);
+
+    dynamic shopsResponse = await api.getNotifications(GlobalUtils.activeToken.accessToken, 'business', state.activeBusiness.id, 'shops');
+    if (shopsResponse is List) {
+      List<NotificationModel> notiArr = [];
+      shopsResponse.forEach((noti) {
+        notiArr.add(NotificationModel.fromMap(noti));
+      });
+      if (notiArr.length > 0) {
+        notifications['shops'] = notiArr;
+      }
+      yield state.copyWith(notifications: notifications);
+    }
+
+    dynamic mailResponse = await api.getNotifications(GlobalUtils.activeToken.accessToken, 'business', state.activeBusiness.id, 'mail');
+    if (mailResponse is List) {
+      List<NotificationModel> notiArr = [];
+      mailResponse.forEach((noti) {
+        notiArr.add(NotificationModel.fromMap(noti));
+      });
+      if (notiArr.length > 0) {
+        notifications['mail'] = notiArr;
+      }
+      yield state.copyWith(notifications: notifications);
+    }
+
+    dynamic posResponse = await api.getNotifications(GlobalUtils.activeToken.accessToken, 'business', state.activeBusiness.id, 'pos');
+    if (posResponse is List) {
+      List<NotificationModel> notiArr = [];
+      posResponse.forEach((noti) {
+        notiArr.add(NotificationModel.fromMap(noti));
+      });
+      if (notiArr.length > 0) {
+        notifications['pos'] = notiArr;
+      }
+      yield state.copyWith(notifications: notifications);
+    }
   }
 
   Stream<DashboardScreenState> deleteNotification(String notificationId) async* {

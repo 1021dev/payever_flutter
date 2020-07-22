@@ -81,7 +81,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 String key = widget.dashboardScreenBloc.state.notifications.keys.toList()[index];
                 List<NotificationModel> notis = widget.dashboardScreenBloc.state.notifications.containsKey(key) ? widget.dashboardScreenBloc.state.notifications[key]: [];
                 List<BusinessApps> bList = widget.businessApps.where((element) {
-                  return element.code == getKind(key.replaceAll('-aware', ''));
+                  return element.code == getKind(key);
                 }).toList();
                 BusinessApps businessApps;
                 if (bList.length > 0) {

@@ -40,7 +40,7 @@ class _NotificationCellState extends State<NotificationCell> {
                     height: 16,
                     decoration: BoxDecoration(
                         image: DecorationImage(
-                            image: NetworkImage('https://payever.azureedge.net/icons-png/icon-commerceos-${getKind(widget.businessApps.code)}-64.png'),
+                            image: NetworkImage('https://payever.azureedge.net/icons-png/icon-commerceos-${getIconsOfKind(getKind(widget.businessApps.code))}-64.png'),
                             fit: BoxFit.fitWidth)),
                   ): Container(),
                   Padding(
