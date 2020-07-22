@@ -442,7 +442,6 @@ class CollectionModel {
   num v = 0;
   String id = '';
   FillCondition automaticFillConditions = FillCondition();
-
   CollectionModel.toMap(dynamic obj) {
     activeSince = obj['activeSince'];
     business = obj['business'];
@@ -450,7 +449,7 @@ class CollectionModel {
     description = obj['description'];
     name = obj['name'];
     image = obj['image'];
-    slug = obj['activeSince'];
+    slug = obj['slug'];
     updatedAt = obj['updatedAt'];
     v = obj['__v'];
     id = obj['_id'];
@@ -501,7 +500,7 @@ class FillCondition {
   FillCondition();
 
   List<Filter> filters = [];
-  List<ProductsModel> manualProductsList = [];
+  List<String> manualProductsList = [];
   bool strict = false;
   String id;
 
@@ -509,7 +508,7 @@ class FillCondition {
     List productsObj = obj['manualProductsList'];
     if (productsObj != null) {
       productsObj.forEach((element) {
-        manualProductsList.add(ProductsModel.toMap(element));
+        manualProductsList.add(element);
       });
     }
     List filtersObj = obj['filters'];

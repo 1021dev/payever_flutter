@@ -523,6 +523,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                     business: widget.dashboardScreenBloc.state.activeBusiness,
                     businessApps: widget.dashboardScreenBloc.state.businessWidgets,
                     dashboardScreenBloc: widget.dashboardScreenBloc,
+                    type: 'products',
                   ),
                 );
               },

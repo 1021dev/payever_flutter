@@ -328,6 +328,7 @@ class _PosScreenState extends State<PosScreen> {
                     business: widget.dashboardScreenBloc.state.activeBusiness,
                     businessApps: widget.dashboardScreenBloc.state.businessWidgets,
                     dashboardScreenBloc: widget.dashboardScreenBloc,
+                    type: 'pos',
                   ),
                 );
               },

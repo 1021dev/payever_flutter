@@ -570,6 +570,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                     business: widget.dashboardScreenBloc.state.activeBusiness,
                     businessApps: widget.dashboardScreenBloc.state.businessWidgets,
                     dashboardScreenBloc: widget.dashboardScreenBloc,
+                    type: 'transactions',
                   ),
                 );
               },

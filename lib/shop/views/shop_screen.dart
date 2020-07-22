@@ -345,6 +345,7 @@ class _ShopScreenState extends State<ShopScreen> {
                     business: widget.dashboardScreenBloc.state.activeBusiness,
                     businessApps: widget.dashboardScreenBloc.state.businessWidgets,
                     dashboardScreenBloc: widget.dashboardScreenBloc,
+                    type: 'shops',
                   ),
                 );
               },

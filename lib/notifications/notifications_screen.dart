@@ -19,8 +19,14 @@ class NotificationsScreen extends StatefulWidget {
   final List<BusinessApps> businessApps;
   final Business business;
   final DashboardScreenBloc dashboardScreenBloc;
+  final String type;
 
-  NotificationsScreen({this.business, this.businessApps, this.dashboardScreenBloc,});
+  NotificationsScreen({
+    this.business,
+    this.businessApps,
+    this.dashboardScreenBloc,
+    this.type,
+  });
 
   @override
   _NotificationsScreenState createState() => _NotificationsScreenState();
@@ -33,8 +39,11 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   @override
   void initState() {
     screenBloc = NotificationsScreenBloc(dashboardScreenBloc: widget.dashboardScreenBloc);
-    screenBloc.add(NotificationsScreenInitEvent(
-      businessId: widget.business.id,));
+    screenBloc.add(
+        NotificationsScreenInitEvent(
+          businessId: widget.business.id,
+        )
+    );
     super.initState();
   }
 
@@ -67,6 +76,17 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   }
 
   Widget _body(NotificationsScreenState state) {
+    Map<String, List<NotificationModel>> notifications = {};
+    notifications = widget.dashboardScreenBloc.state.notifications;
+    if (widget.type != null) {
+      if (notifications.containsKey(widget.type)) {
+        notifications = {
+          widget.type: notifications[widget.type]
+        };
+      } else {
+        notifications = {};
+      }
+    }
     return Scaffold(
       backgroundColor: Colors.black54,
       resizeToAvoidBottomPadding: false,
@@ -78,13 +98,13 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           child: Container(
             constraints: BoxConstraints.expand(),
             padding: EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 16),
-            child: widget.dashboardScreenBloc.state.notifications.keys.toList().length > 0 ? ListView.separated(
+            child: notifications.keys.toList().length > 0 ? ListView.separated(
               separatorBuilder: (context, index) {
                 return Divider(color: Colors.transparent,);
               },
               itemBuilder: (context, index) {
-                String key = widget.dashboardScreenBloc.state.notifications.keys.toList()[index];
-                List<NotificationModel> notis = widget.dashboardScreenBloc.state.notifications.containsKey(key) ? widget.dashboardScreenBloc.state.notifications[key]: [];
+                String key = notifications.keys.toList()[index];
+                List<NotificationModel> notis = notifications.containsKey(key) ? notifications[key]: [];
                 List<BusinessApps> bList = widget.businessApps.where((element) {
                   return element.code == getKind(key);
                 }).toList();
@@ -143,7 +163,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   },
                 );
               },
-              itemCount: widget.dashboardScreenBloc.state.notifications.keys.toList().length,
+              itemCount: notifications.keys.toList().length,
             ): Container(
               alignment: Alignment.topCenter,
               child: BlurEffectView(

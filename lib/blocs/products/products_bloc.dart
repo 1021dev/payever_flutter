@@ -2,9 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
@@ -925,7 +922,7 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
     dynamic response = await api.updateCollection(token, state.businessId, model.toJson(), model.id);
     if (response is Map) {
       CollectionModel collectionModel = CollectionModel.toMap(response);
-      print(collectionModel.toJson());
+      print(collectionModel);
     }
 
     deleteList.forEach((element) async {
