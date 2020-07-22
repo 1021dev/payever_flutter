@@ -698,7 +698,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 PageTransition(
                   child: ProductsInitScreen(),
                   type: PageTransitionType.fade,
-                  duration: Duration(milliseconds: 50),
+                  duration: Duration(milliseconds: 500),
                 ),
               );
             },
@@ -734,8 +734,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
               );
               print('Products Update Result => $result');
-              if ((result != null) && (result == 'Terminal Updated')) {
-//                screenBloc.add(FetchPosEvent(business: state.activeBusiness));
+              if ((result != null) && (result == 'Products Updated')) {
               }
             },
             notifications: notifications,

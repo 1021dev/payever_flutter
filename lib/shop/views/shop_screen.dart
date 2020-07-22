@@ -19,7 +19,9 @@ import 'package:payever/shop/views/external_domain_screen.dart';
 import 'package:payever/shop/views/local_domain_screen.dart';
 import 'package:payever/shop/views/switch_shop_screen.dart';
 import 'package:payever/shop/widgets/shop_top_button.dart';
+import 'package:payever/shop/widgets/template_cell.dart';
 import 'package:payever/shop/widgets/theme_filter_content_view.dart';
+import 'package:payever/shop/widgets/theme_own_cell.dart';
 import 'package:payever/transactions/views/filter_content_view.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -128,77 +130,6 @@ class _ShopScreenState extends State<ShopScreen> {
             screenBloc.add(
                 ShopScreenInitEvent(
                   currentBusinessId: widget.globalStateModel.currentBusiness.id,
-                )
-            );
-          }
-        },
-      ),
-    ];
-  }
-
-  List<OverflowMenuItem> templatePopup(BuildContext context, ShopScreenState state) {
-    return [
-      OverflowMenuItem(
-        title: 'Install',
-        onTap: (TemplateModel template) async {
-          if (state.activeShop != null) {
-            screenBloc.add(
-                InstallTemplateEvent(
-                  businessId: widget.globalStateModel.currentBusiness.id,
-                  templateId: template.id,
-                  shopId: state.activeShop.id,
-                )
-            );
-          }
-        },
-      ),
-    ];
-  }
-
-  List<OverflowMenuItem> themePopup(BuildContext context, ShopScreenState state) {
-    return [
-      OverflowMenuItem(
-        title: 'Install',
-        onTap: (theme) async {
-          if (state.activeShop != null) {
-            screenBloc.add(
-                InstallTemplateEvent(
-                  businessId: widget.globalStateModel.currentBusiness.id,
-                  templateId: theme.id,
-                  shopId: state.activeShop.id,
-                )
-            );
-          }
-        },
-      ),
-      OverflowMenuItem(
-        title: 'Duplicate',
-        onTap: (theme) async {
-          if (state.activeShop != null) {
-            screenBloc.add(
-                DuplicateThemeEvent(
-                  businessId: widget.globalStateModel.currentBusiness.id,
-                  themeId: theme.id,
-                  shopId: state.activeShop.id,
-                )
-            );
-          }
-        },
-      ),
-      OverflowMenuItem(
-        title: 'Edit',
-        onTap: (theme) async {
-        },
-      ),
-      OverflowMenuItem(
-        title: 'Delete',
-        onTap: (theme) async {
-          if (state.activeShop != null) {
-            screenBloc.add(
-                DeleteThemeEvent(
-                  businessId: widget.globalStateModel.currentBusiness.id,
-                  themeId: theme.id,
-                  shopId: state.activeShop.id,
                 )
             );
           }
@@ -608,161 +539,60 @@ class _ShopScreenState extends State<ShopScreen> {
               padding: EdgeInsets.only(left: 36, right: 36, top: 16, bottom: 16),
               children: selectedTypes == 0
                   ? state.templates.map((templateModel) {
-                return Container(
-                  width: Measurements.width - 72,
-                  height: (Measurements.width - 72) * 1.8,
-                  clipBehavior: Clip.antiAlias,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    shape: BoxShape.rectangle,
-                  ),
-                  child: Column(
-                    children: <Widget>[
-                      Expanded(
-                        child: Image.network(
-                          '${Env.storage}${templateModel.picture}',
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      Container(
-                        color: Colors.black87,
-                        height: (Measurements.width - 72) * 0.38,
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: <Widget>[
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Text(
-                                  'new',
-                                  style: TextStyle(
-                                    color: Color(0xffff9000),
-                                    fontSize: 10,
-                                  ),
-                                ),
-                                Text(
-                                  templateModel.name ?? '',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Container(
-                              alignment: Alignment.centerRight,
-                              child: PopupMenuButton<OverflowMenuItem>(
-                                icon: Icon(Icons.more_horiz),
-                                offset: Offset(0, 0),
-                                onSelected: (OverflowMenuItem item) => item.onTap(templateModel),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                color: Colors.black87,
-                                itemBuilder: (BuildContext context) {
-                                  return templatePopup(context, state)
-                                      .map((OverflowMenuItem item) {
-                                    return PopupMenuItem<OverflowMenuItem>(
-                                      value: item,
-                                      child: Text(
-                                        item.title,
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w300,
-                                        ),
-                                      ),
-                                    );
-                                  }).toList();
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                return TemplateCell(
+                  templateModel: templateModel,
+                  onTapInstall: (template) {
+                    if (state.activeShop != null) {
+                      screenBloc.add(
+                          InstallTemplateEvent(
+                            businessId: widget.globalStateModel.currentBusiness.id,
+                            templateId: template.id,
+                            shopId: state.activeShop.id,
+                          )
+                      );
+                    }
+                  },
                 );
               }).toList()
                   : state.ownThemes.map((theme) {
-                return Container(
-                  width: Measurements.width - 72,
-                  height: (Measurements.width - 72) * 1.8,
-                  clipBehavior: Clip.antiAlias,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    shape: BoxShape.rectangle,
-                  ),
-                  child: Column(
-                    children: <Widget>[
-                      Expanded(
-                        child: theme.picture != null ? Image.network(
-                          '${Env.storage}${theme.picture}',
-                          fit: BoxFit.cover,
-                        ) : SvgPicture.asset('assets/images/images_routes.json'),
-                      ),
-                      Container(
-                        color: Colors.black87,
-                        height: (Measurements.width - 72) * 0.38,
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: <Widget>[
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Text(
-                                  'new',
-                                  style: TextStyle(
-                                    color: Color(0xffff9000),
-                                    fontSize: 10,
-                                  ),
-                                ),
-                                Text(
-                                  theme.name,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Container(
-                              alignment: Alignment.centerRight,
-                              child: PopupMenuButton<OverflowMenuItem>(
-                                icon: Icon(Icons.more_horiz),
-                                offset: Offset(0, 0),
-                                onSelected: (OverflowMenuItem item) => item.onTap(theme),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                color: Colors.black87,
-                                itemBuilder: (BuildContext context) {
-                                  return themePopup(context, state)
-                                      .map((OverflowMenuItem item) {
-                                    return PopupMenuItem<OverflowMenuItem>(
-                                      value: item,
-                                      child: Text(
-                                        item.title,
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w300,
-                                        ),
-                                      ),
-                                    );
-                                  }).toList();
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                return ThemeOwnCell(
+                  themeModel: theme,
+                  onTapInstall: (theme) {
+                    if (state.activeShop != null) {
+                      screenBloc.add(
+                          InstallTemplateEvent(
+                            businessId: widget.globalStateModel.currentBusiness.id,
+                            templateId: theme.id,
+                            shopId: state.activeShop.id,
+                          )
+                      );
+                    }
+                  },
+                  onTapDelete: (theme) {
+                    if (state.activeShop != null) {
+                      screenBloc.add(
+                          DeleteThemeEvent(
+                            businessId: widget.globalStateModel.currentBusiness.id,
+                            themeId: theme.id,
+                            shopId: state.activeShop.id,
+                          )
+                      );
+                    }
+                  },
+                  onTapDuplicate: (theme) {
+                    if (state.activeShop != null) {
+                      screenBloc.add(
+                          DuplicateThemeEvent(
+                            businessId: widget.globalStateModel.currentBusiness.id,
+                            themeId: theme.id,
+                            shopId: state.activeShop.id,
+                          )
+                      );
+                    }
+                  },
+                  onTapEdit: (theme) {
+
+                  },
                 );
               }).toList(),
               crossAxisCount: _isPortrait ? 1: 3,
