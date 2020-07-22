@@ -31,8 +31,12 @@ class CollectionDetailImageView extends StatelessWidget {
           color: Colors.white,
           placeholder: (context, url) => Container(
             child: Center(
-            child: CircularProgressIndicator(),
-          ),
+              child: Container(
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                ),
+              ),
+            ),
           ),
           errorWidget: (context, url, error) =>  Container(
             child: SvgPicture.asset('assets/images/noimage.svg', color: Colors.black54, width: 100, height: 100,),

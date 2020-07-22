@@ -45,7 +45,13 @@ class _BackgroundBaseState extends State<BackgroundBase> {
                 imageUrl: widget._isBlur
                     ? widget.wallPaper != null ? '${widget.wallPaper}-blurred': globalStateModel.currentWallpaperBlur
                     : widget.wallPaper != null ? widget.wallPaper: globalStateModel.currentWallpaper,
-                placeholder: (context, url) => Container(),
+                placeholder: (context, url) => Center(
+                  child: Container(
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                    ),
+                  ),
+                ),
                 errorWidget: (context, url, error) => Icon(Icons.error),
                 fit: BoxFit.cover,
               ),

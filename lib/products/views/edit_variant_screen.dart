@@ -338,9 +338,11 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                               ),
                             ),
                           ),
-                          placeholder: (context, url) => Container(
-                            child: Center(
-                              child: CircularProgressIndicator(),
+                          placeholder: (context, url) => Center(
+                            child: Container(
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                              ),
                             ),
                           ),
                           errorWidget: (context, url, error) =>  Container(
@@ -458,9 +460,13 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                                         ),
                                       ),
                                     ),
-                                    placeholder: (context, url) => Container(
-                                      child: Center(
-                                        child: CircularProgressIndicator(),
+                                    placeholder: (context, url) => Center(
+                                      child: Container(
+                                        width: 16,
+                                        height: 16,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                        ),
                                       ),
                                     ),
                                     errorWidget: (context, url, error) =>  Container(

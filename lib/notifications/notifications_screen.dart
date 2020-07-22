@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/models/business.dart';
@@ -7,6 +8,9 @@ import 'package:payever/commons/models/business_apps.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/notifications/widgets/notification_cell.dart';
+import 'package:payever/products/models/models.dart';
+import 'package:payever/products/views/product_detail_screen.dart';
+import 'package:payever/products/views/products_screen.dart';
 
 bool _isPortrait;
 bool _isTablet;
@@ -72,6 +76,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         color: Colors.transparent,
         child: SafeArea(
           child: Container(
+            constraints: BoxConstraints.expand(),
             padding: EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 16),
             child: widget.dashboardScreenBloc.state.notifications.keys.toList().length > 0 ? ListView.separated(
               separatorBuilder: (context, index) {
@@ -92,7 +97,46 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   notifications: notis,
                   businessApps: businessApps,
                   tapOpen: (NotificationModel model) {
-
+                    if (model.app == 'products') {
+                      if (model.message.contains('missing')) {
+                        String productId = '';
+                        if (model.data != null) {
+                          if (model.data['productId'] != null) {
+                            productId = model.data['productId'];
+                          }
+                        }
+                        if (productId != '') {
+                          Navigator.pop(context);
+                          Navigator.push(
+                            context,
+                            PageTransition(
+                              child: ProductDetailScreen(
+                                productsModel: ProductsModel(id: productId),
+                                businessId: widget.business.id,
+                                fromDashBoard: true,
+                                screenBloc: ProductsScreenBloc(dashboardScreenBloc: widget.dashboardScreenBloc),
+                              ),
+                              type: PageTransitionType.fade,
+                              duration: Duration(milliseconds: 500),
+                            ),
+                          );
+                        }
+                      }
+                    } else if (model.app == 'products-aware') {
+                      if (model.message.contains('newProduct')) {
+                        Navigator.pop(context);
+                        Navigator.push(
+                          context,
+                          PageTransition(
+                            child: ProductsInitScreen(
+                              dashboardScreenBloc: widget.dashboardScreenBloc,
+                            ),
+                            type: PageTransitionType.fade,
+                            duration: Duration(milliseconds: 500),
+                          ),
+                        );
+                      }
+                    }
                   },
                   tapDelete: (NotificationModel model) {
                     widget.dashboardScreenBloc.add(DeleteNotification(notificationId: model.id));
@@ -100,34 +144,37 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 );
               },
               itemCount: widget.dashboardScreenBloc.state.notifications.keys.toList().length,
-            ): BlurEffectView(
-              child: Container(
-                height: 49,
-                padding: EdgeInsets.fromLTRB(12, 0, 12, 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Container(
-                          width: 4,
-                          height: 4,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(2),
-                              color: Colors.white
+            ): Container(
+              alignment: Alignment.topCenter,
+              child: BlurEffectView(
+                child: Container(
+                  height: 49,
+                  padding: EdgeInsets.fromLTRB(12, 0, 12, 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            width: 4,
+                            height: 4,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(2),
+                                color: Colors.white
+                            ),
                           ),
-                        ),
-                        SizedBox(width: 12),
-                        Text(
-                          Language.getCommerceOSStrings('No notifications'),
-                          softWrap: true,
-                          style: TextStyle(
-                              color: Colors.white, fontSize: 12),
-                        ),
-                        SizedBox(width: 12),
-                      ],
-                    ),
-                  ],
+                          SizedBox(width: 12),
+                          Text(
+                            Language.getCommerceOSStrings('No notifications'),
+                            softWrap: true,
+                            style: TextStyle(
+                                color: Colors.white, fontSize: 12),
+                          ),
+                          SizedBox(width: 12),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

@@ -152,7 +152,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
           child: Container(
             child: CachedNetworkImage(
               imageUrl: state.curWall != null ? state.curWall: widget.wallpaper,
-              placeholder: (context, url) => Container(),
+              placeholder: (context, url) => Center(
+                child: Container(
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                  ),
+                ),
+              ),
               errorWidget: (context, url, error) => Icon(Icons.error),
               fit: BoxFit.cover,
             ),
@@ -538,6 +544,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
             },
             notifications: notifications,
             openNotification: (NotificationModel model) {
+              if (model.app =='products-aware' && model.message.contains('newProduct')) {
+                Provider.of<GlobalStateModel>(context,listen: false)
+                    .setCurrentBusiness(state.activeBusiness);
+                Provider.of<GlobalStateModel>(context,listen: false)
+                    .setCurrentWallpaper(state.curWall);
+                Navigator.push(
+                  context,
+                  PageTransition(
+                    child: ProductsInitScreen(
+                      dashboardScreenBloc: screenBloc,
+                    ),
+                    type: PageTransitionType.fade,
+                    duration: Duration(milliseconds: 500),
+                  ),
+                );
+              }
             },
             deleteNotification: (NotificationModel model) {
               screenBloc.add(DeleteNotification(notificationId: model.id));
@@ -601,6 +623,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
             },
             notifications: notifications,
             openNotification: (NotificationModel model) {
+              if (model.app =='products-aware' && model.message.contains('newProduct')) {
+                Provider.of<GlobalStateModel>(context,listen: false)
+                    .setCurrentBusiness(state.activeBusiness);
+                Provider.of<GlobalStateModel>(context,listen: false)
+                    .setCurrentWallpaper(state.curWall);
+                Navigator.push(
+                  context,
+                  PageTransition(
+                    child: ProductsInitScreen(
+                      dashboardScreenBloc: screenBloc,
+                    ),
+                    type: PageTransitionType.fade,
+                    duration: Duration(milliseconds: 500),
+                  ),
+                );
+              }
             },
             deleteNotification: (NotificationModel model) {
               screenBloc.add(DeleteNotification(notificationId: model.id));

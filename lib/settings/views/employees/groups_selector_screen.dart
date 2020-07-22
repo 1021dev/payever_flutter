@@ -61,7 +61,15 @@ class _GroupsSelectorScreenState extends State<GroupsSelectorScreen> {
               child: CachedNetworkImage(
                 imageUrl: globalStateModel.currentWallpaper ??
                     globalStateModel.defaultCustomWallpaper,
-                placeholder: (context, url) => Container(),
+                placeholder: (context, url) => Center(
+                  child: Container(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                    ),
+                  ),
+                ),
                 errorWidget: (context, url, error) => Icon(Icons.error),
                 fit: BoxFit.cover,
               )),

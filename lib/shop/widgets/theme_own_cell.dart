@@ -77,7 +77,11 @@ class ThemeOwnCell extends StatelessWidget {
               color: Colors.white,
               placeholder: (context, url) => Container(
                 child: Center(
-                  child: CircularProgressIndicator(),
+                  child: Container(
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                    ),
+                  ),
                 ),
               ),
               errorWidget: (context, url, error) =>  Container(
