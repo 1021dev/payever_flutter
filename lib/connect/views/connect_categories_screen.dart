@@ -113,16 +113,27 @@ class _ConnectCategoriesScreenState extends State<ConnectCategoriesScreen> {
                   ),
                 ),
                 ListView.separated(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
+                    String category = widget.screenBloc.state.categories[index];
+
                     return Container(
                       height: 44,
+                      padding: EdgeInsets.all(8),
                       child: Row(
                         children: <Widget>[
                           Container(
-                            child: SvgPicture.asset('assets/images/appsicon.svg'),
+                            child: SvgPicture.asset(
+                              Measurements.channelIcon(category),
+                              height: 32,
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(left: 8),
                           ),
                           Text(
-                            Language.getCartStrings('categories.${widget.screenBloc.state.categories[index]}.title'),
+                            Language.getConnectStrings('categories.$category.title'),
                           )
                         ],
                       ),

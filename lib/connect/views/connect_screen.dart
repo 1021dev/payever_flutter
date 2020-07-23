@@ -394,6 +394,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
                     return Transform(
                       transform: Matrix4.translationValues(-curvedValue * 200, 0.0, 0),
                       child: ConnectCategoriesScreen(
+                        screenBloc: screenBloc,
                       ),
                     );
                   },
