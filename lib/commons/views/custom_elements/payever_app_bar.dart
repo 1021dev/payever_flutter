@@ -146,7 +146,9 @@ class _PayeverAppBarState extends State<PayeverAppBar> {
                 barrierDismissible: true,
                 barrierLabel: '',
                 context: context,
-                pageBuilder: (context, animation1, animation2) {});
+                pageBuilder: (context, animation1, animation2) {
+                  return null;
+                });
           },
         ),
         IconButton(

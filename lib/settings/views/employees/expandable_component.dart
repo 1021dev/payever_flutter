@@ -115,8 +115,7 @@ class _ExpandableListViewState extends State<ExpandableListView> {
                           "widget.openedAppRowIndex: ${widget.openedAppRowIndex}");
 
                       setState(() {
-                        widget.openedAppRow.value = widget.openedAppRowIndex;
-                        widget.openedAppRow.notifyListeners();
+                        widget.openedAppRow.value(widget.openedAppRowIndex);
                       });
 
                       print(

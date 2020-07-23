@@ -59,7 +59,7 @@ class ProductsScreen extends StatefulWidget {
 
   final ProductsModel productModel;
   final DashboardScreenBloc dashboardScreenBloc;
-  GlobalStateModel globalStateModel;
+  final GlobalStateModel globalStateModel;
 
   ProductsScreen({
     this.globalStateModel,

@@ -167,7 +167,6 @@ class _PosDevicePaymentSettingsState extends State<PosDevicePaymentSettings> {
         child: CircularProgressIndicator(),
       );
     }
-    List<Communication> communications = state.communications;
     return Center(
       child: Container(
         padding: EdgeInsets.only(left: 16, right: 16),

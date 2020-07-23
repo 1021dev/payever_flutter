@@ -157,8 +157,6 @@ class _SwitchShopScreenState extends State<SwitchShopScreen> {
   }
 
   Widget _getBody(ShopScreenState state) {
-    List<ShopDetailModel> shops = state.shops;
-//    defaultShop = shops.where((element) => element.isDefault).first;
     return SingleChildScrollView(
       physics: BouncingScrollPhysics(),
       child: Column(
@@ -184,7 +182,6 @@ class _SwitchShopScreenState extends State<SwitchShopScreen> {
   }
 
   Widget _activeShopWidget(ShopScreenState state) {
-//    ShopDetailModel activeShop = state.activeShop;
     String avatarName = '';
     if (defaultShop != null) {
       String name = defaultShop.name;

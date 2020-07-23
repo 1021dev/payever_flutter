@@ -38,8 +38,8 @@ class Terminal {
       subscription.add(sub);
     });
 
-    dynamic locales = obj[GlobalUtils.DB_POS_TERMINAL_LOCALES];
-    locales.forEach((locale) {
+    dynamic localesObj = obj[GlobalUtils.DB_POS_TERMINAL_LOCALES];
+    localesObj.forEach((locale) {
       locales.add(locale);
     });
   }
