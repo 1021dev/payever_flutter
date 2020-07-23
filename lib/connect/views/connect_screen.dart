@@ -11,6 +11,8 @@ import 'package:payever/notifications/notifications_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'connect_categories_screen.dart';
+
 
 class ConnectInitScreen extends StatelessWidget {
 
@@ -390,12 +392,8 @@ class _ConnectScreenState extends State<ConnectScreen> {
                       transitionBuilder: (context, a1, a2, wg) {
                     final curvedValue = 1.0 - Curves.ease.transform(a1.value);
                     return Transform(
-                      transform: Matrix4.translationValues(curvedValue * 200, 0.0, 0),
-                      child: NotificationsScreen(
-                        business: widget.dashboardScreenBloc.state.activeBusiness,
-                        businessApps: widget.dashboardScreenBloc.state.businessWidgets,
-                        dashboardScreenBloc: widget.dashboardScreenBloc,
-                        type: 'connect',
+                      transform: Matrix4.translationValues(-curvedValue * 200, 0.0, 0),
+                      child: ConnectCategoriesScreen(
                       ),
                     );
                   },
