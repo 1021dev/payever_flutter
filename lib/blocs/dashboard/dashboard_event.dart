@@ -84,6 +84,19 @@ class FetchShops extends DashboardScreenEvent {
 
 }
 
+class FetchConnects extends DashboardScreenEvent {
+  final Business business;
+  FetchConnects({
+    this.business,
+  });
+
+  @override
+  List<Object> get props => [
+    this.business,
+  ];
+
+}
+
 class FetchNotifications extends DashboardScreenEvent {
 
 }

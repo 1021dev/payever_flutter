@@ -58,7 +58,7 @@ class DashboardScreenState {
     this.searchBusinesses = const [],
     this.searchTransactions = const [],
     this.lastSalesRandom,
-    this.connects = const [],
+    this.connects,
     this.shops = const [],
     this.activeShop,
     this.notifications = const {},

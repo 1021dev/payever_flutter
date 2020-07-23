@@ -34,6 +34,8 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
       yield* getTutorials(event.business);
     } else if (event is FetchProducts) {
       yield* getProductsPopularMonthRandom(event.business);
+    } else if (event is FetchConnects) {
+      yield* getConnects(event.business);
     } else if (event is FetchShops) {
       yield* getShops(event.business);
     } else if (event is FetchNotifications) {
@@ -384,6 +386,7 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
       connects.add(ConnectModel.toMap(element));
     });
     yield state.copyWith(connects: connects);
+    add(FetchTutorials(business: currentBusiness));
   }
 
   Future<List<WallpaperCategory>> getWallpaper() => EmployeesApi().getWallpapers()
@@ -402,7 +405,7 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
       lastSales.add(Products.toMap(element));
     });
     yield state.copyWith(lastSalesRandom: lastSales);
-    add(FetchTutorials(business: currentBusiness));
+    add(FetchConnects(business: currentBusiness));
   }
 
   Stream<DashboardScreenState> getShops(Business currentBusiness) async* {

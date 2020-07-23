@@ -889,6 +889,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             businessApps: businessApp,
             appWidget: appWidget,
             notifications: notifications,
+            connects: state.connects,
             openNotification: (NotificationModel model) {
             },
             deleteNotification: (NotificationModel model) {

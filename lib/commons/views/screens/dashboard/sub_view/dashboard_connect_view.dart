@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/models/app_widget.dart';
+import 'package:payever/commons/models/connect.dart';
 import 'package:payever/commons/utils/env.dart';
 import 'package:payever/commons/views/custom_elements/dashboard_option_cell.dart';
 
@@ -14,6 +16,7 @@ class DashboardConnectView extends StatefulWidget {
   final Function openNotification;
   final Function deleteNotification;
   final Function tapOpen;
+  final List<ConnectModel> connects;
 
   DashboardConnectView({
     this.appWidget,
@@ -22,6 +25,7 @@ class DashboardConnectView extends StatefulWidget {
     this.openNotification,
     this.deleteNotification,
     this.tapOpen,
+    this.connects,
   });
   @override
   _DashboardConnectViewState createState() => _DashboardConnectViewState();
@@ -144,7 +148,18 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                     ],
                   ),
                   SizedBox(height: 8),
-                  Row(
+                  widget.connects == null ? Container(
+                    height: 72,
+                    child: Center(
+                      child: Container(
+                        width: 32,
+                        height: 32,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                        ),
+                      ),
+                    ),
+                  ): Row(
                     children: [
                       Expanded(
                         flex: 1,
@@ -155,64 +170,33 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                               'Top rated',
                               style: TextStyle(
                                 fontSize: 12,
-                                color: Colors.white.withAlpha(150),
+                                color: Colors.white70,
                               ),
                             ),
                             SizedBox(height: 4),
-                            Row(
-                              children: [
-                                Container(
-                                  width: 35,
-                                  height: 35,
-                                  padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        image: NetworkImage(Env.commerceOs +
-                                            '/assets/ui-kit/icons-png/icon-commerceos-store-64.png'),
-                                        fit: BoxFit.contain,
-                                      ),
+                            Container(
+                              height: 50,
+                              child: ListView.separated(
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                scrollDirection: Axis.horizontal,
+                                itemBuilder: (context, index) {
+                                  return Container(
+                                    width: 35,
+                                    height: 35,
+                                    padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                                    child: SvgPicture.asset(
+                                      Measurements.channelIcon(widget.connects[index].integration.name),
+                                      height: 16,
                                     ),
-                                  ),
-                                ),
-                                Container(
-                                  width: 35,
-                                  height: 35,
-                                  padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                            image: NetworkImage(Env.commerceOs +
-                                                '/assets/ui-kit/icons-png/icon-commerceos-store-64.png'),
-                                            fit: BoxFit.contain)),
-                                  ),
-                                ),
-                                Container(
-                                  width: 35,
-                                  height: 35,
-                                  padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                            image: NetworkImage(Env.commerceOs +
-                                                '/assets/ui-kit/icons-png/icon-commerceos-store-64.png'),
-                                            fit: BoxFit.contain)),
-                                  ),
-                                ),
-                                Container(
-                                  width: 35,
-                                  height: 35,
-                                  padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                            image: NetworkImage(Env.commerceOs +
-                                                '/assets/ui-kit/icons-png/icon-commerceos-store-64.png'),
-                                            fit: BoxFit.contain)),
-                                  ),
-                                ),
-                              ],
-                            )
+                                  );
+                                },
+                                separatorBuilder: (context, index) {
+                                  return Container();
+                                },
+                                itemCount: widget.connects.length > 4 ? 4: widget.connects.length,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -220,9 +204,7 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                         flex: 1,
                         child: Container(
                           child: InkWell(
-                            onTap: () {
-
-                            },
+                            onTap: widget.tapOpen,
                             child: Container(
                               height: 50,
                               decoration: BoxDecoration(
