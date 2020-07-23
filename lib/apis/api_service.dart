@@ -861,6 +861,23 @@ class ApiService {
     }
   }
 
+  Future<dynamic> getConnectIntegrationByCategory(String token, String id, String category) async {
+    try {
+      print('$TAG - getConnectIntegrationByCategory()');
+      dynamic response = await _client.getTypeless(
+          '${Env.connect}/api/business/$id/integration/category/$category',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<dynamic> getPaymentOptions(String token) async {
     try {
       print('$TAG - getPaymentOptions()');

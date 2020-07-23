@@ -20,3 +20,16 @@ class ConnectScreenInitEvent extends ConnectScreenEvent {
     this.business,
   ];
 }
+
+class ConnectCategorySelected extends ConnectScreenEvent {
+  final String category;
+
+  ConnectCategorySelected({
+    this.category,
+  });
+
+  @override
+  List<Object> get props => [
+    this.category,
+  ];
+}

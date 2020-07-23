@@ -51,7 +51,9 @@
     "shippings": "assets/images/shipping-icon-filter.svg",
     "products": "assets/images/products-icon-filter.svg",
     "shopsystem": "assets/images/shopsystem-icon-filter.svg",
+    "shopsystems": "assets/images/shopsystem-icon-filter.svg",
     "payments": "assets/images/payments-icon-filter.svg",
+    "communications": "assets/images/communication-icon-filter.svg",
     "communication": "assets/images/communication-icon-filter.svg",
     "accounting": "assets/images/accounting-icon-filter.svg",
     "all": "assets/images/all-icon-filter.svg"

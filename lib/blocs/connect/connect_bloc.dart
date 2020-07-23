@@ -19,7 +19,10 @@ class ConnectScreenBloc extends Bloc<ConnectScreenEvent, ConnectScreenState> {
   @override
   Stream<ConnectScreenState> mapEventToState(ConnectScreenEvent event) async* {
     if (event is ConnectScreenInitEvent) {
+      yield state.copyWith(business: event.business);
       yield* fetchConnectInstallations(event.business);
+    } else if (event is ConnectCategorySelected) {
+      yield* selectCategory(event.category);
     }
   }
 
@@ -71,7 +74,21 @@ class ConnectScreenBloc extends Bloc<ConnectScreenEvent, ConnectScreenState> {
       paymentVariants: paymentVariants,
       paymentOptions: paymentOptions,
       categories: categories,
+      selectedCategory: categories.length > 0 ? categories.first: '',
       connectInstallations: connectInstallations,
     );
+  }
+
+  Stream<ConnectScreenState> selectCategory(String category) async* {
+    yield state.copyWith(selectedCategory: category, isLoading: true);
+    List<ConnectModel> connectInstallations = [];
+    dynamic categoryResponse = await api.getConnectIntegrationByCategory(token, state.business, category);
+    if (categoryResponse is List) {
+      categoryResponse.forEach((element) {
+        connectInstallations.add(ConnectModel.toMap(element));
+      });
+    }
+
+    yield state.copyWith(isLoading: false, connectInstallations: connectInstallations);
   }
 }

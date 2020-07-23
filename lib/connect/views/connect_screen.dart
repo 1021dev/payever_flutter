@@ -197,7 +197,11 @@ class _ConnectScreenState extends State<ConnectScreen> {
           Container(
             child: Center(
               child: Container(
-                  child: Icon(Icons.add, size: 24,),
+                child: SvgPicture.asset(
+                  'assets/images/connect.svg',
+                  width: 20,
+                  height: 20,
+                ),
               ),
             ),
           ),
@@ -409,7 +413,11 @@ class _ConnectScreenState extends State<ConnectScreen> {
                 },
                 child: Container(
                   padding: EdgeInsets.all(8),
-                  child: Icon(Icons.filter_list),
+                  child: SvgPicture.asset(
+                    'assets/images/filter.svg',
+                    width: 16,
+                    height: 16,
+                  ),
                 ),
               ),
               Padding(
@@ -441,7 +449,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
                   children: <Widget>[
                     Padding(
                       padding: EdgeInsets.only(left: 8, right: 8),
-                      child: SvgPicture.asset('assets/images/searchicon.svg', width: 16, height: 16,),
+                      child: SvgPicture.asset('assets/images/search_place_holder.svg', width: 16, height: 16,),
                     ),
                     Expanded(
                       child: TextField(

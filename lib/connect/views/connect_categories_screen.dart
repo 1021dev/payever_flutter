@@ -11,7 +11,6 @@ bool _isTablet;
 
 class ConnectCategoriesScreen extends StatefulWidget {
   final ConnectScreenBloc screenBloc;
-
   ConnectCategoriesScreen({
     this.screenBloc,
   });
@@ -23,8 +22,10 @@ class ConnectCategoriesScreen extends StatefulWidget {
 
 class _ConnectCategoriesScreenState extends State<ConnectCategoriesScreen> {
 
+  String selectedCategory = '';
   @override
   void initState() {
+    selectedCategory = widget.screenBloc.state.selectedCategory;
     super.initState();
   }
 
@@ -89,7 +90,8 @@ class _ConnectCategoriesScreenState extends State<ConnectCategoriesScreen> {
                   child: SizedBox(
                     child: MaterialButton(
                       onPressed: () {
-
+                        widget.screenBloc.add(ConnectCategorySelected(category: selectedCategory));
+                        Navigator.pop(context);
                       },
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -113,29 +115,40 @@ class _ConnectCategoriesScreenState extends State<ConnectCategoriesScreen> {
                   ),
                 ),
                 ListView.separated(
+                  padding: EdgeInsets.all(8),
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
                     String category = widget.screenBloc.state.categories[index];
-
-                    return Container(
-                      height: 44,
-                      padding: EdgeInsets.all(8),
-                      child: Row(
-                        children: <Widget>[
-                          Container(
-                            child: SvgPicture.asset(
-                              Measurements.channelIcon(category),
-                              height: 32,
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          selectedCategory = category;
+                        });
+                      },
+                      child: Container(
+                        height: 44,
+                        padding: EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: selectedCategory == category ? Color(0x26FFFFFF): Colors.transparent,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Row(
+                          children: <Widget>[
+                            Container(
+                              child: SvgPicture.asset(
+                                Measurements.channelIcon(category),
+                                height: 32,
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(left: 8),
-                          ),
-                          Text(
-                            Language.getConnectStrings('categories.$category.title'),
-                          )
-                        ],
+                            Padding(
+                              padding: EdgeInsets.only(left: 8),
+                            ),
+                            Text(
+                              Language.getConnectStrings('categories.$category.title'),
+                            )
+                          ],
+                        ),
                       ),
                     );
                   },
