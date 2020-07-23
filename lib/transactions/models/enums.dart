@@ -1,11 +1,11 @@
-Map<String, String> sort_transactions = {
+Map<String, String> sortTransactions = {
 'total_high': 'Total high',
 'total_low': 'Total low',
 'customer_name': 'Customer Name',
 'date': 'Date',
 };
 
-Map<String, String> filter_labels = {
+Map<String, String> filterLabels = {
   'amount': 'Amount',
   'channel': 'Channel',
   'currency': 'Currency',
@@ -24,7 +24,7 @@ Map<String, String> filter_labels = {
   'specific_status': 'Specific status',
 };
 
-Map<String, String> filter_conditions = {
+Map<String, String> filterConditions = {
   'is': 'Is',
   'isNot': 'Is not',
   'startsWith': 'Starts with',
@@ -41,7 +41,7 @@ Map<String, String> filter_conditions = {
   'betweenDates': 'Between'
 };
 
-Map<String, String> payment_type_options = {
+Map<String, String> paymentTypeOptions = {
   'sofort': 'SOFORT Banking',
   'invoice': 'Invoice',
   'cash': 'Wire Transfer',
@@ -69,7 +69,7 @@ Map<String, String> payment_type_options = {
   'instant_payment': 'Instant Payment'
 };
 
-Map<String, String> specific_status_options = {
+Map<String, String> specificStatusOption = {
   'STATUS_NEW': 'New',
   'STATUS_IN_PROCESS': 'In progress',
   'STATUS_ACCEPTED': 'Accepted',
@@ -97,7 +97,7 @@ Map<String, String> specific_status_options = {
   'STATUS_SANTANDER_CANCELLED_ANOTHER': 'Cancelled',
   'STATUS_SANTANDER_SHOP_TEMPORARY_APPROVED': 'Temporarily approved',
 };
-Map<String, String> filter_channel_options = {
+Map<String, String> filterChannelOption = {
   'shopify': 'Shopify',
   'facebook': 'Facebook',
   'finance_express': 'Finance express',
@@ -121,7 +121,7 @@ Map<String, String> filter_channel_options = {
   'xt_commerce': 'xt:Commerce',
   'overlay': 'Overlay'
 };
-Map<String, String> filter_status_options = {
+Map<String, String> filterStatusOption = {
   'STATUS_NEW': 'New',
   'STATUS_IN_PROCESS': 'In progress',
   'STATUS_ACCEPTED': 'Accepted',
@@ -339,31 +339,31 @@ Map<String, String> filterConditionsByFilterType(String type) {
 Map<String, String> getOptionsByFilterType(String type) {
   switch(type) {
     case 'type':
-      return payment_type_options;
+      return paymentTypeOptions;
     case 'status':
-      return filter_status_options;
+      return filterStatusOption;
     case 'specific_status':
-      return specific_status_options;
+      return specificStatusOption;
     case 'channel':
-      return filter_channel_options;
+      return filterChannelOption;
   }
   return {};
 }
 
 String getOptionString(String key) {
-  String temp = payment_type_options.keys.toList().firstWhere((element) => element == key);
+  String temp = paymentTypeOptions.keys.toList().firstWhere((element) => element == key);
   if (temp != null) {
     return temp;
   }
-  temp = filter_status_options.keys.toList().firstWhere((element) => element == key);
+  temp = filterStatusOption.keys.toList().firstWhere((element) => element == key);
   if (temp != null) {
     return temp;
   }
-  temp = specific_status_options.keys.toList().firstWhere((element) => element == key);
+  temp = specificStatusOption.keys.toList().firstWhere((element) => element == key);
   if (temp != null) {
     return temp;
   }
-  temp = filter_channel_options.keys.toList().firstWhere((element) => element == key);
+  temp = filterChannelOption.keys.toList().firstWhere((element) => element == key);
   if (temp != null) {
     return temp;
   }

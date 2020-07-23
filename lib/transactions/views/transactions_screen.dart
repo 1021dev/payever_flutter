@@ -32,12 +32,6 @@ import 'transactions_details_screen.dart';
 bool _isPortrait;
 bool _isTablet;
 final GlobalKey<TagsState> _tagStateKey = GlobalKey<TagsState>();
-// Allows you to get a list of all the ItemTags
-_getAllItem(){
-  List<Item> lst = _tagStateKey.currentState?.getAllItem;
-  if(lst!=null)
-    lst.where((a) => a.active==true).forEach( ( a) => print(a.title));
-}
 
 class TagItemModel {
   String title;
@@ -142,7 +136,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
           _filterItems = [];
           if (state.filterTypes.length > 0) {
             for (int i = 0; i < state.filterTypes.length; i++) {
-              String filterString = '${filter_labels[state.filterTypes[i].type]} ${filter_conditions[state.filterTypes[i].condition]}: ${state.filterTypes[i].disPlayName}';
+              String filterString = '${filterLabels[state.filterTypes[i].type]} ${filterConditions[state.filterTypes[i].condition]}: ${state.filterTypes[i].disPlayName}';
               TagItemModel item = TagItemModel(title: filterString, type: state.filterTypes[i].type);
               _filterItems.add(item);
             }

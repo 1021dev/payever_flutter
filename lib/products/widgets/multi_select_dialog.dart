@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/products/views/add_variant_color_screen.dart';
-import 'package:payever/products/views/add_variant_screen.dart';
 
 class MultiSelectDialogItem {
   const MultiSelectDialogItem(this.value, this.label);

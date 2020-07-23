@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:equatable/equatable.dart';
-import 'package:payever/commons/commons.dart';
 import 'package:payever/shop/models/models.dart';
 
 abstract class ShopScreenEvent extends Equatable {

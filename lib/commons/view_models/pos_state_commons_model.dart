@@ -6,7 +6,6 @@ import 'package:payever/products/models/models.dart';
 
 import 'global_state_model.dart';
 import '../models/models.dart';
-import '../network/network.dart';
 import '../utils/utils.dart';
 
 ValueNotifier<GraphQLClient> clientFor({

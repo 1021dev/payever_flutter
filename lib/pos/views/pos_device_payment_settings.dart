@@ -17,9 +17,9 @@ List<String> dropdownItems = [
 ];
 class PosDevicePaymentSettings extends StatefulWidget {
 
-  PosScreenBloc screenBloc;
-  String businessId;
-  bool installed;
+  final PosScreenBloc screenBloc;
+  final String businessId;
+  final bool installed;
 
   PosDevicePaymentSettings({
     this.screenBloc,

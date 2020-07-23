@@ -1,17 +1,9 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'package:flutter_reorderable_list/flutter_reorderable_list.dart';
-import 'package:flutter_tags/flutter_tags.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
-import 'package:payever/library/material_tag_editor.dart';
-import 'package:payever/products/widgets/multi_select_formfield.dart';
-import 'package:payever/products/widgets/reorderable_variant_item.dart';
 
-import 'add_variant_option_screen.dart';
 
 class AddVariantColorScreen extends StatefulWidget {
 

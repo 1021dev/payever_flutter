@@ -1,10 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:payever/commons/commons.dart';
 import 'package:payever/products/models/models.dart';
 import 'package:payever/products/widgets/collection_item_image_view.dart';
-import 'package:payever/products/widgets/product_item_image_view.dart';
 
 class CollectionGridItem extends StatelessWidget {
   final CollectionListModel collection;

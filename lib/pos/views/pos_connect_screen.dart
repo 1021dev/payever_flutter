@@ -24,8 +24,8 @@ Map<String, String> icons = {
 };
 class PosConnectScreen extends StatefulWidget {
 
-  PosScreenBloc screenBloc;
-  GlobalStateModel globalStateModel;
+  final PosScreenBloc screenBloc;
+  final GlobalStateModel globalStateModel;
 
   PosConnectScreen({
     this.screenBloc,

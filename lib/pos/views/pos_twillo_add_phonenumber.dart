@@ -20,10 +20,10 @@ List<String> dropdownItems = [
 ];
 class PosTwilioAddPhoneNumber extends StatefulWidget {
 
-  PosScreenBloc screenBloc;
-  String businessId;
-  String businessName;
-  String id;
+  final PosScreenBloc screenBloc;
+  final String businessId;
+  final String businessName;
+  final String id;
 
   PosTwilioAddPhoneNumber({
     this.screenBloc,

@@ -2,103 +2,62 @@ import 'transaction.dart';
 import '../utils/utils.dart';
 
 class Terminal {
-  bool _active;
-  String _business;
-  String _channelSet;
-  String _createdAt;
-  String _defaultLocale;
-  List<String> _subscription = List();
-  List<String> _locales = List();
-  String _logo;
-  String _name;
-  String _theme;
-  String _updatedAt;
+  bool active;
+  String business;
+  String channelSet;
+  String createdAt;
+  String defaultLocale;
+  List<String> subscription = List();
+  List<String> locales = List();
+  String logo;
+  String name;
+  String theme;
+  String updatedAt;
   num __v;
-  String _id;
-  List<String> _paymentMethods = List();
-  List<Day> _lastWeek = List();
-  List<Product> _bestSales = List();
-  num _lastWeekAmount = 0;
+  String id;
+  List<String> paymentMethods = List();
+  List<Day> lastWeek = List();
+  List<Product> bestSales = List();
+  num lastWeekAmount = 0;
 
   Terminal.toMap(dynamic obj) {
-    _active = obj[GlobalUtils.DB_POS_TERMINAL_ACTIVE];
-    _business = obj[GlobalUtils.DB_POS_TERMINAL_BUSINESS];
-    _channelSet = obj[GlobalUtils.DB_POS_TERMINAL_CHANNEL_SET];
-    _createdAt = obj[GlobalUtils.DB_POS_TERMINAL_CREATED_AT];
-    _defaultLocale = obj[GlobalUtils.DB_POS_TERMINAL_DEFAULT_LOCALE];
-    _logo = obj[GlobalUtils.DB_POS_TERMINAL_LOGO];
-    _name = obj[GlobalUtils.DB_POS_TERMINAL_NAME];
-    _theme = obj[GlobalUtils.DB_POS_TERMINAL_THEME];
-    _updatedAt = obj[GlobalUtils.DB_POS_TERMINAL_UPDATED_AT];
+    active = obj[GlobalUtils.DB_POS_TERMINAL_ACTIVE];
+    business = obj[GlobalUtils.DB_POS_TERMINAL_BUSINESS];
+    channelSet = obj[GlobalUtils.DB_POS_TERMINAL_CHANNEL_SET];
+    createdAt = obj[GlobalUtils.DB_POS_TERMINAL_CREATED_AT];
+    defaultLocale = obj[GlobalUtils.DB_POS_TERMINAL_DEFAULT_LOCALE];
+    logo = obj[GlobalUtils.DB_POS_TERMINAL_LOGO];
+    name = obj[GlobalUtils.DB_POS_TERMINAL_NAME];
+    theme = obj[GlobalUtils.DB_POS_TERMINAL_THEME];
+    updatedAt = obj[GlobalUtils.DB_POS_TERMINAL_UPDATED_AT];
     __v = obj[GlobalUtils.DB_POS_TERMINAL_V];
-    _id = obj[GlobalUtils.DB_POS_TERMINAL_ID];
+    id = obj[GlobalUtils.DB_POS_TERMINAL_ID];
 
     dynamic subs = obj[GlobalUtils.DB_POS_TERMINAL_INTEGRATION_SUB];
     subs.forEach((sub) {
-      _subscription.add(sub);
+      subscription.add(sub);
     });
 
     dynamic locales = obj[GlobalUtils.DB_POS_TERMINAL_LOCALES];
     locales.forEach((locale) {
-      _locales.add(locale);
+      locales.add(locale);
     });
   }
-
-  bool get active => _active;
-
-  num get v => __v;
-
-  String get business => _business;
-
-  String get channelSet => _channelSet;
-
-  String get createdAt => _createdAt;
-
-  String get defaultLocale => _defaultLocale;
-
-  String get logo => _logo;
-
-  String get name => _name;
-
-  String get theme => _theme;
-
-  String get updatedAt => _updatedAt;
-
-  String get id => _id;
-
-  num get lastWeekAmount => _lastWeekAmount;
-
-  List<String> get integrationSubscription => _subscription;
-
-  List<String> get locales => _locales;
-
-  List<String> get paymentMethods => _paymentMethods;
-
-  List<Day> get lastWeek => _lastWeek;
-
-  List<Product> get bestSales => _bestSales;
-
-  set lastWeekAmount(num amount) => _lastWeekAmount = amount;
-
-  set name(String name) => _name = name;
-
-  set logo(String logo) => _logo = logo;
-
 }
 
 class ChannelSet {
-  ChannelSet(this._id, this._name, this._type);
+  ChannelSet(this.id, this.name, this.type);
 
-  String _checkout;
-  String _id;
-  String _name;
-  String _type;
+  String checkout;
+  String id;
+  String name;
+  String type;
 
   ChannelSet.toMap(dynamic obj) {
-    _checkout = obj[GlobalUtils.DB_POS_CHANNEL_SET_CHECKOUT];
-    _id = obj[GlobalUtils.DB_POS_CHANNEL_SET_ID];
-    _name = obj[GlobalUtils.DB_POS_CHANNEL_SET_NAME];
-    _type = obj[GlobalUtils.DB_POS_CHANNEL_SET_TYPE];
+    checkout = obj[GlobalUtils.DB_POS_CHANNEL_SET_CHECKOUT];
+    id = obj[GlobalUtils.DB_POS_CHANNEL_SET_ID];
+    name = obj[GlobalUtils.DB_POS_CHANNEL_SET_NAME];
+    type = obj[GlobalUtils.DB_POS_CHANNEL_SET_TYPE];
   }
 
   Map<String, dynamic> toDictionary() {
@@ -108,14 +67,6 @@ class ChannelSet {
     map['id'] = id;
     return map;
   }
-
-  String get checkout => _checkout;
-
-  String get id => _id;
-
-  String get name => _name;
-
-  String get type => _type;
 }
 
 // class Checkout{
@@ -145,45 +96,27 @@ class Settings {}
 class Subscription {}
 
 class Product {
-  String _channelSet;
+  String channelSet;
+  String id;
+  String lastSell;
+  String name;
+  String thumbnail;
+  String uuid;
   String _id;
-  String _lastSell;
-  String _name;
-  String _thumbnail;
-  String _uuid;
-  String __id;
-  num _quantity;
+  num quantity;
   num __v;
 
   Product.toMap(dynamic obj) {
-    _channelSet = obj[GlobalUtils.DB_POS_TERM_PRODUCT_CHANNEL_SET];
-    _id = obj[GlobalUtils.DB_POS_TERM_PRODUCT_ID];
-    _lastSell = obj[GlobalUtils.DB_POS_TERM_PRODUCT_LAST_SELL];
-    _name = obj[GlobalUtils.DB_POS_TERM_PRODUCT_NAME];
-    _thumbnail = obj[GlobalUtils.DB_POS_TERM_PRODUCT_THUMBNAIL];
-    _uuid = obj[GlobalUtils.DB_POS_TERM_PRODUCT_UUID];
-    __id = obj[GlobalUtils.DB_POS_TERM_PRODUCT__ID];
-    _quantity = obj[GlobalUtils.DB_POS_TERM_PRODUCT_QUANTITY];
+    channelSet = obj[GlobalUtils.DB_POS_TERM_PRODUCT_CHANNEL_SET];
+    id = obj[GlobalUtils.DB_POS_TERM_PRODUCT_ID];
+    lastSell = obj[GlobalUtils.DB_POS_TERM_PRODUCT_LAST_SELL];
+    name = obj[GlobalUtils.DB_POS_TERM_PRODUCT_NAME];
+    thumbnail = obj[GlobalUtils.DB_POS_TERM_PRODUCT_THUMBNAIL];
+    uuid = obj[GlobalUtils.DB_POS_TERM_PRODUCT_UUID];
+    _id = obj[GlobalUtils.DB_POS_TERM_PRODUCT__ID];
+    quantity = obj[GlobalUtils.DB_POS_TERM_PRODUCT_QUANTITY];
     __v = obj[GlobalUtils.DB_POS_TERM_PRODUCT_V];
   }
-
-  String get channelSet => _channelSet;
-
-  String get id => _id;
-
-  String get lastSell => _lastSell;
-
-  String get name => _name;
-
-  String get thumbnail => _thumbnail;
-
-  String get uuid => _uuid;
-
-  String get ___id => __id;
-
-  num get quantity => _quantity;
-
-  num get _v => __v;
 }
 
 // add items to complete the flow object

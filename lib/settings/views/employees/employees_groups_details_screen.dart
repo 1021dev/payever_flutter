@@ -1,12 +1,10 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
 import '../../../commons/views/custom_elements/custom_elements.dart';
 import '../../view_models/view_models.dart';
-import '../../network/network.dart';
 import '../../models/models.dart';
 import '../../utils/utils.dart';
 

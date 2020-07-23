@@ -43,14 +43,14 @@ class SortContentView extends StatelessWidget {
                   ),
                   InkWell(
                     onTap: (){
-                      onSelected(sort_transactions.keys.toList()[0]);
+                      onSelected(sortTransactions.keys.toList()[0]);
                     },
                     child: Row(
                       children: [
                         Container(
                           width: 24,
                           alignment: Alignment.center,
-                          child: selectedIndex != sort_transactions.keys.toList()[0] ? Container() : Icon(
+                          child: selectedIndex != sortTransactions.keys.toList()[0] ? Container() : Icon(
                             Icons.check,
                             color: Color(0xFFAAAAAA),
                           ),
@@ -60,7 +60,7 @@ class SortContentView extends StatelessWidget {
                           height: 30,
                           alignment: Alignment.centerLeft,
                           child: Text(
-                              sort_transactions[sort_transactions.keys.toList()[0]],
+                            sortTransactions[sortTransactions.keys.toList()[0]],
                               style: TextStyle(
                                 color: Color(0xFFAAAAAA)
                               ),
@@ -74,14 +74,14 @@ class SortContentView extends StatelessWidget {
                   ),
                   InkWell(
                       onTap: (){
-                        onSelected(sort_transactions.keys.toList()[1]);
+                        onSelected(sortTransactions.keys.toList()[1]);
                       },
                       child: Row(
                         children: [
                           Container(
                             alignment: Alignment.center,
                             width: 24,
-                            child: selectedIndex != sort_transactions.keys.toList()[1] ? Container() : Icon(
+                            child: selectedIndex != sortTransactions.keys.toList()[1] ? Container() : Icon(
                               Icons.check,
                               color: Color(0xFFAAAAAA),
                             ),
@@ -91,7 +91,7 @@ class SortContentView extends StatelessWidget {
                             height: 30,
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              sort_transactions[sort_transactions.keys.toList()[1]],
+                              sortTransactions[sortTransactions.keys.toList()[1]],
                               style: TextStyle(
                                   color: Color(0xFFAAAAAA)
                               ),
@@ -105,14 +105,14 @@ class SortContentView extends StatelessWidget {
                   ),
                   InkWell(
                       onTap: (){
-                        onSelected(sort_transactions.keys.toList()[2]);
+                        onSelected(sortTransactions.keys.toList()[2]);
                       },
                       child: Row(
                         children: [
                           Container(
                             width: 24,
                             alignment: Alignment.center,
-                            child: selectedIndex != sort_transactions.keys.toList()[2] ? Container() : Icon(
+                            child: selectedIndex != sortTransactions.keys.toList()[2] ? Container() : Icon(
                               Icons.check,
                               color: Color(0xFFAAAAAA),
                             ),
@@ -122,7 +122,7 @@ class SortContentView extends StatelessWidget {
                             height: 30,
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              sort_transactions[sort_transactions.keys.toList()[2]],
+                              sortTransactions[sortTransactions.keys.toList()[2]],
                               style: TextStyle(
                                   color: Color(0xFFAAAAAA)
                               ),
@@ -136,14 +136,14 @@ class SortContentView extends StatelessWidget {
                   ),
                   InkWell(
                       onTap: (){
-                        onSelected(sort_transactions.keys.toList()[3]);
+                        onSelected(sortTransactions.keys.toList()[3]);
                       },
                       child: Row(
                         children: [
                           Container(
                             width: 24,
                             alignment: Alignment.center,
-                            child: selectedIndex != sort_transactions.keys.toList()[3] ? Container() : Icon(
+                            child: selectedIndex != sortTransactions.keys.toList()[3] ? Container() : Icon(
                               Icons.check,
                               color: Color(0xFFAAAAAA),
                             ),
@@ -153,7 +153,7 @@ class SortContentView extends StatelessWidget {
                             height: 30,
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              sort_transactions[sort_transactions.keys.toList()[3]],
+                              sortTransactions[sortTransactions.keys.toList()[3]],
                               style: TextStyle(
                                   color: Color(0xFFAAAAAA)
                               ),

@@ -9,7 +9,7 @@ import '../../network/network.dart';
 import '../../utils/utils.dart';
 
 class LanguagePopUp extends StatefulWidget {
-  Map<String, String> languages = {
+  final Map<String, String> languages = {
     "en": "English",
     "es": "Español",
     "de": "Deutsch",
@@ -17,7 +17,7 @@ class LanguagePopUp extends StatefulWidget {
     "da": "Dansk",
     "sv": "Svenska",
   };
-  Map<String, String> languagesToConst = {
+  final Map<String, String> languagesToConst = {
     "English": "en",
     "Español": "es",
     "Deutsch": "de",
@@ -94,7 +94,7 @@ class _LanguagePopUpState extends State<LanguagePopUp> {
                       SharedPreferences.getInstance().then(
                           (p) => p.setString(GlobalUtils.LANGUAGE, _lang));
                       Language(context);
-                      Provider.of<GlobalStateModel>(context).notifyListeners();
+                      Provider.of<GlobalStateModel>(context).setRefresh(true);
                       Navigator.of(context).pop();
                     });
                   },

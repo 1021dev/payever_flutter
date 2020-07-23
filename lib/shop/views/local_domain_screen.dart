@@ -16,9 +16,9 @@ bool _isTablet;
 
 class LocalDomainScreen extends StatefulWidget {
 
-  ShopScreenBloc screenBloc;
-  String businessId;
-  ShopDetailModel detailModel;
+  final ShopScreenBloc screenBloc;
+  final String businessId;
+  final ShopDetailModel detailModel;
 
   LocalDomainScreen({
     this.screenBloc,

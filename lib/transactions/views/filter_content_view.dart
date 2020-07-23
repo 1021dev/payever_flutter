@@ -13,14 +13,14 @@ class FilterContentView extends StatefulWidget {
 class _FilterContentViewState extends State<FilterContentView> {
   void showMeDialog(BuildContext context, String filterType) {
 //    String selectedFilterItem = "Is";
-    String filtername = filter_labels[filterType];
+    String filterName = filterLabels[filterType];
     debugPrint('FilterTypeName => $filterType');
     showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text(
-              'Filter by: $filtername',
+              'Filter by: $filterName',
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
             ),
             shape: RoundedRectangleBorder(
@@ -73,13 +73,13 @@ class _FilterContentViewState extends State<FilterContentView> {
                       separatorBuilder: (context, index) {
                         return Divider(height: 0, thickness: 0, color: Colors.transparent,);
                       },
-                      itemCount: filter_labels.keys.toList().length,
+                      itemCount: filterLabels.keys.toList().length,
                       itemBuilder: (context, index) {
                         return ListTile(
-                          title: Text(filter_labels[filter_labels.keys.toList()[index]]),
+                          title: Text(filterLabels[filterLabels.keys.toList()[index]]),
                           trailing: Icon(Icons.keyboard_arrow_right),
                           onTap: () {
-                            showMeDialog(context, filter_labels.keys.toList()[index]);
+                            showMeDialog(context, filterLabels.keys.toList()[index]);
                           },
                         );
                       },

@@ -319,6 +319,16 @@ class AlertDialog extends StatelessWidget {
         case TargetPlatform.android:
         case TargetPlatform.fuchsia:
           label = semanticLabel ?? MaterialLocalizations.of(context)?.alertDialogLabel;
+          break;
+        case TargetPlatform.linux:
+          // TODO: Handle this case.
+          break;
+        case TargetPlatform.macOS:
+          // TODO: Handle this case.
+          break;
+        case TargetPlatform.windows:
+          // TODO: Handle this case.
+          break;
       }
     }
 
@@ -598,6 +608,16 @@ class SimpleDialog extends StatelessWidget {
         case TargetPlatform.android:
         case TargetPlatform.fuchsia:
           label = semanticLabel ?? MaterialLocalizations.of(context)?.dialogLabel;
+          break;
+        case TargetPlatform.linux:
+          // TODO: Handle this case.
+          break;
+        case TargetPlatform.macOS:
+          // TODO: Handle this case.
+          break;
+        case TargetPlatform.windows:
+          // TODO: Handle this case.
+          break;
       }
     }
 

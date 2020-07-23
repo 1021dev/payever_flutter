@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
@@ -18,10 +17,10 @@ bool _isTablet;
 
 class PosCreateTerminalScreen extends StatefulWidget {
 
-  PosScreenBloc screenBloc;
-  String businessId;
-  Terminal editTerminal;
-  bool fromDashBoard;
+  final PosScreenBloc screenBloc;
+  final String businessId;
+  final Terminal editTerminal;
+  final bool fromDashBoard;
 
   PosCreateTerminalScreen({
     this.screenBloc,
@@ -344,10 +343,10 @@ class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
   }
 
   Future getImage() async {
-    var img = await ImagePicker.pickImage(source: ImageSource.gallery);
-    if (img.existsSync()) {
+    PickedFile img = await ImagePicker().getImage(source: ImageSource.gallery);
+    if (img.path != null) {
       print("_image: $img");
-      widget.screenBloc.add(UploadTerminalImage(file: img, businessId: widget.businessId));
+      widget.screenBloc.add(UploadTerminalImage(file: File(img.path), businessId: widget.businessId));
     }
   }
 

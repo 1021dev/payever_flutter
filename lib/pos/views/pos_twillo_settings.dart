@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,10 +19,10 @@ List<String> dropdownItems = [
 ];
 class PosTwilioScreen extends StatefulWidget {
 
-  PosScreenBloc screenBloc;
-  String businessId;
-  String businessName;
-  bool installed;
+  final PosScreenBloc screenBloc;
+  final String businessId;
+  final String businessName;
+  final bool installed;
 
   PosTwilioScreen({
     this.screenBloc,

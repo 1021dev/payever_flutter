@@ -24,10 +24,8 @@ import 'package:payever/pos/views/pos_twillo_settings.dart';
 import 'package:payever/pos/widgets/pos_top_button.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 import 'pos_device_payment_settings.dart';
-import 'pos_qr_settings.dart';
 
 bool _isPortrait;
 bool _isTablet;

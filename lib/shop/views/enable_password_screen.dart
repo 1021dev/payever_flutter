@@ -16,9 +16,9 @@ bool _isTablet;
 
 class EnablePasswordScreen extends StatefulWidget {
 
-  ShopScreenBloc screenBloc;
-  String businessId;
-  ShopDetailModel detailModel;
+  final ShopScreenBloc screenBloc;
+  final String businessId;
+  final ShopDetailModel detailModel;
 
   EnablePasswordScreen({
     this.screenBloc,

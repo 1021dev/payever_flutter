@@ -24,7 +24,6 @@ import 'package:payever/shop/widgets/shop_top_button.dart';
 import 'package:payever/shop/widgets/template_cell.dart';
 import 'package:payever/shop/widgets/theme_filter_content_view.dart';
 import 'package:payever/shop/widgets/theme_own_cell.dart';
-import 'package:payever/transactions/views/filter_content_view.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';

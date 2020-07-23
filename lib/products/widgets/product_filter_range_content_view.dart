@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:payever/commons/models/app_widget.dart';
 import 'package:payever/transactions/models/currency.dart';
 import 'package:payever/transactions/models/enums.dart';
-import 'package:payever/transactions/views/filter_content_view.dart';
 
 class ProductFilterRangeContentView extends StatefulWidget {
   final String type;

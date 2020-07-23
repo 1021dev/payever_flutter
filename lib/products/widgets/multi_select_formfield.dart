@@ -1,7 +1,6 @@
 library multiselect_formfield;
 
 import 'package:flutter/material.dart';
-import 'package:payever/products/views/add_variant_screen.dart';
 
 import 'multi_select_dialog.dart';
 

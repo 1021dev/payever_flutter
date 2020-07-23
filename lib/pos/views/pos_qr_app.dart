@@ -20,9 +20,9 @@ List<String> dropdownItems = [
 ];
 class PosQRAppScreen extends StatefulWidget {
 
-  PosScreenBloc screenBloc;
-  String businessId;
-  String businessName;
+  final PosScreenBloc screenBloc;
+  final String businessId;
+  final String businessName;
 
   PosQRAppScreen({
     this.screenBloc,

@@ -914,7 +914,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
     _filterItems = [];
     if (state.filterTypes.length > 0) {
       for (int i = 0; i < state.filterTypes.length; i++) {
-        String filterString = '${filterProducts[state.filterTypes[i].type]} ${filter_conditions[state.filterTypes[i].condition]}: ${state.filterTypes[i].disPlayName}';
+        String filterString = '${filterProducts[state.filterTypes[i].type]} ${filterConditions[state.filterTypes[i].condition]}: ${state.filterTypes[i].disPlayName}';
         TagItemModel item = TagItemModel(title: filterString, type: state.filterTypes[i].type);
         _filterItems.add(item);
       }

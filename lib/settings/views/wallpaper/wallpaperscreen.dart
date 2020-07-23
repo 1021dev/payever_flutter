@@ -38,7 +38,7 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
               style: TextStyle(fontSize: AppStyle.fontSizeTabTitle()),
               overflow: TextOverflow.ellipsis,
             ));
-            bodies.add(WallpaperRow(cat.industries));
+            bodies.add(WallpaperRow(industries: cat.industries));
           }
           return CustomExpansionTile(
               isWithCustomIcon: true,
@@ -53,9 +53,9 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
 }
 
 class WallpaperRow extends StatefulWidget {
-  List<WallpaperIndustry> industries = List();
+  final List<WallpaperIndustry> industries;
 
-  WallpaperRow(this.industries);
+  WallpaperRow({this.industries = const []});
 
   @override
   _WallpaperRowState createState() => _WallpaperRowState();
@@ -117,7 +117,7 @@ class _WallpaperRowState extends State<WallpaperRow> {
 }
 
 class WallpaperItem extends StatelessWidget {
-  String id;
+  final String id;
 
   WallpaperItem(this.id);
 

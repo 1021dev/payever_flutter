@@ -1,29 +1,25 @@
 import 'dart:io';
 import 'dart:ui';
-import 'package:date_format/date_format.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/shop/shop.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
-import 'package:payever/shop/models/models.dart';
 
 bool _isPortrait;
 bool _isTablet;
 
 class CreateShopScreen extends StatefulWidget {
 
-  ShopScreenBloc screenBloc;
-  String businessId;
-  bool fromDashBoard;
+  final ShopScreenBloc screenBloc;
+  final String businessId;
+  final bool fromDashBoard;
 
   CreateShopScreen({
     this.screenBloc,
@@ -348,13 +344,13 @@ class _CreateShopScreenState extends State<CreateShopScreen> {
   }
 
   Future getImage() async {
-    var img = await ImagePicker.pickImage(source: ImageSource.gallery);
+    PickedFile img = await ImagePicker().getImage(source: ImageSource.gallery);
     if (img == null) {
       return;
     }
-    if (img.existsSync()) {
+    if (img.path != null) {
       print("_image: $img");
-      widget.screenBloc.add(UploadShopImage(file: img, businessId: widget.businessId));
+      widget.screenBloc.add(UploadShopImage(file: File(img.path), businessId: widget.businessId));
     }
   }
 

@@ -16,8 +16,8 @@ bool _isTablet;
 
 class PosSwitchTerminalsScreen extends StatefulWidget {
 
-  PosScreenBloc screenBloc;
-  String businessId;
+  final PosScreenBloc screenBloc;
+  final String businessId;
 
   PosSwitchTerminalsScreen({
     this.screenBloc,

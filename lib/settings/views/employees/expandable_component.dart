@@ -154,7 +154,6 @@ class _ExpandableListViewState extends State<ExpandableListView> {
       onTap: () {
         setState(() {
           widget.openedAppRow.value = widget.openedAppRowIndex;
-          widget.openedAppRow.notifyListeners();
         });
       },
     );

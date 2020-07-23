@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:payever/commons/models/models.dart';
 import 'package:payever/products/models/models.dart';
-import 'package:payever/products/widgets/product_filter_content_view.dart';
 import 'package:payever/shop/models/models.dart';
 
 class ProductsScreenState {

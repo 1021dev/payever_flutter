@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:payever/commons/commons.dart';
-import 'package:payever/transactions/views/filter_content_view.dart';
 
 class TransactionsScreenState {
   final bool isLoading;
