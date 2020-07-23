@@ -1,4 +1,5 @@
 import 'package:payever/commons/utils/common_utils.dart';
+import 'package:payever/transactions/models/currency.dart';
 
 class ConnectModel {
   String createdAt;
@@ -170,4 +171,185 @@ class LinkModel {
     url = obj[GlobalUtils.DB_CONNECT_URL];
   }
 
+}
+
+class Payment {
+  bool acceptFee = false;
+  num contractLength;
+  String descriptionFee;
+  String descriptionOffer;
+  num fixedFee;
+  num id;
+  String imagePrimaryFilename;
+  String imageSecondaryFilename;
+  String instructionText;
+  num max;
+  List<String> merchantAllowedCountries = [];
+  num min;
+  String name;
+  CurrencyOption options;
+  String paymentMethod;
+  String relatedCountry;
+  String relatedCountryName;
+  dynamic settings;
+  String slug;
+  String status;
+  String thumbnail1;
+  String thumbnail2;
+  num variableFee;
+  List<Variant> variants = [];
+
+  Payment.fromMap(dynamic obj) {
+    acceptFee = obj['accept_fee'];
+    contractLength = obj['contract_length'];
+    descriptionFee = obj['description_fee'];
+    descriptionOffer = obj['description_offer'];
+    fixedFee = obj['fixed_fee'];
+    id = obj['id'];
+    imagePrimaryFilename = obj['image_primary_filename'];
+    imageSecondaryFilename = obj['image_secondary_filename'];
+    instructionText = obj['instruction_text'];
+    max = obj['max'];
+    if (obj['merchant_allowed_countries'] != null) {
+      List merchantAllowedCountriesObj = obj['merchant_allowed_countries'];
+      merchantAllowedCountriesObj.forEach((element) {
+        merchantAllowedCountries.add(element);
+      });
+    }
+    min = obj['min'];
+    name = obj['name'];
+    if (obj['options'] != null) {
+      options = CurrencyOption.fromMap(obj['options']);
+    }
+    paymentMethod = obj['payment_method'];
+    relatedCountry = obj['related_country'];
+    relatedCountryName = obj['related_country_name'];
+    settings = obj['settings'];
+    slug = obj['slug'];
+    status = obj['status'];
+    thumbnail1 = obj['thumbnail1'];
+    thumbnail2 = obj['thumbnail2'];
+    variableFee = obj['variable_fee'];
+    if (obj['variants'] != null) {
+      List listObj = obj['variants'];
+      listObj.forEach((element) {
+        variants.add(Variant.fromMap(element));
+      });
+    }
+  }
+
+}
+
+class CurrencyOption {
+  List<String> countries = [];
+  List<String> currencies = [];
+
+  CurrencyOption.fromMap(dynamic obj) {
+    if (obj['countries'] != null) {
+      List listObj = obj['countries'];
+      listObj.forEach((element) {
+        countries.add(element);
+      });
+    }
+    if (obj['currencies'] != null) {
+      List listObj = obj['currencies'];
+      listObj.forEach((element) {
+        currencies.add(element);
+      });
+    }
+  }
+}
+
+class PaymentVariant {
+  MissingSteps missingSteps;
+  List<Variant> variants = [];
+
+  PaymentVariant.fromMap(dynamic obj) {
+    if (obj['missing_steps'] != null) {
+      missingSteps = MissingSteps.fromMap(obj['missing_steps']);
+    }
+    if (obj['variants'] != null) {
+      List listObj = obj['variants'];
+      listObj.forEach((element) {
+        variants.add(Variant.fromMap(element));
+      });
+    }
+  }
+}
+
+class Variant {
+  bool acceptFee;
+  bool completed;
+  List credentials;
+  bool credentialsValid;
+  bool isDefault;
+  num fixedFee;
+  String generalStatus;
+  num id;
+  num max;
+  num min;
+  String name;
+  dynamic options;
+  String paymentMethod;
+  num paymentOptionId;
+  bool shopRedirectEnabled;
+  String status;
+  String uuid;
+  num variableFee;
+
+  Variant.fromMap(dynamic obj) {
+    acceptFee = obj['accept_fee'] ?? false;
+    completed = obj['completed'] ?? false;
+    credentials = obj['credentials'];
+    credentialsValid = obj['credentials_valid'] ?? false;
+    isDefault = obj['default'] ?? false;
+    fixedFee = obj['fixed_fee'];
+    generalStatus = obj['general_status'];
+    id = obj['id'];
+    max = obj['max'];
+    min = obj['min'];
+    name = obj['name'];
+    options = obj['accept_fee'];
+    paymentMethod = obj['payment_method'];
+    paymentOptionId = obj['payment_option_id'];
+    shopRedirectEnabled = obj['shop_redirect_enabled'] ?? false;
+    status = obj['status'];
+    uuid = obj['uuid'];
+    variableFee = obj['variable_fee'];
+  }
+}
+
+class MissingStep {
+  String errorMessage;
+  bool filled = false;
+  String message;
+  bool openDialog = false;
+  String type;
+  String url;
+
+  MissingStep.fromMap(dynamic obj) {
+    errorMessage = obj['error_message'];
+    filled = obj['filled'];
+    message = obj['message'];
+    openDialog = obj['open_dialog'];
+    type = obj['type'];
+    url = obj['url'];
+  }
+}
+
+class MissingSteps {
+  num id;
+  List<MissingStep> missingSteps = [];
+  String successMessage;
+
+  MissingSteps.fromMap(dynamic obj) {
+    id = obj['id'];
+    if (obj['missing_steps'] != null) {
+      List listObj = obj['missing_steps'];
+      listObj.forEach((element) {
+        missingSteps.add(MissingStep.fromMap(element));
+      });
+    }
+    successMessage = obj['success_message'];
+  }
 }

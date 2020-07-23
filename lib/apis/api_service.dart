@@ -827,11 +827,62 @@ class ApiService {
     }
   }
 
-  Future<dynamic> getConnects(String token, String id) async {
+  Future<dynamic> getNotInstalledByCountry(String token, String id) async {
     try {
       print('$TAG - getConnects()');
       dynamic response = await _client.getTypeless(
           '${Env.connect}/api/business/$id/integration/not-installed/random/filtered-by-country',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getConnectionIntegrations(String token, String id) async {
+    try {
+      print('$TAG - getConnectionIntegrations()');
+      dynamic response = await _client.getTypeless(
+          '${Env.connect}/api/business/$id/integration',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getPaymentOptions(String token) async {
+    try {
+      print('$TAG - getPaymentOptions()');
+      dynamic response = await _client.getTypeless(
+          '${Env.checkout}/api/rest/v1/payment-options',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getPaymentVariants(String token, String business) async {
+    try {
+      print('$TAG - getPaymentOptions()');
+      dynamic response = await _client.getTypeless(
+          '${Env.checkout}/api/rest/v3/business-payment-option/$business/variants',
           headers: {
             HttpHeaders.authorizationHeader: 'Bearer $token',
             HttpHeaders.contentTypeHeader: 'application/json',

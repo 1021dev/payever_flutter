@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/models/app_widget.dart';
-import 'package:payever/commons/models/connect.dart';
+import 'package:payever/connect/models/connect.dart';
 import 'package:payever/commons/utils/env.dart';
 import 'package:payever/commons/views/custom_elements/dashboard_option_cell.dart';
 

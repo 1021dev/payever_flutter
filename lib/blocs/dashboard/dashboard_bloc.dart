@@ -5,7 +5,7 @@ import 'package:package_info/package_info.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/blocs/dashboard/dashboard.dart';
 import 'package:payever/commons/commons.dart';
-import 'package:payever/commons/models/connect.dart';
+import 'package:payever/connect/models/connect.dart';
 import 'package:payever/commons/models/fetchwallpaper.dart';
 import 'package:payever/products/models/models.dart';
 import 'package:payever/settings/network/employees_api.dart';
@@ -380,7 +380,7 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
   }
 
   Stream<DashboardScreenState> getConnects(Business currentBusiness) async* {
-    dynamic response = await api.getConnects(GlobalUtils.activeToken.accessToken, currentBusiness.id);
+    dynamic response = await api.getNotInstalledByCountry(GlobalUtils.activeToken.accessToken, currentBusiness.id);
     List<ConnectModel> connects = [];
     response.forEach((element) {
       connects.add(ConnectModel.toMap(element));
