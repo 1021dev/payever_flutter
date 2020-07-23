@@ -32,7 +32,6 @@ import 'package:url_launcher/url_launcher.dart';
 bool _isPortrait;
 bool _isTablet;
 
-
 class ShopInitScreen extends StatelessWidget {
 
   final List<ShopModel> shopModels;
@@ -166,8 +165,6 @@ class _ShopScreenState extends State<ShopScreen> {
     screenBloc.add(
         ShopScreenInitEvent(
           currentBusinessId: widget.globalStateModel.currentBusiness.id,
-//          terminals: widget.shopModels,
-//          activeTerminal: widget.activeShop,
         )
     );
   }

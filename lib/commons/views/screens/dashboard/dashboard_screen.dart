@@ -9,6 +9,7 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/views/screens/login/login_page.dart';
 import 'package:payever/commons/views/screens/switcher/switcher_page.dart';
+import 'package:payever/connect/views/connect_screen.dart';
 import 'package:payever/notifications/notifications_screen.dart';
 import 'package:payever/pos/views/pos_create_terminal_screen.dart';
 import 'package:payever/pos/views/pos_screen.dart';
@@ -892,6 +893,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
             },
             deleteNotification: (NotificationModel model) {
               screenBloc.add(DeleteNotification(notificationId: model.id));
+            },
+            tapOpen: () {
+              Provider.of<GlobalStateModel>(context,listen: false)
+                  .setCurrentBusiness(state.activeBusiness);
+              Provider.of<GlobalStateModel>(context,listen: false)
+                  .setCurrentWallpaper(state.curWall);
+              Navigator.push(
+                context,
+                PageTransition(
+                  child: ConnectInitScreen(
+                    dashboardScreenBloc: screenBloc,
+                  ),
+                  type: PageTransitionType.fade,
+                  duration: Duration(milliseconds: 500),
+                ),
+              );
             },
           )
       );

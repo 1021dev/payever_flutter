@@ -13,6 +13,7 @@ class DashboardConnectView extends StatefulWidget {
   final List<NotificationModel> notifications;
   final Function openNotification;
   final Function deleteNotification;
+  final Function tapOpen;
 
   DashboardConnectView({
     this.appWidget,
@@ -20,6 +21,7 @@ class DashboardConnectView extends StatefulWidget {
     this.notifications = const [],
     this.openNotification,
     this.deleteNotification,
+    this.tapOpen,
   });
   @override
   _DashboardConnectViewState createState() => _DashboardConnectViewState();
@@ -68,9 +70,7 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                       Row(
                         children: [
                           InkWell(
-                            onTap: () {
-
-                            },
+                            onTap: widget.tapOpen,
                             child: Container(
                               height: 20,
                               width: 40,
