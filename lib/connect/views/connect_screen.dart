@@ -7,6 +7,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/screens/dashboard/sub_view/dashboard_menu_view.dart';
+import 'package:payever/connect/widgets/connect_top_button.dart';
 import 'package:payever/notifications/notifications_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -63,6 +64,40 @@ class _ConnectScreenState extends State<ConnectScreen> {
   final GlobalKey<InnerDrawerState> _innerDrawerKey = GlobalKey<InnerDrawerState>();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
+  static int selectedIndex = 0;
+  static int selectedStyle = 1;
+
+  List<String> toolBarWidgetStrings = <String>[
+    Language.getConnectStrings('categories.all.title'),
+    Language.getConnectStrings('categories.payments.title'),
+    Language.getConnectStrings('categories.shipping.title'),
+    Language.getConnectStrings('categories.products.title'),
+    Language.getConnectStrings('categories.shopsystem.title'),
+    Language.getConnectStrings('categories.communication.title'),
+  ];
+
+  List<ConnectPopupButton> appBarPopUpActions(BuildContext context, ConnectScreenState state) {
+    return [
+      ConnectPopupButton(
+        title: Language.getProductListStrings('list_view'),
+        icon: Icon(Icons.view_list, size: 24,),
+        onTap: () async {
+          setState(() {
+            selectedStyle = 0;
+          });
+        },
+      ),
+      ConnectPopupButton(
+        title: Language.getProductListStrings('grid_view'),
+        icon: Icon(Icons.grid_on, size: 24,),
+        onTap: () async {
+          setState(() {
+            selectedStyle = 1;
+          });
+        },
+      ),
+    ];
+  }
 
   @override
   void initState() {
@@ -311,7 +346,8 @@ class _ConnectScreenState extends State<ConnectScreen> {
           ): Center(
             child: Column(
               children: <Widget>[
-//                _toolBar(state),
+                _toolBar(state),
+                _topBar(state),
                 Expanded(
                   child: _getBody(state),
                 ),
@@ -323,8 +359,96 @@ class _ConnectScreenState extends State<ConnectScreen> {
     );
   }
 
+  Widget _toolBar(ConnectScreenState state) {
+    return Container(
+      height: 44,
+      color: Colors.black87,
+      child: ListView.separated(
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (context, index) {
+          return ConnectTopButton(
+            title: toolBarWidgetStrings[index],
+            selectedIndex: selectedIndex,
+            index: index,
+            onTap: () {
+              setState(() {
+                selectedIndex = index;
+              });
+            },
+          );
+        },
+        itemCount: toolBarWidgetStrings.length,
+        separatorBuilder: (context, index) {
+          return Container();
+        },
+      ),
+    );
+  }
+
+  Widget _topBar(ConnectScreenState state) {
+    return Container(
+      height: 44,
+      color: Colors.black,
+      child: Stack(
+        alignment: Alignment.center,
+        fit: StackFit.expand,
+        children: <Widget>[
+          Container(
+            alignment: Alignment.center,
+            child: Text(
+              ' ${Language.getWidgetStrings('widgets.store.product.items')}',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          Container(
+            alignment: Alignment.centerRight,
+            child: PopupMenuButton<ConnectPopupButton>(
+              icon: Icon(selectedStyle == 0 ? Icons.view_list: Icons.grid_on),
+              offset: Offset(0, 100),
+              onSelected: (ConnectPopupButton item) => item.onTap(),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              color: Colors.black87,
+              itemBuilder: (BuildContext context) {
+                return appBarPopUpActions(context, state)
+                    .map((ConnectPopupButton item) {
+                  return PopupMenuItem<ConnectPopupButton>(
+                    value: item,
+                    child: Row(
+                      children: <Widget>[
+                        item.icon,
+                        Padding(
+                          padding: EdgeInsets.only(left: 8),
+                        ),
+                        Text(
+                          item.title,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }).toList();
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _getBody(ConnectScreenState state) {
     return Container();
   }
+
 
 }
