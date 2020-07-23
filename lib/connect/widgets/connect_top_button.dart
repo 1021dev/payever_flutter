@@ -59,7 +59,7 @@ class ConnectPopupButton {
   final String title;
   final Color textColor;
   final Function onTap;
-  final Icon icon;
+  final Widget icon;
 
   ConnectPopupButton({
     this.title,

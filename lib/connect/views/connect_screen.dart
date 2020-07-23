@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
@@ -67,20 +66,14 @@ class _ConnectScreenState extends State<ConnectScreen> {
   static int selectedIndex = 0;
   static int selectedStyle = 1;
 
-  List<String> toolBarWidgetStrings = <String>[
-    Language.getConnectStrings('categories.all.title'),
-    Language.getConnectStrings('categories.payments.title'),
-    Language.getConnectStrings('categories.shipping.title'),
-    Language.getConnectStrings('categories.products.title'),
-    Language.getConnectStrings('categories.shopsystem.title'),
-    Language.getConnectStrings('categories.communication.title'),
-  ];
+  final TextEditingController searchTextController = TextEditingController();
+  final FocusNode searchFocus = FocusNode();
 
   List<ConnectPopupButton> appBarPopUpActions(BuildContext context, ConnectScreenState state) {
     return [
       ConnectPopupButton(
         title: Language.getProductListStrings('list_view'),
-        icon: Icon(Icons.view_list, size: 24,),
+        icon: SvgPicture.asset('assets/images/list.svg'),
         onTap: () async {
           setState(() {
             selectedStyle = 0;
@@ -89,7 +82,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
       ),
       ConnectPopupButton(
         title: Language.getProductListStrings('grid_view'),
-        icon: Icon(Icons.grid_on, size: 24,),
+        icon: SvgPicture.asset('assets/images/grid.svg'),
         onTap: () async {
           setState(() {
             selectedStyle = 1;
@@ -264,11 +257,6 @@ class _ConnectScreenState extends State<ConnectScreen> {
             size: 24,
           ),
           onPressed: () async{
-            Provider.of<GlobalStateModel>(context,listen: false)
-                .setCurrentBusiness(widget.dashboardScreenBloc.state.activeBusiness);
-            Provider.of<GlobalStateModel>(context,listen: false)
-                .setCurrentWallpaper(widget.dashboardScreenBloc.state.curWall);
-
             await showGeneralDialog(
               barrierColor: null,
               transitionBuilder: (context, a1, a2, wg) {
@@ -346,7 +334,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
           ): Center(
             child: Column(
               children: <Widget>[
-                _toolBar(state),
+//                _toolBar(state),
                 _topBar(state),
                 Expanded(
                   child: _getBody(state),
@@ -368,7 +356,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) {
           return ConnectTopButton(
-            title: toolBarWidgetStrings[index],
+            title: Language.getConnectStrings('categories.${state.categories[index]}.title'),
             selectedIndex: selectedIndex,
             index: index,
             onTap: () {
@@ -378,7 +366,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
             },
           );
         },
-        itemCount: toolBarWidgetStrings.length,
+        itemCount: state.categories.length,
         separatorBuilder: (context, index) {
           return Container();
         },
@@ -388,58 +376,159 @@ class _ConnectScreenState extends State<ConnectScreen> {
 
   Widget _topBar(ConnectScreenState state) {
     return Container(
-      height: 44,
-      color: Colors.black,
-      child: Stack(
-        alignment: Alignment.center,
-        fit: StackFit.expand,
+      height: 64,
+      color: Color(0xFF212122),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Container(
-            alignment: Alignment.center,
-            child: Text(
-              ' ${Language.getWidgetStrings('widgets.store.product.items')}',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
+          Row(
+            children: <Widget>[
+              InkWell(
+                onTap: () async {
+                  await showGeneralDialog(
+                      barrierColor: null,
+                      transitionBuilder: (context, a1, a2, wg) {
+                    final curvedValue = 1.0 - Curves.ease.transform(a1.value);
+                    return Transform(
+                      transform: Matrix4.translationValues(curvedValue * 200, 0.0, 0),
+                      child: NotificationsScreen(
+                        business: widget.dashboardScreenBloc.state.activeBusiness,
+                        businessApps: widget.dashboardScreenBloc.state.businessWidgets,
+                        dashboardScreenBloc: widget.dashboardScreenBloc,
+                        type: 'connect',
+                      ),
+                    );
+                  },
+                  transitionDuration: Duration(milliseconds: 200),
+                  barrierDismissible: true,
+                  barrierLabel: '',
+                  context: context,
+                  pageBuilder: (context, animation1, animation2) {
+                  return null;
+                  },
+                  );
+                },
+                child: Container(
+                  padding: EdgeInsets.all(8),
+                  child: Icon(Icons.filter_list),
+                ),
               ),
-            ),
-          ),
-          Container(
-            alignment: Alignment.centerRight,
-            child: PopupMenuButton<ConnectPopupButton>(
-              icon: Icon(selectedStyle == 0 ? Icons.view_list: Icons.grid_on),
-              offset: Offset(0, 100),
-              onSelected: (ConnectPopupButton item) => item.onTap(),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+              Padding(
+                padding: EdgeInsets.only(right: 12),
+                child: Container(
+                  width: 1,
+                  color: Color(0xFF888888),
+                  height: 24,
+                ),
               ),
-              color: Colors.black87,
-              itemBuilder: (BuildContext context) {
-                return appBarPopUpActions(context, state)
-                    .map((ConnectPopupButton item) {
-                  return PopupMenuItem<ConnectPopupButton>(
-                    value: item,
-                    child: Row(
-                      children: <Widget>[
-                        item.icon,
-                        Padding(
-                          padding: EdgeInsets.only(left: 8),
-                        ),
-                        Text(
-                          item.title,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
+              InkWell(
+                onTap: () {
+
+                },
+                child: Text(
+                  'Reset'
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 12),
+              ),
+              Container(
+                constraints: BoxConstraints(minWidth: 100, maxWidth: Measurements.width / 2, maxHeight: 36, minHeight: 36),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: Color(0xFF111111),
+                ),
+                child: Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(left: 8, right: 8),
+                      child: SvgPicture.asset('assets/images/searchicon.svg', width: 16, height: 16,),
+                    ),
+                    Expanded(
+                      child: TextField(
+                        focusNode: searchFocus,
+                        controller: searchTextController,
+                        autofocus: false,
+                        textInputAction: TextInputAction.done,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Search in Connect',
+                          isDense: true,
+                          hintStyle: TextStyle(
+                            fontSize: 14,
+                            color: Colors.white70,
+                            fontWeight: FontWeight.w300,
                           ),
                         ),
-                      ],
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        onSubmitted: (_) {
+                          FocusScope.of(context).unfocus();
+                        },
+                      ),
                     ),
-                  );
-                }).toList();
-              },
-            ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: <Widget>[
+              Container(
+                alignment: Alignment.center,
+                child: Text(
+                  ' ${Language.getWidgetStrings('widgets.store.product.items')}',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Container(
+                alignment: Alignment.centerRight,
+                child: PopupMenuButton<ConnectPopupButton>(
+                  child: Padding(
+                    padding: EdgeInsets.all(8),
+                    child: selectedStyle == 0 ? SvgPicture.asset('assets/images/list.svg'): SvgPicture.asset('assets/images/grid.svg'),
+                  ),
+                  offset: Offset(0, 100),
+                  onSelected: (ConnectPopupButton item) => item.onTap(),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  color: Colors.black87,
+                  itemBuilder: (BuildContext context) {
+                    return appBarPopUpActions(context, state)
+                        .map((ConnectPopupButton item) {
+                      return PopupMenuItem<ConnectPopupButton>(
+                        value: item,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text(
+                              item.title,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(8),
+                              child: item.icon,
+                            ),
+                          ],
+                        ),
+                      );
+                    }).toList();
+                  },
+                ),
+              ),
+            ],
           ),
         ],
       ),
