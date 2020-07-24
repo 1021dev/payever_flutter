@@ -6,6 +6,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/screens/dashboard/sub_view/dashboard_menu_view.dart';
+import 'package:payever/connect/views/connect_detail_screen.dart';
 import 'package:payever/connect/widgets/connect_grid_item.dart';
 import 'package:payever/connect/widgets/connect_list_item.dart';
 import 'package:payever/connect/widgets/connect_top_button.dart';
@@ -343,7 +344,6 @@ class _ConnectScreenState extends State<ConnectScreen> {
           ): Center(
             child: Column(
               children: <Widget>[
-//                _toolBar(state),
                 _topBar(state),
                 Expanded(
                   child: _getBody(state),
@@ -352,33 +352,6 @@ class _ConnectScreenState extends State<ConnectScreen> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _toolBar(ConnectScreenState state) {
-    return Container(
-      height: 44,
-      color: Colors.black87,
-      child: ListView.separated(
-        shrinkWrap: true,
-        scrollDirection: Axis.horizontal,
-        itemBuilder: (context, index) {
-          return ConnectTopButton(
-            title: Language.getConnectStrings('categories.${state.categories[index]}.title'),
-            selectedIndex: selectedIndex,
-            index: index,
-            onTap: () {
-              setState(() {
-                selectedIndex = index;
-              });
-            },
-          );
-        },
-        itemCount: state.categories.length,
-        separatorBuilder: (context, index) {
-          return Container();
-        },
       ),
     );
   }
@@ -643,6 +616,24 @@ class _ConnectScreenState extends State<ConnectScreen> {
               itemBuilder: (context, index) {
                 return ConnectListItem(
                   connectModel: state.connectInstallations[index],
+                  isPortrait: _isPortrait,
+                  isTablet: _isTablet,
+                  onInstall: () {
+
+                  },
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      PageTransition(
+                        child: ConnectDetailScreen(
+                          screenBloc: screenBloc,
+                          connectModel: state.connectInstallations[index],
+                        ),
+                        type: PageTransitionType.fade,
+                        duration: Duration(milliseconds: 500),
+                      ),
+                    );
+                  },
                 );
               },
               separatorBuilder: (context, index) {
@@ -661,25 +652,36 @@ class _ConnectScreenState extends State<ConnectScreen> {
   }
 
   Widget _getGridBody(ConnectScreenState state) {
+    int crossAxisCount = _isTablet ? (_isPortrait ? 2 : 3): (_isPortrait ? 1 : 2);
     double imageRatio= 323.0 / 182.0;
     double contentHeight = 116;
-    double cellWidth = _isPortrait ? (Measurements.width - 44) / 2 : (Measurements.height - 56) / 3;
+    double cellWidth = _isPortrait ? (Measurements.width - 44) / crossAxisCount : (Measurements.height - 56) / crossAxisCount;
     double imageHeight = cellWidth / imageRatio;
-    double cellHeight = imageHeight + imageHeight;
-
+    double cellHeight = imageHeight + contentHeight;
+    print('$cellWidth,  $cellHeight, $imageHeight  => ${cellHeight / cellWidth}');
     return Container(
       child: GridView.count(
-        crossAxisCount: _isPortrait ? 2 : 3,
+        crossAxisCount: crossAxisCount,
         padding: EdgeInsets.all(16),
         crossAxisSpacing: 12,
         mainAxisSpacing: 12,
         shrinkWrap: true,
-        childAspectRatio: cellHeight / cellWidth,
+        childAspectRatio: cellWidth / cellHeight,
         children: state.connectInstallations.map((installation) {
           return ConnectGridItem(
             connectModel: installation,
             onTap: () {
-
+              Navigator.push(
+                context,
+                PageTransition(
+                  child: ConnectDetailScreen(
+                    screenBloc: screenBloc,
+                    connectModel: installation,
+                  ),
+                  type: PageTransitionType.fade,
+                  duration: Duration(milliseconds: 500),
+                ),
+              );
             },
             onInstall: () {
 

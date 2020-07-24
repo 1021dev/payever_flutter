@@ -147,10 +147,10 @@ class ReviewModel {
   String title;
   String userFullName;
   String userId;
-  String _id;
+  String id;
 
   ReviewModel.toMap(dynamic obj) {
-    _id = obj[GlobalUtils.DB_CONNECT_ID];
+    id = obj[GlobalUtils.DB_CONNECT_ID];
     rating = obj[GlobalUtils.DB_CONNECT_RATING];
     reviewDate = obj[GlobalUtils.DB_CONNECT_REVIEW_DATE];
     text = obj[GlobalUtils.DB_CONNECT_TEXT];

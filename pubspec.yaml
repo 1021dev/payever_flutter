@@ -97,9 +97,15 @@ flutter:
     - family: HelveticaNeue
       fonts:
         - asset: assets/fonts/HelveticaNeue.ttf
+    - family: HelveticaNeueBold
+      fonts:
+        - asset: assets/fonts/HelveticaNeueBold.ttf
     - family: HelveticaNeueMed
       fonts:
-        - asset: assets/fonts/HelveticaNeueMed.ttf
+        - asset: assets/fonts/HelveticaNeueMedium.ttf
+    - family: HelveticaNeueLight
+      fonts:
+        - asset: assets/fonts/HelveticaNeueLight.ttf
     - family: Roboto
       fonts:
         - asset: assets/fonts/Roboto-Regular.ttf
