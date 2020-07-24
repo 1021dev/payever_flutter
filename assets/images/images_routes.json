@@ -56,5 +56,26 @@
     "communications": "assets/images/communication-icon-filter.svg",
     "communication": "assets/images/communication-icon-filter.svg",
     "accounting": "assets/images/accounting-icon-filter.svg",
-    "all": "assets/images/all-icon-filter.svg"
+    "all": "assets/images/all-icon-filter.svg",
+
+    "payment-option-santander": "assets/images/payment-option-santander.svg",
+    "payment-option-payex": "assets/images/payexicon.svg",
+    "payment-option-paypall": "assets/images/paypalicon.svg",
+    "payment-option-stripe": "assets/images/stripeicon.svg",
+    "payment-option-stripe-direct-debit": "assets/images/stripeicon.svg",
+    "payment-option-sofort": "assets/images/soforticon.svg",
+    "payment-method-cash-2": "assets/images/wiretrasfer.svg",
+    "conn-api": "assets/images/conn-api.svg",
+    "prestashop-bw": "assets/images/prestashopicon.svg",
+    "xt-commerce-bw": "assets/images/xticon.svg",
+    "dan-domain-bw": "assets/images/dandomainicon.svg",
+    "plenty-markets-bw": "assets/images/plentymarketsicon.svg",
+    "woo-commerce-bw": "assets/images/wooicon.svg",
+    "products-ebay": "assets/images/ebay.svg",
+    "payment-method-amazon": "assets/images/amazon.svg",
+    "api": "assets/images/api.svg",
+    "shipping-dhl-32": "assets/images/dhl.svg",
+    "communications-device-payments-white": "assets/images/device.svg",
+    "communications-twillio": "assets/images/twilio.svg",
+    "communications-qr-white": "assets/images/qr-code.svg"
 }

@@ -574,10 +574,66 @@ class _ConnectScreenState extends State<ConnectScreen> {
         children: <Widget>[
           Container(
             height: 44,
+            padding: EdgeInsets.only(left: 24, right: 24),
             color: Color(0xff3f3f3f),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-
+                Flexible(
+                  flex: 3,
+                  child: Text(
+                    'App Name',
+                    style: TextStyle(
+                      color: Color.fromRGBO(255, 255, 255, 0.7),
+                      fontFamily: 'HelveticaNeue',
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+                Flexible(
+                  flex: 2,
+                  child: Text(
+                    'Category',
+                    style: TextStyle(
+                      color: Color.fromRGBO(255, 255, 255, 0.7),
+                      fontFamily: 'HelveticaNeue',
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+                Flexible(
+                  flex: 2,
+                  child: Text(
+                    'Developer',
+                    style: TextStyle(
+                      color: Color.fromRGBO(255, 255, 255, 0.7),
+                      fontFamily: 'HelveticaNeue',
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+                Flexible(
+                  flex: 2,
+                  child: Text(
+                    'Languages',
+                    style: TextStyle(
+                      color: Color.fromRGBO(255, 255, 255, 0.7),
+                      fontFamily: 'HelveticaNeue',
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+                Flexible(
+                  flex: 1,
+                  child: Text(
+                    'Price',
+                    style: TextStyle(
+                      color: Color.fromRGBO(255, 255, 255, 0.7),
+                      fontFamily: 'HelveticaNeue',
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
