@@ -478,7 +478,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
                   child: Container(
                     alignment: Alignment.center,
                     child: Text(
-                      itemsString,
+                      !_isTablet && _isPortrait ? '' : itemsString,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 16,
@@ -552,8 +552,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Flexible(
-                  flex: 3,
+                Expanded(
                   child: Text(
                     'App Name',
                     style: TextStyle(
@@ -563,8 +562,8 @@ class _ConnectScreenState extends State<ConnectScreen> {
                     ),
                   ),
                 ),
-                Flexible(
-                  flex: 2,
+                _isTablet || !_isPortrait ? Container(
+                  width: Measurements.width * (_isPortrait ? 0.1 : 0.2),
                   child: Text(
                     'Category',
                     style: TextStyle(
@@ -573,9 +572,9 @@ class _ConnectScreenState extends State<ConnectScreen> {
                       fontSize: 14,
                     ),
                   ),
-                ),
-                Flexible(
-                  flex: 2,
+                ): Container(),
+                _isTablet || !_isPortrait ? Container(
+                  width: Measurements.width * (_isPortrait ? 0.1 : 0.2),
                   child: Text(
                     'Developer',
                     style: TextStyle(
@@ -584,9 +583,9 @@ class _ConnectScreenState extends State<ConnectScreen> {
                       fontSize: 14,
                     ),
                   ),
-                ),
-                Flexible(
-                  flex: 2,
+                ): Container(),
+                _isTablet || !_isPortrait ? Container(
+                  width: Measurements.width * (_isPortrait ? 0.1 : 0.2),
                   child: Text(
                     'Languages',
                     style: TextStyle(
@@ -595,9 +594,10 @@ class _ConnectScreenState extends State<ConnectScreen> {
                       fontSize: 14,
                     ),
                   ),
-                ),
-                Flexible(
-                  flex: 1,
+                ): Container(),
+                Container(
+                  width: !_isTablet && _isPortrait ? null : Measurements.width * (_isTablet ? (_isPortrait ? 0.15 : 0.2) : (_isPortrait ? null: 0.35)),
+                  alignment: Alignment.centerRight,
                   child: Text(
                     'Price',
                     style: TextStyle(

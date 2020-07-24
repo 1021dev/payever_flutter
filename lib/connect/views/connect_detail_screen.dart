@@ -108,7 +108,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
             padding: EdgeInsets.only(left: 8),
           ),
           Text(
-            Language.getConnectStrings('layout.title'),
+            Language.getPosConnectStrings(widget.connectModel.integration.displayOptions.title),
             style: TextStyle(
               color: Colors.white,
               fontSize: 16,
@@ -765,6 +765,21 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
   }
 
   Widget _informations(ConnectScreenState state) {
-    return Container();
+    return Container(
+      padding: EdgeInsets.only(left: margin, right: margin),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          Text(
+            Language.getConnectStrings('Informations'),
+            style: TextStyle(
+              color: Color.fromRGBO(255, 255, 255, 0.95),
+              fontFamily: 'HelveticaNeueMed',
+              fontSize: 18,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

@@ -104,7 +104,7 @@ class _ConnectCategoriesScreenState extends State<ConnectCategoriesScreen> {
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.only(left: 24),
+                  padding: EdgeInsets.only(left: 24, bottom: 16),
                   child: Text(
                     'Category',
                     style: TextStyle(
@@ -114,48 +114,48 @@ class _ConnectCategoriesScreenState extends State<ConnectCategoriesScreen> {
                     ),
                   ),
                 ),
-                ListView.separated(
-                  padding: EdgeInsets.all(8),
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    String category = widget.screenBloc.state.categories[index];
-                    return GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          selectedCategory = category;
-                        });
-                      },
-                      child: Container(
-                        height: 44,
-                        padding: EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: selectedCategory == category ? Color(0x26FFFFFF): Colors.transparent,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Row(
-                          children: <Widget>[
-                            Container(
-                              child: SvgPicture.asset(
-                                Measurements.channelIcon(category),
-                                height: 32,
+                Expanded(
+                  child: ListView.separated(
+                    padding: EdgeInsets.all(8),
+                    itemBuilder: (context, index) {
+                      String category = widget.screenBloc.state.categories[index];
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            selectedCategory = category;
+                          });
+                        },
+                        child: Container(
+                          height: 44,
+                          padding: EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: selectedCategory == category ? Color(0x26FFFFFF): Colors.transparent,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Row(
+                            children: <Widget>[
+                              Container(
+                                child: SvgPicture.asset(
+                                  Measurements.channelIcon(category),
+                                  height: 32,
+                                ),
                               ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 8),
-                            ),
-                            Text(
-                              Language.getConnectStrings('categories.$category.title'),
-                            )
-                          ],
+                              Padding(
+                                padding: EdgeInsets.only(left: 8),
+                              ),
+                              Text(
+                                Language.getConnectStrings('categories.$category.title'),
+                              )
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                  separatorBuilder: (context, index) {
-                    return Container();
-                  },
-                  itemCount: widget.screenBloc.state.categories.length,
+                      );
+                    },
+                    separatorBuilder: (context, index) {
+                      return Container();
+                    },
+                    itemCount: widget.screenBloc.state.categories.length,
+                  ),
                 ),
               ],
             ),

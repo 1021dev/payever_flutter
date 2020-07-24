@@ -23,11 +23,12 @@ class ConnectListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double margin = isTablet ? 24: 16;
     String iconType = connectModel.integration.displayOptions.icon ?? '';
     iconType = iconType.replaceAll('#icon-', '');
     return Container(
       height: 66,
-      padding: EdgeInsets.only(left: 24, right: 24),
+      padding: EdgeInsets.only(left: margin, right: margin),
       child: Row(
         children: <Widget>[
           Expanded(
@@ -37,12 +38,14 @@ class ConnectListItem extends StatelessWidget {
                   padding: EdgeInsets.only(right: 16),
                   child: SvgPicture.asset(Measurements.channelIcon(iconType), width: 32, height: 32, color: Colors.white70,),
                 ),
-                Text(
-                  Language.getPosConnectStrings(connectModel.integration.displayOptions.title),
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontFamily: 'HelveticaNeueMed',
-                    fontSize: 14,
+                Expanded(
+                  child: Text(
+                    Language.getPosConnectStrings(connectModel.integration.displayOptions.title),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'HelveticaNeueMed',
+                      fontSize: 14,
+                    ),
                   ),
                 ),
               ],
@@ -51,7 +54,7 @@ class ConnectListItem extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(left: 6),
           ),
-          Container(
+          isTablet || !isPortrait ? Container(
             width: Measurements.width * (isPortrait ? 0.1 : 0.2),
             child: Text(
               Language.getConnectStrings('categories.${connectModel.integration.category}.title'),
@@ -61,11 +64,11 @@ class ConnectListItem extends StatelessWidget {
                 fontSize: 14,
               ),
             ),
-          ),
-          Padding(
+          ): Container(),
+          isTablet || !isPortrait ? Padding(
             padding: EdgeInsets.only(left: 6),
-          ),
-          Container(
+          ): Container(),
+          isTablet || !isPortrait ? Container(
             width: Measurements.width * (isPortrait ? 0.1 : 0.2),
             child: Text(
               Language.getPosConnectStrings(connectModel.integration.installationOptions.developer),
@@ -75,11 +78,11 @@ class ConnectListItem extends StatelessWidget {
                 fontSize: 14,
               ),
             ),
-          ),
-          Padding(
+          ): Container(),
+          isTablet || !isPortrait ? Padding(
             padding: EdgeInsets.only(left: 6),
-          ),
-          Container(
+          ): Container(),
+          isTablet || !isPortrait ? Container(
             width: Measurements.width * (isPortrait ? 0.1 : 0.2),
             child: Text(
               Language.getPosConnectStrings(connectModel.integration.installationOptions.languages),
@@ -89,86 +92,86 @@ class ConnectListItem extends StatelessWidget {
                 fontSize: 14,
               ),
             ),
-          ),
-          Padding(
+          ): Container(),
+          isTablet || !isPortrait ? Padding(
             padding: EdgeInsets.only(left: 6),
-          ),
+          ): Container(),
           Container(
-            width: Measurements.width * (isPortrait ? 0.15 : 0.2),
+            width: !isTablet && isPortrait ? null : Measurements.width * (isTablet ? (isPortrait ? 0.15 : 0.2) : (isPortrait ? null: 0.35)),
             child: connectModel.installed ? Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.all(0),
-                  child: MaterialButton(
-                    onPressed: onTap,
-                    color: Color.fromRGBO(255, 255, 255, 0.1),
-                    height: 26,
-                    minWidth: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(13),
-                    ),
-                    elevation: 0,
-                    focusElevation: 0,
-                    highlightElevation: 0,
-                    hoverElevation: 0,
-                    child: Text(
-                      Language.getPosConnectStrings('integrations.actions.open'),
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'HelveticaNeueMed',
-                        fontSize: 14,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.all(0),
+                    child: MaterialButton(
+                      onPressed: onTap,
+                      color: Color.fromRGBO(255, 255, 255, 0.1),
+                      height: 26,
+                      minWidth: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(13),
+                      ),
+                      elevation: 0,
+                      focusElevation: 0,
+                      highlightElevation: 0,
+                      hoverElevation: 0,
+                      child: Text(
+                        Language.getPosConnectStrings('integrations.actions.open'),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'HelveticaNeueMed',
+                          fontSize: 14,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Container(
-                  padding: EdgeInsets.all(0),
-                  child: MaterialButton(
-                    onPressed: () {
+                  Container(
+                      padding: EdgeInsets.all(0),
+                      child: MaterialButton(
+                        onPressed: () {
 
-                    },
-                    color: Color.fromRGBO(255, 255, 255, 0.1),
-                    height: 26,
-                    minWidth: 0,
-                    shape: CircleBorder(),
-                    elevation: 0,
-                    focusElevation: 0,
-                    highlightElevation: 0,
-                    hoverElevation: 0,
-                    child: Icon(Icons.more_horiz),
-                  ),
-                ),
-              ],
-            ) : Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.only(right: 16),
-                  child: MaterialButton(
-                    onPressed: onInstall,
-                    color: Color.fromRGBO(255, 255, 255, 0.1),
-                    height: 26,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(13),
+                        },
+                        color: Color.fromRGBO(255, 255, 255, 0.1),
+                        height: 26,
+                        minWidth: 0,
+                        shape: CircleBorder(),
+                        elevation: 0,
+                        focusElevation: 0,
+                        highlightElevation: 0,
+                        hoverElevation: 0,
+                        child: Icon(Icons.more_horiz),
+                      ),
                     ),
-                    minWidth: 0,
-                    elevation: 0,
-                    focusElevation: 0,
-                    highlightElevation: 0,
-                    hoverElevation: 0,
-                    child: Text(
-                      Language.getPosConnectStrings('integrations.actions.install'),
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'HelveticaNeueMed',
-                        fontSize: 14,
+                ],
+              ) : Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.only(right: margin / 2),
+                    child: MaterialButton(
+                      onPressed: onInstall,
+                      color: Color.fromRGBO(255, 255, 255, 0.1),
+                      height: 26,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(13),
+                      ),
+                      minWidth: 0,
+                      elevation: 0,
+                      focusElevation: 0,
+                      highlightElevation: 0,
+                      hoverElevation: 0,
+                      child: Text(
+                        Language.getPosConnectStrings('integrations.actions.install'),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'HelveticaNeueMed',
+                          fontSize: 14,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
           ),
         ],
       ),
