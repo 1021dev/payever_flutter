@@ -11,16 +11,17 @@ class BackgroundBase extends StatefulWidget {
   final AppBar appBar;
   final Key currentKey;
   final String wallPaper;
+  final Color backgroudColor;
 
-  BackgroundBase(this._isBlur,
-      {this.body,
-      this.endDrawer,
-      this.bottomNav,
-      this.appBar,
-      this.currentKey,
-      this.wallPaper,
-      }
-      );
+  BackgroundBase(this._isBlur, {
+    this.body,
+    this.endDrawer,
+    this.bottomNav,
+    this.appBar,
+    this.currentKey,
+    this.wallPaper,
+    this.backgroudColor,
+  });
 
   @override
   _BackgroundBaseState createState() => _BackgroundBaseState();
@@ -64,7 +65,7 @@ class _BackgroundBaseState extends State<BackgroundBase> {
               width: Measurements.width,
               child: Scaffold(
                 key: widget.currentKey,
-                backgroundColor: Colors.transparent,
+                backgroundColor: widget.backgroudColor != null ? widget.backgroudColor: Colors.transparent,
                 appBar: widget.appBar,
                 endDrawer: widget.endDrawer,
                 body: widget.body,

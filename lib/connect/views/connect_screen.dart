@@ -7,6 +7,7 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/screens/dashboard/sub_view/dashboard_menu_view.dart';
 import 'package:payever/connect/widgets/connect_grid_item.dart';
+import 'package:payever/connect/widgets/connect_list_item.dart';
 import 'package:payever/connect/widgets/connect_top_button.dart';
 import 'package:payever/notifications/notifications_screen.dart';
 import 'package:provider/provider.dart';
@@ -335,6 +336,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
       body: SafeArea(
         child: BackgroundBase(
           true,
+          backgroudColor: Color.fromRGBO(0, 0, 0, 0.75),
           body: state.isLoading ?
           Center(
             child: CircularProgressIndicator(),
@@ -382,6 +384,14 @@ class _ConnectScreenState extends State<ConnectScreen> {
   }
 
   Widget _topBar(ConnectScreenState state) {
+    String itemsString = '';
+    if (state.selectedCategory == 'all') {
+      itemsString = '${state.connectInstallations.length} ${Language.getWidgetStrings('widgets.store.product.items')} in ${state.categories.length}'
+          ' ${Language.getProductStrings('category.headings.categories').toLowerCase()}';
+    } else {
+      itemsString = '${state.connectInstallations.length} ${Language.getWidgetStrings('widgets.store.product.items')} in'
+          ' ${Language.getConnectStrings('categories.${state.selectedCategory}.title')}';
+    }
     return Container(
       height: 64,
       color: Color(0xFF212122),
@@ -495,7 +505,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
                   child: Container(
                     alignment: Alignment.center,
                     child: Text(
-                      '${state.connectInstallations.length} ${Language.getWidgetStrings('widgets.store.product.items')} in ${state.categories.length} ${Language.getProductStrings('category.headings.categories').toLowerCase()}',
+                      itemsString,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 16,
@@ -559,16 +569,56 @@ class _ConnectScreenState extends State<ConnectScreen> {
   }
 
   Widget _getListBody(ConnectScreenState state) {
-    return Container();
+    return Container(
+      child: Column(
+        children: <Widget>[
+          Container(
+            height: 44,
+            color: Color(0xff3f3f3f),
+            child: Row(
+              children: <Widget>[
+
+              ],
+            ),
+          ),
+          Expanded(
+            child: ListView.separated(
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                return ConnectListItem(
+                  connectModel: state.connectInstallations[index],
+                );
+              },
+              separatorBuilder: (context, index) {
+                return Divider(
+                  height: 0,
+                  thickness: 0.5,
+                  color: Color.fromRGBO(255, 255, 255, 0.2),
+                );
+              },
+              itemCount: state.connectInstallations.length,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _getGridBody(ConnectScreenState state) {
+    double imageRatio= 323.0 / 182.0;
+    double contentHeight = 116;
+    double cellWidth = _isPortrait ? (Measurements.width - 44) / 2 : (Measurements.height - 56) / 3;
+    double imageHeight = cellWidth / imageRatio;
+    double cellHeight = imageHeight + imageHeight;
+
     return Container(
       child: GridView.count(
-        crossAxisCount: 3,
-        padding: EdgeInsets.all(8),
+        crossAxisCount: _isPortrait ? 2 : 3,
+        padding: EdgeInsets.all(16),
         crossAxisSpacing: 12,
         mainAxisSpacing: 12,
+        shrinkWrap: true,
+        childAspectRatio: cellHeight / cellWidth,
         children: state.connectInstallations.map((installation) {
           return ConnectGridItem(
             connectModel: installation,
