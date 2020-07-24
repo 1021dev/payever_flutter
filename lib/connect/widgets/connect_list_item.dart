@@ -26,6 +26,8 @@ class ConnectListItem extends StatelessWidget {
     double margin = isTablet ? 24: 16;
     String iconType = connectModel.integration.displayOptions.icon ?? '';
     iconType = iconType.replaceAll('#icon-', '');
+    iconType = iconType.replaceAll('#', '');
+
     return Container(
       height: 66,
       padding: EdgeInsets.only(left: margin, right: margin),
@@ -36,7 +38,7 @@ class ConnectListItem extends StatelessWidget {
               children: <Widget>[
                 Padding(
                   padding: EdgeInsets.only(right: 16),
-                  child: SvgPicture.asset(Measurements.channelIcon(iconType), width: 32, height: 32, color: Colors.white70,),
+                  child: SvgPicture.asset(Measurements.channelIcon(iconType), width: 32, color: Colors.white70,),
                 ),
                 Expanded(
                   child: Text(

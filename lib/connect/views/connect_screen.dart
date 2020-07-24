@@ -659,6 +659,9 @@ class _ConnectScreenState extends State<ConnectScreen> {
     double imageHeight = cellWidth / imageRatio;
     double cellHeight = imageHeight + contentHeight;
     print('$cellWidth,  $cellHeight, $imageHeight  => ${cellHeight / cellWidth}');
+    if (state.connectInstallations.length == 0) {
+      return Container();
+    }
     return Container(
       child: GridView.count(
         crossAxisCount: crossAxisCount,

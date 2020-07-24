@@ -181,14 +181,15 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                                 physics: NeverScrollableScrollPhysics(),
                                 scrollDirection: Axis.horizontal,
                                 itemBuilder: (context, index) {
+                                  String iconType = widget.connects[index].integration.displayOptions.icon ?? '';
+                                  iconType = iconType.replaceAll('#icon-', '');
+                                  iconType = iconType.replaceAll('#', '');
+                                  print('$iconType');
                                   return Container(
                                     width: 35,
                                     height: 35,
                                     padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-                                    child: SvgPicture.asset(
-                                      Measurements.channelIcon(widget.connects[index].integration.name),
-                                      height: 16,
-                                    ),
+                                    child: SvgPicture.asset(Measurements.channelIcon(iconType), width: 16, height: 16, color: Colors.white70,)
                                   );
                                 },
                                 separatorBuilder: (context, index) {

@@ -20,7 +20,7 @@
     "advertising":          "assets/images/linkicon.svg",
     "offer":                "assets/images/linkicon.svg",
     "dandomain":            "assets/images/dandomainicon.svg",
-    "presta":               "assets/images/prestashopicon.svg",
+    "presta":               "assets/images/prestashop.svg",
     "xt_commerce":          "assets/images/xticon.svg",
     "overlay":              "assets/images/linkicon.svg",
     "link":                 "assets/images/linkicon.svg",
@@ -64,9 +64,9 @@
     "payment-option-stripe": "assets/images/stripeicon.svg",
     "payment-option-stripe-direct-debit": "assets/images/stripeicon.svg",
     "payment-option-sofort": "assets/images/soforticon.svg",
-    "payment-method-cash-2": "assets/images/wiretrasfer.svg",
+    "payment-method-cash-2": "assets/images/wiretransfer.svg",
     "conn-api": "assets/images/conn-api.svg",
-    "prestashop-bw": "assets/images/prestashopicon.svg",
+    "prestashop-bw": "assets/images/prestashop.svg",
     "xt-commerce-bw": "assets/images/xticon.svg",
     "dan-domain-bw": "assets/images/dandomainicon.svg",
     "plenty-markets-bw": "assets/images/plentymarketsicon.svg",
@@ -76,6 +76,7 @@
     "api": "assets/images/api.svg",
     "shipping-dhl-32": "assets/images/dhl.svg",
     "communications-device-payments-white": "assets/images/device.svg",
-    "communications-twillio": "assets/images/twilio.svg",
-    "communications-qr-white": "assets/images/qr-code.svg"
+    "communication-twillio": "assets/images/twilio.svg",
+    "communications-qr-white": "assets/images/qr-code.svg",
+    "subscriptions": "assets/images/subscriptions.svg"
 }
