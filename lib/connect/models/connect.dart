@@ -92,7 +92,7 @@ class ConnectDisplayOptions {
 
   ConnectDisplayOptions.toMap(dynamic obj) {
     icon = obj[GlobalUtils.DB_CONNECT_ICON];
-    title = obj[GlobalUtils.DB_CONNECT_ICON];
+    title = obj[GlobalUtils.DB_CONNECT_TITLE];
     _id = obj[GlobalUtils.DB_CONNECT_ID];
   }
 }

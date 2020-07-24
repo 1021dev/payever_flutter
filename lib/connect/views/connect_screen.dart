@@ -6,6 +6,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/screens/dashboard/sub_view/dashboard_menu_view.dart';
+import 'package:payever/connect/widgets/connect_grid_item.dart';
 import 'package:payever/connect/widgets/connect_top_button.dart';
 import 'package:payever/notifications/notifications_screen.dart';
 import 'package:provider/provider.dart';
@@ -415,6 +416,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
                   padding: EdgeInsets.all(8),
                   child: SvgPicture.asset(
                     'assets/images/filter.svg',
+                    color: Color(0xFF78787d),
                     width: 16,
                     height: 16,
                   ),
@@ -449,7 +451,11 @@ class _ConnectScreenState extends State<ConnectScreen> {
                   children: <Widget>[
                     Padding(
                       padding: EdgeInsets.only(left: 8, right: 8),
-                      child: SvgPicture.asset('assets/images/search_place_holder.svg', width: 16, height: 16,),
+                      child: SvgPicture.asset(
+                        'assets/images/search_place_holder.svg',
+                        width: 16,
+                        height: 16,
+                      ),
                     ),
                     Expanded(
                       child: TextField(
@@ -482,60 +488,64 @@ class _ConnectScreenState extends State<ConnectScreen> {
               ),
             ],
           ),
-          Row(
-            children: <Widget>[
-              Container(
-                alignment: Alignment.center,
-                child: Text(
-                  ' ${Language.getWidgetStrings('widgets.store.product.items')}',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+          Expanded(
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: Text(
+                      '${state.connectInstallations.length} ${Language.getWidgetStrings('widgets.store.product.items')} in ${state.categories.length} ${Language.getProductStrings('category.headings.categories').toLowerCase()}',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ),
-              ),
-              Container(
-                alignment: Alignment.centerRight,
-                child: PopupMenuButton<ConnectPopupButton>(
-                  child: Padding(
-                    padding: EdgeInsets.all(8),
-                    child: selectedStyle == 0 ? SvgPicture.asset('assets/images/list.svg'): SvgPicture.asset('assets/images/grid.svg'),
-                  ),
-                  offset: Offset(0, 100),
-                  onSelected: (ConnectPopupButton item) => item.onTap(),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  color: Colors.black87,
-                  itemBuilder: (BuildContext context) {
-                    return appBarPopUpActions(context, state)
-                        .map((ConnectPopupButton item) {
-                      return PopupMenuItem<ConnectPopupButton>(
-                        value: item,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Text(
-                              item.title,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400,
+                Container(
+                  alignment: Alignment.centerRight,
+                  child: PopupMenuButton<ConnectPopupButton>(
+                    child: Padding(
+                      padding: EdgeInsets.all(8),
+                      child: selectedStyle == 0 ? SvgPicture.asset('assets/images/list.svg'): SvgPicture.asset('assets/images/grid.svg'),
+                    ),
+                    offset: Offset(0, 100),
+                    onSelected: (ConnectPopupButton item) => item.onTap(),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    color: Colors.black87,
+                    itemBuilder: (BuildContext context) {
+                      return appBarPopUpActions(context, state)
+                          .map((ConnectPopupButton item) {
+                        return PopupMenuItem<ConnectPopupButton>(
+                          value: item,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(
+                                item.title,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                ),
                               ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.all(8),
-                              child: item.icon,
-                            ),
-                          ],
-                        ),
-                      );
-                    }).toList();
-                  },
+                              Padding(
+                                padding: EdgeInsets.all(8),
+                                child: item.icon,
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList();
+                    },
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),
@@ -543,7 +553,35 @@ class _ConnectScreenState extends State<ConnectScreen> {
   }
 
   Widget _getBody(ConnectScreenState state) {
+    return selectedStyle == 0
+        ? _getListBody(state)
+        : _getGridBody(state);
+  }
+
+  Widget _getListBody(ConnectScreenState state) {
     return Container();
+  }
+
+  Widget _getGridBody(ConnectScreenState state) {
+    return Container(
+      child: GridView.count(
+        crossAxisCount: 3,
+        padding: EdgeInsets.all(8),
+        crossAxisSpacing: 12,
+        mainAxisSpacing: 12,
+        children: state.connectInstallations.map((installation) {
+          return ConnectGridItem(
+            connectModel: installation,
+            onTap: () {
+
+            },
+            onInstall: () {
+
+            },
+          );
+        }).toList(),
+      ),
+    );
   }
 
 

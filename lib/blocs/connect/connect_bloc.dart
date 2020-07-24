@@ -82,11 +82,20 @@ class ConnectScreenBloc extends Bloc<ConnectScreenEvent, ConnectScreenState> {
   Stream<ConnectScreenState> selectCategory(String category) async* {
     yield state.copyWith(selectedCategory: category, isLoading: true);
     List<ConnectModel> connectInstallations = [];
-    dynamic categoryResponse = await api.getConnectIntegrationByCategory(token, state.business, category);
-    if (categoryResponse is List) {
-      categoryResponse.forEach((element) {
-        connectInstallations.add(ConnectModel.toMap(element));
-      });
+    if (category == 'all') {
+      dynamic connectsResponse = await api.getConnectionIntegrations(token, state.business);
+      if (connectsResponse is List) {
+        connectsResponse.forEach((element) {
+          connectInstallations.add(ConnectModel.toMap(element));
+        });
+      }
+    } else {
+      dynamic categoryResponse = await api.getConnectIntegrationByCategory(token, state.business, category);
+      if (categoryResponse is List) {
+        categoryResponse.forEach((element) {
+          connectInstallations.add(ConnectModel.toMap(element));
+        });
+      }
     }
 
     yield state.copyWith(isLoading: false, connectInstallations: connectInstallations);

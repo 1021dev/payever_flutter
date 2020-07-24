@@ -95,10 +95,26 @@ flutter:
     - assets/translations/pos/front_end/
     - assets/translations/pos/tpm/
     - assets/translations/welcome/
-#    fonts:
-#      - family: Helvetica Neue
-#        fonts:
-#          - asset: assets/fonts/HelveticaNeue.ttf
-#          - asset: assets/fonts/HelveticaNeueMed.ttf
-#            style: HelveticaNeue.ttf
-
+  fonts:
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/Roboto-Regular.ttf
+    - family: Roboto-Bold
+      fonts:
+        - asset: assets/fonts/Roboto-Bold.ttf
+    - family: Roboto-Italic
+      fonts:
+        - asset: assets/fonts/Roboto-Italic.ttf
+    - family: Roboto-Black
+      fonts:
+        - asset: assets/fonts/Roboto-Black.ttf
+          weight: 500
+    - family: Roboto-Light
+      fonts:
+        - asset: assets/fonts/Roboto-Light.ttf
+    - family: Roboto-Medium
+      fonts:
+        - asset: assets/fonts/Roboto-Medium.ttf
+    - family: Roboto-Thin
+      fonts:
+        - asset: assets/fonts/Roboto-Thin.ttf
