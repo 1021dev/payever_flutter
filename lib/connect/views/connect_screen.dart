@@ -618,10 +618,13 @@ class _ConnectScreenState extends State<ConnectScreen> {
                   connectModel: state.connectInstallations[index],
                   isPortrait: _isPortrait,
                   isTablet: _isTablet,
-                  onInstall: () {
+                  onInstall: (model) {
 
                   },
-                  onTap: () {
+                  onUninstall: (model) {
+
+                  },
+                  onTap: (model) {
                     Navigator.push(
                       context,
                       PageTransition(

@@ -12,7 +12,9 @@ import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/views/screens/login/login_page.dart';
 import 'package:payever/connect/models/connect.dart';
+import 'package:payever/connect/views/connect_category_more_connections.dart';
 import 'package:payever/connect/widgets/connect_item_image_view.dart';
+import 'package:payever/connect/widgets/connect_top_button.dart';
 
 class ConnectDetailScreen extends StatefulWidget {
   final ConnectModel connectModel;
@@ -37,6 +39,15 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
   final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
   double iconSize;
   double margin;
+  List<ConnectPopupButton> uninstallPopUp(BuildContext context, ConnectScreenState state) {
+    return [
+      ConnectPopupButton(
+        title: Language.getConnectStrings('actions.uninstall'),
+        onTap: () async {
+        },
+      ),
+    ];
+  }
 
   @override
   void initState() {
@@ -252,19 +263,42 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                                   ),
                                   Container(
                                     padding: EdgeInsets.all(0),
-                                    child: MaterialButton(
-                                      onPressed: () {
-
+                                    child: PopupMenuButton<ConnectPopupButton>(
+                                      child: Padding(
+                                        padding: EdgeInsets.all(8),
+                                        child: SvgPicture.asset('assets/images/more.svg'),
+                                      ),
+                                      offset: Offset(0, 100),
+                                      onSelected: (ConnectPopupButton item) => item.onTap(),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      color: Colors.black87,
+                                      itemBuilder: (BuildContext context) {
+                                        return uninstallPopUp(context, state)
+                                            .map((ConnectPopupButton item) {
+                                          return PopupMenuItem<ConnectPopupButton>(
+                                            value: item,
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: <Widget>[
+                                                Text(
+                                                  item.title,
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsets.all(8),
+                                                  child: item.icon,
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        }).toList();
                                       },
-                                      color: Color.fromRGBO(255, 255, 255, 0.1),
-                                      height: 26,
-                                      minWidth: 0,
-                                      shape: CircleBorder(),
-                                      elevation: 0,
-                                      focusElevation: 0,
-                                      highlightElevation: 0,
-                                      hoverElevation: 0,
-                                      child: Icon(Icons.more_horiz),
                                     ),
                                   ),
                                 ],
@@ -336,19 +370,42 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                               ),
                               Container(
                                 padding: EdgeInsets.all(0),
-                                child: MaterialButton(
-                                  onPressed: () {
-
+                                child: PopupMenuButton<ConnectPopupButton>(
+                                  child: Padding(
+                                    padding: EdgeInsets.all(8),
+                                    child: SvgPicture.asset('assets/images/more.svg'),
+                                  ),
+                                  offset: Offset(0, 100),
+                                  onSelected: (ConnectPopupButton item) => item.onTap(),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  color: Colors.black87,
+                                  itemBuilder: (BuildContext context) {
+                                    return uninstallPopUp(context, state)
+                                        .map((ConnectPopupButton item) {
+                                      return PopupMenuItem<ConnectPopupButton>(
+                                        value: item,
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: <Widget>[
+                                            Text(
+                                              item.title,
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.all(8),
+                                              child: item.icon,
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    }).toList();
                                   },
-                                  color: Color.fromRGBO(255, 255, 255, 0.1),
-                                  height: 26,
-                                  minWidth: 0,
-                                  shape: CircleBorder(),
-                                  elevation: 0,
-                                  focusElevation: 0,
-                                  highlightElevation: 0,
-                                  hoverElevation: 0,
-                                  child: Icon(Icons.more_horiz),
                                 ),
                               ),
                             ],
@@ -812,6 +869,22 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
     if (widget.connectModel.integration.installationOptions.languages != null) {
       informations.add(InformationData(title: 'Languages' , detail: Language.getPosConnectStrings(widget.connectModel.integration.installationOptions.languages)));
     }
+    int count = 1;
+    if (_isTablet) {
+      if (_isPortrait) {
+        count = 3;
+      } else {
+        count = 4;
+      }
+    } else {
+      if (_isPortrait) {
+        count = 2;
+      } else {
+        count = 3;
+      }
+    }
+    double width = (Measurements.width - margin * 2) / count - (count - 1) * margin / 2;
+    double ratio = width / (min(Measurements.width, Measurements.height) * 0.2);
     return Container(
       padding: EdgeInsets.only(left: margin, right: margin),
       child: Column(
@@ -833,8 +906,8 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
               physics: NeverScrollableScrollPhysics(),
               mainAxisSpacing: margin,
               shrinkWrap: true,
-              childAspectRatio: (Measurements.width - margin * 2) / (_isTablet ? 3 : 2) / 60,
-              crossAxisCount: _isTablet ? 3 : 2,
+              childAspectRatio: 4,
+              crossAxisCount: count,
               children: informations.map((info) {
                 return Container(
                   height: 60,
@@ -1046,6 +1119,12 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
     }
     double width = (Measurements.width - margin * 2) / count - (count - 1) * margin / 2;
     double ratio = width / (min(Measurements.width, Measurements.height) * 0.2);
+    int length = 6;
+    if (_isTablet) {
+      length = 6;
+    } else {
+      length = 4;
+    }
     return Container(
       padding: EdgeInsets.only(left: margin, right: margin),
       child: Column(
@@ -1062,9 +1141,20 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                   fontFamily: 'HelveticaNeueMed',
                   fontSize: 18,
                 ),
-              ),   GestureDetector(
+              ),
+              state.categoryConnections.length > length ? GestureDetector(
                 onTap: () {
-
+                  Navigator.push(
+                    context,
+                    PageTransition(
+                      child: ConnectCategoryMoreScreen(
+                        screenBloc: widget.screenBloc,
+                        connections: state.categoryConnections,
+                      ),
+                      type: PageTransitionType.fade,
+                      duration: Duration(milliseconds: 500),
+                    ),
+                  );
                 },
                 child: Text(
                   Language.getConnectStrings('See All'),
@@ -1074,13 +1164,13 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                     fontSize: 14,
                   ),
                 ),
-              ),
+              ): Container(),
             ],
           ),
           Padding(
             padding: EdgeInsets.only(top: margin / 2),
           ),
-          Flexible(
+          state.categoryConnections.length > 0 ? Flexible(
             fit: FlexFit.loose,
             child: GridView.count(
               shrinkWrap: true,
@@ -1225,9 +1315,9 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                     ],
                   ),
                 );
-              }).toList(),
+              }).toList().sublist(0, state.categoryConnections.length > length ? length: state.categoryConnections.length),
             ),
-          ),
+          ): Container(),
         ],
       ),
     );

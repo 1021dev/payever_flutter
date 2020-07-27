@@ -6,10 +6,13 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/connect/models/connect.dart';
 import 'package:payever/connect/widgets/connect_item_image_view.dart';
 
+import 'connect_top_button.dart';
+
 class ConnectListItem extends StatelessWidget {
   final ConnectModel connectModel;
   final Function onTap;
   final Function onInstall;
+  final Function onUninstall;
   final bool isPortrait;
   final bool isTablet;
 
@@ -17,9 +20,21 @@ class ConnectListItem extends StatelessWidget {
     this.connectModel,
     this.onTap,
     this.onInstall,
+    this.onUninstall,
     this.isTablet = false,
     this.isPortrait = true,
   });
+
+  List<ConnectPopupButton> uninstallPopUp(BuildContext context) {
+    return [
+      ConnectPopupButton(
+        title: Language.getConnectStrings('actions.uninstall'),
+        onTap: () {
+          onUninstall(connectModel);
+        },
+      ),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +121,9 @@ class ConnectListItem extends StatelessWidget {
                   Container(
                     padding: EdgeInsets.all(0),
                     child: MaterialButton(
-                      onPressed: onTap,
+                      onPressed: () {
+                        onTap(connectModel);
+                      },
                       color: Color.fromRGBO(255, 255, 255, 0.1),
                       height: 26,
                       minWidth: 0,
@@ -128,22 +145,45 @@ class ConnectListItem extends StatelessWidget {
                     ),
                   ),
                   Container(
-                      padding: EdgeInsets.all(0),
-                      child: MaterialButton(
-                        onPressed: () {
-
-                        },
-                        color: Color.fromRGBO(255, 255, 255, 0.1),
-                        height: 26,
-                        minWidth: 0,
-                        shape: CircleBorder(),
-                        elevation: 0,
-                        focusElevation: 0,
-                        highlightElevation: 0,
-                        hoverElevation: 0,
-                        child: Icon(Icons.more_horiz),
+                    padding: EdgeInsets.all(0),
+                    child: PopupMenuButton<ConnectPopupButton>(
+                      child: Padding(
+                        padding: EdgeInsets.all(8),
+                        child: SvgPicture.asset('assets/images/more.svg'),
                       ),
+                      offset: Offset(0, 100),
+                      onSelected: (ConnectPopupButton item) => item.onTap(),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      color: Colors.black87,
+                      itemBuilder: (BuildContext context) {
+                        return uninstallPopUp(context)
+                            .map((ConnectPopupButton item) {
+                          return PopupMenuItem<ConnectPopupButton>(
+                            value: item,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text(
+                                  item.title,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.all(8),
+                                  child: item.icon,
+                                ),
+                              ],
+                            ),
+                          );
+                        }).toList();
+                      },
                     ),
+                  ),
                 ],
               ) : Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -151,7 +191,9 @@ class ConnectListItem extends StatelessWidget {
                   Container(
                     padding: EdgeInsets.only(right: margin / 2),
                     child: MaterialButton(
-                      onPressed: onInstall,
+                      onPressed: () {
+                        onInstall(connectModel);
+                      },
                       color: Color.fromRGBO(255, 255, 255, 0.1),
                       height: 26,
                       shape: RoundedRectangleBorder(

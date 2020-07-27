@@ -104,7 +104,7 @@ class ConnectScreenBloc extends Bloc<ConnectScreenEvent, ConnectScreenState> {
   }
 
   Stream<ConnectScreenState> getCategoryDetails(ConnectModel model) async* {
-    yield state.copyWith(isLoading: true);
+    yield state.copyWith(isLoading: true, categoryConnections: []);
     List<ConnectModel> connectInstallations = [];
     dynamic categoryResponse = await api.getConnectIntegrationByCategory(token, state.business, model.integration.category);
     if (categoryResponse is List) {
