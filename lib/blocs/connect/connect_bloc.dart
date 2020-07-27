@@ -24,7 +24,13 @@ class ConnectScreenBloc extends Bloc<ConnectScreenEvent, ConnectScreenState> {
     } else if (event is ConnectCategorySelected) {
       yield* selectCategory(event.category);
     } else if (event is ConnectDetailEvent) {
+      yield state.copyWith(editConnect: event.model.integration);
       yield* getCategoryDetails(event.model);
+      yield* getConnectDetail(event.model.integration.name);
+    } else if (event is EditConnectEvent) {
+
+    } else if (event is AddReviewEvent) {
+      yield* addReview(event.title, event.text, event.rate);
     }
   }
 
@@ -104,7 +110,7 @@ class ConnectScreenBloc extends Bloc<ConnectScreenEvent, ConnectScreenState> {
   }
 
   Stream<ConnectScreenState> getCategoryDetails(ConnectModel model) async* {
-    yield state.copyWith(isLoading: true, categoryConnections: []);
+    yield state.copyWith(categoryConnections: []);
     List<ConnectModel> connectInstallations = [];
     dynamic categoryResponse = await api.getConnectIntegrationByCategory(token, state.business, model.integration.category);
     if (categoryResponse is List) {
@@ -116,6 +122,24 @@ class ConnectScreenBloc extends Bloc<ConnectScreenEvent, ConnectScreenState> {
       });
     }
 
-    yield state.copyWith(isLoading: false, categoryConnections: connectInstallations);
+    yield state.copyWith(categoryConnections: connectInstallations);
+  }
+
+  Stream<ConnectScreenState> addReview(String title, String text, num rate) async* {
+    if (title != null) {
+      dynamic response = await api.patchConnectRating(token, state.editConnect.name, rate);
+    } else {
+      dynamic response = await api.patchConnectWriteReview(token, state.editConnect.name, title, text, rate);
+    }
+    yield state.copyWith(isReview: true);
+    getConnectDetail(state.editConnect.name);
+    yield state.copyWith(isReview: false);
+  }
+
+  Stream<ConnectScreenState> getConnectDetail(String name) async* {
+    yield state.copyWith(isLoading: true);
+    dynamic response = await api.getConnectDetail(token, name);
+    ConnectIntegration model = ConnectIntegration.toMap(response);
+    yield state.copyWith(isLoading: false, editConnect: model);
   }
 }

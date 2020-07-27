@@ -879,6 +879,65 @@ class ApiService {
     }
   }
 
+  Future<dynamic> patchConnectRating(String token, String name, num rate) async {
+    try {
+      print('$TAG - patchConnectReview()');
+      dynamic response = await _client.patchTypeless(
+          '${Env.connect}/api/integration/$name/rate',
+          body: {
+            'rating': rate,
+          },
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> patchConnectWriteReview(String token, String name, String title, String text, num rate) async {
+    try {
+      print('$TAG - patchConnectReview()');
+      dynamic response = await _client.patchTypeless(
+          '${Env.connect}/api/integration/$name/add-review',
+          body: {
+            'rating': rate,
+            'title': title,
+            'text': text,
+          },
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getConnectDetail(String token, String name) async {
+    try {
+      print('$TAG - getConnectDetail()');
+      dynamic response = await _client.getTypeless(
+          '${Env.connect}/api/integration/$name',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<dynamic> getPaymentOptions(String token) async {
     try {
       print('$TAG - getPaymentOptions()');

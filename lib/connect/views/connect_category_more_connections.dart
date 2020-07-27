@@ -282,6 +282,9 @@ class _ConnectCategoryMoreScreenState extends State<ConnectCategoryMoreScreen> {
                   onUninstall: (model) {
 
                   },
+                  onOpen: (model) {
+
+                  },
                   onTap: (model) {
                     Navigator.push(
                       context,

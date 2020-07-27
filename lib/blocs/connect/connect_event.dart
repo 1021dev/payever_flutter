@@ -47,3 +47,35 @@ class ConnectDetailEvent extends ConnectScreenEvent {
     this.model,
   ];
 }
+
+class EditConnectEvent extends ConnectScreenEvent {
+  final ConnectModel model;
+
+  EditConnectEvent({
+    this.model,
+  });
+
+  @override
+  List<Object> get props => [
+    this.model,
+  ];
+}
+
+class AddReviewEvent extends ConnectScreenEvent {
+  final String title;
+  final String text;
+  final num rate;
+
+  AddReviewEvent({
+    this.title,
+    this.text,
+    this.rate,
+  });
+
+  @override
+  List<Object> get props => [
+    this.title,
+    this.text,
+    this.rate,
+  ];
+}

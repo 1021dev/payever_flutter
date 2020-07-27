@@ -156,11 +156,11 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
   }
 
   Widget _getBody(ConnectScreenState state) {
-    String iconType = widget.connectModel.integration.displayOptions.icon ?? '';
+    String iconType = state.editConnect.displayOptions.icon ?? '';
     iconType = iconType.replaceAll('#icon-', '');
     iconType = iconType.replaceAll('#', '');
-    String imageUrl = widget.connectModel.integration.installationOptions.links.length > 0
-        ? widget.connectModel.integration.installationOptions.links.first.url ?? '': '';
+    String imageUrl = state.editConnect.installationOptions.links.length > 0
+        ? state.editConnect.installationOptions.links.first.url ?? '': '';
 
     iconSize = _isTablet ? 120: 80;
     margin = _isTablet ? 24: 16;
@@ -198,7 +198,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                                   Flexible(
                                     fit: FlexFit.loose,
                                     child: Text(
-                                      Language.getPosConnectStrings(widget.connectModel.integration.displayOptions.title),
+                                      Language.getPosConnectStrings(state.editConnect.displayOptions.title),
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontFamily: 'HelveticaNeueMed',
@@ -209,7 +209,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                                   Flexible(
                                     fit: FlexFit.loose,
                                     child: Text(
-                                      Language.getPosConnectStrings(widget.connectModel.integration.installationOptions.price),
+                                      Language.getPosConnectStrings(state.editConnect.installationOptions.price),
                                       style: TextStyle(
                                         color: Color.fromRGBO(255, 255, 255, 0.6),
                                         fontFamily: 'HelveticaNeueLight',
@@ -220,7 +220,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                                   Flexible(
                                     fit: FlexFit.loose,
                                     child: Text(
-                                      Language.getPosConnectStrings(widget.connectModel.integration.installationOptions.developer),
+                                      Language.getPosConnectStrings(state.editConnect.installationOptions.developer),
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontFamily: 'HelveticaNeue',
@@ -449,14 +449,14 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            widget.connectModel.integration.reviews.length > 0 ? Column(
+                            state.editConnect.reviews.length > 0 ? Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Row(
                                   children: <Widget>[
                                     Text(
-                                      '${widget.connectModel.integration.reviews.length}',
+                                      '${state.editConnect.reviews.length}',
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontFamily: 'HelveticaNeueMed',
@@ -533,7 +533,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Text(
-                                  '${widget.connectModel.integration.timesInstalled ?? 0}',
+                                  '${state.editConnect.timesInstalled ?? 0}',
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontFamily: 'HelveticaNeueMed',
@@ -564,7 +564,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                               padding: EdgeInsets.only(top: 8),
                             ),
                             Text(
-                              '${widget.connectModel.integration.timesInstalled ?? 0}',
+                              '${state.editConnect.timesInstalled ?? 0}',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontFamily: 'HelveticaNeueMed',
@@ -601,7 +601,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                 children: <Widget>[
                   Expanded(
                     child: Text(
-                      Language.getPosConnectStrings(widget.connectModel.integration.installationOptions.description),
+                      Language.getPosConnectStrings(state.editConnect.installationOptions.description),
                       style: TextStyle(
                         color: Colors.white,
                         fontFamily: 'HelveticaNeue',
@@ -615,7 +615,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                   Column(
                     children: <Widget>[
                       Text(
-                        Language.getPosConnectStrings(widget.connectModel.integration.installationOptions.developer),
+                        Language.getPosConnectStrings(state.editConnect.installationOptions.developer),
                         style: TextStyle(
                           color: Colors.white,
                           fontFamily: 'HelveticaNeue',
@@ -734,7 +734,35 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
   }
 
   Widget _ratingView(ConnectScreenState state) {
-    return Container(
+    double rate = 0;
+    List<ReviewModel> reviews = state.editConnect.reviews;
+    if (reviews.length > 0) {
+      double sum = 0;
+      reviews.forEach((element) {
+        sum = sum + element.rating;
+      });
+      rate = sum / reviews.length;
+    }
+    int count = 1;
+    if (_isTablet) {
+      if (_isPortrait) {
+        count = 2;
+      } else {
+        count = 3;
+      }
+    } else {
+      if (_isPortrait) {
+        count = 1;
+      } else {
+        count = 2;
+      }
+    }
+    int length = 2;
+    if (_isTablet) {
+      length = count;
+    } else {
+      length = 2;
+    }   return Container(
       padding: EdgeInsets.only(left: margin, right: margin),
       child: Column(
         children: <Widget>[
@@ -770,11 +798,11 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Row(
+              rate > 0 ? Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
                   Text(
-                    '4,5',
+                    '$rate',
                     style: TextStyle(
                       color: Color.fromRGBO(255, 255, 255, 0.95),
                       fontFamily: 'HelveticaNeueMed',
@@ -793,12 +821,12 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                     ),
                   ),
                 ],
-              ),
+              ): Container(),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
                   Text(
-                    '63 Ratings',
+                    '${reviews.length} Ratings',
                     style: TextStyle(
                       color: Color.fromRGBO(255, 255, 255, 0.95),
                       fontFamily: 'HelveticaNeue',
@@ -811,6 +839,17 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                 ],
               ),
             ],
+          ),
+          Flexible(
+            fit: FlexFit.loose,
+            child: GridView.count(
+              crossAxisCount: count,
+              childAspectRatio: 3,
+              children: reviews.map((review) {
+                return Container(
+                );
+              }).toList().sublist(0, reviews.length > length ? length: reviews.length),
+            ),
           ),
         ],
       ),
@@ -870,14 +909,14 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
   Widget _informations(ConnectScreenState state) {
     List<InformationData> informations = [];
 
-    if (widget.connectModel.integration.installationOptions.developer != null) {
-      informations.add(InformationData(title: 'Provider', detail: Language.getPosConnectStrings(widget.connectModel.integration.installationOptions.developer)));
+    if (state.editConnect.installationOptions.developer != null) {
+      informations.add(InformationData(title: 'Provider', detail: Language.getPosConnectStrings(state.editConnect.installationOptions.developer)));
     }
-    if (widget.connectModel.integration.installationOptions.category != null) {
-      informations.add(InformationData(title: 'Category' , detail: Language.getConnectStrings('categories.${widget.connectModel.integration.category}.title')));
+    if (state.editConnect.installationOptions.category != null) {
+      informations.add(InformationData(title: 'Category' , detail: Language.getConnectStrings('categories.${state.editConnect.category}.title')));
     }
-    if (widget.connectModel.integration.installationOptions.languages != null) {
-      informations.add(InformationData(title: 'Languages' , detail: Language.getPosConnectStrings(widget.connectModel.integration.installationOptions.languages)));
+    if (state.editConnect.installationOptions.languages != null) {
+      informations.add(InformationData(title: 'Languages' , detail: Language.getPosConnectStrings(state.editConnect.installationOptions.languages)));
     }
     int count = 1;
     if (_isTablet) {
@@ -893,8 +932,8 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
         count = 3;
       }
     }
-    double width = (Measurements.width - margin * 2) / count - (count - 1) * margin / 2;
-    double ratio = width / (min(Measurements.width, Measurements.height) * 0.2);
+//    double width = (Measurements.width - margin * 2) / count - (count - 1) * margin / 2;
+//    double ratio = width / (min(Measurements.width, Measurements.height) * 0.2);2
     return Container(
       padding: EdgeInsets.only(left: margin, right: margin),
       child: Column(
@@ -1127,8 +1166,8 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
         count = 2;
       }
     }
-    double width = (Measurements.width - margin * 2) / count - (count - 1) * margin / 2;
-    double ratio = width / (min(Measurements.width, Measurements.height) * 0.2);
+//    double width = (Measurements.width - margin * 2) / count - (count - 1) * margin / 2;
+//    double ratio = width / (min(Measurements.width, Measurements.height) * 0.2);
     int length = 6;
     if (_isTablet) {
       length = 6;
