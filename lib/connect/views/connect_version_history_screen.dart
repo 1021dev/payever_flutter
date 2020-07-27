@@ -18,7 +18,7 @@ import 'package:payever/connect/widgets/connect_top_button.dart';
 
 class ConnectVersionHistoryScreen extends StatefulWidget {
   final ConnectModel connectModel;
-  final ConnectScreenBloc screenBloc;
+  final ConnectDetailScreenBloc screenBloc;
 
   ConnectVersionHistoryScreen({
     this.connectModel,
@@ -63,7 +63,7 @@ class _ConnectVersionHistoryScreenState extends State<ConnectVersionHistoryScree
 
     return BlocListener(
       bloc: widget.screenBloc,
-      listener: (BuildContext context, ConnectScreenState state) async {
+      listener: (BuildContext context, ConnectDetailScreenState state) async {
         if (state is ConnectScreenStateFailure) {
           Navigator.pushReplacement(
             context,
@@ -74,9 +74,9 @@ class _ConnectVersionHistoryScreenState extends State<ConnectVersionHistoryScree
           );
         }
       },
-      child: BlocBuilder<ConnectScreenBloc, ConnectScreenState>(
+      child: BlocBuilder<ConnectDetailScreenBloc, ConnectDetailScreenState>(
         bloc: widget.screenBloc,
-        builder: (BuildContext context, ConnectScreenState state) {
+        builder: (BuildContext context, ConnectDetailScreenState state) {
           return Scaffold(
             backgroundColor: Colors.black,
             resizeToAvoidBottomPadding: false,
@@ -99,7 +99,7 @@ class _ConnectVersionHistoryScreenState extends State<ConnectVersionHistoryScree
     );
   }
 
-  Widget _appBar(ConnectScreenState state) {
+  Widget _appBar(ConnectDetailScreenState state) {
     return AppBar(
       centerTitle: false,
       elevation: 0,
@@ -144,7 +144,7 @@ class _ConnectVersionHistoryScreenState extends State<ConnectVersionHistoryScree
     );
   }
 
-  Widget _getBody(ConnectScreenState state) {
+  Widget _getBody(ConnectDetailScreenState state) {
     String iconType = widget.connectModel.integration.displayOptions.icon ?? '';
     iconType = iconType.replaceAll('#icon-', '');
     iconType = iconType.replaceAll('#', '');

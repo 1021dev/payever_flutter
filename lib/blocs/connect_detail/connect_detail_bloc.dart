@@ -20,7 +20,7 @@ class ConnectDetailScreenBloc extends Bloc<ConnectDetailScreenEvent, ConnectDeta
   Stream<ConnectDetailScreenState> mapEventToState(ConnectDetailScreenEvent event) async* {
     if (event is ConnectDetailScreenInitEvent) {
       yield state.copyWith(business: event.business, editConnect: event.connectModel.integration);
-      yield* getConnectDetail(event.business);
+      yield* getConnectDetail(event.connectModel.integration.name);
     } else if (event is AddReviewEvent) {
       yield* addReview(event.title, event.text, event.rate);
     }
@@ -58,6 +58,6 @@ class ConnectDetailScreenBloc extends Bloc<ConnectDetailScreenEvent, ConnectDeta
     dynamic response = await api.getConnectDetail(token, name);
     ConnectIntegration model = ConnectIntegration.toMap(response);
     yield state.copyWith(isLoading: false, editConnect: model);
-    getCategoryDetails(state.editConnect);
+    yield* getCategoryDetails(state.editConnect);
   }
 }

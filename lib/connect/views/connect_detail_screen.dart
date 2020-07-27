@@ -163,6 +163,9 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
   }
 
   Widget _getBody(ConnectDetailScreenState state) {
+    if (state.editConnect == null) {
+      return Container();
+    }
     String iconType = state.editConnect.displayOptions.icon ?? '';
     iconType = iconType.replaceAll('#icon-', '');
     iconType = iconType.replaceAll('#', '');
@@ -755,7 +758,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                   fontSize: 18,
                 ),
               ),
-              GestureDetector(
+              reviews.length > 0 ? GestureDetector(
                 onTap: () {
                   Navigator.push(
                     context,
@@ -777,7 +780,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                     fontSize: 14,
                   ),
                 ),
-              ),
+              ): Container(),
             ],
           ),
           Padding(
@@ -869,7 +872,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text(
-                                review.title,
+                                review.title ?? '',
                                 style: TextStyle(
                                   color: Color.fromRGBO(255, 255, 255, 0.95),
                                   fontSize: 14,
@@ -886,7 +889,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: <Widget>[
                               Text(
-                                review.reviewDate,
+                                review.reviewDate ?? '',
                                 style: TextStyle(
                                   color: Color.fromRGBO(255, 255, 255, 0.95).withOpacity(0.6),
                                   fontSize: 14,
@@ -897,7 +900,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                                 padding: EdgeInsets.only(top: margin / 4),
                               ),
                               Text(
-                                review.userFullName,
+                                review.userFullName ?? '',
                                 style: TextStyle(
                                   color: Color.fromRGBO(255, 255, 255, 0.95).withOpacity(0.6),
                                   fontSize: 14,
@@ -912,7 +915,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                         padding: EdgeInsets.only(top: margin / 2),
                       ),
                       Text(
-                        review.text,
+                        review.text ?? '',
                         style: TextStyle(
                           color: Color.fromRGBO(255, 255, 255, 0.95),
                           fontSize: 14,
@@ -948,6 +951,9 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
   }
 
   Widget _allRateView(ConnectDetailScreenState state) {
+    if (state.editConnect.reviews.length == 0) {
+      return Container();
+    }
     double width = Measurements.width;
     if (!_isTablet) {
       width = Measurements.width - margin * 6;
@@ -1032,7 +1038,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                     context,
                     PageTransition(
                       child: ConnectVersionHistoryScreen(
-                        screenBloc: widget.screenBloc,
+                        screenBloc: screenBloc,
                         connectModel: widget.connectModel,
                       ),
                       type: PageTransitionType.fade,
@@ -1144,6 +1150,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
     return Container(
       padding: EdgeInsets.only(left: margin, right: margin),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Flexible(
             child: Column(
