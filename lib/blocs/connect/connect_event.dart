@@ -1,5 +1,6 @@
 
 import 'package:equatable/equatable.dart';
+import 'package:payever/connect/models/connect.dart';
 
 abstract class ConnectScreenEvent extends Equatable {
   ConnectScreenEvent();
@@ -35,14 +36,14 @@ class ConnectCategorySelected extends ConnectScreenEvent {
 }
 
 class ConnectDetailEvent extends ConnectScreenEvent {
-  final String category;
+  final ConnectModel model;
 
   ConnectDetailEvent({
-    this.category,
+    this.model,
   });
 
   @override
   List<Object> get props => [
-    this.category,
+    this.model,
   ];
 }

@@ -7,14 +7,14 @@ class ConnectModel {
   String updatedAt;
   ConnectIntegration integration;
   num __v;
-  String _id;
+  String id;
 
   ConnectModel.toMap(dynamic obj) {
     createdAt = obj[GlobalUtils.DB_CONNECT_CREATED_AT];
     installed = obj[GlobalUtils.DB_CONNECT_INSTALLED];
     updatedAt = obj[GlobalUtils.DB_CONNECT_UPDATED_AT];
     __v = obj[GlobalUtils.DB_CONNECT_V];
-    _id = obj[GlobalUtils.DB_CONNECT_ID];
+    id = obj[GlobalUtils.DB_CONNECT_ID];
     dynamic integrationObj = obj[GlobalUtils.DB_CONNECT_INTEGRATION];
     if (integrationObj != null) {
       integration = ConnectIntegration.toMap(integrationObj);
@@ -36,7 +36,7 @@ class ConnectIntegration {
   num timesInstalled;
   String updatedAt;
   List<dynamic> versions = [];
-  String _id;
+  String id;
   ConnectIntegration.toMap(dynamic obj) {
     createdAt = obj[GlobalUtils.DB_CONNECT_CREATED_AT];
     updatedAt = obj[GlobalUtils.DB_CONNECT_UPDATED_AT];
@@ -45,7 +45,7 @@ class ConnectIntegration {
     name = obj[GlobalUtils.DB_CONNECT_NAME];
     order = obj[GlobalUtils.DB_CONNECT_ORDER];
     timesInstalled = obj[GlobalUtils.DB_CONNECT_TIMES_INSTALLED];
-    _id = obj[GlobalUtils.DB_CONNECT_ID];
+    id = obj[GlobalUtils.DB_CONNECT_ID];
 
     List<dynamic> allowedBusinessesObj = obj[GlobalUtils.DB_CONNECT_ALLOWED_BUSINESSES];
     if (allowedBusinessesObj != null) {
@@ -88,12 +88,12 @@ class ConnectIntegration {
 class ConnectDisplayOptions {
   String icon;
   String title;
-  String _id;
+  String id;
 
   ConnectDisplayOptions.toMap(dynamic obj) {
     icon = obj[GlobalUtils.DB_CONNECT_ICON];
     title = obj[GlobalUtils.DB_CONNECT_TITLE];
-    _id = obj[GlobalUtils.DB_CONNECT_ID];
+    id = obj[GlobalUtils.DB_CONNECT_ID];
   }
 }
 
@@ -109,10 +109,10 @@ class ConnectInstallationOptions {
   String price;
   String pricingLink;
   String website;
-  String _id;
+  String id;
 
   ConnectInstallationOptions.toMap(dynamic obj) {
-    _id = obj[GlobalUtils.DB_CONNECT_ID];
+    id = obj[GlobalUtils.DB_CONNECT_ID];
     appSupport = obj[GlobalUtils.DB_CONNECT_APP_SUPPORT];
     category = obj[GlobalUtils.DB_CONNECT_CATEGORY];
     description = obj[GlobalUtils.DB_CONNECT_DESCRIPTION];
@@ -163,10 +163,10 @@ class ReviewModel {
 class LinkModel {
   String type;
   String url;
-  String _id;
+  String id;
 
   LinkModel.toMap(dynamic obj) {
-    _id = obj[GlobalUtils.DB_CONNECT_ID];
+    id = obj[GlobalUtils.DB_CONNECT_ID];
     type = obj[GlobalUtils.DB_CONNECT_TYPE];
     url = obj[GlobalUtils.DB_CONNECT_URL];
   }

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -38,7 +40,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
 
   @override
   void initState() {
-    widget.screenBloc.add(ConnectDetailEvent(category: widget.connectModel.integration.category));
+    widget.screenBloc.add(ConnectDetailEvent(model: widget.connectModel));
     super.initState();
   }
 
@@ -144,6 +146,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
   Widget _getBody(ConnectScreenState state) {
     String iconType = widget.connectModel.integration.displayOptions.icon ?? '';
     iconType = iconType.replaceAll('#icon-', '');
+    iconType = iconType.replaceAll('#', '');
     String imageUrl = widget.connectModel.integration.installationOptions.links.length > 0
         ? widget.connectModel.integration.installationOptions.links.first.url ?? '': '';
 
@@ -1027,22 +1030,203 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
   }
 
   Widget _morePayever(ConnectScreenState state) {
+    int count = 1;
+    if (_isTablet) {
+      if (_isPortrait) {
+        count = 2;
+      } else {
+        count = 3;
+      }
+    } else {
+      if (_isPortrait) {
+        count = 1;
+      } else {
+        count = 2;
+      }
+    }
+    double width = (Measurements.width - margin * 2) / count - (count - 1) * margin / 2;
+    double ratio = width / (min(Measurements.width, Measurements.height) * 0.2);
     return Container(
       padding: EdgeInsets.only(left: margin, right: margin),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          Text(
-            Language.getConnectStrings('More by payever'),
-            style: TextStyle(
-              color: Color.fromRGBO(255, 255, 255, 0.95),
-              fontFamily: 'HelveticaNeueMed',
-              fontSize: 18,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                Language.getConnectStrings('More by payever'),
+                style: TextStyle(
+                  color: Color.fromRGBO(255, 255, 255, 0.95),
+                  fontFamily: 'HelveticaNeueMed',
+                  fontSize: 18,
+                ),
+              ),   GestureDetector(
+                onTap: () {
+
+                },
+                child: Text(
+                  Language.getConnectStrings('See All'),
+                  style: TextStyle(
+                    color: Color.fromRGBO(255, 255, 255, 0.95),
+                    fontFamily: 'Helvetica Neue',
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+            ],
           ),
           Padding(
             padding: EdgeInsets.only(top: margin / 2),
+          ),
+          Flexible(
+            fit: FlexFit.loose,
+            child: GridView.count(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              crossAxisCount: count,
+              childAspectRatio: 3,
+              mainAxisSpacing: margin / 2,
+              crossAxisSpacing: margin / 2,
+              children: state.categoryConnections.map((connect) {
+                String iconType = connect.integration.displayOptions.icon ?? '';
+                iconType = iconType.replaceAll('#icon-', '');
+                iconType = iconType.replaceAll('#', '');
+                return Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(right: margin),
+                        child: SvgPicture.asset(
+                          Measurements.channelIcon(iconType),
+                          width: iconSize,
+                          height: iconSize,
+                          color: Color.fromRGBO(255, 255, 255, 0.75),
+                        ),
+                      ),
+                      Flexible(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: <Widget>[
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Text(
+                                  Language.getPosConnectStrings(connect.integration.displayOptions.title),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: 'HelveticaNeueMed',
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                Text(
+                                  Language.getConnectStrings('categories.${connect.integration.category}.title'),
+                                  style: TextStyle(
+                                    color: Color.fromRGBO(255, 255, 255, 0.6),
+                                    fontFamily: 'Helvetica Neue',
+                                    fontSize: 12,
+                                  ),
+                                ),
+                                Container(
+                                  child: connect.installed ? Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: <Widget>[
+                                      Container(
+                                        padding: EdgeInsets.all(0),
+                                        child: MaterialButton(
+                                          onPressed: () {
+
+                                          },
+                                          color: Color.fromRGBO(255, 255, 255, 0.1),
+                                          height: 26,
+                                          minWidth: 0,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(13),
+                                          ),
+                                          elevation: 0,
+                                          focusElevation: 0,
+                                          highlightElevation: 0,
+                                          hoverElevation: 0,
+                                          child: Text(
+                                            Language.getPosConnectStrings('integrations.actions.open'),
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontFamily: 'HelveticaNeueMed',
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        padding: EdgeInsets.all(0),
+                                        child: MaterialButton(
+                                          onPressed: () {
+
+                                          },
+                                          color: Color.fromRGBO(255, 255, 255, 0.1),
+                                          height: 26,
+                                          minWidth: 0,
+                                          shape: CircleBorder(),
+                                          elevation: 0,
+                                          focusElevation: 0,
+                                          highlightElevation: 0,
+                                          hoverElevation: 0,
+                                          child: Icon(Icons.more_horiz),
+                                        ),
+                                      ),
+                                    ],
+                                  ) : Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: <Widget>[
+                                      Container(
+                                        padding: EdgeInsets.only(right: 16),
+                                        child: MaterialButton(
+                                          onPressed: () {
+
+                                          },
+                                          color: Color.fromRGBO(255, 255, 255, 0.1),
+                                          height: 26,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(13),
+                                          ),
+                                          minWidth: 0,
+                                          elevation: 0,
+                                          focusElevation: 0,
+                                          highlightElevation: 0,
+                                          hoverElevation: 0,
+                                          child: Text(
+                                            Language.getPosConnectStrings('integrations.actions.install'),
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontFamily: 'HelveticaNeueMed',
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Divider(
+                                  height: margin,
+                                  thickness: 0.5,
+                                  color: Color.fromRGBO(255, 255, 255, 0.1),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }).toList(),
+            ),
           ),
         ],
       ),

@@ -24,7 +24,7 @@ class ConnectScreenBloc extends Bloc<ConnectScreenEvent, ConnectScreenState> {
     } else if (event is ConnectCategorySelected) {
       yield* selectCategory(event.category);
     } else if (event is ConnectDetailEvent) {
-      yield* getCategoryDetails(event.category);
+      yield* getCategoryDetails(event.model);
     }
   }
 
@@ -103,23 +103,17 @@ class ConnectScreenBloc extends Bloc<ConnectScreenEvent, ConnectScreenState> {
     yield state.copyWith(isLoading: false, connectInstallations: connectInstallations);
   }
 
-  Stream<ConnectScreenState> getCategoryDetails(String category) async* {
+  Stream<ConnectScreenState> getCategoryDetails(ConnectModel model) async* {
     yield state.copyWith(isLoading: true);
     List<ConnectModel> connectInstallations = [];
-    if (category == 'all') {
-      dynamic connectsResponse = await api.getConnectionIntegrations(token, state.business);
-      if (connectsResponse is List) {
-        connectsResponse.forEach((element) {
-          connectInstallations.add(ConnectModel.toMap(element));
-        });
-      }
-    } else {
-      dynamic categoryResponse = await api.getConnectIntegrationByCategory(token, state.business, category);
-      if (categoryResponse is List) {
-        categoryResponse.forEach((element) {
-          connectInstallations.add(ConnectModel.toMap(element));
-        });
-      }
+    dynamic categoryResponse = await api.getConnectIntegrationByCategory(token, state.business, model.integration.category);
+    if (categoryResponse is List) {
+      categoryResponse.forEach((element) {
+        ConnectModel cm = ConnectModel.toMap(element);
+        if (cm.id != model.id) {
+          connectInstallations.add(cm);
+        }
+      });
     }
 
     yield state.copyWith(isLoading: false, categoryConnections: connectInstallations);
