@@ -765,7 +765,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                     PageTransition(
                       child: ConnectReviewsScreen(
                         screenBloc: screenBloc,
-                        connectModel: widget.connectModel,
+                        connectModel: widget.connectModel.integration,
                       ),
                       type: PageTransitionType.fade,
                       duration: Duration(milliseconds: 500),

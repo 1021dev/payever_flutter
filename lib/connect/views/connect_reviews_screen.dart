@@ -14,13 +14,15 @@ import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/views/screens/login/login_page.dart';
 import 'package:payever/connect/models/connect.dart';
+import 'package:payever/connect/views/connect_add_reviews_screen.dart';
 import 'package:payever/connect/views/connect_category_more_connections.dart';
 import 'package:payever/connect/views/connect_version_history_screen.dart';
 import 'package:payever/connect/widgets/connect_item_image_view.dart';
 import 'package:payever/connect/widgets/connect_top_button.dart';
+import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 class ConnectReviewsScreen extends StatefulWidget {
-  final ConnectModel connectModel;
+  final ConnectIntegration connectModel;
   final ConnectDetailScreenBloc screenBloc;
 
   ConnectReviewsScreen({
@@ -54,7 +56,6 @@ class _ConnectReviewsScreenState extends State<ConnectReviewsScreen> {
 
   @override
   void initState() {
-    widget.screenBloc.add(ConnectDetailEvent(model: widget.connectModel));
     super.initState();
   }
 
@@ -124,7 +125,7 @@ class _ConnectReviewsScreenState extends State<ConnectReviewsScreen> {
             padding: EdgeInsets.only(left: 8),
           ),
           Text(
-            Language.getPosConnectStrings(widget.connectModel.integration.displayOptions.title),
+            Language.getPosConnectStrings(widget.connectModel.displayOptions.title),
             style: TextStyle(
               color: Colors.white,
               fontSize: 16,
@@ -316,10 +317,20 @@ class _ConnectReviewsScreenState extends State<ConnectReviewsScreen> {
               ),
               GestureDetector(
                 onTap: () {
-
+                  Navigator.push(
+                    context,
+                    PageTransition(
+                      child: ConnectAddReviewsScreen(
+                        screenBloc: widget.screenBloc,
+                        connectIntegration: widget.connectModel,
+                      ),
+                      type: PageTransitionType.fade,
+                      duration: Duration(milliseconds: 500),
+                    ),
+                  );
                 },
                 child: Text(
-                  Language.getConnectStrings('See All'),
+                  Language.getConnectStrings('Write Review'),
                   style: TextStyle(
                     color: Color.fromRGBO(255, 255, 255, 0.95),
                     fontFamily: 'Helvetica Neue',
@@ -482,16 +493,16 @@ class _ConnectReviewsScreenState extends State<ConnectReviewsScreen> {
   Widget _rateView(num rate) {
     return Container(
       child: Row(
-        children: List.generate(5, (index) {
-          return Container(
-            child: SvgPicture.asset(
-              index < rate ? 'assets/images/star_fill.svg'
-                  : 'assets/images/star_outline.svg',
-              width: 14,
-              height: 14,
-            ),
-          );
-        }).toList()
+          children: List.generate(5, (index) {
+            return Container(
+              child: SvgPicture.asset(
+                index < rate ? 'assets/images/star_fill.svg'
+                    : 'assets/images/star_outline.svg',
+                width: 14,
+                height: 14,
+              ),
+            );
+          }).toList()
       ),
     );
   }

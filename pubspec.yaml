@@ -51,14 +51,15 @@ dependencies:
   date_format: ^1.0.8
   flutter_inappwebview: ^4.0.0+4
   loading_more_list: 3.0.0
-  pull_to_refresh: ^1.6.0
+  pull_to_refresh: ^1.6.1
   dropdown_formfield: 0.1.2
   image_cropper: ^1.2.3
   flutter_reorderable_list: ^0.1.4
   flutter_tagging: ^2.2.0+3
   flutter_colorpicker: ^0.3.4
-  fluttertoast: ^7.0.1
-
+  fluttertoast: ^7.0.1+1
+  flutter_rating_bar: ^3.0.1+1
+  smooth_star_rating: ^1.1.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
