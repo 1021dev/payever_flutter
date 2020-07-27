@@ -5,6 +5,7 @@ import 'package:payever/apis/baseClient.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/env.dart';
+import 'package:payever/connect/models/connect.dart';
 import 'package:payever/shop/models/models.dart';
 
 class ApiService {
@@ -900,6 +901,42 @@ class ApiService {
       print('$TAG - getPaymentOptions()');
       dynamic response = await _client.getTypeless(
           '${Env.checkout}/api/rest/v3/business-payment-option/$business/variants',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> installConnect(String token, String business, String name) async {
+    try {
+      print('$TAG - installConnect()');
+      dynamic response = await _client.patchTypeless(
+          '${Env.connect}/api/business/$business/integration/$name/install',
+          body: {},
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> unInstallConnect(String token, String business, String name) async {
+    try {
+      print('$TAG - installConnect()');
+      dynamic response = await _client.patchTypeless(
+          '${Env.connect}/api/business/$business/integration/$name/uninstall',
+          body: {},
           headers: {
             HttpHeaders.authorizationHeader: 'Bearer $token',
             HttpHeaders.contentTypeHeader: 'application/json',

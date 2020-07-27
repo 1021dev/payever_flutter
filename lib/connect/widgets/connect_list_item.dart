@@ -11,6 +11,7 @@ import 'connect_top_button.dart';
 class ConnectListItem extends StatelessWidget {
   final ConnectModel connectModel;
   final Function onTap;
+  final Function onOpen;
   final Function onInstall;
   final Function onUninstall;
   final bool isPortrait;
@@ -19,6 +20,7 @@ class ConnectListItem extends StatelessWidget {
   ConnectListItem({
     this.connectModel,
     this.onTap,
+    this.onOpen,
     this.onInstall,
     this.onUninstall,
     this.isTablet = false,
@@ -43,86 +45,90 @@ class ConnectListItem extends StatelessWidget {
     iconType = iconType.replaceAll('#icon-', '');
     iconType = iconType.replaceAll('#', '');
 
-    return Container(
-      height: 66,
-      padding: EdgeInsets.only(left: margin, right: margin),
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            child: Row(
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(right: 16),
-                  child: SvgPicture.asset(Measurements.channelIcon(iconType), width: 32, color: Colors.white70,),
-                ),
-                Expanded(
-                  child: Text(
-                    Language.getPosConnectStrings(connectModel.integration.displayOptions.title),
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'HelveticaNeueMed',
-                      fontSize: 14,
+    return GestureDetector(
+      onTap: () {
+        onTap(connectModel);
+      },
+      child: Container(
+        height: 66,
+        padding: EdgeInsets.only(left: margin, right: margin),
+        child: Row(
+          children: <Widget>[
+            Expanded(
+              child: Row(
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(right: 16),
+                    child: SvgPicture.asset(Measurements.channelIcon(iconType), width: 32, color: Colors.white70,),
+                  ),
+                  Expanded(
+                    child: Text(
+                      Language.getPosConnectStrings(connectModel.integration.displayOptions.title),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'HelveticaNeueMed',
+                        fontSize: 14,
+                      ),
                     ),
                   ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 6),
+            ),
+            isTablet || !isPortrait ? Container(
+              width: Measurements.width * (isPortrait ? 0.1 : 0.2),
+              child: Text(
+                Language.getConnectStrings('categories.${connectModel.integration.category}.title'),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontFamily: 'HelveticaNeueMed',
+                  fontSize: 14,
                 ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 6),
-          ),
-          isTablet || !isPortrait ? Container(
-            width: Measurements.width * (isPortrait ? 0.1 : 0.2),
-            child: Text(
-              Language.getConnectStrings('categories.${connectModel.integration.category}.title'),
-              style: TextStyle(
-                color: Colors.white,
-                fontFamily: 'HelveticaNeueMed',
-                fontSize: 14,
               ),
-            ),
-          ): Container(),
-          isTablet || !isPortrait ? Padding(
-            padding: EdgeInsets.only(left: 6),
-          ): Container(),
-          isTablet || !isPortrait ? Container(
-            width: Measurements.width * (isPortrait ? 0.1 : 0.2),
-            child: Text(
-              Language.getPosConnectStrings(connectModel.integration.installationOptions.developer),
-              style: TextStyle(
-                color: Colors.white,
-                fontFamily: 'HelveticaNeueMed',
-                fontSize: 14,
+            ): Container(),
+            isTablet || !isPortrait ? Padding(
+              padding: EdgeInsets.only(left: 6),
+            ): Container(),
+            isTablet || !isPortrait ? Container(
+              width: Measurements.width * (isPortrait ? 0.1 : 0.2),
+              child: Text(
+                Language.getPosConnectStrings(connectModel.integration.installationOptions.developer),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontFamily: 'HelveticaNeueMed',
+                  fontSize: 14,
+                ),
               ),
-            ),
-          ): Container(),
-          isTablet || !isPortrait ? Padding(
-            padding: EdgeInsets.only(left: 6),
-          ): Container(),
-          isTablet || !isPortrait ? Container(
-            width: Measurements.width * (isPortrait ? 0.1 : 0.2),
-            child: Text(
-              Language.getPosConnectStrings(connectModel.integration.installationOptions.languages),
-              style: TextStyle(
-                color: Colors.white,
-                fontFamily: 'HelveticaNeueMed',
-                fontSize: 14,
+            ): Container(),
+            isTablet || !isPortrait ? Padding(
+              padding: EdgeInsets.only(left: 6),
+            ): Container(),
+            isTablet || !isPortrait ? Container(
+              width: Measurements.width * (isPortrait ? 0.1 : 0.2),
+              child: Text(
+                Language.getPosConnectStrings(connectModel.integration.installationOptions.languages),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontFamily: 'HelveticaNeueMed',
+                  fontSize: 14,
+                ),
               ),
-            ),
-          ): Container(),
-          isTablet || !isPortrait ? Padding(
-            padding: EdgeInsets.only(left: 6),
-          ): Container(),
-          Container(
-            width: !isTablet && isPortrait ? null : Measurements.width * (isTablet ? (isPortrait ? 0.15 : 0.2) : (isPortrait ? null: 0.35)),
-            child: connectModel.installed ? Row(
+            ): Container(),
+            isTablet || !isPortrait ? Padding(
+              padding: EdgeInsets.only(left: 6),
+            ): Container(),
+            Container(
+              width: !isTablet && isPortrait ? null : Measurements.width * (isTablet ? (isPortrait ? 0.15 : 0.2) : (isPortrait ? null: 0.35)),
+              child: connectModel.installed ? Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   Container(
                     padding: EdgeInsets.all(0),
                     child: MaterialButton(
                       onPressed: () {
-                        onTap(connectModel);
+                        onOpen(connectModel);
                       },
                       color: Color.fromRGBO(255, 255, 255, 0.1),
                       height: 26,
@@ -216,8 +222,9 @@ class ConnectListItem extends StatelessWidget {
                   ),
                 ],
               ),
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }

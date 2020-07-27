@@ -13,6 +13,7 @@ import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/views/screens/login/login_page.dart';
 import 'package:payever/connect/models/connect.dart';
 import 'package:payever/connect/views/connect_category_more_connections.dart';
+import 'package:payever/connect/views/connect_version_history_screen.dart';
 import 'package:payever/connect/widgets/connect_item_image_view.dart';
 import 'package:payever/connect/widgets/connect_top_button.dart';
 
@@ -177,7 +178,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                     child: SvgPicture.asset(
                       Measurements.channelIcon(iconType),
                       width: iconSize,
-                      height: iconSize,
                       color: Color.fromRGBO(255, 255, 255, 0.75),
                     ),
                   ),
@@ -839,7 +839,17 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
             children: <Widget>[
               GestureDetector(
                 onTap: () {
-
+                  Navigator.push(
+                    context,
+                    PageTransition(
+                      child: ConnectVersionHistoryScreen(
+                        screenBloc: widget.screenBloc,
+                        connectModel: widget.connectModel,
+                      ),
+                      type: PageTransitionType.fade,
+                      duration: Duration(milliseconds: 500),
+                    ),
+                  );
                 },
                 child: Text(
                   Language.getConnectStrings('Version History'),
@@ -1193,7 +1203,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                         child: SvgPicture.asset(
                           Measurements.channelIcon(iconType),
                           width: iconSize,
-                          height: iconSize,
                           color: Color.fromRGBO(255, 255, 255, 0.75),
                         ),
                       ),
