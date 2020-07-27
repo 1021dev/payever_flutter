@@ -8,12 +8,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
+import 'package:payever/blocs/connect_detail/connect_detail.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/views/screens/login/login_page.dart';
 import 'package:payever/connect/models/connect.dart';
 import 'package:payever/connect/views/connect_category_more_connections.dart';
+import 'package:payever/connect/views/connect_reviews_screen.dart';
 import 'package:payever/connect/views/connect_version_history_screen.dart';
 import 'package:payever/connect/widgets/connect_item_image_view.dart';
 import 'package:payever/connect/widgets/connect_top_button.dart';
@@ -41,7 +43,9 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
   final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
   double iconSize;
   double margin;
-  List<ConnectPopupButton> uninstallPopUp(BuildContext context, ConnectScreenState state) {
+
+  ConnectDetailScreenBloc screenBloc;
+  List<ConnectPopupButton> uninstallPopUp(BuildContext context, ConnectDetailScreenState state) {
     return [
       ConnectPopupButton(
         title: Language.getConnectStrings('actions.uninstall'),
@@ -53,12 +57,14 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
 
   @override
   void initState() {
-    widget.screenBloc.add(ConnectDetailEvent(model: widget.connectModel));
+    screenBloc = ConnectDetailScreenBloc(connectScreenBloc: widget.screenBloc);
+    screenBloc.add(ConnectDetailScreenInitEvent(business: widget.screenBloc.state.business, connectModel: widget.connectModel,));
     super.initState();
   }
 
   @override
   void dispose() {
+    screenBloc.close();
     super.dispose();
   }
 
@@ -74,9 +80,9 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
     _isTablet = Measurements.width < 600 ? false : true;
 
     return BlocListener(
-      bloc: widget.screenBloc,
-      listener: (BuildContext context, ConnectScreenState state) async {
-        if (state is ConnectScreenStateFailure) {
+      bloc: screenBloc,
+      listener: (BuildContext context, ConnectDetailScreenState state) async {
+        if (state is ConnectDetailScreenStateFailure) {
           Navigator.pushReplacement(
             context,
             PageTransition(
@@ -86,9 +92,9 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
           );
         }
       },
-      child: BlocBuilder<ConnectScreenBloc, ConnectScreenState>(
-        bloc: widget.screenBloc,
-        builder: (BuildContext context, ConnectScreenState state) {
+      child: BlocBuilder<ConnectDetailScreenBloc, ConnectDetailScreenState>(
+        bloc: screenBloc,
+        builder: (BuildContext context, ConnectDetailScreenState state) {
           return Scaffold(
             backgroundColor: Colors.black,
             resizeToAvoidBottomPadding: false,
@@ -111,7 +117,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
     );
   }
 
-  Widget _appBar(ConnectScreenState state) {
+  Widget _appBar(ConnectDetailScreenState state) {
     return AppBar(
       centerTitle: false,
       elevation: 0,
@@ -156,7 +162,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
     );
   }
 
-  Widget _getBody(ConnectScreenState state) {
+  Widget _getBody(ConnectDetailScreenState state) {
     String iconType = state.editConnect.displayOptions.icon ?? '';
     iconType = iconType.replaceAll('#icon-', '');
     iconType = iconType.replaceAll('#', '');
@@ -701,7 +707,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
     );
   }
 
-  Widget _ratingView(ConnectScreenState state) {
+  Widget _ratingView(ConnectDetailScreenState state) {
     double rate = 0;
     List<ReviewModel> reviews = state.editConnect.reviews;
     if (reviews.length > 0) {
@@ -751,7 +757,17 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
               ),
               GestureDetector(
                 onTap: () {
-
+                  Navigator.push(
+                    context,
+                    PageTransition(
+                      child: ConnectReviewsScreen(
+                        screenBloc: screenBloc,
+                        connectModel: widget.connectModel,
+                      ),
+                      type: PageTransitionType.fade,
+                      duration: Duration(milliseconds: 500),
+                    ),
+                  );
                 },
                 child: Text(
                   Language.getConnectStrings('See All'),
@@ -767,6 +783,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
           Padding(
             padding: EdgeInsets.only(top: margin / 2),
           ),
+          reviews.length > 0 ?
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
@@ -813,6 +830,15 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                 ],
               ),
             ],
+          ): Container(
+            child: Text(
+              'No rating',
+              style: TextStyle(
+                color: Color.fromRGBO(255, 255, 255, 0.95),
+                fontSize: 14,
+                fontFamily: 'HelveticaNeueMed',
+              ),
+            ),
           ),
           !_isTablet && _isPortrait ? _allRateView(state): Container(),
           Flexible(
@@ -921,7 +947,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
     );
   }
 
-  Widget _allRateView(ConnectScreenState state) {
+  Widget _allRateView(ConnectDetailScreenState state) {
     double width = Measurements.width;
     if (!_isTablet) {
       width = Measurements.width - margin * 6;
@@ -980,7 +1006,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
     );
   }
 
-  Widget _versions(ConnectScreenState state) {
+  Widget _versions(ConnectDetailScreenState state) {
     return Container(
       padding: EdgeInsets.only(left: margin, right: margin),
       child: Row(
@@ -1030,7 +1056,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
     );
   }
 
-  Widget _informations(ConnectScreenState state) {
+  Widget _informations(ConnectDetailScreenState state) {
     List<InformationData> informations = [];
 
     if (state.editConnect.installationOptions.developer != null) {
@@ -1114,7 +1140,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
     );
   }
 
-  Widget _information2(ConnectScreenState state) {
+  Widget _information2(ConnectDetailScreenState state) {
     return Container(
       padding: EdgeInsets.only(left: margin, right: margin),
       child: Row(
@@ -1217,7 +1243,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
     );
   }
 
-  Widget _supported(ConnectScreenState state) {
+  Widget _supported(ConnectDetailScreenState state) {
     return Container(
       padding: EdgeInsets.only(left: margin, right: margin),
       child: Column(
@@ -1273,7 +1299,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
     );
   }
 
-  Widget _morePayever(ConnectScreenState state) {
+  Widget _morePayever(ConnectDetailScreenState state) {
     int count = 1;
     if (_isTablet) {
       if (_isPortrait) {
@@ -1313,14 +1339,14 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                   fontSize: 18,
                 ),
               ),
-              state.categoryConnections.length > length ? GestureDetector(
+              state.categoryConnects.length > length ? GestureDetector(
                 onTap: () {
                   Navigator.push(
                     context,
                     PageTransition(
                       child: ConnectCategoryMoreScreen(
                         screenBloc: widget.screenBloc,
-                        connections: state.categoryConnections,
+                        connections: state.categoryConnects,
                       ),
                       type: PageTransitionType.fade,
                       duration: Duration(milliseconds: 500),
@@ -1341,7 +1367,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
           Padding(
             padding: EdgeInsets.only(top: margin / 2),
           ),
-          state.categoryConnections.length > 0 ? Flexible(
+          state.categoryConnects.length > 0 ? Flexible(
             fit: FlexFit.loose,
             child: GridView.count(
               shrinkWrap: true,
@@ -1350,7 +1376,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
               childAspectRatio: 3,
               mainAxisSpacing: margin / 2,
               crossAxisSpacing: margin / 2,
-              children: state.categoryConnections.map((connect) {
+              children: state.categoryConnects.map((connect) {
                 String iconType = connect.integration.displayOptions.icon ?? '';
                 iconType = iconType.replaceAll('#icon-', '');
                 iconType = iconType.replaceAll('#', '');
@@ -1485,7 +1511,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                     ],
                   ),
                 );
-              }).toList().sublist(0, state.categoryConnections.length > length ? length: state.categoryConnections.length),
+              }).toList().sublist(0, state.categoryConnects.length > length ? length: state.categoryConnects.length),
             ),
           ): Container(),
         ],

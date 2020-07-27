@@ -9,7 +9,9 @@ import 'connect.dart';
 
 class ConnectScreenBloc extends Bloc<ConnectScreenEvent, ConnectScreenState> {
   final DashboardScreenBloc dashboardScreenBloc;
+
   ConnectScreenBloc({this.dashboardScreenBloc});
+
   ApiService api = ApiService();
   String token = GlobalUtils.activeToken.accessToken;
 
@@ -23,14 +25,6 @@ class ConnectScreenBloc extends Bloc<ConnectScreenEvent, ConnectScreenState> {
       yield* fetchConnectInstallations(event.business);
     } else if (event is ConnectCategorySelected) {
       yield* selectCategory(event.category);
-    } else if (event is ConnectDetailEvent) {
-      yield state.copyWith(editConnect: event.model.integration);
-      yield* getCategoryDetails(event.model);
-      yield* getConnectDetail(event.model.integration.name);
-    } else if (event is EditConnectEvent) {
-
-    } else if (event is AddReviewEvent) {
-      yield* addReview(event.title, event.text, event.rate);
     }
   }
 
@@ -42,7 +36,8 @@ class ConnectScreenBloc extends Bloc<ConnectScreenEvent, ConnectScreenState> {
     List<Payment> paymentOptions = [];
     Map<String, PaymentVariant> paymentVariants = {};
 
-    dynamic connectsResponse = await api.getConnectionIntegrations(token, business);
+    dynamic connectsResponse = await api.getConnectionIntegrations(
+        token, business);
     if (connectsResponse is List) {
       connectsResponse.forEach((element) {
         connectInstallations.add(ConnectModel.toMap(element));
@@ -65,7 +60,8 @@ class ConnectScreenBloc extends Bloc<ConnectScreenEvent, ConnectScreenState> {
       });
     }
 
-    dynamic paymentVariantsResponse = await api.getPaymentVariants(token, business);
+    dynamic paymentVariantsResponse = await api.getPaymentVariants(
+        token, business);
     if (paymentVariantsResponse is Map) {
       paymentVariantsResponse.map((key, value) {
         if (value is Map) {
@@ -82,7 +78,7 @@ class ConnectScreenBloc extends Bloc<ConnectScreenEvent, ConnectScreenState> {
       paymentVariants: paymentVariants,
       paymentOptions: paymentOptions,
       categories: categories,
-      selectedCategory: categories.length > 0 ? categories.first: '',
+      selectedCategory: categories.length > 0 ? categories.first : '',
       connectInstallations: connectInstallations,
     );
   }
@@ -91,14 +87,16 @@ class ConnectScreenBloc extends Bloc<ConnectScreenEvent, ConnectScreenState> {
     yield state.copyWith(selectedCategory: category, isLoading: true);
     List<ConnectModel> connectInstallations = [];
     if (category == 'all') {
-      dynamic connectsResponse = await api.getConnectionIntegrations(token, state.business);
+      dynamic connectsResponse = await api.getConnectionIntegrations(
+          token, state.business);
       if (connectsResponse is List) {
         connectsResponse.forEach((element) {
           connectInstallations.add(ConnectModel.toMap(element));
         });
       }
     } else {
-      dynamic categoryResponse = await api.getConnectIntegrationByCategory(token, state.business, category);
+      dynamic categoryResponse = await api.getConnectIntegrationByCategory(
+          token, state.business, category);
       if (categoryResponse is List) {
         categoryResponse.forEach((element) {
           connectInstallations.add(ConnectModel.toMap(element));
@@ -106,40 +104,8 @@ class ConnectScreenBloc extends Bloc<ConnectScreenEvent, ConnectScreenState> {
       }
     }
 
-    yield state.copyWith(isLoading: false, connectInstallations: connectInstallations);
+    yield state.copyWith(
+        isLoading: false, connectInstallations: connectInstallations);
   }
 
-  Stream<ConnectScreenState> getCategoryDetails(ConnectModel model) async* {
-    yield state.copyWith(categoryConnections: []);
-    List<ConnectModel> connectInstallations = [];
-    dynamic categoryResponse = await api.getConnectIntegrationByCategory(token, state.business, model.integration.category);
-    if (categoryResponse is List) {
-      categoryResponse.forEach((element) {
-        ConnectModel cm = ConnectModel.toMap(element);
-        if (cm.id != model.id) {
-          connectInstallations.add(cm);
-        }
-      });
-    }
-
-    yield state.copyWith(categoryConnections: connectInstallations);
-  }
-
-  Stream<ConnectScreenState> addReview(String title, String text, num rate) async* {
-    if (title != null) {
-      dynamic response = await api.patchConnectRating(token, state.editConnect.name, rate);
-    } else {
-      dynamic response = await api.patchConnectWriteReview(token, state.editConnect.name, title, text, rate);
-    }
-    yield state.copyWith(isReview: true);
-    getConnectDetail(state.editConnect.name);
-    yield state.copyWith(isReview: false);
-  }
-
-  Stream<ConnectScreenState> getConnectDetail(String name) async* {
-    yield state.copyWith(isLoading: true);
-    dynamic response = await api.getConnectDetail(token, name);
-    ConnectIntegration model = ConnectIntegration.toMap(response);
-    yield state.copyWith(isLoading: false, editConnect: model);
-  }
 }
