@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:page_transition/page_transition.dart';
@@ -164,6 +165,15 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
 
     iconSize = _isTablet ? 120: 80;
     margin = _isTablet ? 24: 16;
+    double rate = 0;
+    List<ReviewModel> reviews = state.editConnect.reviews;
+    if (reviews.length > 0) {
+      double sum = 0;
+      reviews.forEach((element) {
+        sum = sum + element.rating;
+      });
+      rate = sum / reviews.length;
+    }
     return Container(
       alignment: Alignment.topCenter,
       child: SingleChildScrollView(
@@ -456,63 +466,21 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                                 Row(
                                   children: <Widget>[
                                     Text(
-                                      '${state.editConnect.reviews.length}',
+                                      '$rate',
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontFamily: 'HelveticaNeueMed',
                                         fontSize: 21,
                                       ),
                                     ),
-                                    Container(
-                                      child: Row(
-                                        children: <Widget>[
-                                          Padding(
-                                            padding: EdgeInsets.only(left: 4),
-                                            child: SvgPicture.asset(
-                                              'assets/images/star_fill.svg',
-                                              width: 14,
-                                              height: 14,
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.only(left: 4),
-                                            child: SvgPicture.asset(
-                                              'assets/images/star_fill.svg',
-                                              width: 14,
-                                              height: 14,
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.only(left: 4),
-                                            child: SvgPicture.asset(
-                                              'assets/images/star_fill.svg',
-                                              width: 14,
-                                              height: 14,
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.only(left: 4),
-                                            child: SvgPicture.asset(
-                                              'assets/images/star_fill.svg',
-                                              width: 14,
-                                              height: 14,
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.only(left: 4),
-                                            child: SvgPicture.asset(
-                                              'assets/images/star_fill.svg',
-                                              width: 14,
-                                              height: 14,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    )
+                                    Padding(
+                                      padding: EdgeInsets.only(left: margin / 4),
+                                    ),
+                                    _rateView(rate),
                                   ],
                                 ),
                                 Text(
-                                  Language.getPosConnectStrings('25 Ratings'),
+                                  Language.getPosConnectStrings('${state.editConnect.reviews.length} Ratings'),
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontFamily: 'HelveticaNeueLight',
@@ -762,9 +730,13 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
       length = count;
     } else {
       length = 2;
-    }   return Container(
+    }
+
+    return Container(
       padding: EdgeInsets.only(left: margin, right: margin),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -785,7 +757,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                   Language.getConnectStrings('See All'),
                   style: TextStyle(
                     color: Color.fromRGBO(255, 255, 255, 0.95),
-                    fontFamily: 'HelveticaNeue',
+                    fontFamily: 'Helvetica Neue',
                     fontSize: 14,
                   ),
                 ),
@@ -824,34 +796,186 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
               ): Container(),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   Text(
                     '${reviews.length} Ratings',
                     style: TextStyle(
                       color: Color.fromRGBO(255, 255, 255, 0.95),
-                      fontFamily: 'HelveticaNeue',
+                      fontFamily: 'Helvetica Neue',
                       fontSize: 14,
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 8, bottom: 8),
+                  !_isTablet && _isPortrait ? Container() : Padding(
+                    padding: EdgeInsets.only(right: margin / 2),
                   ),
+                  !_isTablet && _isPortrait ? Container() : _allRateView(state),
                 ],
               ),
             ],
           ),
+          !_isTablet && _isPortrait ? _allRateView(state): Container(),
           Flexible(
             fit: FlexFit.loose,
-            child: GridView.count(
-              crossAxisCount: count,
+            child: reviews.length == 0 ? Container(): GridView.count(
+              padding: EdgeInsets.only(top: 16,),
+              physics: NeverScrollableScrollPhysics(),
+              mainAxisSpacing: margin,
+              shrinkWrap: true,
               childAspectRatio: 3,
+              crossAxisCount: count,
               children: reviews.map((review) {
                 return Container(
+                  height: 200,
+                  padding: EdgeInsets.all(margin),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: Color.fromRGBO(255, 255, 255, 0.2),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                review.title,
+                                style: TextStyle(
+                                  color: Color.fromRGBO(255, 255, 255, 0.95),
+                                  fontSize: 14,
+                                  fontFamily: 'HelveticaNeueMed',
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: margin / 4),
+                              ),
+                              _rateView(review.rating),
+                            ],
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: <Widget>[
+                              Text(
+                                review.reviewDate,
+                                style: TextStyle(
+                                  color: Color.fromRGBO(255, 255, 255, 0.95).withOpacity(0.6),
+                                  fontSize: 14,
+                                  fontFamily: 'Helvetica Neue',
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: margin / 4),
+                              ),
+                              Text(
+                                review.userFullName,
+                                style: TextStyle(
+                                  color: Color.fromRGBO(255, 255, 255, 0.95).withOpacity(0.6),
+                                  fontSize: 14,
+                                  fontFamily: 'Helvetica Neue',
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: margin / 2),
+                      ),
+                      Text(
+                        review.text,
+                        style: TextStyle(
+                          color: Color.fromRGBO(255, 255, 255, 0.95),
+                          fontSize: 14,
+                          fontFamily: 'Helvetica Neue',
+                        ),
+                      ),
+                    ],
+                  ),
                 );
               }).toList().sublist(0, reviews.length > length ? length: reviews.length),
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _rateView(num rate) {
+    return Container(
+      child: Row(
+        children: List.generate(5, (index) {
+          return Container(
+            child: SvgPicture.asset(
+              index < rate ? 'assets/images/star_fill.svg'
+                  : 'assets/images/star_outline.svg',
+              width: 14,
+              height: 14,
+            ),
+          );
+        }).toList()
+      ),
+    );
+  }
+
+  Widget _allRateView(ConnectScreenState state) {
+    double width = Measurements.width;
+    if (!_isTablet) {
+      width = Measurements.width - margin * 6;
+    } else {
+      width = (Measurements.width - margin * 4) / 2;
+    }
+    List<Map<int, double>> percents = [];
+    List<ReviewModel> reviews = state.editConnect.reviews;
+    List.generate(5, (index) {
+      num count = 0;
+      reviews.forEach((element) {
+        if (element.rating == (index + 1)) {
+          count++;
+        }
+      });
+      percents.add({
+        index + 1: count.toDouble() / reviews.length.toDouble()
+      });
+    });
+    percents = percents.reversed.toList();
+    return Container(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: percents.map((p) {
+          return Container(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                Row(
+                  children: List.generate(p.keys.toList().first, (index) {
+                    return SvgPicture.asset(
+                      'assets/images/star_fill.svg',
+                      width: margin / 2,
+                      height: margin / 2,
+                    );
+                  }),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(right: margin / 2),
+                ),
+                Container(
+                  width: width,
+                  child: SizedBox(
+                    height: margin / 5,
+                    child: LinearProgressIndicator(
+                      value: p.values.first,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }).toList(),
       ),
     );
   }
@@ -932,8 +1056,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
         count = 3;
       }
     }
-//    double width = (Measurements.width - margin * 2) / count - (count - 1) * margin / 2;
-//    double ratio = width / (min(Measurements.width, Measurements.height) * 0.2);2
     return Container(
       padding: EdgeInsets.only(left: margin, right: margin),
       child: Column(
