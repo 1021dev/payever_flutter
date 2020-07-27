@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -39,6 +38,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
 
   @override
   void initState() {
+    widget.screenBloc.add(ConnectDetailEvent(category: widget.connectModel.integration.category));
     super.initState();
   }
 
@@ -175,35 +175,47 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: <Widget>[
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  Language.getPosConnectStrings(widget.connectModel.integration.displayOptions.title),
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontFamily: 'HelveticaNeueMed',
-                                    fontSize: 18,
+                            Flexible(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Flexible(
+                                    fit: FlexFit.loose,
+                                    child: Text(
+                                      Language.getPosConnectStrings(widget.connectModel.integration.displayOptions.title),
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontFamily: 'HelveticaNeueMed',
+                                        fontSize: 18,
+                                      ),
+                                    ),
                                   ),
-                                ),
-                                Text(
-                                  Language.getPosConnectStrings(widget.connectModel.integration.installationOptions.price),
-                                  style: TextStyle(
-                                    color: Color.fromRGBO(255, 255, 255, 0.6),
-                                    fontFamily: 'HelveticaNeueLight',
-                                    fontSize: 12,
+                                  Flexible(
+                                    fit: FlexFit.loose,
+                                    child: Text(
+                                      Language.getPosConnectStrings(widget.connectModel.integration.installationOptions.price),
+                                      style: TextStyle(
+                                        color: Color.fromRGBO(255, 255, 255, 0.6),
+                                        fontFamily: 'HelveticaNeueLight',
+                                        fontSize: 12,
+                                      ),
+                                    ),
                                   ),
-                                ),
-                                Text(
-                                  Language.getPosConnectStrings(widget.connectModel.integration.installationOptions.developer),
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontFamily: 'HelveticaNeue',
-                                    fontSize: 12,
+                                  Flexible(
+                                    fit: FlexFit.loose,
+                                    child: Text(
+                                      Language.getPosConnectStrings(widget.connectModel.integration.installationOptions.developer),
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontFamily: 'HelveticaNeue',
+                                        fontSize: 12,
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                             _isTablet || !_isPortrait ? Container(
                               child: widget.connectModel.installed ? Row(
@@ -636,6 +648,25 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
 
             _information2(state),
 
+            Divider(
+              height: margin,
+              thickness: 0.5,
+              color: Color.fromRGBO(255, 255, 255, 0.1),
+              endIndent: margin,
+              indent: margin,
+            ),
+
+            _supported(state),
+
+            Divider(
+              height: margin,
+              thickness: 0.5,
+              color: Color.fromRGBO(255, 255, 255, 0.1),
+              endIndent: margin,
+              indent: margin,
+            ),
+
+            _morePayever(state),
           ],
         ),
       ),
@@ -855,12 +886,14 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                     Padding(
                       padding: EdgeInsets.only(left: 4),
                     ),
-                    Text(
-                      'Developer Website',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 13,
-                        fontFamily: 'Helvetica Neue',
+                    Expanded(
+                      child: Text(
+                        'Developer Website',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 13,
+                          fontFamily: 'Helvetica Neue',
+                        ),
                       ),
                     ),
                   ],
@@ -885,12 +918,14 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                     Padding(
                       padding: EdgeInsets.only(left: 4),
                     ),
-                    Text(
-                      'Privacy policy',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 13,
-                        fontFamily: 'Helvetica Neue',
+                    Expanded(
+                      child: Text(
+                        'Privacy policy',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 13,
+                          fontFamily: 'Helvetica Neue',
+                        ),
                       ),
                     ),
                   ],
@@ -915,12 +950,14 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                     Padding(
                       padding: EdgeInsets.only(left: 4),
                     ),
-                    Text(
-                      'Licence Agreement',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 13,
-                        fontFamily: 'Helvetica Neue',
+                    Expanded(
+                      child: Text(
+                        'Licence Agreement',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 13,
+                          fontFamily: 'Helvetica Neue',
+                        ),
                       ),
                     ),
                   ],
@@ -934,6 +971,81 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
   }
 
   Widget _supported(ConnectScreenState state) {
-    
+    return Container(
+      padding: EdgeInsets.only(left: margin, right: margin),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          Text(
+            Language.getConnectStrings('Supported'),
+            style: TextStyle(
+              color: Color.fromRGBO(255, 255, 255, 0.95),
+              fontFamily: 'HelveticaNeueMed',
+              fontSize: 18,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: margin / 2),
+          ),
+          Row(
+            children: <Widget>[
+              SvgPicture.asset('assets/images/account.svg'),
+              Padding(
+                padding: EdgeInsets.only(left: margin / 2),
+              ),
+              Flexible(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      Language.getConnectStrings('Title'),
+                      style: TextStyle(
+                        color: Color.fromRGBO(255, 255, 255, 0.95),
+                        fontFamily: 'Helvetica Neue',
+                        fontSize: 16,
+                      ),
+                    ),
+                    Text(
+                      'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.',
+                      style: TextStyle(
+                        color: Color.fromRGBO(255, 255, 255, 0.6),
+                        fontFamily: 'Helvetica Neue',
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _morePayever(ConnectScreenState state) {
+    return Container(
+      padding: EdgeInsets.only(left: margin, right: margin),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          Text(
+            Language.getConnectStrings('More by payever'),
+            style: TextStyle(
+              color: Color.fromRGBO(255, 255, 255, 0.95),
+              fontFamily: 'HelveticaNeueMed',
+              fontSize: 18,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: margin / 2),
+          ),
+        ],
+      ),
+    );
   }
 }

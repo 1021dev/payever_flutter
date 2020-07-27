@@ -33,3 +33,16 @@ class ConnectCategorySelected extends ConnectScreenEvent {
     this.category,
   ];
 }
+
+class ConnectDetailEvent extends ConnectScreenEvent {
+  final String category;
+
+  ConnectDetailEvent({
+    this.category,
+  });
+
+  @override
+  List<Object> get props => [
+    this.category,
+  ];
+}

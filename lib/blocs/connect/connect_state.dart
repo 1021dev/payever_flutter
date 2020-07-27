@@ -6,6 +6,7 @@ class ConnectScreenState {
   final bool isLoading;
   final String business;
   final List<ConnectModel> connectInstallations;
+  final List<ConnectModel> categoryConnections;
   final List<String> categories;
   final List<Payment> paymentOptions;
   final Map<String, PaymentVariant> paymentVariants;
@@ -15,6 +16,7 @@ class ConnectScreenState {
     this.isLoading = false,
     this.business,
     this.connectInstallations = const [],
+    this.categoryConnections = const [],
     this.paymentOptions = const [],
     this.paymentVariants = const {},
     this.categories = const ['all'],
@@ -25,6 +27,7 @@ class ConnectScreenState {
     this.isLoading,
     this.business,
     this.connectInstallations,
+    this.categoryConnections,
     this.paymentVariants,
     this.paymentVariants,
     this.categories,
@@ -35,6 +38,7 @@ class ConnectScreenState {
     bool isLoading,
     String business,
     List<ConnectModel> connectInstallations,
+    List<ConnectModel> categoryConnections,
     List<String> categories,
     List<Payment> paymentOptions,
     Map<String, PaymentVariant> paymentVariants,
@@ -44,6 +48,7 @@ class ConnectScreenState {
       isLoading: isLoading ?? this.isLoading,
       business: business ?? this.business,
       connectInstallations: connectInstallations ?? this.connectInstallations,
+      categoryConnections: categoryConnections ?? this.categoryConnections,
       categories: categories ?? this.categories,
       paymentOptions: paymentOptions ?? this.paymentOptions,
       paymentVariants: paymentVariants ?? this.paymentVariants,
