@@ -120,10 +120,10 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
       actions: <Widget>[
         IconButton(
           constraints: BoxConstraints(
-              maxHeight: 32,
-              maxWidth: 32,
-              minHeight: 32,
-              minWidth: 32
+            maxHeight: 32,
+            maxWidth: 32,
+            minHeight: 32,
+            minWidth: 32,
           ),
           icon: Icon(
             Icons.close,
@@ -634,6 +634,8 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
 
             _informations(state),
 
+            _information2(state),
+
           ],
         ),
       ),
@@ -765,9 +767,21 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
   }
 
   Widget _informations(ConnectScreenState state) {
+    List<InformationData> informations = [];
+
+    if (widget.connectModel.integration.installationOptions.developer != null) {
+      informations.add(InformationData(title: 'Provider', detail: Language.getPosConnectStrings(widget.connectModel.integration.installationOptions.developer)));
+    }
+    if (widget.connectModel.integration.installationOptions.category != null) {
+      informations.add(InformationData(title: 'Category' , detail: Language.getConnectStrings('categories.${widget.connectModel.integration.category}.title')));
+    }
+    if (widget.connectModel.integration.installationOptions.languages != null) {
+      informations.add(InformationData(title: 'Languages' , detail: Language.getPosConnectStrings(widget.connectModel.integration.installationOptions.languages)));
+    }
     return Container(
       padding: EdgeInsets.only(left: margin, right: margin),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Text(
@@ -778,8 +792,148 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
               fontSize: 18,
             ),
           ),
+          Flexible(
+            fit: FlexFit.loose,
+            child: GridView.count(
+              padding: EdgeInsets.only(top: 16,),
+              physics: NeverScrollableScrollPhysics(),
+              mainAxisSpacing: margin,
+              shrinkWrap: true,
+              childAspectRatio: (Measurements.width - margin * 2) / (_isTablet ? 3 : 2) / 60,
+              crossAxisCount: _isTablet ? 3 : 2,
+              children: informations.map((info) {
+                return Container(
+                  height: 60,
+                  alignment: Alignment.centerLeft,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      Text(
+                        info.title,
+                        style: TextStyle(
+                          color: Color.fromRGBO(255, 255, 255, 0.475),
+                          fontSize: 16,
+                          fontFamily: 'Helvetica Neue',
+                        ),
+                      ),
+                      Text(
+                        info.detail,
+                        style: TextStyle(
+                          color: Color.fromRGBO(255, 255, 255, 0.95),
+                          fontSize: 16,
+                          fontFamily: 'Helvetica Neue',
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
         ],
       ),
     );
+  }
+
+  Widget _information2(ConnectScreenState state) {
+    return Container(
+      padding: EdgeInsets.only(left: margin, right: margin),
+      child: Row(
+        children: <Widget>[
+          Flexible(
+            child: Column(
+              children: <Widget>[
+                Divider(
+                  height: margin,
+                  thickness: 0.5,
+                  color: Color.fromRGBO(255, 255, 255, 0.1),
+                ),
+                Row(
+                  children: <Widget>[
+                    SvgPicture.asset('assets/images/website.svg'),
+                    Padding(
+                      padding: EdgeInsets.only(left: 4),
+                    ),
+                    Text(
+                      'Developer Website',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 13,
+                        fontFamily: 'Helvetica Neue',
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: margin),
+          ),
+          Flexible(
+            child: Column(
+              children: <Widget>[
+                Divider(
+                  height: margin,
+                  thickness: 0.5,
+                  color: Color.fromRGBO(255, 255, 255, 0.1),
+                ),
+                Row(
+                  children: <Widget>[
+                    SvgPicture.asset('assets/images/privacy.svg'),
+                    Padding(
+                      padding: EdgeInsets.only(left: 4),
+                    ),
+                    Text(
+                      'Privacy policy',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 13,
+                        fontFamily: 'Helvetica Neue',
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: margin),
+          ),
+          Flexible(
+            child: Column(
+              children: <Widget>[
+                Divider(
+                  height: margin,
+                  thickness: 0.5,
+                  color: Color.fromRGBO(255, 255, 255, 0.1),
+                ),
+                Row(
+                  children: <Widget>[
+                    SvgPicture.asset('assets/images/description.svg'),
+                    Padding(
+                      padding: EdgeInsets.only(left: 4),
+                    ),
+                    Text(
+                      'Licence Agreement',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 13,
+                        fontFamily: 'Helvetica Neue',
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _supported(ConnectScreenState state) {
+    
   }
 }

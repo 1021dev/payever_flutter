@@ -353,3 +353,13 @@ class MissingSteps {
     successMessage = obj['success_message'];
   }
 }
+
+class InformationData {
+  String title;
+  String detail;
+
+  InformationData({
+    this.title,
+    this.detail,
+  });
+}
