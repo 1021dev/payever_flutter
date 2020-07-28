@@ -39,19 +39,13 @@ class FetchWallpaper {
 }
 
 class CurrentWallpaper {
-  String _theme;
-  String _id;
-  String _wallpaper;
+  String theme;
+  String id;
+  String wallpaper;
 
   CurrentWallpaper.map(dynamic obj) {
-    this._theme = obj[GlobalUtils.DB_BUSINESS_CURRENT_WALLPAPER_THEME];
-    this._id = obj[GlobalUtils.DB_BUSINESS_CURRENT_WALLPAPER_ID];
-    this._wallpaper = obj[GlobalUtils.DB_BUSINESS_CURRENT_WALLPAPER_WALLPAPER];
+    this.theme = obj[GlobalUtils.DB_BUSINESS_CURRENT_WALLPAPER_THEME];
+    this.id = obj[GlobalUtils.DB_BUSINESS_CURRENT_WALLPAPER_ID];
+    this.wallpaper = obj[GlobalUtils.DB_BUSINESS_CURRENT_WALLPAPER_WALLPAPER];
   }
-
-  String get theme => _theme;
-
-  String get id => _id;
-
-  String get wallpaper => _wallpaper;
 }

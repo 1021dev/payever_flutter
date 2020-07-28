@@ -26,15 +26,15 @@ class ConnectDetailScreenInitEvent extends ConnectDetailScreenEvent {
 }
 
 class ConnectDetailEvent extends ConnectDetailScreenEvent {
-  final ConnectModel model;
+  final String name;
 
   ConnectDetailEvent({
-    this.model,
+    this.name,
   });
 
   @override
   List<Object> get props => [
-    this.model,
+    this.name,
   ];
 }
 

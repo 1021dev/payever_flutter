@@ -12,6 +12,7 @@ import 'package:payever/blocs/connect_detail/connect_detail_bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/translations.dart';
+import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/screens/login/login_page.dart';
 import 'package:payever/connect/models/connect.dart';
 import 'package:payever/connect/views/connect_category_more_connections.dart';
@@ -54,14 +55,15 @@ class _ConnectAddReviewsScreenState extends State<ConnectAddReviewsScreen> {
   void initState() {
     super.initState();
     List<ReviewModel> reviews = widget.connectIntegration.reviews;
-    String userId = widget.screenBloc.connectScreenBloc.dashboardScreenBloc.state.user.id;
-    print(userId);
+    String userId = widget.screenBloc.connectScreenBloc.dashboardScreenBloc.state.activeBusiness.userId;
     List<ReviewModel> userReviews = reviews.where((element) {
-      return element.id == userId;
+      print(userId);
+      print(element.userId);
+      return element.userId == userId;
     }).toList();
     if (userReviews.length > 0) {
       setState(() {
-        rate = userReviews.first.rating;
+        rate = userReviews.first.rating.toDouble();
         titleController.text = userReviews.first.title ?? '';
         textController.text = userReviews.first.text ?? '';
       });
@@ -95,6 +97,9 @@ class _ConnectAddReviewsScreenState extends State<ConnectAddReviewsScreen> {
               type: PageTransitionType.fade,
             ),
           );
+        }
+        if (state.isReview) {
+          showReviewedDialog();
         }
       },
       child: BlocBuilder<ConnectDetailScreenBloc, ConnectDetailScreenState>(
@@ -267,7 +272,12 @@ class _ConnectAddReviewsScreenState extends State<ConnectAddReviewsScreen> {
                 children: <Widget>[
                   MaterialButton(
                     onPressed: () {
-
+                      FocusScope.of(context).unfocus();
+                      widget.screenBloc.add(AddReviewEvent(
+                        title: titleController.text,
+                        text: textController.text,
+                        rate: rate,
+                      ));
                     },
                     color: Color.fromRGBO(255, 255, 255, 0.1),
                     height: 26,
@@ -293,7 +303,8 @@ class _ConnectAddReviewsScreenState extends State<ConnectAddReviewsScreen> {
                   ),
                   MaterialButton(
                     onPressed: () {
-
+                      FocusScope.of(context).unfocus();
+                      Navigator.pop(context);
                     },
                     color: Color.fromRGBO(255, 255, 255, 0.1),
                     height: 26,
@@ -413,21 +424,69 @@ class _ConnectAddReviewsScreenState extends State<ConnectAddReviewsScreen> {
     );
   }
 
-  Widget _rateView(num rate) {
-    return Container(
-      child: Row(
-          children: List.generate(5, (index) {
-            return Container(
-              child: SvgPicture.asset(
-                index < rate ? 'assets/images/star_fill.svg'
-                    : 'assets/images/star_outline.svg',
-                width: 14,
-                height: 14,
+  void showReviewedDialog() {
+    widget.screenBloc.add(ClearEvent());
+    showCupertinoDialog(
+      context: context,
+      builder: (builder) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: Container(
+            height: 250,
+            width: Measurements.width * 0.8,
+            child: BlurEffectView(
+              color: Color.fromRGBO(50, 50, 50, 0.4),
+              padding: EdgeInsets.all(margin / 2),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.all(margin / 2),
+                  ),
+                  Icon(Icons.info),
+                  Padding(
+                    padding: EdgeInsets.all(margin / 2),
+                  ),
+                  Text(
+                    'Submitted, thanks for your feedback',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontFamily: 'Helvetica Neue',
+                      color: Colors.white,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(margin / 2),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      MaterialButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                        },
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        height: 24,
+                        elevation: 0,
+                        minWidth: 0,
+                        color: Colors.white10,
+                        child: Text(
+                          Language.getConnectStrings('Confirm'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-            );
-          }).toList()
-      ),
+            ),
+          ),
+        );
+      },
     );
   }
-
 }

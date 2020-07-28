@@ -21,6 +21,8 @@ import 'package:payever/connect/views/connect_version_history_screen.dart';
 import 'package:payever/connect/widgets/connect_item_image_view.dart';
 import 'package:payever/connect/widgets/connect_top_button.dart';
 
+import 'connect_add_reviews_screen.dart';
+
 class ConnectDetailScreen extends StatefulWidget {
   final ConnectModel connectModel;
   final ConnectScreenBloc screenBloc;
@@ -842,7 +844,29 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                     fontSize: 14,
                   ),
                 ),
-              ): Container(),
+              ): GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    PageTransition(
+                      child: ConnectAddReviewsScreen(
+                        screenBloc: screenBloc,
+                        connectIntegration: state.editConnect,
+                      ),
+                      type: PageTransitionType.fade,
+                      duration: Duration(milliseconds: 500),
+                    ),
+                  );
+                },
+                child: Text(
+                  Language.getConnectStrings('Write Review'),
+                  style: TextStyle(
+                    color: Color.fromRGBO(255, 255, 255, 0.95),
+                    fontFamily: 'Helvetica Neue',
+                    fontSize: 14,
+                  ),
+                ),
+              ),
             ],
           ),
           Padding(

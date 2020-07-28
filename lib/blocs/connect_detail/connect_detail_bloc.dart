@@ -20,8 +20,12 @@ class ConnectDetailScreenBloc extends Bloc<ConnectDetailScreenEvent, ConnectDeta
   @override
   Stream<ConnectDetailScreenState> mapEventToState(ConnectDetailScreenEvent event) async* {
     if (event is ConnectDetailScreenInitEvent) {
-      yield state.copyWith(business: event.business, editConnect: event.connectModel.integration, installed: event.connectModel.installed);
+      yield state.copyWith(business: event.business,
+          editConnect: event.connectModel.integration,
+          installed: event.connectModel.installed);
       yield* getConnectDetail(event.connectModel.integration.name);
+    } else if (event is ConnectDetailEvent) {
+      yield* getConnectDetail(event.name);
     } else if (event is AddReviewEvent) {
       yield* addReview(event.title, event.text, event.rate);
     } else if (event is InstallEvent) {
@@ -33,7 +37,7 @@ class ConnectDetailScreenBloc extends Bloc<ConnectDetailScreenEvent, ConnectDeta
     } else if (event is UninstallMoreConnectEvent) {
       yield* unInstallMoreConnect(event.model);
     } else if (event is ClearEvent) {
-      yield state.copyWith(installedNewConnect: '', uninstalledNewConnect: '');
+      yield state.copyWith(installedNewConnect: '', uninstalledNewConnect: '', isReview: false);
     }
   }
 
@@ -54,18 +58,17 @@ class ConnectDetailScreenBloc extends Bloc<ConnectDetailScreenEvent, ConnectDeta
   }
 
   Stream<ConnectDetailScreenState> addReview(String title, String text, num rate) async* {
-    if (title != null) {
+    if (title == null || title == '') {
       dynamic response = await api.patchConnectRating(token, state.editConnect.name, rate);
     } else {
       dynamic response = await api.patchConnectWriteReview(token, state.editConnect.name, title, text, rate);
     }
     yield state.copyWith(isReview: true);
-    getConnectDetail(state.editConnect.name);
-    yield state.copyWith(isReview: false);
+    add(ConnectDetailEvent(name: state.editConnect.name));
   }
 
   Stream<ConnectDetailScreenState> getConnectDetail(String name) async* {
-    yield state.copyWith(isLoading: true);
+    yield state.copyWith(isLoading: true, isReview: false);
     dynamic response = await api.getConnectDetail(token, name);
     ConnectIntegration model = ConnectIntegration.toMap(response);
     yield state.copyWith(isLoading: false, editConnect: model);
