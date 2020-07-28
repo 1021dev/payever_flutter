@@ -60,3 +60,5 @@ class UninstallConnectAppEvent extends ConnectScreenEvent {
     this.model,
   ];
 }
+
+class ClearInstallEvent extends ConnectScreenEvent {}

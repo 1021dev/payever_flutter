@@ -45,8 +45,6 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
   double iconSize;
   double margin;
   bool installed = false;
-  String installedNewConnect = '';
-  String uninstalledNewConnect = '';
 
   ConnectDetailScreenBloc screenBloc;
   List<ConnectPopupButton> uninstallPopUp(BuildContext context, ConnectDetailScreenState state) {
@@ -121,7 +119,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
             if (list.length > 0) {
               showInstalledDialog(true, list.first);
             }
-          } else if (uninstalledNewConnect != '') {
+          } else if (state.uninstalledNewConnect != '') {
             List<ConnectModel> models = state.categoryConnects;
             List list = models.where((element) => element.integration.name == state.uninstalledNewConnect).toList();
             if (list.length > 0) {
@@ -1416,7 +1414,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                     context,
                     PageTransition(
                       child: ConnectCategoryMoreScreen(
-                        screenBloc: widget.screenBloc,
+                        screenBloc: screenBloc,
                         connections: state.categoryConnects,
                       ),
                       type: PageTransitionType.fade,

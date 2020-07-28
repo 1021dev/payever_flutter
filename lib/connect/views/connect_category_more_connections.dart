@@ -19,7 +19,7 @@ import 'connect_detail_screen.dart';
 
 class ConnectCategoryMoreScreen extends StatefulWidget {
   final List<ConnectModel> connections;
-  final ConnectScreenBloc screenBloc;
+  final ConnectDetailScreenBloc screenBloc ;
 
   ConnectCategoryMoreScreen({
     this.connections,
@@ -41,7 +41,7 @@ class _ConnectCategoryMoreScreenState extends State<ConnectCategoryMoreScreen> {
   double iconSize;
   double margin;
   static int selectedStyle = 1;
-  List<ConnectPopupButton> appBarPopUpActions(BuildContext context, ConnectScreenState state) {
+  List<ConnectPopupButton> appBarPopUpActions(BuildContext context, ConnectDetailScreenState state) {
     return [
       ConnectPopupButton(
         title: Language.getProductListStrings('list_view'),
@@ -87,7 +87,7 @@ class _ConnectCategoryMoreScreenState extends State<ConnectCategoryMoreScreen> {
 
     return BlocListener(
       bloc: widget.screenBloc,
-      listener: (BuildContext context, ConnectScreenState state) async {
+      listener: (BuildContext context, ConnectDetailScreenState state) async {
         if (state is ConnectScreenStateFailure) {
           Navigator.pushReplacement(
             context,
@@ -98,9 +98,9 @@ class _ConnectCategoryMoreScreenState extends State<ConnectCategoryMoreScreen> {
           );
         }
       },
-      child: BlocBuilder<ConnectScreenBloc, ConnectScreenState>(
+      child: BlocBuilder<ConnectDetailScreenBloc, ConnectDetailScreenState>(
         bloc: widget.screenBloc,
-        builder: (BuildContext context, ConnectScreenState state) {
+        builder: (BuildContext context, ConnectDetailScreenState state) {
           return Scaffold(
             backgroundColor: Colors.black,
             resizeToAvoidBottomPadding: false,
@@ -123,7 +123,7 @@ class _ConnectCategoryMoreScreenState extends State<ConnectCategoryMoreScreen> {
     );
   }
 
-  Widget _appBar(ConnectScreenState state) {
+  Widget _appBar(ConnectDetailScreenState state) {
     String itemsString = '${widget.connections.length} ${Language.getWidgetStrings('widgets.store.product.items')}';
     return AppBar(
       centerTitle: true,
@@ -193,13 +193,13 @@ class _ConnectCategoryMoreScreenState extends State<ConnectCategoryMoreScreen> {
     );
   }
 
-  Widget _getBody(ConnectScreenState state) {
+  Widget _getBody(ConnectDetailScreenState state) {
     return selectedStyle == 0
         ? _getListBody(state)
         : _getGridBody(state);
   }
 
-  Widget _getListBody(ConnectScreenState state) {
+  Widget _getListBody(ConnectDetailScreenState state) {
     return Container(
       child: Column(
         children: <Widget>[
@@ -276,22 +276,22 @@ class _ConnectCategoryMoreScreenState extends State<ConnectCategoryMoreScreen> {
                   connectModel: widget.connections[index],
                   isPortrait: _isPortrait,
                   isTablet: _isTablet,
-                  installingConnect: state.connectInstallations[index].integration.name == state.installingConnect,
+                  installingConnect: state.categoryConnects[index].integration.name == state.installingConnect,
                   onOpen: (model) {
 
                   },
                   onInstall: (model) {
-                    widget.screenBloc.add(InstallConnectAppEvent(model: model));
+                    widget.screenBloc.add(InstallMoreConnectEvent(model: model));
                   },
                   onUninstall: (model) {
-                    widget.screenBloc.add(UninstallConnectAppEvent(model: model));
+                    widget.screenBloc.add(UninstallMoreConnectEvent(model: model));
                   },
                   onTap: (model) {
                     Navigator.push(
                       context,
                       PageTransition(
                         child: ConnectDetailScreen(
-                          screenBloc: widget.screenBloc,
+                          screenBloc: widget.screenBloc.connectScreenBloc,
                           connectModel: widget.connections[index],
                         ),
                         type: PageTransitionType.fade,
@@ -316,7 +316,7 @@ class _ConnectCategoryMoreScreenState extends State<ConnectCategoryMoreScreen> {
     );
   }
 
-  Widget _getGridBody(ConnectScreenState state) {
+  Widget _getGridBody(ConnectDetailScreenState state) {
     int crossAxisCount = _isTablet ? (_isPortrait ? 2 : 3): (_isPortrait ? 1 : 2);
     double imageRatio= 323.0 / 182.0;
     double contentHeight = 116;
@@ -344,7 +344,7 @@ class _ConnectCategoryMoreScreenState extends State<ConnectCategoryMoreScreen> {
                 context,
                 PageTransition(
                   child: ConnectDetailScreen(
-                    screenBloc: widget.screenBloc,
+                    screenBloc: widget.screenBloc.connectScreenBloc,
                     connectModel: installation,
                   ),
                   type: PageTransitionType.fade,
@@ -353,10 +353,10 @@ class _ConnectCategoryMoreScreenState extends State<ConnectCategoryMoreScreen> {
               );
             },
             onInstall: (model) {
-              widget.screenBloc.add(InstallConnectAppEvent(model: model));
+              widget.screenBloc.add(InstallMoreConnectEvent(model: model));
             },
             onUninstall: (model) {
-              widget.screenBloc.add(UninstallConnectAppEvent(model: model));
+              widget.screenBloc.add(UninstallMoreConnectEvent(model: model));
             },
           );
         }).toList(),

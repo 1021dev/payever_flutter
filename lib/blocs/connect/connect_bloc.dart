@@ -29,6 +29,8 @@ class ConnectScreenBloc extends Bloc<ConnectScreenEvent, ConnectScreenState> {
       yield* installConnect(event.model);
     } else if (event is UninstallConnectAppEvent) {
       yield* unInstallConnect(event.model);
+    } else if (event is ClearInstallEvent) {
+      yield state.copyWith(installedConnect: '', uninstalledConnect: '');
     }
   }
 
@@ -136,7 +138,7 @@ class ConnectScreenBloc extends Bloc<ConnectScreenEvent, ConnectScreenState> {
       }
     }
 
-    yield state.copyWith(installingConnect: '');
+    yield state.copyWith(installingConnect: '', installedConnect: model.integration.name);
   }
 
   Stream<ConnectScreenState> unInstallConnect(ConnectModel model) async* {
@@ -163,6 +165,6 @@ class ConnectScreenBloc extends Bloc<ConnectScreenEvent, ConnectScreenState> {
       }
     }
 
-    yield state.copyWith(installingConnect: '');
+    yield state.copyWith(installingConnect: '', uninstalledConnect: model.integration.name);
   }
 }
