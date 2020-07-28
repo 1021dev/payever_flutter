@@ -618,6 +618,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
                   connectModel: state.connectInstallations[index],
                   isPortrait: _isPortrait,
                   isTablet: _isTablet,
+                  installingConnect: state.connectInstallations[index].integration.name == state.installingConnect,
                   onOpen: (model) {
 
                   },
@@ -679,6 +680,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
         children: state.connectInstallations.map((installation) {
           return ConnectGridItem(
             connectModel: installation,
+            installingConnect: installation.integration.name == state.installingConnect,
             onTap: () {
               Navigator.push(
                 context,

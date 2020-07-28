@@ -96,8 +96,8 @@ class ConnectGridItem extends StatelessWidget {
                           child: MaterialButton(
                             child: installingConnect ? Center(
                               child: Container(
-                                width: 12,
-                                height: 12,
+                                width: 16,
+                                height: 16,
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
                                 ),

@@ -220,14 +220,12 @@ class ConnectListItem extends StatelessWidget {
                       focusElevation: 0,
                       highlightElevation: 0,
                       hoverElevation: 0,
-                      child: installingConnect ? Center(
-                        child: Container(
-                          width: 12,
-                          height: 12,
+                      child: installingConnect ? Container(
+                          width: 16,
+                          height: 16,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
                           ),
-                        ),
                       ) : Text(
                         Language.getPosConnectStrings('integrations.actions.install'),
                         style: TextStyle(

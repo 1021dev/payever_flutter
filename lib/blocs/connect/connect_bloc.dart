@@ -26,9 +26,9 @@ class ConnectScreenBloc extends Bloc<ConnectScreenEvent, ConnectScreenState> {
     } else if (event is ConnectCategorySelected) {
       yield* selectCategory(event.category);
     } else if (event is InstallConnectAppEvent) {
-
+      yield* installConnect(event.model);
     } else if (event is UninstallConnectAppEvent) {
-
+      yield* unInstallConnect(event.model);
     }
   }
 
@@ -67,7 +67,8 @@ class ConnectScreenBloc extends Bloc<ConnectScreenEvent, ConnectScreenState> {
     dynamic paymentVariantsResponse = await api.getPaymentVariants(
         token, business);
     if (paymentVariantsResponse is Map) {
-      paymentVariantsResponse.map((key, value) {
+      paymentVariantsResponse.keys.toList().forEach((key) {
+        dynamic value = paymentVariantsResponse[key];
         if (value is Map) {
           PaymentVariant variant = PaymentVariant.fromMap(value);
           if (variant != null) {
@@ -91,8 +92,7 @@ class ConnectScreenBloc extends Bloc<ConnectScreenEvent, ConnectScreenState> {
     yield state.copyWith(selectedCategory: category, isLoading: true);
     List<ConnectModel> connectInstallations = [];
     if (category == 'all') {
-      dynamic connectsResponse = await api.getConnectionIntegrations(
-          token, state.business);
+      dynamic connectsResponse = await api.getConnectionIntegrations(token, state.business);
       if (connectsResponse is List) {
         connectsResponse.forEach((element) {
           connectInstallations.add(ConnectModel.toMap(element));
@@ -118,7 +118,7 @@ class ConnectScreenBloc extends Bloc<ConnectScreenEvent, ConnectScreenState> {
       num id = 0;
       if (state.paymentVariants.containsKey(model.integration.name)) {
         PaymentVariant variant = state.paymentVariants[model.integration.name];
-        id = variant.missingSteps.id;
+        id = variant.variants.first.id;
       }
       dynamic resetResponse = await api.resetPaymentCredential(token, state.business, model.integration.name, '$id');
     }
@@ -139,7 +139,7 @@ class ConnectScreenBloc extends Bloc<ConnectScreenEvent, ConnectScreenState> {
     yield state.copyWith(installingConnect: '');
   }
 
-  Stream<ConnectScreenState> unInstall(ConnectModel model) async* {
+  Stream<ConnectScreenState> unInstallConnect(ConnectModel model) async* {
     yield state.copyWith(installingConnect: model.integration.name);
     if (model.integration.category == 'payments') {
       num id = 0;
@@ -152,7 +152,7 @@ class ConnectScreenBloc extends Bloc<ConnectScreenEvent, ConnectScreenState> {
 
     dynamic response = await api.unInstallConnect(token, state.business, model.integration.name);
     if (response is Map) {
-      if (response['installed'] ?? false) {
+      if (response['installed'] != null) {
         List<ConnectModel> models = [];
         models.addAll(state.connectInstallations);
         int index = models.indexOf(model);

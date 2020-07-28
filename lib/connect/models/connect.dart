@@ -210,11 +210,18 @@ class Payment {
     imageSecondaryFilename = obj['image_secondary_filename'];
     instructionText = obj['instruction_text'];
     max = obj['max'];
-    if (obj['merchant_allowed_countries'] != null) {
+    if (obj['merchant_allowed_countries'] is List) {
       List merchantAllowedCountriesObj = obj['merchant_allowed_countries'];
       merchantAllowedCountriesObj.forEach((element) {
         merchantAllowedCountries.add(element);
       });
+    } else if (obj['merchant_allowed_countries'] is Map) {
+      Map merchantAllowedCountriesObj = obj['merchant_allowed_countries'];
+      if (merchantAllowedCountriesObj != null) {
+        merchantAllowedCountriesObj.keys.toList().forEach((element) {
+          merchantAllowedCountries.add(merchantAllowedCountriesObj[element]);
+        });
+      }
     }
     min = obj['min'];
     name = obj['name'];
@@ -280,7 +287,7 @@ class PaymentVariant {
 class Variant {
   bool acceptFee;
   bool completed;
-  List credentials;
+  dynamic credentials;
   bool credentialsValid;
   bool isDefault;
   num fixedFee;

@@ -942,7 +942,7 @@ class ApiService {
     try {
       print('$TAG - getPaymentOptions()');
       dynamic response = await _client.getTypeless(
-          '${Env.checkout}/api/rest/v1/payment-options',
+          '${Env.checkoutPhp}/api/rest/v1/payment-options',
           headers: {
             HttpHeaders.authorizationHeader: 'Bearer $token',
             HttpHeaders.contentTypeHeader: 'application/json',
@@ -957,9 +957,9 @@ class ApiService {
 
   Future<dynamic> getPaymentVariants(String token, String business) async {
     try {
-      print('$TAG - getPaymentOptions()');
+      print('$TAG - getPaymentVariants()');
       dynamic response = await _client.getTypeless(
-          '${Env.checkout}/api/rest/v3/business-payment-option/$business/variants',
+          '${Env.checkoutPhp}/api/rest/v3/business-payment-option/$business/variants',
           headers: {
             HttpHeaders.authorizationHeader: 'Bearer $token',
             HttpHeaders.contentTypeHeader: 'application/json',
@@ -990,11 +990,11 @@ class ApiService {
     }
   }
 
-  Future<dynamic> resetPaymentCredential(String token, String business, String name, String varientId) async {
+  Future<dynamic> resetPaymentCredential(String token, String business, String name, String variantId) async {
     try {
-      print('$TAG - installConnect()');
+      print('$TAG - resetPaymentCredential()');
       dynamic response = await _client.patchTypeless(
-          '${Env.thirdParty}/api/business/$business/payments/$name/install/$varientId/credentials/reset',
+          '${Env.thirdParty}/api/business/$business/payments/$name/$variantId/credentials/reset',
           body: {},
           headers: {
             HttpHeaders.authorizationHeader: 'Bearer $token',
@@ -1010,7 +1010,7 @@ class ApiService {
 
   Future<dynamic> unInstallConnect(String token, String business, String name) async {
     try {
-      print('$TAG - installConnect()');
+      print('$TAG - unInstallConnect()');
       dynamic response = await _client.patchTypeless(
           '${Env.connect}/api/business/$business/integration/$name/uninstall',
           body: {},
