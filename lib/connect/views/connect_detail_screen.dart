@@ -12,6 +12,7 @@ import 'package:payever/blocs/connect_detail/connect_detail.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/translations.dart';
+import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/screens/login/login_page.dart';
 import 'package:payever/connect/models/connect.dart';
 import 'package:payever/connect/views/connect_category_more_connections.dart';
@@ -43,6 +44,9 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
   final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
   double iconSize;
   double margin;
+  bool installed = false;
+  String installedNewConnect = '';
+  String uninstalledNewConnect = '';
 
   ConnectDetailScreenBloc screenBloc;
   List<ConnectPopupButton> uninstallPopUp(BuildContext context, ConnectDetailScreenState state) {
@@ -50,6 +54,18 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
       ConnectPopupButton(
         title: Language.getConnectStrings('actions.uninstall'),
         onTap: () async {
+          screenBloc.add(UninstallEvent());
+        },
+      ),
+    ];
+  }
+
+  List<ConnectPopupButton> uninstallConnectPopUp(BuildContext context, ConnectDetailScreenState state) {
+    return [
+      ConnectPopupButton(
+        title: Language.getConnectStrings('actions.uninstall'),
+        onTap: (connect) async {
+          screenBloc.add(UninstallMoreConnectEvent(model: connect));
         },
       ),
     ];
@@ -60,6 +76,9 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
     screenBloc = ConnectDetailScreenBloc(connectScreenBloc: widget.screenBloc);
     screenBloc.add(ConnectDetailScreenInitEvent(business: widget.screenBloc.state.business, connectModel: widget.connectModel,));
     super.initState();
+    setState(() {
+      installed = widget.connectModel.installed;
+    });
   }
 
   @override
@@ -90,6 +109,26 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
               type: PageTransitionType.fade,
             ),
           );
+        } else if (state is ConnectDetailScreenState) {
+          if (state.installed != installed) {
+            setState(() {
+              installed = state.installed;
+            });
+            showInstalledDialog(state.installed, widget.connectModel);
+          } else if (state.installedNewConnect != '') {
+            List<ConnectModel> models = state.categoryConnects;
+            List list = models.where((element) => element.integration.name == state.installedNewConnect).toList();
+            if (list.length > 0) {
+              showInstalledDialog(true, list.first);
+            }
+          } else if (uninstalledNewConnect != '') {
+            List<ConnectModel> models = state.categoryConnects;
+            List list = models.where((element) => element.integration.name == state.uninstalledNewConnect).toList();
+            if (list.length > 0) {
+              showInstalledDialog(false, list.first);
+            }
+
+          }
         }
       },
       child: BlocBuilder<ConnectDetailScreenBloc, ConnectDetailScreenState>(
@@ -129,7 +168,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
             padding: EdgeInsets.only(left: 8),
           ),
           Text(
-            Language.getPosConnectStrings(widget.connectModel.integration.displayOptions.title),
+            state.editConnect != null ? Language.getPosConnectStrings(state.editConnect.displayOptions.title): '',
             style: TextStyle(
               color: Colors.white,
               fontSize: 16,
@@ -183,6 +222,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
       });
       rate = sum / reviews.length;
     }
+    print(state.installed);
     return Container(
       alignment: Alignment.topCenter,
       child: SingleChildScrollView(
@@ -251,7 +291,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                               ),
                             ),
                             _isTablet || !_isPortrait ? Container(
-                              child: widget.connectModel.installed ? Row(
+                              child: state.installed ? Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: <Widget>[
                                   Container(
@@ -285,7 +325,13 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                                     child: PopupMenuButton<ConnectPopupButton>(
                                       child: Padding(
                                         padding: EdgeInsets.all(8),
-                                        child: SvgPicture.asset('assets/images/more.svg'),
+                                        child: state.installing ? Container(
+                                          width: 16,
+                                          height: 16,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                          ),
+                                        ) : SvgPicture.asset('assets/images/more.svg'),
                                       ),
                                       offset: Offset(0, 100),
                                       onSelected: (ConnectPopupButton item) => item.onTap(),
@@ -328,7 +374,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                                     padding: EdgeInsets.only(right: 16),
                                     child: MaterialButton(
                                       onPressed: () {
-
+                                        screenBloc.add(InstallEvent());
                                       },
                                       color: Color.fromRGBO(255, 255, 255, 0.1),
                                       height: 26,
@@ -340,7 +386,13 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                                       focusElevation: 0,
                                       highlightElevation: 0,
                                       hoverElevation: 0,
-                                      child: Text(
+                                      child: state.installing ? Container(
+                                        width: 16,
+                                        height: 16,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                        ),
+                                      ) : Text(
                                         Language.getPosConnectStrings('integrations.actions.install'),
                                         style: TextStyle(
                                           color: Colors.white,
@@ -358,7 +410,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                         _isTablet || !_isPortrait
                             ? Container()
                             : Container(
-                          child: widget.connectModel.installed ? Row(
+                          child: state.installed ? Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: <Widget>[
                               Container(
@@ -392,7 +444,13 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                                 child: PopupMenuButton<ConnectPopupButton>(
                                   child: Padding(
                                     padding: EdgeInsets.all(8),
-                                    child: SvgPicture.asset('assets/images/more.svg'),
+                                    child: state.installing ? Container(
+                                      width: 16,
+                                      height: 16,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                      ),
+                                    ) : SvgPicture.asset('assets/images/more.svg'),
                                   ),
                                   offset: Offset(0, 100),
                                   onSelected: (ConnectPopupButton item) => item.onTap(),
@@ -435,7 +493,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                                 padding: EdgeInsets.only(right: 16),
                                 child: MaterialButton(
                                   onPressed: () {
-
+                                    screenBloc.add(InstallEvent());
                                   },
                                   color: Color.fromRGBO(255, 255, 255, 0.1),
                                   height: 26,
@@ -447,7 +505,13 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                                   focusElevation: 0,
                                   highlightElevation: 0,
                                   hoverElevation: 0,
-                                  child: Text(
+                                  child: state.installing ? Container(
+                                    width: 16,
+                                    height: 16,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                    ),
+                                  ) : Text(
                                     Language.getPosConnectStrings('integrations.actions.install'),
                                     style: TextStyle(
                                       color: Colors.white,
@@ -1396,7 +1460,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                         padding: EdgeInsets.only(right: margin),
                         child: SvgPicture.asset(
                           Measurements.channelIcon(iconType),
-                          width: iconSize,
+                          width: iconSize * 0.6,
                           color: Color.fromRGBO(255, 255, 255, 0.75),
                         ),
                       ),
@@ -1457,19 +1521,50 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                                       ),
                                       Container(
                                         padding: EdgeInsets.all(0),
-                                        child: MaterialButton(
-                                          onPressed: () {
-
+                                        child: PopupMenuButton<ConnectPopupButton>(
+                                          child: Padding(
+                                            padding: EdgeInsets.all(8),
+                                            child: state.installingConnect == connect.integration.name ? Center(
+                                              child: Container(
+                                                width: 12,
+                                                height: 12,
+                                                child: CircularProgressIndicator(
+                                                  strokeWidth: 2,
+                                                ),
+                                              ),
+                                            ) : SvgPicture.asset('assets/images/more.svg'),
+                                          ),
+                                          offset: Offset(0, 100),
+                                          onSelected: (ConnectPopupButton item) => item.onTap(connect),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(8),
+                                          ),
+                                          color: Colors.black87,
+                                          itemBuilder: (BuildContext context) {
+                                            return uninstallConnectPopUp(context, state)
+                                                .map((ConnectPopupButton item) {
+                                              return PopupMenuItem<ConnectPopupButton>(
+                                                value: item,
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      item.title,
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 16,
+                                                        fontWeight: FontWeight.w400,
+                                                      ),
+                                                    ),
+                                                    Padding(
+                                                      padding: EdgeInsets.all(8),
+                                                      child: item.icon,
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
+                                            }).toList();
                                           },
-                                          color: Color.fromRGBO(255, 255, 255, 0.1),
-                                          height: 26,
-                                          minWidth: 0,
-                                          shape: CircleBorder(),
-                                          elevation: 0,
-                                          focusElevation: 0,
-                                          highlightElevation: 0,
-                                          hoverElevation: 0,
-                                          child: Icon(Icons.more_horiz),
                                         ),
                                       ),
                                     ],
@@ -1480,7 +1575,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                                         padding: EdgeInsets.only(right: 16),
                                         child: MaterialButton(
                                           onPressed: () {
-
+                                            screenBloc.add(InstallMoreConnectEvent(model: connect));
                                           },
                                           color: Color.fromRGBO(255, 255, 255, 0.1),
                                           height: 26,
@@ -1492,7 +1587,13 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                                           focusElevation: 0,
                                           highlightElevation: 0,
                                           hoverElevation: 0,
-                                          child: Text(
+                                          child: state.installingConnect == connect.integration.name ? Container(
+                                            width: 16,
+                                            height: 16,
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                            ),
+                                          ) : Text(
                                             Language.getPosConnectStrings('integrations.actions.install'),
                                             style: TextStyle(
                                               color: Colors.white,
@@ -1523,6 +1624,93 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
           ): Container(),
         ],
       ),
+    );
+  }
+
+  void showInstalledDialog(bool install, ConnectModel model) {
+/*    "installation.installed.title": "Installed",
+    "installation.installed.description": "You have successfully installed {{ title }}!<br>\nPlease connect you payment account to payever.",
+    "installation.uninstalled.title": "Uninstalled",
+    "installation.uninstalled.description": "You are successfully disconnected from \"{{ title }}\" now!",*/
+    screenBloc.add(ClearEvent());
+    String detail = install ? Language.getConnectStrings('installation.installed.description')
+        : Language.getConnectStrings('installation.uninstalled.description');
+    if (install) {
+      detail = detail.replaceAll('{{ title }}!<br>', Language.getPosConnectStrings(model.integration.displayOptions.title));
+    } else {
+      detail = detail.replaceAll('\"{{ title }}\"', Language.getPosConnectStrings(model.integration.displayOptions.title));
+    }
+    showCupertinoDialog(
+      context: context,
+      builder: (builder) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: Container(
+            height: 250,
+            width: Measurements.width * 0.8,
+            child: BlurEffectView(
+              color: Color.fromRGBO(50, 50, 50, 0.4),
+              padding: EdgeInsets.all(margin / 2),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.all(margin / 2),
+                  ),
+                  Icon(Icons.check),
+                  Padding(
+                    padding: EdgeInsets.all(margin / 2),
+                  ),
+                  Text(
+                    Language.getConnectStrings(install ? 'installation.installed.title': 'installation.uninstalled.title'),
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontFamily: 'HelveticaNeueMed',
+                        color: Colors.white
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(margin / 2),
+                  ),
+                  Text(
+                    detail,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontFamily: 'Helvetica Neue',
+                      color: Colors.white,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(margin / 2),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      MaterialButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        height: 24,
+                        elevation: 0,
+                        minWidth: 0,
+                        color: Colors.white10,
+                        child: Text(
+                          install ? Language.getPosConnectStrings('integrations.actions.open') : Language.getConnectStrings('actions.close'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

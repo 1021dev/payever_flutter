@@ -276,14 +276,15 @@ class _ConnectCategoryMoreScreenState extends State<ConnectCategoryMoreScreen> {
                   connectModel: widget.connections[index],
                   isPortrait: _isPortrait,
                   isTablet: _isTablet,
-                  onInstall: (model) {
-
-                  },
-                  onUninstall: (model) {
-
-                  },
+                  installingConnect: state.connectInstallations[index].integration.name == state.installingConnect,
                   onOpen: (model) {
 
+                  },
+                  onInstall: (model) {
+                    widget.screenBloc.add(InstallConnectAppEvent(model: model));
+                  },
+                  onUninstall: (model) {
+                    widget.screenBloc.add(UninstallConnectAppEvent(model: model));
                   },
                   onTap: (model) {
                     Navigator.push(
@@ -337,6 +338,7 @@ class _ConnectCategoryMoreScreenState extends State<ConnectCategoryMoreScreen> {
         children: widget.connections.map((installation) {
           return ConnectGridItem(
             connectModel: installation,
+            installingConnect: installation.integration.name == state.installingConnect,
             onTap: () {
               Navigator.push(
                 context,
@@ -350,8 +352,11 @@ class _ConnectCategoryMoreScreenState extends State<ConnectCategoryMoreScreen> {
                 ),
               );
             },
-            onInstall: () {
-
+            onInstall: (model) {
+              widget.screenBloc.add(InstallConnectAppEvent(model: model));
+            },
+            onUninstall: (model) {
+              widget.screenBloc.add(UninstallConnectAppEvent(model: model));
             },
           );
         }).toList(),

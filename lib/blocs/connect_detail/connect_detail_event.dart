@@ -56,3 +56,33 @@ class AddReviewEvent extends ConnectDetailScreenEvent {
     this.rate,
   ];
 }
+
+class InstallEvent extends ConnectDetailScreenEvent {}
+
+class UninstallEvent extends ConnectDetailScreenEvent {}
+
+class InstallMoreConnectEvent extends ConnectDetailScreenEvent {
+  final ConnectModel model;
+  InstallMoreConnectEvent({
+    this.model,
+  });
+
+  @override
+  List<Object> get props => [
+    this.model,
+  ];
+}
+
+class UninstallMoreConnectEvent extends ConnectDetailScreenEvent {
+  final ConnectModel model;
+  UninstallMoreConnectEvent({
+    this.model,
+  });
+
+  @override
+  List<Object> get props => [
+    this.model,
+  ];
+}
+
+class ClearEvent extends ConnectDetailScreenEvent {}
