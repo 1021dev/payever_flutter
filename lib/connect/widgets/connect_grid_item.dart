@@ -9,6 +9,8 @@ class ConnectGridItem extends StatelessWidget {
   final ConnectModel connectModel;
   final Function onTap;
   final Function onInstall;
+  final Function onUninstall;
+  final bool installingConnect;
 
   final formatter = new NumberFormat('###,###,###.00', 'en_US');
 
@@ -16,6 +18,8 @@ class ConnectGridItem extends StatelessWidget {
     this.connectModel,
     this.onTap,
     this.onInstall,
+    this.onUninstall,
+    this.installingConnect = false,
   });
 
   @override
@@ -90,10 +94,24 @@ class ConnectGridItem extends StatelessWidget {
                         alignment: Alignment.center,
                         child: SizedBox.expand(
                           child: MaterialButton(
-                            child: Text(
+                            child: installingConnect ? Center(
+                              child: Container(
+                                width: 12,
+                                height: 12,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              ),
+                            ) : Text(
                               connectModel.installed ? Language.getConnectStrings('actions.uninstall'): Language.getConnectStrings('actions.install'),
                             ),
-                            onPressed: onInstall,
+                            onPressed: () {
+                              if (connectModel.installed) {
+                                onUninstall(connectModel);
+                              } else {
+                                onInstall(connectModel);
+                              }
+                            },
                           ),
                         ),
                       ),

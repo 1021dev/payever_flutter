@@ -10,6 +10,7 @@ class ConnectScreenState {
   final List<Payment> paymentOptions;
   final Map<String, PaymentVariant> paymentVariants;
   final String selectedCategory;
+  final String installingConnect;
 
   ConnectScreenState({
     this.isLoading = false,
@@ -19,6 +20,7 @@ class ConnectScreenState {
     this.paymentVariants = const {},
     this.categories = const ['all'],
     this.selectedCategory,
+    this.installingConnect,
   });
 
   List<Object> get props => [
@@ -29,6 +31,7 @@ class ConnectScreenState {
     this.paymentVariants,
     this.categories,
     this.selectedCategory,
+    this.installingConnect,
   ];
 
   ConnectScreenState copyWith({
@@ -39,6 +42,7 @@ class ConnectScreenState {
     List<Payment> paymentOptions,
     Map<String, PaymentVariant> paymentVariants,
     String selectedCategory,
+    String installingConnect,
   }) {
     return ConnectScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -48,6 +52,7 @@ class ConnectScreenState {
       paymentOptions: paymentOptions ?? this.paymentOptions,
       paymentVariants: paymentVariants ?? this.paymentVariants,
       selectedCategory: selectedCategory ?? this.selectedCategory,
+      installingConnect: installingConnect ?? this.installingConnect,
     );
   }
 }

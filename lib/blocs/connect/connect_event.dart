@@ -34,3 +34,29 @@ class ConnectCategorySelected extends ConnectScreenEvent {
     this.category,
   ];
 }
+
+class InstallConnectAppEvent extends ConnectScreenEvent {
+  final ConnectModel model;
+
+  InstallConnectAppEvent({
+    this.model,
+  });
+
+  @override
+  List<Object> get props => [
+    this.model,
+  ];
+}
+
+class UninstallConnectAppEvent extends ConnectScreenEvent {
+  final ConnectModel model;
+
+  UninstallConnectAppEvent({
+    this.model,
+  });
+
+  @override
+  List<Object> get props => [
+    this.model,
+  ];
+}

@@ -622,10 +622,10 @@ class _ConnectScreenState extends State<ConnectScreen> {
 
                   },
                   onInstall: (model) {
-
+                    screenBloc.add(InstallConnectAppEvent(model: model));
                   },
                   onUninstall: (model) {
-
+                    screenBloc.add(UninstallConnectAppEvent(model: model));
                   },
                   onTap: (model) {
                     Navigator.push(
@@ -692,8 +692,11 @@ class _ConnectScreenState extends State<ConnectScreen> {
                 ),
               );
             },
-            onInstall: () {
-
+            onInstall: (model) {
+              screenBloc.add(InstallConnectAppEvent(model: model));
+            },
+            onUninstall: (model) {
+              screenBloc.add(UninstallConnectAppEvent(model: model));
             },
           );
         }).toList(),

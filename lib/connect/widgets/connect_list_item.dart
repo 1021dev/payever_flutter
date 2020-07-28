@@ -16,6 +16,7 @@ class ConnectListItem extends StatelessWidget {
   final Function onUninstall;
   final bool isPortrait;
   final bool isTablet;
+  final bool installingConnect;
 
   ConnectListItem({
     this.connectModel,
@@ -25,6 +26,7 @@ class ConnectListItem extends StatelessWidget {
     this.onUninstall,
     this.isTablet = false,
     this.isPortrait = true,
+    this.installingConnect = false,
   });
 
   List<ConnectPopupButton> uninstallPopUp(BuildContext context) {
@@ -155,7 +157,15 @@ class ConnectListItem extends StatelessWidget {
                     child: PopupMenuButton<ConnectPopupButton>(
                       child: Padding(
                         padding: EdgeInsets.all(8),
-                        child: SvgPicture.asset('assets/images/more.svg'),
+                        child: installingConnect ? Center(
+                          child: Container(
+                            width: 12,
+                            height: 12,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                            ),
+                          ),
+                        ) : SvgPicture.asset('assets/images/more.svg'),
                       ),
                       offset: Offset(0, 100),
                       onSelected: (ConnectPopupButton item) => item.onTap(),
@@ -210,7 +220,15 @@ class ConnectListItem extends StatelessWidget {
                       focusElevation: 0,
                       highlightElevation: 0,
                       hoverElevation: 0,
-                      child: Text(
+                      child: installingConnect ? Center(
+                        child: Container(
+                          width: 12,
+                          height: 12,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                          ),
+                        ),
+                      ) : Text(
                         Language.getPosConnectStrings('integrations.actions.install'),
                         style: TextStyle(
                           color: Colors.white,

@@ -25,6 +25,10 @@ class ConnectScreenBloc extends Bloc<ConnectScreenEvent, ConnectScreenState> {
       yield* fetchConnectInstallations(event.business);
     } else if (event is ConnectCategorySelected) {
       yield* selectCategory(event.category);
+    } else if (event is InstallConnectAppEvent) {
+
+    } else if (event is UninstallConnectAppEvent) {
+
     }
   }
 
@@ -108,4 +112,57 @@ class ConnectScreenBloc extends Bloc<ConnectScreenEvent, ConnectScreenState> {
         isLoading: false, connectInstallations: connectInstallations);
   }
 
+  Stream<ConnectScreenState> installConnect(ConnectModel model) async* {
+    yield state.copyWith(installingConnect: model.integration.name);
+    if (model.integration.category == 'payments') {
+      num id = 0;
+      if (state.paymentVariants.containsKey(model.integration.name)) {
+        PaymentVariant variant = state.paymentVariants[model.integration.name];
+        id = variant.missingSteps.id;
+      }
+      dynamic resetResponse = await api.resetPaymentCredential(token, state.business, model.integration.name, '$id');
+    }
+
+    dynamic response = await api.installConnect(token, state.business, model.integration.name);
+    if (response is Map) {
+      if (response['installed'] ?? false) {
+        List<ConnectModel> models = [];
+        models.addAll(state.connectInstallations);
+        int index = models.indexOf(model);
+        ConnectModel m = models[index];
+        m.installed = response['installed'] ?? false;
+        models[index] = m;
+        yield state.copyWith(connectInstallations: models);
+      }
+    }
+
+    yield state.copyWith(installingConnect: '');
+  }
+
+  Stream<ConnectScreenState> unInstall(ConnectModel model) async* {
+    yield state.copyWith(installingConnect: model.integration.name);
+    if (model.integration.category == 'payments') {
+      num id = 0;
+      if (state.paymentVariants.containsKey(model.integration.name)) {
+        PaymentVariant variant = state.paymentVariants[model.integration.name];
+        id = variant.missingSteps.id;
+      }
+      dynamic resetResponse = await api.resetPaymentCredential(token, state.business, model.integration.name, '$id');
+    }
+
+    dynamic response = await api.unInstallConnect(token, state.business, model.integration.name);
+    if (response is Map) {
+      if (response['installed'] ?? false) {
+        List<ConnectModel> models = [];
+        models.addAll(state.connectInstallations);
+        int index = models.indexOf(model);
+        ConnectModel m = models[index];
+        m.installed = response['installed'] ?? false;
+        models[index] = m;
+        yield state.copyWith(connectInstallations: models);
+      }
+    }
+
+    yield state.copyWith(installingConnect: '');
+  }
 }

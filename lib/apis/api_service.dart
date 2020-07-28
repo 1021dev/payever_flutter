@@ -990,6 +990,24 @@ class ApiService {
     }
   }
 
+  Future<dynamic> resetPaymentCredential(String token, String business, String name, String varientId) async {
+    try {
+      print('$TAG - installConnect()');
+      dynamic response = await _client.patchTypeless(
+          '${Env.thirdParty}/api/business/$business/payments/$name/install/$varientId/credentials/reset',
+          body: {},
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<dynamic> unInstallConnect(String token, String business, String name) async {
     try {
       print('$TAG - installConnect()');
