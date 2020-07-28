@@ -25,6 +25,7 @@ class Business {
   CurrentWallpaper currentWallpaper;
   Documents documents;
   ThemeSetting themeSettings;
+  Taxes taxes;
 
   Business.map(dynamic obj) {
     this.id = obj[GlobalUtils.DB_BUSINESS_ID];
@@ -85,6 +86,12 @@ class Business {
       this.themeSettings =
           ThemeSetting.fromMap(obj['themeSettings']);
     }
+    if (obj['taxes'] != null) {
+      this.taxes =
+          Taxes.fromMap(obj['taxes']);
+    } else {
+      this.taxes = Taxes();
+    }
   }
 
   Map<String, dynamic> toMap() {
@@ -112,6 +119,7 @@ class CompanyAddress {
   String street;
   String zipCode;
   String id;
+  String googleAutocomplete;
 
   CompanyAddress.map(dynamic obj) {
     this.city = obj[GlobalUtils.DB_BUSINESS_CA_CITY];
@@ -121,6 +129,18 @@ class CompanyAddress {
     this.street = obj[GlobalUtils.DB_BUSINESS_CA_STREET];
     this.zipCode = obj[GlobalUtils.DB_BUSINESS_CA_ZIP_CODE];
     this.id = obj[GlobalUtils.DB_BUSINESS_CA_ID];
+    this.googleAutocomplete = obj['googleAutocomplete'];
+  }
+
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> map = {};
+    map['city'] = city;
+    map['country'] = country;
+    map['googleAutocomplete'] = googleAutocomplete;
+    map['street'] = street;
+    map['zipCode'] = zipCode;
+
+    return map;
   }
 }
 
@@ -130,6 +150,8 @@ class CompanyDetails {
   String industry;
   String product;
   String updatedAt;
+  String legalForm;
+  String urlWebsite;
   String id;
   SalesRange salesRange;
   EmployeesRange employeesRange;
@@ -141,6 +163,8 @@ class CompanyDetails {
     this.product = obj[GlobalUtils.DB_BUSINESS_CMDT_PRODUCT];
     this.updatedAt = obj[GlobalUtils.DB_BUSINESS_CMDT_UPDATED_AT];
     this.id = obj[GlobalUtils.DB_BUSINESS_CMDT_ID];
+    this.legalForm = obj['legalForm'];
+    this.urlWebsite = obj['urlWebsite'];
 
     if (obj[GlobalUtils.DB_BUSINESS_CMDT_SALES_RANGE] != null) {
       this.salesRange =
@@ -152,6 +176,15 @@ class CompanyDetails {
     }
   }
 
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> map = {};
+    map['foundationYear'] = foundationYear;
+    map['industry'] = industry;
+    map['legalForm'] = legalForm;
+    map['product'] = product;
+    map['urlWebsite'] = urlWebsite;
+    return map;
+  }
 }
 
 class EmployeesRange {
@@ -200,6 +233,17 @@ class ContactDetails {
     this.phone = obj['phone'];
     this.salutation = obj['salutation'];
   }
+
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> map = {};
+    map['additionalPhone'] = additionalPhone;
+    map['fax'] = fax;
+    map['firstName'] = firstName;
+    map['lastName'] = lastName;
+    map['phone'] = phone;
+    map['salutation'] = salutation;
+    return map;
+  }
 }
 
 class BackAccount {
@@ -225,6 +269,16 @@ class BackAccount {
     id = obj['_id'];
   }
 
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> map = {};
+    map['bankName'] = bankName;
+    map['bic'] = bic;
+    map['city'] = city;
+    map['country'] = country;
+    map['iban'] = iban;
+    map['owner'] = owner;
+    return map;
+  }
 }
 
 class Documents {
@@ -254,4 +308,35 @@ class ThemeSetting {
     id = obj['_id'];
   }
 
+}
+
+class Taxes {
+  String companyRegisterNumber;
+  String createdAt;
+  String taxId;
+  String taxNumber;
+  bool turnoverTaxAct;
+  String updatedAt;
+  String id;
+
+  Taxes();
+
+  Taxes.fromMap(dynamic obj) {
+    companyRegisterNumber = obj['companyRegisterNumber'];
+    createdAt = obj['createdAt'];
+    taxId = obj['taxId'];
+    taxNumber = obj['taxNumber'];
+    turnoverTaxAct = obj['turnoverTaxAct'];
+    updatedAt = obj['updatedAt'];
+    id = obj['_id'];
+  }
+
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> map = {};
+    map['companyRegisterNumber'] = companyRegisterNumber;
+    map['taxId'] = taxId;
+    map['taxNumber'] = taxNumber;
+    map['turnoverTaxAct'] = turnoverTaxAct;
+    return map;
+  }
 }

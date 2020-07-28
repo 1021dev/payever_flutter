@@ -10,6 +10,7 @@ import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/screens/dashboard/sub_view/dashboard_menu_view.dart';
 import 'package:payever/connect/models/connect.dart';
 import 'package:payever/connect/views/connect_detail_screen.dart';
+import 'package:payever/connect/views/connect_setting_screen.dart';
 import 'package:payever/connect/widgets/connect_grid_item.dart';
 import 'package:payever/connect/widgets/connect_list_item.dart';
 import 'package:payever/connect/widgets/connect_top_button.dart';
@@ -642,7 +643,17 @@ class _ConnectScreenState extends State<ConnectScreen> {
                   isTablet: _isTablet,
                   installingConnect: state.connectInstallations[index].integration.name == state.installingConnect,
                   onOpen: (model) {
-
+                    Navigator.push(
+                      context,
+                      PageTransition(
+                        child: ConnectSettingScreen(
+                          screenBloc: screenBloc,
+                          connectIntegration: model.integration,
+                        ),
+                        type: PageTransitionType.fade,
+                        duration: Duration(milliseconds: 500),
+                      ),
+                    );
                   },
                   onInstall: (model) {
                     screenBloc.add(InstallConnectAppEvent(model: model));

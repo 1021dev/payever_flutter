@@ -16,6 +16,7 @@ import 'package:payever/connect/widgets/connect_list_item.dart';
 import 'package:payever/connect/widgets/connect_top_button.dart';
 
 import 'connect_detail_screen.dart';
+import 'connect_setting_screen.dart';
 
 class ConnectCategoryMoreScreen extends StatefulWidget {
   final List<ConnectModel> connections;
@@ -278,7 +279,17 @@ class _ConnectCategoryMoreScreenState extends State<ConnectCategoryMoreScreen> {
                   isTablet: _isTablet,
                   installingConnect: state.categoryConnects[index].integration.name == state.installingConnect,
                   onOpen: (model) {
-
+                    Navigator.push(
+                      context,
+                      PageTransition(
+                        child: ConnectSettingScreen(
+                          screenBloc: widget.screenBloc.connectScreenBloc,
+                          connectIntegration: model.integration,
+                        ),
+                        type: PageTransitionType.fade,
+                        duration: Duration(milliseconds: 500),
+                      ),
+                    );
                   },
                   onInstall: (model) {
                     widget.screenBloc.add(InstallMoreConnectEvent(model: model));

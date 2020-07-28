@@ -21,6 +21,7 @@ import 'package:payever/connect/widgets/connect_item_image_view.dart';
 import 'package:payever/connect/widgets/connect_top_button.dart';
 
 import 'connect_add_reviews_screen.dart';
+import 'connect_setting_screen.dart';
 
 class ConnectDetailScreen extends StatefulWidget {
   final ConnectModel connectModel;
@@ -297,7 +298,17 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                                     padding: EdgeInsets.all(0),
                                     child: MaterialButton(
                                       onPressed: () {
-
+                                        Navigator.push(
+                                          context,
+                                          PageTransition(
+                                            child: ConnectSettingScreen(
+                                              screenBloc: widget.screenBloc,
+                                              connectIntegration: state.editConnect,
+                                            ),
+                                            type: PageTransitionType.fade,
+                                            duration: Duration(milliseconds: 500),
+                                          ),
+                                        );
                                       },
                                       color: Color.fromRGBO(255, 255, 255, 0.1),
                                       height: 26,
@@ -416,7 +427,17 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                                 padding: EdgeInsets.all(0),
                                 child: MaterialButton(
                                   onPressed: () {
-
+                                    Navigator.push(
+                                      context,
+                                      PageTransition(
+                                        child: ConnectSettingScreen(
+                                          screenBloc: widget.screenBloc,
+                                          connectIntegration: state.editConnect,
+                                        ),
+                                        type: PageTransitionType.fade,
+                                        duration: Duration(milliseconds: 500),
+                                      ),
+                                    );
                                   },
                                   color: Color.fromRGBO(255, 255, 255, 0.1),
                                   height: 26,
@@ -1518,7 +1539,17 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                                         padding: EdgeInsets.all(0),
                                         child: MaterialButton(
                                           onPressed: () {
-
+                                            Navigator.push(
+                                              context,
+                                              PageTransition(
+                                                child: ConnectSettingScreen(
+                                                  screenBloc: widget.screenBloc,
+                                                  connectIntegration: connect.integration,
+                                                ),
+                                                type: PageTransitionType.fade,
+                                                duration: Duration(milliseconds: 500),
+                                              ),
+                                            );
                                           },
                                           color: Color.fromRGBO(255, 255, 255, 0.1),
                                           height: 26,

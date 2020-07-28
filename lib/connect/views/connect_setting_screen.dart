@@ -1,19 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
+import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/connect/models/connect.dart';
 
 bool _isPortrait;
 bool _isTablet;
 
-List<String> dropdownItems = [
-  'Verify by code',
-  'Verify by ID',
-];
 class ConnectSettingScreen extends StatefulWidget {
 
   final ConnectScreenBloc screenBloc;
@@ -36,18 +34,28 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
   String wallpaper;
   String selectedState = '';
   int isOpened = 0;
+  int accountSection = -1;
 
   var imageData;
 
+  Business business;
+  Map<String, PaymentVariant> variants;
+  List<Payment> paymentOptions;
+  PaymentVariant variant;
   @override
   void initState() {
     screenBloc = ConnectSettingsDetailScreenBloc(connectScreenBloc: widget.screenBloc);
+    business = widget.screenBloc.dashboardScreenBloc.state.activeBusiness;
+    variants = widget.screenBloc.state.paymentVariants;
+    paymentOptions = widget.screenBloc.state.paymentOptions;
 
+    variant = variants[widget.connectIntegration.name];
     super.initState();
   }
 
   @override
   void dispose() {
+    screenBloc.close();
     super.dispose();
   }
 
@@ -150,7 +158,1275 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
   }
 
   Widget _getBody(ConnectSettingsDetailScreenState state) {
-    return Container();
+    MissingSteps missingSteps = variant.missingSteps;
+
+    List<Widget> widgets = [];
+    for(int i = 0; i < missingSteps.missingSteps.length; i++) {
+      MissingStep missingStep = missingSteps.missingSteps[i];
+      if (missingStep.type == 'additional-info') {
+        Widget header = Container(
+          height: 56,
+          color: Colors.black45,
+          child: SizedBox.expand(
+            child: MaterialButton(
+              onPressed: () {
+                setState(() {
+                  if (isOpened == i) {
+                    isOpened = -1;
+                  } else {
+                    isOpened = i;
+                  }
+                });
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Expanded(
+                    child: Row(
+                      children: <Widget>[
+                        SvgPicture.asset(
+                          'assets/images/account.svg',
+                          width: 16,
+                          height: 16,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 8),
+                        ),
+                        Expanded(
+                          child: Text(
+                            'Account',
+                            maxLines: 1,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Icon(
+                    isOpened == i ? Icons.keyboard_arrow_up : Icons
+                        .keyboard_arrow_down,
+                    size: 20,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+
+        widgets.add(header);
+        // CompanyDetail Section;
+        Widget companySection = isOpened == i ? Container(
+          height: 56,
+          child: SizedBox.expand(
+            child: MaterialButton(
+              onPressed: () {
+                setState(() {
+                  if (accountSection == 0) {
+                    accountSection = -1;
+                  } else {
+                    accountSection = 0;
+                  }
+                });
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Expanded(
+                    child: Row(
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(left: 8),
+                        ),
+                        Expanded(
+                          child: Text(
+                            'Company',
+                            maxLines: 1,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Icon(
+                    accountSection == 0 ? Icons.remove : Icons.add,
+                    size: 20,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ) : Container();
+
+        widgets.add(companySection);
+
+        Widget legalFormField = isOpened == i && accountSection == 0 ? Container(
+          height: 64,
+          child: Center(
+            child: TextFormField(
+              style: TextStyle(fontSize: 16),
+              onTap: () {
+
+              },
+              onChanged: (val) {
+                setState(() {
+                  business.companyDetails.legalForm = val;
+                });
+              },
+              initialValue: business.companyDetails.legalForm ?? '',
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.only(left: 16, right: 16),
+                labelText: Language.getPosTpmStrings('Legal Form'),
+                labelStyle: TextStyle(
+                  color: Colors.grey,
+                ),
+                enabledBorder: InputBorder.none,
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                ),
+              ),
+              readOnly: true,
+              keyboardType: TextInputType.text,
+            ),
+          ),
+        ): Container();
+
+        widgets.add(legalFormField);
+
+        Widget productField = isOpened == i && accountSection == 0 ? Container(
+          height: 64,
+          child: Center(
+            child: TextFormField(
+              style: TextStyle(fontSize: 16),
+              onTap: () {
+
+              },
+              onChanged: (val) {
+                setState(() {
+                  business.companyDetails.product = val;
+                });
+              },
+              initialValue: business.companyDetails.product ?? '',
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.only(left: 16, right: 16),
+                labelText: Language.getPosTpmStrings('Product'),
+                labelStyle: TextStyle(
+                  color: Colors.grey,
+                ),
+                enabledBorder: InputBorder.none,
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                ),
+              ),
+              readOnly: true,
+              keyboardType: TextInputType.text,
+            ),
+          ),
+        ): Container();
+
+        widgets.add(productField);
+
+        Widget industryField = isOpened == i && accountSection == 0 ? Container(
+          height: 64,
+          child: Center(
+            child: TextFormField(
+              style: TextStyle(fontSize: 16),
+              onTap: () {
+
+              },
+              onChanged: (val) {
+                setState(() {
+                  business.companyDetails.industry = val;
+                });
+              },
+              initialValue: business.companyDetails.product ?? '',
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.only(left: 16, right: 16),
+                labelText: Language.getPosTpmStrings('Industry'),
+                labelStyle: TextStyle(
+                  color: Colors.grey,
+                ),
+                enabledBorder: InputBorder.none,
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                ),
+              ),
+              readOnly: true,
+              keyboardType: TextInputType.text,
+            ),
+          ),
+        ): Container();
+
+        widgets.add(industryField);
+
+        Widget websiteField = isOpened == i && accountSection == 0 ? Container(
+          height: 64,
+          child: Center(
+            child: TextFormField(
+              style: TextStyle(fontSize: 16),
+              onChanged: (val) {
+                setState(() {
+                  business.companyDetails.urlWebsite = val;
+                });
+              },
+              initialValue: business.companyDetails.urlWebsite ?? '',
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.only(left: 16, right: 16),
+                labelText: Language.getPosTpmStrings('URL to your website (Optional)'),
+                labelStyle: TextStyle(
+                  color: Colors.grey,
+                ),
+                enabledBorder: InputBorder.none,
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                ),
+              ),
+              keyboardType: TextInputType.text,
+            ),
+          ),
+        ): Container();
+
+        widgets.add(websiteField);
+
+        Widget foundationField = isOpened == i && accountSection == 0 ? Container(
+          height: 64,
+          child: Center(
+            child: TextFormField(
+              style: TextStyle(fontSize: 16),
+              onChanged: (val) {
+                setState(() {
+                  business.companyDetails.foundationYear = val;
+                });
+              },
+              initialValue: business.companyDetails.foundationYear ?? '',
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.only(left: 16, right: 16),
+                labelText: Language.getPosTpmStrings('Foundation year (Optional)'),
+                labelStyle: TextStyle(
+                  color: Colors.grey,
+                ),
+                enabledBorder: InputBorder.none,
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                ),
+              ),
+              keyboardType: TextInputType.text,
+            ),
+          ),
+        ): Container();
+
+        widgets.add(foundationField);
+
+        // Company Adress Section;
+        Widget addressSection = isOpened == i ? Container(
+          height: 56,
+          child: SizedBox.expand(
+            child: MaterialButton(
+              onPressed: () {
+                setState(() {
+                  if (accountSection == 1) {
+                    accountSection = -1;
+                  } else {
+                    accountSection = 1;
+                  }
+                });
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Expanded(
+                    child: Row(
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(left: 8),
+                        ),
+                        Expanded(
+                          child: Text(
+                            'Address',
+                            maxLines: 1,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Icon(
+                    accountSection == 1 ? Icons.remove : Icons.add,
+                    size: 20,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ) : Container();
+
+        widgets.add(addressSection);
+
+        Widget googleAutoCompleteField = isOpened == i && accountSection == 1 ? Container(
+          height: 64,
+          child: Center(
+            child: TextFormField(
+              style: TextStyle(fontSize: 16),
+              onTap: () {
+
+              },
+              onChanged: (val) {
+                setState(() {
+                  business.companyAddress.googleAutocomplete = val;
+                });
+              },
+              initialValue: business.companyAddress.googleAutocomplete ?? '',
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.only(left: 16, right: 16),
+                labelText: Language.getPosTpmStrings('Google Autocomplete'),
+                labelStyle: TextStyle(
+                  color: Colors.grey,
+                ),
+                enabledBorder: InputBorder.none,
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                ),
+              ),
+              keyboardType: TextInputType.text,
+            ),
+          ),
+        ): Container();
+
+        widgets.add(googleAutoCompleteField);
+
+        Widget countryField = isOpened == i && accountSection == 1 ? Container(
+          height: 64,
+          child: Center(
+            child: TextFormField(
+              style: TextStyle(fontSize: 16),
+              onTap: () {
+
+              },
+              onChanged: (val) {
+                setState(() {
+                  business.companyAddress.country = val;
+                });
+              },
+              initialValue: business.companyAddress.country ?? '',
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.only(left: 16, right: 16),
+                labelText: Language.getPosTpmStrings('Country'),
+                labelStyle: TextStyle(
+                  color: Colors.grey,
+                ),
+                enabledBorder: InputBorder.none,
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                ),
+              ),
+              readOnly: true,
+              keyboardType: TextInputType.text,
+            ),
+          ),
+        ): Container();
+
+        widgets.add(countryField);
+
+        Widget cityField = isOpened == i && accountSection == 1 ? Container(
+          height: 64,
+          child: Center(
+            child: TextFormField(
+              style: TextStyle(fontSize: 16),
+              onTap: () {
+
+              },
+              onChanged: (val) {
+                setState(() {
+                  business.companyAddress.city = val;
+                });
+              },
+              initialValue: business.companyAddress.city ?? '',
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.only(left: 16, right: 16),
+                labelText: Language.getPosTpmStrings('City'),
+                labelStyle: TextStyle(
+                  color: Colors.grey,
+                ),
+                enabledBorder: InputBorder.none,
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                ),
+              ),
+              keyboardType: TextInputType.text,
+            ),
+          ),
+        ): Container();
+
+        widgets.add(cityField);
+
+        Widget streetField = isOpened == i && accountSection == 1 ? Container(
+          height: 64,
+          child: Center(
+            child: TextFormField(
+              style: TextStyle(fontSize: 16),
+              onChanged: (val) {
+                setState(() {
+                  business.companyAddress.street = val;
+                });
+              },
+              initialValue: business.companyAddress.street ?? '',
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.only(left: 16, right: 16),
+                labelText: Language.getPosTpmStrings('Street'),
+                labelStyle: TextStyle(
+                  color: Colors.grey,
+                ),
+                enabledBorder: InputBorder.none,
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                ),
+              ),
+              keyboardType: TextInputType.text,
+            ),
+          ),
+        ): Container();
+
+        widgets.add(streetField);
+
+        Widget zipField = isOpened == i && accountSection == 1 ? Container(
+          height: 64,
+          child: Center(
+            child: TextFormField(
+              style: TextStyle(fontSize: 16),
+              onChanged: (val) {
+                setState(() {
+                  business.companyAddress.zipCode = val;
+                });
+              },
+              initialValue: business.companyAddress.zipCode ?? '',
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.only(left: 16, right: 16),
+                labelText: Language.getPosTpmStrings('ZIP code'),
+                labelStyle: TextStyle(
+                  color: Colors.grey,
+                ),
+                enabledBorder: InputBorder.none,
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                ),
+              ),
+              keyboardType: TextInputType.text,
+            ),
+          ),
+        ): Container();
+
+        widgets.add(zipField);
+
+        // Back account Section;
+        Widget bankAccountSection = isOpened == i ? Container(
+          height: 56,
+          child: SizedBox.expand(
+            child: MaterialButton(
+              onPressed: () {
+                setState(() {
+                  if (accountSection == 2) {
+                    accountSection = -1;
+                  } else {
+                    accountSection = 2;
+                  }
+                });
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Expanded(
+                    child: Row(
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(left: 8),
+                        ),
+                        Expanded(
+                          child: Text(
+                            'Bank account',
+                            maxLines: 1,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Icon(
+                    accountSection == 2 ? Icons.remove : Icons.add,
+                    size: 20,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ) : Container();
+
+        widgets.add(bankAccountSection);
+
+        Widget accountOwnerField = isOpened == i && accountSection == 2 ? Container(
+          height: 64,
+          child: Center(
+            child: TextFormField(
+              style: TextStyle(fontSize: 16),
+              onTap: () {
+
+              },
+              onChanged: (val) {
+                setState(() {
+                  business.bankAccount.owner = val;
+                });
+              },
+              initialValue: business.bankAccount.owner ?? '',
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.only(left: 16, right: 16),
+                labelText: Language.getPosTpmStrings('Account owner (optional'),
+                labelStyle: TextStyle(
+                  color: Colors.grey,
+                ),
+                enabledBorder: InputBorder.none,
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                ),
+              ),
+              keyboardType: TextInputType.text,
+            ),
+          ),
+        ): Container();
+
+        widgets.add(accountOwnerField);
+
+        Widget bankNameField = isOpened == i && accountSection == 2 ? Container(
+          height: 64,
+          child: Center(
+            child: TextFormField(
+              style: TextStyle(fontSize: 16),
+              onTap: () {
+
+              },
+              onChanged: (val) {
+                setState(() {
+                  business.bankAccount.bankName = val;
+                });
+              },
+              initialValue: business.bankAccount.bankName ?? '',
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.only(left: 16, right: 16),
+                labelText: Language.getPosTpmStrings('Bank name (optional)'),
+                labelStyle: TextStyle(
+                  color: Colors.grey,
+                ),
+                enabledBorder: InputBorder.none,
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                ),
+              ),
+              keyboardType: TextInputType.text,
+            ),
+          ),
+        ): Container();
+
+        widgets.add(bankNameField);
+
+        Widget bankCountryField = isOpened == i && accountSection == 2 ? Container(
+          height: 64,
+          child: Center(
+            child: TextFormField(
+              style: TextStyle(fontSize: 16),
+              onTap: () {
+
+              },
+              onChanged: (val) {
+                setState(() {
+                  business.bankAccount.country = val;
+                });
+              },
+              initialValue: business.bankAccount.country ?? '',
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.only(left: 16, right: 16),
+                labelText: Language.getPosTpmStrings('Country'),
+                labelStyle: TextStyle(
+                  color: Colors.grey,
+                ),
+                enabledBorder: InputBorder.none,
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                ),
+              ),
+              keyboardType: TextInputType.text,
+            ),
+          ),
+        ): Container();
+
+        widgets.add(bankCountryField);
+
+        Widget bankCityField = isOpened == i && accountSection == 2 ? Container(
+          height: 64,
+          child: Center(
+            child: TextFormField(
+              style: TextStyle(fontSize: 16),
+              onChanged: (val) {
+                setState(() {
+                  business.bankAccount.city = val;
+                });
+              },
+              initialValue: business.bankAccount.city ?? '',
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.only(left: 16, right: 16),
+                labelText: Language.getPosTpmStrings('City (optional)'),
+                labelStyle: TextStyle(
+                  color: Colors.grey,
+                ),
+                enabledBorder: InputBorder.none,
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                ),
+              ),
+              keyboardType: TextInputType.text,
+            ),
+          ),
+        ): Container();
+
+        widgets.add(bankCityField);
+
+        Widget bicField = isOpened == i && accountSection == 2 ? Container(
+          height: 64,
+          child: Center(
+            child: TextFormField(
+              style: TextStyle(fontSize: 16),
+              onChanged: (val) {
+                setState(() {
+                  business.bankAccount.bic = val;
+                });
+              },
+              initialValue: business.bankAccount.bic ?? '',
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.only(left: 16, right: 16),
+                labelText: Language.getPosTpmStrings('BIC'),
+                labelStyle: TextStyle(
+                  color: Colors.grey,
+                ),
+                enabledBorder: InputBorder.none,
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                ),
+              ),
+              keyboardType: TextInputType.text,
+            ),
+          ),
+        ): Container();
+
+        widgets.add(bicField);
+
+        Widget ibanField = isOpened == i && accountSection == 2 ? Container(
+          height: 64,
+          child: Center(
+            child: TextFormField(
+              style: TextStyle(fontSize: 16),
+              onChanged: (val) {
+                setState(() {
+                  business.bankAccount.iban = val;
+                });
+              },
+              initialValue: business.bankAccount.iban ?? '',
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.only(left: 16, right: 16),
+                labelText: Language.getPosTpmStrings('IBAN'),
+                labelStyle: TextStyle(
+                  color: Colors.grey,
+                ),
+                enabledBorder: InputBorder.none,
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                ),
+              ),
+              keyboardType: TextInputType.text,
+            ),
+          ),
+        ): Container();
+
+        widgets.add(ibanField);
+
+        // Taxes Section;
+        Widget taxesSection = isOpened == i ? Container(
+          height: 56,
+          child: SizedBox.expand(
+            child: MaterialButton(
+              onPressed: () {
+                setState(() {
+                  if (accountSection == 3) {
+                    accountSection = -1;
+                  } else {
+                    accountSection = 3;
+                  }
+                });
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Expanded(
+                    child: Row(
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(left: 8),
+                        ),
+                        Expanded(
+                          child: Text(
+                            'Taxes',
+                            maxLines: 1,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Icon(
+                    accountSection == 3 ? Icons.remove : Icons.add,
+                    size: 20,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ) : Container();
+
+        widgets.add(taxesSection);
+
+        Widget registerNumberField = isOpened == i && accountSection == 3 ? Container(
+          height: 64,
+          child: Center(
+            child: TextFormField(
+              style: TextStyle(fontSize: 16),
+              onTap: () {
+
+              },
+              onChanged: (val) {
+                setState(() {
+                  business.taxes.companyRegisterNumber = val;
+                });
+              },
+              initialValue: business.taxes.companyRegisterNumber ?? '',
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.only(left: 16, right: 16),
+                labelText: Language.getPosTpmStrings('Company Register Number (optinal)'),
+                labelStyle: TextStyle(
+                  color: Colors.grey,
+                ),
+                enabledBorder: InputBorder.none,
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                ),
+              ),
+              keyboardType: TextInputType.text,
+            ),
+          ),
+        ): Container();
+
+        widgets.add(registerNumberField);
+
+        Widget taxIdField = isOpened == i && accountSection == 3 ? Container(
+          height: 64,
+          child: Center(
+            child: TextFormField(
+              style: TextStyle(fontSize: 16),
+              onTap: () {
+
+              },
+              onChanged: (val) {
+                setState(() {
+                  business.taxes.taxId = val;
+                });
+              },
+              initialValue: business.taxes.taxId ?? '',
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.only(left: 16, right: 16),
+                labelText: Language.getPosTpmStrings('Tax ID (optional)'),
+                labelStyle: TextStyle(
+                  color: Colors.grey,
+                ),
+                enabledBorder: InputBorder.none,
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                ),
+              ),
+              keyboardType: TextInputType.text,
+            ),
+          ),
+        ): Container();
+
+        widgets.add(taxIdField);
+
+        Widget taxNumberField = isOpened == i && accountSection == 3 ? Container(
+          height: 64,
+          child: Center(
+            child: TextFormField(
+              style: TextStyle(fontSize: 16),
+              onTap: () {
+
+              },
+              onChanged: (val) {
+                setState(() {
+                  business.taxes.taxNumber = val;
+                });
+              },
+              initialValue: business.taxes.taxNumber ?? '',
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.only(left: 16, right: 16),
+                labelText: Language.getPosTpmStrings('Tax Number (optional)'),
+                labelStyle: TextStyle(
+                  color: Colors.grey,
+                ),
+                enabledBorder: InputBorder.none,
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                ),
+              ),
+              keyboardType: TextInputType.text,
+            ),
+          ),
+        ): Container();
+
+        widgets.add(taxNumberField);
+
+        Widget overTaxButton = isOpened == i && accountSection == 3 ? Container(
+          height: 64,
+          child: CheckboxListTile(
+            onChanged: (val) {
+              setState(() {
+                business.taxes.turnoverTaxAct = val;
+              });
+            },
+            value: business.taxes.turnoverTaxAct ?? false,
+            title: Text(
+              'Turnover tax at',
+            ),
+          ),
+        ): Container();
+
+        widgets.add(overTaxButton);
+
+        // Taxes Section;
+        Widget contactSection = isOpened == i ? Container(
+          height: 56,
+          child: SizedBox.expand(
+            child: MaterialButton(
+              onPressed: () {
+                setState(() {
+                  if (accountSection == 4) {
+                    accountSection = -1;
+                  } else {
+                    accountSection = 4;
+                  }
+                });
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Expanded(
+                    child: Row(
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(left: 8),
+                        ),
+                        Expanded(
+                          child: Text(
+                            'Contact',
+                            maxLines: 1,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Icon(
+                    accountSection == 4 ? Icons.remove : Icons.add,
+                    size: 20,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ) : Container();
+
+        widgets.add(contactSection);
+
+        Widget nameSection = isOpened == i && accountSection == 4 ? Container(
+          height: 64,
+          child: Row(
+            children: <Widget>[
+              Flexible(
+                child: TextFormField(
+                  style: TextStyle(fontSize: 16),
+                  onTap: () {
+
+                  },
+                  onChanged: (val) {
+                    setState(() {
+                      business.contactDetails.salutation = val;
+                    });
+                  },
+                  initialValue: business.contactDetails.salutation ?? '',
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.only(left: 16, right: 16),
+                    labelText: Language.getPosTpmStrings('Salutation'),
+                    labelStyle: TextStyle(
+                      color: Colors.grey,
+                    ),
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                    ),
+                  ),
+                  keyboardType: TextInputType.text,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 2),
+              ),
+              Flexible(
+                child: TextFormField(
+                  style: TextStyle(fontSize: 16),
+                  onTap: () {
+
+                  },
+                  onChanged: (val) {
+                    setState(() {
+                      business.contactDetails.firstName = val;
+                    });
+                  },
+                  initialValue: business.contactDetails.firstName ?? '',
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.only(left: 16, right: 16),
+                    labelText: Language.getPosTpmStrings('First Name'),
+                    labelStyle: TextStyle(
+                      color: Colors.grey,
+                    ),
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                    ),
+                  ),
+                  keyboardType: TextInputType.text,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 2),
+              ),
+              Flexible(
+                child: TextFormField(
+                  style: TextStyle(fontSize: 16),
+                  onTap: () {
+
+                  },
+                  onChanged: (val) {
+                    setState(() {
+                      business.contactDetails.lastName = val;
+                    });
+                  },
+                  initialValue: business.contactDetails.lastName ?? '',
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.only(left: 16, right: 16),
+                    labelText: Language.getPosTpmStrings('Last Name'),
+                    labelStyle: TextStyle(
+                      color: Colors.grey,
+                    ),
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                    ),
+                  ),
+                  keyboardType: TextInputType.text,
+                ),
+              ),
+            ],
+          ),
+        ): Container();
+
+        widgets.add(nameSection);
+
+        Widget phoneSection = isOpened == i && accountSection == 4 ? Container(
+          height: 64,
+          child: Row(
+            children: <Widget>[
+              Flexible(
+                child: TextFormField(
+                  style: TextStyle(fontSize: 16),
+                  onTap: () {
+
+                  },
+                  onChanged: (val) {
+                    setState(() {
+                      business.contactDetails.phone = val;
+                    });
+                  },
+                  initialValue: business.contactDetails.phone ?? '',
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.only(left: 16, right: 16),
+                    labelText: Language.getPosTpmStrings('Phone'),
+                    labelStyle: TextStyle(
+                      color: Colors.grey,
+                    ),
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                    ),
+                  ),
+                  keyboardType: TextInputType.text,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 2),
+              ),
+              Flexible(
+                child: TextFormField(
+                  style: TextStyle(fontSize: 16),
+                  onTap: () {
+
+                  },
+                  onChanged: (val) {
+                    setState(() {
+                      business.contactDetails.fax = val;
+                    });
+                  },
+                  initialValue: business.contactDetails.fax ?? '',
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.only(left: 16, right: 16),
+                    labelText: Language.getPosTpmStrings('FAX (optional)'),
+                    labelStyle: TextStyle(
+                      color: Colors.grey,
+                    ),
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                    ),
+                  ),
+                  keyboardType: TextInputType.text,
+                ),
+              ),
+            ],
+          ),
+        ): Container();
+
+        widgets.add(phoneSection);
+
+        Widget additionalPhoneField = isOpened == i && accountSection == 4 ? Container(
+          height: 64,
+          child: Center(
+            child: TextFormField(
+              style: TextStyle(fontSize: 16),
+              onTap: () {
+
+              },
+              onChanged: (val) {
+                setState(() {
+                  business.contactDetails.additionalPhone= val;
+                });
+              },
+              initialValue: business.contactDetails.additionalPhone ?? '',
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.only(left: 16, right: 16),
+                labelText: Language.getPosTpmStrings('Additional Phone (optional)'),
+                labelStyle: TextStyle(
+                  color: Colors.grey,
+                ),
+                enabledBorder: InputBorder.none,
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                ),
+              ),
+              keyboardType: TextInputType.text,
+            ),
+          ),
+        ): Container();
+
+        widgets.add(additionalPhoneField);
+
+        Widget accountSendButton = isOpened == i ? Container(
+          height: 56,
+          child: SizedBox.expand(
+            child: MaterialButton(
+              minWidth: 0,
+              onPressed: () {
+
+              },
+              color: Colors.black87,
+              child: Text(
+                Language.getConnectStrings('Send'),
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ),
+        ) : Container();
+        widgets.add(accountSendButton);
+
+      } else if (missingStep.type == 'missing-credentials') {
+        Widget header = Container(
+          height: 56,
+          color: Colors.black45,
+          child: SizedBox.expand(
+            child: MaterialButton(
+              onPressed: () {
+                setState(() {
+                  if (isOpened == i) {
+                    isOpened = -1;
+                  } else {
+                    isOpened = i;
+                  }
+                });
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Expanded(
+                    child: Row(
+                      children: <Widget>[
+                        Icon(Icons.vpn_key),
+                        Padding(
+                          padding: EdgeInsets.only(left: 8),
+                        ),
+                        Expanded(
+                          child: Text(
+                            'Default',
+                            maxLines: 1,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    children: <Widget>[
+                      MaterialButton(
+                        onPressed: () {
+
+                        },
+                        minWidth: 0,
+                        padding: EdgeInsets.all(2),
+                        height: 24,
+                        child: Text(
+                          'Disconnect',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                      Icon(
+                        isOpened == i ? Icons.keyboard_arrow_up : Icons
+                            .keyboard_arrow_down,
+                        size: 20,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+
+        widgets.add(header);
+
+        Widget redirectAllow = isOpened == i ? Container(
+          height: 64,
+          child: CheckboxListTile(
+            onChanged: (val) {
+              setState(() {
+                variant.variants.first.shopRedirectEnabled = val;
+              });
+            },
+            value: variant.variants.first.shopRedirectEnabled ?? false,
+            title: Text(
+              'Turnover tax at',
+            ),
+          ),
+        ): Container();
+
+        widgets.add(redirectAllow);
+
+
+      } else if (missingStep.type == '') {
+
+      }
+    }
+    return Center(
+      child: Wrap(
+          runSpacing: 16,
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.only(left: 16, right: 16),
+              child: BlurEffectView(
+                color: Color.fromRGBO(20, 20, 20, 0.2),
+                blur: 15,
+                radius: 12,
+                padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: widgets.map((e) => e).toList(),
+                ),
+              ),
+            ),
+          ]
+      ),
+    );
   }
 }
 
+//DropDownFormField(
+//filled: false,
+//titleText: Language.getProductStrings('Product must match'),
+//hintText: Language.getProductStrings('Product must match'),
+//value: conditionOption,
+//onChanged: (value) {
+//setState(() {
+//conditionOption = value;
+//if (conditionOption != 'No Conditions') {
+//CollectionModel collection = state.collectionDetail;
+//FillCondition fillCondition = collection
+//    .automaticFillConditions;
+//fillCondition.strict =
+//conditionOption == 'All Conditions';
+//collection.automaticFillConditions = fillCondition;
+//widget.screenBloc.add(
+//UpdateCollectionDetail(collectionModel: collection));
+//}
+//});
+//},
+//dataSource: productConditionOptions.map((e) {
+//return {
+//'display': e,
+//'value': e,
+//};
+//}).toList(),
+//textField: 'display',
+//valueField: 'value',
+//)

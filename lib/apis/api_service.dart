@@ -830,7 +830,7 @@ class ApiService {
 
   Future<dynamic> getNotInstalledByCountry(String token, String id) async {
     try {
-      print('$TAG - getConnects()');
+      print('$TAG - getNotInstalledByCountry()');
       dynamic response = await _client.getTypeless(
           '${Env.connect}/api/business/$id/integration/not-installed/random/filtered-by-country',
           headers: {
@@ -911,6 +911,24 @@ class ApiService {
           },
           headers: {
             HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+
+  Future<dynamic> getBusinessProducts(String accessToken) async {
+    try {
+      print('$TAG - getBusinessApps()');
+      dynamic response = await _client.getTypeless(
+          '${Env.commerceOsBack}/api/business-products',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $accessToken',
             HttpHeaders.contentTypeHeader: 'application/json',
             HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
           }

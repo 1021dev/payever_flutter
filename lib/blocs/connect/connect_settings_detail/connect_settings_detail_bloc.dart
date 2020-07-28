@@ -22,20 +22,13 @@ class ConnectSettingsDetailScreenBloc extends Bloc<ConnectSettingsDetailScreenEv
     }
   }
 
-  Stream<ConnectSettingsDetailScreenState> getCategoryDetails(ConnectIntegration integration) async* {
-    yield state.copyWith(categoryConnects: []);
-    List<ConnectModel> connectInstallations = [];
-    dynamic categoryResponse = await api.getConnectIntegrationByCategory(token, state.business, integration.category);
-    if (categoryResponse is List) {
-      categoryResponse.forEach((element) {
-        ConnectModel cm = ConnectModel.toMap(element);
-        if (cm.integration.id != integration.id) {
-          connectInstallations.add(cm);
-        }
-      });
+  Stream<ConnectSettingsDetailScreenState> getSettingDetail(ConnectIntegration integration) async* {
+    if (integration.category == 'payments') {
+      
+    } else if (integration.category == 'products') {
+      dynamic response = await api.getBusinessProducts(token);
     }
 
-    yield state.copyWith(categoryConnects: connectInstallations);
   }
 
 
