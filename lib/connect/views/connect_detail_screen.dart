@@ -850,6 +850,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                       child: ConnectReviewsScreen(
                         screenBloc: screenBloc,
                         connectModel: widget.connectModel.integration,
+                        installed: widget.connectModel.installed,
                       ),
                       type: PageTransitionType.fade,
                       duration: Duration(milliseconds: 500),
@@ -1743,6 +1744,19 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                       MaterialButton(
                         onPressed: () {
                           Navigator.pop(context);
+                          if (install) {
+                            Navigator.push(
+                              context,
+                              PageTransition(
+                                child: ConnectSettingScreen(
+                                  screenBloc: widget.screenBloc,
+                                  connectIntegration: model.integration,
+                                ),
+                                type: PageTransitionType.fade,
+                                duration: Duration(milliseconds: 500),
+                              ),
+                            );
+                          }
                         },
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),

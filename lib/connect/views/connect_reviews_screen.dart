@@ -18,10 +18,12 @@ import 'package:payever/connect/widgets/connect_top_button.dart';
 class ConnectReviewsScreen extends StatefulWidget {
   final ConnectIntegration connectModel;
   final ConnectDetailScreenBloc screenBloc;
+  final bool installed;
 
   ConnectReviewsScreen({
     this.connectModel,
     this.screenBloc,
+    this.installed = false,
   });
 
   @override
@@ -309,7 +311,7 @@ class _ConnectReviewsScreenState extends State<ConnectReviewsScreen> {
                   fontSize: 18,
                 ),
               ),
-              GestureDetector(
+              widget.installed ? GestureDetector(
                 onTap: () {
                   Navigator.push(
                     context,
@@ -331,7 +333,7 @@ class _ConnectReviewsScreenState extends State<ConnectReviewsScreen> {
                     fontSize: 14,
                   ),
                 ),
-              ),
+              ): Container(),
             ],
           ),
           Padding(
@@ -423,7 +425,7 @@ class _ConnectReviewsScreenState extends State<ConnectReviewsScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text(
-                                review.title,
+                                review.title ?? '',
                                 style: TextStyle(
                                   color: Color.fromRGBO(255, 255, 255, 0.95),
                                   fontSize: 14,
@@ -440,7 +442,7 @@ class _ConnectReviewsScreenState extends State<ConnectReviewsScreen> {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: <Widget>[
                               Text(
-                                review.reviewDate,
+                                review.reviewDate ?? '',
                                 style: TextStyle(
                                   color: Color.fromRGBO(255, 255, 255, 0.95).withOpacity(0.6),
                                   fontSize: 14,
@@ -466,7 +468,7 @@ class _ConnectReviewsScreenState extends State<ConnectReviewsScreen> {
                         padding: EdgeInsets.only(top: margin / 2),
                       ),
                       Text(
-                        review.text,
+                        review.text ?? '',
                         style: TextStyle(
                           color: Color.fromRGBO(255, 255, 255, 0.95),
                           fontSize: 14,

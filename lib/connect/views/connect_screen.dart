@@ -804,6 +804,19 @@ class _ConnectScreenState extends State<ConnectScreen> {
                         MaterialButton(
                           onPressed: () {
                             Navigator.pop(context);
+                            if (install) {
+                              Navigator.push(
+                                context,
+                                PageTransition(
+                                  child: ConnectSettingScreen(
+                                    screenBloc: screenBloc,
+                                    connectIntegration: model.integration,
+                                  ),
+                                  type: PageTransitionType.fade,
+                                  duration: Duration(milliseconds: 500),
+                                ),
+                              );
+                            }
                           },
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),

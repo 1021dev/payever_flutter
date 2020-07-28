@@ -487,7 +487,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Navigator.push(
                 context,
                 PageTransition(
-                  child: ProductsInitScreen(),
+                  child: ProductsInitScreen(
+                    dashboardScreenBloc: screenBloc,
+                  ),
                   type: PageTransitionType.fade,
                   duration: Duration(milliseconds: 500),
                 ),
@@ -496,7 +498,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Navigator.push(
                 context,
                 PageTransition(
-                  child: ConnectInitScreen(),
+                  child: ConnectInitScreen(
+                    dashboardScreenBloc: screenBloc,
+                  ),
                   type: PageTransitionType.fade,
                   duration: Duration(milliseconds: 500),
                 ),

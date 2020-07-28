@@ -98,17 +98,13 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
       elevation: 0,
       automaticallyImplyLeading: false,
       backgroundColor: Colors.black87,
-      title: Row(
-        children: <Widget>[
-          Text(
-            'Twilio',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
+      title: Text(
+        Language.getPosConnectStrings(widget.connectIntegration.displayOptions.title),
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+        ),
       ),
       actions: <Widget>[
         IconButton(
@@ -145,12 +141,17 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
           body: state.isLoading ?
           Center(
             child: CircularProgressIndicator(),
-          ): Column(
-            children: <Widget>[
-              Expanded(
-                child: _getBody(state),
+          ): Center(
+            child: SingleChildScrollView(
+              child: Container(
+                width: Measurements.width,
+                child: Column(
+                  children: <Widget>[
+                    _getBody(state),
+                  ],
+                ),
               ),
-            ],
+            ),
           ),
         ),
       ),
@@ -166,7 +167,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
       if (missingStep.type == 'additional-info') {
         Widget header = Container(
           height: 56,
-          color: Colors.black45,
+          color: Colors.black54,
           child: SizedBox.expand(
             child: MaterialButton(
               onPressed: () {
@@ -218,9 +219,11 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         );
 
         widgets.add(header);
+        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
         // CompanyDetail Section;
         Widget companySection = isOpened == i ? Container(
           height: 56,
+          color: Colors.black38,
           child: SizedBox.expand(
             child: MaterialButton(
               onPressed: () {
@@ -266,6 +269,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ) : Container();
 
         widgets.add(companySection);
+        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
 
         Widget legalFormField = isOpened == i && accountSection == 0 ? Container(
           height: 64,
@@ -299,6 +303,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ): Container();
 
         widgets.add(legalFormField);
+        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
 
         Widget productField = isOpened == i && accountSection == 0 ? Container(
           height: 64,
@@ -332,6 +337,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ): Container();
 
         widgets.add(productField);
+        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
 
         Widget industryField = isOpened == i && accountSection == 0 ? Container(
           height: 64,
@@ -365,6 +371,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ): Container();
 
         widgets.add(industryField);
+        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
 
         Widget websiteField = isOpened == i && accountSection == 0 ? Container(
           height: 64,
@@ -394,6 +401,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ): Container();
 
         widgets.add(websiteField);
+        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
 
         Widget foundationField = isOpened == i && accountSection == 0 ? Container(
           height: 64,
@@ -423,10 +431,12 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ): Container();
 
         widgets.add(foundationField);
+        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
 
         // Company Adress Section;
         Widget addressSection = isOpened == i ? Container(
           height: 56,
+          color: Colors.black38,
           child: SizedBox.expand(
             child: MaterialButton(
               onPressed: () {
@@ -472,6 +482,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ) : Container();
 
         widgets.add(addressSection);
+        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
 
         Widget googleAutoCompleteField = isOpened == i && accountSection == 1 ? Container(
           height: 64,
@@ -504,6 +515,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ): Container();
 
         widgets.add(googleAutoCompleteField);
+        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
 
         Widget countryField = isOpened == i && accountSection == 1 ? Container(
           height: 64,
@@ -537,6 +549,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ): Container();
 
         widgets.add(countryField);
+        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
 
         Widget cityField = isOpened == i && accountSection == 1 ? Container(
           height: 64,
@@ -569,6 +582,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ): Container();
 
         widgets.add(cityField);
+        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
 
         Widget streetField = isOpened == i && accountSection == 1 ? Container(
           height: 64,
@@ -598,6 +612,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ): Container();
 
         widgets.add(streetField);
+        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
 
         Widget zipField = isOpened == i && accountSection == 1 ? Container(
           height: 64,
@@ -627,9 +642,11 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ): Container();
 
         widgets.add(zipField);
+        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
 
         // Back account Section;
         Widget bankAccountSection = isOpened == i ? Container(
+          color: Colors.black38,
           height: 56,
           child: SizedBox.expand(
             child: MaterialButton(
@@ -676,6 +693,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ) : Container();
 
         widgets.add(bankAccountSection);
+        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
 
         Widget accountOwnerField = isOpened == i && accountSection == 2 ? Container(
           height: 64,
@@ -693,7 +711,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
               initialValue: business.bankAccount.owner ?? '',
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
-                labelText: Language.getPosTpmStrings('Account owner (optional'),
+                labelText: Language.getPosTpmStrings('Account owner (optional)'),
                 labelStyle: TextStyle(
                   color: Colors.grey,
                 ),
@@ -708,6 +726,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ): Container();
 
         widgets.add(accountOwnerField);
+        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
 
         Widget bankNameField = isOpened == i && accountSection == 2 ? Container(
           height: 64,
@@ -740,6 +759,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ): Container();
 
         widgets.add(bankNameField);
+        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
 
         Widget bankCountryField = isOpened == i && accountSection == 2 ? Container(
           height: 64,
@@ -772,6 +792,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ): Container();
 
         widgets.add(bankCountryField);
+        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
 
         Widget bankCityField = isOpened == i && accountSection == 2 ? Container(
           height: 64,
@@ -801,6 +822,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ): Container();
 
         widgets.add(bankCityField);
+        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
 
         Widget bicField = isOpened == i && accountSection == 2 ? Container(
           height: 64,
@@ -830,6 +852,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ): Container();
 
         widgets.add(bicField);
+        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
 
         Widget ibanField = isOpened == i && accountSection == 2 ? Container(
           height: 64,
@@ -859,10 +882,12 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ): Container();
 
         widgets.add(ibanField);
+        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
 
         // Taxes Section;
         Widget taxesSection = isOpened == i ? Container(
           height: 56,
+          color: Colors.black38,
           child: SizedBox.expand(
             child: MaterialButton(
               onPressed: () {
@@ -908,6 +933,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ) : Container();
 
         widgets.add(taxesSection);
+        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
 
         Widget registerNumberField = isOpened == i && accountSection == 3 ? Container(
           height: 64,
@@ -940,6 +966,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ): Container();
 
         widgets.add(registerNumberField);
+        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
 
         Widget taxIdField = isOpened == i && accountSection == 3 ? Container(
           height: 64,
@@ -972,6 +999,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ): Container();
 
         widgets.add(taxIdField);
+        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
 
         Widget taxNumberField = isOpened == i && accountSection == 3 ? Container(
           height: 64,
@@ -1004,6 +1032,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ): Container();
 
         widgets.add(taxNumberField);
+        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
 
         Widget overTaxButton = isOpened == i && accountSection == 3 ? Container(
           height: 64,
@@ -1013,6 +1042,8 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
                 business.taxes.turnoverTaxAct = val;
               });
             },
+            checkColor: Colors.black,
+            activeColor: Colors.white,
             value: business.taxes.turnoverTaxAct ?? false,
             title: Text(
               'Turnover tax at',
@@ -1021,10 +1052,12 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ): Container();
 
         widgets.add(overTaxButton);
+        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
 
         // Taxes Section;
         Widget contactSection = isOpened == i ? Container(
           height: 56,
+          color: Colors.black38,
           child: SizedBox.expand(
             child: MaterialButton(
               onPressed: () {
@@ -1070,6 +1103,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ) : Container();
 
         widgets.add(contactSection);
+        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
 
         Widget nameSection = isOpened == i && accountSection == 4 ? Container(
           height: 64,
@@ -1164,6 +1198,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ): Container();
 
         widgets.add(nameSection);
+        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
 
         Widget phoneSection = isOpened == i && accountSection == 4 ? Container(
           height: 64,
@@ -1229,6 +1264,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ): Container();
 
         widgets.add(phoneSection);
+        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
 
         Widget additionalPhoneField = isOpened == i && accountSection == 4 ? Container(
           height: 64,
@@ -1283,6 +1319,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
           ),
         ) : Container();
         widgets.add(accountSendButton);
+        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
 
       } else if (missingStep.type == 'missing-credentials') {
         Widget header = Container(
@@ -1325,13 +1362,18 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
                   ),
                   Row(
                     children: <Widget>[
-                      MaterialButton(
+                      variant.variants.first.credentialsValid ? MaterialButton(
                         onPressed: () {
 
                         },
                         minWidth: 0,
-                        padding: EdgeInsets.all(2),
+                        color: Colors.black45,
+                        elevation: 0,
+                        padding: EdgeInsets.all(4),
                         height: 24,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                         child: Text(
                           'Disconnect',
                           style: TextStyle(
@@ -1339,7 +1381,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
                             fontSize: 12,
                           ),
                         ),
-                      ),
+                      ): Container(),
                       Icon(
                         isOpened == i ? Icons.keyboard_arrow_up : Icons
                             .keyboard_arrow_down,
@@ -1354,48 +1396,187 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         );
 
         widgets.add(header);
-
-        Widget redirectAllow = isOpened == i ? Container(
-          height: 64,
-          child: CheckboxListTile(
-            onChanged: (val) {
-              setState(() {
-                variant.variants.first.shopRedirectEnabled = val;
-              });
-            },
-            value: variant.variants.first.shopRedirectEnabled ?? false,
-            title: Text(
-              'Turnover tax at',
+        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
+        if (variant.variants.first.credentialsValid) {
+          Widget redirectAllow = isOpened == i ? Container(
+            height: 64,
+            child: CheckboxListTile(
+              onChanged: (val) {
+                setState(() {
+                  variant.variants.first.shopRedirectEnabled = val;
+                });
+              },
+              value: variant.variants.first.shopRedirectEnabled ?? false,
+              activeColor: Colors.white,
+              checkColor: Colors.black,
+              title: Text(
+                'Do redirect to the shop after success or failure',
+              ),
             ),
-          ),
-        ): Container();
+          ): Container();
 
-        widgets.add(redirectAllow);
+          widgets.add(redirectAllow);
+          widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
 
+          Widget connectButton = isOpened == i ? Container(
+            height: 56,
+            child: SizedBox.expand(
+              child: MaterialButton(
+                minWidth: 0,
+                onPressed: () {
+
+                },
+                color: Colors.black87,
+                child: Text(
+                  Language.getConnectStrings('Save'),
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ),
+          ) : Container();
+          widgets.add(connectButton);
+        } else {
+          Widget vendorNumberField = isOpened == i ? Container(
+            height: 64,
+            child: Center(
+              child: TextFormField(
+                style: TextStyle(fontSize: 16),
+                onTap: () {
+
+                },
+                onChanged: (val) {
+                  setState(() {
+
+                  });
+                },
+                initialValue: '',
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.only(left: 16, right: 16),
+                  labelText: Language.getPosTpmStrings('Vendor Number'),
+                  labelStyle: TextStyle(
+                    color: Colors.grey,
+                  ),
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                  ),
+                ),
+                keyboardType: TextInputType.text,
+              ),
+            ),
+          ): Container();
+
+          widgets.add(vendorNumberField);
+          widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
+
+          Widget passwordField = isOpened == i ? Container(
+            height: 64,
+            child: Center(
+              child: TextFormField(
+                style: TextStyle(fontSize: 16),
+                onTap: () {
+
+                },
+                onChanged: (val) {
+                  setState(() {
+
+                  });
+                },
+                initialValue: '',
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.only(left: 16, right: 16),
+                  labelText: Language.getPosTpmStrings('Password'),
+                  labelStyle: TextStyle(
+                    color: Colors.grey,
+                  ),
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                  ),
+                ),
+                keyboardType: TextInputType.text,
+              ),
+            ),
+          ): Container();
+
+          widgets.add(passwordField);
+          widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
+
+          Widget connectButton = isOpened == i ? Container(
+            height: 56,
+            child: SizedBox.expand(
+              child: MaterialButton(
+                minWidth: 0,
+                onPressed: () {
+
+                },
+                color: Colors.black87,
+                child: Text(
+                  Language.getConnectStrings('Connect'),
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ),
+          ) : Container();
+          widgets.add(connectButton);
+        }
 
       } else if (missingStep.type == '') {
 
       }
+
     }
+    Widget saveButton = Container(
+      height: 56,
+      child: SizedBox.expand(
+        child: MaterialButton(
+          minWidth: 0,
+          onPressed: () {
+
+          },
+          color: Colors.black54,
+          child: Text(
+            Language.getConnectStrings('+ Add'),
+            textAlign: TextAlign.left,
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+      ),
+    );
+    widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
+    widgets.add(saveButton);
+
     return Center(
       child: Wrap(
-          runSpacing: 16,
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.only(left: 16, right: 16),
-              child: BlurEffectView(
-                color: Color.fromRGBO(20, 20, 20, 0.2),
-                blur: 15,
-                radius: 12,
-                padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: widgets.map((e) => e).toList(),
-                ),
+        runSpacing: 16,
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.only(left: 16, right: 16),
+            child: BlurEffectView(
+              color: Color.fromRGBO(20, 20, 20, 0.2),
+              blur: 15,
+              radius: 12,
+              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: widgets.map((e) => e).toList(),
               ),
             ),
-          ]
+          ),
+        ],
       ),
     );
   }
