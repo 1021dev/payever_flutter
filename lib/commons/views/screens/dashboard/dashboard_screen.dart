@@ -492,6 +492,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   duration: Duration(milliseconds: 500),
                 ),
               );
+            } else if (aw.type.contains('connect')) {
+              Navigator.push(
+                context,
+                PageTransition(
+                  child: ConnectInitScreen(),
+                  type: PageTransitionType.fade,
+                  duration: Duration(milliseconds: 500),
+                ),
+              );
             }
           },
         )

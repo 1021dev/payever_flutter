@@ -11,4 +11,4 @@ export './products/variants/variants.dart';
 export './welcome/welcome.dart';
 export './notifications/notifications.dart';
 export './connect/connect.dart';
-export './connect_detail/connect_detail.dart';
+export './connect/connect_detail/connect_detail.dart';

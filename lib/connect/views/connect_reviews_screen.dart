@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,18 +7,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
-import 'package:payever/blocs/connect_detail/connect_detail_bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/views/screens/login/login_page.dart';
 import 'package:payever/connect/models/connect.dart';
 import 'package:payever/connect/views/connect_add_reviews_screen.dart';
-import 'package:payever/connect/views/connect_category_more_connections.dart';
-import 'package:payever/connect/views/connect_version_history_screen.dart';
-import 'package:payever/connect/widgets/connect_item_image_view.dart';
 import 'package:payever/connect/widgets/connect_top_button.dart';
-import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 class ConnectReviewsScreen extends StatefulWidget {
   final ConnectIntegration connectModel;
