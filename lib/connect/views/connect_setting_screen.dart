@@ -5,6 +5,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
+import 'package:payever/connect/models/connect.dart';
 
 bool _isPortrait;
 bool _isTablet;
@@ -16,9 +17,11 @@ List<String> dropdownItems = [
 class ConnectSettingScreen extends StatefulWidget {
 
   final ConnectScreenBloc screenBloc;
+  final ConnectIntegration connectIntegration;
 
   ConnectSettingScreen({
     this.screenBloc,
+    this.connectIntegration,
   });
 
   @override
@@ -29,6 +32,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
+  ConnectSettingsDetailScreenBloc screenBloc;
   String wallpaper;
   String selectedState = '';
   int isOpened = 0;
@@ -37,6 +41,8 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
 
   @override
   void initState() {
+    screenBloc = ConnectSettingsDetailScreenBloc(connectScreenBloc: widget.screenBloc);
+
     super.initState();
   }
 
@@ -57,9 +63,9 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
     _isTablet = Measurements.width < 600 ? false : true;
 
     return BlocListener(
-      bloc: widget.screenBloc,
-      listener: (BuildContext context, ConnectScreenState state) async {
-        if (state is PosScreenFailure) {
+      bloc: screenBloc,
+      listener: (BuildContext context, ConnectSettingsDetailScreenState state) async {
+        if (state is ConnectSettingsDetailScreenStateFailure) {
           Navigator.pushReplacement(
             context,
             PageTransition(
@@ -69,16 +75,16 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
           );
         }
       },
-      child: BlocBuilder<ConnectScreenBloc, ConnectScreenState>(
-        bloc: widget.screenBloc,
-        builder: (BuildContext context, ConnectScreenState state) {
+      child: BlocBuilder<ConnectSettingsDetailScreenBloc, ConnectSettingsDetailScreenState>(
+        bloc: screenBloc,
+        builder: (BuildContext context, ConnectSettingsDetailScreenState state) {
           return _body(state);
         },
       ),
     );
   }
 
-  Widget _appBar(ConnectScreenState state) {
+  Widget _appBar(ConnectSettingsDetailScreenState state) {
     return AppBar(
       centerTitle: false,
       elevation: 0,
@@ -120,7 +126,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
     );
   }
 
-  Widget _body(ConnectScreenState state) {
+  Widget _body(ConnectSettingsDetailScreenState state) {
     return Scaffold(
       backgroundColor: Colors.black,
       resizeToAvoidBottomPadding: false,
@@ -143,7 +149,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
     );
   }
 
-  Widget _getBody(ConnectScreenState state) {
+  Widget _getBody(ConnectSettingsDetailScreenState state) {
     return Container();
   }
 }
