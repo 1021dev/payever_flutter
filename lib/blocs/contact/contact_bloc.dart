@@ -25,7 +25,6 @@ class ContactScreenBloc extends Bloc<ContactScreenEvent, ContactScreenState> {
   }
 
   Stream<ContactScreenState> fetchContactInstallations(String business) async* {
-    yield state.copyWith(isLoading: true);
   }
 
 }

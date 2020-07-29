@@ -2,19 +2,24 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:payever/commons/commons.dart';
+import 'package:payever/contacts/widgets/contact_item_image_view.dart';
 
 class ContactGridItem extends StatelessWidget {
   final Function onTap;
   final Function onInstall;
   final Function onUninstall;
-
-  final formatter = new NumberFormat('###,###,###.00', 'en_US');
+  final bool checked;
 
   ContactGridItem({
     this.onTap,
     this.onInstall,
     this.onUninstall,
+    this.checked = true,
   });
+
+  final String groupPlaceholder = 'https://payeverstage.azureedge.net/placeholders/group-placeholder.png';
+  final String contactPlaceholder = 'https://payeverstage.azureedge.net/placeholders/contact-placeholder.png';
+
 
   @override
   Widget build(BuildContext context) {
@@ -27,15 +32,15 @@ class ContactGridItem extends StatelessWidget {
           color: Color.fromRGBO(0, 0, 0, 0.3),
         ),
         child: Stack(
-          alignment: Alignment.topRight,
+          alignment: Alignment.topLeft,
           children: <Widget>[
             Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 Expanded(
-                  child: Container(
-                    height: 200,
+                  child: ContactItemImageView(
+                    contactPlaceholder,
                   ),
                 ),
                 Container(
@@ -102,20 +107,21 @@ class ContactGridItem extends StatelessWidget {
             ),
             Container(
               margin: EdgeInsets.all(10),
-              height: 20,
-              width: 75,
+              height: 24,
+              width: 24,
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 color: Color.fromRGBO(0, 0, 0, 0.3),
               ),
-              child: Text(
-                Language.getConnectStrings('installation.installed.title').toUpperCase(),
-                style: TextStyle(
-                  color: Colors.white,
-                  fontFamily: 'Roboto-Medium',
-                  fontSize: 11,
-                ),
+              child: checked ? Icon(
+                Icons.check_circle_outline,
+                color: Colors.white60,
+                size: 24,
+              ) : Icon(
+                Icons.radio_button_unchecked,
+                color: Colors.white60,
+                size: 24,
               ),
             ),
           ],

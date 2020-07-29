@@ -10,6 +10,7 @@ import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/views/screens/login/login_page.dart';
 import 'package:payever/commons/views/screens/switcher/switcher_page.dart';
 import 'package:payever/connect/views/connect_screen.dart';
+import 'package:payever/contacts/views/contacts_screen.dart';
 import 'package:payever/notifications/notifications_screen.dart';
 import 'package:payever/pos/views/pos_create_terminal_screen.dart';
 import 'package:payever/pos/views/pos_screen.dart';
@@ -499,6 +500,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 context,
                 PageTransition(
                   child: ConnectInitScreen(
+                    dashboardScreenBloc: screenBloc,
+                  ),
+                  type: PageTransitionType.fade,
+                  duration: Duration(milliseconds: 500),
+                ),
+              );
+            } else if (aw.code.contains('contact')) {
+              Navigator.push(
+                context,
+                PageTransition(
+                  child: ContactsInitScreen(
                     dashboardScreenBloc: screenBloc,
                   ),
                   type: PageTransitionType.fade,

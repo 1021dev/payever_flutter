@@ -10,6 +10,7 @@ import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/screens/dashboard/sub_view/dashboard_menu_view.dart';
 import 'package:payever/connect/widgets/connect_top_button.dart';
 import 'package:payever/contacts/views/contacts_filter_screen.dart';
+import 'package:payever/contacts/widgets/contact_grid_add_item.dart';
 import 'package:payever/contacts/widgets/contact_grid_item.dart';
 import 'package:payever/contacts/widgets/contact_list_item.dart';
 import 'package:payever/notifications/notifications_screen.dart';
@@ -193,7 +194,7 @@ class _ContactScreenState extends State<ContactScreen> {
             child: Center(
               child: Container(
                 child: SvgPicture.asset(
-                  'assets/images/contact.svg',
+                  'assets/images/contacts.svg',
                   width: 20,
                   height: 20,
                 ),
@@ -383,12 +384,11 @@ class _ContactScreenState extends State<ContactScreen> {
                   );
                 },
                 child: Container(
-                  padding: EdgeInsets.all(8),
+                  padding: EdgeInsets.all(margin),
                   child: SvgPicture.asset(
                     'assets/images/filter.svg',
-                    color: Color(0xFF78787d),
-                    width: 16,
-                    height: 16,
+                    width: 12,
+                    height: 12,
                   ),
                 ),
               ),
@@ -471,6 +471,18 @@ class _ContactScreenState extends State<ContactScreen> {
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+
+                  },
+                  child: Container(
+                    child: SvgPicture.asset(
+                      'assets/images/sort-by-button.svg',
+                      width: 12,
+                      height: 12,
                     ),
                   ),
                 ),
@@ -635,6 +647,7 @@ class _ContactScreenState extends State<ContactScreen> {
         shrinkWrap: true,
         childAspectRatio: cellWidth / cellHeight,
         children: <Widget>[
+          ContactGridAddItem(),
           ContactGridItem(),
         ],
       ),
