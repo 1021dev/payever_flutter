@@ -180,6 +180,13 @@ class _AddContactScreenState extends State<AddContactScreen> {
 
     type = widget.editContact.type;
 
+    List<ContactField> imageFields = widget.editContact.contactFields.nodes.where((element) {
+      return element.field.name == 'imageUrl';
+    }).toList();
+    if (imageFields.length > 0) {
+      image = imageFields.first.value;
+    }
+
     List<ContactField> emailFields = widget.editContact.contactFields.nodes.where((element) {
       return element.field.name == 'email';
     }).toList();
@@ -301,7 +308,6 @@ class _AddContactScreenState extends State<AddContactScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Expanded(
                   child: Container(
@@ -312,26 +318,23 @@ class _AddContactScreenState extends State<AddContactScreen> {
                     ),
                     child: image == '' ? SvgPicture.asset('assets/images/add_contacts.svg')
                         : CachedNetworkImage(
-                      imageUrl: contactPlaceholder,
+                      alignment: Alignment.center,
+                      imageUrl: image,
                       imageBuilder: (context, imageProvider) => Container(
                         clipBehavior: Clip.antiAlias,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          border: Border.all(
-                            color: Colors.white,
-                            width: 2,
-                          ),
                           gradient: LinearGradient(
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
                             colors: [Color(0xffededf4), Color(0xffaeb0b7)],
                           ),
-                          image: DecorationImage(
-                            image: imageProvider,
-                            fit: BoxFit.cover,
-                          ),
                         ),
-                      ),
+                        child: Image(
+                          image: imageProvider,
+                          fit: BoxFit.cover,
+                        ),
+                      ) ,
                       placeholder: (context, url) => Container(
                         child: Center(
                           child: Container(
@@ -340,9 +343,6 @@ class _AddContactScreenState extends State<AddContactScreen> {
                             ),
                           ),
                         ),
-                      ),
-                      errorWidget: (context, url, error) =>  Container(
-                        child: SvgPicture.asset('assets/images/noimage.svg', color: Colors.black54, width: 100, height: 100,),
                       ),
                     ),
                   ),

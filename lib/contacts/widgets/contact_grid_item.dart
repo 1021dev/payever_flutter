@@ -24,6 +24,7 @@ class ContactGridItem extends StatelessWidget {
     String email = '';
     String firstName = '';
     String lastName = '';
+    String image = '';
     List<ContactField> emailFields = contact.contact.contactFields.nodes.where((element) {
       return element.field.name == 'email';
     }).toList();
@@ -45,6 +46,13 @@ class ContactGridItem extends StatelessWidget {
       lastName = lastNameFields.first.value;
     }
 
+    List<ContactField> imageFields = contact.contact.contactFields.nodes.where((element) {
+      return element.field.name == 'imageUrl';
+    }).toList();
+    if (imageFields.length > 0) {
+      image = imageFields.first.value;
+    }
+
     return GestureDetector(
       onTap: () {
         onTap(contact);
@@ -64,7 +72,7 @@ class ContactGridItem extends StatelessWidget {
               children: <Widget>[
                 Expanded(
                   child: ContactItemImageView(
-                    contactPlaceholder,
+                    image == '' ? contactPlaceholder : image,
                   ),
                 ),
                 Container(
