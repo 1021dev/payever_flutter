@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:payever/commons/commons.dart';
+import 'package:payever/contacts/models/model.dart';
 import 'package:payever/contacts/widgets/contact_item_image_view.dart';
 
 class ContactGridItem extends StatelessWidget {
@@ -9,12 +9,14 @@ class ContactGridItem extends StatelessWidget {
   final Function onInstall;
   final Function onUninstall;
   final bool checked;
+  final Contact contact;
 
   ContactGridItem({
     this.onTap,
     this.onInstall,
     this.onUninstall,
     this.checked = true,
+    this.contact,
   });
 
   final String groupPlaceholder = 'https://payeverstage.azureedge.net/placeholders/group-placeholder.png';

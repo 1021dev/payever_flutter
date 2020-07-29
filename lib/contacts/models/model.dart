@@ -96,3 +96,10 @@ class ContactPageInfo {
     hasNextPage = obj['hasNextPage'];
   }
 }
+
+class ContactModel {
+  bool isChecked;
+  Contact contact;
+
+  ContactModel({this.contact, this.isChecked});
+}

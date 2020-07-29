@@ -6,6 +6,8 @@ import 'package:payever/apis/api_service.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/contacts/models/model.dart';
+import 'package:uuid/uuid.dart';
+import 'package:uuid/uuid_util.dart';
 
 import 'contact_detail.dart';
 
@@ -33,7 +35,7 @@ class ContactDetailScreenBloc extends Bloc<ContactDetailScreenEvent, ContactDeta
   Stream<ContactDetailScreenState> getField(String businessId) async* {
     yield state.copyWith(isLoading: true);
     List<Field> fields = [];
-    Map body = {
+    Map<String, dynamic> body = {
       'operationName': null,
       'query': '{\n  fields(filter: {or: [{businessId: {isNull: true}}]}) {\n    nodes {\n      id\n      businessId\n      name\n      type\n      __typename\n    }\n    __typename\n  }\n}\n',
       'variables': {
@@ -61,7 +63,7 @@ class ContactDetailScreenBloc extends Bloc<ContactDetailScreenEvent, ContactDeta
 
   Stream<ContactDetailScreenState> getFieldData(String businessId) async* {
     yield state.copyWith(isLoading: true);
-    Map body = {
+    Map<String, dynamic> body = {
       'operationName': null,
       'query': 'query (\$businessId: UUID!) {\n  fields(filter: {or: [{businessId: {equalTo: \$businessId}}]}) {\n    nodes {\n      id\n      businessId\n      name\n      type\n      defaultValues\n      __typename\n    }\n    __typename\n  }\n}\n',
       'variables': {
@@ -85,7 +87,7 @@ class ContactDetailScreenBloc extends Bloc<ContactDetailScreenEvent, ContactDeta
 
   Stream<ContactDetailScreenState> getContact(String id) async* {
     Contact contact;
-    Map body = {
+    Map<String, dynamic> body = {
       'operationName': 'contact',
       'query': 'query contact(\$id: UUID!) {\n  contact(id: \$id) {\n    id\n    businessId\n    type\n    contactFields {\n      nodes {\n        id\n        value\n        fieldId\n        field {\n          id\n          name\n          defaultValues\n          type\n          __typename\n        }\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n',
       'variables': {
@@ -103,6 +105,58 @@ class ContactDetailScreenBloc extends Bloc<ContactDetailScreenEvent, ContactDeta
       }
     }
     yield state.copyWith(isLoading: false, contact: contact);
+  }
+
+  Stream<ContactDetailScreenState> createContact(String type) async* {
+    Contact contact;
+    String id = Uuid().v4();
+    Map<String, dynamic> body = {
+      'operationName': 'contact',
+      'query': 'mutation (\$id: UUID!, \$businessId: UUID!, \$type: String!) {\n  createContact(input: {contact: {id: \$id, businessId: \$businessId, type: \$type}}) {\n    contact {\n      id\n      businessId\n      type\n      __typename\n    }\n    __typename\n  }\n}\n',
+      'variables': {
+        'businessId': state.business,
+        'id': id,
+        'type': type,
+      },
+    };
+    dynamic response = await api.getGraphql(token, body);
+    if (response is Map) {
+      dynamic data = response['data'];
+      if (data is Map) {
+        dynamic contactData = data['createContact'];
+        if (contactData is Map) {
+          contact = Contact.fromMap(contactData['contact']);
+        }
+      }
+    }
+    yield state.copyWith(isLoading: false,);
+  }
+
+  Stream<ContactDetailScreenState> createContactField(String contactId, String fieldId, String value) async* {
+    ContactField contactField;
+    String id = Uuid().v4();
+    Map<String, dynamic> body = {
+      'operationName': 'createContactField',
+      'query': 'mutation createContactField(\$id: UUID!, \$businessId: UUID!, \$contactId: UUID!, \$fieldId: UUID!, \$value: String!) {\n  createContactField(input: {contactField: {id: \$id, businessId: \$businessId, contactId: \$contactId, fieldId: \$fieldId, value: \$value}}) {\n    contactField {\n      id\n      value\n      __typename\n    }\n    __typename\n  }\n}\n',
+      'variables': {
+        'businessId': state.business,
+        'contactId': contactId,
+        'fieldId': fieldId,
+        'id': id,
+        'value': value,
+      },
+    };
+    dynamic response = await api.getGraphql(token, body);
+    if (response is Map) {
+      dynamic data = response['data'];
+      if (data is Map) {
+        dynamic createContactField = data['createContactField'];
+        if (createContactField is Map) {
+          contactField = ContactField.fromMap(createContactField['contactField']);
+        }
+      }
+    }
+    yield state.copyWith(isLoading: false);
   }
 
 

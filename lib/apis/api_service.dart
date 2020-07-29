@@ -1991,7 +1991,7 @@ class ApiService {
     }
   }
 
-  Future<dynamic> getGraphql(String token, Map body) async {
+  Future<dynamic> getGraphql(String token, Map<String, dynamic> body) async {
     try {
       print('$TAG - getGraphql()');
       dynamic response = await _client.postTypeLess(

@@ -6,7 +6,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
-import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/screens/dashboard/sub_view/dashboard_menu_view.dart';
 import 'package:payever/connect/widgets/connect_top_button.dart';
 import 'package:payever/contacts/views/add_contact_screen.dart';
@@ -623,7 +622,7 @@ class _ContactScreenState extends State<ContactScreen> {
                   color: Color.fromRGBO(255, 255, 255, 0.2),
                 );
               },
-              itemCount: 0,
+              itemCount: state.contacts != null ? state.contacts.nodes.length : 0,
             ),
           ),
         ],
@@ -639,6 +638,30 @@ class _ContactScreenState extends State<ContactScreen> {
     double imageHeight = cellWidth / imageRatio;
     double cellHeight = imageHeight + contentHeight;
     print('$cellWidth,  $cellHeight, $imageHeight  => ${cellHeight / cellWidth}');
+
+    List<Widget> widgets = [];
+    widgets.add(
+      ContactGridAddItem(
+        onAdd: () {
+          Navigator.push(
+            context,
+            PageTransition(
+              child: AddContactScreen(
+                screenBloc: screenBloc,
+              ),
+              type: PageTransitionType.fade,
+              duration: Duration(milliseconds: 500),
+            ),
+          );
+        },
+      ),
+    );
+    if (state.contacts != null) {
+      widgets.addAll(state.contacts.nodes.map((e) {
+        return ContactGridItem();
+      }).toList());
+    }
+
     return Container(
       child: GridView.count(
         crossAxisCount: crossAxisCount,
@@ -647,23 +670,7 @@ class _ContactScreenState extends State<ContactScreen> {
         mainAxisSpacing: 12,
         shrinkWrap: true,
         childAspectRatio: cellWidth / cellHeight,
-        children: <Widget>[
-          ContactGridAddItem(
-            onAdd: () {
-              Navigator.push(
-                context,
-                PageTransition(
-                  child: AddContactScreen(
-                    screenBloc: screenBloc,
-                  ),
-                  type: PageTransitionType.fade,
-                  duration: Duration(milliseconds: 500),
-                ),
-              );
-            },
-          ),
-          ContactGridItem(),
-        ],
+        children: widgets,
       ),
     );
   }
