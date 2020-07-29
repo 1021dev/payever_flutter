@@ -14,6 +14,7 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/connect/models/connect.dart';
+import 'package:payever/contacts/models/model.dart';
 
 bool _isPortrait;
 bool _isTablet;
@@ -21,9 +22,11 @@ bool _isTablet;
 class AddContactScreen extends StatefulWidget {
 
   final ContactScreenBloc screenBloc;
+  final Contact editContact;
 
   AddContactScreen({
     this.screenBloc,
+    this.editContact,
   });
 
   @override
@@ -48,6 +51,9 @@ class _AddContactScreenState extends State<AddContactScreen> {
   @override
   void initState() {
     screenBloc = ContactDetailScreenBloc(contactScreenBloc: widget.screenBloc);
+    if (widget.editContact != null) {
+      screenBloc.add(GetContactDetail(contact: widget.editContact));
+    }
     business = widget.screenBloc.dashboardScreenBloc.state.activeBusiness;
 
     super.initState();
@@ -159,6 +165,90 @@ class _AddContactScreenState extends State<AddContactScreen> {
   }
 
   Widget _getBody(ContactDetailScreenState state) {
+    String type = '';
+    String firstName = '';
+    String lastName = '';
+    String mobilePhone = '';
+    String email = '';
+    String homePage = '';
+    String street = '';
+    String city = '';
+    String stateString = '';
+    String zip = '';
+    String country = '';
+    String image = state.blobName ?? '';
+
+    type = widget.editContact.type;
+
+    List<ContactField> emailFields = widget.editContact.contactFields.nodes.where((element) {
+      return element.field.name == 'email';
+    }).toList();
+    if (emailFields.length > 0) {
+      email = emailFields.first.value;
+    }
+
+    List<ContactField> firstNameFields = widget.editContact.contactFields.nodes.where((element) {
+      return element.field.name == 'firstName';
+    }).toList();
+    if (firstNameFields.length > 0) {
+      firstName = firstNameFields.first.value;
+    }
+
+    List<ContactField> lastNameFields = widget.editContact.contactFields.nodes.where((element) {
+      return element.field.name == 'lastName';
+    }).toList();
+    if (lastNameFields.length > 0) {
+      lastName = lastNameFields.first.value;
+    }
+
+    List<ContactField> phoneFields = widget.editContact.contactFields.nodes.where((element) {
+      return element.field.name == 'mobilePhone';
+    }).toList();
+    if (phoneFields.length > 0) {
+      mobilePhone = phoneFields.first.value;
+    }
+
+    List<ContactField> homePageFields = widget.editContact.contactFields.nodes.where((element) {
+      return element.field.name == 'homepage';
+    }).toList();
+    if (homePageFields.length > 0) {
+      homePage = homePageFields.first.value;
+    }
+
+    List<ContactField> streetFields = widget.editContact.contactFields.nodes.where((element) {
+      return element.field.name == 'street';
+    }).toList();
+    if (streetFields.length > 0) {
+      street = streetFields.first.value;
+    }
+
+    List<ContactField> cityFields = widget.editContact.contactFields.nodes.where((element) {
+      return element.field.name == 'city';
+    }).toList();
+    if (cityFields.length > 0) {
+      city = cityFields.first.value;
+    }
+
+    List<ContactField> stateFields = widget.editContact.contactFields.nodes.where((element) {
+      return element.field.name == 'state';
+    }).toList();
+    if (stateFields.length > 0) {
+      stateString = stateFields.first.value;
+    }
+
+    List<ContactField> zipFields = widget.editContact.contactFields.nodes.where((element) {
+      return element.field.name == 'zip';
+    }).toList();
+    if (zipFields.length > 0) {
+      zip = zipFields.first.value;
+    }
+
+    List<ContactField> coungryFields = widget.editContact.contactFields.nodes.where((element) {
+      return element.field.name == 'country';
+    }).toList();
+    if (coungryFields.length > 0) {
+      country = coungryFields.first.value;
+    }
 
     List<Widget> widgets = [];
     Widget header = Container(
@@ -220,7 +310,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                     ),
-                    child: true ? SvgPicture.asset('assets/images/add_contacts.svg')
+                    child: image == '' ? SvgPicture.asset('assets/images/add_contacts.svg')
                         : CachedNetworkImage(
                       imageUrl: contactPlaceholder,
                       imageBuilder: (context, imageProvider) => Container(
@@ -334,14 +424,12 @@ class _AddContactScreenState extends State<AddContactScreen> {
       child: Center(
         child: TextFormField(
           style: TextStyle(fontSize: 16),
-          onTap: () {
-
-          },
           onChanged: (val) {
             setState(() {
+
             });
           },
-          initialValue: '',
+          initialValue: type,
           decoration: InputDecoration(
             contentPadding: EdgeInsets.only(left: 16, right: 16),
             labelText: Language.getPosTpmStrings('Type'),
@@ -368,14 +456,11 @@ class _AddContactScreenState extends State<AddContactScreen> {
           Flexible(
             child: TextFormField(
               style: TextStyle(fontSize: 16),
-              onTap: () {
-
-              },
               onChanged: (val) {
                 setState(() {
                 });
               },
-              initialValue: '',
+              initialValue: firstName,
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('First Name'),
@@ -397,14 +482,11 @@ class _AddContactScreenState extends State<AddContactScreen> {
           Flexible(
             child: TextFormField(
               style: TextStyle(fontSize: 16),
-              onTap: () {
-
-              },
               onChanged: (val) {
                 setState(() {
                 });
               },
-              initialValue: '',
+              initialValue: lastName,
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('Last Name'),
@@ -433,14 +515,11 @@ class _AddContactScreenState extends State<AddContactScreen> {
           Flexible(
             child: TextFormField(
               style: TextStyle(fontSize: 16),
-              onTap: () {
-
-              },
               onChanged: (val) {
                 setState(() {
                 });
               },
-              initialValue: '',
+              initialValue: mobilePhone,
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('Mobile Phone'),
@@ -462,14 +541,11 @@ class _AddContactScreenState extends State<AddContactScreen> {
           Flexible(
             child: TextFormField(
               style: TextStyle(fontSize: 16),
-              onTap: () {
-
-              },
               onChanged: (val) {
                 setState(() {
                 });
               },
-              initialValue: '',
+              initialValue: email,
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('Email'),
@@ -496,14 +572,11 @@ class _AddContactScreenState extends State<AddContactScreen> {
       child: Center(
         child: TextFormField(
           style: TextStyle(fontSize: 16),
-          onTap: () {
-
-          },
           onChanged: (val) {
             setState(() {
             });
           },
-          initialValue: '',
+          initialValue: homePage,
           decoration: InputDecoration(
             contentPadding: EdgeInsets.only(left: 16, right: 16),
             labelText: Language.getPosTpmStrings('Homepage'),
@@ -528,14 +601,11 @@ class _AddContactScreenState extends State<AddContactScreen> {
       child: Center(
         child: TextFormField(
           style: TextStyle(fontSize: 16),
-          onTap: () {
-
-          },
           onChanged: (val) {
             setState(() {
             });
           },
-          initialValue: '',
+          initialValue: street,
           decoration: InputDecoration(
             contentPadding: EdgeInsets.only(left: 16, right: 16),
             labelText: Language.getPosTpmStrings('Street'),
@@ -562,14 +632,11 @@ class _AddContactScreenState extends State<AddContactScreen> {
           Flexible(
             child: TextFormField(
               style: TextStyle(fontSize: 16),
-              onTap: () {
-
-              },
               onChanged: (val) {
                 setState(() {
                 });
               },
-              initialValue: '',
+              initialValue: city,
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('City'),
@@ -591,14 +658,11 @@ class _AddContactScreenState extends State<AddContactScreen> {
           Flexible(
             child: TextFormField(
               style: TextStyle(fontSize: 16),
-              onTap: () {
-
-              },
               onChanged: (val) {
                 setState(() {
                 });
               },
-              initialValue: '',
+              initialValue: stateString,
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('State'),
@@ -627,14 +691,11 @@ class _AddContactScreenState extends State<AddContactScreen> {
           Flexible(
             child: TextFormField(
               style: TextStyle(fontSize: 16),
-              onTap: () {
-
-              },
               onChanged: (val) {
                 setState(() {
                 });
               },
-              initialValue: '',
+              initialValue: zip,
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('Zip'),
@@ -656,14 +717,11 @@ class _AddContactScreenState extends State<AddContactScreen> {
           Flexible(
             child: TextFormField(
               style: TextStyle(fontSize: 16),
-              onTap: () {
-
-              },
               onChanged: (val) {
                 setState(() {
                 });
               },
-              initialValue: '',
+              initialValue: country,
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('Country'),
@@ -749,7 +807,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                     ),
                     Expanded(
                       child: Text(
-                        'Company',
+                        'Options',
                         maxLines: 1,
                         style: TextStyle(
                           color: Colors.white,

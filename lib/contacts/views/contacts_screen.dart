@@ -665,7 +665,17 @@ class _ContactScreenState extends State<ContactScreen> {
                   isTablet: _isTablet,
                   isPortrait: _isPortrait,
                   onOpen: (contactModel) {
-
+                    Navigator.push(
+                      context,
+                      PageTransition(
+                        child: AddContactScreen(
+                          screenBloc: screenBloc,
+                          editContact: contactModel.contact,
+                        ),
+                        type: PageTransitionType.fade,
+                        duration: Duration(milliseconds: 500),
+                      ),
+                    );
                   },
                   onTap: (contactModel){
                     screenBloc.add(SelectContactEvent(contact: contactModel));
@@ -722,7 +732,17 @@ class _ContactScreenState extends State<ContactScreen> {
             screenBloc.add(SelectContactEvent(contact: contactModel));
           },
           onOpen: (contactModel) {
-
+            Navigator.push(
+              context,
+              PageTransition(
+                child: AddContactScreen(
+                  screenBloc: screenBloc,
+                  editContact: contactModel.contact,
+                ),
+                type: PageTransitionType.fade,
+                duration: Duration(milliseconds: 500),
+              ),
+            );
           },
         );
       }).toList());
