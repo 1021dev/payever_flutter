@@ -446,12 +446,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
           businessApps: state.businessWidgets,
           appWidgets: state.currentWidgets,
           onTapEdit: () {},
-          onTapWidget: (AppWidget aw) {
+          onTapWidget: (BusinessApps aw) {
             Provider.of<GlobalStateModel>(context,listen: false)
                 .setCurrentBusiness(state.activeBusiness);
             Provider.of<GlobalStateModel>(context,listen: false)
                 .setCurrentWallpaper(state.curWall);
-            if (aw.type.contains('transactions')) {
+            if (aw.code.contains('transactions')) {
               Navigator.push(
                 context,
                 PageTransition(
@@ -461,7 +461,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   type: PageTransitionType.fade,
                 ),
               );
-            } else if (aw.type.contains('pos')) {
+            } else if (aw.code.contains('pos')) {
               Navigator.push(
                 context,
                 PageTransition(
@@ -472,7 +472,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   duration: Duration(milliseconds: 500),
                 ),
               );
-            } else if (aw.type.contains('shop')) {
+            } else if (aw.code.contains('shop')) {
               Navigator.push(
                 context,
                 PageTransition(
@@ -483,7 +483,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   duration: Duration(milliseconds: 500),
                 ),
               );
-            } else if (aw.type.contains('products')) {
+            } else if (aw.code.contains('products')) {
               Navigator.push(
                 context,
                 PageTransition(
@@ -494,7 +494,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   duration: Duration(milliseconds: 500),
                 ),
               );
-            } else if (aw.type.contains('connect')) {
+            } else if (aw.code.contains('connect')) {
               Navigator.push(
                 context,
                 PageTransition(

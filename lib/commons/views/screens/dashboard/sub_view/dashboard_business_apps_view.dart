@@ -22,14 +22,11 @@ class DashboardBusinessAppsView extends StatefulWidget {
 }
 
 class _DashboardBusinessAppsViewState extends State<DashboardBusinessAppsView> {
-  String uiKit = '${Env.cdnIcon}icons-apps-white/icon-apps-white-';
   @override
   Widget build(BuildContext context) {
-    List<BusinessApps> businessApps =
-    widget.businessApps.where((element) => element.dashboardInfo != null).toList();
-
-    List<AppWidget> availableApps = widget.appWidgets.where((app){
-      if (businessApps.where((bus) => app.type == bus.code).toList().length > 0) {
+    List<BusinessApps> businessApps = widget.businessApps.where((element) {
+      String title = element.dashboardInfo.title ?? '';
+      if (element.installed && title != '') {
         return true;
       } else {
         return false;
@@ -38,7 +35,7 @@ class _DashboardBusinessAppsViewState extends State<DashboardBusinessAppsView> {
     return BlurEffectView(
       padding: EdgeInsets.fromLTRB(14, 12, 14, 0),
       child: Container(
-        height: 56 + (availableApps.length / 4).ceilToDouble() * 86,
+        height: 56 + (businessApps.length / 4).ceilToDouble() * 86,
         child: Column(
           children: [
             Row(
@@ -89,10 +86,10 @@ class _DashboardBusinessAppsViewState extends State<DashboardBusinessAppsView> {
             Padding(
               padding: EdgeInsets.only(top: 8),
             ),
-            if (availableApps != null) Expanded(
+            if (businessApps != null) Expanded(
               child: GridView.count(
                 crossAxisCount: 4,
-                children: availableApps.map((e) => BusinessAppCell(
+                children: businessApps.map((e) => BusinessAppCell(
                   onTap: (){
                     widget.onTapWidget(e);
                   },
