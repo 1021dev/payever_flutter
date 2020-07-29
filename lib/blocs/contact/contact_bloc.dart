@@ -25,6 +25,7 @@ class ContactScreenBloc extends Bloc<ContactScreenEvent, ContactScreenState> {
   }
 
   Stream<ContactScreenState> fetchContactInstallations(String business) async* {
+    dynamic response = await api.getProductsPopularMonthRandom(business, token);
   }
 
 }

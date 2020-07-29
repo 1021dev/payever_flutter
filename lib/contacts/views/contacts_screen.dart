@@ -9,6 +9,7 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/screens/dashboard/sub_view/dashboard_menu_view.dart';
 import 'package:payever/connect/widgets/connect_top_button.dart';
+import 'package:payever/contacts/views/add_contact_screen.dart';
 import 'package:payever/contacts/views/contacts_filter_screen.dart';
 import 'package:payever/contacts/widgets/contact_grid_add_item.dart';
 import 'package:payever/contacts/widgets/contact_grid_item.dart';
@@ -647,7 +648,20 @@ class _ContactScreenState extends State<ContactScreen> {
         shrinkWrap: true,
         childAspectRatio: cellWidth / cellHeight,
         children: <Widget>[
-          ContactGridAddItem(),
+          ContactGridAddItem(
+            onAdd: () {
+              Navigator.push(
+                context,
+                PageTransition(
+                  child: AddContactScreen(
+                    screenBloc: screenBloc,
+                  ),
+                  type: PageTransitionType.fade,
+                  duration: Duration(milliseconds: 500),
+                ),
+              );
+            },
+          ),
           ContactGridItem(),
         ],
       ),

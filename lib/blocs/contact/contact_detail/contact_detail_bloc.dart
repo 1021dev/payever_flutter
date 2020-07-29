@@ -7,8 +7,8 @@ import 'package:payever/commons/commons.dart';
 import 'contact_detail.dart';
 
 class ContactDetailScreenBloc extends Bloc<ContactDetailScreenEvent, ContactDetailScreenState> {
-  final ContactScreenBloc connectScreenBloc;
-  ContactDetailScreenBloc({this.connectScreenBloc});
+  final ContactScreenBloc contactScreenBloc;
+  ContactDetailScreenBloc({this.contactScreenBloc});
   ApiService api = ApiService();
   String token = GlobalUtils.activeToken.accessToken;
 
