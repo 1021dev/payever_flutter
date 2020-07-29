@@ -21,8 +21,34 @@ class ContactGridItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String email = '';
+    String firstName = '';
+    String lastName = '';
+    List<ContactField> emailFields = contact.contact.contactFields.nodes.where((element) {
+      return element.field.name == 'email';
+    }).toList();
+    if (emailFields.length > 0) {
+      email = emailFields.first.value;
+    }
+
+    List<ContactField> firstNameFields = contact.contact.contactFields.nodes.where((element) {
+      return element.field.name == 'firstName';
+    }).toList();
+    if (firstNameFields.length > 0) {
+      firstName = firstNameFields.first.value;
+    }
+
+    List<ContactField> lastNameFields = contact.contact.contactFields.nodes.where((element) {
+      return element.field.name == 'lastName';
+    }).toList();
+    if (lastNameFields.length > 0) {
+      lastName = lastNameFields.first.value;
+    }
+
     return GestureDetector(
-      onTap: onTap(contact),
+      onTap: () {
+        onTap(contact);
+      },
       child: Container(
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
@@ -58,7 +84,7 @@ class ContactGridItem extends StatelessWidget {
                                 height: 25,
                                 alignment: Alignment.topLeft,
                                 child: Text(
-                                  Language.getConnectStrings('connectModel.integration.displayOptions.title'),
+                                  '$firstName $lastName',
                                   maxLines: 1,
                                   style: TextStyle(
                                       color: Colors.white,
@@ -70,7 +96,7 @@ class ContactGridItem extends StatelessWidget {
                               Container(
                                 alignment: Alignment.topLeft,
                                 child: Text(
-                                  Language.getConnectStrings('connectModel.integration.installationOptions.price'),
+                                  email,
                                   maxLines: 1,
                                   style: TextStyle(
                                       color: Colors.white,
@@ -92,7 +118,9 @@ class ContactGridItem extends StatelessWidget {
                             child: Text(
                               'Open',
                             ),
-                            onPressed: onOpen(contact),
+                            onPressed: (){
+                              onOpen(contact);
+                            }
                           ),
                         ),
                       ),

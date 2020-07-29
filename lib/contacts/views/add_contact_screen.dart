@@ -37,8 +37,8 @@ class _AddContactScreenState extends State<AddContactScreen> {
   ContactDetailScreenBloc screenBloc;
   String wallpaper;
   String selectedState = '';
-  int isOpened = 0;
-  int accountSection = -1;
+  bool openGeneral = true;
+  bool openAdditional = true;
   final String contactPlaceholder = 'https://payeverstage.azureedge.net/placeholders/contact-placeholder.png';
 
   var imageData;
@@ -168,11 +168,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
         child: MaterialButton(
           onPressed: () {
             setState(() {
-              if (isOpened == 0) {
-                isOpened = -1;
-              } else {
-                isOpened = 0;
-              }
+              openGeneral = !openGeneral;
             });
           },
           child: Row(
@@ -196,7 +192,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                 ),
               ),
               Icon(
-                isOpened == 0 ? Icons.add : Icons.remove,
+                openGeneral ? Icons.add : Icons.remove,
                 size: 20,
               ),
             ],
@@ -209,7 +205,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
     widgets.add(Divider(height: 0, thickness: 0.5, color: Colors.black),);
 
     // Photo section;
-    Widget photoSection = isOpened == 0 ? Container(
+    Widget photoSection = openGeneral ? Container(
         height: Measurements.width * 0.5,
         child: Center(
             child: Column(
@@ -262,7 +258,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                   ),
                 ),
                 Container(
-                  width: 100,
+                  width: 120,
                   child: MaterialButton(
                     onPressed: () {
                       showCupertinoModalPopup(
@@ -333,7 +329,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
     widgets.add(photoSection);
     widgets.add(Divider(height: 0, thickness: 0.5, color: Colors.black),);
 
-    Widget typeField = isOpened == 0 ? Container(
+    Widget typeField = openGeneral ? Container(
       height: 64,
       child: Center(
         child: TextFormField(
@@ -365,7 +361,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
     widgets.add(typeField);
     widgets.add(Divider(height: 0, thickness: 0.5, color: Colors.black),);
 
-    Widget nameSection = isOpened == 0 ? Container(
+    Widget nameSection = openGeneral ? Container(
       height: 64,
       child: Row(
         children: <Widget>[
@@ -430,7 +426,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
     widgets.add(nameSection);
     widgets.add(Divider(height: 0, thickness: 0.5, color: Colors.black),);
 
-    Widget phoneSection = isOpened == 0 ? Container(
+    Widget phoneSection = openGeneral ? Container(
       height: 64,
       child: Row(
         children: <Widget>[
@@ -495,7 +491,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
     widgets.add(phoneSection);
     widgets.add(Divider(height: 0, thickness: 0.5, color: Colors.black),);
 
-    Widget homepageField = isOpened == 0 ? Container(
+    Widget homepageField = openGeneral ? Container(
       height: 64,
       child: Center(
         child: TextFormField(
@@ -527,7 +523,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
     widgets.add(homepageField);
     widgets.add(Divider(height: 0, thickness: 0.5, color: Colors.black),);
 
-    Widget streetField = isOpened == 0 ? Container(
+    Widget streetField = openGeneral ? Container(
       height: 64,
       child: Center(
         child: TextFormField(
@@ -559,7 +555,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
     widgets.add(streetField);
     widgets.add(Divider(height: 0, thickness: 0.5, color: Colors.black),);
 
-    Widget citySection = isOpened == 0 ? Container(
+    Widget citySection = openGeneral ? Container(
       height: 64,
       child: Row(
         children: <Widget>[
@@ -624,7 +620,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
     widgets.add(citySection);
     widgets.add(Divider(height: 0, thickness: 0.5, color: Colors.black),);
 
-    Widget zipSection = isOpened == 0 ? Container(
+    Widget zipSection = openGeneral ? Container(
       height: 64,
       child: Row(
         children: <Widget>[
@@ -697,11 +693,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
         child: MaterialButton(
           onPressed: () {
             setState(() {
-              if (isOpened == 1) {
-                isOpened = -1;
-              } else {
-                isOpened = 1;
-              }
+              openAdditional = !openAdditional;
             });
           },
           child: Row(
@@ -725,7 +717,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                 ),
               ),
               Icon(
-                isOpened == 0 ? Icons.add : Icons.remove,
+                openAdditional ? Icons.add : Icons.remove,
                 size: 20,
               ),
             ],
@@ -737,7 +729,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
     widgets.add(additionalSection);
     widgets.add(Divider(height: 0, thickness: 0.5, color: Colors.black),);
 
-    Widget optionsSection = isOpened == 1 ? Container(
+    Widget optionsSection = openAdditional ? Container(
       height: 56,
       color: Colors.black38,
       child: SizedBox.expand(

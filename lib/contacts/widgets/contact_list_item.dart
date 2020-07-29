@@ -24,7 +24,9 @@ class ContactListItem extends StatelessWidget {
     double margin = isTablet ? 24: 16;
 
     return GestureDetector(
-      onTap: onTap,
+      onTap: () {
+        onTap(contact);
+      },
       child: Container(
         height: 66,
         padding: EdgeInsets.only(left: margin, right: margin),
@@ -95,7 +97,7 @@ class ContactListItem extends StatelessWidget {
                     padding: EdgeInsets.all(0),
                     child: MaterialButton(
                       onPressed: () {
-                        onOpen();
+                        onOpen(contact);
                       },
                       color: Color.fromRGBO(255, 255, 255, 0.1),
                       height: 26,

@@ -358,7 +358,7 @@ class _ContactScreenState extends State<ContactScreen> {
       selectedCount = state.contactLists.where((element) => element.isChecked).toList().length;
     }
     itemsString = '${state.contactLists.length} items';
-    return selectedCount > 0 ? Container(
+    return selectedCount == 0 ? Container(
           height: 64,
           color: Color(0xFF212122),
           child: Row(
@@ -540,6 +540,8 @@ class _ContactScreenState extends State<ContactScreen> {
       height: 64,
       color: Color(0xFF212122),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           MaterialButton(
             onPressed: () {
@@ -666,7 +668,7 @@ class _ContactScreenState extends State<ContactScreen> {
 
                   },
                   onTap: (contactModel){
-
+                    screenBloc.add(SelectContactEvent(contact: contactModel));
                   },
                   contact: state.contactLists[index],
                 );
