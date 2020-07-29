@@ -20,7 +20,7 @@ class ContactScreenBloc extends Bloc<ContactScreenEvent, ContactScreenState> {
   Stream<ContactScreenState> mapEventToState(ContactScreenEvent event) async* {
     if (event is ContactScreenInitEvent) {
       yield state.copyWith(business: event.business);
-      yield* fetchContactInstallations(event.business);
+      yield* getContacts(event.business);
     }
   }
 
@@ -64,6 +64,12 @@ class ContactScreenBloc extends Bloc<ContactScreenEvent, ContactScreenState> {
       },
     };
     dynamic response = await api.getGraphql(token, body);
+    if (response is Map) {
+      dynamic data = response['data'];
+      if (data is Map) {
+
+      }
+    }
   }
 
 }

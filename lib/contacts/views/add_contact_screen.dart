@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -5,6 +6,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
@@ -262,7 +265,36 @@ class _AddContactScreenState extends State<AddContactScreen> {
                   width: 100,
                   child: MaterialButton(
                     onPressed: () {
-
+                      showCupertinoModalPopup(
+                        context: context,
+                        builder: (BuildContext context) => CupertinoActionSheet(
+                          title: const Text('Choose Photo'),
+                          message: const Text('Your options are '),
+                          actions: <Widget>[
+                            CupertinoActionSheetAction(
+                              child: const Text('Take a Picture'),
+                              onPressed: () {
+                                Navigator.pop(context, 'Take a Picture');
+                                getImage(0);
+                              },
+                            ),
+                            CupertinoActionSheetAction(
+                              child: const Text('Camera Roll'),
+                              onPressed: () {
+                                Navigator.pop(context, 'Camera Roll');
+                                getImage(1);
+                              },
+                            )
+                          ],
+                          cancelButton: CupertinoActionSheetAction(
+                            child: const Text('Cancel'),
+                            isDefaultAction: true,
+                            onPressed: () {
+                              Navigator.pop(context, 'Cancel');
+                            },
+                          ),
+                        ),
+                      );
                     },
                     minWidth: 0,
                     padding: EdgeInsets.all(4),
@@ -281,7 +313,12 @@ class _AddContactScreenState extends State<AddContactScreen> {
                             padding: EdgeInsets.only(left: 8),
                           ),
                           Text(
-                              'Add Media'
+                            'Add Media',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontFamily: 'Helvetica Neue',
+                            ),
                           )
                         ],
                       ),
@@ -793,6 +830,54 @@ class _AddContactScreenState extends State<AddContactScreen> {
       ),
     );
   }
+
+  Future getImage(int type) async {
+    ImagePicker imagePicker = ImagePicker();
+    var image = await imagePicker.getImage(
+      source: type == 1 ? ImageSource.gallery : ImageSource.camera,
+    );
+    if (image != null) {
+      await _cropImage(File(image.path));
+    }
+  }
+
+  Future<Null> _cropImage(File imageFile) async {
+    File croppedFile = await ImageCropper.cropImage(
+        sourcePath: imageFile.path,
+        aspectRatioPresets: Platform.isAndroid
+            ? [
+          CropAspectRatioPreset.square,
+          CropAspectRatioPreset.ratio3x2,
+          CropAspectRatioPreset.original,
+          CropAspectRatioPreset.ratio4x3,
+          CropAspectRatioPreset.ratio16x9
+        ]
+            : [
+          CropAspectRatioPreset.original,
+          CropAspectRatioPreset.square,
+          CropAspectRatioPreset.ratio3x2,
+          CropAspectRatioPreset.ratio4x3,
+          CropAspectRatioPreset.ratio5x3,
+          CropAspectRatioPreset.ratio5x4,
+          CropAspectRatioPreset.ratio7x5,
+          CropAspectRatioPreset.ratio16x9
+        ],
+        androidUiSettings: AndroidUiSettings(
+            toolbarTitle: 'Cropper',
+            toolbarColor: Colors.deepOrange,
+            toolbarWidgetColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: false),
+        iosUiSettings: IOSUiSettings(
+          title: 'Cropper',
+        ));
+
+    if (croppedFile != null) {
+      screenBloc.add(AddContactPhotoEvent(file: croppedFile));
+    }
+
+  }
+
 }
 
 //DropDownFormField(
