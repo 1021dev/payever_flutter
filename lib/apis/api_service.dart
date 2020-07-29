@@ -1991,4 +1991,24 @@ class ApiService {
     }
   }
 
+  Future<dynamic> getGraphql(String token, Map body) async {
+    try {
+      print('$TAG - getGraphql()');
+      dynamic response = await _client.postTypeLess(
+          '${Env.contacts}/graphql',
+          body: body,
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+
+
 }

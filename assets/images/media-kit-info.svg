@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="140" height="140" viewBox="0 0 140 140">
+    <defs>
+        <linearGradient id="0frdarprnb" x1="50%" x2="50%" y1="0%" y2="97.817%">
+            <stop offset="0%" stop-color="#EDEDF4"/>
+            <stop offset="100%" stop-color="#AEB0B7"/>
+        </linearGradient>
+        <circle id="439qv6r1wa" cx="70" cy="70" r="70"/>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <use fill="url(#0frdarprnb)" fill-rule="nonzero" xlink:href="#439qv6r1wa"/>
+    </g>
+</svg>

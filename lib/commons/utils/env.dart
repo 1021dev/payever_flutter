@@ -38,6 +38,7 @@ class Env {
   static String builderShop;
   static String notifications;
   static String shop;
+  static String contacts;
 
   Env.map(dynamic obj) {
     Env.users = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_USER];
@@ -78,6 +79,8 @@ class Env {
     Env.backendBuilder = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_BUILDER];
     Env.builderShop = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_BUILDER_SHOP];
     Env.notifications = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_NOTIFICATIONS];
+
+    Env.contacts = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_CONTACTS];
 
     Env.cdnImage = '${obj[GlobalUtils.ENV_CUSTOM][GlobalUtils.ENV_CUSTOM_CDN]}/images/';
     Env.cdnIcon = '${obj[GlobalUtils.ENV_CUSTOM][GlobalUtils.ENV_CUSTOM_CDN]}/icons-png/';

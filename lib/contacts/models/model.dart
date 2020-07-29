@@ -54,11 +54,15 @@ class Field {
   String id;
   String name;
   String typename;
+  String businessId;
+  String type;
 
   Field.fromMap(dynamic obj) {
     id = obj['id'];
     name = obj['name'];
     typename = obj['__typename'];
+    businessId = obj['businessId'];
+    type = obj['type'];
   }
 }
 

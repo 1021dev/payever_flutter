@@ -1,3 +1,6 @@
+import 'dart:ui';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,6 +36,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
   String selectedState = '';
   int isOpened = 0;
   int accountSection = -1;
+  final String contactPlaceholder = 'https://payeverstage.azureedge.net/placeholders/contact-placeholder.png';
 
   var imageData;
 
@@ -189,8 +193,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                 ),
               ),
               Icon(
-                isOpened == 0 ? Icons.add : Icons
-                    .remove,
+                isOpened == 0 ? Icons.add : Icons.remove,
                 size: 20,
               ),
             ],
@@ -200,54 +203,130 @@ class _AddContactScreenState extends State<AddContactScreen> {
     );
 
     widgets.add(header);
-    widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
+    widgets.add(Divider(height: 0, thickness: 0.5, color: Colors.black),);
 
-        // Photo section;
-        Widget photoSection = isOpened == 0 ? Container(
-          height: Measurements.width * 0.8,
-          child: Center(
+    // Photo section;
+    Widget photoSection = isOpened == 0 ? Container(
+        height: Measurements.width * 0.5,
+        child: Center(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
               children: <Widget>[
+                Expanded(
+                  child: Container(
+                    margin: EdgeInsets.all(16),
+                    clipBehavior: Clip.antiAlias,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                    ),
+                    child: true ? SvgPicture.asset('assets/images/add_contacts.svg')
+                        : CachedNetworkImage(
+                      imageUrl: contactPlaceholder,
+                      imageBuilder: (context, imageProvider) => Container(
+                        clipBehavior: Clip.antiAlias,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: Colors.white,
+                            width: 2,
+                          ),
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [Color(0xffededf4), Color(0xffaeb0b7)],
+                          ),
+                          image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      placeholder: (context, url) => Container(
+                        child: Center(
+                          child: Container(
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                            ),
+                          ),
+                        ),
+                      ),
+                      errorWidget: (context, url, error) =>  Container(
+                        child: SvgPicture.asset('assets/images/noimage.svg', color: Colors.black54, width: 100, height: 100,),
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  width: 100,
+                  child: MaterialButton(
+                    onPressed: () {
 
+                    },
+                    minWidth: 0,
+                    padding: EdgeInsets.all(4),
+                    height: 24,
+                    color: Colors.black87,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Container(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          SvgPicture.asset('assets/images/add.svg'),
+                          Padding(
+                            padding: EdgeInsets.only(left: 8),
+                          ),
+                          Text(
+                              'Add Media'
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
               ],
             )
-          )
-        ) : Container();
+        )
+    ) : Container();
 
-        widgets.add(photoSection);
-        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
+    widgets.add(photoSection);
+    widgets.add(Divider(height: 0, thickness: 0.5, color: Colors.black),);
 
-        Widget typeField = isOpened == 0 ? Container(
-          height: 64,
-          child: Center(
-            child: TextFormField(
-              style: TextStyle(fontSize: 16),
-              onTap: () {
+    Widget typeField = isOpened == 0 ? Container(
+      height: 64,
+      child: Center(
+        child: TextFormField(
+          style: TextStyle(fontSize: 16),
+          onTap: () {
 
-              },
-              onChanged: (val) {
-                setState(() {
-                });
-              },
-              initialValue: '',
-              decoration: InputDecoration(
-                contentPadding: EdgeInsets.only(left: 16, right: 16),
-                labelText: Language.getPosTpmStrings('Type'),
-                labelStyle: TextStyle(
-                  color: Colors.grey,
-                ),
-                enabledBorder: InputBorder.none,
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.blue, width: 0.5),
-                ),
-              ),
-              keyboardType: TextInputType.text,
+          },
+          onChanged: (val) {
+            setState(() {
+            });
+          },
+          initialValue: '',
+          decoration: InputDecoration(
+            contentPadding: EdgeInsets.only(left: 16, right: 16),
+            labelText: Language.getPosTpmStrings('Type'),
+            labelStyle: TextStyle(
+              color: Colors.grey,
+            ),
+            enabledBorder: InputBorder.none,
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.blue, width: 0.5),
             ),
           ),
-        ): Container();
+          keyboardType: TextInputType.text,
+        ),
+      ),
+    ): Container();
 
-        widgets.add(typeField);
-        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
+    widgets.add(typeField);
+    widgets.add(Divider(height: 0, thickness: 0.5, color: Colors.black),);
 
     Widget nameSection = isOpened == 0 ? Container(
       height: 64,
@@ -278,8 +357,9 @@ class _AddContactScreenState extends State<AddContactScreen> {
               keyboardType: TextInputType.text,
             ),
           ),
-          Padding(
-            padding: EdgeInsets.only(left: 2),
+          Container(
+            width: 0.5,
+            color: Colors.black,
           ),
           Flexible(
             child: TextFormField(
@@ -311,7 +391,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
     ): Container();
 
     widgets.add(nameSection);
-    widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
+    widgets.add(Divider(height: 0, thickness: 0.5, color: Colors.black),);
 
     Widget phoneSection = isOpened == 0 ? Container(
       height: 64,
@@ -342,8 +422,9 @@ class _AddContactScreenState extends State<AddContactScreen> {
               keyboardType: TextInputType.text,
             ),
           ),
-          Padding(
-            padding: EdgeInsets.only(left: 2),
+          Container(
+            width: 0.5,
+            color: Colors.black,
           ),
           Flexible(
             child: TextFormField(
@@ -375,7 +456,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
     ): Container();
 
     widgets.add(phoneSection);
-    widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
+    widgets.add(Divider(height: 0, thickness: 0.5, color: Colors.black),);
 
     Widget homepageField = isOpened == 0 ? Container(
       height: 64,
@@ -407,7 +488,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
     ): Container();
 
     widgets.add(homepageField);
-    widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
+    widgets.add(Divider(height: 0, thickness: 0.5, color: Colors.black),);
 
     Widget streetField = isOpened == 0 ? Container(
       height: 64,
@@ -439,7 +520,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
     ): Container();
 
     widgets.add(streetField);
-    widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
+    widgets.add(Divider(height: 0, thickness: 0.5, color: Colors.black),);
 
     Widget citySection = isOpened == 0 ? Container(
       height: 64,
@@ -470,8 +551,9 @@ class _AddContactScreenState extends State<AddContactScreen> {
               keyboardType: TextInputType.text,
             ),
           ),
-          Padding(
-            padding: EdgeInsets.only(left: 2),
+          Container(
+            width: 0.5,
+            color: Colors.black,
           ),
           Flexible(
             child: TextFormField(
@@ -503,7 +585,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
     ): Container();
 
     widgets.add(citySection);
-    widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
+    widgets.add(Divider(height: 0, thickness: 0.5, color: Colors.black),);
 
     Widget zipSection = isOpened == 0 ? Container(
       height: 64,
@@ -534,8 +616,9 @@ class _AddContactScreenState extends State<AddContactScreen> {
               keyboardType: TextInputType.text,
             ),
           ),
-          Padding(
-            padding: EdgeInsets.only(left: 2),
+          Container(
+            width: 0.5,
+            color: Colors.black,
           ),
           Flexible(
             child: TextFormField(
@@ -567,14 +650,106 @@ class _AddContactScreenState extends State<AddContactScreen> {
     ): Container();
 
     widgets.add(zipSection);
-    widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
+    widgets.add(Divider(height: 0, thickness: 0.5, color: Colors.black),);
+
+    // Additional Section
+    Widget additionalSection = Container(
+      height: 56,
+      color: Colors.black54,
+      child: SizedBox.expand(
+        child: MaterialButton(
+          onPressed: () {
+            setState(() {
+              if (isOpened == 1) {
+                isOpened = -1;
+              } else {
+                isOpened = 1;
+              }
+            });
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Expanded(
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Text(
+                        'ADDITIONAL',
+                        maxLines: 1,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(
+                isOpened == 0 ? Icons.add : Icons.remove,
+                size: 20,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    widgets.add(additionalSection);
+    widgets.add(Divider(height: 0, thickness: 0.5, color: Colors.black),);
+
+    Widget optionsSection = isOpened == 1 ? Container(
+      height: 56,
+      color: Colors.black38,
+      child: SizedBox.expand(
+        child: MaterialButton(
+          onPressed: () {
+            setState(() {
+            });
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Expanded(
+                child: Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(left: 8),
+                    ),
+                    Expanded(
+                      child: Text(
+                        'Company',
+                        maxLines: 1,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(
+                Icons.keyboard_arrow_down,
+                size: 20,
+              ),
+            ],
+          ),
+        ),
+      ),
+    ) : Container();
+
+    widgets.add(optionsSection);
 
     return Center(
       child: Wrap(
         runSpacing: 16,
         children: <Widget>[
           Container(
-            padding: EdgeInsets.only(left: 16, right: 16),
+            padding: EdgeInsets.only(left: 16, right: 16, top: 16),
             child: BlurEffectView(
               color: Color.fromRGBO(20, 20, 20, 0.2),
               blur: 15,
@@ -587,6 +762,33 @@ class _AddContactScreenState extends State<AddContactScreen> {
               ),
             ),
           ),
+          Padding(
+            padding: EdgeInsets.only(top: 16),
+          ),
+          Container(
+            height: 56,
+            margin: EdgeInsets.only(left: 16, right: 16, bottom: 16),
+            child: SizedBox.expand(
+              child: MaterialButton(
+                onPressed: () {
+                },
+                color: Colors.black87,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  'Save',
+                  maxLines: 1,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ),
+          ),
+
         ],
       ),
     );
