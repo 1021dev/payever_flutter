@@ -2,24 +2,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:payever/commons/commons.dart';
+import 'package:payever/contacts/models/model.dart';
 
 class ContactListItem extends StatelessWidget {
   final Function onTap;
   final Function onOpen;
-  final Function onInstall;
-  final Function onUninstall;
   final bool isPortrait;
   final bool isTablet;
-  final bool installingConnect;
+  final ContactModel contact;
 
   ContactListItem({
     this.onTap,
     this.onOpen,
-    this.onInstall,
-    this.onUninstall,
     this.isTablet = false,
     this.isPortrait = true,
-    this.installingConnect = false,
+    this.contact,
   });
 
   @override
@@ -33,6 +30,25 @@ class ContactListItem extends StatelessWidget {
         padding: EdgeInsets.only(left: margin, right: margin),
         child: Row(
           children: <Widget>[
+            Container(
+              margin: EdgeInsets.all(10),
+              height: 24,
+              width: 24,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Color.fromRGBO(0, 0, 0, 0.3),
+              ),
+              child: contact.isChecked ? Icon(
+                Icons.check_circle_outline,
+                color: Colors.white60,
+                size: 24,
+              ) : Icon(
+                Icons.radio_button_unchecked,
+                color: Colors.white60,
+                size: 24,
+              ),
+            ),
             Expanded(
               child: Row(
                 children: <Widget>[
@@ -59,7 +75,7 @@ class ContactListItem extends StatelessWidget {
             isTablet || !isPortrait ? Container(
               width: Measurements.width * (isPortrait ? 0.1 : 0.2),
               child: Text(
-                Language.getConnectStrings('categories..title'),
+                Language.getConnectStrings('categories.title'),
                 style: TextStyle(
                   color: Colors.white,
                   fontFamily: 'HelveticaNeueMed',

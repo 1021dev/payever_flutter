@@ -6,16 +6,12 @@ import 'package:payever/contacts/widgets/contact_item_image_view.dart';
 
 class ContactGridItem extends StatelessWidget {
   final Function onTap;
-  final Function onInstall;
-  final Function onUninstall;
-  final bool checked;
-  final Contact contact;
+  final Function onOpen;
+  final ContactModel contact;
 
   ContactGridItem({
     this.onTap,
-    this.onInstall,
-    this.onUninstall,
-    this.checked = true,
+    this.onOpen,
     this.contact,
   });
 
@@ -26,7 +22,7 @@ class ContactGridItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: onTap(contact),
       child: Container(
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
@@ -96,9 +92,7 @@ class ContactGridItem extends StatelessWidget {
                             child: Text(
                               'Open',
                             ),
-                            onPressed: () {
-                                onInstall();
-                            },
+                            onPressed: onOpen(contact),
                           ),
                         ),
                       ),
@@ -116,7 +110,7 @@ class ContactGridItem extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
                 color: Color.fromRGBO(0, 0, 0, 0.3),
               ),
-              child: checked ? Icon(
+              child: contact.isChecked ? Icon(
                 Icons.check_circle_outline,
                 color: Colors.white60,
                 size: 24,

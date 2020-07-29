@@ -353,103 +353,181 @@ class _ContactScreenState extends State<ContactScreen> {
 
   Widget _topBar(ContactScreenState state) {
     String itemsString = '';
-    return Container(
-      height: 64,
-      color: Color(0xFF212122),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Row(
+    int selectedCount = 0;
+    if (state.contactLists.length > 0) {
+      selectedCount = state.contactLists.where((element) => element.isChecked).toList().length;
+    }
+    itemsString = '${state.contactLists.length} items';
+    return selectedCount > 0 ? Container(
+          height: 64,
+          color: Color(0xFF212122),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              InkWell(
-                onTap: () async {
-                  await showGeneralDialog(
-                    barrierColor: null,
-                    transitionBuilder: (context, a1, a2, wg) {
-                      final curvedValue = 1.0 - Curves.ease.transform(a1.value);
-                      return Transform(
-                        transform: Matrix4.translationValues(-curvedValue * 200, 0.0, 0),
-                        child: ContactsFilterScreen(
-                          screenBloc: screenBloc,
-                        ),
+              Row(
+                children: <Widget>[
+                  InkWell(
+                    onTap: () async {
+                      await showGeneralDialog(
+                        barrierColor: null,
+                        transitionBuilder: (context, a1, a2, wg) {
+                          final curvedValue = 1.0 - Curves.ease.transform(a1.value);
+                          return Transform(
+                            transform: Matrix4.translationValues(-curvedValue * 200, 0.0, 0),
+                            child: ContactsFilterScreen(
+                              screenBloc: screenBloc,
+                            ),
+                          );
+                        },
+                        transitionDuration: Duration(milliseconds: 200),
+                        barrierDismissible: true,
+                        barrierLabel: '',
+                        context: context,
+                        pageBuilder: (context, animation1, animation2) {
+                          return null;
+                        },
                       );
                     },
-                    transitionDuration: Duration(milliseconds: 200),
-                    barrierDismissible: true,
-                    barrierLabel: '',
-                    context: context,
-                    pageBuilder: (context, animation1, animation2) {
-                      return null;
-                    },
-                  );
-                },
-                child: Container(
-                  padding: EdgeInsets.all(margin),
-                  child: SvgPicture.asset(
-                    'assets/images/filter.svg',
-                    width: 12,
-                    height: 12,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(right: 12),
-                child: Container(
-                  width: 1,
-                  color: Color(0xFF888888),
-                  height: 24,
-                ),
-              ),
-              InkWell(
-                onTap: () {
-
-                },
-                child: Text(
-                    'Reset'
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 12),
-              ),
-              Container(
-                constraints: BoxConstraints(minWidth: 100, maxWidth: Measurements.width / 2, maxHeight: 36, minHeight: 36),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: Color(0xFF111111),
-                ),
-                child: Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(left: 8, right: 8),
+                    child: Container(
+                      padding: EdgeInsets.all(margin),
                       child: SvgPicture.asset(
-                        'assets/images/search_place_holder.svg',
-                        width: 16,
-                        height: 16,
+                        'assets/images/filter.svg',
+                        width: 12,
+                        height: 12,
                       ),
                     ),
-                    Expanded(
-                      child: TextField(
-                        focusNode: searchFocus,
-                        controller: searchTextController,
-                        autofocus: false,
-                        textInputAction: TextInputAction.done,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: 'Search in Contact',
-                          isDense: true,
-                          hintStyle: TextStyle(
-                            fontSize: 14,
-                            color: Colors.white70,
-                            fontWeight: FontWeight.w300,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(right: 12),
+                    child: Container(
+                      width: 1,
+                      color: Color(0xFF888888),
+                      height: 24,
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+
+                    },
+                    child: Text(
+                        'Reset'
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 12),
+                  ),
+                  Container(
+                    constraints: BoxConstraints(minWidth: 100, maxWidth: Measurements.width / 2, maxHeight: 36, minHeight: 36),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: Color(0xFF111111),
+                    ),
+                    child: Row(
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(left: 8, right: 8),
+                          child: SvgPicture.asset(
+                            'assets/images/search_place_holder.svg',
+                            width: 16,
+                            height: 16,
                           ),
                         ),
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w400,
+                        Expanded(
+                          child: TextField(
+                            focusNode: searchFocus,
+                            controller: searchTextController,
+                            autofocus: false,
+                            textInputAction: TextInputAction.done,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'Search in Contact',
+                              isDense: true,
+                              hintStyle: TextStyle(
+                                fontSize: 14,
+                                color: Colors.white70,
+                                fontWeight: FontWeight.w300,
+                              ),
+                            ),
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w400,
+                            ),
+                            onSubmitted: (_) {
+                              FocusScope.of(context).unfocus();
+                            },
+                          ),
                         ),
-                        onSubmitted: (_) {
-                          FocusScope.of(context).unfocus();
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              Expanded(
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Container(
+                        alignment: Alignment.center,
+                        child: Text(
+                          !_isTablet && _isPortrait ? '' : itemsString,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+
+                      },
+                      child: Container(
+                        child: SvgPicture.asset(
+                          'assets/images/sort-by-button.svg',
+                          width: 12,
+                          height: 12,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      alignment: Alignment.centerRight,
+                      child: PopupMenuButton<ConnectPopupButton>(
+                        child: Padding(
+                          padding: EdgeInsets.all(8),
+                          child: selectedStyle == 0 ? SvgPicture.asset('assets/images/list.svg'): SvgPicture.asset('assets/images/grid.svg'),
+                        ),
+                        offset: Offset(0, 100),
+                        onSelected: (ConnectPopupButton item) => item.onTap(),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        color: Colors.black87,
+                        itemBuilder: (BuildContext context) {
+                          return appBarPopUpActions(context, state)
+                              .map((ConnectPopupButton item) {
+                            return PopupMenuItem<ConnectPopupButton>(
+                              value: item,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Text(
+                                    item.title,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(8),
+                                    child: item.icon,
+                                  ),
+                                ],
+                              ),
+                            );
+                          }).toList();
                         },
                       ),
                     ),
@@ -458,75 +536,43 @@ class _ContactScreenState extends State<ContactScreen> {
               ),
             ],
           ),
-          Expanded(
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: Container(
-                    alignment: Alignment.center,
-                    child: Text(
-                      !_isTablet && _isPortrait ? '' : itemsString,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-
-                  },
-                  child: Container(
-                    child: SvgPicture.asset(
-                      'assets/images/sort-by-button.svg',
-                      width: 12,
-                      height: 12,
-                    ),
-                  ),
-                ),
-                Container(
-                  alignment: Alignment.centerRight,
-                  child: PopupMenuButton<ConnectPopupButton>(
-                    child: Padding(
-                      padding: EdgeInsets.all(8),
-                      child: selectedStyle == 0 ? SvgPicture.asset('assets/images/list.svg'): SvgPicture.asset('assets/images/grid.svg'),
-                    ),
-                    offset: Offset(0, 100),
-                    onSelected: (ConnectPopupButton item) => item.onTap(),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    color: Colors.black87,
-                    itemBuilder: (BuildContext context) {
-                      return appBarPopUpActions(context, state)
-                          .map((ConnectPopupButton item) {
-                        return PopupMenuItem<ConnectPopupButton>(
-                          value: item,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Text(
-                                item.title,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.all(8),
-                                child: item.icon,
-                              ),
-                            ],
-                          ),
-                        );
-                      }).toList();
-                    },
-                  ),
-                ),
-              ],
+    ): Container(
+      height: 64,
+      color: Color(0xFF212122),
+      child: Row(
+        children: <Widget>[
+          MaterialButton(
+            onPressed: () {
+              screenBloc.add(SelectAllContactsEvent());
+            },
+            child: Text(
+              'Select all',
+            ),
+          ),
+          Container(
+            height: 36,
+            width: 0.5,
+            color: Colors.white38,
+          ),
+          MaterialButton(
+            onPressed: () {
+              screenBloc.add(DeselectAllContactsEvent());
+            },
+            child: Text(
+              'Deselect all',
+            ),
+          ),
+          Container(
+            height: 36,
+            width: 0.5,
+            color: Colors.white38,
+          ),
+          MaterialButton(
+            onPressed: () {
+              screenBloc.add(DeleteSelectedContactsEvent());
+            },
+            child: Text(
+              'Delete',
             ),
           ),
         ],
@@ -613,7 +659,17 @@ class _ContactScreenState extends State<ContactScreen> {
             child: ListView.separated(
               shrinkWrap: true,
               itemBuilder: (context, index) {
-                return ContactListItem();
+                return ContactListItem(
+                  isTablet: _isTablet,
+                  isPortrait: _isPortrait,
+                  onOpen: (contactModel) {
+
+                  },
+                  onTap: (contactModel){
+
+                  },
+                  contact: state.contactLists[index],
+                );
               },
               separatorBuilder: (context, index) {
                 return Divider(
@@ -622,7 +678,7 @@ class _ContactScreenState extends State<ContactScreen> {
                   color: Color.fromRGBO(255, 255, 255, 0.2),
                 );
               },
-              itemCount: state.contacts != null ? state.contacts.nodes.length : 0,
+              itemCount: state.contactLists.length,
             ),
           ),
         ],
@@ -657,8 +713,16 @@ class _ContactScreenState extends State<ContactScreen> {
       ),
     );
     if (state.contacts != null) {
-      widgets.addAll(state.contacts.nodes.map((e) {
-        return ContactGridItem();
+      widgets.addAll(state.contactLists.map((contact) {
+        return ContactGridItem(
+          contact: contact,
+          onTap: (contactModel) {
+            screenBloc.add(SelectContactEvent(contact: contactModel));
+          },
+          onOpen: (contactModel) {
+
+          },
+        );
       }).toList());
     }
 
