@@ -1,9 +1,12 @@
+import 'package:dropdown_formfield/dropdown_formfield.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
+import 'package:payever/contacts/models/model.dart';
+import 'package:payever/transactions/models/enums.dart';
 
 bool _isPortrait;
 bool _isTablet;
@@ -22,6 +25,14 @@ class ContactsFilterScreen extends StatefulWidget {
 class _ContactsFilterScreenState extends State<ContactsFilterScreen> {
 
   String selectedCategory = '';
+
+  List<ContactFilterItem> filters = [
+    ContactFilterItem(disPlayName: 'Name'),
+    ContactFilterItem(disPlayName: 'Members count'),
+    ContactFilterItem(disPlayName: 'Purchase date'),
+    ContactFilterItem(disPlayName: 'Orders count'),
+    ContactFilterItem(disPlayName: 'Total spent'),
+  ];
   @override
   void initState() {
     super.initState();
@@ -41,6 +52,7 @@ class _ContactsFilterScreenState extends State<ContactsFilterScreen> {
         ? MediaQuery.of(context).size.width : MediaQuery.of(context).size.height);
     _isTablet = Measurements.width < 600 ? false : true;
 
+    Map<String, String> filterTypes = filterConditionsByFilterType('weight');
     return Scaffold(
       backgroundColor: Color(0x80111111),
       resizeToAvoidBottomPadding: false,
@@ -102,7 +114,7 @@ class _ContactsFilterScreenState extends State<ContactsFilterScreen> {
                 Container(
                   padding: EdgeInsets.only(left: 24, bottom: 16),
                   child: Text(
-                    'Category',
+                    'Contacts',
                     style: TextStyle(
                       color: Colors.white70,
                       fontSize: 16,
@@ -114,42 +126,119 @@ class _ContactsFilterScreenState extends State<ContactsFilterScreen> {
                   child: ListView.separated(
                     padding: EdgeInsets.all(8),
                     itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () {
-//                          setState(() {
-//                            selectedCategory = category;
-//                          });
-                        },
-                        child: Container(
-                          height: 44,
-                          padding: EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Color(0x26FFFFFF),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Row(
-                            children: <Widget>[
-//                              Container(
-//                                child: SvgPicture.asset(
-//                                  Measurements.channelIcon(category),
-//                                  height: 32,
-//                                ),
-//                              ),
-                              Padding(
-                                padding: EdgeInsets.only(left: 8),
+                      ContactFilterItem item = filters[index];
+                      return Container(
+                        child: Column(
+                          children: <Widget>[
+                            MaterialButton(
+                              onPressed: () {
+                                setState(() {
+                                  item.isOpened = !item.isOpened;
+                                  filters[index] = item;
+                                });
+                              },
+                              child: Container(
+                                height: 44,
+                                padding: EdgeInsets.all(8),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Text(
+                                      item.disPlayName,
+                                    ),
+                                    Icon(item.isOpened ? Icons.close: Icons.add, size: 12,),
+                                  ],
+                                ),
                               ),
-                              Text(
-                                Language.getConnectStrings('.title'),
-                              )
-                            ],
-                          ),
+                            ),
+                            item.isOpened ? Container(
+                              padding: EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                clipBehavior: Clip.antiAlias,
+                                child: Column(
+                                  children: <Widget>[
+                                    Container(
+                                      color: Colors.black45,
+                                      child: DropdownButtonFormField(
+                                        items: filterTypes.keys.toList().map((key) {
+                                          return DropdownMenuItem(
+                                            onTap: () {
+
+                                            },
+                                            child: Padding(
+                                              padding: EdgeInsets.only(left: 16),
+                                              child: Text(
+                                                filterTypes[key],
+                                              ),
+                                            ),
+                                            value: key,
+                                          );
+                                        }).toList(),
+                                        onChanged: (val) {
+
+                                        },
+                                        isDense: true,
+                                        hint: Padding(
+                                          padding: EdgeInsets.only(left: 16),
+                                          child: Text(
+                                            'Condition',
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      color: Colors.black45,
+                                      child: TextFormField(
+                                        style: TextStyle(fontSize: 16),
+                                        onChanged: (val) {
+                                          setState(() {
+                                          });
+                                        },
+                                        initialValue: item.value ?? '',
+                                        decoration: InputDecoration(
+                                          contentPadding: EdgeInsets.only(left: 16, right: 16),
+                                          labelText: Language.getPosTpmStrings('Search'),
+                                          labelStyle: TextStyle(
+                                            color: Colors.grey,
+                                          ),
+                                          enabledBorder: InputBorder.none,
+                                          focusedBorder: UnderlineInputBorder(
+                                            borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                                          ),
+                                        ),
+                                        keyboardType: TextInputType.text,
+                                      ),
+                                    ),
+                                    Container(
+                                      height: 44,
+                                      child: SizedBox.expand(
+                                        child: MaterialButton(
+                                          onPressed: () {
+
+                                          },
+                                          color: Colors.white38,
+                                          elevation: 0,
+                                          child: Text(
+                                            'Apply',
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ): Container(),
+                          ],
                         ),
                       );
                     },
                     separatorBuilder: (context, index) {
                       return Container();
                     },
-                    itemCount: 0,
+                    itemCount: filters.length,
                   ),
                 ),
               ],

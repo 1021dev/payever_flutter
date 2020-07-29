@@ -103,3 +103,20 @@ class ContactModel {
 
   ContactModel({this.contact, this.isChecked});
 }
+
+
+class ContactFilterItem {
+  String type;
+  String condition;
+  String value;
+  String disPlayName;
+  bool isOpened;
+
+  ContactFilterItem({
+    this.type = 'ß',
+    this.condition = '',
+    this.value = '',
+    this.disPlayName = '',
+    this.isOpened = false,
+  });
+}

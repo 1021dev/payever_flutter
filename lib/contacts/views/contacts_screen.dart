@@ -589,6 +589,10 @@ class _ContactScreenState extends State<ContactScreen> {
   }
 
   Widget _getListBody(ContactScreenState state) {
+    int selectedCount = 0;
+    if (state.contactLists.length > 0) {
+      selectedCount = state.contactLists.where((element) => element.isChecked).toList().length;
+    }
     return Container(
       child: Column(
         children: <Widget>[
@@ -597,61 +601,23 @@ class _ContactScreenState extends State<ContactScreen> {
             padding: EdgeInsets.only(left: 24, right: 24),
             color: Color(0xff3f3f3f),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Expanded(
-                  child: Text(
-                    'App Name',
-                    style: TextStyle(
-                      color: Color.fromRGBO(255, 255, 255, 0.7),
-                      fontFamily: 'HelveticaNeue',
-                      fontSize: 14,
-                    ),
+                GestureDetector(
+                  onTap: () {
+                    screenBloc.add(SelectAllContactsEvent());
+                  },
+                  child: Icon(
+                    selectedCount == state.contactLists.length ? Icons.check_circle_outline : Icons.radio_button_unchecked,
                   ),
                 ),
-                _isTablet || !_isPortrait ? Container(
-                  width: Measurements.width * (_isPortrait ? 0.1 : 0.2),
-                  child: Text(
-                    'Category',
-                    style: TextStyle(
-                      color: Color.fromRGBO(255, 255, 255, 0.7),
-                      fontFamily: 'HelveticaNeue',
-                      fontSize: 14,
-                    ),
-                  ),
-                ): Container(),
-                _isTablet || !_isPortrait ? Container(
-                  width: Measurements.width * (_isPortrait ? 0.1 : 0.2),
-                  child: Text(
-                    'Developer',
-                    style: TextStyle(
-                      color: Color.fromRGBO(255, 255, 255, 0.7),
-                      fontFamily: 'HelveticaNeue',
-                      fontSize: 14,
-                    ),
-                  ),
-                ): Container(),
-                _isTablet || !_isPortrait ? Container(
-                  width: Measurements.width * (_isPortrait ? 0.1 : 0.2),
-                  child: Text(
-                    'Languages',
-                    style: TextStyle(
-                      color: Color.fromRGBO(255, 255, 255, 0.7),
-                      fontFamily: 'HelveticaNeue',
-                      fontSize: 14,
-                    ),
-                  ),
-                ): Container(),
-                Container(
-                  width: !_isTablet && _isPortrait ? null : Measurements.width * (_isTablet ? (_isPortrait ? 0.15 : 0.2) : (_isPortrait ? null: 0.35)),
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    'Price',
-                    style: TextStyle(
-                      color: Color.fromRGBO(255, 255, 255, 0.7),
-                      fontFamily: 'HelveticaNeue',
-                      fontSize: 14,
-                    ),
+                Padding(
+                  padding: EdgeInsets.only(left: 8),
+                ),
+                Text(
+                  'Contacts',
+                  style: TextStyle(
+                    fontFamily: 'Helvetica Neue',
+                    fontSize: 14,
                   ),
                 ),
               ],

@@ -929,33 +929,3 @@ class _AddContactScreenState extends State<AddContactScreen> {
   }
 
 }
-
-//DropDownFormField(
-//filled: false,
-//titleText: Language.getProductStrings('Product must match'),
-//hintText: Language.getProductStrings('Product must match'),
-//value: conditionOption,
-//onChanged: (value) {
-//setState(() {
-//conditionOption = value;
-//if (conditionOption != 'No Conditions') {
-//CollectionModel collection = state.collectionDetail;
-//FillCondition fillCondition = collection
-//    .automaticFillConditions;
-//fillCondition.strict =
-//conditionOption == 'All Conditions';
-//collection.automaticFillConditions = fillCondition;
-//widget.screenBloc.add(
-//UpdateCollectionDetail(collectionModel: collection));
-//}
-//});
-//},
-//dataSource: productConditionOptions.map((e) {
-//return {
-//'display': e,
-//'value': e,
-//};
-//}).toList(),
-//textField: 'display',
-//valueField: 'value',
-//)

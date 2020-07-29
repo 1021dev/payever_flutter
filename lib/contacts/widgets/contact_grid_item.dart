@@ -142,10 +142,6 @@ class ContactGridItem extends StatelessWidget {
               height: 24,
               width: 24,
               alignment: Alignment.center,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Color.fromRGBO(0, 0, 0, 0.3),
-              ),
               child: contact.isChecked ? Icon(
                 Icons.check_circle_outline,
                 color: Colors.white60,
