@@ -167,12 +167,9 @@ class _ContactsFilterScreenState extends State<ContactsFilterScreen> {
                                   children: <Widget>[
                                     Container(
                                       color: Colors.black45,
-                                      child: DropdownButtonFormField(
+                                      child: item.condition != null ? DropdownButtonFormField(
                                         items: filterTypes.keys.toList().map((key) {
                                           return DropdownMenuItem(
-                                            onTap: () {
-
-                                            },
                                             child: Padding(
                                               padding: EdgeInsets.only(left: 16),
                                               child: Text(
@@ -183,7 +180,35 @@ class _ContactsFilterScreenState extends State<ContactsFilterScreen> {
                                           );
                                         }).toList(),
                                         onChanged: (val) {
-
+                                          setState(() {
+                                            item.condition = val;
+                                            filters[index] = item;
+                                          });
+                                        },
+                                        hint: Padding(
+                                          padding: EdgeInsets.only(left: 16),
+                                          child: Text(
+                                            'Condition',
+                                          ),
+                                        ),
+                                        value: item.condition,
+                                      ) : DropdownButtonFormField(
+                                        items: filterTypes.keys.toList().map((key) {
+                                          return DropdownMenuItem(
+                                            child: Padding(
+                                              padding: EdgeInsets.only(left: 16),
+                                              child: Text(
+                                                filterTypes[key],
+                                              ),
+                                            ),
+                                            value: key,
+                                          );
+                                        }).toList(),
+                                        onChanged: (val) {
+                                          setState(() {
+                                            item.condition = val;
+                                            filters[index] = item;
+                                          });
                                         },
                                         hint: Padding(
                                           padding: EdgeInsets.only(left: 16),
@@ -238,6 +263,8 @@ class _ContactsFilterScreenState extends State<ContactsFilterScreen> {
                                         style: TextStyle(fontSize: 16),
                                         onChanged: (val) {
                                           setState(() {
+                                            item.value = val;
+                                            filters[index] = item;
                                           });
                                         },
                                         readOnly: item.type == 'Date',

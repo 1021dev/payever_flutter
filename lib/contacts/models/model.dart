@@ -119,7 +119,7 @@ class ContactFilterItem {
 
   ContactFilterItem({
     this.type = 'Text',
-    this.condition = '',
+    this.condition,
     this.value = '',
     this.disPlayName = '',
     this.isOpened = false,
