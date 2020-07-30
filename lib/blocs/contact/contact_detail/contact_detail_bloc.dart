@@ -31,9 +31,11 @@ class ContactDetailScreenBloc extends Bloc<ContactDetailScreenEvent, ContactDeta
     } else if (event is AddContactPhotoEvent) {
       yield* uploadContactPhoto(event.file, state.business);
     } else if (event is CreateNewFieldEvent) {
-
+      yield* createNewField(event.field);
     } else if (event is GetCustomField) {
       yield* getCustomField(event.business);
+    } else if (event is LoadTemplateEvent) {
+      yield* createNewContactField(event.field);
     }
   }
 
@@ -202,11 +204,45 @@ class ContactDetailScreenBloc extends Bloc<ContactDetailScreenEvent, ContactDeta
     yield state.copyWith(isLoading: false);
   }
 
+  Stream<ContactDetailScreenState> createNewContactField(Field field) async* {
+    String id = Uuid().v4();
+    Map<String, dynamic> body = {
+      'operationName': 'createContactField',
+      'query': 'mutation createContactField(\$id: UUID!, \$businessId: UUID!, \$contactId: UUID!, \$fieldId: UUID!, \$value: String!) {\n  createContactField(input: {contactField: {id: \$id, businessId: \$businessId, contactId: \$contactId, fieldId: \$fieldId, value: \$value}}) {\n    contactField {\n      id\n      value\n      __typename\n    }\n    __typename\n  }\n}\n',
+      'variables': {
+        'businessId': state.business,
+        'fieldId': field.id,
+        'id': id,
+        'value': '',
+        'contactId': state.contact.id,
+      },
+    };
+    dynamic response = await api.getGraphql(token, body);
+    if (response is Map) {
+      dynamic data = response['data'];
+      if (data is Map) {
+      }
+    }
+    List<Field> additional = [];
+    additional.addAll(state.additionalFields);
+    additional.add(field);
+    yield state.copyWith(additionalFields: additional);
+  }
+
   Stream<ContactDetailScreenState> addAdditionalField(Field field) async* {
 
   }
 
   Stream<ContactDetailScreenState> removeAdditionalField(Field field) async* {
-
+    List<Field> additional = [];
+    additional.addAll(state.additionalFields);
+    List<Field> a = additional.where((element) {
+      return element.id == field.id;
+    }).toList();
+    if (a.length > 0) {
+      Field ad = a.first;
+      additional.remove(ad);
+    }
+    yield state.copyWith(additionalFields: additional);
   }
 }

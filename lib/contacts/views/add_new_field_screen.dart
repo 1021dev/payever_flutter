@@ -47,14 +47,14 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
   String fieldType = '';
   String name = '';
   bool isSave = false;
-  List<String> filedTypes = [
-    'Single line Text',
-    'Paragraph Text',
-    'Number',
-    'Checkbox',
-    'Dropdown',
-    'Multiselect',
-  ];
+  Map<String, String> filedTypes = {
+    'Single line Text': 'text',
+    'Paragraph Text': 'textarea',
+    'Number': 'number',
+    'Checkbox': 'checkbox',
+    'Dropdown': 'select',
+    'Multiselect': 'multiselect',
+  };
 
   @override
   void initState() {
@@ -238,8 +238,8 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
       padding: EdgeInsets.only(left: 4),
       child: Center(
         child: DropDownFormField(
-          dataSource: filedTypes.map((element) {
-            return {'display': element, 'value': element};
+          dataSource: filedTypes.keys.toList().map((element) {
+            return {'display': element, 'value': filedTypes[element]};
           }).toList(),
           onChanged: (val) {
             setState(() {
@@ -545,6 +545,12 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
                           ),
                           MaterialButton(
                             onPressed: () {
+                              Field field = new Field();
+                              field.name = name;
+                              field.type = fieldType;
+                              field.businessId = widget.screenBloc.state.business;
+                              field.typename = 'Field';
+                              widget.screenBloc.add(CreateNewFieldEvent(field: field));
                               Navigator.pop(context);
                               Navigator.pop(context);
                             },

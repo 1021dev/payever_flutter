@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:payever/commons/commons.dart';
 import 'package:payever/contacts/models/model.dart';
 
 class ContactOptionContentView extends StatefulWidget {
@@ -38,8 +39,13 @@ class _ContactOptionContentViewState extends State<ContactOptionContentView> {
 
   @override
   Widget build(BuildContext context) {
+
+    double height = (isPrevious ? 64 * widget.fields.length :  120) + MediaQuery.of(context).padding.bottom;
+    if (height > (Measurements.height / 2.0)) {
+      height = Measurements.height / 2.0;
+    }
     return Container(
-      height: (isPrevious ? 64 * widget.fields.length :  120) + MediaQuery.of(context).padding.bottom,
+      height: height,
       padding: EdgeInsets.all(16),
       child: isPrevious ? ListView.separated(
         itemBuilder: (context, index) {

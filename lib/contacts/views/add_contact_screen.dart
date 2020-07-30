@@ -328,7 +328,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
 
     // Photo section;
     Widget photoSection = openGeneral ? Container(
-        height: Measurements.width * 0.5,
+        height: 200,
         child: Center(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -818,34 +818,363 @@ class _AddContactScreenState extends State<AddContactScreen> {
     widgets.add(additionalSection);
     widgets.add(Divider(height: 0, thickness: 0.5, color: Colors.black),);
 
-    state.additionalFields.forEach((element) {
-      Widget w = Container(
-        height: 56,
-        color: Colors.black38,
-        child: SizedBox.expand(
-          child: TextFormField(
-            style: TextStyle(fontSize: 16),
-            onChanged: (val) {
-              setState(() {
+    if (openAdditional) {
+      state.additionalFields.forEach((element) {
+        if (element.type == 'input') {
+          Widget w = Container(
+            height: 56,
+            color: Colors.black38,
+            child: SizedBox.expand(
+              child: Row(
+                children: <Widget>[
+                  TextFormField(
+                    style: TextStyle(fontSize: 16),
+                    onChanged: (val) {
+                      setState(() {
 
-              });
-            },
-            decoration: InputDecoration(
-              contentPadding: EdgeInsets.only(left: 16, right: 16),
-              labelText: Language.getPosTpmStrings('Type'),
-              labelStyle: TextStyle(
-                color: Colors.grey,
-              ),
-              enabledBorder: InputBorder.none,
-              focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                      });
+                    },
+                    maxLines: 5,
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.only(left: 16, right: 16),
+                      labelText: Language.getPosTpmStrings('Type'),
+                      labelStyle: TextStyle(
+                        color: Colors.grey,
+                      ),
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                      ),
+                    ),
+                    keyboardType: TextInputType.text,
+                  ),
+                  Row(
+                    children: <Widget>[
+                      MaterialButton(
+                        onPressed: () {
+
+                        },
+                        color: Colors.white60,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        height: 24,
+                        minWidth: 0,
+                        padding: EdgeInsets.all(4),
+                        child: Text(
+                            'Edit'
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          screenBloc.add(RemoveAdditionalField(field: element));
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.all(8),
+                          child: Icon(Icons.remove_circle),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
-            keyboardType: TextInputType.text,
-          ),
-        ),
-      );
-    });
+          );
+        } else if (element.type == 'select') {
+          Widget w = Container(
+            height: 56,
+            color: Colors.black38,
+            child: SizedBox.expand(
+              child: Row(
+                children: <Widget>[
+                  TextFormField(
+                    style: TextStyle(fontSize: 16),
+                    onChanged: (val) {
+                      setState(() {
+
+                      });
+                    },
+                    maxLines: 5,
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.only(left: 16, right: 16),
+                      labelText: Language.getPosTpmStrings('Type'),
+                      labelStyle: TextStyle(
+                        color: Colors.grey,
+                      ),
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                      ),
+                    ),
+                    keyboardType: TextInputType.text,
+                  ),
+                  Row(
+                    children: <Widget>[
+                      MaterialButton(
+                        onPressed: () {
+
+                        },
+                        color: Colors.white60,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        height: 24,
+                        minWidth: 0,
+                        padding: EdgeInsets.all(4),
+                        child: Text(
+                            'Edit'
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          screenBloc.add(RemoveAdditionalField(field: element));
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.all(8),
+                          child: Icon(Icons.remove_circle),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        } else if (element.type == 'checkbox') {
+          Widget w = Container(
+            height: 56,
+            color: Colors.black38,
+            child: SizedBox.expand(
+              child: Row(
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Icon(Icons.check_box_outline_blank),
+                      Padding(
+                        padding: EdgeInsets.only(left: 8),
+                      ),
+                      Text(
+                        element.name,
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      MaterialButton(
+                        onPressed: () {
+
+                        },
+                        color: Colors.white60,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        height: 24,
+                        minWidth: 0,
+                        padding: EdgeInsets.all(4),
+                        child: Text(
+                            'Edit'
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          screenBloc.add(RemoveAdditionalField(field: element));
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.all(8),
+                          child: Icon(Icons.remove_circle),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        } else if (element.type == 'textarea') {
+          Widget w = Container(
+            height: 56,
+            color: Colors.black38,
+            child: SizedBox.expand(
+              child: Row(
+                children: <Widget>[
+                  TextFormField(
+                    style: TextStyle(fontSize: 16),
+                    onChanged: (val) {
+                      setState(() {
+
+                      });
+                    },
+                    maxLines: 5,
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.only(left: 16, right: 16),
+                      labelText: Language.getPosTpmStrings('Type'),
+                      labelStyle: TextStyle(
+                        color: Colors.grey,
+                      ),
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                      ),
+                    ),
+                    keyboardType: TextInputType.text,
+                  ),
+                  Row(
+                    children: <Widget>[
+                      MaterialButton(
+                        onPressed: () {
+
+                        },
+                        color: Colors.white60,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        height: 24,
+                        minWidth: 0,
+                        padding: EdgeInsets.all(4),
+                        child: Text(
+                            'Edit'
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          screenBloc.add(RemoveAdditionalField(field: element));
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.all(8),
+                          child: Icon(Icons.remove_circle),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        } else if (element.type == 'number') {
+          Widget w = Container(
+            height: 56,
+            color: Colors.black38,
+            child: SizedBox.expand(
+              child: Row(
+                children: <Widget>[
+                  TextFormField(
+                    style: TextStyle(fontSize: 16),
+                    onChanged: (val) {
+                      setState(() {
+
+                      });
+                    },
+                    maxLines: 5,
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.only(left: 16, right: 16),
+                      labelText: Language.getPosTpmStrings('Type'),
+                      labelStyle: TextStyle(
+                        color: Colors.grey,
+                      ),
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                      ),
+                    ),
+                    keyboardType: TextInputType.number,
+                  ),
+                  Row(
+                    children: <Widget>[
+                      MaterialButton(
+                        onPressed: () {
+
+                        },
+                        color: Colors.white60,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        height: 24,
+                        minWidth: 0,
+                        padding: EdgeInsets.all(4),
+                        child: Text(
+                            'Edit'
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          screenBloc.add(RemoveAdditionalField(field: element));
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.all(8),
+                          child: Icon(Icons.remove_circle),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        } else if (element.type == 'multiselect') {
+          Widget w = Container(
+            height: 56,
+            color: Colors.black38,
+            child: SizedBox.expand(
+              child: Row(
+                children: <Widget>[
+                  TextFormField(
+                    style: TextStyle(fontSize: 16),
+                    onChanged: (val) {
+                      setState(() {
+
+                      });
+                    },
+                    maxLines: 5,
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.only(left: 16, right: 16),
+                      labelText: Language.getPosTpmStrings('Type'),
+                      labelStyle: TextStyle(
+                        color: Colors.grey,
+                      ),
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                      ),
+                    ),
+                    keyboardType: TextInputType.number,
+                  ),
+                  Row(
+                    children: <Widget>[
+                      MaterialButton(
+                        onPressed: () {
+
+                        },
+                        color: Colors.white60,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        height: 24,
+                        minWidth: 0,
+                        padding: EdgeInsets.all(4),
+                        child: Text(
+                            'Edit'
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          screenBloc.add(RemoveAdditionalField(field: element));
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.all(8),
+                          child: Icon(Icons.remove_circle),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+      });
+    } else {
+
+    }
     Widget optionsSection = openAdditional ? Container(
       height: 56,
       color: Colors.black38,
@@ -871,6 +1200,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                   },
                   onSelectPrevious: (val) {
                     Navigator.pop(context);
+                    showLoadDialog(val);
                   },
                   fields: state.customFields,
                 );
@@ -1009,4 +1339,94 @@ class _AddContactScreenState extends State<AddContactScreen> {
 
   }
 
+  showLoadDialog(Field field) {
+    showCupertinoDialog(
+      context: context,
+      builder: (builder) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: Center(
+            child: Wrap(
+                children: <Widget>[
+                  BlurEffectView(
+                    color: Color.fromRGBO(50, 50, 50, 0.4),
+                    padding: EdgeInsets.all(16),
+                    child: Column(
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(top: 16),
+                        ),
+                        SvgPicture.asset('assets/images/group_contact.svg'),
+                        Padding(
+                          padding: EdgeInsets.only(top: 16),
+                        ),
+                        Text(
+                          Language.getPosStrings('Are you sure?'),
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w300,
+                              color: Colors.white
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 16),
+                        ),
+                        Text(
+                          Language.getPosStrings('This will load the template from ${field.name}'),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w300,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 16),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            MaterialButton(
+                              onPressed: () {
+                                screenBloc.add(LoadTemplateEvent(field: field));
+                                Navigator.pop(context);
+                              },
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              height: 24,
+                              elevation: 0,
+                              minWidth: 0,
+                              color: Colors.white10,
+                              child: Text(
+                                Language.getCommerceOSStrings('Load'),
+                              ),
+                            ),
+                            MaterialButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              height: 24,
+                              elevation: 0,
+                              minWidth: 0,
+                              color: Colors.white10,
+                              child: Text(
+                                Language.getCommerceOSStrings('actions.cancel'),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ]
+            ),
+          ),
+        );
+      },
+    );
+  }
 }

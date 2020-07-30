@@ -89,3 +89,13 @@ class RemoveAdditionalField extends ContactDetailScreenEvent {
     this.field,
   ];
 }
+
+class LoadTemplateEvent extends ContactDetailScreenEvent {
+  final Field field;
+
+  LoadTemplateEvent({this.field});
+  @override
+  List<Object> get props => [
+    this.field,
+  ];
+}
