@@ -13,7 +13,6 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
-import 'package:payever/connect/models/connect.dart';
 import 'package:payever/contacts/models/model.dart';
 
 bool _isPortrait;
@@ -53,6 +52,8 @@ class _AddContactScreenState extends State<AddContactScreen> {
     screenBloc = ContactDetailScreenBloc(contactScreenBloc: widget.screenBloc);
     if (widget.editContact != null) {
       screenBloc.add(GetContactDetail(contact: widget.editContact));
+    } else {
+      screenBloc.add(ContactDetailScreenInitEvent(business: widget.screenBloc.dashboardScreenBloc.state.activeBusiness.id));
     }
     business = widget.screenBloc.dashboardScreenBloc.state.activeBusiness;
 
@@ -178,83 +179,85 @@ class _AddContactScreenState extends State<AddContactScreen> {
     String country = '';
     String image = state.blobName ?? '';
 
-    type = widget.editContact.type;
+    if (state.contact != null) {
+      type = state.contact.type;
 
-    List<ContactField> imageFields = widget.editContact.contactFields.nodes.where((element) {
-      return element.field.name == 'imageUrl';
-    }).toList();
-    if (imageFields.length > 0) {
-      image = imageFields.first.value;
-    }
+      List<ContactField> imageFields = state.contact.contactFields.nodes.where((element) {
+        return element.field.name == 'imageUrl';
+      }).toList();
+      if (imageFields.length > 0) {
+        image = imageFields.first.value;
+      }
 
-    List<ContactField> emailFields = widget.editContact.contactFields.nodes.where((element) {
-      return element.field.name == 'email';
-    }).toList();
-    if (emailFields.length > 0) {
-      email = emailFields.first.value;
-    }
+      List<ContactField> emailFields = state.contact.contactFields.nodes.where((element) {
+        return element.field.name == 'email';
+      }).toList();
+      if (emailFields.length > 0) {
+        email = emailFields.first.value;
+      }
 
-    List<ContactField> firstNameFields = widget.editContact.contactFields.nodes.where((element) {
-      return element.field.name == 'firstName';
-    }).toList();
-    if (firstNameFields.length > 0) {
-      firstName = firstNameFields.first.value;
-    }
+      List<ContactField> firstNameFields = state.contact.contactFields.nodes.where((element) {
+        return element.field.name == 'firstName';
+      }).toList();
+      if (firstNameFields.length > 0) {
+        firstName = firstNameFields.first.value;
+      }
 
-    List<ContactField> lastNameFields = widget.editContact.contactFields.nodes.where((element) {
-      return element.field.name == 'lastName';
-    }).toList();
-    if (lastNameFields.length > 0) {
-      lastName = lastNameFields.first.value;
-    }
+      List<ContactField> lastNameFields = state.contact.contactFields.nodes.where((element) {
+        return element.field.name == 'lastName';
+      }).toList();
+      if (lastNameFields.length > 0) {
+        lastName = lastNameFields.first.value;
+      }
 
-    List<ContactField> phoneFields = widget.editContact.contactFields.nodes.where((element) {
-      return element.field.name == 'mobilePhone';
-    }).toList();
-    if (phoneFields.length > 0) {
-      mobilePhone = phoneFields.first.value;
-    }
+      List<ContactField> phoneFields = state.contact.contactFields.nodes.where((element) {
+        return element.field.name == 'mobilePhone';
+      }).toList();
+      if (phoneFields.length > 0) {
+        mobilePhone = phoneFields.first.value;
+      }
 
-    List<ContactField> homePageFields = widget.editContact.contactFields.nodes.where((element) {
-      return element.field.name == 'homepage';
-    }).toList();
-    if (homePageFields.length > 0) {
-      homePage = homePageFields.first.value;
-    }
+      List<ContactField> homePageFields = state.contact.contactFields.nodes.where((element) {
+        return element.field.name == 'homepage';
+      }).toList();
+      if (homePageFields.length > 0) {
+        homePage = homePageFields.first.value;
+      }
 
-    List<ContactField> streetFields = widget.editContact.contactFields.nodes.where((element) {
-      return element.field.name == 'street';
-    }).toList();
-    if (streetFields.length > 0) {
-      street = streetFields.first.value;
-    }
+      List<ContactField> streetFields = state.contact.contactFields.nodes.where((element) {
+        return element.field.name == 'street';
+      }).toList();
+      if (streetFields.length > 0) {
+        street = streetFields.first.value;
+      }
 
-    List<ContactField> cityFields = widget.editContact.contactFields.nodes.where((element) {
-      return element.field.name == 'city';
-    }).toList();
-    if (cityFields.length > 0) {
-      city = cityFields.first.value;
-    }
+      List<ContactField> cityFields = state.contact.contactFields.nodes.where((element) {
+        return element.field.name == 'city';
+      }).toList();
+      if (cityFields.length > 0) {
+        city = cityFields.first.value;
+      }
 
-    List<ContactField> stateFields = widget.editContact.contactFields.nodes.where((element) {
-      return element.field.name == 'state';
-    }).toList();
-    if (stateFields.length > 0) {
-      stateString = stateFields.first.value;
-    }
+      List<ContactField> stateFields = state.contact.contactFields.nodes.where((element) {
+        return element.field.name == 'state';
+      }).toList();
+      if (stateFields.length > 0) {
+        stateString = stateFields.first.value;
+      }
 
-    List<ContactField> zipFields = widget.editContact.contactFields.nodes.where((element) {
-      return element.field.name == 'zip';
-    }).toList();
-    if (zipFields.length > 0) {
-      zip = zipFields.first.value;
-    }
+      List<ContactField> zipFields = state.contact.contactFields.nodes.where((element) {
+        return element.field.name == 'zip';
+      }).toList();
+      if (zipFields.length > 0) {
+        zip = zipFields.first.value;
+      }
 
-    List<ContactField> coungryFields = widget.editContact.contactFields.nodes.where((element) {
-      return element.field.name == 'country';
-    }).toList();
-    if (coungryFields.length > 0) {
-      country = coungryFields.first.value;
+      List<ContactField> coungryFields = state.contact.contactFields.nodes.where((element) {
+        return element.field.name == 'country';
+      }).toList();
+      if (coungryFields.length > 0) {
+        country = coungryFields.first.value;
+      }
     }
 
     List<Widget> widgets = [];

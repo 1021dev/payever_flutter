@@ -1,9 +1,10 @@
 class Contact {
-  String businessId;
-  ContactFields contactFields;
-  String id;
-  String type;
-  String typename;
+  Contact();
+  String businessId = '';
+  ContactFields contactFields = new ContactFields();
+  String id = '';
+  String type = '';
+  String typename = '';
 
   Contact.fromMap(dynamic obj) {
     businessId = obj['businessId'];
@@ -18,8 +19,9 @@ class Contact {
 }
 
 class ContactFields {
+  ContactFields();
   List<ContactField> nodes = [];
-  String typename;
+  String typename = '';
 
   ContactFields.fromMap(dynamic obj) {
     typename = obj['__typename'];
@@ -33,11 +35,11 @@ class ContactFields {
 }
 
 class ContactField {
-  Field field;
-  String fieldId;
-  String id;
-  String value;
-  String typename;
+  Field field = Field();
+  String fieldId = '';
+  String id = '';
+  String value = '';
+  String typename = '';
 
   ContactField.fromMap(dynamic obj) {
     fieldId = obj['fieldId'];
@@ -51,11 +53,12 @@ class ContactField {
 }
 
 class Field {
-  String id;
-  String name;
-  String typename;
-  String businessId;
-  String type;
+  Field();
+  String id= '';
+  String name = '';
+  String typename = '';
+  String businessId = '';
+  String type = '';
 
   Field.fromMap(dynamic obj) {
     id = obj['id'];
@@ -67,10 +70,11 @@ class Field {
 }
 
 class Contacts {
+  Contacts();
   List<Contact> nodes = [];
-  ContactPageInfo pageInfo;
+  ContactPageInfo pageInfo = ContactPageInfo();
   num totalCount = 0;
-  String typename;
+  String typename = '';
 
   Contacts.fromMap(dynamic obj) {
     typename = obj['__typename'];
@@ -88,8 +92,9 @@ class Contacts {
 }
 
 class ContactPageInfo {
-  bool hasNextPage;
-  String typename;
+  ContactPageInfo();
+  bool hasNextPage = false;
+  String typename = '';
 
   ContactPageInfo.fromMap(dynamic obj) {
     typename = obj['__typename'];
@@ -98,8 +103,8 @@ class ContactPageInfo {
 }
 
 class ContactModel {
-  bool isChecked;
-  Contact contact;
+  bool isChecked = false;
+  Contact contact = Contact();
 
   ContactModel({this.contact, this.isChecked});
 }
@@ -113,7 +118,7 @@ class ContactFilterItem {
   bool isOpened;
 
   ContactFilterItem({
-    this.type = 'ß',
+    this.type = 'Text',
     this.condition = '',
     this.value = '',
     this.disPlayName = '',

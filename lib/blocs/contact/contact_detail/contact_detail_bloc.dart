@@ -23,7 +23,7 @@ class ContactDetailScreenBloc extends Bloc<ContactDetailScreenEvent, ContactDeta
   @override
   Stream<ContactDetailScreenState> mapEventToState(ContactDetailScreenEvent event) async* {
     if (event is ContactDetailScreenInitEvent) {
-      yield state.copyWith(business: event.business);
+      yield state.copyWith(business: event.business, contact: new Contact());
       yield* getField(event.business);
     } else if (event is GetContactDetail) {
       yield state.copyWith(contact: event.contact);

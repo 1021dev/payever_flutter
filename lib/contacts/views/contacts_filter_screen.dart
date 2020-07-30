@@ -1,6 +1,8 @@
-import 'package:dropdown_formfield/dropdown_formfield.dart';
+import 'package:date_format/date_format.dart';
+import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
@@ -29,10 +31,13 @@ class _ContactsFilterScreenState extends State<ContactsFilterScreen> {
   List<ContactFilterItem> filters = [
     ContactFilterItem(disPlayName: 'Name'),
     ContactFilterItem(disPlayName: 'Members count'),
-    ContactFilterItem(disPlayName: 'Purchase date'),
+    ContactFilterItem(disPlayName: 'Purchase date', type: 'Date'),
     ContactFilterItem(disPlayName: 'Orders count'),
     ContactFilterItem(disPlayName: 'Total spent'),
   ];
+
+  DateTime startDate;
+  DateTime endDate;
   @override
   void initState() {
     super.initState();
@@ -55,7 +60,7 @@ class _ContactsFilterScreenState extends State<ContactsFilterScreen> {
     Map<String, String> filterTypes = filterConditionsByFilterType('weight');
     return Scaffold(
       backgroundColor: Color(0x80111111),
-      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomPadding: true,
       body: BlurEffectView(
         radius: 0,
         color: Colors.transparent,
@@ -180,7 +185,6 @@ class _ContactsFilterScreenState extends State<ContactsFilterScreen> {
                                         onChanged: (val) {
 
                                         },
-                                        isDense: true,
                                         hint: Padding(
                                           padding: EdgeInsets.only(left: 16),
                                           child: Text(
@@ -191,12 +195,52 @@ class _ContactsFilterScreenState extends State<ContactsFilterScreen> {
                                     ),
                                     Container(
                                       color: Colors.black45,
-                                      child: TextFormField(
+                                      child: item.type == 'Date'
+                                          ?
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          FlatButton(
+                                            onPressed: () async {
+                                              final DateTime picked = await showDatePicker(
+                                                  context: context,
+                                                  initialDate: startDate ?? DateTime.now(),
+                                                  firstDate: DateTime(1990),
+                                                  lastDate: DateTime(2030));
+                                              if (picked != null && picked != startDate) {
+                                                setState(() {
+                                                  startDate = picked;
+                                                });
+                                              }
+                                            },
+                                            child: Text(
+                                              startDate != null ? formatDate(startDate, [mm, '/', dd, '/', yyyy]): 'Start Date',
+                                            ),
+                                          ),
+                                          item.condition == 'between' ? FlatButton(
+                                            onPressed: () async {
+                                              final DateTime picked = await showDatePicker(
+                                                  context: context,
+                                                  initialDate: endDate ?? DateTime.now(),
+                                                  firstDate: DateTime(1990),
+                                                  lastDate: DateTime(2030));
+                                              if (picked != null && picked != endDate)
+                                                setState(() {
+                                                  endDate = picked;
+                                                });
+                                            },
+                                            child: Text(
+                                              endDate != null ? formatDate(endDate, [mm, '/', dd, '/', yyyy]): 'End Date',
+                                            ),
+                                          ): Container(),
+                                        ],
+                                      ): TextFormField(
                                         style: TextStyle(fontSize: 16),
                                         onChanged: (val) {
                                           setState(() {
                                           });
                                         },
+                                        readOnly: item.type == 'Date',
                                         initialValue: item.value ?? '',
                                         decoration: InputDecoration(
                                           contentPadding: EdgeInsets.only(left: 16, right: 16),
