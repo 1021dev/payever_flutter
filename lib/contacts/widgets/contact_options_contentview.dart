@@ -40,7 +40,7 @@ class _ContactOptionContentViewState extends State<ContactOptionContentView> {
   @override
   Widget build(BuildContext context) {
 
-    double height = (isPrevious ? 64 * widget.fields.length :  120) + MediaQuery.of(context).padding.bottom;
+    double height = (isPrevious ? 64 * widget.fields.length :  64 * 2) + MediaQuery.of(context).padding.bottom;
     if (height > (Measurements.height / 2.0)) {
       height = Measurements.height / 2.0;
     }

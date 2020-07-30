@@ -104,7 +104,7 @@ class ContactDetailScreenBloc extends Bloc<ContactDetailScreenEvent, ContactDeta
     if (response != null) {
       blob = response['blobName'];
     }
-    yield state.copyWith(uploadPhoto: false, blobName: blob);
+    yield state.copyWith(uploadPhoto: false, blobName: '${Env.storage}/images/$blob');
   }
 
 

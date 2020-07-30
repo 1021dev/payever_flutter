@@ -336,16 +336,22 @@ class _AddContactScreenState extends State<AddContactScreen> {
               children: <Widget>[
                 Expanded(
                   child: Container(
+                    height: 120,
+                    width: 120,
                     margin: EdgeInsets.all(16),
                     clipBehavior: Clip.antiAlias,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Colors.white,
+                        width: 2,
+                      ),
                     ),
-                    child: state.uploadPhoto ? Container(
-                      width: 16,
-                      height: 16,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
+                    child: state.uploadPhoto ? Center(
+                      child: Container(
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                          ),
                       ),
                     ) : (image == '' ? SvgPicture.asset('assets/images/add_contacts.svg')
                         : CachedNetworkImage(
@@ -690,8 +696,6 @@ class _AddContactScreenState extends State<AddContactScreen> {
             child: TextFormField(
               style: TextStyle(fontSize: 16),
               onChanged: (val) {
-                setState(() {
-                });
               },
               initialValue: stateString,
               decoration: InputDecoration(
@@ -826,27 +830,27 @@ class _AddContactScreenState extends State<AddContactScreen> {
             color: Colors.black38,
             child: SizedBox.expand(
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  TextFormField(
-                    style: TextStyle(fontSize: 16),
-                    onChanged: (val) {
-                      setState(() {
-
-                      });
-                    },
-                    maxLines: 5,
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.only(left: 16, right: 16),
-                      labelText: Language.getPosTpmStrings('Type'),
-                      labelStyle: TextStyle(
-                        color: Colors.grey,
+                  Flexible(
+                    child: TextFormField(
+                      style: TextStyle(fontSize: 16),
+                      onChanged: (val) {
+                      },
+                      maxLines: 5,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.only(left: 16, right: 16),
+                        labelText: Language.getPosTpmStrings(element.name),
+                        labelStyle: TextStyle(
+                          color: Colors.grey,
+                        ),
+                        enabledBorder: InputBorder.none,
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                        ),
                       ),
-                      enabledBorder: InputBorder.none,
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue, width: 0.5),
-                      ),
+                      keyboardType: TextInputType.text,
                     ),
-                    keyboardType: TextInputType.text,
                   ),
                   Row(
                     children: <Widget>[
@@ -860,9 +864,13 @@ class _AddContactScreenState extends State<AddContactScreen> {
                         ),
                         height: 24,
                         minWidth: 0,
-                        padding: EdgeInsets.all(4),
+                        padding: EdgeInsets.only(left: 8, right: 8),
                         child: Text(
-                            'Edit'
+                          'Edit',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                          ),
                         ),
                       ),
                       GestureDetector(
@@ -880,33 +888,37 @@ class _AddContactScreenState extends State<AddContactScreen> {
               ),
             ),
           );
+          widgets.add(w);
         } else if (element.type == 'select') {
           Widget w = Container(
             height: 56,
             color: Colors.black38,
             child: SizedBox.expand(
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  TextFormField(
-                    style: TextStyle(fontSize: 16),
-                    onChanged: (val) {
-                      setState(() {
+                  Flexible(
+                    child: TextFormField(
+                      style: TextStyle(fontSize: 16),
+                      onChanged: (val) {
+                        setState(() {
 
-                      });
-                    },
-                    maxLines: 5,
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.only(left: 16, right: 16),
-                      labelText: Language.getPosTpmStrings('Type'),
-                      labelStyle: TextStyle(
-                        color: Colors.grey,
+                        });
+                      },
+                      maxLines: 5,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.only(left: 16, right: 16),
+                        labelText: Language.getPosTpmStrings(element.name),
+                        labelStyle: TextStyle(
+                          color: Colors.grey,
+                        ),
+                        enabledBorder: InputBorder.none,
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                        ),
                       ),
-                      enabledBorder: InputBorder.none,
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue, width: 0.5),
-                      ),
+                      keyboardType: TextInputType.text,
                     ),
-                    keyboardType: TextInputType.text,
                   ),
                   Row(
                     children: <Widget>[
@@ -920,9 +932,13 @@ class _AddContactScreenState extends State<AddContactScreen> {
                         ),
                         height: 24,
                         minWidth: 0,
-                        padding: EdgeInsets.all(4),
+                        padding: EdgeInsets.only(left: 8, right: 8),
                         child: Text(
-                            'Edit'
+                          'Edit',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                          ),
                         ),
                       ),
                       GestureDetector(
@@ -940,15 +956,20 @@ class _AddContactScreenState extends State<AddContactScreen> {
               ),
             ),
           );
+          widgets.add(w);
         } else if (element.type == 'checkbox') {
           Widget w = Container(
             height: 56,
             color: Colors.black38,
             child: SizedBox.expand(
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Row(
                     children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(left: 16),
+                      ),
                       Icon(Icons.check_box_outline_blank),
                       Padding(
                         padding: EdgeInsets.only(left: 8),
@@ -970,9 +991,13 @@ class _AddContactScreenState extends State<AddContactScreen> {
                         ),
                         height: 24,
                         minWidth: 0,
-                        padding: EdgeInsets.all(4),
+                        padding: EdgeInsets.only(left: 8, right: 8),
                         child: Text(
-                            'Edit'
+                          'Edit',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                          ),
                         ),
                       ),
                       GestureDetector(
@@ -990,33 +1015,37 @@ class _AddContactScreenState extends State<AddContactScreen> {
               ),
             ),
           );
+          widgets.add(w);
         } else if (element.type == 'textarea') {
           Widget w = Container(
             height: 56,
             color: Colors.black38,
             child: SizedBox.expand(
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  TextFormField(
-                    style: TextStyle(fontSize: 16),
-                    onChanged: (val) {
-                      setState(() {
+                  Flexible(
+                    child: TextFormField(
+                      style: TextStyle(fontSize: 16),
+                      onChanged: (val) {
+                        setState(() {
 
-                      });
-                    },
-                    maxLines: 5,
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.only(left: 16, right: 16),
-                      labelText: Language.getPosTpmStrings('Type'),
-                      labelStyle: TextStyle(
-                        color: Colors.grey,
+                        });
+                      },
+                      maxLines: 5,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.only(left: 16, right: 16),
+                        labelText: Language.getPosTpmStrings(element.name),
+                        labelStyle: TextStyle(
+                          color: Colors.grey,
+                        ),
+                        enabledBorder: InputBorder.none,
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                        ),
                       ),
-                      enabledBorder: InputBorder.none,
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue, width: 0.5),
-                      ),
+                      keyboardType: TextInputType.text,
                     ),
-                    keyboardType: TextInputType.text,
                   ),
                   Row(
                     children: <Widget>[
@@ -1030,9 +1059,13 @@ class _AddContactScreenState extends State<AddContactScreen> {
                         ),
                         height: 24,
                         minWidth: 0,
-                        padding: EdgeInsets.all(4),
+                        padding: EdgeInsets.only(left: 8, right: 8),
                         child: Text(
-                            'Edit'
+                          'Edit',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                          ),
                         ),
                       ),
                       GestureDetector(
@@ -1050,33 +1083,37 @@ class _AddContactScreenState extends State<AddContactScreen> {
               ),
             ),
           );
+          widgets.add(w);
         } else if (element.type == 'number') {
           Widget w = Container(
             height: 56,
             color: Colors.black38,
             child: SizedBox.expand(
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  TextFormField(
-                    style: TextStyle(fontSize: 16),
-                    onChanged: (val) {
-                      setState(() {
+                  Flexible(
+                    child: TextFormField(
+                      style: TextStyle(fontSize: 16),
+                      onChanged: (val) {
+                        setState(() {
 
-                      });
-                    },
-                    maxLines: 5,
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.only(left: 16, right: 16),
-                      labelText: Language.getPosTpmStrings('Type'),
-                      labelStyle: TextStyle(
-                        color: Colors.grey,
+                        });
+                      },
+                      maxLines: 5,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.only(left: 16, right: 16),
+                        labelText: Language.getPosTpmStrings(element.name),
+                        labelStyle: TextStyle(
+                          color: Colors.grey,
+                        ),
+                        enabledBorder: InputBorder.none,
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                        ),
                       ),
-                      enabledBorder: InputBorder.none,
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue, width: 0.5),
-                      ),
+                      keyboardType: TextInputType.number,
                     ),
-                    keyboardType: TextInputType.number,
                   ),
                   Row(
                     children: <Widget>[
@@ -1090,9 +1127,13 @@ class _AddContactScreenState extends State<AddContactScreen> {
                         ),
                         height: 24,
                         minWidth: 0,
-                        padding: EdgeInsets.all(4),
+                        padding: EdgeInsets.only(left: 8, right: 8),
                         child: Text(
-                            'Edit'
+                          'Edit',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                          ),
                         ),
                       ),
                       GestureDetector(
@@ -1110,33 +1151,37 @@ class _AddContactScreenState extends State<AddContactScreen> {
               ),
             ),
           );
+          widgets.add(w);
         } else if (element.type == 'multiselect') {
           Widget w = Container(
             height: 56,
             color: Colors.black38,
             child: SizedBox.expand(
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  TextFormField(
-                    style: TextStyle(fontSize: 16),
-                    onChanged: (val) {
-                      setState(() {
+                  Flexible(
+                    child: TextFormField(
+                      style: TextStyle(fontSize: 16),
+                      onChanged: (val) {
+                        setState(() {
 
-                      });
-                    },
-                    maxLines: 5,
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.only(left: 16, right: 16),
-                      labelText: Language.getPosTpmStrings('Type'),
-                      labelStyle: TextStyle(
-                        color: Colors.grey,
+                        });
+                      },
+                      maxLines: 5,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.only(left: 16, right: 16),
+                        labelText: Language.getPosTpmStrings(element.name),
+                        labelStyle: TextStyle(
+                          color: Colors.grey,
+                        ),
+                        enabledBorder: InputBorder.none,
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                        ),
                       ),
-                      enabledBorder: InputBorder.none,
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue, width: 0.5),
-                      ),
+                      keyboardType: TextInputType.number,
                     ),
-                    keyboardType: TextInputType.number,
                   ),
                   Row(
                     children: <Widget>[
@@ -1150,9 +1195,13 @@ class _AddContactScreenState extends State<AddContactScreen> {
                         ),
                         height: 24,
                         minWidth: 0,
-                        padding: EdgeInsets.all(4),
+                        padding: EdgeInsets.only(left: 8, right: 8),
                         child: Text(
-                            'Edit'
+                          'Edit',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                          ),
                         ),
                       ),
                       GestureDetector(
@@ -1170,7 +1219,9 @@ class _AddContactScreenState extends State<AddContactScreen> {
               ),
             ),
           );
+          widgets.add(w);
         }
+        widgets.add(Divider(height: 0, thickness: 0.5, color: Colors.black),);
       });
     } else {
 
