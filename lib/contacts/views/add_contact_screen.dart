@@ -26,10 +26,12 @@ class AddContactScreen extends StatefulWidget {
 
   final ContactScreenBloc screenBloc;
   final Contact editContact;
+  final bool isNew;
 
   AddContactScreen({
     this.screenBloc,
     this.editContact,
+    this.isNew = false,
   });
 
   @override
@@ -481,7 +483,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                   borderSide: BorderSide(color: Colors.blue, width: 0.5),
                 ),
               ),
-              keyboardType: TextInputType.text,
+              keyboardType: TextInputType.phone,
             ),
           ),
           Container(
@@ -508,7 +510,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                   borderSide: BorderSide(color: Colors.blue, width: 0.5),
                 ),
               ),
-              keyboardType: TextInputType.text,
+              keyboardType: TextInputType.emailAddress,
             ),
           ),
         ],
@@ -540,7 +542,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
               borderSide: BorderSide(color: Colors.blue, width: 0.5),
             ),
           ),
-          keyboardType: TextInputType.text,
+          keyboardType: TextInputType.url,
         ),
       ),
     ): Container();
@@ -778,7 +780,18 @@ class _AddContactScreenState extends State<AddContactScreen> {
                     children: <Widget>[
                       MaterialButton(
                         onPressed: () {
-
+                          Navigator.push(
+                            context,
+                            PageTransition(
+                              child: AddNewFieldScreen(
+                                isEdit: true,
+                                editField: element,
+                                screenBloc: screenBloc,
+                              ),
+                              type: PageTransitionType.fade,
+                              duration: Duration(milliseconds: 500),
+                            ),
+                          );
                         },
                         color: Colors.white60,
                         shape: RoundedRectangleBorder(
@@ -846,7 +859,18 @@ class _AddContactScreenState extends State<AddContactScreen> {
                     children: <Widget>[
                       MaterialButton(
                         onPressed: () {
-
+                          Navigator.push(
+                            context,
+                            PageTransition(
+                              child: AddNewFieldScreen(
+                                isEdit: true,
+                                editField: element,
+                                screenBloc: screenBloc,
+                              ),
+                              type: PageTransitionType.fade,
+                              duration: Duration(milliseconds: 500),
+                            ),
+                          );
                         },
                         color: Colors.white60,
                         shape: RoundedRectangleBorder(
@@ -905,7 +929,18 @@ class _AddContactScreenState extends State<AddContactScreen> {
                     children: <Widget>[
                       MaterialButton(
                         onPressed: () {
-
+                          Navigator.push(
+                            context,
+                            PageTransition(
+                              child: AddNewFieldScreen(
+                                isEdit: true,
+                                editField: element,
+                                screenBloc: screenBloc,
+                              ),
+                              type: PageTransitionType.fade,
+                              duration: Duration(milliseconds: 500),
+                            ),
+                          );
                         },
                         color: Colors.white60,
                         shape: RoundedRectangleBorder(
@@ -973,7 +1008,18 @@ class _AddContactScreenState extends State<AddContactScreen> {
                     children: <Widget>[
                       MaterialButton(
                         onPressed: () {
-
+                          Navigator.push(
+                            context,
+                            PageTransition(
+                              child: AddNewFieldScreen(
+                                isEdit: true,
+                                editField: element,
+                                screenBloc: screenBloc,
+                              ),
+                              type: PageTransitionType.fade,
+                              duration: Duration(milliseconds: 500),
+                            ),
+                          );
                         },
                         color: Colors.white60,
                         shape: RoundedRectangleBorder(
@@ -1041,7 +1087,18 @@ class _AddContactScreenState extends State<AddContactScreen> {
                     children: <Widget>[
                       MaterialButton(
                         onPressed: () {
-
+                          Navigator.push(
+                            context,
+                            PageTransition(
+                              child: AddNewFieldScreen(
+                                isEdit: true,
+                                editField: element,
+                                screenBloc: screenBloc,
+                              ),
+                              type: PageTransitionType.fade,
+                              duration: Duration(milliseconds: 500),
+                            ),
+                          );
                         },
                         color: Colors.white60,
                         shape: RoundedRectangleBorder(
@@ -1109,7 +1166,18 @@ class _AddContactScreenState extends State<AddContactScreen> {
                     children: <Widget>[
                       MaterialButton(
                         onPressed: () {
-
+                          Navigator.push(
+                            context,
+                            PageTransition(
+                              child: AddNewFieldScreen(
+                                isEdit: true,
+                                editField: element,
+                                screenBloc: screenBloc,
+                              ),
+                              type: PageTransitionType.fade,
+                              duration: Duration(milliseconds: 500),
+                            ),
+                          );
                         },
                         color: Colors.white60,
                         shape: RoundedRectangleBorder(
@@ -1254,11 +1322,21 @@ class _AddContactScreenState extends State<AddContactScreen> {
                     Fluttertoast.showToast(msg: 'LastName required');
                     return;
                   }
+                  if ((state.contactUserModel.mobilePhone ?? '') == '') {
+                    Fluttertoast.showToast(msg: 'Email required');
+                    return;
+                  }
                   if ((state.contactUserModel.email ?? '') == '') {
                     Fluttertoast.showToast(msg: 'Email required');
                     return;
                   }
-                  screenBloc.add(CreateNewContact());
+                  if (!Validators.isValidEmail(state.contactUserModel.email)) {
+                    Fluttertoast.showToast(msg: 'Email invalid');
+                    return;
+                  }
+                  if (widget.isNew) {
+                    screenBloc.add(CreateNewContact());
+                  }
                 },
                 color: Colors.black87,
                 shape: RoundedRectangleBorder(

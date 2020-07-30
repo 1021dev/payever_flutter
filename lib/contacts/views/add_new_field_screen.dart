@@ -21,11 +21,13 @@ bool _isTablet;
 class AddNewFieldScreen extends StatefulWidget {
 
   final ContactDetailScreenBloc screenBloc;
-  final Contact editContact;
+  final Field editField;
+  final bool isEdit;
 
   AddNewFieldScreen({
     this.screenBloc,
-    this.editContact,
+    this.editField,
+    this.isEdit = false,
   });
 
   @override
@@ -58,6 +60,10 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
 
   @override
   void initState() {
+    if (widget.editField != null) {
+      fieldLabel = widget.editField.name;
+      fieldType = widget.editField.type;
+    }
     fieldLabelController.text = fieldLabel;
     fieldNameController.text = name;
     super.initState();
@@ -378,12 +384,16 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
               return;
             }
             if (fieldType == '') {
-              Fluttertoast.showToast(msg: 'fieldType required');
+              Fluttertoast.showToast(msg: 'FieldType required');
               return;
             }
-            setState(() {
-              isSave = true;
-            });
+            if (widget.isEdit) {
+              Navigator.pop(context);
+            } else {
+              setState(() {
+                isSave = true;
+              });
+            }
           },
           color: Colors.black87,
           child: Text(

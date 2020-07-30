@@ -740,6 +740,7 @@ class _ContactScreenState extends State<ContactScreen> {
               context,
               PageTransition(
                 child: AddContactScreen(
+                  isNew: true,
                   screenBloc: screenBloc,
                 ),
                 type: PageTransitionType.fade,

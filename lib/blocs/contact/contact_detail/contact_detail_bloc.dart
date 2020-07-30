@@ -41,6 +41,8 @@ class ContactDetailScreenBloc extends Bloc<ContactDetailScreenEvent, ContactDeta
       yield* createContact(state.contactUserModel.type);
     } else if (event is CreateNewContactField) {
       yield* createContactField(event.contactId, event.fieldId, event.value);
+    } else if (event is RemoveAdditionalField) {
+      yield* removeAdditionalField(event.field);
     }
   }
 
@@ -142,7 +144,7 @@ class ContactDetailScreenBloc extends Bloc<ContactDetailScreenEvent, ContactDeta
     if (response is Map) {
       dynamic data = response['data'];
       if (data is Map) {
-        dynamic field = data['field'];
+        dynamic field = data['fields'];
         if (field is Map) {
           dynamic nodes = field['nodes'];
           if (nodes is List) {
@@ -268,6 +270,25 @@ class ContactDetailScreenBloc extends Bloc<ContactDetailScreenEvent, ContactDeta
         };
         dynamic response = await api.getGraphql(token, body);
       }
+    } else if (state.blobName != '') {
+      List<Field> imageFields = state.formFields.where((element) {
+        return element.name == 'imageUrl';
+      }).toList();
+      if (imageFields.length > 0) {
+        String uuid = Uuid().v4();
+        Map<String, dynamic> body = {
+          'operationName': 'createContactField',
+          'query': 'mutation createContactField(\$id: UUID!, \$businessId: UUID!, \$contactId: UUID!, \$fieldId: UUID!, \$value: String!) {\n  createContactField(input: {contactField: {id: \$id, businessId: \$businessId, contactId: \$contactId, fieldId: \$fieldId, value: \$value}}) {\n    contactField {\n      id\n      value\n      __typename\n    }\n    __typename\n  }\n}\n',
+          'variables': {
+            'businessId': state.business,
+            'contactId': contact.id,
+            'fieldId': imageFields.first.id,
+            'id': uuid,
+            'value': state.blobName,
+          },
+        };
+        dynamic response = await api.getGraphql(token, body);
+      }
     }
     if (contactUserModel.firstName != null) {
       List<Field> firstNameFields = state.formFields.where((element) {
@@ -351,7 +372,7 @@ class ContactDetailScreenBloc extends Bloc<ContactDetailScreenEvent, ContactDeta
     }
     if (contactUserModel.homePage != null) {
       List<Field> homepageFields = state.formFields.where((element) {
-        return element.name == 'homePage';
+        return element.name == 'homepage';
       }).toList();
       if (homepageFields.length > 0) {
         String uuid = Uuid().v4();
