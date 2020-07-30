@@ -22,10 +22,9 @@ class ContactDetailScreenBloc extends Bloc<ContactDetailScreenEvent, ContactDeta
   @override
   Stream<ContactDetailScreenState> mapEventToState(ContactDetailScreenEvent event) async* {
     if (event is ContactDetailScreenInitEvent) {
-      yield state.copyWith(business: event.business, contact: new Contact());
+      yield state.copyWith(business: event.business, contact: new Contact(), contactUserModel: ContactUserModel());
       yield* getField(event.business);
     } else if (event is GetContactDetail) {
-      print('image =  ${event.contact.contactFields.nodes.first.value}');
       yield state.copyWith(contact: event.contact, business: event.business);
       yield* getField(event.business);
     } else if (event is AddContactPhotoEvent) {
@@ -36,11 +35,97 @@ class ContactDetailScreenBloc extends Bloc<ContactDetailScreenEvent, ContactDeta
       yield* getCustomField(event.business);
     } else if (event is LoadTemplateEvent) {
       yield* createNewContactField(event.field);
+    } else if (event is UpdateContactUserModel) {
+      yield* updateContactDetail(event.userModel);
     }
   }
 
   Stream<ContactDetailScreenState> getField(String businessId) async* {
     yield state.copyWith(isLoading: true);
+    Contact contact = state.contact;
+    ContactUserModel contactUserModel = new ContactUserModel();
+
+      contactUserModel.type = state.contact.type;
+      if (state.blobName != '') {
+        contactUserModel.imageUrl = state.blobName;
+      } else {
+        List<ContactField> imageFields = state.contact.contactFields.nodes.where((element) {
+          return element.field.name == 'imageUrl';
+        }).toList();
+        if (imageFields.length > 0) {
+          contactUserModel.imageUrl = imageFields.first.value;
+        }
+      }
+      List<ContactField> emailFields = state.contact.contactFields.nodes.where((element) {
+        return element.field.name == 'email';
+      }).toList();
+      if (emailFields.length > 0) {
+        contactUserModel.email = emailFields.first.value;
+      }
+
+      List<ContactField> firstNameFields = state.contact.contactFields.nodes.where((element) {
+        return element.field.name == 'firstName';
+      }).toList();
+      if (firstNameFields.length > 0) {
+        contactUserModel.firstName = firstNameFields.first.value;
+      }
+
+      List<ContactField> lastNameFields = state.contact.contactFields.nodes.where((element) {
+        return element.field.name == 'lastName';
+      }).toList();
+      if (lastNameFields.length > 0) {
+        contactUserModel.lastName = lastNameFields.first.value;
+      }
+
+      List<ContactField> phoneFields = state.contact.contactFields.nodes.where((element) {
+        return element.field.name == 'mobilePhone';
+      }).toList();
+      if (phoneFields.length > 0) {
+        contactUserModel.mobilePhone = phoneFields.first.value;
+      }
+
+      List<ContactField> homePageFields = state.contact.contactFields.nodes.where((element) {
+        return element.field.name == 'homepage';
+      }).toList();
+      if (homePageFields.length > 0) {
+        contactUserModel.homePage = homePageFields.first.value;
+      }
+
+      List<ContactField> streetFields = state.contact.contactFields.nodes.where((element) {
+        return element.field.name == 'street';
+      }).toList();
+      if (streetFields.length > 0) {
+        contactUserModel.street = streetFields.first.value;
+      }
+
+      List<ContactField> cityFields = state.contact.contactFields.nodes.where((element) {
+        return element.field.name == 'city';
+      }).toList();
+      if (cityFields.length > 0) {
+        contactUserModel.city = cityFields.first.value;
+      }
+
+      List<ContactField> stateFields = state.contact.contactFields.nodes.where((element) {
+        return element.field.name == 'state';
+      }).toList();
+      if (stateFields.length > 0) {
+        contactUserModel.states = stateFields.first.value;
+      }
+
+      List<ContactField> zipFields = state.contact.contactFields.nodes.where((element) {
+        return element.field.name == 'zip';
+      }).toList();
+      if (zipFields.length > 0) {
+        contactUserModel.zip = zipFields.first.value;
+      }
+
+      List<ContactField> coungryFields = state.contact.contactFields.nodes.where((element) {
+        return element.field.name == 'country';
+      }).toList();
+      if (coungryFields.length > 0) {
+        contactUserModel.country = coungryFields.first.value;
+      }
+
     List<Field> fields = [];
     Map<String, dynamic> body = {
       'operationName': null,
@@ -65,7 +150,7 @@ class ContactDetailScreenBloc extends Bloc<ContactDetailScreenEvent, ContactDeta
       }
     }
 
-    yield state.copyWith(isLoading: false, formFields: fields);
+    yield state.copyWith(isLoading: false, formFields: fields, contactUserModel: contactUserModel);
     add(GetCustomField(business: businessId));
   }
 
@@ -104,7 +189,13 @@ class ContactDetailScreenBloc extends Bloc<ContactDetailScreenEvent, ContactDeta
     if (response != null) {
       blob = response['blobName'];
     }
-    yield state.copyWith(uploadPhoto: false, blobName: '${Env.storage}/images/$blob');
+    ContactUserModel contactUserModel = state.contactUserModel;
+    contactUserModel.imageUrl = '${Env.storage}/images/$blob';
+    yield state.copyWith(uploadPhoto: false, blobName: '${Env.storage}/images/$blob', contactUserModel: contactUserModel);
+  }
+
+  Stream<ContactDetailScreenState> updateContactDetail(ContactUserModel contactUserModel) async* {
+    yield state.copyWith(contactUserModel: contactUserModel);
   }
 
 

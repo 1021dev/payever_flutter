@@ -185,103 +185,9 @@ class _AddContactScreenState extends State<AddContactScreen> {
   }
 
   Widget _getBody(ContactDetailScreenState state) {
-    String type = '';
-    String firstName = '';
-    String lastName = '';
-    String mobilePhone = '';
-    String email = '';
-    String homePage = '';
-    String street = '';
-    String city = '';
-    String stateString = '';
-    String zip = '';
-    String country = '';
-    String image = '';
-
-    if (state.contact != null) {
-      type = state.contact.type;
-      if (state.blobName != '') {
-        image = state.blobName;
-      } else {
-        List<ContactField> imageFields = state.contact.contactFields.nodes.where((element) {
-          return element.field.name == 'imageUrl';
-        }).toList();
-        if (imageFields.length > 0) {
-          image = imageFields.first.value;
-        }
-      }
-      print(image);
-      List<ContactField> emailFields = state.contact.contactFields.nodes.where((element) {
-        return element.field.name == 'email';
-      }).toList();
-      if (emailFields.length > 0) {
-        email = emailFields.first.value;
-      }
-
-      List<ContactField> firstNameFields = state.contact.contactFields.nodes.where((element) {
-        return element.field.name == 'firstName';
-      }).toList();
-      if (firstNameFields.length > 0) {
-        firstName = firstNameFields.first.value;
-      }
-
-      List<ContactField> lastNameFields = state.contact.contactFields.nodes.where((element) {
-        return element.field.name == 'lastName';
-      }).toList();
-      if (lastNameFields.length > 0) {
-        lastName = lastNameFields.first.value;
-      }
-
-      List<ContactField> phoneFields = state.contact.contactFields.nodes.where((element) {
-        return element.field.name == 'mobilePhone';
-      }).toList();
-      if (phoneFields.length > 0) {
-        mobilePhone = phoneFields.first.value;
-      }
-
-      List<ContactField> homePageFields = state.contact.contactFields.nodes.where((element) {
-        return element.field.name == 'homepage';
-      }).toList();
-      if (homePageFields.length > 0) {
-        homePage = homePageFields.first.value;
-      }
-
-      List<ContactField> streetFields = state.contact.contactFields.nodes.where((element) {
-        return element.field.name == 'street';
-      }).toList();
-      if (streetFields.length > 0) {
-        street = streetFields.first.value;
-      }
-
-      List<ContactField> cityFields = state.contact.contactFields.nodes.where((element) {
-        return element.field.name == 'city';
-      }).toList();
-      if (cityFields.length > 0) {
-        city = cityFields.first.value;
-      }
-
-      List<ContactField> stateFields = state.contact.contactFields.nodes.where((element) {
-        return element.field.name == 'state';
-      }).toList();
-      if (stateFields.length > 0) {
-        stateString = stateFields.first.value;
-      }
-
-      List<ContactField> zipFields = state.contact.contactFields.nodes.where((element) {
-        return element.field.name == 'zip';
-      }).toList();
-      if (zipFields.length > 0) {
-        zip = zipFields.first.value;
-      }
-
-      List<ContactField> coungryFields = state.contact.contactFields.nodes.where((element) {
-        return element.field.name == 'country';
-      }).toList();
-      if (coungryFields.length > 0) {
-        country = coungryFields.first.value;
-      }
+    if (state.contactUserModel == null) {
+      return Container();
     }
-
     List<Widget> widgets = [];
     Widget header = Container(
       height: 56,
@@ -353,10 +259,10 @@ class _AddContactScreenState extends State<AddContactScreen> {
                             strokeWidth: 2,
                           ),
                       ),
-                    ) : (image == '' ? SvgPicture.asset('assets/images/add_contacts.svg')
+                    ) : (state.contactUserModel.imageUrl == '' ? SvgPicture.asset('assets/images/add_contacts.svg')
                         : CachedNetworkImage(
                       alignment: Alignment.center,
-                      imageUrl: image,
+                      imageUrl: state.contactUserModel.imageUrl,
                       imageBuilder: (context, imageProvider) => Container(
                         clipBehavior: Clip.antiAlias,
                         decoration: BoxDecoration(
@@ -462,11 +368,11 @@ class _AddContactScreenState extends State<AddContactScreen> {
         child: TextFormField(
           style: TextStyle(fontSize: 16),
           onChanged: (val) {
-            setState(() {
-
-            });
+            ContactUserModel contactUserModel = state.contactUserModel;
+            contactUserModel.type = val;
+            screenBloc.add(UpdateContactUserModel(userModel: contactUserModel));
           },
-          initialValue: type,
+          initialValue: state.contactUserModel.type,
           decoration: InputDecoration(
             contentPadding: EdgeInsets.only(left: 16, right: 16),
             labelText: Language.getPosTpmStrings('Type'),
@@ -494,10 +400,11 @@ class _AddContactScreenState extends State<AddContactScreen> {
             child: TextFormField(
               style: TextStyle(fontSize: 16),
               onChanged: (val) {
-                setState(() {
-                });
+                ContactUserModel contactUserModel = state.contactUserModel;
+                contactUserModel.firstName = val;
+                screenBloc.add(UpdateContactUserModel(userModel: contactUserModel));
               },
-              initialValue: firstName,
+              initialValue: state.contactUserModel.firstName,
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('First Name'),
@@ -520,10 +427,11 @@ class _AddContactScreenState extends State<AddContactScreen> {
             child: TextFormField(
               style: TextStyle(fontSize: 16),
               onChanged: (val) {
-                setState(() {
-                });
+                ContactUserModel contactUserModel = state.contactUserModel;
+                contactUserModel.lastName = val;
+                screenBloc.add(UpdateContactUserModel(userModel: contactUserModel));
               },
-              initialValue: lastName,
+              initialValue: state.contactUserModel.lastName,
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('Last Name'),
@@ -553,10 +461,11 @@ class _AddContactScreenState extends State<AddContactScreen> {
             child: TextFormField(
               style: TextStyle(fontSize: 16),
               onChanged: (val) {
-                setState(() {
-                });
+                ContactUserModel contactUserModel = state.contactUserModel;
+                contactUserModel.mobilePhone = val;
+                screenBloc.add(UpdateContactUserModel(userModel: contactUserModel));
               },
-              initialValue: mobilePhone,
+              initialValue: state.contactUserModel.mobilePhone,
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('Mobile Phone'),
@@ -579,10 +488,11 @@ class _AddContactScreenState extends State<AddContactScreen> {
             child: TextFormField(
               style: TextStyle(fontSize: 16),
               onChanged: (val) {
-                setState(() {
-                });
+                ContactUserModel contactUserModel = state.contactUserModel;
+                contactUserModel.email = val;
+                screenBloc.add(UpdateContactUserModel(userModel: contactUserModel));
               },
-              initialValue: email,
+              initialValue: state.contactUserModel.email,
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('Email'),
@@ -610,10 +520,11 @@ class _AddContactScreenState extends State<AddContactScreen> {
         child: TextFormField(
           style: TextStyle(fontSize: 16),
           onChanged: (val) {
-            setState(() {
-            });
+            ContactUserModel contactUserModel = state.contactUserModel;
+            contactUserModel.homePage = val;
+            screenBloc.add(UpdateContactUserModel(userModel: contactUserModel));
           },
-          initialValue: homePage,
+          initialValue: state.contactUserModel.homePage,
           decoration: InputDecoration(
             contentPadding: EdgeInsets.only(left: 16, right: 16),
             labelText: Language.getPosTpmStrings('Homepage'),
@@ -639,10 +550,11 @@ class _AddContactScreenState extends State<AddContactScreen> {
         child: TextFormField(
           style: TextStyle(fontSize: 16),
           onChanged: (val) {
-            setState(() {
-            });
+            ContactUserModel contactUserModel = state.contactUserModel;
+            contactUserModel.street = val;
+            screenBloc.add(UpdateContactUserModel(userModel: contactUserModel));
           },
-          initialValue: street,
+          initialValue: state.contactUserModel.street,
           decoration: InputDecoration(
             contentPadding: EdgeInsets.only(left: 16, right: 16),
             labelText: Language.getPosTpmStrings('Street'),
@@ -670,10 +582,11 @@ class _AddContactScreenState extends State<AddContactScreen> {
             child: TextFormField(
               style: TextStyle(fontSize: 16),
               onChanged: (val) {
-                setState(() {
-                });
+                ContactUserModel contactUserModel = state.contactUserModel;
+                contactUserModel.city = val;
+                screenBloc.add(UpdateContactUserModel(userModel: contactUserModel));
               },
-              initialValue: city,
+              initialValue: state.contactUserModel.city,
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('City'),
@@ -696,8 +609,11 @@ class _AddContactScreenState extends State<AddContactScreen> {
             child: TextFormField(
               style: TextStyle(fontSize: 16),
               onChanged: (val) {
+                ContactUserModel contactUserModel = state.contactUserModel;
+                contactUserModel.states = val;
+                screenBloc.add(UpdateContactUserModel(userModel: contactUserModel));
               },
-              initialValue: stateString,
+              initialValue: state.contactUserModel.states,
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('State'),
@@ -727,10 +643,11 @@ class _AddContactScreenState extends State<AddContactScreen> {
             child: TextFormField(
               style: TextStyle(fontSize: 16),
               onChanged: (val) {
-                setState(() {
-                });
+                ContactUserModel contactUserModel = state.contactUserModel;
+                contactUserModel.zip = val;
+                screenBloc.add(UpdateContactUserModel(userModel: contactUserModel));
               },
-              initialValue: zip,
+              initialValue: state.contactUserModel.zip,
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('Zip'),
@@ -753,10 +670,11 @@ class _AddContactScreenState extends State<AddContactScreen> {
             child: TextFormField(
               style: TextStyle(fontSize: 16),
               onChanged: (val) {
-                setState(() {
-                });
+                ContactUserModel contactUserModel = state.contactUserModel;
+                contactUserModel.country = val;
+                screenBloc.add(UpdateContactUserModel(userModel: contactUserModel));
               },
-              initialValue: country,
+              initialValue: state.contactUserModel.country,
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('Country'),

@@ -11,6 +11,7 @@ class ContactDetailScreenState {
   final List<Field> customFields;
   final List<Field> additionalFields;
   final Contact contact;
+  final ContactUserModel contactUserModel;
 
   ContactDetailScreenState({
     this.isLoading = false,
@@ -21,6 +22,7 @@ class ContactDetailScreenState {
     this.customFields = const [],
     this.additionalFields = const [],
     this.contact,
+    this.contactUserModel,
   });
 
   List<Object> get props => [
@@ -32,6 +34,7 @@ class ContactDetailScreenState {
     this.customFields,
     this.additionalFields,
     this.contact,
+    this.contactUserModel,
   ];
 
   ContactDetailScreenState copyWith({
@@ -43,6 +46,7 @@ class ContactDetailScreenState {
     List<Field> customFields,
     List<Field> additionalFields,
     Contact contact,
+    ContactUserModel contactUserModel,
   }) {
     return ContactDetailScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -53,6 +57,7 @@ class ContactDetailScreenState {
       customFields: customFields ?? this.customFields,
       additionalFields: additionalFields ?? this.additionalFields,
       contact: contact ?? this.contact,
+      contactUserModel: contactUserModel ?? this.contactUserModel,
     );
   }
 }

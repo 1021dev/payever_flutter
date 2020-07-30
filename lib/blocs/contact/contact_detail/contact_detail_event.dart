@@ -99,3 +99,13 @@ class LoadTemplateEvent extends ContactDetailScreenEvent {
     this.field,
   ];
 }
+
+class UpdateContactUserModel extends ContactDetailScreenEvent {
+  final ContactUserModel userModel;
+
+  UpdateContactUserModel({this.userModel});
+  @override
+  List<Object> get props => [
+    this.userModel,
+  ];
+}

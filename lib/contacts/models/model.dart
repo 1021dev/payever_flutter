@@ -125,3 +125,22 @@ class ContactFilterItem {
     this.isOpened = false,
   });
 }
+
+class ContactUserModel {
+  ContactUserModel();
+
+  String type = '';
+  String firstName = '';
+  String lastName = '';
+  String email = '';
+  String mobilePhone = '';
+  String street = '';
+  String homePage = '';
+  String city = '';
+  String states = '';
+  String country = '';
+  String zip = '';
+  String imageUrl = '';
+
+
+}
