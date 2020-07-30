@@ -45,3 +45,13 @@ class GetContactDetail extends ContactDetailScreenEvent {
     this.contact,
   ];
 }
+
+class CreateNewFieldEvent extends ContactDetailScreenEvent {
+  final Field field;
+
+  CreateNewFieldEvent({this.field});
+  @override
+  List<Object> get props => [
+    this.field,
+  ];
+}

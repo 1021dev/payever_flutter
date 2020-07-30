@@ -114,7 +114,7 @@ class _ContactsFilterScreenState extends State<ContactsFilterScreen> {
                 Container(
                   padding: EdgeInsets.only(left: 24, bottom: 16),
                   child: Text(
-                    'Contacts',
+                    Language.getCommerceOSStrings('dashboard.apps.contacts'),
                     style: TextStyle(
                       color: Colors.white70,
                       fontSize: 16,

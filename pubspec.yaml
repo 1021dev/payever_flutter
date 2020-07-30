@@ -57,7 +57,7 @@ dependencies:
   flutter_reorderable_list: ^0.1.4
   flutter_tagging: ^2.2.0+3
   flutter_colorpicker: ^0.3.4
-  fluttertoast: ^7.0.1+1
+  fluttertoast: ^7.0.2
   flutter_rating_bar: ^3.0.1+1
   smooth_star_rating: ^1.1.1
 dev_dependencies:

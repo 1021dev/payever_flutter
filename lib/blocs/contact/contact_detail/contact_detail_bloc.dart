@@ -29,6 +29,8 @@ class ContactDetailScreenBloc extends Bloc<ContactDetailScreenEvent, ContactDeta
       yield state.copyWith(contact: event.contact);
     } else if (event is AddContactPhotoEvent) {
       yield* uploadContactPhoto(event.file, state.business);
+    } else if (event is CreateNewFieldEvent) {
+
     }
   }
 
@@ -159,5 +161,25 @@ class ContactDetailScreenBloc extends Bloc<ContactDetailScreenEvent, ContactDeta
     yield state.copyWith(isLoading: false);
   }
 
-
+  Stream<ContactDetailScreenState> createNewField(Field field) async* {
+    String id = Uuid().v4();
+    Map<String, dynamic> body = {
+      'operationName': 'createField',
+      'query': 'mutation createField(\$id: UUID!, \$businessId: UUID!, \$name: String!, \$type: String!, \$defaultValues: JSON) {\n  createField(input: {field: {id: \$id, defaultValues: \$defaultValues, businessId: \$businessId, name: \$name, type: \$type}}) {\n    field {\n      id\n      __typename\n    }\n    __typename\n  }\n}\n',
+      'variables': {
+        'businessId': state.business,
+        'defaultValues': null,
+        'id': id,
+        'name': field.name,
+        'type': field.type,
+      },
+    };
+    dynamic response = await api.getGraphql(token, body);
+    if (response is Map) {
+      dynamic data = response['data'];
+      if (data is Map) {
+      }
+    }
+    yield state.copyWith(isLoading: false);
+  }
 }

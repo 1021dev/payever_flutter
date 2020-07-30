@@ -90,6 +90,32 @@ class _ContactScreenState extends State<ContactScreen> {
     ];
   }
 
+  List<ConnectPopupButton> sortPopup(BuildContext context, ContactScreenState state) {
+    return [
+      ConnectPopupButton(
+        title: Language.getProductListStrings('Name asc'),
+        onTap: () async {
+          setState(() {
+          });
+        },
+      ),
+      ConnectPopupButton(
+        title: Language.getProductListStrings('Name desc'),
+        onTap: () async {
+          setState(() {
+          });
+        },
+      ),
+      ConnectPopupButton(
+        title: Language.getProductListStrings('Email'),
+        onTap: () async {
+          setState(() {
+          });
+        },
+      ),
+    ];
+  }
+
   @override
   void initState() {
     screenBloc = ContactScreenBloc(
@@ -479,16 +505,39 @@ class _ContactScreenState extends State<ContactScreen> {
                         ),
                       ),
                     ),
-                    GestureDetector(
-                      onTap: () {
-
-                      },
-                      child: Container(
-                        child: SvgPicture.asset(
-                          'assets/images/sort-by-button.svg',
-                          width: 12,
-                          height: 12,
+                    Container(
+                      alignment: Alignment.centerRight,
+                      child: PopupMenuButton<ConnectPopupButton>(
+                        child: Padding(
+                          padding: EdgeInsets.all(8),
+                          child: SvgPicture.asset(
+                            'assets/images/sort-by-button.svg',
+                            width: 12,
+                            height: 12,
+                          ),
                         ),
+                        offset: Offset(0, 100),
+                        onSelected: (ConnectPopupButton item) => item.onTap(),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        color: Colors.black87,
+                        itemBuilder: (BuildContext context) {
+                          return sortPopup(context, state)
+                              .map((ConnectPopupButton item) {
+                            return PopupMenuItem<ConnectPopupButton>(
+                              value: item,
+                              child: Text(
+                                item.title,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            );
+                          }).toList();
+                        },
                       ),
                     ),
                     Container(
@@ -604,7 +653,11 @@ class _ContactScreenState extends State<ContactScreen> {
               children: <Widget>[
                 GestureDetector(
                   onTap: () {
-                    screenBloc.add(SelectAllContactsEvent());
+                    if (selectedCount == state.contactLists.length) {
+                      screenBloc.add(DeselectAllContactsEvent());
+                    } else {
+                      screenBloc.add(SelectAllContactsEvent());
+                    }
                   },
                   child: Icon(
                     selectedCount == state.contactLists.length ? Icons.check_circle_outline : Icons.radio_button_unchecked,
