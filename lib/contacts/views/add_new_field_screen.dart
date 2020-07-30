@@ -1,8 +1,12 @@
 import 'dart:ui';
 
+import 'package:dropdown_formfield/dropdown_formfield.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
@@ -32,34 +36,30 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  String wallpaper;
-  String selectedState = '';
-  bool openGeneral = true;
-  bool openAdditional = true;
+  TextEditingController fieldNameController = TextEditingController();
+  TextEditingController fieldLabelController = TextEditingController();
 
-
-  Business business;
-  List<OverflowMenuItem> optionPopup(BuildContext context, ContactDetailScreenState state) {
-    return [
-      OverflowMenuItem(
-        title: Language.getProductListStrings('Add Field'),
-        onTap: () async {
-          setState(() {
-          });
-        },
-      ),
-      OverflowMenuItem(
-        title: Language.getProductListStrings('Choose previous fields'),
-        onTap: () async {
-          setState(() {
-          });
-        },
-      ),
-    ];
-  }
+  bool isFilterable = false;
+  bool isOnlyAdmin = false;
+  bool isShowPerson = false;
+  bool isShowCompany = false;
+  String fieldLabel = '';
+  String fieldType = '';
+  String name = '';
+  bool isSave = false;
+  List<String> filedTypes = [
+    'Single line Text',
+    'Paragraph Text',
+    'Number',
+    'Checkbox',
+    'Dropdown',
+    'Multiselect',
+  ];
 
   @override
   void initState() {
+    fieldLabelController.text = fieldLabel;
+    fieldNameController.text = name;
     super.initState();
   }
 
@@ -129,7 +129,13 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
             size: 24,
           ),
           onPressed: () {
-            Navigator.pop(context);
+            if (isSave) {
+              setState(() {
+                isSave = false;
+              });
+            } else {
+              Navigator.pop(context);
+            }
           },
         ),
         Padding(
@@ -171,6 +177,7 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
 
     List<Widget> widgets = [];
     Widget header = Container(
+      padding: EdgeInsets.only(left: 16, right: 16),
       height: 56,
       color: Colors.black54,
       child: SizedBox.expand(
@@ -195,16 +202,18 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
     widgets.add(header);
     widgets.add(Divider(height: 0, thickness: 0.5, color: Colors.black),);
 
-    Widget filedLabel = Container(
+    Widget filedLabelField = Container(
       height: 64,
       child: Center(
         child: TextFormField(
           style: TextStyle(fontSize: 16),
+          controller: fieldLabelController,
           onChanged: (val) {
             setState(() {
-
+              fieldLabel = val;
             });
           },
+          autovalidate: true,
           decoration: InputDecoration(
             contentPadding: EdgeInsets.only(left: 16, right: 16),
             labelText: Language.getPosTpmStrings('Field Label'),
@@ -221,12 +230,39 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
       ),
     );
 
-    widgets.add(filedLabel);
+    widgets.add(filedLabelField);
     widgets.add(Divider(height: 0, thickness: 0.5, color: Colors.black),);
 
+    Widget fieldTypeField = Container(
+      height: 64,
+      padding: EdgeInsets.only(left: 4),
+      child: Center(
+        child: DropDownFormField(
+          dataSource: filedTypes.map((element) {
+            return {'display': element, 'value': element};
+          }).toList(),
+          onChanged: (val) {
+            setState(() {
+              fieldType = val;
+            });
+          },
+          autovalidate: true,
+          filled: false,
+          value: fieldType,
+          titleText: null,
+          hintText: 'Field Type',
+          textField: 'display',
+          valueField: 'value',
+        ),
+      ),
+    );
+
+    widgets.add(fieldTypeField);
+    widgets.add(Divider(height: 0, thickness: 0.5, color: Colors.black),);
 
     Widget filterableSection = Container(
       height: 64,
+      padding: EdgeInsets.only(left: 16, right: 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
@@ -236,11 +272,14 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
             ),
           ),
           CupertinoSwitch(
-            value: false,
+            value: isFilterable,
             onChanged: (val) {
-
+              setState(() {
+                isFilterable = val;
+              });
             },
-          )
+            trackColor: Colors.black26,
+          ),
         ],
       ),
     );
@@ -250,6 +289,7 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
 
     Widget valueEditable = Container(
       height: 64,
+      padding: EdgeInsets.only(left: 16, right: 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
@@ -259,11 +299,14 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
             ),
           ),
           CupertinoSwitch(
-            value: false,
+            value: isOnlyAdmin,
             onChanged: (val) {
-
+              setState(() {
+                isOnlyAdmin = val;
+              });
             },
-          )
+            trackColor: Colors.black26,
+          ),
         ],
       ),
     );
@@ -273,6 +316,7 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
 
     Widget showOnPersonCards = Container(
       height: 64,
+      padding: EdgeInsets.only(left: 16, right: 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
@@ -282,11 +326,14 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
             ),
           ),
           CupertinoSwitch(
-            value: false,
+            value: isShowPerson,
             onChanged: (val) {
-
+              setState(() {
+                isShowPerson = val;
+              });
             },
-          )
+            trackColor: Colors.black26,
+          ),
         ],
       ),
     );
@@ -296,6 +343,7 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
 
     Widget showOnCompanyCards = Container(
       height: 64,
+      padding: EdgeInsets.only(left: 16, right: 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
@@ -305,11 +353,14 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
             ),
           ),
           CupertinoSwitch(
-            value: false,
+            value: isShowCompany,
             onChanged: (val) {
-
+              setState(() {
+                isShowCompany = val;
+              });
             },
-          )
+            trackColor: Colors.black26,
+          ),
         ],
       ),
     );
@@ -319,15 +370,80 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
 
     Widget saveButton = Container(
       height: 56,
-      margin: EdgeInsets.only(left: 16, right: 16, bottom: 16),
       child: SizedBox.expand(
         child: MaterialButton(
           onPressed: () {
+            if (fieldLabel == '') {
+              Fluttertoast.showToast(msg: 'Field Label required');
+              return;
+            }
+            if (fieldType == '') {
+              Fluttertoast.showToast(msg: 'fieldType required');
+              return;
+            }
+            setState(() {
+              isSave = true;
+            });
           },
           color: Colors.black87,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
+          child: Text(
+            'Save field',
+            maxLines: 1,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+            ),
           ),
+        ),
+      ),
+    );
+    widgets.add(saveButton);
+
+    List<Widget> saveWidgets = [];
+
+    Widget fieldNameField = Container(
+      height: 64,
+      child: Center(
+        child: TextFormField(
+          controller: fieldNameController,
+          style: TextStyle(fontSize: 16),
+          onChanged: (val) {
+            setState(() {
+              name = val;
+            });
+          },
+          decoration: InputDecoration(
+            contentPadding: EdgeInsets.only(left: 16, right: 16),
+            labelText: Language.getPosTpmStrings('Name'),
+            labelStyle: TextStyle(
+              color: Colors.grey,
+            ),
+            enabledBorder: InputBorder.none,
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.blue, width: 0.5),
+            ),
+          ),
+          keyboardType: TextInputType.text,
+        ),
+      ),
+    );
+
+    saveWidgets.add(fieldNameField);
+    saveWidgets.add(Divider(height: 0, thickness: 0.5, color: Colors.black),);
+
+    Widget saveButton1 = Container(
+      height: 56,
+      child: SizedBox.expand(
+        child: MaterialButton(
+          onPressed: () {
+            if (name == '') {
+              Fluttertoast.showToast(msg: 'Field Name required');
+              return;
+            }
+            showConfirmDialog();
+          },
+          color: Colors.black87,
           child: Text(
             'Save',
             maxLines: 1,
@@ -340,7 +456,7 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
         ),
       ),
     );
-    widgets.add(saveButton);
+    saveWidgets.add(saveButton1);
 
     return Center(
       child: Wrap(
@@ -356,12 +472,103 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: widgets.map((e) => e).toList(),
+                children: (isSave ? saveWidgets: widgets).map((e) => e).toList(),
               ),
             ),
           ),
         ],
       ),
+    );
+  }
+
+  showConfirmDialog() {
+    showCupertinoDialog(
+      context: context,
+      builder: (builder) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: Center(
+            child: Wrap(
+              children: <Widget>[
+                BlurEffectView(
+                  color: Color.fromRGBO(50, 50, 50, 0.4),
+                  padding: EdgeInsets.all(16),
+                  child: Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(top: 16),
+                      ),
+                      SvgPicture.asset('assets/images/group_contact.svg'),
+                      Padding(
+                        padding: EdgeInsets.only(top: 16),
+                      ),
+                      Text(
+                        Language.getPosStrings('Are you sure?'),
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w300,
+                            color: Colors.white
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 16),
+                      ),
+                      Text(
+                        Language.getPosStrings('This will save the info you entered over ${fieldNameController.text}'),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w300,
+                          color: Colors.white,
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 16),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          MaterialButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            height: 24,
+                            elevation: 0,
+                            minWidth: 0,
+                            color: Colors.white10,
+                            child: Text(
+                              Language.getCommerceOSStrings('actions.cancel'),
+                            ),
+                          ),
+                          MaterialButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                            },
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            height: 24,
+                            elevation: 0,
+                            minWidth: 0,
+                            color: Colors.white10,
+                            child: Text(
+                              Language.getCommerceOSStrings('actions.save'),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ]
+            ),
+          ),
+        );
+      },
     );
   }
 }

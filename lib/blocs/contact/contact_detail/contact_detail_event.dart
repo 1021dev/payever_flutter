@@ -59,6 +59,7 @@ class CreateNewFieldEvent extends ContactDetailScreenEvent {
     this.field,
   ];
 }
+
 class GetCustomField extends ContactDetailScreenEvent {
   final String business;
 
@@ -66,5 +67,25 @@ class GetCustomField extends ContactDetailScreenEvent {
   @override
   List<Object> get props => [
     this.business,
+  ];
+}
+
+class AddAdditionalField extends ContactDetailScreenEvent {
+  final Field field;
+
+  AddAdditionalField({this.field});
+  @override
+  List<Object> get props => [
+    this.field,
+  ];
+}
+
+class RemoveAdditionalField extends ContactDetailScreenEvent {
+  final Field field;
+
+  RemoveAdditionalField({this.field});
+  @override
+  List<Object> get props => [
+    this.field,
   ];
 }

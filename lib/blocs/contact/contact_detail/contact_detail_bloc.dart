@@ -211,4 +211,12 @@ class ContactDetailScreenBloc extends Bloc<ContactDetailScreenEvent, ContactDeta
     }
     yield state.copyWith(isLoading: false);
   }
+
+  Stream<ContactDetailScreenState> addAdditionalField(Field field) async* {
+
+  }
+
+  Stream<ContactDetailScreenState> removeAdditionalField(Field field) async* {
+
+  }
 }
