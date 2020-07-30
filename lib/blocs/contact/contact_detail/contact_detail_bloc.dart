@@ -25,6 +25,7 @@ class ContactDetailScreenBloc extends Bloc<ContactDetailScreenEvent, ContactDeta
       yield state.copyWith(business: event.business, contact: new Contact());
       yield* getField(event.business);
     } else if (event is GetContactDetail) {
+      print('image =  ${event.contact.contactFields.nodes.first.value}');
       yield state.copyWith(contact: event.contact, business: event.business);
       yield* getField(event.business);
     } else if (event is AddContactPhotoEvent) {
@@ -101,18 +102,7 @@ class ContactDetailScreenBloc extends Bloc<ContactDetailScreenEvent, ContactDeta
     if (response != null) {
       blob = response['blobName'];
     }
-    Contact contact;
-    contact = state.contact;
-    List<ContactField> imageFields = state.contact.contactFields.nodes.where((element) {
-      return element.field.name == 'imageUrl';
-    }).toList();
-    if (imageFields.length > 0) {
-      int index = state.contact.contactFields.nodes.indexOf(imageFields.first);
-      ContactField contactField = state.contact.contactFields.nodes[index];
-      contactField.value = '${Env.storage}/images/$blob';
-      contact.contactFields.nodes[index] = contactField;
-    }
-    yield state.copyWith(uploadPhoto: false, blobName: blob, contact: contact);
+    yield state.copyWith(uploadPhoto: false, blobName: blob);
   }
 
 

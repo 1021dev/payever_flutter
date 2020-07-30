@@ -683,13 +683,13 @@ class _ContactScreenState extends State<ContactScreen> {
                 return ContactListItem(
                   isTablet: _isTablet,
                   isPortrait: _isPortrait,
-                  onOpen: (contactModel) {
+                  onOpen: () {
                     Navigator.push(
                       context,
                       PageTransition(
                         child: AddContactScreen(
                           screenBloc: screenBloc,
-                          editContact: contactModel.contact,
+                          editContact: state.contactLists[index].contact,
                         ),
                         type: PageTransitionType.fade,
                         duration: Duration(milliseconds: 500),
@@ -697,7 +697,7 @@ class _ContactScreenState extends State<ContactScreen> {
                     );
                   },
                   onTap: (contactModel){
-                    screenBloc.add(SelectContactEvent(contact: contactModel));
+                    screenBloc.add(SelectContactEvent(contact: state.contactLists[index]));
                   },
                   contact: state.contactLists[index],
                 );

@@ -46,9 +46,7 @@ class ContactListItem extends StatelessWidget {
       lastName = lastNameFields.first.value;
     }
     return GestureDetector(
-      onTap: () {
-        onTap(contact);
-      },
+      onTap: onTap,
       child: Container(
         height: 66,
         padding: EdgeInsets.only(left: margin, right: margin),
@@ -111,9 +109,7 @@ class ContactListItem extends StatelessWidget {
                   Container(
                     padding: EdgeInsets.all(0),
                     child: MaterialButton(
-                      onPressed: () {
-                        onOpen(contact);
-                      },
+                      onPressed: onOpen,
                       color: Color.fromRGBO(255, 255, 255, 0.1),
                       height: 26,
                       minWidth: 0,

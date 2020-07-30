@@ -16,7 +16,7 @@ class ContactDetailScreenState {
     this.isLoading = false,
     this.uploadPhoto = false,
     this.business,
-    this.blobName,
+    this.blobName = '',
     this.formFields = const [],
     this.customFields = const [],
     this.additionalFields = const [],

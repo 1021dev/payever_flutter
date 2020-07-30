@@ -48,7 +48,6 @@ class _AddContactScreenState extends State<AddContactScreen> {
 
   var imageData;
 
-  Business business;
   List<OverflowMenuItem> optionPopup(BuildContext context, ContactDetailScreenState state) {
     return [
       OverflowMenuItem(
@@ -71,18 +70,18 @@ class _AddContactScreenState extends State<AddContactScreen> {
   @override
   void initState() {
     super.initState();
-    screenBloc = ContactDetailScreenBloc(contactScreenBloc: widget.screenBloc);
+    screenBloc = ContactDetailScreenBloc();
     if (widget.editContact != null) {
       screenBloc.add(GetContactDetail(contact: widget.editContact, business: widget.screenBloc.dashboardScreenBloc.state.activeBusiness.id));
     } else {
       screenBloc.add(ContactDetailScreenInitEvent(business: widget.screenBloc.dashboardScreenBloc.state.activeBusiness.id));
     }
-    business = widget.screenBloc.dashboardScreenBloc.state.activeBusiness;
   }
 
   @override
   void dispose() {
     screenBloc.close();
+    print('dispose');
     super.dispose();
   }
 
@@ -197,18 +196,21 @@ class _AddContactScreenState extends State<AddContactScreen> {
     String stateString = '';
     String zip = '';
     String country = '';
-    String image = state.blobName ?? '';
+    String image = '';
 
     if (state.contact != null) {
       type = state.contact.type;
-
-      List<ContactField> imageFields = state.contact.contactFields.nodes.where((element) {
-        return element.field.name == 'imageUrl';
-      }).toList();
-      if (imageFields.length > 0) {
-        image = imageFields.first.value;
+      if (state.blobName != '') {
+        image = state.blobName;
+      } else {
+        List<ContactField> imageFields = state.contact.contactFields.nodes.where((element) {
+          return element.field.name == 'imageUrl';
+        }).toList();
+        if (imageFields.length > 0) {
+          image = imageFields.first.value;
+        }
       }
-
+      print(image);
       List<ContactField> emailFields = state.contact.contactFields.nodes.where((element) {
         return element.field.name == 'email';
       }).toList();
@@ -339,7 +341,13 @@ class _AddContactScreenState extends State<AddContactScreen> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                     ),
-                    child: image == '' ? SvgPicture.asset('assets/images/add_contacts.svg')
+                    child: state.uploadPhoto ? Container(
+                      width: 16,
+                      height: 16,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                      ),
+                    ) : (image == '' ? SvgPicture.asset('assets/images/add_contacts.svg')
                         : CachedNetworkImage(
                       alignment: Alignment.center,
                       imageUrl: image,
@@ -367,7 +375,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                           ),
                         ),
                       ),
-                    ),
+                    )),
                   ),
                 ),
                 Container(
@@ -810,6 +818,34 @@ class _AddContactScreenState extends State<AddContactScreen> {
     widgets.add(additionalSection);
     widgets.add(Divider(height: 0, thickness: 0.5, color: Colors.black),);
 
+    state.additionalFields.forEach((element) {
+      Widget w = Container(
+        height: 56,
+        color: Colors.black38,
+        child: SizedBox.expand(
+          child: TextFormField(
+            style: TextStyle(fontSize: 16),
+            onChanged: (val) {
+              setState(() {
+
+              });
+            },
+            decoration: InputDecoration(
+              contentPadding: EdgeInsets.only(left: 16, right: 16),
+              labelText: Language.getPosTpmStrings('Type'),
+              labelStyle: TextStyle(
+                color: Colors.grey,
+              ),
+              enabledBorder: InputBorder.none,
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.blue, width: 0.5),
+              ),
+            ),
+            keyboardType: TextInputType.text,
+          ),
+        ),
+      );
+    });
     Widget optionsSection = openAdditional ? Container(
       height: 56,
       color: Colors.black38,
