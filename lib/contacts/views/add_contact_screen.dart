@@ -14,6 +14,7 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/contacts/models/model.dart';
+import 'package:payever/contacts/views/add_new_field_screen.dart';
 import 'package:payever/contacts/widgets/contact_options_contentview.dart';
 import 'package:payever/pos/widgets/pos_top_button.dart';
 
@@ -821,6 +822,16 @@ class _AddContactScreenState extends State<AddContactScreen> {
                 return ContactOptionContentView(
                   onAddNewField: () {
                     Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      PageTransition(
+                        child: AddNewFieldScreen(
+                          screenBloc: screenBloc,
+                        ),
+                        type: PageTransitionType.fade,
+                        duration: Duration(milliseconds: 500),
+                      ),
+                    );
                   },
                   onSelectPrevious: (val) {
                     Navigator.pop(context);
