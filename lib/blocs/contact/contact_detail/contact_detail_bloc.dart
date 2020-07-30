@@ -7,7 +7,6 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/contacts/models/model.dart';
 import 'package:uuid/uuid.dart';
-import 'package:uuid/uuid_util.dart';
 
 import 'contact_detail.dart';
 
@@ -26,11 +25,14 @@ class ContactDetailScreenBloc extends Bloc<ContactDetailScreenEvent, ContactDeta
       yield state.copyWith(business: event.business, contact: new Contact());
       yield* getField(event.business);
     } else if (event is GetContactDetail) {
-      yield state.copyWith(contact: event.contact);
+      yield state.copyWith(contact: event.contact, business: event.business);
+      yield* getField(event.business);
     } else if (event is AddContactPhotoEvent) {
       yield* uploadContactPhoto(event.file, state.business);
     } else if (event is CreateNewFieldEvent) {
 
+    } else if (event is GetCustomField) {
+      yield* getCustomField(event.business);
     }
   }
 
@@ -61,9 +63,10 @@ class ContactDetailScreenBloc extends Bloc<ContactDetailScreenEvent, ContactDeta
     }
 
     yield state.copyWith(isLoading: false, formFields: fields);
+    add(GetCustomField(business: businessId));
   }
 
-  Stream<ContactDetailScreenState> getFieldData(String businessId) async* {
+  Stream<ContactDetailScreenState> getCustomField(String businessId) async* {
     yield state.copyWith(isLoading: true);
     Map<String, dynamic> body = {
       'operationName': null,
@@ -72,18 +75,44 @@ class ContactDetailScreenBloc extends Bloc<ContactDetailScreenEvent, ContactDeta
         'businessId': businessId
       },
     };
+    List<Field> fieldDatas = [];
     dynamic response = await api.getGraphql(token, body);
-    yield state.copyWith(isLoading: false);
+    if (response is Map) {
+      dynamic data = response['data'];
+      if (data is Map) {
+        dynamic fields = data['fields'];
+        if (fields is Map) {
+          dynamic nodes = fields['nodes'];
+          if (nodes is List) {
+            nodes.forEach((element) {
+              fieldDatas.add(Field.fromMap(element));
+            });
+          }
+        }
+      }
+    }
+    yield state.copyWith(isLoading: false, customFields: fieldDatas);
   }
 
   Stream<ContactDetailScreenState> uploadContactPhoto(File file, String businessId) async* {
     yield state.copyWith(uploadPhoto: true, blobName: '');
-    dynamic response = await api.uploadImageToProducts(file, businessId, token);
+    dynamic response = await api.postImageToBusiness(file, businessId, token);
     String blob = '';
     if (response != null) {
       blob = response['blobName'];
     }
-    yield state.copyWith(uploadPhoto: false, blobName: blob);
+    Contact contact;
+    contact = state.contact;
+    List<ContactField> imageFields = state.contact.contactFields.nodes.where((element) {
+      return element.field.name == 'imageUrl';
+    }).toList();
+    if (imageFields.length > 0) {
+      int index = state.contact.contactFields.nodes.indexOf(imageFields.first);
+      ContactField contactField = state.contact.contactFields.nodes[index];
+      contactField.value = '${Env.storage}/images/$blob';
+      contact.contactFields.nodes[index] = contactField;
+    }
+    yield state.copyWith(uploadPhoto: false, blobName: blob, contact: contact);
   }
 
 

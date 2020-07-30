@@ -2,6 +2,7 @@
 import 'dart:io';
 
 import 'package:equatable/equatable.dart';
+import 'package:payever/commons/models/business.dart';
 import 'package:payever/contacts/models/model.dart';
 
 abstract class ContactDetailScreenEvent extends Equatable {
@@ -37,12 +38,15 @@ class AddContactPhotoEvent extends ContactDetailScreenEvent {
 
 class GetContactDetail extends ContactDetailScreenEvent {
   final Contact contact;
+  final String business;
   GetContactDetail({
     this.contact,
+    this.business,
   });
   @override
   List<Object> get props => [
     this.contact,
+    this.business,
   ];
 }
 
@@ -53,5 +57,14 @@ class CreateNewFieldEvent extends ContactDetailScreenEvent {
   @override
   List<Object> get props => [
     this.field,
+  ];
+}
+class GetCustomField extends ContactDetailScreenEvent {
+  final String business;
+
+  GetCustomField({this.business});
+  @override
+  List<Object> get props => [
+    this.business,
   ];
 }

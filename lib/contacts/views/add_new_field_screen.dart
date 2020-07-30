@@ -20,21 +20,21 @@ import 'package:payever/pos/widgets/pos_top_button.dart';
 bool _isPortrait;
 bool _isTablet;
 
-class AddContactScreen extends StatefulWidget {
+class AddNewFieldScreen extends StatefulWidget {
 
   final ContactScreenBloc screenBloc;
   final Contact editContact;
 
-  AddContactScreen({
+  AddNewFieldScreen({
     this.screenBloc,
     this.editContact,
   });
 
   @override
-  createState() => _AddContactScreenState();
+  createState() => _AddNewFieldScreenState();
 }
 
-class _AddContactScreenState extends State<AddContactScreen> {
+class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 

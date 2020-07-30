@@ -8,7 +8,7 @@ class ContactDetailScreenState {
   final String business;
   final String blobName;
   final List<Field> formFields;
-  final List<ContactFields> fieldDatas;
+  final List<Field> customFields;
   final Contact contact;
 
   ContactDetailScreenState({
@@ -17,7 +17,7 @@ class ContactDetailScreenState {
     this.business,
     this.blobName,
     this.formFields = const [],
-    this.fieldDatas = const [],
+    this.customFields = const [],
     this.contact,
   });
 
@@ -27,7 +27,7 @@ class ContactDetailScreenState {
     this.business,
     this.blobName,
     this.formFields,
-    this.fieldDatas,
+    this.customFields,
     this.contact,
   ];
 
@@ -37,7 +37,7 @@ class ContactDetailScreenState {
     String business,
     String blobName,
     List<Field> formFields,
-    List<ContactFields> fieldDatas,
+    List<Field> customFields,
     Contact contact,
   }) {
     return ContactDetailScreenState(
@@ -46,7 +46,7 @@ class ContactDetailScreenState {
       business: business ?? this.business,
       blobName: blobName ?? this.blobName,
       formFields: formFields ?? this.formFields,
-      fieldDatas: fieldDatas ?? this.fieldDatas,
+      customFields: customFields ?? this.customFields,
       contact: contact ?? this.contact,
     );
   }
