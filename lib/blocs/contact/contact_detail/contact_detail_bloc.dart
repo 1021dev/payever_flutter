@@ -37,6 +37,10 @@ class ContactDetailScreenBloc extends Bloc<ContactDetailScreenEvent, ContactDeta
       yield* createNewContactField(event.field);
     } else if (event is UpdateContactUserModel) {
       yield* updateContactDetail(event.userModel);
+    } else if (event is CreateNewContact) {
+      yield* createContact(state.contactUserModel.type);
+    } else if (event is CreateNewContactField) {
+      yield* createContactField(event.contactId, event.fieldId, event.value);
     }
   }
 
@@ -222,10 +226,11 @@ class ContactDetailScreenBloc extends Bloc<ContactDetailScreenEvent, ContactDeta
   }
 
   Stream<ContactDetailScreenState> createContact(String type) async* {
+    yield state.copyWith(isLoading: true,);
     Contact contact;
     String id = Uuid().v4();
     Map<String, dynamic> body = {
-      'operationName': 'contact',
+      'operationName': null,
       'query': 'mutation (\$id: UUID!, \$businessId: UUID!, \$type: String!) {\n  createContact(input: {contact: {id: \$id, businessId: \$businessId, type: \$type}}) {\n    contact {\n      id\n      businessId\n      type\n      __typename\n    }\n    __typename\n  }\n}\n',
       'variables': {
         'businessId': state.business,
@@ -243,7 +248,229 @@ class ContactDetailScreenBloc extends Bloc<ContactDetailScreenEvent, ContactDeta
         }
       }
     }
-    yield state.copyWith(isLoading: false,);
+    ContactUserModel contactUserModel = state.contactUserModel;
+    if (contactUserModel.imageUrl != null && contactUserModel.imageUrl != '') {
+      List<Field> imageFields = state.formFields.where((element) {
+        return element.name == 'imageUrl';
+      }).toList();
+      if (imageFields.length > 0) {
+        String uuid = Uuid().v4();
+        Map<String, dynamic> body = {
+          'operationName': 'createContactField',
+          'query': 'mutation createContactField(\$id: UUID!, \$businessId: UUID!, \$contactId: UUID!, \$fieldId: UUID!, \$value: String!) {\n  createContactField(input: {contactField: {id: \$id, businessId: \$businessId, contactId: \$contactId, fieldId: \$fieldId, value: \$value}}) {\n    contactField {\n      id\n      value\n      __typename\n    }\n    __typename\n  }\n}\n',
+          'variables': {
+            'businessId': state.business,
+            'contactId': contact.id,
+            'fieldId': imageFields.first.id,
+            'id': uuid,
+            'value': contactUserModel.imageUrl,
+          },
+        };
+        dynamic response = await api.getGraphql(token, body);
+      }
+    }
+    if (contactUserModel.firstName != null) {
+      List<Field> firstNameFields = state.formFields.where((element) {
+        return element.name == 'firstName';
+      }).toList();
+      if (firstNameFields.length > 0) {
+        String uuid = Uuid().v4();
+        Map<String, dynamic> body = {
+          'operationName': 'createContactField',
+          'query': 'mutation createContactField(\$id: UUID!, \$businessId: UUID!, \$contactId: UUID!, \$fieldId: UUID!, \$value: String!) {\n  createContactField(input: {contactField: {id: \$id, businessId: \$businessId, contactId: \$contactId, fieldId: \$fieldId, value: \$value}}) {\n    contactField {\n      id\n      value\n      __typename\n    }\n    __typename\n  }\n}\n',
+          'variables': {
+            'businessId': state.business,
+            'contactId': contact.id,
+            'fieldId': firstNameFields.first.id,
+            'id': uuid,
+            'value': contactUserModel.firstName,
+          },
+        };
+        dynamic response = await api.getGraphql(token, body);
+      }
+    }
+    if (contactUserModel.lastName != null) {
+      List<Field> lastNameFields = state.formFields.where((element) {
+        return element.name == 'lastName';
+      }).toList();
+      if (lastNameFields.length > 0) {
+        String uuid = Uuid().v4();
+        Map<String, dynamic> body = {
+          'operationName': 'createContactField',
+          'query': 'mutation createContactField(\$id: UUID!, \$businessId: UUID!, \$contactId: UUID!, \$fieldId: UUID!, \$value: String!) {\n  createContactField(input: {contactField: {id: \$id, businessId: \$businessId, contactId: \$contactId, fieldId: \$fieldId, value: \$value}}) {\n    contactField {\n      id\n      value\n      __typename\n    }\n    __typename\n  }\n}\n',
+          'variables': {
+            'businessId': state.business,
+            'contactId': contact.id,
+            'fieldId': lastNameFields.first.id,
+            'id': uuid,
+            'value': contactUserModel.lastName,
+          },
+        };
+        dynamic response = await api.getGraphql(token, body);
+      }
+    }
+    if (contactUserModel.mobilePhone != null) {
+      List<Field> phoneFields = state.formFields.where((element) {
+        return element.name == 'mobilePhone';
+      }).toList();
+      if (phoneFields.length > 0) {
+        String uuid = Uuid().v4();
+        Map<String, dynamic> body = {
+          'operationName': 'createContactField',
+          'query': 'mutation createContactField(\$id: UUID!, \$businessId: UUID!, \$contactId: UUID!, \$fieldId: UUID!, \$value: String!) {\n  createContactField(input: {contactField: {id: \$id, businessId: \$businessId, contactId: \$contactId, fieldId: \$fieldId, value: \$value}}) {\n    contactField {\n      id\n      value\n      __typename\n    }\n    __typename\n  }\n}\n',
+          'variables': {
+            'businessId': state.business,
+            'contactId': contact.id,
+            'fieldId': phoneFields.first.id,
+            'id': uuid,
+            'value': contactUserModel.mobilePhone,
+          },
+        };
+        dynamic response = await api.getGraphql(token, body);
+      }
+    }
+    if (contactUserModel.email != null) {
+      List<Field> emailFields = state.formFields.where((element) {
+        return element.name == 'email';
+      }).toList();
+      if (emailFields.length > 0) {
+        String uuid = Uuid().v4();
+        Map<String, dynamic> body = {
+          'operationName': 'createContactField',
+          'query': 'mutation createContactField(\$id: UUID!, \$businessId: UUID!, \$contactId: UUID!, \$fieldId: UUID!, \$value: String!) {\n  createContactField(input: {contactField: {id: \$id, businessId: \$businessId, contactId: \$contactId, fieldId: \$fieldId, value: \$value}}) {\n    contactField {\n      id\n      value\n      __typename\n    }\n    __typename\n  }\n}\n',
+          'variables': {
+            'businessId': state.business,
+            'contactId': contact.id,
+            'fieldId': emailFields.first.id,
+            'id': uuid,
+            'value': contactUserModel.email,
+          },
+        };
+        dynamic response = await api.getGraphql(token, body);
+      }
+    }
+    if (contactUserModel.homePage != null) {
+      List<Field> homepageFields = state.formFields.where((element) {
+        return element.name == 'homePage';
+      }).toList();
+      if (homepageFields.length > 0) {
+        String uuid = Uuid().v4();
+        Map<String, dynamic> body = {
+          'operationName': 'createContactField',
+          'query': 'mutation createContactField(\$id: UUID!, \$businessId: UUID!, \$contactId: UUID!, \$fieldId: UUID!, \$value: String!) {\n  createContactField(input: {contactField: {id: \$id, businessId: \$businessId, contactId: \$contactId, fieldId: \$fieldId, value: \$value}}) {\n    contactField {\n      id\n      value\n      __typename\n    }\n    __typename\n  }\n}\n',
+          'variables': {
+            'businessId': state.business,
+            'contactId': contact.id,
+            'fieldId': homepageFields.first.id,
+            'id': uuid,
+            'value': contactUserModel.homePage,
+          },
+        };
+        dynamic response = await api.getGraphql(token, body);
+      }
+    }
+    if (contactUserModel.street != null) {
+      List<Field> streetFields = state.formFields.where((element) {
+        return element.name == 'street';
+      }).toList();
+      if (streetFields.length > 0) {
+        String uuid = Uuid().v4();
+        Map<String, dynamic> body = {
+          'operationName': 'createContactField',
+          'query': 'mutation createContactField(\$id: UUID!, \$businessId: UUID!, \$contactId: UUID!, \$fieldId: UUID!, \$value: String!) {\n  createContactField(input: {contactField: {id: \$id, businessId: \$businessId, contactId: \$contactId, fieldId: \$fieldId, value: \$value}}) {\n    contactField {\n      id\n      value\n      __typename\n    }\n    __typename\n  }\n}\n',
+          'variables': {
+            'businessId': state.business,
+            'contactId': contact.id,
+            'fieldId': streetFields.first.id,
+            'id': uuid,
+            'value': contactUserModel.street,
+          },
+        };
+        dynamic response = await api.getGraphql(token, body);
+      }
+    }
+    if (contactUserModel.city != null) {
+      List<Field> cityFields = state.formFields.where((element) {
+        return element.name == 'city';
+      }).toList();
+      if (cityFields.length > 0) {
+        String uuid = Uuid().v4();
+        Map<String, dynamic> body = {
+          'operationName': 'createContactField',
+          'query': 'mutation createContactField(\$id: UUID!, \$businessId: UUID!, \$contactId: UUID!, \$fieldId: UUID!, \$value: String!) {\n  createContactField(input: {contactField: {id: \$id, businessId: \$businessId, contactId: \$contactId, fieldId: \$fieldId, value: \$value}}) {\n    contactField {\n      id\n      value\n      __typename\n    }\n    __typename\n  }\n}\n',
+          'variables': {
+            'businessId': state.business,
+            'contactId': contact.id,
+            'fieldId': cityFields.first.id,
+            'id': uuid,
+            'value': contactUserModel.city,
+          },
+        };
+        dynamic response = await api.getGraphql(token, body);
+      }
+    }
+    if (contactUserModel.states != null) {
+      List<Field> stateFields = state.formFields.where((element) {
+        return element.name == 'state';
+      }).toList();
+      if (stateFields.length > 0) {
+        String uuid = Uuid().v4();
+        Map<String, dynamic> body = {
+          'operationName': 'createContactField',
+          'query': 'mutation createContactField(\$id: UUID!, \$businessId: UUID!, \$contactId: UUID!, \$fieldId: UUID!, \$value: String!) {\n  createContactField(input: {contactField: {id: \$id, businessId: \$businessId, contactId: \$contactId, fieldId: \$fieldId, value: \$value}}) {\n    contactField {\n      id\n      value\n      __typename\n    }\n    __typename\n  }\n}\n',
+          'variables': {
+            'businessId': state.business,
+            'contactId': contact.id,
+            'fieldId': stateFields.first.id,
+            'id': uuid,
+            'value': contactUserModel.states,
+          },
+        };
+        dynamic response = await api.getGraphql(token, body);
+      }
+    }
+    if (contactUserModel.zip != null) {
+      List<Field> zipFields = state.formFields.where((element) {
+        return element.name == 'zip';
+      }).toList();
+      if (zipFields.length > 0) {
+        String uuid = Uuid().v4();
+        Map<String, dynamic> body = {
+          'operationName': 'createContactField',
+          'query': 'mutation createContactField(\$id: UUID!, \$businessId: UUID!, \$contactId: UUID!, \$fieldId: UUID!, \$value: String!) {\n  createContactField(input: {contactField: {id: \$id, businessId: \$businessId, contactId: \$contactId, fieldId: \$fieldId, value: \$value}}) {\n    contactField {\n      id\n      value\n      __typename\n    }\n    __typename\n  }\n}\n',
+          'variables': {
+            'businessId': state.business,
+            'contactId': contact.id,
+            'fieldId': zipFields.first.id,
+            'id': uuid,
+            'value': contactUserModel.zip,
+          },
+        };
+        dynamic response = await api.getGraphql(token, body);
+      }
+    }
+    if (contactUserModel.country != null) {
+      List<Field> countryFields = state.formFields.where((element) {
+        return element.name == 'country';
+      }).toList();
+      if (countryFields.length > 0) {
+        String uuid = Uuid().v4();
+        Map<String, dynamic> body = {
+          'operationName': 'createContactField',
+          'query': 'mutation createContactField(\$id: UUID!, \$businessId: UUID!, \$contactId: UUID!, \$fieldId: UUID!, \$value: String!) {\n  createContactField(input: {contactField: {id: \$id, businessId: \$businessId, contactId: \$contactId, fieldId: \$fieldId, value: \$value}}) {\n    contactField {\n      id\n      value\n      __typename\n    }\n    __typename\n  }\n}\n',
+          'variables': {
+            'businessId': state.business,
+            'contactId': contact.id,
+            'fieldId': countryFields.first.id,
+            'id': uuid,
+            'value': contactUserModel.country,
+          },
+        };
+        dynamic response = await api.getGraphql(token, body);
+      }
+    }
+    yield state.copyWith(isLoading: false);
+    yield ContactDetailScreenStateSuccess();
   }
 
   Stream<ContactDetailScreenState> createContactField(String contactId, String fieldId, String value) async* {

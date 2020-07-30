@@ -15,6 +15,7 @@ import 'package:payever/contacts/widgets/contact_grid_item.dart';
 import 'package:payever/contacts/widgets/contact_list_item.dart';
 import 'package:payever/notifications/notifications_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
@@ -66,6 +67,9 @@ class _ContactScreenState extends State<ContactScreen> {
   final FocusNode searchFocus = FocusNode();
   double iconSize;
   double margin;
+  RefreshController contactRefreshController = RefreshController(
+    initialRefresh: false,
+  );
 
   List<ConnectPopupButton> appBarPopUpActions(BuildContext context, ContactScreenState state) {
     return [
@@ -728,56 +732,96 @@ class _ContactScreenState extends State<ContactScreen> {
 
     List<Widget> widgets = [];
     widgets.add(
-      ContactGridAddItem(
-        onAdd: () {
-          Navigator.push(
-            context,
-            PageTransition(
-              child: AddContactScreen(
-                screenBloc: screenBloc,
-              ),
-              type: PageTransitionType.fade,
-              duration: Duration(milliseconds: 500),
-            ),
-          );
-        },
-      ),
-    );
-    if (state.contacts != null) {
-      widgets.addAll(state.contactLists.map((contact) {
-        return ContactGridItem(
-          contact: contact,
-          onTap: (contactModel) {
-            screenBloc.add(SelectContactEvent(contact: contactModel));
-          },
-          onOpen: (contactModel) {
+      Container(
+        padding: EdgeInsets.only(left: 16, right: 16),
+        child: ContactGridAddItem(
+          onAdd: () {
             Navigator.push(
               context,
               PageTransition(
                 child: AddContactScreen(
                   screenBloc: screenBloc,
-                  editContact: contactModel.contact,
                 ),
                 type: PageTransitionType.fade,
                 duration: Duration(milliseconds: 500),
               ),
             );
           },
+        ),
+      ),
+    );
+    if (state.contacts != null) {
+      widgets.addAll(state.contactLists.map((contact) {
+        return Container(
+          padding: EdgeInsets.only(left: 16, right: 16),
+          child: ContactGridItem(
+            contact: contact,
+            onTap: (contactModel) {
+              screenBloc.add(SelectContactEvent(contact: contactModel));
+            },
+            onOpen: (contactModel) {
+              Navigator.push(
+                context,
+                PageTransition(
+                  child: AddContactScreen(
+                    screenBloc: screenBloc,
+                    editContact: contactModel.contact,
+                  ),
+                  type: PageTransitionType.fade,
+                  duration: Duration(milliseconds: 500),
+                ),
+              );
+            },
+          ),
         );
       }).toList());
     }
 
     return Container(
-      child: GridView.count(
-        crossAxisCount: crossAxisCount,
-        padding: EdgeInsets.all(16),
-        crossAxisSpacing: 12,
-        mainAxisSpacing: 12,
-        shrinkWrap: true,
-        childAspectRatio: cellWidth / cellHeight,
-        children: widgets,
+      padding: EdgeInsets.only(top: 16),
+      clipBehavior: Clip.none,
+      child: SmartRefresher(
+        enablePullDown: true,
+        enablePullUp: false,
+        header: MaterialClassicHeader(backgroundColor: Colors.black,semanticsLabel: '',),
+        footer: CustomFooter(
+          loadStyle: LoadStyle.ShowWhenLoading,
+          height: 1,
+          builder: (context, status) {
+            return Container();
+          },
+        ),
+        controller: contactRefreshController,
+        onRefresh: () {
+          _refreshProducts();
+        },
+        onLoading: () {
+//                        _loadMoreCollections(state);
+        },
+        child: CustomScrollView(
+          slivers: <Widget>[
+            SliverGrid.count(
+              crossAxisCount: crossAxisCount,
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 12,
+              childAspectRatio: cellWidth / cellHeight,
+              children: widgets,
+            ),
+            new SliverToBoxAdapter(
+              child: Container(),
+            )
+          ],
+        ),
       ),
     );
+  }
+
+  void _refreshProducts() async {
+    screenBloc.add(
+        ContactsRefreshEvent()
+    );
+    await Future.delayed(Duration(seconds: 0, milliseconds: 1000));
+    contactRefreshController.refreshCompleted(resetFooterState: true);
   }
 
 }

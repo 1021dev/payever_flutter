@@ -38,3 +38,5 @@ class DeleteContactEvent extends ContactScreenEvent {
 }
 
 class DeleteSelectedContactsEvent extends ContactScreenEvent {}
+
+class ContactsRefreshEvent extends ContactScreenEvent{}

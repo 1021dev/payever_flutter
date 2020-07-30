@@ -32,6 +32,8 @@ class ContactScreenBloc extends Bloc<ContactScreenEvent, ContactScreenState> {
       yield* deleteContact(event.contact);
     } else if (event is DeleteSelectedContactsEvent) {
       yield* deleteSelectedContacts();
+    } else if (event is ContactsRefreshEvent) {
+      yield* reloadContacts(state.business);
     }
   }
 
@@ -65,6 +67,37 @@ class ContactScreenBloc extends Bloc<ContactScreenEvent, ContactScreenState> {
 
   Stream<ContactScreenState> getContacts(String businessId) async* {
     yield state.copyWith(isLoading: true);
+    Contacts contacts;
+    Map<String, dynamic> body = {
+      'operationName': null,
+      'query': 'query (\$businessId: UUID!, \$offset: Int!, \$itemCount: Int!) {\n  contacts(orderBy: CREATED_AT_DESC, first: \$itemCount, offset: \$offset, condition: {businessId: \$businessId}) {\n    nodes {\n      id\n      businessId\n      type\n      contactFields {\n        nodes {\n          id\n          value\n          fieldId\n          field {\n            id\n            name\n            __typename\n          }\n          __typename\n        }\n        __typename\n      }\n      __typename\n    }\n    totalCount\n    pageInfo {\n      hasNextPage\n      __typename\n    }\n    __typename\n  }\n}\n',
+      'variables': {
+        'businessId': businessId,
+        'itemCount': 20,
+        'offset': 0
+      },
+    };
+    dynamic response = await api.getGraphql(token, body);
+    if (response is Map) {
+      dynamic data = response['data'];
+      if (data is Map) {
+        dynamic contactsObj = data['contacts'];
+        if (contactsObj != null) {
+          contacts = Contacts.fromMap(contactsObj);
+        }
+      }
+    }
+    List<Contact> contactList = [];
+    List<ContactModel> contactModels = [];
+    contacts.nodes.forEach((element) {
+      contactList.add(element);
+      contactModels.add(ContactModel(contact: element, isChecked: false));
+    });
+
+    yield state.copyWith(isLoading: false, contacts: contacts, contactNodes: contactList, contactLists: contactModels);
+  }
+
+  Stream<ContactScreenState> reloadContacts(String businessId) async* {
     Contacts contacts;
     Map<String, dynamic> body = {
       'operationName': null,

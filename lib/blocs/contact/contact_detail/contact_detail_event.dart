@@ -109,3 +109,18 @@ class UpdateContactUserModel extends ContactDetailScreenEvent {
     this.userModel,
   ];
 }
+
+class CreateNewContact extends ContactDetailScreenEvent {}
+class CreateNewContactField extends ContactDetailScreenEvent {
+  final String contactId;
+  final String fieldId;
+  final String value;
+
+  CreateNewContactField({this.contactId, this.fieldId, this.value,});
+  @override
+  List<Object> get props => [
+    this.contactId,
+    this.fieldId,
+    this.value,
+  ];
+}

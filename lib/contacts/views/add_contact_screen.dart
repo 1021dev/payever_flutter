@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:page_transition/page_transition.dart';
@@ -107,6 +108,9 @@ class _AddContactScreenState extends State<AddContactScreen> {
               type: PageTransitionType.fade,
             ),
           );
+        } else if (state is ContactDetailScreenStateSuccess) {
+          widget.screenBloc.add(ContactsRefreshEvent());
+          Navigator.pop(context);
         }
       },
       child: BlocBuilder<ContactDetailScreenBloc, ContactDetailScreenState>(
@@ -372,7 +376,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
             contactUserModel.type = val;
             screenBloc.add(UpdateContactUserModel(userModel: contactUserModel));
           },
-          initialValue: state.contactUserModel.type,
+          initialValue: state.contactUserModel.type ?? '',
           decoration: InputDecoration(
             contentPadding: EdgeInsets.only(left: 16, right: 16),
             labelText: Language.getPosTpmStrings('Type'),
@@ -404,7 +408,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                 contactUserModel.firstName = val;
                 screenBloc.add(UpdateContactUserModel(userModel: contactUserModel));
               },
-              initialValue: state.contactUserModel.firstName,
+              initialValue: state.contactUserModel.firstName ?? '',
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('First Name'),
@@ -431,7 +435,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                 contactUserModel.lastName = val;
                 screenBloc.add(UpdateContactUserModel(userModel: contactUserModel));
               },
-              initialValue: state.contactUserModel.lastName,
+              initialValue: state.contactUserModel.lastName ?? '',
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('Last Name'),
@@ -465,7 +469,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                 contactUserModel.mobilePhone = val;
                 screenBloc.add(UpdateContactUserModel(userModel: contactUserModel));
               },
-              initialValue: state.contactUserModel.mobilePhone,
+              initialValue: state.contactUserModel.mobilePhone ?? '',
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('Mobile Phone'),
@@ -492,7 +496,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                 contactUserModel.email = val;
                 screenBloc.add(UpdateContactUserModel(userModel: contactUserModel));
               },
-              initialValue: state.contactUserModel.email,
+              initialValue: state.contactUserModel.email ?? '',
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('Email'),
@@ -524,7 +528,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
             contactUserModel.homePage = val;
             screenBloc.add(UpdateContactUserModel(userModel: contactUserModel));
           },
-          initialValue: state.contactUserModel.homePage,
+          initialValue: state.contactUserModel.homePage ?? '',
           decoration: InputDecoration(
             contentPadding: EdgeInsets.only(left: 16, right: 16),
             labelText: Language.getPosTpmStrings('Homepage'),
@@ -554,7 +558,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
             contactUserModel.street = val;
             screenBloc.add(UpdateContactUserModel(userModel: contactUserModel));
           },
-          initialValue: state.contactUserModel.street,
+          initialValue: state.contactUserModel.street ?? '',
           decoration: InputDecoration(
             contentPadding: EdgeInsets.only(left: 16, right: 16),
             labelText: Language.getPosTpmStrings('Street'),
@@ -586,7 +590,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                 contactUserModel.city = val;
                 screenBloc.add(UpdateContactUserModel(userModel: contactUserModel));
               },
-              initialValue: state.contactUserModel.city,
+              initialValue: state.contactUserModel.city ?? '',
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('City'),
@@ -613,7 +617,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                 contactUserModel.states = val;
                 screenBloc.add(UpdateContactUserModel(userModel: contactUserModel));
               },
-              initialValue: state.contactUserModel.states,
+              initialValue: state.contactUserModel.states ?? '',
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('State'),
@@ -647,7 +651,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                 contactUserModel.zip = val;
                 screenBloc.add(UpdateContactUserModel(userModel: contactUserModel));
               },
-              initialValue: state.contactUserModel.zip,
+              initialValue: state.contactUserModel.zip ?? '',
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('Zip'),
@@ -674,7 +678,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                 contactUserModel.country = val;
                 screenBloc.add(UpdateContactUserModel(userModel: contactUserModel));
               },
-              initialValue: state.contactUserModel.country,
+              initialValue: state.contactUserModel.country ?? '',
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('Country'),
@@ -1238,6 +1242,23 @@ class _AddContactScreenState extends State<AddContactScreen> {
             child: SizedBox.expand(
               child: MaterialButton(
                 onPressed: () {
+                  if ((state.contactUserModel.type ?? '') == '') {
+                    Fluttertoast.showToast(msg: 'Contact Type required');
+                    return;
+                  }
+                  if ((state.contactUserModel.firstName ?? '') == '') {
+                    Fluttertoast.showToast(msg: 'FirstName required');
+                    return;
+                  }
+                  if ((state.contactUserModel.lastName ?? '') == '') {
+                    Fluttertoast.showToast(msg: 'LastName required');
+                    return;
+                  }
+                  if ((state.contactUserModel.email ?? '') == '') {
+                    Fluttertoast.showToast(msg: 'Email required');
+                    return;
+                  }
+                  screenBloc.add(CreateNewContact());
                 },
                 color: Colors.black87,
                 shape: RoundedRectangleBorder(
