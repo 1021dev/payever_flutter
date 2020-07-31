@@ -347,6 +347,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     setState(() {
                       selectedIndex = 1;
                     });
+                    screenBloc.add(GetPaymentConfig());
                   },
                 ),
                 CheckoutTopButton(

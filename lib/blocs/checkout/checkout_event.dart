@@ -19,3 +19,7 @@ class CheckoutScreenInitEvent extends CheckoutScreenEvent {
     this.business,
   ];
 }
+
+class GetPaymentConfig extends CheckoutScreenEvent {
+
+}

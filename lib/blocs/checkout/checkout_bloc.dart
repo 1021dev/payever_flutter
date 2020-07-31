@@ -27,6 +27,8 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     if (event is CheckoutScreenInitEvent) {
       yield state.copyWith(business: event.business);
       yield* fetchConnectInstallations(event.business);
+    } else if (event is GetPaymentConfig) {
+      yield* getPaymentData();
     }
   }
 
@@ -101,6 +103,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
   }
 
   Stream<CheckoutScreenState> getPaymentData() async* {
+    yield state.copyWith(isLoading: true);
     List<ConnectModel> integrations = [];
     dynamic integrationsResponse = await api.getCheckoutIntegrations(state.business, token);
     if (integrationsResponse is List) {
@@ -108,7 +111,29 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
         integrations.add(ConnectModel.toMap(element));
       });
     }
-    
-    dynamic connectionResponse = await api.getConnectionIntegrations(token, id)
+
+    List<IntegrationModel> connections = [];
+    List<IntegrationModel> checkoutConnections = [];
+
+    dynamic connectionResponse = await api.getConnections(state.business, token);
+    if (connectionResponse is List) {
+      connectionResponse.forEach((element) {
+        connections.add(IntegrationModel.fromMap(element));
+      });
+    }
+
+    dynamic checkoutConnectionResponse = await api.getCheckoutConnections(state.business, token, state.defaultCheckout.id);
+    if (checkoutConnectionResponse is List) {
+      checkoutConnectionResponse.forEach((element) {
+        checkoutConnections.add(IntegrationModel.fromMap(element));
+      });
+    }
+
+    yield state.copyWith(
+      isLoading: false,
+      connects: integrations,
+      connections: connections,
+      checkoutConnections: checkoutConnections,
+    );
   }
 }

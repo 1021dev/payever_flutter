@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/models/pos.dart';
+import 'package:payever/connect/models/connect.dart';
 
 class CheckoutScreenState {
   final bool isLoading;
@@ -12,6 +13,9 @@ class CheckoutScreenState {
   final Checkout defaultCheckout;
   final CheckoutFlow checkoutFlow;
   final ChannelSetFlow channelSetFlow;
+  final List<IntegrationModel> connections;
+  final List<IntegrationModel> checkoutConnections;
+  final List<ConnectModel> connects;
 
   CheckoutScreenState({
     this.isLoading = false,
@@ -22,6 +26,9 @@ class CheckoutScreenState {
     this.defaultCheckout,
     this.checkoutFlow,
     this.channelSetFlow,
+    this.connections = const [],
+    this.checkoutConnections = const [],
+    this.connects = const [],
   });
 
   List<Object> get props => [
@@ -33,6 +40,9 @@ class CheckoutScreenState {
     this.defaultCheckout,
     this.checkoutFlow,
     this.channelSetFlow,
+    this.connects,
+    this.connections,
+    this.checkoutConnections,
   ];
 
   CheckoutScreenState copyWith({
@@ -44,6 +54,9 @@ class CheckoutScreenState {
     Checkout defaultCheckout,
     CheckoutFlow checkoutFlow,
     ChannelSetFlow channelSetFlow,
+    List<IntegrationModel> connections,
+    List<IntegrationModel> checkoutConnections,
+    List<ConnectModel> connects,
   }) {
     return CheckoutScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -54,6 +67,9 @@ class CheckoutScreenState {
       defaultCheckout: defaultCheckout ?? this.defaultCheckout,
       checkoutFlow: checkoutFlow ?? this.checkoutFlow,
       channelSetFlow: channelSetFlow ?? this.channelSetFlow,
+      connections: connections ?? this.connections,
+      checkoutConnections: checkoutConnections ?? this.checkoutConnections,
+      connects: connects ?? this.connects,
     );
   }
 }

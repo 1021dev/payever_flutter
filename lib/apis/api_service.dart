@@ -2065,7 +2065,6 @@ class ApiService {
     }
   }
 
-
   Future<dynamic> getCheckoutIntegrations(String idBusiness, String token) async {
     try {
       print('$TAG - getCheckoutIntegrations()');
@@ -2083,7 +2082,39 @@ class ApiService {
     }
   }
 
+  Future<dynamic> getConnections(String idBusiness, String token) async {
+    try {
+      print('$TAG - getConnections()');
+      dynamic response = await _client.getTypeless(
+          '$checkoutBusiness$idBusiness/connection',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
 
+  Future<dynamic> getCheckoutConnections(String idBusiness, String token, String checkoutId) async {
+    try {
+      print('$TAG - getCheckoutConnections()');
+      dynamic response = await _client.getTypeless(
+          '$checkoutBusiness$idBusiness$checkout$checkoutId/connection',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
 
   String randomString(int strlen) {
     const chars = "0123456789";

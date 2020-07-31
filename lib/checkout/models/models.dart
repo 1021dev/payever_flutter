@@ -430,3 +430,13 @@ class ChannelSetFlow {
     xFrameHost = obj['x_frame_host'];
   }
 }
+
+class IntegrationModel {
+  String integration;
+  String id;
+
+  IntegrationModel.fromMap(dynamic obj) {
+    integration = obj['integration'];
+    id = obj['id'];
+  }
+}
