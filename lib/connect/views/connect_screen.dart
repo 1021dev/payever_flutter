@@ -15,7 +15,7 @@ import 'package:payever/connect/widgets/connect_grid_item.dart';
 import 'package:payever/connect/widgets/connect_list_item.dart';
 import 'package:payever/connect/widgets/connect_top_button.dart';
 import 'package:payever/dashboard/sub_view/dashboard_menu_view.dart';
-import 'package:payever/login/login_page.dart';
+import 'package:payever/login/login_screen.dart';
 import 'package:payever/notifications/notifications_screen.dart';
 import 'package:payever/switcher/switcher_page.dart';
 import 'package:provider/provider.dart';

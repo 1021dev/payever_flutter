@@ -29,7 +29,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
-import 'package:payever/login/login_page.dart';
+import 'package:payever/login/login_screen.dart';
 
 
 bool _isPortrait;

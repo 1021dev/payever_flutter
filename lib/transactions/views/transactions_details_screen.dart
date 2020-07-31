@@ -7,7 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/transaction_detail/transaction_detail.dart';
-import 'package:payever/login/login_page.dart';
+import 'package:payever/login/login_screen.dart';
 
 import '../utils/utils.dart';
 import '../../commons/models/models.dart';

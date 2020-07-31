@@ -12,7 +12,7 @@ import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/create_shop_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
-import 'package:payever/login/login_page.dart';
+import 'package:payever/login/login_screen.dart';
 
 bool _isPortrait;
 bool _isTablet;

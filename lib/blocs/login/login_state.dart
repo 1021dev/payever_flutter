@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:payever/commons/models/version.dart';
 
 class LoginScreenState {
   final bool isLoading;
@@ -31,4 +32,9 @@ class LoginScreenFailure extends LoginScreenState {
   String toString() {
     return 'LoginScreenFailure { error $error }';
   }
+}
+
+class LoginScreenVersionFailed extends LoginScreenState {
+  final Version version;
+  LoginScreenVersionFailed({this.version});
 }

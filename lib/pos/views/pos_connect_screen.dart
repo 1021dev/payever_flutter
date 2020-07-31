@@ -9,7 +9,7 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
-import 'package:payever/login/login_page.dart';
+import 'package:payever/login/login_screen.dart';
 import 'package:payever/pos/views/pos_qr_settings.dart';
 import 'package:payever/pos/views/pos_twillo_settings.dart';
 

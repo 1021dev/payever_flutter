@@ -9,7 +9,7 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
-import 'package:payever/login/login_page.dart';
+import 'package:payever/login/login_screen.dart';
 import 'package:payever/connect/views/connect_screen.dart';
 import 'package:payever/contacts/views/contacts_screen.dart';
 import 'package:payever/notifications/notifications_screen.dart';
@@ -47,7 +47,10 @@ class DashboardScreenInit extends StatelessWidget {
   Widget build(BuildContext context) {
     GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context, listen: true);
 
-    return DashboardScreen(wallpaper: globalStateModel.currentWallpaper, refresh: globalStateModel.refresh,);
+    return DashboardScreen(
+      wallpaper: globalStateModel.currentWallpaper,
+      refresh: globalStateModel.refresh,
+    );
   }
 }
 

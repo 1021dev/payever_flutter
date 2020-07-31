@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,7 +11,7 @@ import 'commons/view_models/view_models.dart';
 import 'commons/utils/utils.dart';
 import 'commons/network/network.dart';
 import 'dashboard/dashboard_screen.dart';
-import 'login/login_page.dart';
+import 'login/login_screen.dart';
 
 void main() {
   BlocSupervisor.delegate = PayeverBlocDelegate();
@@ -51,7 +53,6 @@ class _MyAppState extends State<MyApp> {
   bool _haveCredentials;
   String wallpaper;
 
-  RestDataSource api = RestDataSource();
   GlobalStateModel globalStateModel = GlobalStateModel();
 
   @override
@@ -79,22 +80,22 @@ class _MyAppState extends State<MyApp> {
         title: 'payever',
         theme: _payeverTheme,
         routes: {
-//            '/dashboard': (context) => DashboardMidScreen(wallpaper),
         },
         home: _loadCredentials.value
             ? Center(child: CircularProgressIndicator())
-            : _haveCredentials ? DashboardScreenInit() : LoginScreen(),//DashboardMidScreen(wallpaper) : LoginScreen(),
+            : _haveCredentials ? DashboardScreenInit() : LoginScreen(),
       ),
     );
   }
 
   _storedCredentials() async {
+    String fingerPrint = '${Platform.operatingSystem}  ${Platform.operatingSystemVersion}';
+
     preferences = await SharedPreferences.getInstance();
-    wallpaper = preferences.getString(GlobalUtils.WALLPAPER) ?? "";
-    String bus = preferences.getString(GlobalUtils.BUSINESS) ?? "";
-    String rfToken = preferences.getString(GlobalUtils.REFRESH_TOKEN) ?? "";
-    GlobalUtils.fingerprint =
-        preferences.getString(GlobalUtils.FINGERPRINT) ?? "";
+    wallpaper = preferences.getString(GlobalUtils.WALLPAPER) ?? '';
+    String bus = preferences.getString(GlobalUtils.BUSINESS) ?? '';
+    String rfToken = preferences.getString(GlobalUtils.REFRESH_TOKEN) ?? '';
+    GlobalUtils.fingerprint = preferences.getString(GlobalUtils.FINGERPRINT) ?? fingerPrint;
     _loadCredentials.value = false;
     _haveCredentials = rfToken.isNotEmpty && bus.isNotEmpty;
   }

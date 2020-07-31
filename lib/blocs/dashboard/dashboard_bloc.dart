@@ -147,7 +147,7 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
           var refreshTokenLogin = await api.login(
               preferences.getString(GlobalUtils.EMAIL),
               preferences.getString(GlobalUtils.PASSWORD),
-              preferences.getString(GlobalUtils.fingerprint),
+//              preferences.getString(GlobalUtils.fingerprint),
           );
           if (refreshTokenLogin != null) {
             yield* _loadUserData(

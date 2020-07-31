@@ -13,7 +13,7 @@ import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
-import 'package:payever/login/login_page.dart';
+import 'package:payever/login/login_screen.dart';
 import 'package:payever/connect/models/connect.dart';
 import 'package:payever/connect/views/connect_category_more_connections.dart';
 import 'package:payever/connect/views/connect_reviews_screen.dart';

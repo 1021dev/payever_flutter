@@ -11,7 +11,7 @@ import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/dashboard/dashboard_screen.dart';
-import 'package:payever/login/login_page.dart';
+import 'package:payever/login/login_screen.dart';
 import 'package:provider/provider.dart';
 
 const double _heightFactorTablet = 0.05;

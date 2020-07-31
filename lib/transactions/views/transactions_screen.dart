@@ -13,7 +13,7 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/dashboard/sub_view/dashboard_menu_view.dart';
-import 'package:payever/login/login_page.dart';
+import 'package:payever/login/login_screen.dart';
 import 'package:payever/notifications/notifications_screen.dart';
 import 'package:payever/switcher/switcher_page.dart';
 import 'package:payever/transactions/models/enums.dart';

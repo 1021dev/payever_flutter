@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:payever/login/login_page.dart';
+import 'package:payever/login/login_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../../../commons/views/custom_elements/custom_elements.dart';

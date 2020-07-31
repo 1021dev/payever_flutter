@@ -202,7 +202,7 @@ class ApiService {
     }
   }
 
-  Future<dynamic> login(String username, String password, String finger) async {
+  Future<dynamic> login(String username, String password) async {
     try {
       print('$TAG - login()');
       dynamic response = await _client.post(

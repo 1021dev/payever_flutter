@@ -11,7 +11,7 @@ class LoginEvent extends LoginScreenEvent {
   final String email;
   final String password;
 
-  LoginEvent(this.email, this.password,);
+  LoginEvent({this.email, this.password,});
 
   @override
   List<Object> get props => [
