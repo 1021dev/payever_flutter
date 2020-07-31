@@ -41,7 +41,7 @@ class LoginScreenBloc extends Bloc<LoginScreenEvent, LoginScreenState> {
       if (versionString.compareTo(version.minVersion) < 0) {
 
         yield state.copyWith(isLoading: false);
-        LoginScreenVersionFailed(version: version);
+        yield LoginScreenVersionFailed(version: version);
 
       }else{
 
@@ -59,7 +59,7 @@ class LoginScreenBloc extends Bloc<LoginScreenEvent, LoginScreenState> {
         GlobalUtils.activeToken = tokenData;
 
         yield state.copyWith(isLoading: false);
-        LoginScreenSuccess();
+        yield LoginScreenSuccess();
       }
     } catch (error){
       print(onError.toString());

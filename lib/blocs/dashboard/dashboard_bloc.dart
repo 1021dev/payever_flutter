@@ -93,8 +93,7 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
 
   Stream<DashboardScreenState> loadData() async* {
     var preferences = await SharedPreferences.getInstance();
-    //  var environment = await api.getEnv();
-    // Env.map(environment);
+    print(Measurements.parseJwt(preferences.getString(GlobalUtils.REFRESH_TOKEN))['exp'] * 1000);
     if (DateTime.now().difference(DateTime.fromMillisecondsSinceEpoch(Measurements.parseJwt(preferences
             .getString(GlobalUtils.REFRESH_TOKEN))['exp'] * 1000)).inHours < 0) {
       try {

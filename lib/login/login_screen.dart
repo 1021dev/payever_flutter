@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:payever/blocs/bloc.dart';
+import 'package:payever/commons/models/version.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/global_keys.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
@@ -79,7 +80,7 @@ class _LoginState extends State<Login> {
           if (state is LoginScreenFailure) {
             _isInvalidInformation = true;
           } else if (state is LoginScreenVersionFailed) {
-
+            showPopUp(state.version);
           } else if (state is LoginScreenSuccess) {
             Navigator.pushReplacement(
                 context,
@@ -399,6 +400,62 @@ class _LoginState extends State<Login> {
             }
         ),
     );
+  }
+
+  showPopUp(Version _version ){
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return Center(
+            child: Dialog(
+              backgroundColor: Colors.black.withOpacity(0.3),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              child: ClipRRect(
+                  borderRadius:BorderRadius.circular(12),
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 8,sigmaY: 16),
+                    child: Container(
+                      height: 200,
+                      width: 300,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Text("Your App version is no longer supported."),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              RaisedButton(
+                                elevation: 0,
+                                padding: EdgeInsets.symmetric(vertical: 1),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                                color: Colors.white.withOpacity(0.15),
+                                child: Text("Close"),
+                                onPressed: (){
+                                  exit(0);
+                                },
+                              ),
+                              RaisedButton(
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                                color: Colors.white.withOpacity(0.2),
+                                child: Text("Update"),
+                                onPressed: (){
+                                  _launchURL(_version.storeLink(Platform.operatingSystem.contains("ios")));
+                                },
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  )
+              ),
+            ),
+          );
+        }
+        );
   }
 
 }

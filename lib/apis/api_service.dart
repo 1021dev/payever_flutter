@@ -205,7 +205,7 @@ class ApiService {
   Future<dynamic> login(String username, String password) async {
     try {
       print('$TAG - login()');
-      dynamic response = await _client.post(
+      dynamic response = await _client.postTypeLess(
           loginUrl,
           body: {
             'email': username,

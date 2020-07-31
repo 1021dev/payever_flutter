@@ -5,7 +5,7 @@ class LoginScreenState {
   final bool isLoading;
 
   LoginScreenState({
-    this.isLoading = true,
+    this.isLoading = false,
   });
 
   List<Object> get props => [
