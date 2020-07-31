@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/dashboard/dashboard_bloc.dart';
+import 'package:payever/checkout/widgets/checkout_top_button.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
@@ -61,6 +62,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   double iconSize;
   double margin;
 
+  int selectedIndex = 0;
   CheckoutScreenBloc screenBloc;
 
   @override
@@ -172,7 +174,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             padding: EdgeInsets.only(left: 8),
           ),
           Text(
-            Language.getConnectStrings('layout.title'),
+            Language.getCommerceOSStrings('dashboard.apps.checkout'),
             style: TextStyle(
               color: Colors.white,
               fontSize: 16,
@@ -236,7 +238,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     business: widget.dashboardScreenBloc.state.activeBusiness,
                     businessApps: widget.dashboardScreenBloc.state.businessWidgets,
                     dashboardScreenBloc: widget.dashboardScreenBloc,
-                    type: 'connect',
+                    type: 'checkout',
                   ),
                 );
               },
@@ -320,12 +322,96 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   Widget _topBar(CheckoutScreenState state) {
     return Container(
-      height: 64,
       color: Color(0xFF212122),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                CheckoutTopButton(
+                  title: 'checkout',
+                  selectedIndex: selectedIndex,
+                  index: 0,
+                  onTap: () {
+                    setState(() {
+                      selectedIndex = 0;
+                    });
+                  },
+                ),
+                CheckoutTopButton(
+                  title: Language.getPosConnectStrings('integrations.payments.instant_payment.category'),
+                  selectedIndex: selectedIndex,
+                  index: 1,
+                  onTap: () {
+                    setState(() {
+                      selectedIndex = 1;
+                    });
+                  },
+                ),
+                CheckoutTopButton(
+                  title: Language.getWidgetStrings('widgets.checkout.channels'),
+                  selectedIndex: selectedIndex,
+                  index: 2,
+                  onTap: () {
+                    setState(() {
+                      selectedIndex = 2;
+                    });
+                  },
+                ),
+                CheckoutTopButton(
+                  title: Language.getCommerceOSStrings('dashboard.apps.connect'),
+                  selectedIndex: selectedIndex,
+                  index: 3,
+                  onTap: () {
+                    setState(() {
+                      selectedIndex = 3;
+                    });
+                  },
+                ),
+                CheckoutTopButton(
+                  title: Language.getPosConnectStrings('Sections'),
+                  selectedIndex: selectedIndex,
+                  index: 4,
+                  onTap: () {
+                    setState(() {
+                      selectedIndex = 4;
+                    });
+                  },
+                ),
+                CheckoutTopButton(
+                  title: Language.getConnectStrings('categories.communications.main.titles.settings'),
+                  selectedIndex: selectedIndex,
+                  index: 5,
+                  onTap: () {
+                    setState(() {
+                      selectedIndex = 5;
+                    });
+                  },
+                ),
+              ],
+            )
+          ],
+        ),
+      ),
     );
   }
 
   Widget _getBody(CheckoutScreenState state) {
+    switch (selectedIndex) {
+      case 0:
+        return Container();
+      case 1:
+        return Container();
+      case 2:
+        return Container();
+      case 3:
+        return Container();
+      case 4:
+        return Container();
+      case 5:
+        return Container();
+    }
     return Container();
   }
 

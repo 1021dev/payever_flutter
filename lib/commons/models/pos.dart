@@ -49,6 +49,8 @@ class ChannelSet {
   ChannelSet(this.id, this.name, this.type);
 
   String checkout;
+  bool customPolicy = false;
+  bool policyEnabled = false;
   String id;
   String name;
   String type;
@@ -58,6 +60,8 @@ class ChannelSet {
     id = obj[GlobalUtils.DB_POS_CHANNEL_SET_ID];
     name = obj[GlobalUtils.DB_POS_CHANNEL_SET_NAME];
     type = obj[GlobalUtils.DB_POS_CHANNEL_SET_TYPE];
+    customPolicy = obj['customPolicy'];
+    policyEnabled = obj['policyEnabled'];
   }
 
   Map<String, dynamic> toDictionary() {

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:dio/dio.dart';
 import 'package:payever/apis/baseClient.dart';
@@ -89,7 +90,7 @@ class ApiService {
   static String subtractEnd = '/subtract';
 
   static String checkoutV1 = '${Env.checkoutPhp}/api/rest/v1/checkout/flow';
-  static String checkoutV3 = '${Env.checkoutPhp}/api/rest/v3/checkout/flow/';
+  static String checkoutV3 = '${Env.checkoutPhp}/api/rest/v3/checkout/flow';
 
   static String employees = Env.employees;
   static String newEmployee = '$authBaseUrl/api/employees/create/';
@@ -1063,7 +1064,7 @@ class ApiService {
 
   Future<dynamic> toggleInstalled(String token, String id, String uuid) async {
     try {
-      print('$TAG - patchTutorials()');
+      print('$TAG - toggleInstalled()');
       dynamic response = await _client.postTypeLess(
           '${Env.commerceOs}/api/apps/business/$id/toggle-installed',
           body: {
@@ -1083,9 +1084,9 @@ class ApiService {
   }
   Future<dynamic> toggleSetUpStatus(String token, String id, String type) async {
     try {
-      print('$TAG - patchTutorials()');
+      print('$TAG - toggleSetUpStatus()');
       dynamic response = await _client.patchTypeless(
-          '${Env.commerceOs}/api/apps/business/$id/app/$type/toggle-setup-status',
+          '${Env.commerceOsBack}/api/apps/business/$id/app/$type/toggle-setup-status',
           body: {
             'setupStatus': 'completed'
           },
@@ -2013,7 +2014,45 @@ class ApiService {
     try {
       print('$TAG - getCheckout()');
       dynamic response = await _client.getTypeless(
-          '${Env.checkoutPhp}/api/business/$business/checkout',
+          '${Env.checkout}/api/business/$business/checkout',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getCheckoutChannelFlow(String token, String channelId) async {
+    try {
+      print('$TAG - getCheckoutChannelFlow()');
+      var rand = randomString(8);
+      print(rand);
+      dynamic response = await _client.getTypeless(
+          '$checkoutFlow$channelId/checkout?rand=$rand',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getCheckoutFlow(String token, String local) async {
+    try {
+      print('$TAG - getCheckoutFlow()');
+      var rand = randomString(8);
+      print(rand);
+      dynamic response = await _client.postTypeLess(
+          '$checkoutV3?_locale=$local&rand=$rand',
           headers: {
             HttpHeaders.authorizationHeader: 'Bearer $token',
             HttpHeaders.contentTypeHeader: 'application/json',
@@ -2027,5 +2066,33 @@ class ApiService {
   }
 
 
+  Future<dynamic> getCheckoutIntegrations(String idBusiness, String token) async {
+    try {
+      print('$TAG - getCheckoutIntegrations()');
+      dynamic response = await _client.getTypeless(
+          '$checkoutBusiness$idBusiness$endIntegration',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+
+
+  String randomString(int strlen) {
+    const chars = "0123456789";
+    Random rnd = new Random(new DateTime.now().millisecondsSinceEpoch);
+    String result = "";
+    for (var i = 0; i < strlen; i++) {
+      result += chars[rnd.nextInt(chars.length)];
+    }
+    return result;
+  }
 
 }

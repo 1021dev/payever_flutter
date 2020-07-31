@@ -26,19 +26,19 @@ class Checkout {
     id = obj['_id'];
 
     dynamic connectionsObj = obj['connections'];
-    if (connectionsObj.isNotEmpty) {
+    if (connectionsObj is List) {
       connectionsObj.forEach((element) {
         connections.add(element);
       });
     }
     dynamic _sections = obj[GlobalUtils.DB_CHECKOUT_SECTIONS];
-    if (_sections.isNotEmpty) {
+    if (_sections is List) {
       _sections.forEach((section) {
         sections.add(Section.fromMap(section));
       });
     }
     dynamic settingsObj = obj['settings'];
-    if (settingsObj.isNotEmpty) {
+    if (settingsObj is Map) {
       settings = CheckoutSettings.fromMap(settingsObj);
     }
   }
@@ -58,9 +58,8 @@ class Section {
     fixed = obj[GlobalUtils.DB_CHECKOUT_SECTIONS_FIXED];
     order = obj[GlobalUtils.DB_CHECKOUT_SECTIONS_ORDER];
     id = obj['id'];
-    print("Section $code enabled $enabled");
     var _excludedChannels = obj[GlobalUtils.DB_CHECKOUT_SECTIONS_EXCLUDED];
-    if (_excludedChannels.isNotEmpty) {
+    if (_excludedChannels is List) {
       _excludedChannels.forEach((channel) {
         excludedChannels.add(channel);
       });
@@ -251,13 +250,13 @@ class CheckoutFlow {
       });
     }
     dynamic paymentMethodsObj = obj['paymentMethods'];
-    if (paymentMethodsObj.isNotEmpty) {
+    if (paymentMethodsObj is List) {
       paymentMethodsObj.forEach((element) {
         paymentMethods.add(element);
       });
     }
     dynamic sectionsObj = obj['sections'];
-    if (sectionsObj.isNotEmpty) {
+    if (sectionsObj is List) {
       sectionsObj.forEach((element) {
         sections.add(Section.fromMap(element));
       });
