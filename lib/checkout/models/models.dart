@@ -393,6 +393,41 @@ class ChannelSetFlow {
     pendingUrl = obj['pending_url'];
     posMerchantMode = obj['pos_merchant_mode'];
     reference = obj['reference'];
-
+    sellerEmail = obj['seller_email'];
+    shippingAddressId = obj['shipping_address_id'];
+    dynamic shippingAddressesObj = obj['shipping_addresses'];
+    if (shippingAddressesObj is List) {
+      shippingAddressesObj.forEach((element) {
+        shippingAddresses.add(element);
+      });
+    }
+    shippingCategory = obj['shipping_category'];
+    shippingFee = obj['shipping_fee'];
+    shippingMethodCode = obj['shipping_method_code'];
+    shippingMethodName = obj['shipping_method_name'];
+    shippingOptionName = obj['shipping_option_name'];
+    dynamic shippingOptionsObj = obj['shipping_options'];
+    if (shippingOptionsObj is List) {
+      shippingOptionsObj.forEach((element) {
+        shippingOptions.add(element);
+      });
+    }
+    shippingOrderId = obj['shipping_order_id'];
+    shippingType = obj['shipping_type'];
+    shopUrl = obj['shop_url'];
+    singleAddress = obj['single_address'];
+    state = obj['state'];
+    successUrl = obj['success_url'];
+    taxValue = obj['tax_value'];
+    total = obj['total'];
+    userAccountId = obj['user_account_id'];
+    dynamic valuesObj = obj['values'];
+    if (valuesObj is List) {
+      valuesObj.forEach((element) {
+        values.add(element);
+      });
+    }
+    variantId = obj['variant_id'];
+    xFrameHost = obj['x_frame_host'];
   }
 }
