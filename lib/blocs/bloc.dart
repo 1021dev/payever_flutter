@@ -15,3 +15,4 @@ export './connect/connect_detail/connect_detail.dart';
 export './connect/connect_settings_detail/connect_settings_detail.dart';
 export './contact/contact.dart';
 export './contact/contact_detail/contact_detail.dart';
+export './checkout/checkout.dart';
