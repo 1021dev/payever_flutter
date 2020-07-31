@@ -703,7 +703,7 @@ class _ContactScreenState extends State<ContactScreen> {
                       ),
                     );
                   },
-                  onTap: (contactModel){
+                  onTap: (){
                     screenBloc.add(SelectContactEvent(contact: state.contactLists[index]));
                   },
                   contact: state.contactLists[index],

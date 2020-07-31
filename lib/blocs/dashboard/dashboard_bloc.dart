@@ -483,4 +483,8 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
     dynamic response = await api.deleteNotification(GlobalUtils.activeToken.accessToken, notificationId);
     fetchNotifications();
   }
+
+  Stream<DashboardScreenState> getCheckout() async* {
+    dynamic response = await api.getCheckout(GlobalUtils.activeToken.accessToken, state.activeBusiness.id);
+  }
 }

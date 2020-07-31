@@ -6,6 +6,7 @@ import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
+import 'package:payever/checkout/views/checkout_screen.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
@@ -456,6 +457,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           appWidgets: state.currentWidgets,
           onTapEdit: () {},
           onTapWidget: (BusinessApps aw) {
+            print('app code => ${aw.code}');
             Provider.of<GlobalStateModel>(context,listen: false)
                 .setCurrentBusiness(state.activeBusiness);
             Provider.of<GlobalStateModel>(context,listen: false)
@@ -519,6 +521,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 context,
                 PageTransition(
                   child: ContactsInitScreen(
+                    dashboardScreenBloc: screenBloc,
+                  ),
+                  type: PageTransitionType.fade,
+                  duration: Duration(milliseconds: 500),
+                ),
+              );
+            } else if (aw.code.contains('checkout')) {
+              Navigator.push(
+                context,
+                PageTransition(
+                  child: CheckoutInitScreen(
                     dashboardScreenBloc: screenBloc,
                   ),
                   type: PageTransitionType.fade,
@@ -702,6 +715,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
               },
               deleteNotification: (NotificationModel model) {
                 screenBloc.add(DeleteNotification(notificationId: model.id));
+              },
+              onOpen: () {
+                Provider.of<GlobalStateModel>(context,listen: false)
+                    .setCurrentBusiness(state.activeBusiness);
+                Provider.of<GlobalStateModel>(context,listen: false)
+                    .setCurrentWallpaper(state.curWall);
+                Navigator.push(
+                  context,
+                  PageTransition(
+                    child: CheckoutInitScreen(
+                      dashboardScreenBloc: screenBloc,
+                    ),
+                    type: PageTransitionType.fade,
+                    duration: Duration(milliseconds: 500),
+                  ),
+                );
               },
             )
         );

@@ -2009,6 +2009,23 @@ class ApiService {
     }
   }
 
+  Future<dynamic> getCheckout(String token, String business) async {
+    try {
+      print('$TAG - getCheckout()');
+      dynamic response = await _client.getTypeless(
+          '${Env.checkoutPhp}/api/business/$business/checkout',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
 
 
 }

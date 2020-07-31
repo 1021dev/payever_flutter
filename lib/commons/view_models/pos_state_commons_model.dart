@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:payever/checkout/models/model.dart';
 import 'package:payever/products/models/models.dart';
 
 import 'global_state_model.dart';
