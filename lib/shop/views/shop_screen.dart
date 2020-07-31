@@ -11,7 +11,7 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/shop/shop.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
-import 'package:payever/commons/views/screens/dashboard/sub_view/dashboard_menu_view.dart';
+import 'package:payever/dashboard/sub_view/dashboard_menu_view.dart';
 import 'package:payever/notifications/notifications_screen.dart';
 import 'package:payever/pos/widgets/pos_top_button.dart';
 import 'package:payever/shop/models/models.dart';
@@ -24,9 +24,12 @@ import 'package:payever/shop/widgets/shop_top_button.dart';
 import 'package:payever/shop/widgets/template_cell.dart';
 import 'package:payever/shop/widgets/theme_filter_content_view.dart';
 import 'package:payever/shop/widgets/theme_own_cell.dart';
+import 'package:payever/switcher/switcher_page.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:payever/commons/views/custom_elements/wallpaper.dart';
+import 'package:payever/login/login_page.dart';
 
 
 bool _isPortrait;

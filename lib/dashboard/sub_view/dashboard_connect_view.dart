@@ -1,40 +1,36 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:payever/commons/commons.dart';
+import 'package:payever/commons/models/app_widget.dart';
+import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
+import 'package:payever/connect/models/connect.dart';
 import 'package:payever/commons/utils/env.dart';
 import 'package:payever/commons/views/custom_elements/dashboard_option_cell.dart';
-import 'package:payever/commons/views/custom_elements/product_cell.dart';
-import 'package:payever/products/models/models.dart';
 
-import '../../../custom_elements/blur_effect_view.dart';
-
-class DashboardProductsView extends StatefulWidget {
+class DashboardConnectView extends StatefulWidget {
   final AppWidget appWidget;
   final BusinessApps businessApps;
-  final List<Products> lastSales;
-  final Business business;
-  final Function onOpen;
-  final Function onSelect;
   final List<NotificationModel> notifications;
   final Function openNotification;
   final Function deleteNotification;
+  final Function tapOpen;
+  final List<ConnectModel> connects;
 
-  DashboardProductsView({
+  DashboardConnectView({
     this.appWidget,
     this.businessApps,
-    this.lastSales,
-    this.business,
-    this.onOpen,
-    this.onSelect,
     this.notifications = const [],
     this.openNotification,
     this.deleteNotification,
+    this.tapOpen,
+    this.connects,
   });
   @override
-  _DashboardProductsViewState createState() => _DashboardProductsViewState();
+  _DashboardConnectViewState createState() => _DashboardConnectViewState();
 }
 
-class _DashboardProductsViewState extends State<DashboardProductsView> {
+class _DashboardConnectViewState extends State<DashboardConnectView> {
   String uiKit = '${Env.cdnIcon}icons-apps-white/icon-apps-white-';
   bool isExpanded = false;
   @override
@@ -58,13 +54,15 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
                             width: 16,
                             height: 16,
                             decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    image: NetworkImage('${uiKit}product.png'),
-                                    fit: BoxFit.fitWidth)),
+                              image: DecorationImage(
+                                image: NetworkImage('${Env.cdnIcon}icons-apps-white/icon-apps-white-connect.png'),
+                                fit: BoxFit.fitWidth,
+                              ),
+                            ),
                           ),
                           SizedBox(width: 8,),
                           Text(
-                            Language.getCommerceOSStrings('dashboard.apps.products').toUpperCase(),
+                            'CONNECT',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 12,
@@ -75,33 +73,32 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
                       Row(
                         children: [
                           InkWell(
-                            onTap: widget.onOpen,
+                            onTap: widget.tapOpen,
                             child: Container(
                               height: 20,
                               width: 40,
                               decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Colors.black.withAlpha(100)
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.black.withAlpha(100),
                               ),
                               child: Center(
                                 child: Text(
                                   Language.getCommerceOSStrings('actions.open'),
                                   style: TextStyle(
-                                      fontSize: 10,
-                                      color: Colors.white
+                                    fontSize: 10,
+                                    color: Colors.white,
                                   ),
                                 ),
                               ),
                             ),
                           ),
-                          widget.notifications.length > 0 ?
-                          SizedBox(width: 8) : Container(),
+                          widget.notifications.length > 0 ? SizedBox(width: 8): Container(),
                           widget.notifications.length > 0 ? Container(
                             height: 20,
                             width: 40,
                             decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.white10
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.white10,
                             ),
                             child: Row(
                               children: [
@@ -111,8 +108,8 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
                                     child: Text(
                                       '${widget.notifications.length}',
                                       style: TextStyle(
-                                          fontSize: 10,
-                                          color: Colors.white
+                                        fontSize: 10,
+                                        color: Colors.white,
                                       ),
                                     ),
                                   ),
@@ -150,16 +147,8 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
                     ],
                   ),
                   SizedBox(height: 8),
-                  widget.lastSales != null
-                      ? Container(
-                    height: 92,
-                    child: ListView.builder(
-                      itemBuilder: _itemBuilder,
-                      itemCount: widget.lastSales.length > 3 ? 3: widget.lastSales.length,
-                      scrollDirection: Axis.horizontal,
-                    ),
-                  ): Container(
-                    height: 92,
+                  widget.connects == null ? Container(
+                    height: 72,
                     child: Center(
                       child: Container(
                         width: 32,
@@ -169,7 +158,76 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
                         ),
                       ),
                     ),
+                  ): Row(
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Top rated',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.white70,
+                              ),
+                            ),
+                            SizedBox(height: 4),
+                            Container(
+                              height: 50,
+                              child: ListView.separated(
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                scrollDirection: Axis.horizontal,
+                                itemBuilder: (context, index) {
+                                  String iconType = widget.connects[index].integration.displayOptions.icon ?? '';
+                                  iconType = iconType.replaceAll('#icon-', '');
+                                  iconType = iconType.replaceAll('#', '');
+                                  print('$iconType');
+                                  return Container(
+                                    width: 35,
+                                    height: 35,
+                                    padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                                    child: SvgPicture.asset(Measurements.channelIcon(iconType), width: 16, height: 16, color: Colors.white70,)
+                                  );
+                                },
+                                separatorBuilder: (context, index) {
+                                  return Container();
+                                },
+                                itemCount: widget.connects.length > 4 ? 4: widget.connects.length,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Container(
+                          child: InkWell(
+                            onTap: widget.tapOpen,
+                            child: Container(
+                              height: 50,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(6),
+                                color: Colors.black26,
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Connect',
+                                  softWrap: true,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
                   ),
+                  SizedBox(height: 12),
                 ],
               ),
             ),
@@ -177,15 +235,18 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
               Container(
                 height: 50.0 * widget.notifications.length,
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(6), bottomRight: Radius.circular(6)),
-                    color: Colors.black38
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(6),
+                    bottomRight: Radius.circular(6),
+                  ),
+                  color: Colors.black38,
                 ),
                 child: ListView.builder(
                   itemBuilder: _itemBuilderDDetails,
                   itemCount: widget.notifications.length,
                   physics: NeverScrollableScrollPhysics(),
                 ),
-              )
+              ),
           ],
         ),
       );
@@ -203,25 +264,18 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
                     height: 40,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                          image: NetworkImage('${Env.cdnIcon}icon-comerceos-product-not-installed.png'),
-                          fit: BoxFit.contain),
+                        image: NetworkImage('${Env.cdnIcon}icon-comerceos-connect-not-installed.png'),
+                        fit: BoxFit.contain,
+                      ),
                     ),
                   ),
                   SizedBox(height: 8),
                   Text(
                     Language.getWidgetStrings(widget.appWidget.title),
                     style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold
-                    ),
-                  ),
-                  SizedBox(height: 4),
-                  Text(
-                    Language.getWidgetStrings('widgets.products.actions.add-new'),
-                    style: TextStyle(
                       color: Colors.white,
-                      fontSize: 10,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   SizedBox(height: 4),
@@ -232,7 +286,10 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
             Container(
               height: 40,
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(6), bottomRight: Radius.circular(6)),
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(6),
+                    bottomRight: Radius.circular(6),
+                  ),
                   color: Colors.black38
               ),
               child: Row(
@@ -248,7 +305,9 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
                           !widget.businessApps.installed ? 'Get started' : 'Continue setup process',
                           softWrap: true,
                           style: TextStyle(
-                              color: Colors.white, fontSize: 12),
+                            color: Colors.white,
+                            fontSize: 12,
+                          ),
                         ),
                       ),
                     ),
@@ -268,28 +327,22 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
                           'Learn more',
                           softWrap: true,
                           style: TextStyle(
-                              color: Colors.white, fontSize: 12),
+                            color: Colors.white,
+                            fontSize: 12,
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ],
               ),
-            )
+            ),
           ],
         ),
       );
     }
   }
-  Widget _itemBuilder(BuildContext context, int index) {
-    return ProductCell(
-      product: widget.lastSales[index],
-      business: widget.business,
-      onTap: (Products product) {
-        widget.onSelect(product);
-      },
-    );
-  }
+
   Widget _itemBuilderDDetails(BuildContext context, int index) {
     return DashboardOptionCell(
       notificationModel: widget.notifications[index],
@@ -301,5 +354,4 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
       },
     );
   }
-
 }

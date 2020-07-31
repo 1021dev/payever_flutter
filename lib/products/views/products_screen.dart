@@ -13,7 +13,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
-import 'package:payever/commons/views/screens/dashboard/sub_view/dashboard_menu_view.dart';
+import 'package:payever/dashboard/sub_view/dashboard_menu_view.dart';
 import 'package:payever/notifications/notifications_screen.dart';
 import 'package:payever/pos/widgets/pos_top_button.dart';
 import 'package:payever/products/models/models.dart';
@@ -24,12 +24,15 @@ import 'package:payever/products/widgets/product_filter_content_view.dart';
 import 'package:payever/products/widgets/product_grid_item.dart';
 import 'package:payever/products/widgets/product_sort_content_view.dart';
 import 'package:payever/products/widgets/products_top_button.dart';
+import 'package:payever/switcher/switcher_page.dart';
 import 'package:payever/transactions/models/enums.dart';
 import 'package:payever/transactions/views/sub_view/search_text_content_view.dart';
 import 'package:payever/transactions/views/transactions_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:payever/commons/views/custom_elements/wallpaper.dart';
+import 'package:payever/login/login_page.dart';
 
 
 bool _isPortrait;

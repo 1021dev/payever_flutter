@@ -18,6 +18,8 @@ import 'package:payever/products/models/models.dart';
 import 'package:payever/products/widgets/collection_detail_image_view.dart';
 import 'package:payever/products/widgets/product_detail_header.dart';
 import 'package:payever/transactions/models/enums.dart';
+import 'package:payever/commons/views/custom_elements/wallpaper.dart';
+import 'package:payever/login/login_page.dart';
 
 bool _isPortrait;
 bool _isTablet;

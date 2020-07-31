@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -10,11 +8,9 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/translations.dart';
-import 'package:payever/commons/views/screens/login/login_page.dart';
+import 'package:payever/commons/views/custom_elements/wallpaper.dart';
+import 'package:payever/login/login_page.dart';
 import 'package:payever/connect/models/connect.dart';
-import 'package:payever/connect/views/connect_category_more_connections.dart';
-import 'package:payever/connect/widgets/connect_item_image_view.dart';
-import 'package:payever/connect/widgets/connect_top_button.dart';
 
 class ConnectVersionHistoryScreen extends StatefulWidget {
   final ConnectModel connectModel;

@@ -2,9 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/env.dart';
+import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/tutorial_cell.dart';
-
-import '../../../custom_elements/blur_effect_view.dart';
 
 class DashboardTutorialView extends StatefulWidget {
   final List<Tutorial> tutorials;

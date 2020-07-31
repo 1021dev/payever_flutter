@@ -14,7 +14,9 @@ import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
-import 'package:payever/commons/views/screens/dashboard/sub_view/dashboard_menu_view.dart';
+import 'package:payever/commons/views/custom_elements/wallpaper.dart';
+import 'package:payever/dashboard/sub_view/dashboard_menu_view.dart';
+import 'package:payever/login/login_page.dart';
 import 'package:payever/notifications/notifications_screen.dart';
 import 'package:payever/pos/views/pos_connect_screen.dart';
 import 'package:payever/pos/views/pos_create_terminal_screen.dart';
@@ -22,6 +24,7 @@ import 'package:payever/pos/views/pos_qr_app.dart';
 import 'package:payever/pos/views/pos_switch_terminals_screen.dart';
 import 'package:payever/pos/views/pos_twillo_settings.dart';
 import 'package:payever/pos/widgets/pos_top_button.dart';
+import 'package:payever/switcher/switcher_page.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -209,13 +212,19 @@ class _PosScreenState extends State<PosScreen> {
               Navigator.pushReplacement(
                   context,
                   PageTransition(
-                      child: LoginScreen(), type: PageTransitionType.fade));
+                      child: LoginScreen(),
+                    type: PageTransitionType.fade,
+                  )
+              );
             },
             onSwitchBusiness: () {
               Navigator.pushReplacement(
                   context,
                   PageTransition(
-                      child: SwitcherScreen(), type: PageTransitionType.fade));
+                      child: SwitcherScreen(),
+                      type: PageTransitionType.fade,
+                  )
+              );
             },
             onPersonalInfo: () {
 

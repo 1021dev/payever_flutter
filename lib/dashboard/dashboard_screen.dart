@@ -7,8 +7,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
-import 'package:payever/commons/views/screens/login/login_page.dart';
-import 'package:payever/commons/views/screens/switcher/switcher_page.dart';
+import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
+import 'package:payever/commons/views/custom_elements/wallpaper.dart';
+import 'package:payever/login/login_page.dart';
 import 'package:payever/connect/views/connect_screen.dart';
 import 'package:payever/contacts/views/contacts_screen.dart';
 import 'package:payever/notifications/notifications_screen.dart';
@@ -19,14 +20,12 @@ import 'package:payever/products/views/product_detail_screen.dart';
 import 'package:payever/products/views/products_screen.dart';
 import 'package:payever/search/views/search_screen.dart';
 import 'package:payever/shop/views/shop_screen.dart';
+import 'package:payever/switcher/switcher_page.dart';
 import 'package:payever/transactions/transactions.dart';
 import 'package:payever/welcome/welcome_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../utils/env.dart';
-import '../../views.dart';
-import '../../custom_elements/blur_effect_view.dart';
 import 'sub_view/dashboard_advertising_view.dart';
 import 'sub_view/dashboard_app_pos.dart';
 import 'sub_view/dashboard_business_apps_view.dart';
@@ -124,12 +123,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
           Navigator.pushReplacement(
               context,
               PageTransition(
-                  child: LoginScreen(), type: PageTransitionType.fade));
+                  child: LoginScreen(),
+                  type: PageTransitionType.fade,
+              )
+          );
         } else if (state is DashboardScreenSwitch) {
           Navigator.pushReplacement(
               context,
               PageTransition(
-                  child: SwitcherScreen(), type: PageTransitionType.fade));
+                  child: SwitcherScreen(),
+                  type: PageTransitionType.fade,
+              )
+          );
         }
       },
       child: BlocBuilder<DashboardScreenBloc, DashboardScreenState> (

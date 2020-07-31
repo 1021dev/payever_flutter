@@ -1,8 +1,7 @@
+import 'package:payever/commons/models/token.dart';
+import 'package:payever/commons/network/rest_ds.dart';
+import 'package:payever/commons/utils/common_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../../models/models.dart';
-import '../../../network/network.dart';
-import '../../../utils/utils.dart';
 
 abstract class LoginScreenContract {
   void onLoginSuccess(Token token);
@@ -17,8 +16,7 @@ class LoginScreenPresenter {
   LoginScreenPresenter(this._view);
 
   void doLogin(String username, String password) {
-    api
-        .login(username, password, GlobalUtils.fingerprint)
+    api.login(username, password, GlobalUtils.fingerprint)
         .then((dynamic token) async {
       Token tokenData = Token.map(token);
 

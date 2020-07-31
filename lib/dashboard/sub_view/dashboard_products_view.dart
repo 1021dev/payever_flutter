@@ -1,31 +1,40 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/commons/commons.dart';
+import 'package:payever/commons/utils/env.dart';
+import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/dashboard_option_cell.dart';
+import 'package:payever/commons/views/custom_elements/product_cell.dart';
+import 'package:payever/products/models/models.dart';
 
-import '../../../custom_elements/blur_effect_view.dart';
-
-class DashboardContactView extends StatefulWidget {
-  final VoidCallback onOpen;
-  final BusinessApps businessApps;
+class DashboardProductsView extends StatefulWidget {
   final AppWidget appWidget;
+  final BusinessApps businessApps;
+  final List<Products> lastSales;
+  final Business business;
+  final Function onOpen;
+  final Function onSelect;
   final List<NotificationModel> notifications;
   final Function openNotification;
   final Function deleteNotification;
 
-  DashboardContactView({
-    this.onOpen,
-    this.businessApps,
+  DashboardProductsView({
     this.appWidget,
+    this.businessApps,
+    this.lastSales,
+    this.business,
+    this.onOpen,
+    this.onSelect,
     this.notifications = const [],
     this.openNotification,
     this.deleteNotification,
   });
   @override
-  _DashboardContactViewState createState() => _DashboardContactViewState();
+  _DashboardProductsViewState createState() => _DashboardProductsViewState();
 }
 
-class _DashboardContactViewState extends State<DashboardContactView> {
+class _DashboardProductsViewState extends State<DashboardProductsView> {
+  String uiKit = '${Env.cdnIcon}icons-apps-white/icon-apps-white-';
   bool isExpanded = false;
   @override
   Widget build(BuildContext context) {
@@ -49,12 +58,12 @@ class _DashboardContactViewState extends State<DashboardContactView> {
                             height: 16,
                             decoration: BoxDecoration(
                                 image: DecorationImage(
-                                    image: NetworkImage('${Env.cdnIcon}icons-apps-white/icon-apps-white-mail.png'),
+                                    image: NetworkImage('${uiKit}product.png'),
                                     fit: BoxFit.fitWidth)),
                           ),
                           SizedBox(width: 8,),
                           Text(
-                            Language.getWidgetStrings(widget.appWidget.title).toUpperCase(),
+                            Language.getCommerceOSStrings('dashboard.apps.products').toUpperCase(),
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 12,
@@ -84,20 +93,22 @@ class _DashboardContactViewState extends State<DashboardContactView> {
                               ),
                             ),
                           ),
-                          widget.notifications.length > 0 ? SizedBox(width: 8): Container(),
-                          widget.notifications.length > 0 ?Container(
+                          widget.notifications.length > 0 ?
+                          SizedBox(width: 8) : Container(),
+                          widget.notifications.length > 0 ? Container(
                             height: 20,
                             width: 40,
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
                                 color: Colors.white10
                             ),
-                            child:  Row(
+                            child: Row(
                               children: [
                                 Expanded(
                                   flex: 1,
                                   child: Center(
-                                    child: Text('1',
+                                    child: Text(
+                                      '${widget.notifications.length}',
                                       style: TextStyle(
                                           fontSize: 10,
                                           color: Colors.white
@@ -137,86 +148,26 @@ class _DashboardContactViewState extends State<DashboardContactView> {
                       )
                     ],
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 8),
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.only(left: 4, right: 4),
-                              child: Column(
-                                children: <Widget>[
-                                  Text(
-                                    'Contacts',
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w200,
-                                    ),
-                                  ),
-                                  Text(
-                                    '0',
-                                    style: TextStyle(
-                                      fontSize: 32,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              color: Colors.white24,
-                              width: 1,
-                              height: 50,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 4, right: 4),
-                              child: Column(
-                                children: <Widget>[
-                                  Text(
-                                    'Groups',
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w200,
-                                    ),
-                                  ),
-                                  Text(
-                                    '0',
-                                    style: TextStyle(
-                                      fontSize: 32,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
+                  SizedBox(height: 8),
+                  widget.lastSales != null
+                      ? Container(
+                    height: 92,
+                    child: ListView.builder(
+                      itemBuilder: _itemBuilder,
+                      itemCount: widget.lastSales.length > 3 ? 3: widget.lastSales.length,
+                      scrollDirection: Axis.horizontal,
+                    ),
+                  ): Container(
+                    height: 92,
+                    child: Center(
+                      child: Container(
+                        width: 32,
+                        height: 32,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
                         ),
                       ),
-                      Expanded(
-                        child: MaterialButton(
-                          onPressed: () {
-
-                          },
-                          color: Colors.black26,
-                          height: 60,
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Text(
-                            'Add Contact',
-                            softWrap: true,
-                            style: TextStyle(
-                                color: Colors.white, fontSize: 16),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 16),
+                    ),
                   ),
                 ],
               ),
@@ -225,18 +176,15 @@ class _DashboardContactViewState extends State<DashboardContactView> {
               Container(
                 height: 50.0 * widget.notifications.length,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(6),
-                    bottomRight: Radius.circular(6),
-                  ),
-                  color: Colors.black38,
+                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(6), bottomRight: Radius.circular(6)),
+                    color: Colors.black38
                 ),
                 child: ListView.builder(
                   itemBuilder: _itemBuilderDDetails,
                   itemCount: widget.notifications.length,
                   physics: NeverScrollableScrollPhysics(),
                 ),
-              ),
+              )
           ],
         ),
       );
@@ -254,7 +202,7 @@ class _DashboardContactViewState extends State<DashboardContactView> {
                     height: 40,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                          image: NetworkImage('${Env.cdnIcon}icon-comerceos-mail-not-installed.png'),
+                          image: NetworkImage('${Env.cdnIcon}icon-comerceos-product-not-installed.png'),
                           fit: BoxFit.contain),
                     ),
                   ),
@@ -269,7 +217,7 @@ class _DashboardContactViewState extends State<DashboardContactView> {
                   ),
                   SizedBox(height: 4),
                   Text(
-                    Language.getWidgetStrings('widgets.${widget.appWidget.type}.install-app'),
+                    Language.getWidgetStrings('widgets.products.actions.add-new'),
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 10,
@@ -332,7 +280,15 @@ class _DashboardContactViewState extends State<DashboardContactView> {
       );
     }
   }
-
+  Widget _itemBuilder(BuildContext context, int index) {
+    return ProductCell(
+      product: widget.lastSales[index],
+      business: widget.business,
+      onTap: (Products product) {
+        widget.onSelect(product);
+      },
+    );
+  }
   Widget _itemBuilderDDetails(BuildContext context, int index) {
     return DashboardOptionCell(
       notificationModel: widget.notifications[index],
@@ -344,4 +300,5 @@ class _DashboardContactViewState extends State<DashboardContactView> {
       },
     );
   }
+
 }

@@ -4,16 +4,19 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:payever/commons/models/token.dart';
+import 'package:payever/commons/network/rest_ds.dart';
+import 'package:payever/commons/utils/auth.dart';
+import 'package:payever/commons/utils/common_utils.dart';
+import 'package:payever/commons/utils/env.dart';
+import 'package:payever/commons/utils/global_keys.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
+import 'package:payever/commons/views/custom_elements/updatedialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:device_info/device_info.dart';
 import 'package:page_transition/page_transition.dart';
 
-import '../../../models/models.dart';
-import '../../../network/network.dart';
-import '../../../utils/utils.dart';
-import '../../custom_elements/custom_elements.dart';
 import '../switcher/switcher_page.dart';
 import 'login_page_controller.dart';
 

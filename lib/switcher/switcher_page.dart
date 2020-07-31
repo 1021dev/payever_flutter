@@ -3,14 +3,16 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
-import 'package:payever/commons/views/screens/dashboard/dashboard_screen.dart';
+import 'package:payever/commons/models/business.dart';
+import 'package:payever/commons/utils/common_utils.dart';
+import 'package:payever/commons/utils/env.dart';
+import 'package:payever/commons/utils/global_keys.dart';
+import 'package:payever/commons/utils/translations.dart';
+import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
-import 'package:payever/commons/views/screens/login/login_page.dart';
+import 'package:payever/dashboard/dashboard_screen.dart';
+import 'package:payever/login/login_page.dart';
 import 'package:provider/provider.dart';
-
-import '../../../view_models/view_models.dart';
-import '../../../models/models.dart';
-import '../../../utils/utils.dart';
 
 const double _heightFactorTablet = 0.05;
 const double _heightFactorPhone = 0.07;

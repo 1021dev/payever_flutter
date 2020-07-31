@@ -16,6 +16,8 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/products/models/models.dart';
 import 'package:payever/products/widgets/single_choice_dialog.dart';
+import 'package:payever/commons/views/custom_elements/wallpaper.dart';
+import 'package:payever/login/login_page.dart';
 
 import 'add_variant_option_screen.dart';
 

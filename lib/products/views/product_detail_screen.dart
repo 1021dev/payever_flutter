@@ -25,6 +25,8 @@ import 'package:payever/products/views/edit_variant_screen.dart';
 import 'package:payever/products/widgets/product_detail_header.dart';
 import 'package:payever/products/widgets/product_detail_subsection_header.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/commons/views/custom_elements/wallpaper.dart';
+import 'package:payever/login/login_page.dart';
 
 bool _isPortrait;
 bool _isTablet;

@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:payever/blocs/payever_bloc_delegate.dart';
-import 'package:payever/commons/views/screens/dashboard/dashboard_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 
 import 'commons/view_models/view_models.dart';
-import 'commons/views/screens/screens.dart';
 import 'commons/utils/utils.dart';
 import 'commons/network/network.dart';
+import 'dashboard/dashboard_screen.dart';
+import 'login/login_page.dart';
 
 void main() {
   BlocSupervisor.delegate = PayeverBlocDelegate();

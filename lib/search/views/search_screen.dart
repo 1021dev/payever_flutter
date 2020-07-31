@@ -8,7 +8,7 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/utils.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
-import 'package:payever/commons/views/screens/login/login_page.dart';
+import 'package:payever/login/login_page.dart';
 import 'package:payever/search/widgets/app_widget_cell.dart';
 import 'package:payever/search/widgets/search_result_business_view.dart';
 import 'package:payever/search/widgets/search_result_transaction_view.dart';

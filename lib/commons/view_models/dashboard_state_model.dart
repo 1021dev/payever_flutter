@@ -5,7 +5,6 @@ import 'package:payever/settings/network/employees_api.dart';
 import '../models/models.dart';
 import '../network/network.dart';
 import '../utils/utils.dart';
-import '../views/views.dart';
 
 class DashboardStateModel extends ChangeNotifier with Validators {
   Terminal _activeTerminal;

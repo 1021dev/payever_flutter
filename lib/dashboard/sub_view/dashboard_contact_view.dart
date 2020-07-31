@@ -1,16 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:payever/commons/models/app_widget.dart';
-import 'package:payever/commons/models/business_apps.dart';
-import 'package:payever/commons/models/models.dart';
-import 'package:payever/commons/utils/env.dart';
-import 'package:payever/commons/utils/translations.dart';
+import 'package:payever/commons/commons.dart';
+import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/dashboard_option_cell.dart';
 
-import '../../../custom_elements/blur_effect_view.dart';
-
-
-class DashboardMailView extends StatefulWidget {
+class DashboardContactView extends StatefulWidget {
   final VoidCallback onOpen;
   final BusinessApps businessApps;
   final AppWidget appWidget;
@@ -18,7 +12,7 @@ class DashboardMailView extends StatefulWidget {
   final Function openNotification;
   final Function deleteNotification;
 
-  DashboardMailView({
+  DashboardContactView({
     this.onOpen,
     this.businessApps,
     this.appWidget,
@@ -27,10 +21,10 @@ class DashboardMailView extends StatefulWidget {
     this.deleteNotification,
   });
   @override
-  _DashboardMailViewState createState() => _DashboardMailViewState();
+  _DashboardContactViewState createState() => _DashboardContactViewState();
 }
 
-class _DashboardMailViewState extends State<DashboardMailView> {
+class _DashboardContactViewState extends State<DashboardContactView> {
   bool isExpanded = false;
   @override
   Widget build(BuildContext context) {
@@ -90,7 +84,7 @@ class _DashboardMailViewState extends State<DashboardMailView> {
                             ),
                           ),
                           widget.notifications.length > 0 ? SizedBox(width: 8): Container(),
-                          widget.notifications.length > 0 ? Container(
+                          widget.notifications.length > 0 ?Container(
                             height: 20,
                             width: 40,
                             decoration: BoxDecoration(
@@ -102,8 +96,7 @@ class _DashboardMailViewState extends State<DashboardMailView> {
                                 Expanded(
                                   flex: 1,
                                   child: Center(
-                                    child: Text(
-                                      '${widget.notifications.length}',
+                                    child: Text('1',
                                       style: TextStyle(
                                           fontSize: 10,
                                           color: Colors.white
@@ -140,7 +133,7 @@ class _DashboardMailViewState extends State<DashboardMailView> {
                             ),
                           ): Container(),
                         ],
-                      ),
+                      )
                     ],
                   ),
                   Padding(
@@ -157,7 +150,7 @@ class _DashboardMailViewState extends State<DashboardMailView> {
                               child: Column(
                                 children: <Widget>[
                                   Text(
-                                    'Campaigns',
+                                    'Contacts',
                                     style: TextStyle(
                                       fontSize: 10,
                                       fontWeight: FontWeight.w200,
@@ -182,32 +175,7 @@ class _DashboardMailViewState extends State<DashboardMailView> {
                               child: Column(
                                 children: <Widget>[
                                   Text(
-                                    'Mailings',
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w200,
-                                    ),
-                                  ),
-                                  Text(
-                                    '0',
-                                    style: TextStyle(
-                                      fontSize: 32,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              color: Colors.white24,
-                              width: 1,
-                              height: 50,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 4, right: 4),
-                              child: Column(
-                                children: <Widget>[
-                                  Text(
-                                    'Sales',
+                                    'Groups',
                                     style: TextStyle(
                                       fontSize: 10,
                                       fontWeight: FontWeight.w200,
@@ -237,7 +205,7 @@ class _DashboardMailViewState extends State<DashboardMailView> {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
-                            'New Campaign',
+                            'Add Contact',
                             softWrap: true,
                             style: TextStyle(
                                 color: Colors.white, fontSize: 16),
@@ -284,9 +252,9 @@ class _DashboardMailViewState extends State<DashboardMailView> {
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: NetworkImage('${Env.cdnIcon}icon-comerceos-mail-not-installed.png'),
-                            fit: BoxFit.contain),
+                      image: DecorationImage(
+                          image: NetworkImage('${Env.cdnIcon}icon-comerceos-mail-not-installed.png'),
+                          fit: BoxFit.contain),
                     ),
                   ),
                   SizedBox(height: 8),

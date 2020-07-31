@@ -1,68 +1,67 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:payever/commons/commons.dart';
+import 'package:payever/commons/models/app_widget.dart';
+import 'package:payever/commons/models/business_apps.dart';
+import 'package:payever/commons/models/models.dart';
 import 'package:payever/commons/utils/env.dart';
 import 'package:payever/commons/utils/translations.dart';
+import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/dashboard_option_cell.dart';
+import 'package:payever/shop/models/models.dart';
 
-import '../../../custom_elements/blur_effect_view.dart';
-
-
-class DashboardTransactionsView extends StatefulWidget {
+class DashboardShopView extends StatefulWidget {
   final VoidCallback onOpen;
   final BusinessApps businessApps;
   final AppWidget appWidget;
+  final List<ShopModel> shops;
+  final ShopModel shopModel;
   final bool isLoading;
-  final List<Day> lastMonth;
-  final List<Month> lastYear;
-  final List<double> monthlySum;
-  final double total;
-  final Function onTapGetStarted;
-  final Function onTapContinueSetup;
-  final Function onTapLearnMore;
+  final Function onTapEditShop;
   final List<NotificationModel> notifications;
   final Function openNotification;
   final Function deleteNotification;
 
-  DashboardTransactionsView({
+  DashboardShopView({
     this.onOpen,
     this.businessApps,
     this.appWidget,
-    this.total = 0,
-    this.isLoading = true,
-    this.lastMonth = const [],
-    this.lastYear = const [],
-    this.monthlySum = const [],
-    this.onTapGetStarted,
-    this.onTapContinueSetup,
-    this.onTapLearnMore,
+    this.shopModel,
+    this.shops = const [],
+    this.isLoading = false,
+    this.onTapEditShop,
     this.notifications = const [],
     this.openNotification,
     this.deleteNotification,
   });
   @override
-  _DashboardTransactionsViewState createState() => _DashboardTransactionsViewState();
+  _DashboardShopViewState createState() => _DashboardShopViewState();
 }
 
-class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
+class _DashboardShopViewState extends State<DashboardShopView> {
+  String imageBase = Env.storage + '/images/';
   bool isExpanded = false;
   @override
   Widget build(BuildContext context) {
-    String currency = '';
-    if (widget.lastYear.length > 0) {
-      NumberFormat format = NumberFormat();
-      currency = format.simpleCurrencySymbol(widget.lastYear.last.currency);
-
-      print('Last monthly => ${widget.lastYear.last.amount}');
+    List<ShopModel> shops = widget.shops;
+    String avatarName = '';
+    if (widget.shopModel != null) {
+      String name = widget.shopModel.name;
+      if (name.contains(' ')) {
+        avatarName = name.substring(0, 1);
+        avatarName = avatarName + name.split(' ')[1].substring(0, 1);
+      } else {
+        avatarName = name.substring(0, 1) + name.substring(name.length - 1);
+        avatarName = avatarName.toUpperCase();
+      }
     }
+
     if (widget.businessApps.setupStatus == 'completed') {
       return BlurEffectView(
-        padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
         child: Column(
           children: [
             Container(
-              padding: EdgeInsets.fromLTRB(14, 0, 14, 0),
+              padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
               child: Column(
                 children: [
                   Row(
@@ -74,9 +73,11 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                             width: 16,
                             height: 16,
                             decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    image: NetworkImage('${Env.cdnIcon}icons-apps-white/icon-apps-white-${widget.appWidget.type}.png'),
-                                    fit: BoxFit.fitWidth)),
+                              image: DecorationImage(
+                                image: NetworkImage('${Env.cdnIcon}icons-apps-white/icon-apps-white-shop.png'),
+                                fit: BoxFit.contain,
+                              ),
+                            ),
                           ),
                           SizedBox(width: 8,),
                           Text(
@@ -101,16 +102,17 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                               ),
                               child: Center(
                                 child: Text(
-                                  'Open',
+                                  Language.getCommerceOSStrings('actions.open'),
                                   style: TextStyle(
-                                    fontSize: 10,
-                                    color: Colors.white,
+                                      fontSize: 10,
+                                      color: Colors.white
                                   ),
                                 ),
                               ),
                             ),
                           ),
-                          widget.notifications.length > 0 ? SizedBox(width: 8): Container(),
+                          widget.notifications.length > 0 ?
+                          SizedBox(width: 8) : Container(),
                           widget.notifications.length > 0 ? Container(
                             height: 20,
                             width: 40,
@@ -161,54 +163,115 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                             ),
                           ): Container(),
                         ],
-                      )
+                      ),
                     ],
                   ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 8),
+                  ),
                   widget.isLoading ? Container(
-                    height: 64,
+                    height: 50,
                     child: Center(
-                      child: Container(
-                        width: 32,
-                        height: 32,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                        ),
-                      ),
+                      child: CircularProgressIndicator(),
                     ),
                   ):
-                  SizedBox(height: 8),
-                  !widget.isLoading ?  Row(
-                    children: [
-                      Icon(
-                        Icons.arrow_upward,
-                        color: Colors.white,
-                        size: 10,
-                      ),
-                      SizedBox(width: 4),
-                      Text(
-                        Language.getWidgetStrings('widgets.transactions.this-month'),
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ): Container(),
-                  !widget.isLoading ?  SizedBox(height: 8): Container(),
-                  widget.lastYear.length > 0 ?  Row(
-                    children: [
-                      Text(
-                        '${widget.lastYear.last.amount} $currency',
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w400,
-                        ),
+                  widget.shopModel != null
+                      ? (
+                      Row(
+                        children: <Widget>[
+                          // Shop View
+                          Expanded(
+                            flex: 1,
+                            child: Row(
+                              children: <Widget>[
+                                widget.shopModel.logo != null ?
+                                Container(
+                                  width: 50,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      image: DecorationImage(
+                                        image: NetworkImage('$imageBase${widget.shopModel.logo}'),
+                                        fit: BoxFit.cover,
+                                      )
+                                  ),
+                                ):
+                                Container(
+                                  child: CircleAvatar(
+                                    radius: 25,
+                                    backgroundColor: Colors.blueGrey.withOpacity(0.5),
+                                    child: Text(
+                                      avatarName,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 12),
+                                ),
+                                Expanded(
+                                  child: AutoSizeText(
+                                    widget.shopModel.name,
+                                    maxLines: 2,
+                                    minFontSize: 16,
+                                    maxFontSize: 24,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(left: 12),
+                          ),
+                          // Edit Button
+                          Expanded(
+                            flex: 1,
+                            child: MaterialButton(
+                              onPressed: widget.onTapEditShop,
+                              color: Colors.black26,
+                              height: 60,
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Container(
+                                height: 50,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.edit),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      'Edit',
+                                      softWrap: true,
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 16),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       )
-                    ],
-                  ): Container(),
-                  !widget.isLoading ? SizedBox(height: 20): Container(),
+                  ) : Container(
+                    alignment: Alignment.centerLeft,
+                    height: 50,
+                    child: Text(
+                      'You have no shops',
+                      style: TextStyle(
+                        color: Colors.white70,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -241,9 +304,9 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: NetworkImage('${Env.cdnIcon}icon-comerceos-${widget.appWidget.type}-not-installed.png'),
-                          fit: BoxFit.contain),
+                        image: DecorationImage(
+                            image: NetworkImage('${Env.cdnIcon}icon-comerceos-shop-not-installed.png'),
+                            fit: BoxFit.contain),
                     ),
                   ),
                   SizedBox(height: 8),
@@ -253,6 +316,14 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                         color: Colors.white,
                         fontSize: 16,
                         fontWeight: FontWeight.bold
+                    ),
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    Language.getWidgetStrings('widgets.store.install-app'),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 10,
                     ),
                   ),
                   SizedBox(height: 4),
@@ -272,9 +343,7 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                     flex: 1,
                     child: InkWell(
                       onTap: () {
-                        widget.businessApps.installed
-                            ? widget.onTapContinueSetup(widget.businessApps)
-                            : widget.onTapGetStarted(widget.businessApps);
+
                       },
                       child: Center(
                         child: Text(
@@ -294,7 +363,7 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                     flex: 1,
                     child: InkWell(
                       onTap: () {
-                        widget.onTapLearnMore(widget.businessApps);
+
                       },
                       child: Center(
                         child: Text(
@@ -311,9 +380,10 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
             )
           ],
         ),
-    );
+      );
     }
   }
+
   Widget _itemBuilderDDetails(BuildContext context, int index) {
     return DashboardOptionCell(
       notificationModel: widget.notifications[index],

@@ -7,14 +7,17 @@ import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
-import 'package:payever/commons/views/screens/dashboard/sub_view/dashboard_menu_view.dart';
+import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/connect/models/connect.dart';
 import 'package:payever/connect/views/connect_detail_screen.dart';
 import 'package:payever/connect/views/connect_setting_screen.dart';
 import 'package:payever/connect/widgets/connect_grid_item.dart';
 import 'package:payever/connect/widgets/connect_list_item.dart';
 import 'package:payever/connect/widgets/connect_top_button.dart';
+import 'package:payever/dashboard/sub_view/dashboard_menu_view.dart';
+import 'package:payever/login/login_page.dart';
 import 'package:payever/notifications/notifications_screen.dart';
+import 'package:payever/switcher/switcher_page.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

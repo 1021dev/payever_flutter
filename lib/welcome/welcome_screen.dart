@@ -8,9 +8,11 @@ import 'package:payever/blocs/welcome/welcome_bloc.dart';
 import 'package:payever/blocs/welcome/welcome_event.dart';
 import 'package:payever/blocs/welcome/welcome_state.dart';
 import 'package:payever/commons/commons.dart';
+import 'package:payever/login/login_page.dart';
 import 'package:payever/transactions/views/transactions_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 
 bool _isPortrait;
 bool _isTablet;

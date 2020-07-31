@@ -5,12 +5,10 @@ import 'package:payever/commons/models/business_apps.dart';
 import 'package:payever/commons/models/models.dart';
 import 'package:payever/commons/utils/env.dart';
 import 'package:payever/commons/utils/translations.dart';
+import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/dashboard_option_cell.dart';
 
-import '../../../custom_elements/blur_effect_view.dart';
-
-
-class DashboardCheckoutView extends StatefulWidget {
+class DashboardMailView extends StatefulWidget {
   final VoidCallback onOpen;
   final BusinessApps businessApps;
   final AppWidget appWidget;
@@ -18,7 +16,7 @@ class DashboardCheckoutView extends StatefulWidget {
   final Function openNotification;
   final Function deleteNotification;
 
-  DashboardCheckoutView({
+  DashboardMailView({
     this.onOpen,
     this.businessApps,
     this.appWidget,
@@ -27,10 +25,10 @@ class DashboardCheckoutView extends StatefulWidget {
     this.deleteNotification,
   });
   @override
-  _DashboardCheckoutViewState createState() => _DashboardCheckoutViewState();
+  _DashboardMailViewState createState() => _DashboardMailViewState();
 }
 
-class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
+class _DashboardMailViewState extends State<DashboardMailView> {
   bool isExpanded = false;
   @override
   Widget build(BuildContext context) {
@@ -54,7 +52,7 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                             height: 16,
                             decoration: BoxDecoration(
                                 image: DecorationImage(
-                                    image: NetworkImage('${Env.cdnIcon}icons-apps-white/icon-apps-white-${widget.appWidget.type}.png'),
+                                    image: NetworkImage('${Env.cdnIcon}icons-apps-white/icon-apps-white-mail.png'),
                                     fit: BoxFit.fitWidth)),
                           ),
                           SizedBox(width: 8,),
@@ -140,7 +138,7 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                             ),
                           ): Container(),
                         ],
-                      )
+                      ),
                     ],
                   ),
                   Padding(
@@ -149,65 +147,98 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                   Row(
                     children: [
                       Expanded(
-                        flex: 1,
-                        child: Container(
-                          child: InkWell(
-                            onTap: () {
-
-                            },
-                            child: Container(
-                              height: 60,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(6),
-                                  color: Colors.black26
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(Icons.local_grocery_store),
-                                  SizedBox(width: 8),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.only(left: 4, right: 4),
+                              child: Column(
+                                children: <Widget>[
                                   Text(
-                                    'Link',
-                                    softWrap: true,
+                                    'Campaigns',
                                     style: TextStyle(
-                                        color: Colors.white, fontSize: 16),
-                                  )
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w200,
+                                    ),
+                                  ),
+                                  Text(
+                                    '0',
+                                    style: TextStyle(
+                                      fontSize: 32,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
-                          ),
+                            Container(
+                              color: Colors.white24,
+                              width: 1,
+                              height: 50,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(left: 4, right: 4),
+                              child: Column(
+                                children: <Widget>[
+                                  Text(
+                                    'Mailings',
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w200,
+                                    ),
+                                  ),
+                                  Text(
+                                    '0',
+                                    style: TextStyle(
+                                      fontSize: 32,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              color: Colors.white24,
+                              width: 1,
+                              height: 50,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(left: 4, right: 4),
+                              child: Column(
+                                children: <Widget>[
+                                  Text(
+                                    'Sales',
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w200,
+                                    ),
+                                  ),
+                                  Text(
+                                    '0',
+                                    style: TextStyle(
+                                      fontSize: 32,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 12),
-                      ),
                       Expanded(
-                        flex: 1,
-                        child: Container(
-                          child: InkWell(
-                            onTap: () {
+                        child: MaterialButton(
+                          onPressed: () {
 
-                            },
-                            child: Container(
-                              height: 60,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(6),
-                                  color: Colors.black26
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(Icons.edit),
-                                  SizedBox(width: 8),
-                                  Text(
-                                    'Manage',
-                                    softWrap: true,
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 16),
-                                  )
-                                ],
-                              ),
-                            ),
+                          },
+                          color: Colors.black26,
+                          height: 60,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            'New Campaign',
+                            softWrap: true,
+                            style: TextStyle(
+                                color: Colors.white, fontSize: 16),
                           ),
                         ),
                       ),
@@ -223,8 +254,11 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
               Container(
                 height: 50.0 * widget.notifications.length,
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(6), bottomRight: Radius.circular(6)),
-                    color: Colors.black38
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(6),
+                    bottomRight: Radius.circular(6),
+                  ),
+                  color: Colors.black38,
                 ),
                 child: ListView.builder(
                   itemBuilder: _itemBuilderDDetails,
@@ -249,8 +283,8 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                     height: 40,
                     decoration: BoxDecoration(
                         image: DecorationImage(
-                            image: NetworkImage('${Env.cdnIcon}icon-comerceos-${widget.appWidget.type}-not-installed.png'),
-                            fit: BoxFit.fitWidth),
+                            image: NetworkImage('${Env.cdnIcon}icon-comerceos-mail-not-installed.png'),
+                            fit: BoxFit.contain),
                     ),
                   ),
                   SizedBox(height: 8),
@@ -264,7 +298,7 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                   ),
                   SizedBox(height: 4),
                   Text(
-                    Language.getWidgetStrings('widgets.checkout.actions.add-new'),
+                    Language.getWidgetStrings('widgets.${widget.appWidget.type}.install-app'),
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 10,
@@ -327,6 +361,7 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
       );
     }
   }
+
   Widget _itemBuilderDDetails(BuildContext context, int index) {
     return DashboardOptionCell(
       notificationModel: widget.notifications[index],
@@ -338,5 +373,4 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
       },
     );
   }
-
 }

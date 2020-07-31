@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import '../../../utils/utils.dart';
+import 'package:payever/commons/utils/common_utils.dart';
 
 enum LoadState { LOADED, NOT_LOADED }
 

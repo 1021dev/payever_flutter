@@ -2,8 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/models/app_widget.dart';
-
-import '../../../custom_elements/blur_effect_view.dart';
+import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 
 class DashboardStudioView extends StatefulWidget {
   final VoidCallback onOpen;

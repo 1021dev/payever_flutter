@@ -12,7 +12,9 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
+import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/contacts/models/model.dart';
+import 'package:payever/login/login_page.dart';
 import 'package:payever/pos/widgets/pos_top_button.dart';
 
 bool _isPortrait;

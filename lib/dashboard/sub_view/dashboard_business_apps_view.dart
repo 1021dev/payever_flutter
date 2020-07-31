@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/env.dart';
 import 'package:payever/commons/views/custom_elements/BusinessAppCell.dart';
-
-import '../../../custom_elements/blur_effect_view.dart';
+import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 
 class DashboardBusinessAppsView extends StatefulWidget {
   final List<BusinessApps> businessApps;
