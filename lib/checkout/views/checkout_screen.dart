@@ -297,13 +297,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     iconSize = _isTablet ? 120: 80;
     margin = _isTablet ? 24: 16;
     return Scaffold(
-//      backgroundColor: Colors.black,
+      backgroundColor: Colors.black,
       resizeToAvoidBottomPadding: false,
       appBar: _appBar(state),
       body: SafeArea(
         child: BackgroundBase(
           true,
-          backgroudColor: Color.fromRGBO(0, 0, 0, 0.75),
+          backgroudColor: Color.fromRGBO(20, 20, 0, 0.4),
           body: state.isLoading ?
           Center(
             child: CircularProgressIndicator(),
