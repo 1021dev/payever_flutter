@@ -5,6 +5,7 @@ class ConnectModel {
   String createdAt;
   bool installed;
   String updatedAt;
+  String businessId;
   ConnectIntegration integration;
   num __v;
   String id;
@@ -12,6 +13,7 @@ class ConnectModel {
   ConnectModel.toMap(dynamic obj) {
     createdAt = obj[GlobalUtils.DB_CONNECT_CREATED_AT];
     installed = obj[GlobalUtils.DB_CONNECT_INSTALLED];
+    businessId = obj['businessId'];
     updatedAt = obj[GlobalUtils.DB_CONNECT_UPDATED_AT];
     __v = obj[GlobalUtils.DB_CONNECT_V];
     id = obj[GlobalUtils.DB_CONNECT_ID];
