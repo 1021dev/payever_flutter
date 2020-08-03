@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/dashboard/dashboard_bloc.dart';
+import 'package:payever/checkout/views/workshop_screen.dart';
 import 'package:payever/checkout/widgets/checkout_top_button.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/translations.dart';
@@ -401,7 +402,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   Widget _getBody(CheckoutScreenState state) {
     switch (selectedIndex) {
       case 0:
-        return Container();
+        return WorkShopInitScreen();
       case 1:
         return Container();
       case 2:

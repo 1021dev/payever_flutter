@@ -55,3 +55,17 @@ class CheckoutTopButton extends StatelessWidget {
     return makeContent;
   }
 }
+
+class CheckOutPopupButton {
+  final String title;
+  final Color textColor;
+  final Function onTap;
+  final Widget icon;
+
+  CheckOutPopupButton({
+    this.title,
+    this.textColor = Colors.black,
+    this.onTap,
+    this.icon,
+  });
+}
