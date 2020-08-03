@@ -104,13 +104,19 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                 return _morePopup(context).map((CheckOutPopupButton item) {
                   return PopupMenuItem<CheckOutPopupButton>(
                     value: item,
-                    child: Text(
-                      item.title,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                      ),
+                    child: Row(
+                      children: <Widget>[
+                        item.icon,
+                        SizedBox(width: 8,),
+                        Text(
+                          item.title,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ],
                     ),
                   );
                 }).toList();
@@ -363,24 +369,44 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
     return [
       CheckOutPopupButton(
         title: 'Copy pay link',
+        icon: SvgPicture.asset(
+          'assets/images/pay_link.svg',
+          width: 16,
+          height: 16,
+        ),
         onTap: () async {
           setState(() {});
         },
       ),
       CheckOutPopupButton(
         title: 'Copy prefilled link',
+        icon: SvgPicture.asset(
+          'assets/images/prefilled_link.svg',
+          width: 16,
+          height: 16,
+        ),
         onTap: () async {
           setState(() {});
         },
       ),
       CheckOutPopupButton(
         title: 'E-mail prefilled link',
+        icon: SvgPicture.asset(
+          'assets/images/email_link.svg',
+          width: 16,
+          height: 16,
+        ),
         onTap: () async {
           setState(() {});
         },
       ),
       CheckOutPopupButton(
         title: 'Prefilled QR code',
+        icon: SvgPicture.asset(
+          'assets/images/prefilled_qr.svg',
+          width: 16,
+          height: 16,
+        ),
         onTap: () async {
           setState(() {});
         },

@@ -95,6 +95,7 @@ flutter:
     - assets/translations/pos/front_end/
     - assets/translations/pos/tpm/
     - assets/translations/welcome/
+    - assets/translations/checkout/
   fonts:
     - family: HelveticaNeue
       fonts:

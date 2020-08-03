@@ -322,6 +322,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   }
 
   Widget _topBar(CheckoutScreenState state) {
+    String defaultCheckoutTitle = '';
+    if (state.defaultCheckout != null) {
+      defaultCheckoutTitle = state.defaultCheckout.name;
+    }
     return Container(
       color: Color(0xFF212122),
       child: SingleChildScrollView(
@@ -331,7 +335,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             Row(
               children: <Widget>[
                 CheckoutTopButton(
-                  title: 'checkout',
+                  title: defaultCheckoutTitle,
                   selectedIndex: selectedIndex,
                   index: 0,
                   onTap: () {

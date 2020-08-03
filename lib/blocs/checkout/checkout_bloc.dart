@@ -103,7 +103,9 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
   }
 
   Stream<CheckoutScreenState> getPaymentData() async* {
-    yield state.copyWith(isLoading: true);
+    if (state.connects.length == 0) {
+      yield state.copyWith(isLoading: true);
+    }
     List<ConnectModel> integrations = [];
     dynamic integrationsResponse = await api.getCheckoutIntegrations(state.business, token);
     if (integrationsResponse is List) {
