@@ -71,7 +71,7 @@ class _SwitcherScreenState extends State<SwitcherScreen> {
           Navigator.pushReplacement(
               context,
               PageTransition(
-                child: DashboardScreenInit(),
+                child: DashboardScreenInit(refresh: true,),
                 type: PageTransitionType.fade,
               )
           );

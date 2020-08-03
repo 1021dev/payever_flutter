@@ -83,7 +83,7 @@ class _MyAppState extends State<MyApp> {
         },
         home: _loadCredentials.value
             ? Center(child: CircularProgressIndicator())
-            : _haveCredentials ? DashboardScreenInit() : LoginScreen(),
+            : _haveCredentials ? DashboardScreenInit(refresh: false,) : LoginScreen(),
       ),
     );
   }
@@ -97,6 +97,8 @@ class _MyAppState extends State<MyApp> {
     String rfToken = preferences.getString(GlobalUtils.REFRESH_TOKEN) ?? '';
     GlobalUtils.fingerprint = preferences.getString(GlobalUtils.FINGERPRINT) ?? fingerPrint;
     print('Refresh Token $rfToken');
+    print('Finger print ${GlobalUtils.fingerprint}');
+
     _loadCredentials.value = false;
     _haveCredentials = rfToken.isNotEmpty && bus.isNotEmpty;
   }

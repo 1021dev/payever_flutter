@@ -44,6 +44,8 @@ import 'sub_view/dashboard_tutorial_view.dart';
 
 class DashboardScreenInit extends StatelessWidget {
 
+  final bool refresh;
+  DashboardScreenInit({this.refresh = false});
   @override
   Widget build(BuildContext context) {
     GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context, listen: true);
@@ -54,7 +56,6 @@ class DashboardScreenInit extends StatelessWidget {
     );
   }
 }
-
 
 class DashboardScreen extends StatefulWidget {
   final String wallpaper;
@@ -81,13 +82,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     screenBloc = DashboardScreenBloc();
-    screenBloc.add(DashboardScreenInitEvent(wallpaper: widget.wallpaper));
+    screenBloc.add(DashboardScreenInitEvent(wallpaper: widget.wallpaper, isRefresh: widget.refresh));
     super.initState();
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     screenBloc.close();
     super.dispose();
   }

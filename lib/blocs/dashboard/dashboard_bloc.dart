@@ -25,7 +25,9 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
   @override
   Stream<DashboardScreenState> mapEventToState(DashboardScreenEvent event) async* {
     if (event is DashboardScreenInitEvent) {
-      yield* _checkVersion(event.wallpaper);
+      yield* _checkVersion(event.wallpaper, event.isRefresh);
+    } else if (event is DashboardScreenLoadDataEvent) {
+      yield* _fetchInitialData();
     } else if (event is FetchPosEvent) {
       yield* fetchPOSCard(event.business);
     } else if (event is FetchMonthlyEvent) {
@@ -45,7 +47,7 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
     }
   }
 
-  Stream<DashboardScreenState> _checkVersion(String wallpaper) async* {
+  Stream<DashboardScreenState> _checkVersion(String wallpaper, bool refresh) async* {
     yield state.copyWith(curWall: wallpaper);
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     String version = packageInfo.version;
@@ -53,7 +55,7 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
     if (environment is Map) {
       Env.map(environment);
     } else {
-      add(DashboardScreenInitEvent(wallpaper: wallpaper));
+      add(DashboardScreenInitEvent(wallpaper: wallpaper, isRefresh: true));
     }
     var v = await api.getVersion();
     Version vv = Version.map(v);
@@ -64,131 +66,79 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
     if (version.compareTo(vv.minVersion) < 0) {
       print('Not Supported Version');
     }else{
-      yield* loadData();
+      if (refresh) {
+        yield* loadData();
+      } else {
+        yield* _fetchInitialData();
+      }
     }
   }
 
-  Stream<DashboardScreenState> _loadUserData(var dataLoaded) async* {
-    if (dataLoaded != null) {
-      var data = json.decode(dataLoaded);
-      var responseMsg = data['responseMsg'];
-      switch (responseMsg) {
-        case 'refreshToken':
-          yield* _fetchInitialDataRenew(data['token'], true);
-          break;
-        case 'refreshTokenLogin':
-          yield* _fetchInitialDataRenew(data['token'], true);
-          break;
-        case 'error':
-          Future.delayed(Duration(milliseconds: 1500)).then((value) async => loadData());
-          break;
-        case 'goToLogin':
+  Stream<DashboardScreenState> _reLogin() async* {
+    var preferences = await SharedPreferences.getInstance();
+    if (DateTime.now().difference(DateTime.parse(preferences.getString(GlobalUtils.LAST_OPEN))).inHours < 720) {
+      try {
+        var refreshTokenLogin = await api.login(
+          preferences.getString(GlobalUtils.EMAIL),
+          preferences.getString(GlobalUtils.PASSWORD),
+        );
+        Token tokenData = Token.map(refreshTokenLogin);
+
+        preferences.setString(GlobalUtils.TOKEN, tokenData.accessToken);
+        preferences.setString(
+            GlobalUtils.REFRESH_TOKEN, tokenData.refreshToken);
+        preferences.setString(GlobalUtils.LAST_OPEN, DateTime.now().toString());
+        print('REFRESH TOKEN = ${tokenData.refreshToken}');
+
+        GlobalUtils.activeToken = tokenData;
+        yield* _fetchInitialData();
+      } catch (error) {
+        if (error.toString().contains('SocketException')) {
+          Future.delayed(Duration(milliseconds: 1500)).then((value) async =>
+              _reLogin());
+        } else {
           yield DashboardScreenLogout();
-          break;
-        default:
-          break;
+        }
       }
+    } else {
+      yield DashboardScreenLogout();
     }
   }
 
   Stream<DashboardScreenState> loadData() async* {
     var preferences = await SharedPreferences.getInstance();
-    print(Measurements.parseJwt(preferences.getString(GlobalUtils.REFRESH_TOKEN))['exp'] * 1000);
-    if (DateTime.now().difference(DateTime.fromMillisecondsSinceEpoch(Measurements.parseJwt(preferences
-            .getString(GlobalUtils.REFRESH_TOKEN))['exp'] * 1000)).inHours < 0) {
+    String rfTokenString = preferences.getString(GlobalUtils.REFRESH_TOKEN) ?? '';
+    dynamic interval = Measurements.parseJwt(rfTokenString)['exp'] * 1000;
+    if (DateTime.now().difference(DateTime.fromMillisecondsSinceEpoch(interval)).inHours < 1) {
       try {
-        var refreshToken = await api.refreshToken(
-          preferences.getString(GlobalUtils.REFRESH_TOKEN),
+        dynamic refreshToken = await api.refreshToken(
+          rfTokenString,
           preferences.getString(GlobalUtils.FINGERPRINT),
         );
         if (refreshToken != null) {
-          yield* _loadUserData(
-              json.encode(
-                  {
-                    'responseMsg': 'refreshToken',
-                    'token': refreshToken,
-                    'renew': true,
-                  }
-              )
-          );
+          if (refreshToken is Map) {
+            Token token = Token.map(refreshToken);
+            yield* _fetchInitialDataRenew(token, true);
+          } else {
+            yield* _reLogin();
+          }
         } else {
-          yield* _loadUserData(
-              json.encode(
-                  {
-                    'responseMsg': 'error',
-                    'token': '',
-                    'renew': false,
-                  }
-              )
-          )
-          ;
+          yield* _reLogin();
         }
       } catch (e) {
         print('Refresh Token Error = > $e');
         if (e.toString().contains('SocketException')) {
-          yield* _loadUserData(null);
+          yield* loadData();
         } else {
-          yield* _loadUserData(
-              json.encode(
-                  {
-                    'responseMsg': 'goToLogin',
-                    'token': '',
-                    'renew': false,
-                  }
-              )
-          );
+          yield* _reLogin();
         }
       }
     } else {
-      if (DateTime.now().difference(
-          DateTime.parse(preferences.getString(GlobalUtils.LAST_OPEN))).inHours < 720) {
-        try {
-          var refreshTokenLogin = await api.login(
-              preferences.getString(GlobalUtils.EMAIL),
-              preferences.getString(GlobalUtils.PASSWORD),
-//              preferences.getString(GlobalUtils.fingerprint),
-          );
-          if (refreshTokenLogin != null) {
-            yield* _loadUserData(
-                json.encode(
-                    {
-                      'responseMsg': 'refreshTokenLogin',
-                      'token': refreshTokenLogin,
-                      'renew': false,
-                    }
-                )
-            );
-          } else {
-            yield* _loadUserData(
-                json.encode(
-                    {
-                      'responseMsg': 'error',
-                      'token': '',
-                      'renew': false,
-                    }
-                )
-            );
-          }
-        } catch (e) {
-          if (e.toString().contains('SocketException')) {
-            yield* _loadUserData(null);
-          } else {
-            yield* _loadUserData(
-                json.encode(
-                    {
-                      'responseMsg': 'goToLogin',
-                      'token': '',
-                      'renew': false,
-                    }
-                )
-            );
-          }
-        }
-      }
+      yield* _reLogin();
     }
   }
 
-  Stream<DashboardScreenState> _fetchInitialDataRenew(dynamic token, bool renew) async* {
+  Stream<DashboardScreenState> _fetchInitialData() async* {
     List<BusinessApps> businessWidgets = [];
     List<AppWidget> widgetApps = [];
     List<Business> businesses = [];
@@ -196,17 +146,10 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
     FetchWallpaper fetchWallpaper;
     String language;
     String currentWallpaper;
-
-    var _token = renew ? Token.map(token) : token;
-    GlobalUtils.activeToken = _token;
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    if (!renew) {
-      GlobalUtils.activeToken.refreshToken = sharedPreferences.getString(GlobalUtils.REFRESH_TOKEN);
-    }
-    sharedPreferences.setString(GlobalUtils.TOKEN, GlobalUtils.activeToken.accessToken);
-    sharedPreferences.setString(GlobalUtils.REFRESH_TOKEN, GlobalUtils.activeToken.refreshToken);
-    sharedPreferences.setString(GlobalUtils.LAST_OPEN, DateTime.now().toString());
-    String accessToken = GlobalUtils.activeToken.accessToken;
+    String refreshToken = sharedPreferences.getString(GlobalUtils.REFRESH_TOKEN) ?? '';
+    String accessToken = sharedPreferences.getString(GlobalUtils.TOKEN) ?? '';
+    GlobalUtils.activeToken = Token(accessToken: accessToken, refreshToken: refreshToken);
 
     dynamic user = await api.getUser(accessToken);
     User tempUser = User.map(user);
@@ -268,6 +211,20 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
     );
 
     add(FetchMonthlyEvent(business: activeBusiness));
+  }
+
+  Stream<DashboardScreenState> _fetchInitialDataRenew(dynamic token, bool renew) async* {
+
+    var _token = renew ? Token.map(token) : token;
+    GlobalUtils.activeToken = _token;
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    if (!renew) {
+      GlobalUtils.activeToken.refreshToken = sharedPreferences.getString(GlobalUtils.REFRESH_TOKEN);
+    }
+    sharedPreferences.setString(GlobalUtils.TOKEN, GlobalUtils.activeToken.accessToken);
+    sharedPreferences.setString(GlobalUtils.REFRESH_TOKEN, GlobalUtils.activeToken.refreshToken);
+    sharedPreferences.setString(GlobalUtils.LAST_OPEN, DateTime.now().toString());
+    add(DashboardScreenLoadDataEvent());
   }
 
   Stream<DashboardScreenState> fetchPOSCard(Business activeBusiness) async* {

@@ -11,13 +11,17 @@ abstract class DashboardScreenEvent extends Equatable {
 class DashboardScreenInitEvent extends DashboardScreenEvent {
 
   final String wallpaper;
-  DashboardScreenInitEvent({this.wallpaper});
+  final bool isRefresh;
+  DashboardScreenInitEvent({this.wallpaper, this.isRefresh = false});
 
   @override
   List<Object> get props => [
     this.wallpaper,
+    this.isRefresh,
   ];
 }
+
+class DashboardScreenLoadDataEvent extends DashboardScreenEvent {}
 
 class FetchPosEvent extends DashboardScreenEvent {
   final Business business;

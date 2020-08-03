@@ -4,6 +4,11 @@ class Token {
   String accessToken;
   String refreshToken;
 
+  Token({
+    this.accessToken,
+    this.refreshToken,
+  });
+
   Token.map(dynamic obj) {
     this.accessToken = obj[GlobalUtils.DB_TOKEN_ACC];
     this.refreshToken = obj[GlobalUtils.DB_TOKEN_RFS];
