@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/checkout/models/models.dart';
+import 'package:payever/checkout/views/checkout_connect_screen.dart';
 import 'package:payever/checkout/widgets/checkout_top_button.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
@@ -13,10 +15,18 @@ class PaymentOptionsScreen extends StatefulWidget {
 
   final List<ConnectModel> connects;
   final List<IntegrationModel> integrations;
+  final Function onTapAdd;
+  final Function onTapOpen;
+  final Function onTapInstall;
+  final Function onTapUninstall;
 
   PaymentOptionsScreen({
     this.connects = const [],
     this.integrations = const [],
+    this.onTapAdd,
+    this.onTapOpen,
+    this.onTapInstall,
+    this.onTapUninstall,
   });
 
   @override
@@ -38,13 +48,18 @@ class _PaymentOptionsScreenState extends State<PaymentOptionsScreen> {
                 if (index == widget.integrations.length) {
                   return Container(
                     height: 50,
-                    padding: EdgeInsets.only(left: 16),
-                    child: Row(
-                      children: <Widget>[
-                        Text(
-                          '+ Add',
+                    child: SizedBox.expand(
+                      child: MaterialButton(
+                        onPressed: widget.onTapAdd,
+                        child: Row(
+                          children: <Widget>[
+                            Text(
+                              '+ Add',
+                              textAlign: TextAlign.start,
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   );
                 } else {
@@ -83,7 +98,7 @@ class _PaymentOptionsScreenState extends State<PaymentOptionsScreen> {
                                   ),
                                   MaterialButton(
                                     onPressed: () {
-
+                                      widget.onTapOpen(connectModel);
                                     },
                                     color: Colors.black38,
                                     elevation: 0,
