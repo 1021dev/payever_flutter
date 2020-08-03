@@ -2,16 +2,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/checkout/widgets/checkout_top_button.dart';
+import 'package:payever/commons/commons.dart';
 class WorkShopInitScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WorkshopScreen();
   }
 }
+
 class WorkshopScreen extends StatefulWidget {
   @override
   _WorkshopScreenState createState() => _WorkshopScreenState();
 }
+
 class _WorkshopScreenState extends State<WorkshopScreen> {
   bool openAdditional = true;
   List<String> titles = [
@@ -31,7 +34,12 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
     return Container(
       color: Colors.white,
       child: Column(
-        children: <Widget>[_topBar(), Expanded(child: _body())],
+        children: <Widget>[
+          _topBar(),
+          Expanded(
+            child: _body(),
+          ),
+        ],
       ),
     );
   }
@@ -46,7 +54,10 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
           ),
           Text(
             'Your checkout',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w400,
+            ),
           ),
           Spacer(),
           InkWell(
@@ -55,7 +66,9 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
               height: 30,
               width: 80,
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15), color: Colors.white),
+                borderRadius: BorderRadius.circular(15),
+                color: Colors.white,
+              ),
               child: Center(
                 child: Text(
                   'Open',
@@ -109,6 +122,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
       ),
     );
   }
+
   Widget _body() {
     return Padding(
       padding: const EdgeInsets.all(15),
@@ -129,7 +143,10 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                     ),
                     Text(
                       'Payever',
-                      style: TextStyle(color: Colors.black, fontSize: 24),
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 24,
+                      ),
                     ),
                     Spacer(),
                     OutlineButton(
@@ -162,8 +179,11 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         Text(
-                          'BESTELLUNG',
-                          style: TextStyle(color: Colors.black54, fontSize: 16),
+                          Language.getCheckoutStrings('checkout_order_summary.title'),
+                          style: TextStyle(
+                            color: Colors.black54,
+                            fontSize: 16,
+                          ),
                         ),
                         Spacer(),
                         IconButton(
@@ -181,7 +201,10 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                       ],
                     ),
                   ),
-                  Visibility(visible: openAdditional, child: _additionalView()),
+                  Visibility(
+                    visible: openAdditional,
+                    child: _additionalView(),
+                  ),
                   Divider(
                     height: 1,
                     color: Colors.black54,
@@ -199,7 +222,10 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                               width: 100,
                               child: Text(
                                 titles[index],
-                                style: TextStyle(color: Colors.black54, fontSize: 16),
+                                style: TextStyle(
+                                  color: Colors.black54,
+                                  fontSize: 16,
+                                ),
                               ),
                             ),
                             SizedBox(width: 10),
@@ -233,6 +259,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
       ),
     );
   }
+
   Widget _additionalView() {
     return Column(
       children: <Widget>[
@@ -249,10 +276,20 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Text('US\$', style: TextStyle(color: Colors.black54, fontSize: 16, fontWeight: FontWeight.w400),),
+                    Text('US\$',
+                      style: TextStyle(
+                        color: Colors.black54,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
                     Expanded(
                       child: TextFormField(
-                        style: TextStyle(fontSize: 16, color:Colors.black54, fontWeight: FontWeight.w400),
+                        style: TextStyle(
+                          fontSize: 16,
+                          color:Colors.black54,
+                          fontWeight: FontWeight.w400,
+                        ),
                         onChanged: (val) {
                         },
                         initialValue: '',
@@ -274,7 +311,11 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
               Container(
                 height: 60,
                 child: TextFormField(
-                  style: TextStyle(fontSize: 16, color:Colors.black54, fontWeight: FontWeight.w400),
+                  style: TextStyle(
+                    fontSize: 16,
+                    color:Colors.black54,
+                    fontWeight: FontWeight.w400,
+                  ),
                   onChanged: (val) {
                   },
                   initialValue: '',
@@ -300,7 +341,9 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
           child: Container(
             height: 50,
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(4), color: Colors.black87),
+              borderRadius: BorderRadius.circular(4),
+              color: Colors.black87,
+            ),
             child: Center(
               child: Text(
                 'Next Step',

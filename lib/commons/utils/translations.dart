@@ -111,6 +111,14 @@ class Language {
       print(onError);
     });
 
+    await DefaultAssetBundle.of(context)
+        .loadString("assets/translations/checkout/$language.json", cache: true)
+        .then((value) {
+      checkoutStrings = JsonDecoder().convert(value);
+    }).catchError((onError) {
+      print(onError);
+    });
+
     return await DefaultAssetBundle.of(context)
         .loadString("assets/translations/custom/$language.json", cache: true)
         .then((value) {
@@ -135,6 +143,7 @@ class Language {
   static dynamic posConnectStrings = Map();
   static dynamic posTpmStrings = Map();
   static dynamic welcomeStrings = Map();
+  static dynamic checkoutStrings = Map();
 
   static String getWidgetStrings(String tag) => widgetStrings[tag] ?? tag;
 
@@ -167,6 +176,8 @@ class Language {
   static String getPosConnectStrings(String tag) => posConnectStrings[tag] ?? tag;
 
   static String getWelcomeStrings(String tag) => welcomeStrings[tag] ?? tag;
+
+  static String getCheckoutStrings(String tag) => checkoutStrings[tag] ?? tag;
 
   static String language;
 
