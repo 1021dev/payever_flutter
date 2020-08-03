@@ -306,10 +306,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         child: BackgroundBase(
           true,
           backgroudColor: Color.fromRGBO(20, 20, 0, 0.4),
-          body: state.isLoading ?
-          Center(
-            child: CircularProgressIndicator(),
-          ): Column(
+          body: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
@@ -413,11 +410,15 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   Widget _getBody(CheckoutScreenState state) {
     switch (selectedIndex) {
       case 0:
-        return WorkShopInitScreen();
+        return state.isLoading ?
+        Center(
+          child: CircularProgressIndicator(),
+        ) : WorkShopInitScreen();
       case 1:
         return PaymentOptionsScreen(
           connects: state.connects,
           integrations: state.checkoutConnections,
+          isLoading: state.isLoading,
           onTapAdd: () {
             Navigator.push(
               context,
@@ -425,6 +426,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 child: CheckoutConnectScreen(
                   checkoutScreenBloc: screenBloc,
                   business: state.business,
+                  category: 'payments',
                 ),
                 type: PageTransitionType.fade,
                 duration: Duration(milliseconds: 500),

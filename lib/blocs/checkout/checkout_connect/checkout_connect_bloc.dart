@@ -19,7 +19,7 @@ class CheckoutConnectScreenBloc extends Bloc<CheckoutConnectScreenEvent, Checkou
   Stream<CheckoutConnectScreenState> mapEventToState(
       CheckoutConnectScreenEvent event) async* {
     if (event is CheckoutConnectScreenInitEvent) {
-      yield state.copyWith(business: event.business);
+      yield state.copyWith(business: event.business, category: event.category);
       yield* fetchInitialData(event.business);
     }
   }
@@ -53,7 +53,7 @@ class CheckoutConnectScreenBloc extends Bloc<CheckoutConnectScreenEvent, Checkou
     }
     List<ConnectModel> connectInstallations = [];
     dynamic categoryResponse = await api.getConnectIntegrationByCategory(
-        token, state.business, 'payments');
+        token, state.business, state.category);
     if (categoryResponse is List) {
       categoryResponse.forEach((element) {
         connectInstallations.add(ConnectModel.toMap(element));
@@ -64,7 +64,7 @@ class CheckoutConnectScreenBloc extends Bloc<CheckoutConnectScreenEvent, Checkou
       isLoading: false,
       paymentVariants: paymentVariants,
       paymentOptions: paymentOptions,
-
+      connectInstallations: connectInstallations,
     );
   }
 }

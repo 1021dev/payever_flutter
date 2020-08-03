@@ -9,13 +9,16 @@ abstract class CheckoutConnectScreenEvent extends Equatable {
 
 class CheckoutConnectScreenInitEvent extends CheckoutConnectScreenEvent {
   final String business;
+  final String category;
 
   CheckoutConnectScreenInitEvent({
     this.business,
+    this.category,
   });
 
   @override
   List<Object> get props => [
     this.business,
+    this.category,
   ];
 }

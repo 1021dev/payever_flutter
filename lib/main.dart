@@ -96,6 +96,7 @@ class _MyAppState extends State<MyApp> {
     String bus = preferences.getString(GlobalUtils.BUSINESS) ?? '';
     String rfToken = preferences.getString(GlobalUtils.REFRESH_TOKEN) ?? '';
     GlobalUtils.fingerprint = preferences.getString(GlobalUtils.FINGERPRINT) ?? fingerPrint;
+    print('Refresh Token $rfToken');
     _loadCredentials.value = false;
     _haveCredentials = rfToken.isNotEmpty && bus.isNotEmpty;
   }

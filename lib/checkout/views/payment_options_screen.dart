@@ -19,6 +19,7 @@ class PaymentOptionsScreen extends StatefulWidget {
   final Function onTapOpen;
   final Function onTapInstall;
   final Function onTapUninstall;
+  final bool isLoading;
 
   PaymentOptionsScreen({
     this.connects = const [],
@@ -27,6 +28,7 @@ class PaymentOptionsScreen extends StatefulWidget {
     this.onTapOpen,
     this.onTapInstall,
     this.onTapUninstall,
+    this.isLoading = false,
   });
 
   @override
@@ -42,7 +44,19 @@ class _PaymentOptionsScreenState extends State<PaymentOptionsScreen> {
       padding: EdgeInsets.all(16),
       child: Center(
         child: BlurEffectView(
-          child: SingleChildScrollView(
+          child: widget.isLoading ?
+          Wrap(
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.all(8),
+                child: Center(
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                  ),
+                ),
+              ),
+            ],
+          ) : SingleChildScrollView(
             child: Column(
               children: List.generate(widget.integrations.length + 1, (index) {
                 if (index == widget.integrations.length) {
