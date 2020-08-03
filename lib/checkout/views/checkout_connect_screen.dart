@@ -148,7 +148,91 @@ class _CheckoutConnectScreenState extends State<CheckoutConnectScreen> {
   }
 
   Widget _getBody(CheckoutConnectScreenState state) {
+    List<ConnectModel> connects = [];
+    if (state.connectInstallations.length == 0) {
       return Container();
-  }
+    }
 
+    connects.addAll(state.connectInstallations);
+    connects.removeWhere((element) {
+      bool installed = false;
+      for (IntegrationModel integration in widget.checkoutScreenBloc.state.checkoutConnections) {
+        if (integration.integration == element.integration.name) {
+          installed = true;
+        }
+      }
+      return installed;
+    });
+    return Container(
+      width: Measurements.width,
+      padding: EdgeInsets.all(16),
+      child: Center(
+        child: BlurEffectView(
+          child: Column(
+            children: <Widget>[
+              ListView.separated(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  ConnectModel connectModel = connects[index];
+                  return Container(
+                    height: 50,
+                    padding: EdgeInsets.only(left: 16, right: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Flexible(
+                          child: Text(
+                            Language.getPosConnectStrings(connectModel.integration.displayOptions.title ?? ''),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontFamily: 'Helvetica Neue',
+                            ),
+                          ),
+                        ),
+                        Row(
+                          children: <Widget>[
+                            CupertinoSwitch(
+                              value: true,
+                              onChanged: (val) {
+
+                              },
+                            ),
+                            MaterialButton(
+                              onPressed: () {
+                              },
+                              color: Colors.black38,
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              height: 24,
+                              minWidth: 0,
+                              padding: EdgeInsets.only(left: 8, right: 8),
+                              child: Text(
+                                Language.getConnectStrings('actions.open'),
+                              ),
+                            )
+                          ],
+                        )
+                      ],
+                    ),
+                  );
+                },
+                separatorBuilder: (context, index) {
+                  return Divider(
+                    height: 0,
+                    thickness: 0.5,
+                    color: Colors.white70,
+                  );
+                },
+                itemCount: connects.length,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }

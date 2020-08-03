@@ -74,7 +74,7 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
       var responseMsg = data['responseMsg'];
       switch (responseMsg) {
         case 'refreshToken':
-          yield* _fetchInitialDataRenew(data['token'], false);
+          yield* _fetchInitialDataRenew(data['token'], true);
           break;
         case 'refreshTokenLogin':
           yield* _fetchInitialDataRenew(data['token'], true);
@@ -107,7 +107,7 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
                   {
                     'responseMsg': 'refreshToken',
                     'token': refreshToken,
-                    'renew': false,
+                    'renew': true,
                   }
               )
           );
@@ -197,7 +197,7 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
     String language;
     String currentWallpaper;
 
-    var _token = !renew ? Token.map(token) : token;
+    var _token = renew ? Token.map(token) : token;
     GlobalUtils.activeToken = _token;
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     if (!renew) {

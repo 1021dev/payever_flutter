@@ -51,11 +51,20 @@ class CheckoutConnectScreenBloc extends Bloc<CheckoutConnectScreenEvent, Checkou
         return;
       });
     }
+    List<ConnectModel> connectInstallations = [];
+    dynamic categoryResponse = await api.getConnectIntegrationByCategory(
+        token, state.business, 'payments');
+    if (categoryResponse is List) {
+      categoryResponse.forEach((element) {
+        connectInstallations.add(ConnectModel.toMap(element));
+      });
+    }
 
     yield state.copyWith(
       isLoading: false,
       paymentVariants: paymentVariants,
       paymentOptions: paymentOptions,
+
     );
   }
 }
