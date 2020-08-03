@@ -1,29 +1,40 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/checkout/widgets/checkout_top_button.dart';
-
 class WorkShopInitScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WorkshopScreen();
   }
 }
-
 class WorkshopScreen extends StatefulWidget {
   @override
   _WorkshopScreenState createState() => _WorkshopScreenState();
 }
-
 class _WorkshopScreenState extends State<WorkshopScreen> {
   bool openAdditional = true;
-
+  List<String> titles = [
+    'ACCOUNT',
+    'BILLING & SHIPPING',
+    'ELEGIR METODO DE PAGO',
+    'PAYMENT'
+  ];
+  List<String> values = [
+    'Login or enter your email',
+    'Add your billing and shipping address',
+    'Choose payment option',
+    'Your payment option'
+  ];
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[_topBar(), Expanded(child: _body())],
+    return Container(
+      color: Colors.white,
+      child: Column(
+        children: <Widget>[_topBar(), Expanded(child: _body())],
+      ),
     );
   }
-
   Widget _topBar() {
     return Container(
       height: 50,
@@ -56,17 +67,19 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
               ),
             ),
           ),
-          SizedBox(
-            width: 10,
-          ),
+          SizedBox(width: 10,),
           Container(
+            height: 30,
             alignment: Alignment.centerRight,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+            ),
             child: PopupMenuButton<CheckOutPopupButton>(
-              child: Padding(
-                padding: EdgeInsets.all(8),
-                child: Icon(
-                  Icons.more_horiz,
-                ),
+              child: Icon(
+                Icons.more_horiz,
+                color: Colors.black,
+                size: 30,
               ),
               offset: Offset(0, 100),
               onSelected: (CheckOutPopupButton item) => item.onTap(),
@@ -91,21 +104,17 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
               },
             ),
           ),
-          SizedBox(
-            width: 10,
-          ),
+          SizedBox(width: 10,),
         ],
       ),
     );
   }
-
   Widget _body() {
     return Padding(
       padding: const EdgeInsets.all(15),
       child: Container(
         color: Colors.white,
-        child: Padding(
-          padding: const EdgeInsets.all(18.0),
+        child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
               Container(
@@ -143,18 +152,18 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
               ),
               Divider(
                 height: 2,
-                color: Colors.black26,
+                color: Colors.black54,
               ),
-              Expanded(
-                  child: Column(
+              Column(
                 children: <Widget>[
                   Container(
                     height: 60,
                     child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         Text(
                           'BESTELLUNG',
-                          style: TextStyle(color: Colors.black38, fontSize: 16),
+                          style: TextStyle(color: Colors.black54, fontSize: 16),
                         ),
                         Spacer(),
                         IconButton(
@@ -171,16 +180,142 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                             })
                       ],
                     ),
+                  ),
+                  Visibility(visible: openAdditional, child: _additionalView()),
+                  Divider(
+                    height: 1,
+                    color: Colors.black54,
+                  ),
+                  ListView.separated(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        height: 100,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Container(
+                              width: 100,
+                              child: Text(
+                                titles[index],
+                                style: TextStyle(color: Colors.black54, fontSize: 16),
+                              ),
+                            ),
+                            SizedBox(width: 10),
+                            Expanded(
+                              child: Text(
+                                values[index],
+                                style: TextStyle(
+                                  color: Colors.black87,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w300,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      );
+                    },
+                    itemCount: titles.length,
+                    separatorBuilder: (context, index) {
+                      return Divider(
+                        height: 1,
+                        color: Colors.black54,
+                      );
+                    },
                   )
                 ],
-              )),
+              ),
             ],
           ),
         ),
       ),
     );
   }
-
+  Widget _additionalView() {
+    return Column(
+      children: <Widget>[
+        Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.black38),
+            borderRadius: BorderRadius.all(Radius.circular(4)),
+          ),
+          child: Column(
+            children: <Widget>[
+              Container(
+                height: 60,
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Text('US\$', style: TextStyle(color: Colors.black54, fontSize: 16, fontWeight: FontWeight.w400),),
+                    Expanded(
+                      child: TextFormField(
+                        style: TextStyle(fontSize: 16, color:Colors.black54, fontWeight: FontWeight.w400),
+                        onChanged: (val) {
+                        },
+                        initialValue: '',
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.only(left: 16, right: 16),
+                          labelText: 'Amount',
+                          labelStyle: TextStyle(
+                            color: Colors.grey,
+                          ),
+                          enabledBorder: InputBorder.none,
+                        ),
+                        keyboardType: TextInputType.text,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Divider(height: 1,color: Colors.black54,),
+              Container(
+                height: 60,
+                child: TextFormField(
+                  style: TextStyle(fontSize: 16, color:Colors.black54, fontWeight: FontWeight.w400),
+                  onChanged: (val) {
+                  },
+                  initialValue: '',
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.only(left: 16, right: 16),
+                    labelText: 'Reference',
+                    labelStyle: TextStyle(
+                      color: Colors.grey,
+                    ),
+                    enabledBorder: InputBorder.none,
+                  ),
+                  keyboardType: TextInputType.text,
+                ),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(
+          height: 20,
+        ),
+        InkWell(
+          onTap: () {},
+          child: Container(
+            height: 50,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(4), color: Colors.black87),
+            child: Center(
+              child: Text(
+                'Next Step',
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
   List<CheckOutPopupButton> _morePopup(BuildContext context) {
     return [
       CheckOutPopupButton(
