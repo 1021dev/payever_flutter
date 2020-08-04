@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:package_info/package_info.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/blocs/login/login.dart';
@@ -11,6 +12,7 @@ import '../bloc.dart';
 class LoginScreenBloc extends Bloc<LoginScreenEvent, LoginScreenState> {
   LoginScreenBloc();
   ApiService api = ApiService();
+  final _storage = FlutterSecureStorage();
 
   @override
   LoginScreenState get initialState => LoginScreenState();
@@ -49,12 +51,13 @@ class LoginScreenBloc extends Bloc<LoginScreenEvent, LoginScreenState> {
         Token tokenData = Token.map(loginObj);
 
         final preferences = await SharedPreferences.getInstance();
-        preferences.setString(GlobalUtils.EMAIL, email);
-        preferences.setString(GlobalUtils.PASSWORD, password);
-        preferences.setString(GlobalUtils.TOKEN, tokenData.accessToken);
-        preferences.setString(GlobalUtils.REFRESH_TOKEN, tokenData.refreshToken);
         preferences.setString(GlobalUtils.LAST_OPEN, DateTime.now().toString());
         print('REFRESH TOKEN = ${tokenData.refreshToken}');
+
+        await _storage.write(key: GlobalUtils.EMAIL, value: email);
+        await _storage.write(key: GlobalUtils.PASSWORD, value: password);
+        await _storage.write(key: GlobalUtils.REFRESH_TOKEN, value: tokenData.refreshToken);
+        await _storage.write(key: GlobalUtils.TOKEN, value: tokenData.accessToken);
 
         GlobalUtils.activeToken = tokenData;
 

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
@@ -115,7 +116,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         builder: (BuildContext context, CheckoutScreenState state) {
           return DashboardMenuView(
             innerDrawerKey: _innerDrawerKey,
-            onLogout: () {
+            onLogout: () async* {
+              FlutterSecureStorage storage = FlutterSecureStorage();
+              await storage.deleteAll();
               SharedPreferences.getInstance().then((p) {
                 p.setString(GlobalUtils.BUSINESS, '');
                 p.setString(GlobalUtils.EMAIL, '');

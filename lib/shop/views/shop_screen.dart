@@ -5,6 +5,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
@@ -207,7 +208,9 @@ class _ShopScreenState extends State<ShopScreen> {
         builder: (BuildContext context, ShopScreenState state) {
           return DashboardMenuView(
             innerDrawerKey: _innerDrawerKey,
-            onLogout: () {
+            onLogout: () async* {
+              FlutterSecureStorage storage = FlutterSecureStorage();
+              await storage.deleteAll();
               SharedPreferences.getInstance().then((p) {
                 p.setString(GlobalUtils.BUSINESS, '');
                 p.setString(GlobalUtils.EMAIL, '');

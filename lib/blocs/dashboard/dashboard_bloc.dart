@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:package_info/package_info.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/blocs/dashboard/dashboard.dart';
@@ -18,6 +19,7 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
   DashboardScreenBloc();
   ApiService api = ApiService();
   String uiKit = '${Env.commerceOs}/assets/ui-kit/icons-png/';
+  final _storage = FlutterSecureStorage();
 
   @override
   DashboardScreenState get initialState => DashboardScreenState();
@@ -84,11 +86,10 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
         );
         Token tokenData = Token.map(refreshTokenLogin);
 
-        preferences.setString(GlobalUtils.TOKEN, tokenData.accessToken);
-        preferences.setString(
-            GlobalUtils.REFRESH_TOKEN, tokenData.refreshToken);
         preferences.setString(GlobalUtils.LAST_OPEN, DateTime.now().toString());
         print('REFRESH TOKEN = ${tokenData.refreshToken}');
+        await _storage.write(key: GlobalUtils.REFRESH_TOKEN, value: tokenData.refreshToken);
+        await _storage.write(key: GlobalUtils.TOKEN, value: tokenData.accessToken);
 
         GlobalUtils.activeToken = tokenData;
         yield* _fetchInitialData();
@@ -97,17 +98,19 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
           Future.delayed(Duration(milliseconds: 1500)).then((value) async =>
               _reLogin());
         } else {
+          await _storage.deleteAll();
           yield DashboardScreenLogout();
         }
       }
     } else {
+      await _storage.deleteAll();
       yield DashboardScreenLogout();
     }
   }
 
   Stream<DashboardScreenState> loadData() async* {
     var preferences = await SharedPreferences.getInstance();
-    String rfTokenString = preferences.getString(GlobalUtils.REFRESH_TOKEN) ?? '';
+    String rfTokenString = await _storage.read(key: GlobalUtils.REFRESH_TOKEN) ?? '';
     dynamic interval = Measurements.parseJwt(rfTokenString)['exp'] * 1000;
     if (DateTime.now().difference(DateTime.fromMillisecondsSinceEpoch(interval)).inHours < 1) {
       try {
@@ -147,8 +150,8 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
     String language;
     String currentWallpaper;
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String refreshToken = sharedPreferences.getString(GlobalUtils.REFRESH_TOKEN) ?? '';
-    String accessToken = sharedPreferences.getString(GlobalUtils.TOKEN) ?? '';
+    String refreshToken = await _storage.read(key: GlobalUtils.REFRESH_TOKEN) ?? '';
+    String accessToken = await _storage.read(key: GlobalUtils.TOKEN) ?? '';
     GlobalUtils.activeToken = Token(accessToken: accessToken, refreshToken: refreshToken);
 
     dynamic user = await api.getUser(accessToken);
@@ -213,16 +216,15 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
     add(FetchMonthlyEvent(business: activeBusiness));
   }
 
-  Stream<DashboardScreenState> _fetchInitialDataRenew(dynamic token, bool renew) async* {
+  Stream<DashboardScreenState> _fetchInitialDataRenew(Token token, bool renew) async* {
 
-    var _token = renew ? Token.map(token) : token;
-    GlobalUtils.activeToken = _token;
+    GlobalUtils.activeToken = token;
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     if (!renew) {
-      GlobalUtils.activeToken.refreshToken = sharedPreferences.getString(GlobalUtils.REFRESH_TOKEN);
+      GlobalUtils.activeToken.refreshToken = await _storage.read(key: GlobalUtils.REFRESH_TOKEN) ?? '';
     }
-    sharedPreferences.setString(GlobalUtils.TOKEN, GlobalUtils.activeToken.accessToken);
-    sharedPreferences.setString(GlobalUtils.REFRESH_TOKEN, GlobalUtils.activeToken.refreshToken);
+
+    await _storage.write(key: GlobalUtils.TOKEN, value: GlobalUtils.activeToken.accessToken);
     sharedPreferences.setString(GlobalUtils.LAST_OPEN, DateTime.now().toString());
     add(DashboardScreenLoadDataEvent());
   }
