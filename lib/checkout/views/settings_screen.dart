@@ -22,7 +22,18 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.checkoutScreenBloc.state.checkoutFlow == null) {
+    if (widget.checkoutScreenBloc.state.defaultCheckout == null) {
+      return Center(
+        child: Container(
+          width: 32,
+          height: 32,
+          child: CircularProgressIndicator(
+            strokeWidth: 2,
+          ),
+        ),
+      );
+    }
+    if (widget.checkoutScreenBloc.state.defaultCheckout.settings.styles == null) {
       return Center(
         child: Container(
           width: 32,
@@ -149,7 +160,7 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                     ),
                     Spacer(),
                     CupertinoSwitch(
-                      value: true,
+                      value: widget.checkoutScreenBloc.state.defaultCheckout.settings.styles.active ?? false,
                       onChanged: (value) {},
                     ),
                     SizedBox(

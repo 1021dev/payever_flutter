@@ -61,6 +61,15 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
         defaultCheckout = checkouts.first;
       }
     }
+    Lang defaultLang;
+    if (defaultCheckout != null) {
+      List<Lang> langList = defaultCheckout.settings.languages.where((element) => element.active).toList();
+      if (langList.length > 0) {
+        defaultLang = langList.first;
+      }
+    }
+
+    String langCode = defaultLang != null ? defaultLang.code: 'en';
 
     dynamic channelSetResponse = await api.getChannelSet(business, token);
     if (channelSetResponse is List) {
@@ -90,7 +99,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     }
 
     ChannelSetFlow channelSetFlow;
-    dynamic checkoutFlowResponse = await api.getCheckoutFlow(token, 'en');
+    dynamic checkoutFlowResponse = await api.getCheckoutFlow(token, langCode, channelSet.id);
     if (checkoutFlowResponse is Map) {
       channelSetFlow = ChannelSetFlow.fromMap(checkoutFlowResponse);
     }

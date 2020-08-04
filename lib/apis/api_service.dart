@@ -2046,13 +2046,16 @@ class ApiService {
     }
   }
 
-  Future<dynamic> getCheckoutFlow(String token, String local) async {
+  Future<dynamic> getCheckoutFlow(String token, String local, String channelSetId) async {
     try {
       print('$TAG - getCheckoutFlow()');
       var rand = randomString(8);
       print(rand);
       dynamic response = await _client.postTypeLess(
           '$checkoutV3?_locale=$local&rand=$rand',
+          body: {
+            'channel_set_id': channelSetId,
+          },
           headers: {
             HttpHeaders.authorizationHeader: 'Bearer $token',
             HttpHeaders.contentTypeHeader: 'application/json',

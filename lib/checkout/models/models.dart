@@ -92,7 +92,7 @@ class CheckoutSettings {
     phoneNumber = obj['phoneNumber'];
     testingMode = obj['testingMode'];
     dynamic stylesObj = obj['styles'];
-    if (styles is Map) {
+    if (stylesObj is Map) {
       styles = Style.fromMap(stylesObj);
     }
 
@@ -152,6 +152,7 @@ class Style {
       page = PageStyle.fromMap(pageObj);
     }
     id = obj['_id'];
+    active = obj['active'];
     businessHeaderBackgroundColor = obj['businessHeaderBackgroundColor'];
     businessHeaderBorderColor = obj['businessHeaderBorderColor'];
     buttonBackgroundColor = obj['buttonBackgroundColor'];
@@ -362,7 +363,12 @@ class ChannelSetFlow {
     clientId = obj['client_id'];
     comment = obj['comment'];
     connectionId = obj['connection_id'];
-    countries = obj['countries'];
+    dynamic countriesObj = obj['countries'];
+    if (countriesObj is Map) {
+      countriesObj.keys.toList().forEach((element) {
+        countries[element] = countriesObj[element];
+      });
+    }
     currency = obj['currency'];
     differentAddress = obj['different_address'];
     express = obj['express'];
