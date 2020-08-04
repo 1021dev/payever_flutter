@@ -61,12 +61,11 @@ class SectionItem extends StatelessWidget {
           SizedBox(
             width: 16,
           ),
-          Icon(
-            isExpanded ? Icons.remove : Icons.add,
-          ),
-          SizedBox(
-            width: 10,
-          ),
+          IconButton(
+              icon: Icon(
+                isExpanded ? Icons.remove : Icons.add,
+              ),
+              onPressed: onTap),
         ],
       ),
     );
