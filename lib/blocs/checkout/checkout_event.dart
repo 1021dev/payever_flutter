@@ -34,3 +34,9 @@ class GetPaymentConfig extends CheckoutScreenEvent {
 class GetPhoneNumbers extends CheckoutScreenEvent {
 
 }
+
+class UpdateCheckoutSettings extends CheckoutScreenEvent {
+  final CheckoutSettings settings;
+
+  UpdateCheckoutSettings({this.settings});
+}

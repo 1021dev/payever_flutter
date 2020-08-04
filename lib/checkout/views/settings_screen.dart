@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/checkout/models/models.dart';
+import 'package:payever/checkout/views/checkout_languages_screen.dart';
 import 'package:payever/checkout/views/checkout_phone_number_screen.dart';
 import 'package:payever/commons/commons.dart';
 
@@ -31,7 +32,7 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
       );
     }
     String defaultLanguage = '';
-    List<Lang> langs = widget.checkoutScreenBloc.state.checkoutFlow.languages.where((element) => element.active).toList();
+    List<Lang> langs = widget.checkoutScreenBloc.state.defaultCheckout.settings.languages.where((element) => element.active).toList();
     if (langs.length > 0) {
       defaultLanguage = langs.first.name;
     }
@@ -63,7 +64,7 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                     ),
                     Spacer(),
                     CupertinoSwitch(
-                      value: widget.checkoutScreenBloc.state.checkoutFlow.testingMode,
+                      value: widget.checkoutScreenBloc.state.defaultCheckout.settings.testingMode,
                       onChanged: (value) {},
                     ),
                     SizedBox(
@@ -194,7 +195,17 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                     ),
                     Spacer(),
                     MaterialButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          PageTransition(
+                            child: CheckoutLanguagesScreen(
+                              checkoutScreenBloc: widget.checkoutScreenBloc,
+                            ),
+                            type: PageTransitionType.fade,
+                          ),
+                        );
+                      },
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -239,7 +250,7 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                     Container(
                       constraints: BoxConstraints(minWidth: 100, maxWidth: 150),
                       child: Text(
-                        widget.checkoutScreenBloc.state.checkoutFlow.phoneNumber ?? '',
+                        widget.checkoutScreenBloc.state.defaultCheckout.settings.phoneNumber ?? '',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
@@ -305,7 +316,7 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                     Container(
                       constraints: BoxConstraints(minWidth: 100, maxWidth: 150),
                       child: Text(
-                        widget.checkoutScreenBloc.state.checkoutFlow.message ?? '',
+                        widget.checkoutScreenBloc.state.defaultCheckout.settings.message ?? '',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(

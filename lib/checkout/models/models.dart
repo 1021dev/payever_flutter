@@ -68,7 +68,7 @@ class Section {
 }
 
 class CheckoutSettings {
-  List<dynamic> cspAllowedHosts = [];
+  List<String> cspAllowedHosts = [];
   List<Lang> languages = [];
   String message = '';
   String phoneNumber = '';
