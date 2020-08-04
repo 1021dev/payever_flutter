@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/connect/models/connect.dart';
 import 'package:payever/commons/models/fetchwallpaper.dart';
@@ -33,6 +34,8 @@ class DashboardScreenState {
   final List<ConnectModel> connects;
   final List<ShopModel> shops;
   final Map<String, List<NotificationModel>> notifications;
+  final List<Checkout> checkouts;
+  final Checkout defaultCheckout;
 
   DashboardScreenState({
     this.isLoading = false,
@@ -62,6 +65,8 @@ class DashboardScreenState {
     this.shops = const [],
     this.activeShop,
     this.notifications = const {},
+    this.checkouts = const [],
+    this.defaultCheckout,
   });
 
   List<Object> get props => [
@@ -92,6 +97,8 @@ class DashboardScreenState {
     this.shops,
     this.activeShop,
     this.notifications,
+    this.checkouts,
+    this.defaultCheckout,
   ];
 
   DashboardScreenState copyWith({
@@ -122,6 +129,8 @@ class DashboardScreenState {
     List<ShopModel> shops,
     ShopModel activeShop,
     Map<String, List<NotificationModel>> notifications,
+    List<Checkout> checkouts,
+    Checkout defaultCheckout,
   }) {
     return DashboardScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -151,6 +160,8 @@ class DashboardScreenState {
       shops: shops ?? this.shops,
       activeShop: activeShop ?? this.activeShop,
       notifications: notifications ?? this.notifications,
+      checkouts: checkouts ?? this.checkouts,
+      defaultCheckout: defaultCheckout ?? this.defaultCheckout,
     );
   }
 }

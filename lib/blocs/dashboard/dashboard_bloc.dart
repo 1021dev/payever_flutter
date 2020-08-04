@@ -5,6 +5,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:package_info/package_info.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/blocs/dashboard/dashboard.dart';
+import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/connect/models/connect.dart';
 import 'package:payever/commons/models/fetchwallpaper.dart';
@@ -334,7 +335,7 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
       tutorials.add(Tutorial.map(element));
     });
     yield state.copyWith(tutorials: tutorials);
-    add(FetchNotifications());
+    yield* getCheckout();
   }
 
   Stream<DashboardScreenState> getConnects(Business currentBusiness) async* {
@@ -440,10 +441,29 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
 
   Stream<DashboardScreenState> deleteNotification(String notificationId) async* {
     dynamic response = await api.deleteNotification(GlobalUtils.activeToken.accessToken, notificationId);
-    fetchNotifications();
+    yield* fetchNotifications();
   }
 
   Stream<DashboardScreenState> getCheckout() async* {
-    dynamic response = await api.getCheckout(GlobalUtils.activeToken.accessToken, state.activeBusiness.id);
+    List<Checkout> checkouts = [];
+    Checkout defaultCheckout;
+    dynamic checkoutsResponse = await api.getCheckout(GlobalUtils.activeToken.accessToken, state.activeBusiness.id);
+    if (checkoutsResponse is List) {
+      checkoutsResponse.forEach((element) {
+        checkouts.add(Checkout.fromMap(element));
+      });
+    }
+    List defaults = checkouts.where((element) => element.isDefault).toList();
+
+    if (defaults.length > 0) {
+      defaultCheckout = defaults.first;
+    } else {
+      if (checkouts.length > 0) {
+        defaultCheckout = checkouts.first;
+      }
+    }
+
+    yield state.copyWith(checkouts: checkouts, defaultCheckout: defaultCheckout);
+    add(FetchNotifications());
   }
 }

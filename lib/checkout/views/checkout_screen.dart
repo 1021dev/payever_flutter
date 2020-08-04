@@ -7,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/dashboard/dashboard_bloc.dart';
+import 'package:payever/checkout/models/models.dart';
 import 'package:payever/checkout/views/channels_screeen.dart';
 import 'package:payever/checkout/views/connect_screen.dart';
 import 'package:payever/checkout/views/payment_options_screen.dart';
@@ -29,9 +30,13 @@ import 'checkout_connect_screen.dart';
 
 class CheckoutInitScreen extends StatelessWidget {
   final DashboardScreenBloc dashboardScreenBloc;
+  final List<Checkout> checkouts;
+  final Checkout defaultCheckout;
 
   CheckoutInitScreen({
     this.dashboardScreenBloc,
+    this.checkouts = const [],
+    this.defaultCheckout,
   });
 
   @override
@@ -41,6 +46,8 @@ class CheckoutInitScreen extends StatelessWidget {
     return CheckoutScreen(
       globalStateModel: globalStateModel,
       dashboardScreenBloc: dashboardScreenBloc,
+      checkouts: checkouts,
+      defaultCheckout: defaultCheckout,
     );
   }
 }
@@ -49,10 +56,14 @@ class CheckoutScreen extends StatefulWidget {
 
   final GlobalStateModel globalStateModel;
   final DashboardScreenBloc dashboardScreenBloc;
+  final List<Checkout> checkouts;
+  final Checkout defaultCheckout;
 
   CheckoutScreen({
     this.globalStateModel,
     this.dashboardScreenBloc,
+    this.checkouts = const [],
+    this.defaultCheckout,
   });
 
   @override
@@ -77,7 +88,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   @override
   void initState() {
     screenBloc = CheckoutScreenBloc(dashboardScreenBloc: widget.dashboardScreenBloc);
-    screenBloc.add(CheckoutScreenInitEvent(business: widget.globalStateModel.currentBusiness.id));
+    screenBloc.add(CheckoutScreenInitEvent(
+      business: widget.globalStateModel.currentBusiness.id,
+      checkouts: widget.checkouts,
+      defaultCheckout: widget.defaultCheckout,
+    ));
     super.initState();
   }
 

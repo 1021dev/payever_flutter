@@ -117,11 +117,13 @@ class _CheckoutPhoneNumberScreenState extends State<CheckoutPhoneNumberScreen> {
       padding: EdgeInsets.all(16),
       child: Center(
         child: BlurEffectView(
+          radius: 20,
           child: Wrap(
             children: <Widget>[
               Container(
-                padding: EdgeInsets.all(8),
-                child: Container(
+                padding: EdgeInsets.all(12),
+                child: BlurEffectView(
+                  radius: 8,
                   child: DropdownButtonFormField(
                     items: List.generate(state.phoneNumbers.length, (index) {
                       return DropdownMenuItem(
@@ -139,12 +141,26 @@ class _CheckoutPhoneNumberScreenState extends State<CheckoutPhoneNumberScreen> {
                     hint: Padding(
                       padding: EdgeInsets.only(left: 16),
                       child: Text(
-                        'Condition',
+                        'Phone number',
                       ),
                     ),
                   ),
                 ),
-              )
+              ),
+              Container(
+                height: 50,
+                child: SizedBox.expand(
+                  child: MaterialButton(
+                    onPressed: () {
+
+                    },
+                    color: Colors.black,
+                    child: Text(
+                      Language.getCommerceOSStrings('actions.save'),
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),

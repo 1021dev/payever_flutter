@@ -2119,8 +2119,9 @@ class ApiService {
   Future<dynamic> getPhoneNumbers(String idBusiness, String token, String checkoutId) async {
     try {
       print('$TAG - getCheckoutConnections()');
-      dynamic response = await _client.getTypeless(
-          '${Env.thirdPartyCommunication}/aou/business/$idBusiness/connection/$checkoutId/action/get-numbers',
+      dynamic response = await _client.postTypeLess(
+          '${Env.thirdPartyCommunication}/api/business/$idBusiness/connection/$checkoutId/action/get-numbers',
+          body: {},
           headers: {
             HttpHeaders.authorizationHeader: 'Bearer $token',
             HttpHeaders.contentTypeHeader: 'application/json',

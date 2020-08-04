@@ -19,6 +19,17 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.checkoutScreenBloc.state.checkoutFlow == null) {
+      return Center(
+        child: Container(
+          width: 32,
+          height: 32,
+          child: CircularProgressIndicator(
+            strokeWidth: 2,
+          ),
+        ),
+      );
+    }
     String defaultLanguage = '';
     List<Lang> langs = widget.checkoutScreenBloc.state.checkoutFlow.languages.where((element) => element.active).toList();
     if (langs.length > 0) {

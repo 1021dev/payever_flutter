@@ -536,6 +536,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 PageTransition(
                   child: CheckoutInitScreen(
                     dashboardScreenBloc: screenBloc,
+                    checkouts: state.checkouts,
+                    defaultCheckout: state.defaultCheckout,
                   ),
                   type: PageTransitionType.fade,
                   duration: Duration(milliseconds: 500),
@@ -714,6 +716,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
               businessApps: businessApp,
               appWidget: appWidget,
               notifications: notifications,
+              checkouts: state.checkouts,
+              defaultCheckout: state.defaultCheckout,
               openNotification: (NotificationModel model) {
               },
               deleteNotification: (NotificationModel model) {
@@ -729,6 +733,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   PageTransition(
                     child: CheckoutInitScreen(
                       dashboardScreenBloc: screenBloc,
+                      checkouts: state.checkouts,
+                      defaultCheckout: state.defaultCheckout,
                     ),
                     type: PageTransitionType.fade,
                     duration: Duration(milliseconds: 500),

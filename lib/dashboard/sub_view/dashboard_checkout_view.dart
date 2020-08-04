@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/models/app_widget.dart';
 import 'package:payever/commons/models/business_apps.dart';
 import 'package:payever/commons/models/models.dart';
@@ -15,6 +16,8 @@ class DashboardCheckoutView extends StatefulWidget {
   final List<NotificationModel> notifications;
   final Function openNotification;
   final Function deleteNotification;
+  final List<Checkout> checkouts;
+  final Checkout defaultCheckout;
 
   DashboardCheckoutView({
     this.onOpen,
@@ -23,6 +26,8 @@ class DashboardCheckoutView extends StatefulWidget {
     this.notifications = const [],
     this.openNotification,
     this.deleteNotification,
+    this.checkouts = const [],
+    this.defaultCheckout,
   });
   @override
   _DashboardCheckoutViewState createState() => _DashboardCheckoutViewState();
@@ -144,7 +149,8 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                   Padding(
                     padding: EdgeInsets.only(top: 8),
                   ),
-                  Row(
+                  widget.checkouts.length > 0
+                      ? Row(
                     children: [
                       Expanded(
                         flex: 1,
@@ -210,6 +216,18 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                         ),
                       ),
                     ],
+                  )
+                      : Container(
+                    height: 72,
+                    child: Center(
+                      child: Container(
+                        width: 32,
+                        height: 32,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                        ),
+                      ),
+                    ),
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 16),

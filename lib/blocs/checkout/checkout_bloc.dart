@@ -23,7 +23,11 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
   Stream<CheckoutScreenState> mapEventToState(
       CheckoutScreenEvent event) async* {
     if (event is CheckoutScreenInitEvent) {
-      yield state.copyWith(business: event.business);
+      yield state.copyWith(
+        business: event.business,
+        checkouts: event.checkouts,
+        defaultCheckout: event.defaultCheckout,
+      );
       yield* fetchConnectInstallations(event.business);
     } else if (event is GetPaymentConfig) {
       yield* getPaymentData();
