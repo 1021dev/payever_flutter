@@ -1,30 +1,22 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
-class ChannelsInitScreen extends StatelessWidget {
+class SettingsInitScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChannelsScreen();
+    return SettingsScreen();
   }
 }
 
-class ChannelsScreen extends StatefulWidget {
+class SettingsScreen extends StatefulWidget {
   @override
-  _ChannelsScreenState createState() => _ChannelsScreenState();
+  _SettingsScreenState createState() => _SettingsScreenState();
 }
 
-class _ChannelsScreenState extends State<ChannelsScreen> {
+class _SettingsScreenState extends State<SettingsScreen> {
   List<String> titles = [
-    'Pay by Link',
-    'Text Link',
-    'Button',
-    'Calculator',
-    'Bubble',
-    'Point of Sale',
-    'Shop'
+    'QR',
+    'Twilio SMS',
   ];
-
   @override
   Widget build(BuildContext context) {
     return _body();
@@ -52,8 +44,6 @@ class _ChannelsScreenState extends State<ChannelsScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         SizedBox(width: 16,),
-                        SvgPicture.asset('assets/images/grid.svg', width: 20, height: 20,),
-                        SizedBox(width: 16,),
                         Text(
                           titles[index],
                           style: TextStyle(
@@ -62,6 +52,7 @@ class _ChannelsScreenState extends State<ChannelsScreen> {
                           ),
                         ),
                         Spacer(),
+                        SizedBox(width: 10,),
                         InkWell(
                           onTap: () {},
                           child: Container(

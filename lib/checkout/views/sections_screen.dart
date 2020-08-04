@@ -1,30 +1,23 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
-class ChannelsInitScreen extends StatelessWidget {
+class SectionsInitScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChannelsScreen();
+    return SectionsScreen();
   }
 }
 
-class ChannelsScreen extends StatefulWidget {
+class SectionsScreen extends StatefulWidget {
   @override
-  _ChannelsScreenState createState() => _ChannelsScreenState();
+  _SectionsScreenState createState() => _SectionsScreenState();
 }
 
-class _ChannelsScreenState extends State<ChannelsScreen> {
+class _SectionsScreenState extends State<SectionsScreen> {
   List<String> titles = [
-    'Pay by Link',
-    'Text Link',
-    'Button',
-    'Calculator',
-    'Bubble',
-    'Point of Sale',
-    'Shop'
+    'Step 1',
+    'Step 2',
+    'Step 3',
   ];
-
   @override
   Widget build(BuildContext context) {
     return _body();
@@ -51,8 +44,6 @@ class _ChannelsScreenState extends State<ChannelsScreen> {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        SizedBox(width: 16,),
-                        SvgPicture.asset('assets/images/grid.svg', width: 20, height: 20,),
                         SizedBox(width: 16,),
                         Text(
                           titles[index],
@@ -102,12 +93,12 @@ class _ChannelsScreenState extends State<ChannelsScreen> {
                 color: Colors.grey,
               ),
               Container(
-                alignment: Alignment.centerLeft,
                 height: 65,
+                color: Colors.black87,
                 child: MaterialButton(
                   onPressed: () {},
                   child: Text(
-                    '+ Add',
+                    'Save',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -122,3 +113,4 @@ class _ChannelsScreenState extends State<ChannelsScreen> {
     );
   }
 }
+

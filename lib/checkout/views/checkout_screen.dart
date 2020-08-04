@@ -7,7 +7,10 @@ import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/dashboard/dashboard_bloc.dart';
 import 'package:payever/checkout/views/channels_screeen.dart';
+import 'package:payever/checkout/views/connect_screen.dart';
 import 'package:payever/checkout/views/payment_options_screen.dart';
+import 'package:payever/checkout/views/sections_screen.dart';
+import 'package:payever/checkout/views/settings_screen.dart';
 import 'package:payever/checkout/views/workshop_screen.dart';
 import 'package:payever/checkout/widgets/checkout_top_button.dart';
 import 'package:payever/commons/utils/common_utils.dart';
@@ -447,11 +450,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       case 2:
         return ChannelsInitScreen();
       case 3:
-        return Container();
+        return ConnectInitScreen();
       case 4:
-        return Container();
+        return SectionsInitScreen();
       case 5:
-        return Container();
+        return SettingsInitScreen();
     }
     return Container();
   }

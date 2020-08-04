@@ -2,29 +2,23 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-class ChannelsInitScreen extends StatelessWidget {
+class ConnectInitScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChannelsScreen();
+    return ConnectScreen();
   }
 }
 
-class ChannelsScreen extends StatefulWidget {
+class ConnectScreen extends StatefulWidget {
   @override
-  _ChannelsScreenState createState() => _ChannelsScreenState();
+  ConnectScreenState createState() => ConnectScreenState();
 }
 
-class _ChannelsScreenState extends State<ChannelsScreen> {
+class ConnectScreenState extends State<ConnectScreen> {
   List<String> titles = [
-    'Pay by Link',
-    'Text Link',
-    'Button',
-    'Calculator',
-    'Bubble',
-    'Point of Sale',
-    'Shop'
+    'QR',
+    'Twilio SMS',
   ];
-
   @override
   Widget build(BuildContext context) {
     return _body();
@@ -62,6 +56,11 @@ class _ChannelsScreenState extends State<ChannelsScreen> {
                           ),
                         ),
                         Spacer(),
+                        CupertinoSwitch(
+                          value: true,
+                          onChanged: (value) { },
+                        ),
+                        SizedBox(width: 10,),
                         InkWell(
                           onTap: () {},
                           child: Container(
