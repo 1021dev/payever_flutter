@@ -5,6 +5,7 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/checkout/models/models.dart';
 import 'package:payever/checkout/views/checkout_host_screen.dart';
 import 'package:payever/checkout/views/checkout_languages_screen.dart';
+import 'package:payever/checkout/views/checkout_message_screen.dart';
 import 'package:payever/checkout/views/checkout_phone_number_screen.dart';
 import 'package:payever/commons/commons.dart';
 
@@ -338,7 +339,17 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                     ),
                     Spacer(),
                     MaterialButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          PageTransition(
+                            child: CheckoutMessageScreen(
+                              checkoutScreenBloc: widget.checkoutScreenBloc,
+                            ),
+                            type: PageTransitionType.fade,
+                          ),
+                        );
+                      },
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),

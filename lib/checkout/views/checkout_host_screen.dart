@@ -24,7 +24,6 @@ class _CheckoutCSPAllowedHostScreenState extends State<CheckoutCSPAllowedHostScr
 
   @override
   void initState() {
-    widget.checkoutScreenBloc.add(GetPhoneNumbers());
     super.initState();
   }
 

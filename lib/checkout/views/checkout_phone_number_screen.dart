@@ -111,7 +111,6 @@ class _CheckoutPhoneNumberScreenState extends State<CheckoutPhoneNumberScreen> {
   }
 
   Widget _getBody(CheckoutScreenState state) {
-    print(state.checkoutFlow.phoneNumber);
     return Container(
       width: Measurements.width,
       padding: EdgeInsets.all(16),

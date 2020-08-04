@@ -1,26 +1,26 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
-import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/login/login_screen.dart';
 
-class CheckoutLanguagesScreen extends StatefulWidget {
+class CheckoutMessageScreen extends StatefulWidget {
 
   final CheckoutScreenBloc checkoutScreenBloc;
 
-  CheckoutLanguagesScreen({this.checkoutScreenBloc});
+  CheckoutMessageScreen({this.checkoutScreenBloc});
 
-  _CheckoutLanguagesScreenState createState() => _CheckoutLanguagesScreenState();
+  _CheckoutMessageScreenState createState() => _CheckoutMessageScreenState();
 
 }
 
-class _CheckoutLanguagesScreenState extends State<CheckoutLanguagesScreen> {
+class _CheckoutMessageScreenState extends State<CheckoutMessageScreen> {
 
   @override
   void initState() {
@@ -79,7 +79,7 @@ class _CheckoutLanguagesScreenState extends State<CheckoutLanguagesScreen> {
       automaticallyImplyLeading: false,
       backgroundColor: Colors.black87,
       title: Text(
-        Language.getConnectStrings('Add Language'),
+        Language.getConnectStrings('actions.edit'),
         style: TextStyle(
           color: Colors.white,
           fontSize: 16,
@@ -111,80 +111,57 @@ class _CheckoutLanguagesScreenState extends State<CheckoutLanguagesScreen> {
   }
 
   Widget _getBody(CheckoutScreenState state) {
-    if (state.defaultCheckout == null) {
-      return Container();
-    }
     return Container(
       width: Measurements.width,
       padding: EdgeInsets.all(16),
       child: Center(
         child: BlurEffectView(
+          radius: 20,
           child: Wrap(
             children: <Widget>[
-              ListView.separated(
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  Lang lang = state.defaultCheckout.settings.languages[index];
-                  return Container(
-                    height: 50,
-                    padding: EdgeInsets.only(left: 16, right: 16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Flexible(
-                          child: Text(
-                            lang.name,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontFamily: 'Helvetica Neue',
-                            ),
-                          ),
-                        ),
-                        Spacer(),
-                        Row(
-                          children: <Widget>[
-                            lang.isDefault ? Text(
-                              Language.getPosStrings('edit_locales.default'),
-                            ): (lang.active ? MaterialButton(
-                              onPressed: () {
+              Container(
+                padding: EdgeInsets.all(12),
+                child: BlurEffectView(
+                  radius: 8,
+                  child: TextFormField(
+                    onSaved: (val) {
 
-                              },
-                              color: Colors.black54,
-                              elevation: 0,
-                              height: 24,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              minWidth: 0,
-                              padding: EdgeInsets.only(left: 8, right: 8),
-                              child: Text(
-                                Language.getPosStrings('actions.set_as_default'),
-                              ),
-                            ): Container()),
-                            Padding(
-                              padding: EdgeInsets.only(left: 8),
-                            ),
-                            CupertinoSwitch(
-                              value: lang.active,
-                              onChanged: (val) {
-
-                              },
-                            )
-                          ],
+                    },
+                    onChanged: (val) {
+                      setState(() {
+                      });
+                    },
+                    validator: (value) {
+                      return null;
+                    },
+                    decoration: new InputDecoration(
+                      labelText: 'Message',
+                      border: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.blue,
                         ),
-                      ],
+                      ),
+                      contentPadding: EdgeInsets.only(left: 16, right: 16),
                     ),
-                  );
-                },
-                separatorBuilder: (context, index) {
-                  return Divider(
-                    height: 0,
-                    thickness: 0.5,
-                    color: Colors.grey,
-                  );
-                },
-                itemCount: state.defaultCheckout.settings.languages.length,
+                    style: TextStyle(fontSize: 16),
+                    keyboardType: TextInputType.url,
+                    initialValue: state.defaultCheckout.settings.message,
+                  ),
+                ),
+              ),
+              Container(
+                height: 50,
+                child: SizedBox.expand(
+                  child: MaterialButton(
+                    onPressed: () {
+
+                    },
+                    color: Colors.black,
+                    child: Text(
+                      Language.getCommerceOSStrings('actions.save'),
+                    ),
+                  ),
+                ),
               ),
             ],
           ),
