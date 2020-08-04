@@ -1,26 +1,27 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:payever/blocs/bloc.dart';
+import 'package:payever/checkout/models/models.dart';
+import 'package:payever/commons/commons.dart';
 
-class SettingsInitScreen extends StatelessWidget {
+class CheckoutSettingsScreen extends StatefulWidget {
+  final CheckoutScreenBloc checkoutScreenBloc;
+
+  CheckoutSettingsScreen({this.checkoutScreenBloc});
+
   @override
-  Widget build(BuildContext context) {
-    return SettingsScreen();
-  }
+  _CheckoutSettingsScreenState createState() => _CheckoutSettingsScreenState();
 }
 
-class SettingsScreen extends StatefulWidget {
-  @override
-  _SettingsScreenState createState() => _SettingsScreenState();
-}
-
-class _SettingsScreenState extends State<SettingsScreen> {
+class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return _body();
-  }
-
-  Widget _body() {
+    String defaultLanguage = '';
+    List<Lang> langs = widget.checkoutScreenBloc.state.checkoutFlow.languages.where((element) => element.active).toList();
+    if (langs.length > 0) {
+      defaultLanguage = langs.first.name;
+    }
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -33,7 +34,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Container(
-                height: 65,
+                height: 50,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
@@ -49,7 +50,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     Spacer(),
                     CupertinoSwitch(
-                      value: true,
+                      value: widget.checkoutScreenBloc.state.checkoutFlow.testingMode,
                       onChanged: (value) {},
                     ),
                     SizedBox(
@@ -63,7 +64,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 color: Colors.grey,
               ),
               Container(
-                height: 65,
+                height: 50,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
@@ -78,23 +79,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ),
                     ),
                     Spacer(),
-                    InkWell(
-                      onTap: () {},
-                      child: Container(
-                        height: 28,
-                        width: 65,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          color: Colors.black54,
-                        ),
-                        child: Center(
-                          child: Text(
-                            'Edit',
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: Colors.white,
-                            ),
-                          ),
+                    MaterialButton(
+                      onPressed: () {},
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      color: Colors.black54,
+                      elevation: 0,
+                      height: 24,
+                      minWidth: 0,
+                      child: Text(
+                        Language.getPosStrings('actions.edit'),
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.white,
                         ),
                       ),
                     ),
@@ -109,7 +107,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 color: Colors.grey,
               ),
               Container(
-                height: 65,
+                height: 50,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
@@ -131,23 +129,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     SizedBox(
                       width: 10,
                     ),
-                    InkWell(
-                      onTap: () {},
-                      child: Container(
-                        height: 28,
-                        width: 65,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          color: Colors.black54,
-                        ),
-                        child: Center(
-                          child: Text(
-                            'Edit',
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: Colors.white,
-                            ),
-                          ),
+                    MaterialButton(
+                      onPressed: () {},
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      color: Colors.black54,
+                      elevation: 0,
+                      height: 24,
+                      minWidth: 0,
+                      child: Text(
+                        Language.getPosStrings('actions.edit'),
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.white,
                         ),
                       ),
                     ),
@@ -162,7 +157,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 color: Colors.grey,
               ),
               Container(
-                height: 65,
+                height: 50,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
@@ -178,30 +173,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     Spacer(),
                     Text(
-                      'Español(default)',
+                      '$defaultLanguage (default)',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 16,
+                        fontSize: 14,
                       ),
                     ),
                     Spacer(),
-                    InkWell(
-                      onTap: () {},
-                      child: Container(
-                        height: 28,
-                        width: 65,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          color: Colors.black54,
-                        ),
-                        child: Center(
-                          child: Text(
-                            'Edit',
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: Colors.white,
-                            ),
-                          ),
+                    MaterialButton(
+                      onPressed: () {},
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      color: Colors.black54,
+                      elevation: 0,
+                      height: 24,
+                      minWidth: 0,
+                      child: Text(
+                        Language.getPosStrings('actions.edit'),
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.white,
                         ),
                       ),
                     ),
@@ -216,7 +208,119 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 color: Colors.grey,
               ),
               Container(
-                height: 65,
+                height: 50,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(
+                      width: 16,
+                    ),
+                    Text(
+                      'Phone number',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                      ),
+                    ),
+                    Spacer(),
+                    Container(
+                      constraints: BoxConstraints(minWidth: 100, maxWidth: 150),
+                      child: Text(
+                        widget.checkoutScreenBloc.state.checkoutFlow.phoneNumber ?? '',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+                    Spacer(),
+                    MaterialButton(
+                      onPressed: () {},
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      color: Colors.black54,
+                      elevation: 0,
+                      height: 24,
+                      minWidth: 0,
+                      child: Text(
+                        Language.getPosStrings('actions.copy'),
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                  ],
+                ),
+              ),
+              Divider(
+                height: 1,
+                color: Colors.grey,
+              ),
+              Container(
+                height: 50,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(
+                      width: 16,
+                    ),
+                    Text(
+                      'Message',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                      ),
+                    ),
+                    Spacer(),
+                    Container(
+                      constraints: BoxConstraints(minWidth: 100, maxWidth: 150),
+                      child: Text(
+                        widget.checkoutScreenBloc.state.checkoutFlow.message ?? '',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+                    Spacer(),
+                    MaterialButton(
+                      onPressed: () {},
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      color: Colors.black54,
+                      elevation: 0,
+                      height: 24,
+                      minWidth: 0,
+                      child: Text(
+                        Language.getPosStrings('actions.copy'),
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                  ],
+                ),
+              ),
+              Divider(
+                height: 1,
+                color: Colors.grey,
+              ),
+              Container(
+                height: 50,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
@@ -231,23 +335,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ),
                     ),
                     Spacer(),
-                    InkWell(
-                      onTap: () {},
-                      child: Container(
-                        height: 28,
-                        width: 65,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          color: Colors.black54,
-                        ),
-                        child: Center(
-                          child: Text(
-                            'Edit',
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: Colors.white,
-                            ),
-                          ),
+                    MaterialButton(
+                      onPressed: () {},
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      color: Colors.black54,
+                      elevation: 0,
+                      height: 24,
+                      minWidth: 0,
+                      child: Text(
+                        Language.getPosStrings('actions.edit'),
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.white,
                         ),
                       ),
                     ),
@@ -262,7 +363,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 color: Colors.grey,
               ),
               Container(
-                height: 65,
+                height: 50,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
@@ -280,33 +381,30 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     Container(
                       constraints: BoxConstraints(minWidth: 100, maxWidth: 150),
                       child: Text(
-                        '5a3cf9e9-47dd-4b99-ac12-ec55547d0b27',
+                        widget.checkoutScreenBloc.state.defaultCheckout.id,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 16,
+                          fontSize: 14,
                         ),
                       ),
                     ),
                     Spacer(),
-                    InkWell(
-                      onTap: () {},
-                      child: Container(
-                        height: 28,
-                        width: 65,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          color: Colors.black54,
-                        ),
-                        child: Center(
-                          child: Text(
-                            'Open',
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: Colors.white,
-                            ),
-                          ),
+                    MaterialButton(
+                      onPressed: () {},
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      color: Colors.black54,
+                      elevation: 0,
+                      height: 24,
+                      minWidth: 0,
+                      child: Text(
+                        Language.getPosStrings('actions.copy'),
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.white,
                         ),
                       ),
                     ),
