@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SettingsInitScreen extends StatelessWidget {
@@ -13,10 +14,7 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  List<String> titles = [
-    'QR',
-    'Twilio SMS',
-  ];
+
   @override
   Widget build(BuildContext context) {
     return _body();
@@ -34,78 +32,290 @@ class _SettingsScreenState extends State<SettingsScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              ListView.separated(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  return Container(
-                    height: 65,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        SizedBox(width: 16,),
-                        Text(
-                          titles[index],
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                          ),
-                        ),
-                        Spacer(),
-                        SizedBox(width: 10,),
-                        InkWell(
-                          onTap: () {},
-                          child: Container(
-                            height: 28,
-                            width: 65,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              color: Colors.black54,
-                            ),
-                            child: Center(
-                              child: Text(
-                                'Open',
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                      ],
+              Container(
+                height: 65,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(
+                      width: 16,
                     ),
-                  );
-                },
-                itemCount: titles.length,
-                separatorBuilder: (context, index) {
-                  return Divider(
-                    height: 1,
-                    color: Colors.grey,
-                  );
-                },
+                    Text(
+                      'Testing mode',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                      ),
+                    ),
+                    Spacer(),
+                    CupertinoSwitch(
+                      value: true,
+                      onChanged: (value) {},
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                  ],
+                ),
               ),
               Divider(
                 height: 1,
                 color: Colors.grey,
               ),
               Container(
-                alignment: Alignment.centerLeft,
                 height: 65,
-                child: MaterialButton(
-                  onPressed: () {},
-                  child: Text(
-                    '+ Add',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(
+                      width: 16,
                     ),
-                  ),
+                    Text(
+                      'CSP allowed hosts',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                      ),
+                    ),
+                    Spacer(),
+                    InkWell(
+                      onTap: () {},
+                      child: Container(
+                        height: 28,
+                        width: 65,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          color: Colors.black54,
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Edit',
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                  ],
                 ),
-              )
+              ),
+              Divider(
+                height: 1,
+                color: Colors.grey,
+              ),
+              Container(
+                height: 65,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(
+                      width: 16,
+                    ),
+                    Text(
+                      'Color and style',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                      ),
+                    ),
+                    Spacer(),
+                    CupertinoSwitch(
+                      value: true,
+                      onChanged: (value) {},
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    InkWell(
+                      onTap: () {},
+                      child: Container(
+                        height: 28,
+                        width: 65,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          color: Colors.black54,
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Edit',
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                  ],
+                ),
+              ),
+              Divider(
+                height: 1,
+                color: Colors.grey,
+              ),
+              Container(
+                height: 65,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(
+                      width: 16,
+                    ),
+                    Text(
+                      'Language',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                      ),
+                    ),
+                    Spacer(),
+                    Text(
+                      'Español(default)',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                      ),
+                    ),
+                    Spacer(),
+                    InkWell(
+                      onTap: () {},
+                      child: Container(
+                        height: 28,
+                        width: 65,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          color: Colors.black54,
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Edit',
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                  ],
+                ),
+              ),
+              Divider(
+                height: 1,
+                color: Colors.grey,
+              ),
+              Container(
+                height: 65,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(
+                      width: 16,
+                    ),
+                    Text(
+                      'Policies',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                      ),
+                    ),
+                    Spacer(),
+                    InkWell(
+                      onTap: () {},
+                      child: Container(
+                        height: 28,
+                        width: 65,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          color: Colors.black54,
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Edit',
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                  ],
+                ),
+              ),
+              Divider(
+                height: 1,
+                color: Colors.grey,
+              ),
+              Container(
+                height: 65,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(
+                      width: 16,
+                    ),
+                    Text(
+                      'Channel Set ID',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                      ),
+                    ),
+                    Spacer(),
+                    Container(
+                      constraints: BoxConstraints(minWidth: 100, maxWidth: 150),
+                      child: Text(
+                        '5a3cf9e9-47dd-4b99-ac12-ec55547d0b27',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                    Spacer(),
+                    InkWell(
+                      onTap: () {},
+                      child: Container(
+                        height: 28,
+                        width: 65,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          color: Colors.black54,
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Open',
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),

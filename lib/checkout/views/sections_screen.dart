@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:payever/checkout/widgets/section_item.dart';
 
 class SectionsInitScreen extends StatelessWidget {
   @override
@@ -13,11 +15,8 @@ class SectionsScreen extends StatefulWidget {
 }
 
 class _SectionsScreenState extends State<SectionsScreen> {
-  List<String> titles = [
-    'Step 1',
-    'Step 2',
-    'Step 3',
-  ];
+  int _selectedSectionIndex = -1;
+
   @override
   Widget build(BuildContext context) {
     return _body();
@@ -34,67 +33,60 @@ class _SectionsScreenState extends State<SectionsScreen> {
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              ListView.separated(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  return Container(
-                    height: 65,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        SizedBox(width: 16,),
-                        Text(
-                          titles[index],
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                          ),
-                        ),
-                        Spacer(),
-                        InkWell(
-                          onTap: () {},
-                          child: Container(
-                            height: 28,
-                            width: 65,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              color: Colors.black54,
-                            ),
-                            child: Center(
-                              child: Text(
-                                'Open',
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                      ],
-                    ),
-                  );
-                },
-                itemCount: titles.length,
-                separatorBuilder: (context, index) {
-                  return Divider(
-                    height: 1,
-                    color: Colors.grey,
-                  );
+              SectionItem(
+                title: 'Step 1',
+                detail: 'Shopping cart details',
+                isExpanded: _selectedSectionIndex == 0,
+                onTap: () {
+                  setState(() {
+                    _selectedSectionIndex = _selectedSectionIndex == 0 ? -1 : 0;
+                  });
                 },
               ),
               Divider(
-                height: 1,
+                height: 0,
+                thickness: 0.5,
+                color: Colors.grey,
+              ),
+              SectionItem(
+                title: 'Step 2',
+                detail: 'Customer & payment details',
+                isExpanded: _selectedSectionIndex == 1,
+                onTap: () {
+                  setState(() {
+                    _selectedSectionIndex = _selectedSectionIndex == 0 ? -1 : 0;
+                  });
+                },
+              ),
+              Divider(
+                height: 0,
+                thickness: 0.5,
+                color: Colors.grey,
+              ),
+              SectionItem(
+                title: 'Step 3',
+                detail: 'After sale details',
+                isExpanded: _selectedSectionIndex == 2,
+                onTap: () {
+                  setState(() {
+                    _selectedSectionIndex = _selectedSectionIndex == 0 ? -1 : 0;
+                  });
+                },
+              ),
+              Divider(
+                height: 0,
+                thickness: 0.5,
                 color: Colors.grey,
               ),
               Container(
                 height: 65,
-                color: Colors.black87,
+                decoration: BoxDecoration(
+                    color: Colors.black87,
+                    borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(10),
+                        bottomRight: Radius.circular(10))),
                 child: MaterialButton(
                   onPressed: () {},
                   child: Text(
@@ -113,4 +105,3 @@ class _SectionsScreenState extends State<SectionsScreen> {
     );
   }
 }
-
