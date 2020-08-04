@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/dashboard/dashboard_bloc.dart';
+import 'package:payever/checkout/views/channels_screeen.dart';
 import 'package:payever/checkout/views/payment_options_screen.dart';
 import 'package:payever/checkout/views/workshop_screen.dart';
 import 'package:payever/checkout/widgets/checkout_top_button.dart';
@@ -444,7 +445,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           },
         );
       case 2:
-        return Container();
+        return ChannelsInitScreen();
       case 3:
         return Container();
       case 4:

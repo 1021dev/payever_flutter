@@ -83,7 +83,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
           SizedBox(width: 10,),
           Container(
             height: 30,
-            alignment: Alignment.centerRight,
+            width: 30,
             decoration: BoxDecoration(
               color: Colors.white,
               shape: BoxShape.circle,
@@ -92,7 +92,6 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
               child: Icon(
                 Icons.more_horiz,
                 color: Colors.black,
-                size: 30,
               ),
               offset: Offset(0, 100),
               onSelected: (CheckOutPopupButton item) => item.onTap(),
@@ -144,14 +143,14 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                     SvgPicture.asset(
                       'assets/images/payeverlogo.svg',
                       color: Colors.black,
-                      height: 24,
-                      width: 24,
+                      height: 20,
+                      width: 20,
                     ),
                     Text(
                       'Payever',
                       style: TextStyle(
                         color: Colors.black,
-                        fontSize: 24,
+                        fontSize: 18,
                       ),
                     ),
                     Spacer(),
@@ -160,7 +159,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                         'Switch Checkout',
                         style: TextStyle(
                             color: Colors.black,
-                            fontSize: 16,
+                            fontSize: 14,
                             fontWeight: FontWeight.w400),
                       ),
                       onPressed: () {}, //callback when button is clicked
@@ -230,7 +229,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                                 titles[index],
                                 style: TextStyle(
                                   color: Colors.black54,
-                                  fontSize: 16,
+                                  fontSize: 15,
                                 ),
                               ),
                             ),
@@ -240,8 +239,8 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                                 values[index],
                                 style: TextStyle(
                                   color: Colors.black87,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w300,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w400,
                                 ),
                               ),
                             )
