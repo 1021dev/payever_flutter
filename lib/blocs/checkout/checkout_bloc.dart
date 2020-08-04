@@ -27,6 +27,8 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       yield* fetchConnectInstallations(event.business);
     } else if (event is GetPaymentConfig) {
       yield* getPaymentData();
+    } else if (event is GetPhoneNumbers) {
+      yield* getPhoneNumbers();
     }
   }
 
@@ -135,5 +137,24 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       connections: connections,
       checkoutConnections: checkoutConnections,
     );
+  }
+
+  Stream<CheckoutScreenState> getPhoneNumbers() async* {
+    List<String> phoneNumbers = [];
+    IntegrationModel twilioIntegration;
+    print(state.connections);
+    List<IntegrationModel> list = state.connections.where((element) => element.integration == 'twilio').toList();
+    if (list.length > 0) {
+      twilioIntegration = list.first;
+    }
+    if (twilioIntegration != null) {
+      dynamic phoneResponse = await api.getPhoneNumbers(state.business, token, twilioIntegration.id);
+      if (phoneResponse is List) {
+        phoneResponse.forEach((element) {
+          phoneNumbers.add(element);
+        });
+      }
+    }
+    yield state.copyWith(phoneNumbers: phoneNumbers);
   }
 }

@@ -23,3 +23,7 @@ class CheckoutScreenInitEvent extends CheckoutScreenEvent {
 class GetPaymentConfig extends CheckoutScreenEvent {
 
 }
+
+class GetPhoneNumbers extends CheckoutScreenEvent {
+
+}

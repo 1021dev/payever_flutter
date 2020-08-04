@@ -16,6 +16,7 @@ class CheckoutScreenState {
   final List<IntegrationModel> connections;
   final List<IntegrationModel> checkoutConnections;
   final List<ConnectModel> connects;
+  final List<String> phoneNumbers;
 
   CheckoutScreenState({
     this.isLoading = false,
@@ -29,6 +30,7 @@ class CheckoutScreenState {
     this.connections = const [],
     this.checkoutConnections = const [],
     this.connects = const [],
+    this.phoneNumbers = const [],
   });
 
   List<Object> get props => [
@@ -43,6 +45,7 @@ class CheckoutScreenState {
     this.connects,
     this.connections,
     this.checkoutConnections,
+    this.phoneNumbers,
   ];
 
   CheckoutScreenState copyWith({
@@ -57,6 +60,7 @@ class CheckoutScreenState {
     List<IntegrationModel> connections,
     List<IntegrationModel> checkoutConnections,
     List<ConnectModel> connects,
+    List<String> phoneNumbers,
   }) {
     return CheckoutScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -70,6 +74,7 @@ class CheckoutScreenState {
       connections: connections ?? this.connections,
       checkoutConnections: checkoutConnections ?? this.checkoutConnections,
       connects: connects ?? this.connects,
+      phoneNumbers: phoneNumbers ?? this.phoneNumbers,
     );
   }
 }

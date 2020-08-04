@@ -36,7 +36,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
       child: Column(
         children: <Widget>[
           _topBar(),
-          Expanded(
+          Flexible(
             child: _body(),
           ),
         ],

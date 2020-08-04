@@ -313,18 +313,17 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         child: BackgroundBase(
           true,
           backgroudColor: Color.fromRGBO(20, 20, 0, 0.4),
-          body: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              _topBar(state),
-              Expanded(
-                child: Center(
+          body: Container(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                _topBar(state),
+                Expanded(
                   child: _getBody(state),
                 ),
-              ),
-            ],
-          ),
+              ],
+            ),
+          ) ,
         ),
       ),
     );
@@ -337,7 +336,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     }
     return Container(
       color: Color(0xFF212122),
-      child: Expanded(
+      height: 44,
+      child: Container(
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
@@ -415,6 +415,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   }
 
   Widget _getBody(CheckoutScreenState state) {
+
     switch (selectedIndex) {
       case 0:
         return state.isLoading ?

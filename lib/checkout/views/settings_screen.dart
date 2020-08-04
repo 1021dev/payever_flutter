@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/checkout/models/models.dart';
+import 'package:payever/checkout/views/checkout_phone_number_screen.dart';
 import 'package:payever/commons/commons.dart';
 
 class CheckoutSettingsScreen extends StatefulWidget {
@@ -237,7 +239,17 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                     ),
                     Spacer(),
                     MaterialButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          PageTransition(
+                            child: CheckoutPhoneNumberScreen(
+                              checkoutScreenBloc: widget.checkoutScreenBloc,
+                            ),
+                            type: PageTransitionType.fade,
+                          ),
+                        );
+                      },
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -246,7 +258,7 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                       height: 24,
                       minWidth: 0,
                       child: Text(
-                        Language.getPosStrings('actions.copy'),
+                        Language.getPosStrings('actions.edit'),
                         style: TextStyle(
                           fontSize: 12,
                           color: Colors.white,
@@ -302,7 +314,7 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                       height: 24,
                       minWidth: 0,
                       child: Text(
-                        Language.getPosStrings('actions.copy'),
+                        Language.getPosStrings('actions.edit'),
                         style: TextStyle(
                           fontSize: 12,
                           color: Colors.white,

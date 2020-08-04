@@ -2116,6 +2116,23 @@ class ApiService {
     }
   }
 
+  Future<dynamic> getPhoneNumbers(String idBusiness, String token, String checkoutId) async {
+    try {
+      print('$TAG - getCheckoutConnections()');
+      dynamic response = await _client.getTypeless(
+          '${Env.thirdPartyCommunication}/aou/business/$idBusiness/connection/$checkoutId/action/get-numbers',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   String randomString(int strlen) {
     const chars = "0123456789";
     Random rnd = new Random(new DateTime.now().millisecondsSinceEpoch);

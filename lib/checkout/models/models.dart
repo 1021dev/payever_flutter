@@ -437,6 +437,6 @@ class IntegrationModel {
 
   IntegrationModel.fromMap(dynamic obj) {
     integration = obj['integration'];
-    id = obj['id'];
+    id = obj['_id'];
   }
 }
