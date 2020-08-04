@@ -79,7 +79,7 @@ class CheckoutSettings {
     dynamic cspAllowedHostObj = obj['cspAllowedHosts'];
     if (cspAllowedHostObj is List) {
       cspAllowedHostObj.forEach((element) {
-        cspAllowedHosts.add(element);
+        cspAllowedHosts.add(element.toString());
       });
     }
     dynamic langObj = obj['languages'];
@@ -252,7 +252,7 @@ class CheckoutFlow {
     dynamic paymentMethodsObj = obj['paymentMethods'];
     if (paymentMethodsObj is List) {
       paymentMethodsObj.forEach((element) {
-        paymentMethods.add(element);
+        paymentMethods.add(element.toString());
       });
     }
     dynamic sectionsObj = obj['sections'];
