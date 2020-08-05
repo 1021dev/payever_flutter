@@ -172,11 +172,11 @@ class _ConnectScreenState extends State<ConnectScreen> {
             innerDrawerKey: _innerDrawerKey,
             onLogout: () async {
               FlutterSecureStorage storage = FlutterSecureStorage();
-              await storage.deleteAll();
+              await storage.delete(key: GlobalUtils.TOKEN);
+              await storage.delete(key: GlobalUtils.BUSINESS);
+              await storage.delete(key: GlobalUtils.REFRESH_TOKEN);
               SharedPreferences.getInstance().then((p) {
                 p.setString(GlobalUtils.BUSINESS, '');
-                p.setString(GlobalUtils.EMAIL, '');
-                p.setString(GlobalUtils.PASSWORD, '');
                 p.setString(GlobalUtils.DEVICE_ID, '');
                 p.setString(GlobalUtils.DB_TOKEN_ACC, '');
                 p.setString(GlobalUtils.DB_TOKEN_RFS, '');

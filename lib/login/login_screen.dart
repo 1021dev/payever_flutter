@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/models/version.dart';
 import 'package:payever/commons/utils/common_utils.dart';
@@ -40,8 +41,6 @@ class _LoginState extends State<Login> {
   bool _isInvalidInformation = false;
 
   String _password, _username;
-  String password = GlobalUtils.pass;
-  String email = GlobalUtils.mail;
 
   final LoginScreenBloc loginScreenBloc = LoginScreenBloc(); // ignore: close_sinks
 
@@ -104,7 +103,8 @@ class _LoginState extends State<Login> {
                       decoration: BoxDecoration(
                         image: DecorationImage(
                           image: NetworkImage(
-                              'https://payever.azureedge.net/images/commerceos-background.jpg'),
+                            'https://payever.azureedge.net/images/commerceos-background.jpg',
+                          ),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -187,11 +187,13 @@ class _LoginState extends State<Login> {
                                               height: 55,
                                               child: Container(
                                                 decoration: BoxDecoration(
-                                                    color: Colors.black.withOpacity(0.25),
-                                                    shape: BoxShape.rectangle,
-                                                    borderRadius: BorderRadius.only(
-                                                        topLeft: Radius.circular(8.0),
-                                                        topRight: Radius.circular(8.0))),
+                                                  color: Colors.black.withOpacity(0.25),
+                                                  shape: BoxShape.rectangle,
+                                                  borderRadius: BorderRadius.only(
+                                                    topLeft: Radius.circular(8.0),
+                                                    topRight: Radius.circular(8.0),
+                                                  ),
+                                                ),
                                                 child: Padding(
                                                   padding: EdgeInsets.only(
                                                       left: _paddingText,
@@ -218,13 +220,14 @@ class _LoginState extends State<Login> {
                                                       border: InputBorder.none,
                                                       contentPadding: _isTablet
                                                           ? EdgeInsets.all(
-                                                          Measurements.height * 0.007)
+                                                          Measurements.height * 0.007,
+                                                      )
                                                           : null,
                                                     ),
                                                     style: TextStyle(fontSize: 16),
                                                     keyboardType:
                                                     TextInputType.emailAddress,
-                                                    initialValue: kDebugMode ? 'testcases@payever.de' : email,
+                                                    initialValue: state.email,
                                                   ),
                                                 ),
                                               ),
@@ -269,12 +272,13 @@ class _LoginState extends State<Login> {
                                                             contentPadding: _isTablet
                                                                 ? EdgeInsets.all(
                                                                 Measurements.height *
-                                                                    0.007)
+                                                                    0.007,
+                                                            )
                                                                 : null,
                                                           ),
                                                           obscureText: true,
                                                           style: TextStyle(fontSize: 16),
-                                                          initialValue: kDebugMode ? 'Payever123!' : password,
+                                                          initialValue: state.password,
                                                         ),
                                                       ),
                                                     ],
@@ -295,19 +299,22 @@ class _LoginState extends State<Login> {
                                         height: 55,
                                         child: Container(
                                           decoration: BoxDecoration(
-                                              color: Colors.black.withOpacity(0.8),
-                                              shape: BoxShape.rectangle,
-                                              borderRadius: BorderRadius.only(
-                                                  bottomLeft: Radius.circular(8.0),
-                                                  bottomRight: Radius.circular(8.0))),
+                                            color: Colors.black.withOpacity(0.8),
+                                            shape: BoxShape.rectangle,
+                                            borderRadius: BorderRadius.only(
+                                              bottomLeft: Radius.circular(8.0),
+                                              bottomRight: Radius.circular(8.0),
+                                            ),
+                                          ),
                                           child: !state.isLoading
                                               ? InkWell(
                                             key: GlobalKeys.loginButton,
                                             child: Center(
-                                                child: Text(
-                                                  'Login',
-                                                  style: TextStyle(fontSize: 16),
-                                                )),
+                                              child: Text(
+                                                'Login',
+                                                style: TextStyle(fontSize: 16),
+                                              ),
+                                            ),
                                             onTap: () {
                                               print('login');
                                               _submit();
@@ -333,9 +340,10 @@ class _LoginState extends State<Login> {
                                       child: Text(
                                         'Forgot your password?',
                                         style: TextStyle(
-                                            decoration: TextDecoration.underline,
-                                            fontSize: 14,
-                                            color: Color.fromRGBO(255, 255, 255, 0.6)),
+                                          decoration: TextDecoration.underline,
+                                          fontSize: 14,
+                                          color: Color.fromRGBO(255, 255, 255, 0.6),
+                                        ),
                                       ),
                                       onTap: () {
                                         _launchURL(GlobalUtils.FORGOT_PASS);

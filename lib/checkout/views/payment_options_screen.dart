@@ -97,18 +97,21 @@ class _PaymentOptionsScreenState extends State<PaymentOptionsScreen> {
                                   Language.getPosConnectStrings(connectModel.integration.displayOptions.title ?? ''),
                                   style: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 16,
+                                    fontSize: 14,
                                     fontFamily: 'Helvetica Neue',
                                   ),
                                 ),
                               ),
                               Row(
                                 children: <Widget>[
-                                  CupertinoSwitch(
-                                    value: true,
-                                    onChanged: (val) {
+                                  Transform.scale(
+                                    scale: 0.8,
+                                    child: CupertinoSwitch(
+                                      value: true,
+                                      onChanged: (val) {
 
-                                    },
+                                      },
+                                    ),
                                   ),
                                   MaterialButton(
                                     onPressed: () {
@@ -124,6 +127,11 @@ class _PaymentOptionsScreenState extends State<PaymentOptionsScreen> {
                                     padding: EdgeInsets.only(left: 8, right: 8),
                                     child: Text(
                                       Language.getConnectStrings('actions.open'),
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                        fontFamily: 'HelveticaNeueMed',
+                                      ),
                                     ),
                                   )
                                 ],

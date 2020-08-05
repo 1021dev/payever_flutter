@@ -47,7 +47,6 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
       bloc: widget.checkoutScreenBloc,
       builder: (BuildContext context, state) {
         return Container(
-          color: Colors.white,
           child: Column(
             children: <Widget>[
               _topBar(),
@@ -60,6 +59,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
       },
     );
   }
+
   Widget _topBar() {
     return Container(
       height: 50,
@@ -146,15 +146,17 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
   }
 
   Widget _body(CheckoutScreenState state) {
-    return Padding(
-      padding: const EdgeInsets.all(15),
+    return Container(
+      color: Colors.white,
+      margin: const EdgeInsets.all(16),
       child: Container(
-        color: Colors.white,
+        height: double.infinity,
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
               Container(
                 height: 50,
+                padding: EdgeInsets.only(left: 16, right: 16),
                 child: Row(
                   children: <Widget>[
                     SvgPicture.asset(
@@ -171,21 +173,25 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                       ),
                     ),
                     Spacer(),
-                    OutlineButton(
+                    MaterialButton(
                       child: Text(
                         'Switch Checkout',
                         style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400),
+                          color: Colors.black,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
                       onPressed: () {}, //callback when button is clicked
-                      borderSide: BorderSide(
-                        color: Colors.black54, //Color of the border
-                        style: BorderStyle.solid, //Style of the border
-                        width: 0.8, //width of the border
+                      height: 32,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4),
+                        side: BorderSide(
+                          color: Colors.black38,
+                          width: 1,
+                        )
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -194,22 +200,25 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                 thickness: 0.5,
                 color: Colors.black54,
               ),
-              Column(
-                children: <Widget>[
-                  _orderView(state),
-                  Divider(
-                    height: 0,
-                    thickness: 0.5,
-                    color: Colors.black54,
-                  ),
-                  _accountView(state),
-                  Divider(
-                    height: 0,
-                    thickness: 0.5,
-                    color: Colors.black54,
-                  ),
-                  _billingView(state),
-                ],
+              Padding(
+                padding: EdgeInsets.all(16),
+                child: Column(
+                  children: <Widget>[
+                    _orderView(state),
+                    Divider(
+                      height: 0,
+                      thickness: 0.5,
+                      color: Colors.black54,
+                    ),
+                    _accountView(state),
+                    Divider(
+                      height: 0,
+                      thickness: 0.5,
+                      color: Colors.black54,
+                    ),
+                    _billingView(state),
+                  ],
+                ),
               ),
             ],
           ),

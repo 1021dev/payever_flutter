@@ -22,3 +22,5 @@ class LoginEvent extends LoginScreenEvent {
 }
 
 class FetchEnvEvent extends LoginScreenEvent {}
+
+class FetchLoginCredentialsEvent extends LoginScreenEvent {}

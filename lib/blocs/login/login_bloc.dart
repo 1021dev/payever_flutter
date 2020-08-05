@@ -21,6 +21,11 @@ class LoginScreenBloc extends Bloc<LoginScreenEvent, LoginScreenState> {
   Stream<LoginScreenState> mapEventToState(LoginScreenEvent event) async* {
     if (event is LoginEvent) {
       yield* login(event.email, event.password);
+    } else if (event is FetchLoginCredentialsEvent) {
+      FlutterSecureStorage storage = FlutterSecureStorage();
+      String email = await storage.read(key: GlobalUtils.EMAIL) ?? '';
+      String password = await storage.read(key: GlobalUtils.PASSWORD) ?? '';
+      yield state.copyWith(email: email, password: password);
     }
   }
 
