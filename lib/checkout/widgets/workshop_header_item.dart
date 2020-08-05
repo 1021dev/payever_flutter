@@ -7,17 +7,24 @@ class WorkshopHeader extends StatelessWidget {
   final bool isExpanded;
   final bool isApproved;
   final Function onTap;
-  const WorkshopHeader({this.title, this.subTitle = '', this.isExpanded, this.isApproved = false, this.onTap});
+  const WorkshopHeader({
+    this.title,
+    this.subTitle = '',
+    this.isExpanded,
+    this.isApproved = false,
+    this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 60,
+      height: 50,
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Container(
-            width: 100,
+          Flexible(
+            flex: 1,
             child: Text(
               title.toUpperCase(),
               style: TextStyle(
@@ -26,29 +33,41 @@ class WorkshopHeader extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(width: 10),
-          Text(
-            subTitle,
-            style: TextStyle(
-              color: Colors.black87,
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
+          SizedBox(
+            width: 8,
+          ),
+          Flexible(
+            flex: 2,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Flexible(
+                  child: Text(
+                    subTitle,
+                    style: TextStyle(
+                      color: Colors.black87,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: isApproved,
+                  child: IconButton(
+                    icon: Icon(
+                      this.isExpanded
+                          ? Icons.keyboard_arrow_up
+                          : Icons.keyboard_arrow_down,
+                      color: Colors.black38,
+                    ),
+                    onPressed: () {
+                      this.onTap();
+                    },
+                  ),
+                ),
+              ],
             ),
           ),
-          Spacer(),
-          Visibility(
-            visible: isApproved,
-            child: IconButton(
-                icon: Icon(
-                  this.isExpanded
-                      ? Icons.keyboard_arrow_up
-                      : Icons.keyboard_arrow_down,
-                  color: Colors.black38,
-                ),
-                onPressed: () {
-                  this.onTap();
-                }),
-          )
         ],
       ),
     );
