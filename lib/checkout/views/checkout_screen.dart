@@ -176,11 +176,39 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   }
 
   Widget _appBar(CheckoutScreenState state) {
+    String defaultCheckoutTitle = '';
+    if (state.defaultCheckout != null) {
+      defaultCheckoutTitle = state.defaultCheckout.name;
+    }
     return AppBar(
       centerTitle: false,
       elevation: 0,
       automaticallyImplyLeading: false,
       backgroundColor: Colors.black87,
+      bottom: TabBar(
+        isScrollable: true,
+        indicatorColor: Colors.white70,
+        tabs: <Widget>[
+          Tab(
+            text: defaultCheckoutTitle,
+          ),
+          Tab(
+            text: Language.getPosConnectStrings('integrations.payments.instant_payment.category'),
+          ),
+          Tab(
+            text: Language.getWidgetStrings('widgets.checkout.channels'),
+          ),
+          Tab(
+            text: Language.getCommerceOSStrings('dashboard.apps.connect'),
+          ),
+          Tab(
+            text: Language.getPosConnectStrings('Sections'),
+          ),
+          Tab(
+            text: Language.getConnectStrings('categories.communications.main.titles.settings'),
+          ),
+        ],
+      ),
       title: Row(
         children: <Widget>[
           Container(
@@ -318,25 +346,38 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   Widget _body(CheckoutScreenState state) {
     iconSize = _isTablet ? 120: 80;
     margin = _isTablet ? 24: 16;
-    return Scaffold(
-      backgroundColor: Colors.black,
-      resizeToAvoidBottomPadding: false,
-      appBar: _appBar(state),
-      body: SafeArea(
-        child: BackgroundBase(
-          true,
-          backgroudColor: Color.fromRGBO(20, 20, 0, 0.4),
-          body: Container(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+    return DefaultTabController(
+      length: 6,
+      child: Scaffold(
+        backgroundColor: Colors.black,
+        resizeToAvoidBottomPadding: false,
+        appBar: _appBar(state),
+        body: SafeArea(
+          child: BackgroundBase(
+            true,
+            backgroudColor: Color.fromRGBO(20, 20, 0, 0.4),
+//            body: Container(
+//              child: Column(
+//                crossAxisAlignment: CrossAxisAlignment.stretch,
+//                children: <Widget>[
+//                  _topBar(state),
+//                  Expanded(
+//                    child: _getBody(state),
+//                  ),
+//                ],
+//              ),
+//            ) ,
+            body: TabBarView(
               children: <Widget>[
-                _topBar(state),
-                Expanded(
-                  child: _getBody(state),
-                ),
+                _getBody(state, 0),
+                _getBody(state, 1),
+                _getBody(state, 2),
+                _getBody(state, 3),
+                _getBody(state, 4),
+                _getBody(state, 5),
               ],
             ),
-          ) ,
+          ),
         ),
       ),
     );
@@ -427,9 +468,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     );
   }
 
-  Widget _getBody(CheckoutScreenState state) {
+  Widget _getBody(CheckoutScreenState state, int index) {
 
-    switch (selectedIndex) {
+    switch (index) {
       case 0:
         return state.isLoading ?
         Center(

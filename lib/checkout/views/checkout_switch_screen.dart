@@ -13,13 +13,14 @@ bool _isPortrait;
 bool _isTablet;
 
 class CheckoutSwitchScreen extends StatefulWidget {
-
   final CheckoutScreenBloc screenBloc;
   final String businessId;
+  final Function onOpen;
 
   CheckoutSwitchScreen({
     this.screenBloc,
     this.businessId,
+    this.onOpen,
   });
 
   @override
@@ -30,20 +31,20 @@ class _CheckoutSwitchScreenState extends State<CheckoutSwitchScreen> {
   String imageBase = Env.storage + '/images/';
 
   CheckoutSwitchScreenBloc screenBloc;
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   Checkout selectedCheckout;
-  String wallpaper;
   bool isLoading = false;
 
   @override
   void initState() {
     screenBloc = CheckoutSwitchScreenBloc(checkoutScreenBloc: widget.screenBloc);
+    screenBloc.add(CheckoutSwitchScreenInitEvent(business: widget.businessId));
     super.initState();
   }
 
   @override
   void dispose() {
+    screenBloc.close();
     super.dispose();
   }
 
@@ -93,9 +94,9 @@ class _CheckoutSwitchScreenState extends State<CheckoutSwitchScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          _activeTerminalWidget(state) ,
+          _defaultCheckoutWidget(state) ,
           Text(
-            'Further Terminals',
+            'Further Checkouts',
             style: TextStyle(
               color: Colors.white,
               fontSize: 18,
@@ -105,13 +106,13 @@ class _CheckoutSwitchScreenState extends State<CheckoutSwitchScreen> {
           Padding(
             padding: EdgeInsets.only(top: 16),
           ),
-          _furtherTerminals(state),
+          _furtherCheckouts(state),
         ],
       ),
     );
   }
 
-  Widget _activeTerminalWidget(CheckoutSwitchScreenState state) {
+  Widget _defaultCheckoutWidget(CheckoutSwitchScreenState state) {
     String avatarName = '';
     if (state.defaultCheckout != null) {
       String name = state.defaultCheckout.name;
@@ -122,6 +123,8 @@ class _CheckoutSwitchScreenState extends State<CheckoutSwitchScreen> {
         avatarName = name.substring(0, 1) + name.substring(name.length - 1);
         avatarName = avatarName.toUpperCase();
       }
+    } else {
+      return Container();
     }
     return Container(
       padding: EdgeInsets.only(top: 64, bottom: 64),
@@ -170,6 +173,7 @@ class _CheckoutSwitchScreenState extends State<CheckoutSwitchScreen> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
+              elevation: 0,
               color: Colors.black26,
               child: Text(
                 '+ Add Checkout',
@@ -186,7 +190,7 @@ class _CheckoutSwitchScreenState extends State<CheckoutSwitchScreen> {
     );
   }
 
-  Widget _furtherTerminals(CheckoutSwitchScreenState state) {
+  Widget _furtherCheckouts(CheckoutSwitchScreenState state) {
     return GridView.count(
       crossAxisCount: _isTablet ? 5: 3,
       childAspectRatio: 0.7,
@@ -198,7 +202,7 @@ class _CheckoutSwitchScreenState extends State<CheckoutSwitchScreen> {
             selectedCheckout = checkout;
           });
         },
-        selected: selectedCheckout,
+        selected: selectedCheckout ?? state.defaultCheckout,
         checkout: cht,
         onMore: (Checkout checkout) {
           showCupertinoModalPopup(
@@ -210,7 +214,7 @@ class _CheckoutSwitchScreenState extends State<CheckoutSwitchScreen> {
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
                   color: Colors.black,
-                  borderRadius: BorderRadius.all(Radius.circular(15)),
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12)),
                 ),
                 padding: EdgeInsets.only(top: 16),
                 child: Column(
@@ -222,7 +226,7 @@ class _CheckoutSwitchScreenState extends State<CheckoutSwitchScreen> {
         },
         onOpen: (Checkout checkout) {
           screenBloc.add(SetDefaultCheckoutEvent(checkout: checkout));
-          Navigator.pop(context);
+          widget.onOpen(checkout);
         },
       )).toList(),
       physics: NeverScrollableScrollPhysics(),
@@ -238,7 +242,9 @@ class _CheckoutSwitchScreenState extends State<CheckoutSwitchScreen> {
             onPressed: () {
               Navigator.pop(context);
             },
-            child: Text('Edit'),
+            child: Text(
+              Language.getCheckoutStrings('checkout_sdk.action.edit'),
+            ),
           ),
         ),
       ),
@@ -434,6 +440,7 @@ class CheckoutCell extends StatelessWidget {
                       onOpen(checkout);
                     },
                     height: 20,
+                    elevation: 0,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),

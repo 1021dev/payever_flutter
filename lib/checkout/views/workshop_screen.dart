@@ -6,6 +6,8 @@ import 'package:intl/intl.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/checkout/checkout_bloc.dart';
 import 'package:payever/blocs/checkout/checkout_state.dart';
+import 'package:payever/checkout/models/models.dart';
+import 'package:payever/checkout/views/checkout_switch_screen.dart';
 import 'package:payever/checkout/widgets/checkout_top_button.dart';
 import 'package:payever/checkout/widgets/workshop_header_item.dart';
 import 'package:payever/commons/commons.dart';
@@ -157,6 +159,18 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
     NumberFormat format = NumberFormat();
     currency = format.simpleCurrencySymbol(currencyString);
 
+    if (switchCheckout) {
+
+      return CheckoutSwitchScreen(
+        businessId: state.business,
+        screenBloc: widget.checkoutScreenBloc,
+        onOpen: (Checkout checkout) {
+          setState(() {
+            switchCheckout = false;
+          });
+        },
+      );
+    }
     return Container(
       color: Colors.white,
       margin: const EdgeInsets.all(16),

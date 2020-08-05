@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:payever/checkout/models/models.dart';
-import 'package:payever/connect/models/connect.dart';
 
 class CheckoutSwitchScreenState {
   final bool isLoading;
@@ -11,7 +10,7 @@ class CheckoutSwitchScreenState {
   CheckoutSwitchScreenState({
     this.isLoading = false,
     this.business,
-    this.checkouts,
+    this.checkouts = const [],
     this.defaultCheckout,
   });
 
@@ -31,6 +30,8 @@ class CheckoutSwitchScreenState {
     return CheckoutSwitchScreenState(
       isLoading: isLoading ?? this.isLoading,
       business: business ?? this.business,
+      checkouts: checkouts ?? this.checkouts,
+      defaultCheckout: defaultCheckout ?? this.defaultCheckout,
     );
   }
 }

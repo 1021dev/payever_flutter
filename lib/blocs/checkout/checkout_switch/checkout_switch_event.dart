@@ -10,17 +10,14 @@ abstract class CheckoutSwitchScreenEvent extends Equatable {
 
 class CheckoutSwitchScreenInitEvent extends CheckoutSwitchScreenEvent {
   final String business;
-  final String category;
 
   CheckoutSwitchScreenInitEvent({
     this.business,
-    this.category,
   });
 
   @override
   List<Object> get props => [
     this.business,
-    this.category,
   ];
 }
 

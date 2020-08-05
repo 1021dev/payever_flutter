@@ -18,6 +18,11 @@ class CheckoutSwitchScreenBloc extends Bloc<CheckoutSwitchScreenEvent, CheckoutS
   Stream<CheckoutSwitchScreenState> mapEventToState(
       CheckoutSwitchScreenEvent event) async* {
     if (event is CheckoutSwitchScreenInitEvent) {
+      yield state.copyWith(
+        business: event.business,
+        checkouts: checkoutScreenBloc.state.checkouts,
+        defaultCheckout: checkoutScreenBloc.state.defaultCheckout,
+      );
     } else if (event is SetDefaultCheckoutEvent) {
 
     } else if (event is UpdateCheckoutEvent) {
