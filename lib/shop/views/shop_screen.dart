@@ -208,7 +208,7 @@ class _ShopScreenState extends State<ShopScreen> {
         builder: (BuildContext context, ShopScreenState state) {
           return DashboardMenuView(
             innerDrawerKey: _innerDrawerKey,
-            onLogout: () async* {
+            onLogout: () async {
               FlutterSecureStorage storage = FlutterSecureStorage();
               await storage.deleteAll();
               SharedPreferences.getInstance().then((p) {

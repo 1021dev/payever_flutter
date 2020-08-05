@@ -172,7 +172,7 @@ class _ContactScreenState extends State<ContactScreen> {
         builder: (BuildContext context, ContactScreenState state) {
           return DashboardMenuView(
             innerDrawerKey: _innerDrawerKey,
-            onLogout: () async* {
+            onLogout: () async {
               FlutterSecureStorage storage = FlutterSecureStorage();
               await storage.deleteAll();
               SharedPreferences.getInstance().then((p) {

@@ -31,7 +31,7 @@ class SwitcherScreenBloc extends Bloc<SwitcherScreenEvent, SwitcherScreenState> 
 
     List<Business> businesses = [];
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    String token = preferences.getString(GlobalUtils.TOKEN);
+    String token = GlobalUtils.activeToken.accessToken;
 
     dynamic userobj = await api.getUser(token);
     User user = User.map(userobj);
