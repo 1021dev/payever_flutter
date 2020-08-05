@@ -30,6 +30,8 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
   String currency = '';
   bool editOrder = false;
 
+  bool switchCheckout = false;
+
   List<String> titles = [
     'ACCOUNT',
     'BILLING & SHIPPING',
@@ -245,7 +247,11 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                         fontWeight: FontWeight.w400,
                       ),
                     ),
-                    onPressed: () {}, //callback when button is clicked
+                    onPressed: () {
+                      setState(() {
+                        switchCheckout = true;
+                      });
+                    }, //callback when button is clicked
                     height: 32,
                     minWidth: 0,
                     padding: EdgeInsets.only(left: 4, right: 4),
@@ -334,8 +340,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
     return Column(
       children: <Widget>[
         WorkshopHeader(
-          title: Language.getCheckoutStrings(
-              'checkout_order_summary.title'),
+          title: Language.getCheckoutStrings('checkout_order_summary.title'),
           isExpanded: _selectedSectionIndex == 0,
           isApproved: isOrderApproved,
           onTap: () {
