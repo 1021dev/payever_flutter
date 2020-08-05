@@ -40,3 +40,16 @@ class UpdateCheckoutSettings extends CheckoutScreenEvent {
 
   UpdateCheckoutSettings({this.settings});
 }
+
+class PatchCheckoutOrderEvent extends CheckoutScreenEvent {
+  final double amount;
+  final String reference;
+
+  PatchCheckoutOrderEvent(this.amount, this.reference);
+
+  @override
+  List<Object> get props => [
+    this.amount,
+    this.reference,
+  ];
+}

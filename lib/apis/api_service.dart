@@ -2147,4 +2147,23 @@ class ApiService {
     return result;
   }
 
+  Future<dynamic> patchCheckoutOrder(String token, String local, Map<String, dynamic>body) async {
+    try {
+      print('$TAG - patchCheckoutOrder()');
+      var rand = randomString(8);
+      print(rand);
+      dynamic response = await _client.patchTypeless(
+          '$checkoutV3?_locale=$local&rand=$rand',
+          body: body,
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
 }

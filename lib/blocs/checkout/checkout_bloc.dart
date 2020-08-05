@@ -33,6 +33,8 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       yield* getPaymentData();
     } else if (event is GetPhoneNumbers) {
       yield* getPhoneNumbers();
+    } else if (event is PatchCheckoutOrderEvent) {
+      yield* patchCheckoutOrder(event);
     }
   }
 
@@ -170,4 +172,17 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     }
     yield state.copyWith(phoneNumbers: phoneNumbers);
   }
+
+  Stream<CheckoutScreenState> patchCheckoutOrder(PatchCheckoutOrderEvent event) async* {
+    yield state.copyWith(
+      isLoading: true,
+    );
+    Map<String, dynamic>body = {'amount': event.amount, 'reference': event.reference};
+    dynamic response = await api.patchCheckoutOrder(token, 'en', body);
+    yield state.copyWith(
+      isLoading: false,
+    );
+  }
+
+
 }

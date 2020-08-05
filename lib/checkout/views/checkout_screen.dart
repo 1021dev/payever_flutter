@@ -436,7 +436,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         return state.isLoading ?
         Center(
           child: CircularProgressIndicator(),
-        ) : WorkShopInitScreen();
+        ) : WorkshopScreen(checkoutScreenBloc: this.screenBloc,);
       case 1:
         return PaymentOptionsScreen(
           connects: state.connects,

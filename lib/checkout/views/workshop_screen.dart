@@ -1,22 +1,27 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:payever/blocs/bloc.dart';
+import 'package:payever/blocs/checkout/checkout_bloc.dart';
+import 'package:payever/blocs/checkout/checkout_state.dart';
 import 'package:payever/checkout/widgets/checkout_top_button.dart';
 import 'package:payever/commons/commons.dart';
-class WorkShopInitScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return WorkshopScreen();
-  }
-}
 
 class WorkshopScreen extends StatefulWidget {
+  final CheckoutScreenBloc checkoutScreenBloc;
+
+  const WorkshopScreen({this.checkoutScreenBloc});
+
   @override
   _WorkshopScreenState createState() => _WorkshopScreenState();
 }
 
 class _WorkshopScreenState extends State<WorkshopScreen> {
-  bool openAdditional = true;
+
+  bool openOrder = true;
+  bool openAccount = false;
+
   List<String> titles = [
     'ACCOUNT',
     'BILLING & SHIPPING',
@@ -31,16 +36,22 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
   ];
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      child: Column(
-        children: <Widget>[
-          _topBar(),
-          Flexible(
-            child: _body(),
+
+    return BlocBuilder<CheckoutScreenBloc, CheckoutScreenState>(
+      bloc: widget.checkoutScreenBloc,
+      builder: (BuildContext context, state) {
+        return Container(
+          color: Colors.white,
+          child: Column(
+            children: <Widget>[
+              _topBar(),
+              Flexible(
+                child: _body(state),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
   Widget _topBar() {
@@ -128,7 +139,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
     );
   }
 
-  Widget _body() {
+  Widget _body(CheckoutScreenState state) {
     return Padding(
       padding: const EdgeInsets.all(15),
       child: Container(
@@ -184,31 +195,31 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         Text(
-                          Language.getCheckoutStrings('checkout_order_summary.title'),
+                          Language.getCheckoutStrings('checkout_order_summary.title').toUpperCase(),
                           style: TextStyle(
                             color: Colors.black54,
-                            fontSize: 16,
+                            fontSize: 12,
                           ),
                         ),
                         Spacer(),
                         IconButton(
                             icon: Icon(
-                              openAdditional
+                              openOrder
                                   ? Icons.keyboard_arrow_up
                                   : Icons.keyboard_arrow_down,
                               color: Colors.black38,
                             ),
                             onPressed: () {
                               setState(() {
-                                openAdditional = !openAdditional;
+                                openOrder = !openOrder;
                               });
                             })
                       ],
                     ),
                   ),
                   Visibility(
-                    visible: openAdditional,
-                    child: _additionalView(),
+                    visible: openOrder,
+                    child: _orderView(state),
                   ),
                   Divider(
                     height: 1,
@@ -219,7 +230,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
                       return Container(
-                        height: 100,
+                        height: 70,
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
@@ -229,7 +240,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                                 titles[index],
                                 style: TextStyle(
                                   color: Colors.black54,
-                                  fontSize: 15,
+                                  fontSize: 12,
                                 ),
                               ),
                             ),
@@ -239,8 +250,8 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                                 values[index],
                                 style: TextStyle(
                                   color: Colors.black87,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w400,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
                             )
@@ -265,18 +276,18 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
     );
   }
 
-  Widget _additionalView() {
+  Widget _orderView(CheckoutScreenState state) {
     return Column(
       children: <Widget>[
         Container(
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.black38),
-            borderRadius: BorderRadius.all(Radius.circular(4)),
+            border: Border.all(color: Colors.grey),
+            borderRadius: BorderRadius.all(Radius.circular(8)),
           ),
           child: Column(
             children: <Widget>[
               Container(
-                height: 60,
+                height: 50,
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -314,7 +325,108 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
               ),
               Divider(height: 1,color: Colors.black54,),
               Container(
-                height: 60,
+                height: 50,
+                child: TextFormField(
+                  style: TextStyle(
+                    fontSize: 16,
+                    color:Colors.black54,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  onChanged: (val) {
+                  },
+                  initialValue: '',
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.only(left: 16, right: 16),
+                    labelText: 'Reference',
+                    labelStyle: TextStyle(
+                      color: Colors.grey,
+                    ),
+                    enabledBorder: InputBorder.none,
+                  ),
+                  keyboardType: TextInputType.text,
+                ),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(
+          height: 20,
+        ),
+        InkWell(
+          onTap: () {},
+          child: Container(
+            height: 50,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(4),
+              color: Colors.black87,
+            ),
+            child: Center(
+              child: state.isLoading ?
+              Text(
+                'Next Step',
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w400,
+                ),
+              ) : CircularProgressIndicator(),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _accountView() {
+    return Column(
+      children: <Widget>[
+        Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey),
+            borderRadius: BorderRadius.all(Radius.circular(8)),
+          ),
+          child: Column(
+            children: <Widget>[
+              Container(
+                height: 50,
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Text('US\$',
+                      style: TextStyle(
+                        color: Colors.black54,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    Expanded(
+                      child: TextFormField(
+                        style: TextStyle(
+                          fontSize: 16,
+                          color:Colors.black54,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        onChanged: (val) {
+                        },
+                        initialValue: '',
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.only(left: 16, right: 16),
+                          labelText: 'Amount',
+                          labelStyle: TextStyle(
+                            color: Colors.grey,
+                          ),
+                          enabledBorder: InputBorder.none,
+                        ),
+                        keyboardType: TextInputType.text,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Divider(height: 1,color: Colors.black54,),
+              Container(
+                height: 50,
                 child: TextFormField(
                   style: TextStyle(
                     fontSize: 16,
@@ -364,6 +476,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
       ],
     );
   }
+
   List<CheckOutPopupButton> _morePopup(BuildContext context) {
     return [
       CheckOutPopupButton(
