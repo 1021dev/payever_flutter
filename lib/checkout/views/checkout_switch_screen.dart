@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/checkout/models/models.dart';
+import 'package:payever/checkout/views/create_edit_checkout_screen.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 
@@ -168,6 +170,18 @@ class _CheckoutSwitchScreenState extends State<CheckoutSwitchScreen> {
             ),
             MaterialButton(
               onPressed: () {
+                Navigator.push(
+                  context,
+                  PageTransition(
+                    child: CreateEditCheckoutScreen(
+                      screenBloc: screenBloc,
+                      businessId: screenBloc.state.business,
+                      fromDashBoard: false,
+                    ),
+                    type: PageTransitionType.fade,
+                    duration: Duration(milliseconds: 500),
+                  ),
+                );
               },
               height: 32,
               shape: RoundedRectangleBorder(
@@ -241,6 +255,19 @@ class _CheckoutSwitchScreenState extends State<CheckoutSwitchScreen> {
           child: MaterialButton(
             onPressed: () {
               Navigator.pop(context);
+              Navigator.push(
+                context,
+                PageTransition(
+                  child: CreateEditCheckoutScreen(
+                    screenBloc: screenBloc,
+                    businessId: screenBloc.state.business,
+                    checkout: checkout,
+                    fromDashBoard: false,
+                  ),
+                  type: PageTransitionType.fade,
+                  duration: Duration(milliseconds: 500),
+                ),
+              );
             },
             child: Text(
               Language.getCheckoutStrings('checkout_sdk.action.edit'),
@@ -286,7 +313,7 @@ class _CheckoutSwitchScreenState extends State<CheckoutSwitchScreen> {
                               padding: EdgeInsets.only(top: 16),
                             ),
                             Text(
-                              Language.getPosStrings('delete_terminal_confirm.title'),
+                              Language.getCheckoutStrings('Deleting Checkout'),
                               style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w300,
@@ -297,7 +324,7 @@ class _CheckoutSwitchScreenState extends State<CheckoutSwitchScreen> {
                               padding: EdgeInsets.only(top: 16),
                             ),
                             Text(
-                              Language.getPosStrings('delete_terminal_confirm.description'),
+                              Language.getCheckoutStrings('Do you really want to delete your checkout? Because all data will be lost and you will not be able to restore it.'),
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   fontSize: 14,
