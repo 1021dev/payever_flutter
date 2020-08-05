@@ -45,7 +45,7 @@ class PatchCheckoutOrderEvent extends CheckoutScreenEvent {
   final double amount;
   final String reference;
 
-  PatchCheckoutOrderEvent(this.amount, this.reference);
+  PatchCheckoutOrderEvent({this.amount, this.reference});
 
   @override
   List<Object> get props => [

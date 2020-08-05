@@ -6,6 +6,7 @@ import 'package:payever/connect/models/connect.dart';
 
 class CheckoutScreenState {
   final bool isLoading;
+  final bool isOrdering;
   final String business;
   final List<Checkout> checkouts;
   final List<ChannelSet> channelSets;
@@ -20,6 +21,7 @@ class CheckoutScreenState {
 
   CheckoutScreenState({
     this.isLoading = false,
+    this.isOrdering = false,
     this.business,
     this.checkouts = const [],
     this.channelSets = const [],
@@ -35,6 +37,7 @@ class CheckoutScreenState {
 
   List<Object> get props => [
     this.isLoading,
+    this.isOrdering,
     this.business,
     this.checkouts,
     this.channelSets,
@@ -50,6 +53,7 @@ class CheckoutScreenState {
 
   CheckoutScreenState copyWith({
     bool isLoading,
+    bool isOrdering,
     String business,
     List<Checkout> checkouts,
     List<ChannelSet> channelSets,
@@ -64,6 +68,7 @@ class CheckoutScreenState {
   }) {
     return CheckoutScreenState(
       isLoading: isLoading ?? this.isLoading,
+      isOrdering: isOrdering ?? this.isOrdering,
       business: business ?? this.business,
       checkouts: checkouts ?? this.checkouts,
       channelSets: channelSets ?? this.channelSets,

@@ -6,6 +6,7 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/checkout/checkout_bloc.dart';
 import 'package:payever/blocs/checkout/checkout_state.dart';
 import 'package:payever/checkout/widgets/checkout_top_button.dart';
+import 'package:payever/checkout/widgets/workshop_header_item.dart';
 import 'package:payever/commons/commons.dart';
 
 class WorkshopScreen extends StatefulWidget {
@@ -19,8 +20,13 @@ class WorkshopScreen extends StatefulWidget {
 
 class _WorkshopScreenState extends State<WorkshopScreen> {
 
-  bool openOrder = true;
-  bool openAccount = false;
+  int _selectedSectionIndex = 0;
+  bool isOrderApproved = true;
+  bool isAccountApproved = false;
+  bool isSendDeviceApproved = false;
+  bool isSelectPaymentApproved = false;
+  bool isBillingApproved = false;
+
 
   List<String> titles = [
     'ACCOUNT',
@@ -184,89 +190,25 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                 ),
               ),
               Divider(
-                height: 2,
+                height: 0,
+                thickness: 0.5,
                 color: Colors.black54,
               ),
               Column(
                 children: <Widget>[
-                  Container(
-                    height: 60,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          Language.getCheckoutStrings('checkout_order_summary.title').toUpperCase(),
-                          style: TextStyle(
-                            color: Colors.black54,
-                            fontSize: 12,
-                          ),
-                        ),
-                        Spacer(),
-                        IconButton(
-                            icon: Icon(
-                              openOrder
-                                  ? Icons.keyboard_arrow_up
-                                  : Icons.keyboard_arrow_down,
-                              color: Colors.black38,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                openOrder = !openOrder;
-                              });
-                            })
-                      ],
-                    ),
-                  ),
-                  Visibility(
-                    visible: openOrder,
-                    child: _orderView(state),
-                  ),
+                  _orderView(state),
                   Divider(
-                    height: 1,
+                    height: 0,
+                    thickness: 0.5,
                     color: Colors.black54,
                   ),
-                  ListView.separated(
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      return Container(
-                        height: 70,
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Container(
-                              width: 100,
-                              child: Text(
-                                titles[index],
-                                style: TextStyle(
-                                  color: Colors.black54,
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 10),
-                            Expanded(
-                              child: Text(
-                                values[index],
-                                style: TextStyle(
-                                  color: Colors.black87,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      );
-                    },
-                    itemCount: titles.length,
-                    separatorBuilder: (context, index) {
-                      return Divider(
-                        height: 1,
-                        color: Colors.black54,
-                      );
-                    },
-                  )
+                  _accountView(state),
+                  Divider(
+                    height: 0,
+                    thickness: 0.5,
+                    color: Colors.black54,
+                  ),
+                  _billingView(state),
                 ],
               ),
             ],
@@ -279,27 +221,68 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
   Widget _orderView(CheckoutScreenState state) {
     return Column(
       children: <Widget>[
-        Container(
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey),
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-          ),
+        WorkshopHeader(
+          title: Language.getCheckoutStrings(
+              'checkout_order_summary.title'),
+          isExpanded: _selectedSectionIndex == 0,
+          isApproved: isOrderApproved,
+          onTap: () {
+            setState(() {
+              _selectedSectionIndex = _selectedSectionIndex == 0 ? -1 : 0;
+            });
+          },
+        ),
+        Visibility(
+          visible: _selectedSectionIndex == 0,
           child: Column(
             children: <Widget>[
               Container(
-                height: 50,
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                ),
+                child: Column(
                   children: <Widget>[
-                    Text('US\$',
-                      style: TextStyle(
-                        color: Colors.black54,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
+                    Container(
+                      height: 50,
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Text('US\$',
+                            style: TextStyle(
+                              color: Colors.black54,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          Expanded(
+                            child: TextFormField(
+                              style: TextStyle(
+                                fontSize: 16,
+                                color:Colors.black54,
+                                fontWeight: FontWeight.w400,
+                              ),
+                              onChanged: (val) {
+                              },
+                              initialValue: '',
+                              decoration: InputDecoration(
+                                contentPadding: EdgeInsets.only(left: 16, right: 16),
+                                labelText: 'Amount',
+                                labelStyle: TextStyle(
+                                  color: Colors.grey,
+                                ),
+                                enabledBorder: InputBorder.none,
+                              ),
+                              keyboardType: TextInputType.text,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    Expanded(
+                    Divider(height: 1,color: Colors.black54,),
+                    Container(
+                      height: 50,
                       child: TextFormField(
                         style: TextStyle(
                           fontSize: 16,
@@ -311,7 +294,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                         initialValue: '',
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.only(left: 16, right: 16),
-                          labelText: 'Amount',
+                          labelText: 'Reference',
                           labelStyle: TextStyle(
                             color: Colors.grey,
                           ),
@@ -323,84 +306,100 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                   ],
                 ),
               ),
-              Divider(height: 1,color: Colors.black54,),
-              Container(
-                height: 50,
-                child: TextFormField(
-                  style: TextStyle(
-                    fontSize: 16,
-                    color:Colors.black54,
-                    fontWeight: FontWeight.w400,
+              SizedBox(
+                height: 20,
+              ),
+              InkWell(
+                onTap: () {
+                  if (!state.isOrdering) {
+                    widget.checkoutScreenBloc.add(
+                        PatchCheckoutOrderEvent(amount: 100, reference: 'Test'));
+                    _selectedSectionIndex = 1;
+                    isAccountApproved = true;
+                  }
+                },
+                child: Container(
+                  height: 50,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4),
+                    color: Colors.black87,
                   ),
-                  onChanged: (val) {
-                  },
-                  initialValue: '',
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.only(left: 16, right: 16),
-                    labelText: 'Reference',
-                    labelStyle: TextStyle(
-                      color: Colors.grey,
+                  child: Center(
+                    child: state.isOrdering ?
+                    CircularProgressIndicator() :
+                    Text(
+                      'Next Step',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
-                    enabledBorder: InputBorder.none,
                   ),
-                  keyboardType: TextInputType.text,
                 ),
               ),
+              SizedBox(height: 20,),
             ],
-          ),
-        ),
-        SizedBox(
-          height: 20,
-        ),
-        InkWell(
-          onTap: () {},
-          child: Container(
-            height: 50,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(4),
-              color: Colors.black87,
-            ),
-            child: Center(
-              child: state.isLoading ?
-              Text(
-                'Next Step',
-                style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w400,
-                ),
-              ) : CircularProgressIndicator(),
-            ),
           ),
         ),
       ],
     );
   }
 
-  Widget _accountView() {
+  Widget _sendToDeviceView(CheckoutScreenState state) {
+    return Container();
+  }
+
+  Widget _accountView(CheckoutScreenState state) {
     return Column(
       children: <Widget>[
-        Container(
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey),
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-          ),
+        WorkshopHeader(
+          title: 'Account',
+          subTitle: 'Login or enter your email',
+          isExpanded: _selectedSectionIndex == 1,
+          isApproved: isAccountApproved,
+          onTap: () {
+            setState(() {
+              _selectedSectionIndex = _selectedSectionIndex == 1 ? -1 : 1;
+            });
+          },
+        ),
+        Visibility(
+          visible: _selectedSectionIndex == 1,
           child: Column(
             children: <Widget>[
               Container(
-                height: 50,
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                ),
+                child: Column(
                   children: <Widget>[
-                    Text('US\$',
-                      style: TextStyle(
-                        color: Colors.black54,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                      ),
+                    Container(
+                      height: 50,
+                      child: TextFormField(
+                          style: TextStyle(
+                            fontSize: 16,
+                            color:Colors.black54,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          onChanged: (val) {
+                          },
+                          initialValue: '',
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.only(left: 16, right: 16),
+                            labelText: 'Mobile number',
+                            labelStyle: TextStyle(
+                              color: Colors.grey,
+                            ),
+                            enabledBorder: InputBorder.none,
+                          ),
+                          keyboardType: TextInputType.text,
+                        ),
                     ),
-                    Expanded(
+                    Divider(height: 1,color: Colors.black54,),
+                    Container(
+                      height: 50,
                       child: TextFormField(
                         style: TextStyle(
                           fontSize: 16,
@@ -412,7 +411,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                         initialValue: '',
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.only(left: 16, right: 16),
-                          labelText: 'Amount',
+                          labelText: 'E-Mail Address',
                           labelStyle: TextStyle(
                             color: Colors.grey,
                           ),
@@ -424,57 +423,191 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                   ],
                 ),
               ),
-              Divider(height: 1,color: Colors.black54,),
-              Container(
-                height: 50,
-                child: TextFormField(
-                  style: TextStyle(
-                    fontSize: 16,
-                    color:Colors.black54,
-                    fontWeight: FontWeight.w400,
-                  ),
-                  onChanged: (val) {
-                  },
-                  initialValue: '',
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.only(left: 16, right: 16),
-                    labelText: 'Reference',
-                    labelStyle: TextStyle(
-                      color: Colors.grey,
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  MaterialButton(
+                    onPressed: () {
+                      setState(() {
+                        _selectedSectionIndex = 2;
+                        isBillingApproved = true;
+                      });
+                    },
+                    elevation: 0,
+                    height: 24,
+                    minWidth: Measurements.width/2 - 30,
+                    child: Text(
+                      'Skip',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.black87,
+                      ),
                     ),
-                    enabledBorder: InputBorder.none,
                   ),
-                  keyboardType: TextInputType.text,
-                ),
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        _selectedSectionIndex = 2;
+                        isBillingApproved = true;
+                      });
+                    },
+                    child: Container(
+                      height: 50,
+                      width: Measurements.width/2 - 30,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(4),
+                        color: Colors.black87,
+                      ),
+                      child: Center(
+                        child: Text(
+                          'Continue',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
+              SizedBox(height: 20,),
             ],
-          ),
-        ),
-        SizedBox(
-          height: 20,
-        ),
-        InkWell(
-          onTap: () {},
-          child: Container(
-            height: 50,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(4),
-              color: Colors.black87,
-            ),
-            child: Center(
-              child: Text(
-                'Next Step',
-                style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-            ),
           ),
         ),
       ],
     );
+  }
+
+  Widget _billingView(CheckoutScreenState state) {
+    return Column(
+      children: <Widget>[
+        WorkshopHeader(
+          title: 'BILLING & SHIPPING',
+          subTitle: 'Add your billing and shipping address',
+          isExpanded: _selectedSectionIndex == 2,
+          isApproved: isBillingApproved,
+          onTap: () {
+            setState(() {
+              _selectedSectionIndex = _selectedSectionIndex == 2 ? -1 : 2;
+            });
+          },
+        ),
+        Visibility(
+          visible: _selectedSectionIndex == 2,
+          child: Column(
+            children: <Widget>[
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                ),
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      height: 50,
+                      child: TextFormField(
+                        style: TextStyle(
+                          fontSize: 16,
+                          color:Colors.black54,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        onChanged: (val) {
+                        },
+                        initialValue: '',
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.only(left: 16, right: 16),
+                          labelText: 'Mobile number',
+                          labelStyle: TextStyle(
+                            color: Colors.grey,
+                          ),
+                          enabledBorder: InputBorder.none,
+                        ),
+                        keyboardType: TextInputType.text,
+                      ),
+                    ),
+                    Divider(height: 1,color: Colors.black54,),
+                    Container(
+                      height: 50,
+                      child: TextFormField(
+                        style: TextStyle(
+                          fontSize: 16,
+                          color:Colors.black54,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        onChanged: (val) {
+                        },
+                        initialValue: '',
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.only(left: 16, right: 16),
+                          labelText: 'E-Mail Address',
+                          labelStyle: TextStyle(
+                            color: Colors.grey,
+                          ),
+                          enabledBorder: InputBorder.none,
+                        ),
+                        keyboardType: TextInputType.text,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  MaterialButton(
+                    onPressed: () {},
+                    elevation: 0,
+                    height: 24,
+                    minWidth: Measurements.width/2 - 30,
+                    child: Text(
+                      'Skip',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {},
+                    child: Container(
+                      height: 50,
+                      width: Measurements.width/2 - 30,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(4),
+                        color: Colors.black87,
+                      ),
+                      child: Center(
+                        child: Text(
+                          'Continue',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 20,),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _paymentView() {
+    return Container();
   }
 
   List<CheckOutPopupButton> _morePopup(BuildContext context) {

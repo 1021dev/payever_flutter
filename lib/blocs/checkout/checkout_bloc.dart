@@ -175,12 +175,13 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
 
   Stream<CheckoutScreenState> patchCheckoutOrder(PatchCheckoutOrderEvent event) async* {
     yield state.copyWith(
-      isLoading: true,
+      isOrdering: true,
     );
     Map<String, dynamic>body = {'amount': event.amount, 'reference': event.reference};
-    dynamic response = await api.patchCheckoutOrder(token, 'en', body);
+//    dynamic response = await api.patchCheckoutOrder(token, 'en', body);
+    await Future.delayed(Duration(milliseconds: 1000));
     yield state.copyWith(
-      isLoading: false,
+      isOrdering: false,
     );
   }
 
