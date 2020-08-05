@@ -26,6 +26,7 @@ class LoginScreenBloc extends Bloc<LoginScreenEvent, LoginScreenState> {
       String email = await storage.read(key: GlobalUtils.EMAIL) ?? '';
       String password = await storage.read(key: GlobalUtils.PASSWORD) ?? '';
       yield state.copyWith(email: email, password: password);
+      yield LoadedCredentialsState(username: email, password: password);
     }
   }
 

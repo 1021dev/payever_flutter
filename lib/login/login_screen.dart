@@ -42,11 +42,14 @@ class _LoginState extends State<Login> {
 
   String _password, _username;
 
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
   final LoginScreenBloc loginScreenBloc = LoginScreenBloc(); // ignore: close_sinks
 
   @override
   void initState() {
     super.initState();
+    loginScreenBloc.add(FetchLoginCredentialsEvent());
     String fingerPrint = '${Platform.operatingSystem}  ${Platform.operatingSystemVersion}';
     GlobalUtils.fingerprint = fingerPrint;
     SharedPreferences.getInstance().then((p) {
@@ -88,6 +91,9 @@ class _LoginState extends State<Login> {
                   child: SwitcherScreen(),
                 )
             );
+          } else if (state is LoadedCredentialsState) {
+            emailController.text = state.username;
+            passwordController.text = state.password;
           }
         },
         child: BlocBuilder<LoginScreenBloc, LoginScreenState>(
@@ -199,6 +205,7 @@ class _LoginState extends State<Login> {
                                                       left: _paddingText,
                                                       right: _paddingText),
                                                   child: TextFormField(
+                                                    controller: emailController,
                                                     enabled: !state.isLoading,
                                                     onSaved: (val) => _username = val,
                                                     onChanged: (val) {
@@ -227,7 +234,6 @@ class _LoginState extends State<Login> {
                                                     style: TextStyle(fontSize: 16),
                                                     keyboardType:
                                                     TextInputType.emailAddress,
-                                                    initialValue: state.email,
                                                   ),
                                                 ),
                                               ),
@@ -253,6 +259,7 @@ class _LoginState extends State<Login> {
                                                             left: _paddingText,
                                                             right: _paddingText),
                                                         child: TextFormField(
+                                                          controller: passwordController,
                                                           enabled: !state.isLoading,
                                                           onSaved: (val) => _password = val,
                                                           onChanged: (val) {
@@ -278,7 +285,6 @@ class _LoginState extends State<Login> {
                                                           ),
                                                           obscureText: true,
                                                           style: TextStyle(fontSize: 16),
-                                                          initialValue: state.password,
                                                         ),
                                                       ),
                                                     ],

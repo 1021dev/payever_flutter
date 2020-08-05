@@ -31,6 +31,15 @@ class LoginScreenState {
   }
 }
 
+class LoadedCredentialsState extends LoginScreenState {
+  final String username;
+  final String password;
+  LoadedCredentialsState({
+    this.username,
+    this.password,
+  });
+}
+
 class LoginScreenSuccess extends LoginScreenState {}
 
 class LoginScreenFailure extends LoginScreenState {
