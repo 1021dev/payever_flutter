@@ -5,28 +5,33 @@ class CheckoutChannelSetScreenState {
   final bool isLoading;
   final List<ChannelSet> channelSets;
   final String business;
+  final String type;
 
   CheckoutChannelSetScreenState({
     this.isLoading = false,
     this.channelSets = const [],
     this.business,
+    this.type,
   });
 
   List<Object> get props => [
     this.isLoading,
     this.channelSets,
     this.business,
+    this.type,
   ];
 
   CheckoutChannelSetScreenState copyWith({
     bool isLoading,
     List<ChannelSet> channelSets,
     String business,
+    String type,
   }) {
     return CheckoutChannelSetScreenState(
       isLoading: isLoading ?? this.isLoading,
       channelSets: channelSets ?? this.channelSets,
       business: business ?? this.business,
+      type: type ?? this.type,
     );
   }
 }

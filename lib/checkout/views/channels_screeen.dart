@@ -111,7 +111,9 @@ class _ChannelsScreenState extends State<ChannelsScreen> {
                                     ),
                                   ) : Container(),
                                   MaterialButton(
-                                    onPressed: widget.onTapOpen,
+                                    onPressed: () {
+                                      widget.onTapOpen(model);
+                                    },
                                     color: Colors.black38,
                                     elevation: 0,
                                     shape: RoundedRectangleBorder(

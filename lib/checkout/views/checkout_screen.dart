@@ -25,6 +25,7 @@ import 'package:payever/switcher/switcher_page.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'checkout_channelset_screen.dart';
 import 'checkout_connect_screen.dart';
 
 class CheckoutInitScreen extends StatelessWidget {
@@ -451,8 +452,47 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               ),
             );
           },
-          onTapOpen: ( ) {
-
+          onTapOpen: (ChannelItem model) {
+            if (model.title == 'Point of Sale') {
+              Navigator.push(
+                context,
+                PageTransition(
+                  child: CheckoutChannelSetScreen(
+                    checkoutScreenBloc: screenBloc,
+                    business: state.business,
+                    category: 'pos',
+                  ),
+                  type: PageTransitionType.fade,
+                  duration: Duration(milliseconds: 500),
+                ),
+              );
+            } else if (model.title == 'Shop') {
+              Navigator.push(
+                context,
+                PageTransition(
+                  child: CheckoutChannelSetScreen(
+                    checkoutScreenBloc: screenBloc,
+                    business: state.business,
+                    category: 'shop',
+                  ),
+                  type: PageTransitionType.fade,
+                  duration: Duration(milliseconds: 500),
+                ),
+              );
+            } else if (model.title == 'Mail') {
+              Navigator.push(
+                context,
+                PageTransition(
+                  child: CheckoutChannelSetScreen(
+                    checkoutScreenBloc: screenBloc,
+                    business: state.business,
+                    category: 'marketing',
+                  ),
+                  type: PageTransitionType.fade,
+                  duration: Duration(milliseconds: 500),
+                ),
+              );
+            }
           },
         );
       case 3:

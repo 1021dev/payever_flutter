@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:payever/apis/api_service.dart';
@@ -22,19 +21,38 @@ class CheckoutChannelSetScreenBloc extends Bloc<CheckoutChannelSetScreenEvent, C
   Stream<CheckoutChannelSetScreenState> mapEventToState(
       CheckoutChannelSetScreenEvent event) async* {
     if (event is CheckoutChannelSetScreenInitEvent) {
-      yield state.copyWith(business: event.business, channelSets:  checkoutScreenBloc.state.channelSets);
+      List<ChannelSet> channelSets = checkoutScreenBloc.state.channelSets.where((element) => element.type == event.type).toList();
+      yield state.copyWith(
+        business: event.business,
+        channelSets: channelSets,
+        type: event.type,
+      );
     } else if (event is UpdateChannelSet) {
-
+      yield* updateChannelSet(event.channelSet, event.checkoutId);
+    } else if (event is GetChannelSetEvent) {
+      yield* getChannelSets();
     }
   }
 
-  Stream<CheckoutChannelSetScreenState> updateChannelSet(String businessId, ChannelSet channelSet, String checkoutId ) async* {
-    if (state.channelSets.length == 0) {
-      yield state.copyWith(isLoading: true);
+  Stream<CheckoutChannelSetScreenState> updateChannelSet(ChannelSet channelSet, String checkoutId) async* {
+    List<ChannelSet> chsets = [];
+    String chId;
+    chsets.addAll(state.channelSets);
+    int index = chsets.indexOf(channelSet);
+    ChannelSet chset = chsets[index];
+    if (chset.checkout == checkoutId) {
+      chset.checkout = '';
+    } else {
+      chset.checkout = checkoutId;
+      chId = checkoutId;
     }
+    chsets[index] = chset;
+    await api.patchCheckoutChannelSet(token, state.business, chset.id, chId);
+    yield state.copyWith(channelSets: chsets);
+    checkoutScreenBloc.add(GetChannelSet());
+  }
 
-    dynamic response = await api.getConnectIntegrationByCategory(
-        token, state.business, 'communications');
+  Stream<CheckoutChannelSetScreenState> getChannelSets() async* {
     List<ChannelSet> channelSets = [];
     dynamic channelSetResponse = await api.getChannelSet(state.business, token);
     if (channelSetResponse is List) {
@@ -42,8 +60,8 @@ class CheckoutChannelSetScreenBloc extends Bloc<CheckoutChannelSetScreenEvent, C
         channelSets.add(ChannelSet.toMap(element));
       });
     }
+    List<ChannelSet> typeChannelSets = channelSets.where((element) => element.type == state.type).toList();
 
-    yield state.copyWith(channelSets: channelSets);
-    checkoutScreenBloc.add(GetChannelSet());
+    yield state.copyWith(channelSets: typeChannelSets);
   }
 }

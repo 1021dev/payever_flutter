@@ -2247,7 +2247,7 @@ class ApiService {
 
   Future<dynamic> patchCheckoutChannelSet(String token, String business, String channelId, String checkoutId) async {
     try {
-      print('$TAG - patchCheckoutChannelSet()');
+      print('$TAG - patchCheckoutChannelSet() -> CheckoutId => $checkoutId');
       dynamic response = await _client.patchTypeless(
           '${Env.checkout}/api/business/$business/channelSet/$channelId/checkout',
           body: {

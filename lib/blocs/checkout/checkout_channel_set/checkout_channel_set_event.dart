@@ -11,18 +11,23 @@ abstract class CheckoutChannelSetScreenEvent extends Equatable {
 
 class CheckoutChannelSetScreenInitEvent extends CheckoutChannelSetScreenEvent {
   final String business;
+  final String type;
 
   CheckoutChannelSetScreenInitEvent({
     this.business,
+    this.type,
   });
 
   @override
   List<Object> get props => [
     this.business,
+    this.type,
   ];
 }
 
-class UpdateChannelSet extends CheckoutChannelSetScreenEvent{
+class GetChannelSetEvent extends CheckoutChannelSetScreenEvent {}
+
+class UpdateChannelSet extends CheckoutChannelSetScreenEvent {
 
   final ChannelSet channelSet;
   final String checkoutId;

@@ -142,9 +142,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
   }
 
   Stream<CheckoutScreenState> getPaymentData() async* {
-    if (state.connects.length == 0) {
-      yield state.copyWith(loadingPaymentOption: true);
-    }
+    yield state.copyWith(loadingPaymentOption: true);
     List<ConnectModel> integrations = [];
     dynamic integrationsResponse = await api.getCheckoutIntegrations(state.business, token);
     if (integrationsResponse is List) {
@@ -211,11 +209,11 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
 
 
   Stream<CheckoutScreenState> getChannelConfig() async* {
-    if (state.channelItems.length == 0) {
+//    if (state.channelItems.length == 0) {
       yield state.copyWith(
-        loadingConnect: true,
+        loadingChannel: true,
       );
-    }
+//    }
     List<ConnectModel> connectInstallations = [];
     dynamic categoryResponse = await api.getConnectIntegrationByCategory(
         token, state.business, 'shopsystems');
@@ -325,11 +323,9 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
   }
 
   Stream<CheckoutScreenState> getConnectConfig() async* {
-    if (state.connectItems.length == 0) {
       yield state.copyWith(
         loadingConnect: true,
       );
-    }
     List<ConnectModel> connectInstallations = [];
     dynamic categoryResponse = await api.getConnectIntegrationByCategory(
         token, state.business, 'communications');
