@@ -1,7 +1,10 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/blocs/dashboard/dashboard_bloc.dart';
 import 'package:payever/checkout/models/models.dart';
+import 'package:payever/checkout/views/channels_screeen.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/connect/models/connect.dart';
@@ -199,10 +202,112 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     yield state.copyWith(
       isOrdering: true,
     );
+    List<ConnectModel> connectInstallations = [];
+    dynamic categoryResponse = await api.getConnectIntegrationByCategory(
+        token, state.business, 'shopsystems');
+    if (categoryResponse is List) {
+      categoryResponse.forEach((element) {
+        connectInstallations.add(ConnectModel.toMap(element));
+      });
+    }
 
-    await Future.delayed(Duration(milliseconds: 1000));
+    List<BusinessApps> businessApps = [];
+    businessApps.addAll(dashboardScreenBloc.state.businessWidgets);
+
+    List<ChannelItem> items = [];
+    List<String> titles = [];
+    List<ChannelSet> list = [];
+    list.addAll(state.channelSets);
+//    List<ChannelSet> filterList = list.where((element) => element.checkout == widget.checkoutScreenBloc.state.defaultCheckout.id).toList();
+    for(ChannelSet channelSet in list) {
+      if (!titles.contains(channelSet.type)) {
+        titles.add(channelSet.type);
+      }
+    }
+    for (String title in titles) {
+      if (title == 'link') {
+        ChannelItem item = new ChannelItem(
+          title: 'Pay by Link',
+          button: 'Open',
+          checkValue: null,
+          image: SvgPicture.asset('assets/images/pay_link.svg', height: 24,),
+        );
+        items.insert(0, item);
+      } else if (title == 'finance_express') {
+        ChannelItem item1 = new ChannelItem(
+          title: 'Text Link',
+          button: 'Edit',
+          checkValue: null,
+          image: SvgPicture.asset('assets/images/pay_link.svg', height: 24,),
+        );
+        items.add(item1);
+        ChannelItem item2 = new ChannelItem(
+          title: 'Button',
+          button: 'Edit',
+          checkValue: null,
+          image: SvgPicture.asset('assets/images/button.svg', height: 24,),
+        );
+        items.add(item2);
+        ChannelItem item3 = new ChannelItem(
+            title: 'Calculator',
+            button: 'Edit',
+            checkValue: null,
+            image: SvgPicture.asset('assets/images/calculator.svg', height: 24,)
+        );
+        items.add(item3);
+        ChannelItem item4 = new ChannelItem(
+          title: 'Bubble',
+          button: 'Edit',
+          checkValue: null,
+          image: SvgPicture.asset('assets/images/bubble.svg', height: 24,),
+        );
+        items.add(item4);
+      } else if (title == 'marketing') {
+        ChannelItem item = new ChannelItem(
+          title: 'Mail',
+          button: 'Open',
+          checkValue: null,
+          image: SvgPicture.asset('assets/images/mailicon.svg', height: 24,),
+        );
+        items.add(item);
+      } else if (title == 'pos') {
+        ChannelItem item= new ChannelItem(
+          title: 'Point of Sale',
+          button: 'Open',
+          checkValue: null,
+          image: SvgPicture.asset('assets/images/pos.svg', height: 24,),
+        );
+        items.add(item);
+      } else if (title == 'shop') {
+        ChannelItem item = new ChannelItem(
+          title: 'Shop',
+          button: 'Open',
+          checkValue: null,
+          image: SvgPicture.asset('assets/images/shopicon.svg', height: 24,),
+        );
+        items.add(item);
+      } else {
+        ConnectModel connectModel = connectInstallations.firstWhere((element) => element.integration.name == title);
+        if (connectModel != null) {
+          String iconType = connectModel.integration.displayOptions.icon ?? '';
+          iconType = iconType.replaceAll('#icon-', '');
+          iconType = iconType.replaceAll('#', '');
+
+          ChannelItem item = new ChannelItem(
+              title: Language.getPosConnectStrings(connectModel.integration.displayOptions.title),
+              button: 'Open',
+              checkValue: connectModel.installed,
+              image: SvgPicture.asset(Measurements.channelIcon(iconType), height: 24,)
+          );
+          items.add(item);
+        }
+
+      }
+    }
+
     yield state.copyWith(
       isOrdering: false,
+      channelItems: items,
     );
   }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/checkout/models/models.dart';
+import 'package:payever/checkout/views/channels_screeen.dart';
 import 'package:payever/commons/models/pos.dart';
 import 'package:payever/connect/models/connect.dart';
 
@@ -18,6 +19,7 @@ class CheckoutScreenState {
   final List<IntegrationModel> checkoutConnections;
   final List<ConnectModel> connects;
   final List<String> phoneNumbers;
+  final List<ChannelItem> channelItems;
 
   CheckoutScreenState({
     this.isLoading = false,
@@ -33,6 +35,7 @@ class CheckoutScreenState {
     this.checkoutConnections = const [],
     this.connects = const [],
     this.phoneNumbers = const [],
+    this.channelItems = const [],
   });
 
   List<Object> get props => [
@@ -49,6 +52,7 @@ class CheckoutScreenState {
     this.connections,
     this.checkoutConnections,
     this.phoneNumbers,
+    this.channelItems,
   ];
 
   CheckoutScreenState copyWith({
@@ -65,6 +69,7 @@ class CheckoutScreenState {
     List<IntegrationModel> checkoutConnections,
     List<ConnectModel> connects,
     List<String> phoneNumbers,
+    List<ChannelItem> channelItems
   }) {
     return CheckoutScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -80,6 +85,7 @@ class CheckoutScreenState {
       checkoutConnections: checkoutConnections ?? this.checkoutConnections,
       connects: connects ?? this.connects,
       phoneNumbers: phoneNumbers ?? this.phoneNumbers,
+      channelItems: channelItems ?? this.channelItems,
     );
   }
 }

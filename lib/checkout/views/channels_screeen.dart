@@ -2,28 +2,29 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/blocs/checkout/checkout_bloc.dart';
-import 'package:payever/checkout/models/models.dart';
-import 'package:payever/commons/commons.dart';
+import 'package:payever/commons/utils/common_utils.dart';
+import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 
 class ChannelsScreen extends StatefulWidget {
   final CheckoutScreenBloc checkoutScreenBloc;
+  final Function onTapOpen;
+  final Function onTapAdd;
+  final Function onChangeSwitch;
+  final bool isLoading;
 
-  ChannelsScreen({this.checkoutScreenBloc});
+  ChannelsScreen({
+    this.checkoutScreenBloc,
+    this.onTapOpen,
+    this.onTapAdd,
+    this.onChangeSwitch,
+    this.isLoading = true,
+  });
 
   @override
   _ChannelsScreenState createState() => _ChannelsScreenState();
 }
 
 class _ChannelsScreenState extends State<ChannelsScreen> {
-  List<String> subTitles = [
-    'Pay by Link',
-    'Text Link',
-    'Button',
-    'Calculator',
-    'Bubble',
-    'Point of Sale',
-    'Shop'
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -31,123 +32,117 @@ class _ChannelsScreenState extends State<ChannelsScreen> {
   }
 
   Widget _body() {
-
-    List<ChannelItem> items = [];
-    List<String> titles = [];
-    List<ChannelSet> list = [];
-    list.addAll(widget.checkoutScreenBloc.state.channelSets);
-//    List<ChannelSet> filterList = list.where((element) => element.checkout == widget.checkoutScreenBloc.state.defaultCheckout.id).toList();
-    for(ChannelSet channelSet in list) {
-      if (!titles.contains(channelSet.type)) {
-        titles.add(channelSet.type);
-      }
-    }
-    
-    if (titles.contains('link')) {
-      ChannelItem item = new ChannelItem(
-        title: 'Pay by Link',
-        button: 'Open',
-        checkValue: null,
-        image: SvgPicture.asset('assets/images/linkicon.svg')
-      );
-      items.add(item);
-    }
-    if (titles.contains('finance_express')) {
-      ChannelItem item = new ChannelItem(
-          title: 'Pay by Link',
-          button: 'Open',
-          checkValue: null,
-          image: SvgPicture.asset('assets/images/linkicon.svg')
-      );
-      items.add(item);
-    }
-
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.black26,
-            borderRadius: BorderRadius.all(Radius.circular(10)),
-          ),
-          child: SingleChildScrollView(
+    return Container(
+      width: Measurements.width,
+      padding: EdgeInsets.all(16),
+      child: Center(
+        child: BlurEffectView(
+          child: widget.isLoading ?
+          Wrap(
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.all(8),
+                child: Center(
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                  ),
+                ),
+              ),
+            ],
+          ) : SingleChildScrollView(
             child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                ListView.separated(
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      height: 65,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          SizedBox(width: 16,),
-                          SvgPicture.asset('assets/images/grid.svg', width: 20, height: 20,),
-                          SizedBox(width: 16,),
-                          Text(
-                            titles[index],
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
+              children: List.generate(widget.checkoutScreenBloc.state.channelItems.length + 1, (index) {
+                if (index == widget.checkoutScreenBloc.state.channelItems.length) {
+                  return Container(
+                    height: 50,
+                    child: SizedBox.expand(
+                      child: MaterialButton(
+                        onPressed: widget.onTapAdd,
+                        child: Row(
+                          children: <Widget>[
+                            Text(
+                              '+ Add',
+                              textAlign: TextAlign.start,
                             ),
-                          ),
-                          Spacer(),
-                          InkWell(
-                            onTap: () {},
-                            child: Container(
-                              height: 28,
-                              width: 65,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                color: Colors.black54,
-                              ),
-                              child: Center(
-                                child: Text(
-                                  'Open',
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                  itemCount: titles.length,
-                  separatorBuilder: (context, index) {
-                    return Divider(
-                      height: 1,
-                      color: Colors.grey,
-                    );
-                  },
-                ),
-                Divider(
-                  height: 1,
-                  color: Colors.grey,
-                ),
-                Container(
-                  alignment: Alignment.centerLeft,
-                  height: 65,
-                  child: MaterialButton(
-                    onPressed: () {},
-                    child: Text(
-                      '+ Add',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                )
-              ],
+                  );
+                } else {
+                  ChannelItem model = widget.checkoutScreenBloc.state.channelItems[index];
+                    return Column(
+                      children: <Widget>[
+                        Container(
+                          height: 50,
+                          padding: EdgeInsets.only(left: 16, right: 16),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Flexible(
+                                child: Row(
+                                  children: <Widget>[
+                                    model.image,
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 8),
+                                    ),
+                                    Flexible(
+                                      child: Text(
+                                        model.title,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                          fontFamily: 'Helvetica Neue',
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Row(
+                                children: <Widget>[
+                                  model.checkValue != null ? Transform.scale(
+                                    scale: 0.8,
+                                    child: CupertinoSwitch(
+                                      value: model.checkValue,
+                                      onChanged: (val) {
+                                        widget.onChangeSwitch(val);
+                                      },
+                                    ),
+                                  ) : Container(),
+                                  MaterialButton(
+                                    onPressed: widget.onTapOpen,
+                                    color: Colors.black38,
+                                    elevation: 0,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    height: 24,
+                                    minWidth: 0,
+                                    padding: EdgeInsets.only(left: 8, right: 8),
+                                    child: Text(
+                                      model.button,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                        fontFamily: 'HelveticaNeueMed',
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                        Divider(
+                          height: 0,
+                          thickness: 0.5,
+                          color: Colors.white70,
+                        ),
+                      ],
+                    );
+                  }
+              }),
             ),
           ),
         ),

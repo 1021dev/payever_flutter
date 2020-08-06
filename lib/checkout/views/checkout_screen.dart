@@ -191,6 +191,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         onTap: (index) {
           if (index == 1) {
             screenBloc.add(GetPaymentConfig());
+          } else if (index == 2) {
+            screenBloc.add(GetChannelConfig());
           }
         },
         tabs: <Widget>[
@@ -374,6 +376,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 //              ),
 //            ) ,
             body: TabBarView(
+              physics: NeverScrollableScrollPhysics(),
               children: <Widget>[
                 _getBody(state, 0),
                 _getBody(state, 1),
@@ -427,7 +430,30 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           },
         );
       case 2:
-        return ChannelsScreen(checkoutScreenBloc: screenBloc,);
+        return ChannelsScreen(
+          checkoutScreenBloc: screenBloc,
+          isLoading: false,
+          onChangeSwitch: (val) {
+
+          },
+          onTapAdd: () {
+            Navigator.push(
+              context,
+              PageTransition(
+                child: CheckoutConnectScreen(
+                  checkoutScreenBloc: screenBloc,
+                  business: state.business,
+                  category: 'shopsystems',
+                ),
+                type: PageTransitionType.fade,
+                duration: Duration(milliseconds: 500),
+              ),
+            );
+          },
+          onTapOpen: ( ) {
+
+          },
+        );
       case 3:
         return ConnectInitScreen();
       case 4:
