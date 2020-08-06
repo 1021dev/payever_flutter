@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/apis/api_service.dart';
@@ -42,6 +43,8 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       yield* getChannelConfig();
     } else if (event is GetConnectConfig) {
       yield* getConnectConfig();
+    } else if (event is GetChannelSet) {
+      yield* getCheckoutFlow();
     }
   }
 
@@ -50,7 +53,6 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     yield state.copyWith(isLoading: isLoading);
 
     List<Checkout> checkouts = [];
-    List<ChannelSet> channelSets = [];
     List<String> integrations = [];
     Checkout defaultCheckout;
 
@@ -75,22 +77,6 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       defaultCheckout = state.defaultCheckout;
       checkouts.addAll(state.checkouts);
     }
-    Lang defaultLang;
-    if (defaultCheckout != null) {
-      List<Lang> langList = defaultCheckout.settings.languages.where((element) => element.active).toList();
-      if (langList.length > 0) {
-        defaultLang = langList.first;
-      }
-    }
-
-    String langCode = defaultLang != null ? defaultLang.code: 'en';
-
-    dynamic channelSetResponse = await api.getChannelSet(business, token);
-    if (channelSetResponse is List) {
-      channelSetResponse.forEach((element) {
-        channelSets.add(ChannelSet.toMap(element));
-      });
-    }
 
     if (defaultCheckout != null) {
       dynamic integrationsResponse = await api.getCheckoutIntegration(business, defaultCheckout.id, token);
@@ -104,8 +90,35 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
 
     await api.toggleSetUpStatus(token, business, 'checkout');
     
+    yield state.copyWith(
+      isLoading: false,
+      checkouts: checkouts,
+      integrations: integrations,
+      defaultCheckout: defaultCheckout,
+    );
+
+    add(GetChannelSet());
+  }
+
+  Stream<CheckoutScreenState> getCheckoutFlow() async* {
+    List<ChannelSet> channelSets = [];
+    dynamic channelSetResponse = await api.getChannelSet(state.business, token);
+    if (channelSetResponse is List) {
+      channelSetResponse.forEach((element) {
+        channelSets.add(ChannelSet.toMap(element));
+      });
+    }
     ChannelSet channelSet = channelSets.firstWhere((element) => element.type == 'link');
     CheckoutFlow checkoutFlow;
+    Lang defaultLang;
+    if (state.defaultCheckout != null) {
+      List<Lang> langList = state.defaultCheckout.settings.languages.where((element) => element.active).toList();
+      if (langList.length > 0) {
+        defaultLang = langList.first;
+      }
+    }
+
+    String langCode = defaultLang != null ? defaultLang.code: 'en';
 
     dynamic channelFlowResponse = await api.getCheckoutChannelFlow(token, channelSet.id);
     if (channelFlowResponse is Map) {
@@ -118,15 +131,14 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       channelSetFlow = ChannelSetFlow.fromMap(checkoutFlowResponse);
     }
 
+
     yield state.copyWith(
       isLoading: false,
-      checkouts: checkouts,
       channelSets: channelSets,
-      integrations: integrations,
-      defaultCheckout: defaultCheckout,
       channelSetFlow: channelSetFlow,
       checkoutFlow: checkoutFlow,
     );
+
   }
 
   Stream<CheckoutScreenState> getPaymentData() async* {
@@ -331,16 +343,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     businessApps.addAll(dashboardScreenBloc.state.businessWidgets);
 
     List<ChannelItem> items = [];
-    List<String> titles = [];
-    List<ChannelSet> list = [];
-    list.addAll(state.channelSets);
-    for(ChannelSet channelSet in list) {
-      if (!titles.contains(channelSet.type)) {
-        titles.add(channelSet.type);
-      }
-    }
-    for (String title in titles) {
-      ConnectModel connectModel = connectInstallations.firstWhere((element) => element.integration.name == title);
+    for (ConnectModel connectModel in connectInstallations) {
       if (connectModel != null) {
         String iconType = connectModel.integration.displayOptions.icon ?? '';
         iconType = iconType.replaceAll('#icon-', '');

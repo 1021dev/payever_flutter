@@ -27,6 +27,8 @@ class CheckoutScreenInitEvent extends CheckoutScreenEvent {
   ];
 }
 
+class GetChannelSet extends CheckoutScreenEvent {}
+
 class GetPaymentConfig extends CheckoutScreenEvent {
 
 }

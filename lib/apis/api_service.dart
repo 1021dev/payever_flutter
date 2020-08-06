@@ -2154,16 +2154,6 @@ class ApiService {
     }
   }
 
-  String randomString(int strlen) {
-    const chars = "0123456789";
-    Random rnd = new Random(new DateTime.now().millisecondsSinceEpoch);
-    String result = "";
-    for (var i = 0; i < strlen; i++) {
-      result += chars[rnd.nextInt(chars.length)];
-    }
-    return result;
-  }
-
   Future<dynamic> patchCheckoutOrder(String token, String checkoutFlowId, String local, Map<String, dynamic>body) async {
     try {
       print('$TAG - patchCheckoutOrder()');
@@ -2255,6 +2245,30 @@ class ApiService {
     }
   }
 
+  Future<dynamic> patchCheckoutChannelSet(String token, String business, String channelId, String checkoutId) async {
+    try {
+      print('$TAG - patchCheckoutChannelSet()');
+      dynamic response = await _client.patchTypeless(
+          '${Env.checkout}/api/business/$business/channelSet/$channelId/checkout',
+          body: {
+            'checkoutId': checkoutId,
+          },
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  ///***************************************************************************
+  ///****                      UTILS                                       *****
+  ///***************************************************************************
+
   Map<String, String>_getHeaders(String token) {
     return {
       HttpHeaders.authorizationHeader: 'Bearer $token',
@@ -2262,4 +2276,16 @@ class ApiService {
       HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
     };
   }
+
+
+  String randomString(int strlen) {
+    const chars = "0123456789";
+    Random rnd = new Random(new DateTime.now().millisecondsSinceEpoch);
+    String result = "";
+    for (var i = 0; i < strlen; i++) {
+      result += chars[rnd.nextInt(chars.length)];
+    }
+    return result;
+  }
+
 }
