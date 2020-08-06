@@ -23,12 +23,14 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
   Stream<CheckoutScreenState> mapEventToState(
       CheckoutScreenEvent event) async* {
     if (event is CheckoutScreenInitEvent) {
-      yield state.copyWith(
-        business: event.business,
-        checkouts: event.checkouts,
-        defaultCheckout: event.defaultCheckout,
-      );
-      yield* fetchConnectInstallations(event.business);
+      if (event.business != null) {
+        yield state.copyWith(
+          business: event.business,
+          checkouts: event.checkouts,
+          defaultCheckout: event.defaultCheckout,
+        );
+      }
+      yield* fetchConnectInstallations(event.business, isLoading: true);
     } else if (event is GetPaymentConfig) {
       yield* getPaymentData();
     } else if (event is GetPhoneNumbers) {
@@ -38,30 +40,35 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     }
   }
 
-  Stream<CheckoutScreenState> fetchConnectInstallations(String business) async* {
+  Stream<CheckoutScreenState> fetchConnectInstallations(String business, {bool isLoading = false}) async* {
 
-    yield state.copyWith(isLoading: true);
+    yield state.copyWith(isLoading: isLoading);
 
     List<Checkout> checkouts = [];
     List<ChannelSet> channelSets = [];
     List<String> integrations = [];
-
     Checkout defaultCheckout;
-    dynamic checkoutsResponse = await api.getCheckout(token, business);
-    if (checkoutsResponse is List) {
-      checkoutsResponse.forEach((element) {
-        checkouts.add(Checkout.fromMap(element));
-      });
-    }
 
-    List defaults = checkouts.where((element) => element.isDefault).toList();
-
-    if (defaults.length > 0) {
-      defaultCheckout = defaults.first;
-    } else {
-      if (checkouts.length > 0) {
-        defaultCheckout = checkouts.first;
+    if (state.defaultCheckout == null) {
+      dynamic checkoutsResponse = await api.getCheckout(token, business);
+      if (checkoutsResponse is List) {
+        checkoutsResponse.forEach((element) {
+          checkouts.add(Checkout.fromMap(element));
+        });
       }
+
+      List defaults = checkouts.where((element) => element.isDefault).toList();
+
+      if (defaults.length > 0) {
+        defaultCheckout = defaults.first;
+      } else {
+        if (checkouts.length > 0) {
+          defaultCheckout = checkouts.first;
+        }
+      }
+    } else {
+      defaultCheckout = state.defaultCheckout;
+      checkouts.addAll(state.checkouts);
     }
     Lang defaultLang;
     if (defaultCheckout != null) {

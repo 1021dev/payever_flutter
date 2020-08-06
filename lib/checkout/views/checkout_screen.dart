@@ -188,6 +188,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       bottom: TabBar(
         isScrollable: true,
         indicatorColor: Colors.white70,
+        onTap: (index) {
+          if (index == 1) {
+            screenBloc.add(GetPaymentConfig());
+          }
+        },
         tabs: <Widget>[
           Tab(
             text: defaultCheckoutTitle,
@@ -348,6 +353,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     margin = _isTablet ? 24: 16;
     return DefaultTabController(
       length: 6,
+      initialIndex: 0,
       child: Scaffold(
         backgroundColor: Colors.black,
         resizeToAvoidBottomPadding: false,
@@ -377,91 +383,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 _getBody(state, 5),
               ],
             ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _topBar(CheckoutScreenState state) {
-    String defaultCheckoutTitle = '';
-    if (state.defaultCheckout != null) {
-      defaultCheckoutTitle = state.defaultCheckout.name;
-    }
-    return Container(
-      color: Color(0xFF212122),
-      height: 44,
-      child: Container(
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  CheckoutTopButton(
-                    title: defaultCheckoutTitle,
-                    selectedIndex: selectedIndex,
-                    index: 0,
-                    onTap: () {
-                      setState(() {
-                        selectedIndex = 0;
-                      });
-                    },
-                  ),
-                  CheckoutTopButton(
-                    title: Language.getPosConnectStrings('integrations.payments.instant_payment.category'),
-                    selectedIndex: selectedIndex,
-                    index: 1,
-                    onTap: () {
-                      setState(() {
-                        selectedIndex = 1;
-                      });
-                      screenBloc.add(GetPaymentConfig());
-                    },
-                  ),
-                  CheckoutTopButton(
-                    title: Language.getWidgetStrings('widgets.checkout.channels'),
-                    selectedIndex: selectedIndex,
-                    index: 2,
-                    onTap: () {
-                      setState(() {
-                        selectedIndex = 2;
-                      });
-                    },
-                  ),
-                  CheckoutTopButton(
-                    title: Language.getCommerceOSStrings('dashboard.apps.connect'),
-                    selectedIndex: selectedIndex,
-                    index: 3,
-                    onTap: () {
-                      setState(() {
-                        selectedIndex = 3;
-                      });
-                    },
-                  ),
-                  CheckoutTopButton(
-                    title: Language.getPosConnectStrings('Sections'),
-                    selectedIndex: selectedIndex,
-                    index: 4,
-                    onTap: () {
-                      setState(() {
-                        selectedIndex = 4;
-                      });
-                    },
-                  ),
-                  CheckoutTopButton(
-                    title: Language.getConnectStrings('categories.communications.main.titles.settings'),
-                    selectedIndex: selectedIndex,
-                    index: 5,
-                    onTap: () {
-                      setState(() {
-                        selectedIndex = 5;
-                      });
-                    },
-                  ),
-                ],
-              )
-            ],
           ),
         ),
       ),

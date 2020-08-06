@@ -54,13 +54,12 @@ class CheckoutSwitchScreenBloc extends Bloc<CheckoutSwitchScreenEvent, CheckoutS
 
   Stream<CheckoutSwitchScreenState> openCheckout(String businessId, Checkout checkout) async* {
     yield state.copyWith(isLoading: true);
-    dynamic response = await api.openCheckout(GlobalUtils.activeToken.accessToken, businessId, checkout.id);
-    if (response != null) {
-      yield CheckoutSwitchScreenOpenStateSuccess();
-      checkoutScreenBloc.state.copyWith(defaultCheckout: checkout);
-    } else {
-      yield CheckoutSwitchScreenStateFailure(error: 'Update checkout failed');
-    }
+//    dynamic response = await api.openCheckout(GlobalUtils.activeToken.accessToken, businessId, checkout.id);
+//    if (response != null) {
+//      checkoutScreenBloc.state.copyWith(defaultCheckout: checkout);
+//    }
+    checkoutScreenBloc.add(CheckoutScreenInitEvent(business: businessId, defaultCheckout: checkout, checkouts: checkoutScreenBloc.state.checkouts));
+
     yield state.copyWith(blobName: '', isLoading: false);
   }
 
@@ -68,11 +67,31 @@ class CheckoutSwitchScreenBloc extends Bloc<CheckoutSwitchScreenEvent, CheckoutS
     yield state.copyWith(isUpdating: true);
     dynamic response = await api.switchCheckout(GlobalUtils.activeToken.accessToken, businessId, checkoutId);
     if (response != null) {
-      yield CheckoutSwitchScreenStateSuccess();
-    } else {
-      yield CheckoutSwitchScreenStateFailure(error: 'Update checkout failed');
+      checkoutScreenBloc.add(CheckoutScreenInitEvent());
     }
+    List<Checkout> checkouts = [];
+    Checkout defaultCheckout;
+    dynamic checkoutsResponse = await api.getCheckout(token, businessId);
+    if (checkoutsResponse is List) {
+      checkoutsResponse.forEach((element) {
+        checkouts.add(Checkout.fromMap(element));
+      });
+    }
+
+    List defaults = checkouts.where((element) => element.isDefault).toList();
+
+    if (defaults.length > 0) {
+      defaultCheckout = defaults.first;
+    } else {
+      if (checkouts.length > 0) {
+        defaultCheckout = checkouts.first;
+      }
+    }
+    checkoutScreenBloc.state.copyWith(checkouts: checkouts, defaultCheckout: defaultCheckout);
+    checkoutScreenBloc.add(CheckoutScreenInitEvent(business: businessId, defaultCheckout: defaultCheckout, checkouts: checkouts));
+
     yield state.copyWith(blobName: '', isUpdating: false);
+    yield CheckoutSwitchScreenStateSuccess();
   }
 
   Stream<CheckoutSwitchScreenState> createCheckout(CreateCheckoutEvent event) async* {
