@@ -1,13 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/checkout/models/models.dart';
-import 'package:payever/checkout/views/channels_screeen.dart';
 import 'package:payever/commons/models/pos.dart';
 import 'package:payever/connect/models/connect.dart';
 
 class CheckoutScreenState {
   final bool isLoading;
   final bool isOrdering;
+  final bool loadingChannel;
+  final bool loadingConnect;
+  final bool loadingPaymentOption;
   final String business;
   final List<Checkout> checkouts;
   final List<ChannelSet> channelSets;
@@ -20,10 +22,14 @@ class CheckoutScreenState {
   final List<ConnectModel> connects;
   final List<String> phoneNumbers;
   final List<ChannelItem> channelItems;
+  final List<ChannelItem> connectItems;
 
   CheckoutScreenState({
     this.isLoading = false,
     this.isOrdering = false,
+    this.loadingChannel = false,
+    this.loadingConnect = false,
+    this.loadingPaymentOption = false,
     this.business,
     this.checkouts = const [],
     this.channelSets = const [],
@@ -36,11 +42,15 @@ class CheckoutScreenState {
     this.connects = const [],
     this.phoneNumbers = const [],
     this.channelItems = const [],
+    this.connectItems = const [],
   });
 
   List<Object> get props => [
     this.isLoading,
     this.isOrdering,
+    this.loadingPaymentOption,
+    this.loadingConnect,
+    this.loadingChannel,
     this.business,
     this.checkouts,
     this.channelSets,
@@ -53,11 +63,15 @@ class CheckoutScreenState {
     this.checkoutConnections,
     this.phoneNumbers,
     this.channelItems,
+    this.connectItems,
   ];
 
   CheckoutScreenState copyWith({
     bool isLoading,
     bool isOrdering,
+    bool loadingChannel,
+    bool loadingConnect,
+    bool loadingPaymentOption,
     String business,
     List<Checkout> checkouts,
     List<ChannelSet> channelSets,
@@ -69,11 +83,15 @@ class CheckoutScreenState {
     List<IntegrationModel> checkoutConnections,
     List<ConnectModel> connects,
     List<String> phoneNumbers,
-    List<ChannelItem> channelItems
+    List<ChannelItem> channelItems,
+    List<ChannelItem> connectItems,
   }) {
     return CheckoutScreenState(
       isLoading: isLoading ?? this.isLoading,
       isOrdering: isOrdering ?? this.isOrdering,
+      loadingChannel: loadingChannel ?? this.loadingChannel,
+      loadingConnect: loadingConnect ?? this.loadingConnect,
+      loadingPaymentOption: loadingPaymentOption ?? this.loadingPaymentOption,
       business: business ?? this.business,
       checkouts: checkouts ?? this.checkouts,
       channelSets: channelSets ?? this.channelSets,
@@ -86,6 +104,7 @@ class CheckoutScreenState {
       connects: connects ?? this.connects,
       phoneNumbers: phoneNumbers ?? this.phoneNumbers,
       channelItems: channelItems ?? this.channelItems,
+      connectItems: connectItems ?? this.connectItems,
     );
   }
 }

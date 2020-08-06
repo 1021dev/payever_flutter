@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:payever/blocs/checkout/checkout_bloc.dart';
+import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 
@@ -149,13 +149,4 @@ class _ChannelsScreenState extends State<ChannelsScreen> {
       ),
     );
   }
-}
-
-class ChannelItem {
-  String title;
-  SvgPicture image;
-  String button;
-  bool checkValue;
-  
-  ChannelItem({this.title, this.image, this.button, this.checkValue,});
 }

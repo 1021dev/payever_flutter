@@ -1,3 +1,4 @@
+import 'package:flutter_svg/svg.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/connect/models/connect.dart';
@@ -497,4 +498,13 @@ class FinanceExpress {
     textSize = obj['textSize'];
     width = obj['width'];
   }
+}
+
+class ChannelItem {
+  String title;
+  SvgPicture image;
+  String button;
+  bool checkValue;
+
+  ChannelItem({this.title, this.image, this.button, this.checkValue,});
 }

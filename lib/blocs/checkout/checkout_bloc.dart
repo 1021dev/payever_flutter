@@ -1,10 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/blocs/dashboard/dashboard_bloc.dart';
 import 'package:payever/checkout/models/models.dart';
-import 'package:payever/checkout/views/channels_screeen.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/connect/models/connect.dart';
@@ -42,6 +40,8 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       yield* patchCheckoutOrder(event);
     } else if (event is GetChannelConfig) {
       yield* getChannelConfig();
+    } else if (event is GetConnectConfig) {
+      yield* getConnectConfig();
     }
   }
 
@@ -131,7 +131,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
 
   Stream<CheckoutScreenState> getPaymentData() async* {
     if (state.connects.length == 0) {
-      yield state.copyWith(isLoading: true);
+      yield state.copyWith(loadingPaymentOption: true);
     }
     List<ConnectModel> integrations = [];
     dynamic integrationsResponse = await api.getCheckoutIntegrations(state.business, token);
@@ -159,7 +159,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     }
 
     yield state.copyWith(
-      isLoading: false,
+      loadingPaymentOption: false,
       connects: integrations,
       connections: connections,
       checkoutConnections: checkoutConnections,
@@ -199,9 +199,11 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
 
 
   Stream<CheckoutScreenState> getChannelConfig() async* {
-    yield state.copyWith(
-      isOrdering: true,
-    );
+    if (state.channelItems.length == 0) {
+      yield state.copyWith(
+        loadingConnect: true,
+      );
+    }
     List<ConnectModel> connectInstallations = [];
     dynamic categoryResponse = await api.getConnectIntegrationByCategory(
         token, state.business, 'shopsystems');
@@ -218,7 +220,6 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     List<String> titles = [];
     List<ChannelSet> list = [];
     list.addAll(state.channelSets);
-//    List<ChannelSet> filterList = list.where((element) => element.checkout == widget.checkoutScreenBloc.state.defaultCheckout.id).toList();
     for(ChannelSet channelSet in list) {
       if (!titles.contains(channelSet.type)) {
         titles.add(channelSet.type);
@@ -306,10 +307,59 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     }
 
     yield state.copyWith(
-      isOrdering: false,
+      loadingChannel: false,
       channelItems: items,
     );
   }
 
+  Stream<CheckoutScreenState> getConnectConfig() async* {
+    if (state.connectItems.length == 0) {
+      yield state.copyWith(
+        loadingConnect: true,
+      );
+    }
+    List<ConnectModel> connectInstallations = [];
+    dynamic categoryResponse = await api.getConnectIntegrationByCategory(
+        token, state.business, 'communications');
+    if (categoryResponse is List) {
+      categoryResponse.forEach((element) {
+        connectInstallations.add(ConnectModel.toMap(element));
+      });
+    }
+
+    List<BusinessApps> businessApps = [];
+    businessApps.addAll(dashboardScreenBloc.state.businessWidgets);
+
+    List<ChannelItem> items = [];
+    List<String> titles = [];
+    List<ChannelSet> list = [];
+    list.addAll(state.channelSets);
+    for(ChannelSet channelSet in list) {
+      if (!titles.contains(channelSet.type)) {
+        titles.add(channelSet.type);
+      }
+    }
+    for (String title in titles) {
+      ConnectModel connectModel = connectInstallations.firstWhere((element) => element.integration.name == title);
+      if (connectModel != null) {
+        String iconType = connectModel.integration.displayOptions.icon ?? '';
+        iconType = iconType.replaceAll('#icon-', '');
+        iconType = iconType.replaceAll('#', '');
+
+        ChannelItem item = new ChannelItem(
+            title: Language.getPosConnectStrings(connectModel.integration.displayOptions.title),
+            button: 'Open',
+            checkValue: connectModel.installed,
+            image: SvgPicture.asset(Measurements.channelIcon(iconType), height: 24,)
+        );
+        items.add(item);
+      }
+    }
+
+    yield state.copyWith(
+      loadingConnect: false,
+      connectItems: items,
+    );
+  }
 
 }

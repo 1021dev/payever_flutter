@@ -14,7 +14,6 @@ import 'package:payever/checkout/views/payment_options_screen.dart';
 import 'package:payever/checkout/views/sections_screen.dart';
 import 'package:payever/checkout/views/settings_screen.dart';
 import 'package:payever/checkout/views/workshop_screen.dart';
-import 'package:payever/checkout/widgets/checkout_top_button.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
@@ -193,6 +192,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             screenBloc.add(GetPaymentConfig());
           } else if (index == 2) {
             screenBloc.add(GetChannelConfig());
+          } else if (index == 3) {
+            screenBloc.add(GetConnectConfig());
           }
         },
         tabs: <Widget>[
@@ -404,7 +405,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         return PaymentOptionsScreen(
           connects: state.connects,
           integrations: state.checkoutConnections,
-          isLoading: state.isLoading,
+          isLoading: state.loadingPaymentOption,
           onTapAdd: () {
             Navigator.push(
               context,
@@ -432,7 +433,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       case 2:
         return ChannelsScreen(
           checkoutScreenBloc: screenBloc,
-          isLoading: false,
+          isLoading: state.loadingChannel,
           onChangeSwitch: (val) {
 
           },
@@ -455,7 +456,30 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           },
         );
       case 3:
-        return ConnectInitScreen();
+        return ConnectScreen(
+          checkoutScreenBloc: screenBloc,
+          isLoading: state.loadingConnect,
+          onChangeSwitch: (val) {
+
+          },
+          onTapAdd: () {
+            Navigator.push(
+              context,
+              PageTransition(
+                child: CheckoutConnectScreen(
+                  checkoutScreenBloc: screenBloc,
+                  business: state.business,
+                  category: 'communications',
+                ),
+                type: PageTransitionType.fade,
+                duration: Duration(milliseconds: 500),
+              ),
+            );
+          },
+          onTapOpen: ( ) {
+
+          },
+        );
       case 4:
         return SectionsInitScreen();
       case 5:

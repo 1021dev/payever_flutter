@@ -35,6 +35,10 @@ class GetChannelConfig extends CheckoutScreenEvent {
 
 }
 
+class GetConnectConfig extends CheckoutScreenEvent {
+
+}
+
 class GetPhoneNumbers extends CheckoutScreenEvent {
 
 }
