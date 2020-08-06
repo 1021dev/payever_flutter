@@ -239,7 +239,7 @@ class _CheckoutSwitchScreenState extends State<CheckoutSwitchScreen> {
           );
         },
         onOpen: (Checkout checkout) {
-          screenBloc.add(SetDefaultCheckoutEvent(checkout: checkout));
+          screenBloc.add(SetDefaultCheckoutEvent(businessId: widget.businessId, id: checkout.id));
           widget.onOpen(checkout);
         },
       )).toList(),
@@ -281,7 +281,8 @@ class _CheckoutSwitchScreenState extends State<CheckoutSwitchScreen> {
           child: MaterialButton(
             onPressed: () {
               Navigator.pop(context);
-              screenBloc.add(SetDefaultCheckoutEvent(checkout: checkout));
+              screenBloc.add(SetDefaultCheckoutEvent(
+                  businessId: widget.businessId, id: checkout.id));
             },
             child: Text('Set as Default'),
           ),
@@ -349,6 +350,7 @@ class _CheckoutSwitchScreenState extends State<CheckoutSwitchScreen> {
                                 MaterialButton(
                                   onPressed: () {
                                     Navigator.pop(context);
+                                    screenBloc.add(DeleteCheckoutEvent(widget.businessId, checkout));
                                   },
                                   child: Text(
                                     'Yes',

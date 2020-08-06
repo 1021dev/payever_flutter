@@ -2188,7 +2188,7 @@ class ApiService {
     try {
       print('$TAG - createCheckout()');
       dynamic response = await _client.postTypeLess(
-        '${Env.checkout}/api/business/$business/checkout/',
+        '${Env.checkout}/api/business/$business/checkout',
         body: body,
         headers: _getHeaders(token),
       );

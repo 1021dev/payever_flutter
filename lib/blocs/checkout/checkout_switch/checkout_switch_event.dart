@@ -24,6 +24,7 @@ class CheckoutSwitchScreenInitEvent extends CheckoutSwitchScreenEvent {
 }
 
 class UploadCheckoutImage extends CheckoutSwitchScreenEvent{
+
   final File file;
   final String businessId;
   UploadCheckoutImage({this.file, this.businessId});
@@ -36,9 +37,17 @@ class UploadCheckoutImage extends CheckoutSwitchScreenEvent{
 }
 
 class SetDefaultCheckoutEvent extends CheckoutSwitchScreenEvent {
-  final Checkout checkout;
 
-  SetDefaultCheckoutEvent({this.checkout});
+  final String businessId;
+  final String id;
+
+  SetDefaultCheckoutEvent({this.businessId, this.id});
+
+  @override
+  List<Object> get props => [
+    this.businessId,
+    this.id,
+  ];
 }
 
 class CreateCheckoutEvent extends CheckoutSwitchScreenEvent {
@@ -47,8 +56,13 @@ class CreateCheckoutEvent extends CheckoutSwitchScreenEvent {
   final String logo;
 
   CreateCheckoutEvent({this.businessId, this.name, this.logo});
+
   @override
-  List<Object> get props => [this.name,this.logo,];
+  List<Object> get props => [
+    this.businessId,
+    this.name,
+    this.logo,
+  ];
 }
 
 class UpdateCheckoutEvent extends CheckoutSwitchScreenEvent {
@@ -57,10 +71,26 @@ class UpdateCheckoutEvent extends CheckoutSwitchScreenEvent {
   final String name;
   final String id;
 
-  UpdateCheckoutEvent({this.businessId,this.logo,this.name,this.id,});
+  UpdateCheckoutEvent({this.businessId, this.logo, this.name, this.id,});
 
+  @override
+  List<Object> get props => [
+    this.businessId,
+    this.logo,
+    this.name,
+    this.id,
+  ];
 }
 
 class DeleteCheckoutEvent extends CheckoutSwitchScreenEvent {
+  final String businessId;
+  final Checkout checkout;
 
+  DeleteCheckoutEvent(this.businessId, this.checkout,);
+
+  @override
+  List<Object> get props => [
+    this.businessId,
+    this.checkout,
+  ];
 }

@@ -85,7 +85,7 @@ class _CreateEditCheckoutScreenState extends State<CreateEditCheckoutScreen> {
               type: PageTransitionType.fade,
             ),
           );
-        } else if (state is PosScreenSuccess) {
+        } else if (state is CheckoutSwitchScreenStateSuccess) {
           if(widget.fromDashBoard) {
             Navigator.pop(context, 'Checkout Updated');
           } else {
@@ -308,7 +308,7 @@ class _CreateEditCheckoutScreenState extends State<CreateEditCheckoutScreen> {
                         submitCheckout(state);
                       }
                     },
-                    child: state.isLoading ? Center(
+                    child: state.isUpdating ? Center(
                       child: CircularProgressIndicator(),
                     ) : Text(
                       'Done',
