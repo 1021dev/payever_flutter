@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/blocs/bloc.dart';
+import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 
 class CheckoutSwitchScreenBloc extends Bloc<CheckoutSwitchScreenEvent, CheckoutSwitchScreenState> {
@@ -32,5 +33,9 @@ class CheckoutSwitchScreenBloc extends Bloc<CheckoutSwitchScreenEvent, CheckoutS
 
   Stream<CheckoutSwitchScreenState> fetchInitialData(String business) async* {
     yield state.copyWith(isLoading: true);
+  }
+
+  Stream<CheckoutSwitchScreenState> switchCheckOut(Checkout checkout) {
+
   }
 }

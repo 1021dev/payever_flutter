@@ -2166,4 +2166,70 @@ class ApiService {
       return Future.error(e);
     }
   }
+
+  ///---------------------------------------------------------------------------
+  ///                   Checkout - Switch / Create / Edit / Delete
+  ///---------------------------------------------------------------------------
+
+  Future<dynamic> switchCheckout(String token, String business, String checkout) async {
+    try {
+      print('$TAG - switchCheckout()');
+      dynamic response = await _client.patchTypeless(
+        '${Env.checkout}/api/business/$business/checkout/$checkout/default',
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> createCheckout(String token, String business, Map body) async {
+    try {
+      print('$TAG - createCheckout()');
+      dynamic response = await _client.postTypeLess(
+        '${Env.checkout}/api/business/$business/checkout/',
+        body: body,
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> editCheckout(String token, String business, String checkout, Map body) async {
+    try {
+      print('$TAG - editCheckout()');
+      dynamic response = await _client.patchTypeless(
+        '${Env.checkout}/api/business/$business/checkout/$checkout',
+        body: body,
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> deleteCheckout(String token, String business, String checkout) async {
+    try {
+      print('$TAG - deleteCheckout()');
+      dynamic response = await _client.deleteTypeless(
+        '${Env.checkout}/api/business/$business/checkout/$checkout',
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Map<String, String>_getHeaders(String token) {
+    return {
+      HttpHeaders.authorizationHeader: 'Bearer $token',
+      HttpHeaders.contentTypeHeader: 'application/json',
+      HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+    };
+  }
 }
