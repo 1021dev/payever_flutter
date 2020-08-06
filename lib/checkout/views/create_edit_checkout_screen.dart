@@ -332,6 +332,7 @@ class _CreateEditCheckoutScreenState extends State<CreateEditCheckoutScreen> {
     if (widget.checkout != null) {
       widget.screenBloc.add(UpdateCheckoutEvent(
         businessId: widget.businessId,
+        checkout: widget.checkout,
         name: checkoutEditController.text,
         logo: state.blobName != '' ? state.blobName : null,
         id: widget.checkout.id,

@@ -50,6 +50,19 @@ class SetDefaultCheckoutEvent extends CheckoutSwitchScreenEvent {
   ];
 }
 
+class OpenCheckoutEvent extends CheckoutSwitchScreenEvent {
+  final String businessId;
+  final Checkout checkout;
+
+  OpenCheckoutEvent({this.businessId, this.checkout,});
+
+  @override
+  List<Object> get props => [
+    this.businessId,
+    this.checkout,
+  ];
+}
+
 class CreateCheckoutEvent extends CheckoutSwitchScreenEvent {
   final String businessId;
   final String name;
@@ -67,15 +80,17 @@ class CreateCheckoutEvent extends CheckoutSwitchScreenEvent {
 
 class UpdateCheckoutEvent extends CheckoutSwitchScreenEvent {
   final String businessId;
+  final Checkout checkout;
   final String logo;
   final String name;
   final String id;
 
-  UpdateCheckoutEvent({this.businessId, this.logo, this.name, this.id,});
+  UpdateCheckoutEvent({this.businessId, this.checkout, this.logo, this.name, this.id,});
 
   @override
   List<Object> get props => [
     this.businessId,
+    this.checkout,
     this.logo,
     this.name,
     this.id,

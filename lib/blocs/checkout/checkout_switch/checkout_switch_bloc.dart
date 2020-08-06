@@ -28,10 +28,12 @@ class CheckoutSwitchScreenBloc extends Bloc<CheckoutSwitchScreenEvent, CheckoutS
       );
     } else if (event is SetDefaultCheckoutEvent) {
       yield* switchCheckout(event.businessId, event.id);
+    } else if (event is OpenCheckoutEvent) {
+      yield* openCheckout(event.businessId, event.checkout);
     } else if (event is CreateCheckoutEvent) {
       yield* createCheckout(event);
     } else if (event is UpdateCheckoutEvent) {
-      yield* updateCheckout(event);
+      yield* updateCheckout(event, event.checkout);
     } else if (event is DeleteCheckoutEvent) {
       yield* deleteCheckout(event.businessId, event.checkout);
     } else if (event is UploadCheckoutImage) {
@@ -50,6 +52,18 @@ class CheckoutSwitchScreenBloc extends Bloc<CheckoutSwitchScreenEvent, CheckoutS
     yield state.copyWith(isLoading: true);
   }
 
+  Stream<CheckoutSwitchScreenState> openCheckout(String businessId, Checkout checkout) async* {
+    yield state.copyWith(isLoading: true);
+    dynamic response = await api.openCheckout(GlobalUtils.activeToken.accessToken, businessId, checkout.id);
+    if (response != null) {
+      yield CheckoutSwitchScreenOpenStateSuccess();
+      checkoutScreenBloc.state.copyWith(defaultCheckout: checkout);
+    } else {
+      yield CheckoutSwitchScreenStateFailure(error: 'Update checkout failed');
+    }
+    yield state.copyWith(blobName: '', isLoading: false);
+  }
+
   Stream<CheckoutSwitchScreenState> switchCheckout(String businessId, String checkoutId) async* {
     yield state.copyWith(isUpdating: true);
     dynamic response = await api.switchCheckout(GlobalUtils.activeToken.accessToken, businessId, checkoutId);
@@ -65,7 +79,9 @@ class CheckoutSwitchScreenBloc extends Bloc<CheckoutSwitchScreenEvent, CheckoutS
     yield state.copyWith(isUpdating: true);
     Map<String, String>body = {'name':event.name, 'logo':event.logo,};
     dynamic response = await api.createCheckout(GlobalUtils.activeToken.accessToken, event.businessId, body);
-    if (response != null) {
+    if (response != null && response is Map) {
+      Checkout checkout = Checkout.fromMap(response);
+      checkoutScreenBloc.state.checkouts.add(checkout);
       yield CheckoutSwitchScreenStateSuccess();
     } else {
       yield CheckoutSwitchScreenStateFailure(error: 'Update checkout failed');
@@ -73,11 +89,13 @@ class CheckoutSwitchScreenBloc extends Bloc<CheckoutSwitchScreenEvent, CheckoutS
     yield state.copyWith(blobName: '', isUpdating: false);
   }
 
-  Stream<CheckoutSwitchScreenState> updateCheckout(UpdateCheckoutEvent event) async* {
+  Stream<CheckoutSwitchScreenState> updateCheckout(UpdateCheckoutEvent event, Checkout checkout) async* {
     yield state.copyWith(isUpdating: true);
     Map<String, String>body = {'name':event.name, 'logo':event.logo, '_id':event.id};
     dynamic response = await api.patchCheckout(GlobalUtils.activeToken.accessToken, event.businessId, event.id, body);
     if (response != null) {
+      checkout.name = event.name;
+      checkout.logo = event.logo;
       yield CheckoutSwitchScreenStateSuccess();
     } else {
       yield CheckoutSwitchScreenStateFailure(error: 'Update checkout failed');

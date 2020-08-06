@@ -2184,6 +2184,19 @@ class ApiService {
     }
   }
 
+  Future<dynamic> openCheckout(String token, String business, String checkout) async {
+    try {
+      print('$TAG - switchCheckout()');
+      dynamic response = await _client.getTypeless(
+        '${Env.checkout}/api/business/$business/checkout/$checkout/integration',
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<dynamic> createCheckout(String token, String business, Map body) async {
     try {
       print('$TAG - createCheckout()');

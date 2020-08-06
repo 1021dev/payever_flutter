@@ -48,6 +48,8 @@ class CheckoutSwitchScreenState {
 
 class CheckoutSwitchScreenStateSuccess extends CheckoutSwitchScreenState {}
 
+class CheckoutSwitchScreenOpenStateSuccess extends CheckoutSwitchScreenState {}
+
 class CheckoutSwitchScreenStateFailure extends CheckoutSwitchScreenState {
   final String error;
 

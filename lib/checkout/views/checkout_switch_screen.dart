@@ -64,6 +64,9 @@ class _CheckoutSwitchScreenState extends State<CheckoutSwitchScreen> {
     return BlocListener(
       bloc: screenBloc,
       listener: (BuildContext context, CheckoutSwitchScreenState state) async {
+        if (state is CheckoutSwitchScreenOpenStateSuccess){
+          Navigator.pop(context);
+        }
       },
       child: BlocBuilder<CheckoutSwitchScreenBloc, CheckoutSwitchScreenState>(
         bloc: screenBloc,
@@ -239,7 +242,7 @@ class _CheckoutSwitchScreenState extends State<CheckoutSwitchScreen> {
           );
         },
         onOpen: (Checkout checkout) {
-          screenBloc.add(SetDefaultCheckoutEvent(businessId: widget.businessId, id: checkout.id));
+          screenBloc.add(OpenCheckoutEvent(businessId: widget.businessId, checkout: checkout));
           widget.onOpen(checkout);
         },
       )).toList(),
