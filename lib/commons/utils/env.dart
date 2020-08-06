@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 import 'utils.dart';
 
 class Env {
@@ -39,6 +41,8 @@ class Env {
   static String notifications;
   static String shop;
   static String contacts;
+  static String financeExpressPhp;
+  static String financeExpress;
 
   Env.map(dynamic obj) {
     Env.users = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_USER];
@@ -81,6 +85,8 @@ class Env {
     Env.notifications = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_NOTIFICATIONS];
 
     Env.contacts = obj[GlobalUtils.ENV_BACKEND][GlobalUtils.ENV_CONTACTS];
+
+    Env.financeExpressPhp = obj[GlobalUtils.ENV_PHP][GlobalUtils.ENV_FINANCE_EXPRESS];
 
     Env.cdnImage = '${obj[GlobalUtils.ENV_CUSTOM][GlobalUtils.ENV_CUSTOM_CDN]}/images/';
     Env.cdnIcon = '${obj[GlobalUtils.ENV_CUSTOM][GlobalUtils.ENV_CUSTOM_CDN]}/icons-png/';

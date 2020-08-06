@@ -1,21 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-
-class ChannelsInitScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return ChannelsScreen();
-  }
-}
+import 'package:payever/blocs/checkout/checkout_bloc.dart';
+import 'package:payever/checkout/models/models.dart';
+import 'package:payever/commons/commons.dart';
 
 class ChannelsScreen extends StatefulWidget {
+  final CheckoutScreenBloc checkoutScreenBloc;
+
+  ChannelsScreen({this.checkoutScreenBloc});
+
   @override
   _ChannelsScreenState createState() => _ChannelsScreenState();
 }
 
 class _ChannelsScreenState extends State<ChannelsScreen> {
-  List<String> titles = [
+  List<String> subTitles = [
     'Pay by Link',
     'Text Link',
     'Button',
@@ -31,6 +31,37 @@ class _ChannelsScreenState extends State<ChannelsScreen> {
   }
 
   Widget _body() {
+
+    List<ChannelItem> items = [];
+    List<String> titles = [];
+    List<ChannelSet> list = [];
+    list.addAll(widget.checkoutScreenBloc.state.channelSets);
+//    List<ChannelSet> filterList = list.where((element) => element.checkout == widget.checkoutScreenBloc.state.defaultCheckout.id).toList();
+    for(ChannelSet channelSet in list) {
+      if (!titles.contains(channelSet.type)) {
+        titles.add(channelSet.type);
+      }
+    }
+    
+    if (titles.contains('link')) {
+      ChannelItem item = new ChannelItem(
+        title: 'Pay by Link',
+        button: 'Open',
+        checkValue: null,
+        image: SvgPicture.asset('assets/images/linkicon.svg')
+      );
+      items.add(item);
+    }
+    if (titles.contains('finance_express')) {
+      ChannelItem item = new ChannelItem(
+          title: 'Pay by Link',
+          button: 'Open',
+          checkValue: null,
+          image: SvgPicture.asset('assets/images/linkicon.svg')
+      );
+      items.add(item);
+    }
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -123,4 +154,13 @@ class _ChannelsScreenState extends State<ChannelsScreen> {
       ),
     );
   }
+}
+
+class ChannelItem {
+  String title;
+  SvgPicture image;
+  String button;
+  bool checkValue;
+  
+  ChannelItem({this.title, this.image, this.button, this.checkValue,});
 }

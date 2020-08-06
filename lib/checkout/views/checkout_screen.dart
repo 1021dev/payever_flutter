@@ -427,7 +427,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           },
         );
       case 2:
-        return ChannelsInitScreen();
+        return ChannelsScreen(checkoutScreenBloc: screenBloc,);
       case 3:
         return ConnectInitScreen();
       case 4:

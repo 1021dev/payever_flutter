@@ -753,6 +753,7 @@ class GlobalUtils {
   // env__
   static const String ENV_CUSTOM = 'custom';
   static const String ENV_BACKEND = 'backend';
+  static const String ENV_PHP = 'php';
   static const String ENV_AUTH = 'auth';
   static const String ENV_USER = 'users';
   static const String ENV_BUSINESS = 'business';
@@ -790,6 +791,7 @@ class GlobalUtils {
   static const String ENV_PAYMENT_SANTANDERNL = 'santanderNl';
   static const String ENV_NOTIFICATIONS = 'notifications';
   static const String ENV_CONTACTS = 'contacts';
+  static const String ENV_FINANCE_EXPRESS = 'financeExpress';
 
   // dashboard_
   static const String CURRENT_WALLPAPER = 'currentWallpaper';

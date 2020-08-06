@@ -2137,6 +2137,24 @@ class ApiService {
     }
   }
 
+  Future<dynamic> getFinanceExpressSettings(String idBusiness, String token, String checkoutId) async {
+    try {
+      print('$TAG - getCheckoutConnections()');
+      dynamic response = await _client.postTypeLess(
+          '${Env.financeExpressPhp}/api/settings/$idBusiness/connection/$checkoutId/action/get-numbers',
+          body: {},
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+  https://finance-express-php.payever.org/api/settings
   String randomString(int strlen) {
     const chars = "0123456789";
     Random rnd = new Random(new DateTime.now().millisecondsSinceEpoch);

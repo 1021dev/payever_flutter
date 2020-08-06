@@ -37,6 +37,8 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       yield* getPhoneNumbers();
     } else if (event is PatchCheckoutOrderEvent) {
       yield* patchCheckoutOrder(event);
+    } else if (event is GetChannelConfig) {
+      yield* getChannelConfig();
     }
   }
 
@@ -186,6 +188,18 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     );
     Map<String, dynamic>body = {'amount': event.amount, 'reference': event.reference};
 //    dynamic response = await api.patchCheckoutOrder(token, 'en', body);
+    await Future.delayed(Duration(milliseconds: 1000));
+    yield state.copyWith(
+      isOrdering: false,
+    );
+  }
+
+
+  Stream<CheckoutScreenState> getChannelConfig() async* {
+    yield state.copyWith(
+      isOrdering: true,
+    );
+
     await Future.delayed(Duration(milliseconds: 1000));
     yield state.copyWith(
       isOrdering: false,

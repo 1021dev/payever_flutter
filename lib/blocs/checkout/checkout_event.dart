@@ -31,6 +31,10 @@ class GetPaymentConfig extends CheckoutScreenEvent {
 
 }
 
+class GetChannelConfig extends CheckoutScreenEvent {
+
+}
+
 class GetPhoneNumbers extends CheckoutScreenEvent {
 
 }

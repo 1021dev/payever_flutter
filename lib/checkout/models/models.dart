@@ -446,3 +446,55 @@ class IntegrationModel {
     id = obj['_id'];
   }
 }
+
+class FinanceExpressSetting {
+  FinanceExpress bannerAndRate;
+  FinanceExpress bubble;
+  FinanceExpress button;
+  FinanceExpress textLink;
+
+  FinanceExpressSetting.fromMap(dynamic obj) {
+    bannerAndRate = obj['banner-and-rate'];
+    bubble = obj['bubble'];
+    button = obj['button'];
+    textLink = obj['text-link'];
+  }
+}
+
+class FinanceExpress {
+  bool adaptiveDesign = false;
+  String bgColor;
+  String borderColor;
+  String buttonColor;
+  String displayType;
+  String linkColor;
+  String linkTo;
+  String order;
+  num size = 0;
+  String textColor;
+  bool visibility = true;
+  num alignment;
+  dynamic corners;
+  num height;
+  num textSize;
+  num width;
+
+  FinanceExpress.fromMap(dynamic obj) {
+    adaptiveDesign = obj['adaptiveDesign'];
+    bgColor = obj['bgColor'];
+    borderColor = obj['borderColor'];
+    buttonColor = obj['buttonColor'];
+    displayType = obj['displayType'];
+    linkColor = obj['linkColor'];
+    linkTo = obj['linkTo'];
+    order = obj['order'];
+    size = obj['size'];
+    textColor = obj['textColor'];
+    visibility = obj['visibility'];
+    alignment = obj['alignment'];
+    corners = obj['corners'];
+    height = obj['height'];
+    textSize = obj['textSize'];
+    width = obj['width'];
+  }
+}
