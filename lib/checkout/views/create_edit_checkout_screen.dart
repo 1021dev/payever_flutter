@@ -175,7 +175,7 @@ class _CreateEditCheckoutScreenState extends State<CreateEditCheckoutScreen> {
   }
 
   Widget _getBody(CheckoutSwitchScreenState state) {
-    String blobName = '';//state.blobName;
+    String blobName = state.blobName;
     return Center(
       child: Container(
         padding: EdgeInsets.only(left: 16, right: 16),
@@ -330,18 +330,18 @@ class _CreateEditCheckoutScreenState extends State<CreateEditCheckoutScreen> {
 
   void submitCheckout(CheckoutSwitchScreenState state) {
     if (widget.checkout != null) {
-//      widget.screenBloc.add(UpdatePosTerminalEvent(
-//        businessId: widget.businessId,
-//        name: terminalNameController.text,
-//        logo: state.blobName != '' ? state.blobName : null,
-//        terminalId: widget.editTerminal.id,
-//      ));
-//    } else {
-//      widget.screenBloc.add(CreatePosTerminalEvent(
-//        businessId: widget.businessId,
-//        name: terminalNameController.text,
-//        logo: state.blobName != '' ? state.blobName : null,
-//      ));
+      widget.screenBloc.add(UpdateCheckoutEvent(
+        businessId: widget.businessId,
+        name: checkoutEditController.text,
+        logo: state.blobName != '' ? state.blobName : null,
+        id: widget.checkout.id,
+      ));
+    } else {
+      widget.screenBloc.add(CreateCheckoutEvent(
+        businessId:widget.businessId,
+        name: checkoutEditController.text,
+        logo: state.blobName != '' ? state.blobName : null,
+      ));
     }
   }
 
@@ -349,10 +349,9 @@ class _CreateEditCheckoutScreenState extends State<CreateEditCheckoutScreen> {
     PickedFile img = await ImagePicker().getImage(source: ImageSource.gallery);
     if (img.path != null) {
       print("_image: $img");
-//      widget.screenBloc.add(UploadTerminalImage(file: File(img.path), businessId: widget.businessId));
+      widget.screenBloc.add(UploadCheckoutImage(file: File(img.path), businessId: widget.businessId));
     }
   }
-
 
 }
 

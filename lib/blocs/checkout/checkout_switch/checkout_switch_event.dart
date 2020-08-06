@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:equatable/equatable.dart';
 import 'package:payever/checkout/models/models.dart';
 
@@ -21,14 +23,44 @@ class CheckoutSwitchScreenInitEvent extends CheckoutSwitchScreenEvent {
   ];
 }
 
+class UploadCheckoutImage extends CheckoutSwitchScreenEvent{
+  final File file;
+  final String businessId;
+  UploadCheckoutImage({this.file, this.businessId});
+
+  @override
+  List<Object> get props => [
+    this.file,
+    this.businessId,
+  ];
+}
+
 class SetDefaultCheckoutEvent extends CheckoutSwitchScreenEvent {
   final Checkout checkout;
 
   SetDefaultCheckoutEvent({this.checkout});
 }
 
-class UpdateCheckoutEvent extends CheckoutSwitchScreenEvent {
-  final Checkout checkout;
+class CreateCheckoutEvent extends CheckoutSwitchScreenEvent {
+  final String businessId;
+  final String name;
+  final String logo;
 
-  UpdateCheckoutEvent({this.checkout});
+  CreateCheckoutEvent({this.businessId, this.name, this.logo});
+  @override
+  List<Object> get props => [this.name,this.logo,];
+}
+
+class UpdateCheckoutEvent extends CheckoutSwitchScreenEvent {
+  final String businessId;
+  final String logo;
+  final String name;
+  final String id;
+
+  UpdateCheckoutEvent({this.businessId,this.logo,this.name,this.id,});
+
+}
+
+class DeleteCheckoutEvent extends CheckoutSwitchScreenEvent {
+
 }

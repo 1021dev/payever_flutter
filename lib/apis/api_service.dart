@@ -2198,7 +2198,7 @@ class ApiService {
     }
   }
 
-  Future<dynamic> editCheckout(String token, String business, String checkout, Map body) async {
+  Future<dynamic> patchCheckout(String token, String business, String checkout, Map body) async {
     try {
       print('$TAG - editCheckout()');
       dynamic response = await _client.patchTypeless(
