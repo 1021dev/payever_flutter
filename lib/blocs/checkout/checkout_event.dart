@@ -45,7 +45,11 @@ class GetPhoneNumbers extends CheckoutScreenEvent {
 
 }
 
+class UpdateCheckoutSections extends CheckoutScreenEvent {
+  final List<Section> sections;
 
+  UpdateCheckoutSections({this.sections});
+}
 
 class PatchCheckoutOrderEvent extends CheckoutScreenEvent {
   final double amount;

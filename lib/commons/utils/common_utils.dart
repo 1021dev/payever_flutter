@@ -727,6 +727,7 @@ class GlobalUtils {
   static const String DB_CHECKOUT_SECTIONS = 'sections';
   static const String DB_CHECKOUT_SECTIONS_CODE = 'code';
   static const String DB_CHECKOUT_SECTIONS_ENABLED = 'enabled';
+  static const String DB_CHECKOUT_SECTIONS_DEFAULT_ENABLED = 'defaultEnabled';
   static const String DB_CHECKOUT_SECTIONS_FIXED = 'fixed';
   static const String DB_CHECKOUT_SECTIONS_ORDER = 'order';
   static const String DB_CHECKOUT_SECTIONS_EXCLUDED = 'excluded_channels';

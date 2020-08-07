@@ -1,16 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:payever/blocs/bloc.dart';
 import 'package:payever/checkout/widgets/section_detail_item.dart';
 import 'package:payever/checkout/widgets/section_item.dart';
-
-class SectionsInitScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return SectionsScreen();
-  }
-}
+import 'package:payever/commons/utils/common_utils.dart';
+import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 
 class SectionsScreen extends StatefulWidget {
+  final CheckoutScreenBloc checkoutScreenBloc;
+
+  SectionsScreen({this.checkoutScreenBloc,});
   @override
   _SectionsScreenState createState() => _SectionsScreenState();
 }
@@ -24,14 +23,11 @@ class _SectionsScreenState extends State<SectionsScreen> {
   }
 
   Widget _body() {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.black26,
-            borderRadius: BorderRadius.all(Radius.circular(10)),
-          ),
+    return Container(
+      width: Measurements.width,
+      padding: EdgeInsets.all(16),
+      child: Center(
+        child: BlurEffectView(
           child: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,

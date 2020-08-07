@@ -2265,6 +2265,19 @@ class ApiService {
     }
   }
 
+  Future<dynamic> getAvailableSections(String token, String business, String checkoutId) async {
+    try {
+      print('$TAG - getAvailableSections() -> CheckoutId => $checkoutId');
+      dynamic response = await _client.getTypeless(
+        '${Env.checkout}/api/business/$business/checkout/$checkoutId/sections/available',
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   ///***************************************************************************
   ///****                      UTILS                                       *****
   ///***************************************************************************

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
@@ -47,27 +48,115 @@ class Checkout {
 
 class Section {
   String code = '';
-  bool enabled = false;
-  bool fixed = false;
+  bool defaultEnabled;
+  bool enabled;
+  bool fixed;
   num order = 0;
   String id = '';
   List<String> excludedChannels = [];
+  List<SubSection> subsections = [];
 
   Section.fromMap(dynamic obj) {
     code = obj[GlobalUtils.DB_CHECKOUT_SECTIONS_CODE];
+    defaultEnabled = obj[GlobalUtils.DB_CHECKOUT_SECTIONS_DEFAULT_ENABLED];
     enabled = obj[GlobalUtils.DB_CHECKOUT_SECTIONS_ENABLED];
     fixed = obj[GlobalUtils.DB_CHECKOUT_SECTIONS_FIXED];
     order = obj[GlobalUtils.DB_CHECKOUT_SECTIONS_ORDER];
-    id = obj['id'];
+    id = obj['_id'];
     var _excludedChannels = obj[GlobalUtils.DB_CHECKOUT_SECTIONS_EXCLUDED];
     if (_excludedChannels is List) {
       _excludedChannels.forEach((channel) {
         excludedChannels.add(channel);
       });
     }
+
+    var subSectionsObj = obj['subsections'];
+    if (subSectionsObj is List) {
+      subSectionsObj.forEach((element) {
+        subsections.add(SubSection.fromMap(element));
+      });
+    }
+  }
+
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> map = {};
+
+    map['code'] = code;
+    map['defaultEnabled'] = defaultEnabled;
+    if (enabled != null) {
+      map['enabled'] = enabled;
+    }
+    map['fixed'] = fixed;
+    map['order'] = order;
+    map['excludedChannels'] = excludedChannels;
+    map['_id'] = id;
+
+    List list = [];
+    subsections.forEach((element) {
+      list.add(element.toMap());
+    });
+    map['subsections'] = list;
+
+    return map;
   }
 }
 
+class SubSection {
+  String code;
+  List<Rule> rules = [];
+  String id;
+
+  SubSection.fromMap(dynamic obj) {
+    code = obj['code'];
+    id = obj['_id'];
+    dynamic rulesObj = obj['rules'];
+    if (rulesObj is List) {
+      rulesObj.forEach((element) {
+        rules.add(Rule.fromMap(element));
+      });
+    }
+  }
+
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> map = {};
+
+    map['code'] = code;
+    map['_id'] = id;
+
+    List list = [];
+    rules.forEach((element) {
+      list.add(element.toMap());
+    });
+    map['rules'] = list;
+
+    return map;
+  }
+}
+
+class Rule {
+  String operator;
+  String property;
+  String type;
+  String id;
+
+  Rule.fromMap(dynamic obj) {
+    operator = obj['operator'];
+    property = obj['property'];
+    type = obj['type'];
+    id = obj['_id'];
+  }
+
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> map = {};
+
+    map['operator'] = operator;
+    map['property'] = property;
+    map['type'] = type;
+    map['_id'] = id;
+
+    return map;
+  }
+}
 class CheckoutSettings {
   List<String> cspAllowedHosts = [];
   List<Lang> languages = [];

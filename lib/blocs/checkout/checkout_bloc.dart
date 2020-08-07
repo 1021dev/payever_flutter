@@ -31,8 +31,10 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
           checkouts: event.checkouts,
           defaultCheckout: event.defaultCheckout,
         );
+      } else {
+
       }
-      yield* fetchConnectInstallations(event.business, isLoading: true);
+      yield* fetchConnectInstallations(state.business, isLoading: true);
     } else if (event is GetPaymentConfig) {
       yield* getPaymentData();
     } else if (event is GetPhoneNumbers) {
@@ -199,7 +201,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     yield state.copyWith(
       isOrdering: true,
     );
-    Map<String, dynamic>body = {'amount': event.amount, 'reference': event.reference};
+    Map<String, dynamic> body = {'amount': event.amount, 'reference': event.reference};
 //    dynamic response = await api.patchCheckoutOrder(token, 'en', body);
     await Future.delayed(Duration(milliseconds: 1000));
     yield state.copyWith(
@@ -207,13 +209,12 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     );
   }
 
-
   Stream<CheckoutScreenState> getChannelConfig() async* {
-//    if (state.channelItems.length == 0) {
+    if (state.channelItems.length == 0) {
       yield state.copyWith(
         loadingChannel: true,
       );
-//    }
+    }
     List<ConnectModel> connectInstallations = [];
     dynamic categoryResponse = await api.getConnectIntegrationByCategory(
         token, state.business, 'shopsystems');
@@ -323,9 +324,9 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
   }
 
   Stream<CheckoutScreenState> getConnectConfig() async* {
-      yield state.copyWith(
-        loadingConnect: true,
-      );
+    yield state.copyWith(
+      loadingConnect: true,
+    );
     List<ConnectModel> connectInstallations = [];
     dynamic categoryResponse = await api.getConnectIntegrationByCategory(
         token, state.business, 'communications');
@@ -359,6 +360,46 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       loadingConnect: false,
       connectItems: items,
     );
+  }
+
+  Stream<CheckoutScreenState> getCheckoutSections() async* {
+    yield state.copyWith(
+    );
+
+    if (state.defaultCheckout != null) {
+      List<Section> availableSections = [];
+      dynamic sectionsResponse = await api.getAvailableSections(
+          token, state.business, state.defaultCheckout.id);
+      if (sectionsResponse is List) {
+        sectionsResponse.forEach((element) {
+          availableSections.add(Section.fromMap(element));
+        });
+      }
+    }
+
+    yield state.copyWith(
+    );
+  }
+
+  Stream<CheckoutScreenState> updateCheckoutSections(List<Section> sections) async* {
+    yield state.copyWith(
+      sectionUpdate: true,
+    );
+
+    Map<String, dynamic> body = {};
+    List<Map<String, dynamic>> sectionMapList = [];
+    sections.forEach((section) {
+      sectionMapList.add(section.toMap());
+    });
+
+    body['sections'] = sectionMapList;
+    dynamic sectionsResponse = await api.patchCheckout(token, state.business, state.defaultCheckout.id, body);
+
+    yield state.copyWith(
+      sectionUpdate: false,
+    );
+
+    add(CheckoutScreenInitEvent());
   }
 
 }

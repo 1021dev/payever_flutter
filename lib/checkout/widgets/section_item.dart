@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:payever/commons/commons.dart';
 
 class SectionItem extends StatelessWidget {
   final String title;
@@ -11,6 +12,7 @@ class SectionItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 65,
+      color: Colors.black87,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
@@ -38,23 +40,19 @@ class SectionItem extends StatelessWidget {
             ),
           ),
           Spacer(),
-          InkWell(
-            onTap: () {},
-            child: Container(
-              height: 28,
-              width: 65,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                color: Colors.black54,
-              ),
-              child: Center(
-                child: Text(
-                  'Edit',
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.white,
-                  ),
-                ),
+          MaterialButton(
+            onPressed: () {},
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            height: 24,
+            minWidth: 0,
+            padding: EdgeInsets.only(left: 12, right: 12),
+            child: Text(
+              Language.getCheckoutStrings('checkout_sdk.action.edit'),
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.white,
               ),
             ),
           ),

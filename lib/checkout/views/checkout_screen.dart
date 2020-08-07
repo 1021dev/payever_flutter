@@ -521,7 +521,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           },
         );
       case 4:
-        return SectionsInitScreen();
+        return SectionsScreen(
+          checkoutScreenBloc: screenBloc,
+        );
       case 5:
         return CheckoutSettingsScreen(
           checkoutScreenBloc: screenBloc,
