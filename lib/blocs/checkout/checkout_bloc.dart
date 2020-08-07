@@ -47,6 +47,12 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       yield* getConnectConfig();
     } else if (event is GetChannelSet) {
       yield* getCheckoutFlow();
+    } else if (event is ReorderSection1Event) {
+      yield* reorderSections1(event.oldIndex, event.newIndex);
+    } else if (event is ReorderSection2Event) {
+      yield* reorderSections2(event.oldIndex, event.newIndex);
+    } else if (event is ReorderSection3Event) {
+      yield* reorderSections3(event.oldIndex, event.newIndex);
     }
   }
 
@@ -381,6 +387,32 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     );
   }
 
+  Stream<CheckoutScreenState> getSectionDetails() async* {
+    List<Section> sections = [];
+    List<Section> sections1 = [];
+    List<Section> sections2 = [];
+    List<Section> sections3 = [];
+    sections.addAll(state.defaultCheckout.sections);
+    for (int i = 0; i < sections.length; i++) {
+      Section section = sections[i];
+      if (section.code == 'order') {
+        sections1.add(section);
+      } else if (section.code == 'send_to_device') {
+        sections1.add(section);
+      } else if (section.code == 'choosePayment') {
+        sections2.add(section);
+      } else if (section.code == 'payment') {
+        sections2.add(section);
+      } else if (section.code == 'address') {
+        sections2.add(section);
+      } else if (section.code == 'user') {
+        sections2.add(section);
+      }
+    }
+
+    yield state.copyWith(sections1: sections1, sections2: sections2, sections3: sections3);
+  }
+
   Stream<CheckoutScreenState> updateCheckoutSections(List<Section> sections) async* {
     yield state.copyWith(
       sectionUpdate: true,
@@ -400,6 +432,42 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     );
 
     add(CheckoutScreenInitEvent());
+  }
+
+  Stream<CheckoutScreenState> reorderSections1(int oldIndex, int newIndex) async* {
+    if (newIndex > oldIndex) {
+      newIndex -= 1;
+    }
+    List<Section> sections1 = [];
+    sections1.addAll(state.sections1);
+    Section item = sections1.removeAt(oldIndex);
+    sections1.insert(newIndex, item);
+
+    yield state.copyWith(sections1: sections1);
+  }
+
+  Stream<CheckoutScreenState> reorderSections2(int oldIndex, int newIndex) async* {
+    if (newIndex > oldIndex) {
+      newIndex -= 1;
+    }
+    List<Section> sections2 = [];
+    sections2.addAll(state.sections2);
+    Section item = sections2.removeAt(oldIndex);
+    sections2.insert(newIndex, item);
+
+    yield state.copyWith(sections1: sections2);
+  }
+
+  Stream<CheckoutScreenState> reorderSections3(int oldIndex, int newIndex) async* {
+    if (newIndex > oldIndex) {
+      newIndex -= 1;
+    }
+    List<Section> sections3 = [];
+    sections3.addAll(state.sections3);
+    Section item = sections3.removeAt(oldIndex);
+    sections3.insert(newIndex, item);
+
+    yield state.copyWith(sections3: sections3);
   }
 
 }

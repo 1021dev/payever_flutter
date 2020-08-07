@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:dropdown_formfield/dropdown_formfield.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -15,7 +14,6 @@ import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/contacts/models/model.dart';
 import 'package:payever/login/login_screen.dart';
-import 'package:payever/pos/widgets/pos_top_button.dart';
 
 bool _isPortrait;
 bool _isTablet;

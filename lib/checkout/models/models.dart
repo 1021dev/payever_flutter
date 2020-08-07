@@ -667,3 +667,21 @@ class ChannelItem {
 
   ChannelItem({this.title, this.image, this.button, this.checkValue,});
 }
+
+String getTitleFromCode(String code) {
+  switch (code) {
+    case 'order':
+      return 'Order';
+    case 'send_to_device':
+      return 'Send To Device';
+    case 'choosePayment':
+      return 'Choose Payment';
+    case 'payment':
+      return 'Payment Detail';
+    case 'address':
+      return 'Address';
+    case 'user':
+      return 'User Detail';
+  }
+  return '';
+}

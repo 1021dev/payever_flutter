@@ -24,6 +24,9 @@ class CheckoutScreenState {
   final List<String> phoneNumbers;
   final List<ChannelItem> channelItems;
   final List<ChannelItem> connectItems;
+  final List<Section> sections1;
+  final List<Section> sections2;
+  final List<Section> sections3;
 
   CheckoutScreenState({
     this.isLoading = false,
@@ -45,6 +48,9 @@ class CheckoutScreenState {
     this.phoneNumbers = const [],
     this.channelItems = const [],
     this.connectItems = const [],
+    this.sections1 = const [],
+    this.sections2 = const [],
+    this.sections3 = const [],
   });
 
   List<Object> get props => [
@@ -67,6 +73,9 @@ class CheckoutScreenState {
     this.phoneNumbers,
     this.channelItems,
     this.connectItems,
+    this.sections1,
+    this.sections2,
+    this.sections3,
   ];
 
   CheckoutScreenState copyWith({
@@ -89,6 +98,9 @@ class CheckoutScreenState {
     List<String> phoneNumbers,
     List<ChannelItem> channelItems,
     List<ChannelItem> connectItems,
+    List<Section> sections1,
+    List<Section> sections2,
+    List<Section> sections3,
   }) {
     return CheckoutScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -110,6 +122,9 @@ class CheckoutScreenState {
       phoneNumbers: phoneNumbers ?? this.phoneNumbers,
       channelItems: channelItems ?? this.channelItems,
       connectItems: connectItems ?? this.connectItems,
+      sections1: sections1 ?? this.sections1,
+      sections2: sections2 ?? this.sections2,
+      sections3: sections3 ?? this.sections3,
     );
   }
 }

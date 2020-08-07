@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:payever/checkout/models/models.dart';
 
 abstract class CheckoutScreenEvent extends Equatable {
@@ -62,4 +63,23 @@ class PatchCheckoutOrderEvent extends CheckoutScreenEvent {
     this.amount,
     this.reference,
   ];
+}
+
+class ReorderSection1Event extends CheckoutScreenEvent {
+  final int oldIndex;
+  final int newIndex;
+
+  ReorderSection1Event({this.oldIndex, this.newIndex});
+}
+class ReorderSection2Event extends CheckoutScreenEvent {
+  final int oldIndex;
+  final int newIndex;
+
+  ReorderSection2Event({this.oldIndex, this.newIndex});
+}
+class ReorderSection3Event extends CheckoutScreenEvent {
+  final int oldIndex;
+  final int newIndex;
+
+  ReorderSection3Event({this.oldIndex, this.newIndex});
 }

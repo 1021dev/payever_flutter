@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/blocs/bloc.dart';
+import 'package:payever/checkout/models/models.dart';
 import 'package:payever/checkout/widgets/section_detail_item.dart';
 import 'package:payever/checkout/widgets/section_item.dart';
 import 'package:payever/commons/utils/common_utils.dart';
@@ -42,6 +43,13 @@ class _SectionsScreenState extends State<SectionsScreen> {
                       _selectedSectionIndex = _selectedSectionIndex == 0 ? -1 : 0;
                     });
                   },
+                  sections: widget.checkoutScreenBloc.state.sections1,
+                  onReorder: (oldIndex, newIndex) {
+                    widget.checkoutScreenBloc.add(ReorderSection1Event(oldIndex: oldIndex, newIndex: newIndex));
+                  },
+                  onDelete: (Section section) {
+
+                  },
                 ),
                 Divider(
                   height: 0,
@@ -58,6 +66,13 @@ class _SectionsScreenState extends State<SectionsScreen> {
                       _selectedSectionIndex = _selectedSectionIndex == 1 ? -1 : 1;
                     });
                   },
+                  sections: widget.checkoutScreenBloc.state.sections2,
+                  onReorder: (oldIndex, newIndex) {
+                    widget.checkoutScreenBloc.add(ReorderSection1Event(oldIndex: oldIndex, newIndex: newIndex));
+                  },
+                  onDelete: (Section section) {
+
+                  },
                 ),
                 Divider(
                   height: 0,
@@ -73,6 +88,13 @@ class _SectionsScreenState extends State<SectionsScreen> {
                     setState(() {
                       _selectedSectionIndex = _selectedSectionIndex == 2 ? -1 : 2;
                     });
+                  },
+                  sections: widget.checkoutScreenBloc.state.sections3,
+                  onReorder: (oldIndex, newIndex) {
+                    widget.checkoutScreenBloc.add(ReorderSection1Event(oldIndex: oldIndex, newIndex: newIndex));
+                  },
+                  onDelete: (Section section) {
+
                   },
                 ),
                 Divider(
