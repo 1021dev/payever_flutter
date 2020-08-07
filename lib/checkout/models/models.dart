@@ -102,10 +102,14 @@ class CheckoutSettings {
   Map<String, dynamic> toDictionary() {
     Map<String, dynamic> map = {};
     map['cspAllowedHosts'] = cspAllowedHosts;
-    map['languages'] = languages;
+    List<Map<String, dynamic>>langs = [];
+    languages.forEach((element) {
+      langs.add(element.toDictionary());
+    });
+    map['languages'] = langs;
     map['message'] = message;
     map['phoneNumber'] = phoneNumber;
-    map['styles'] = styles;
+    map['styles'] = styles.toDictionary();
     map['testingMode'] = testingMode;
     return {'settings':map};
   }
@@ -196,8 +200,26 @@ class Style {
 
   Map<String, dynamic> toDictionary() {
     Map<String, dynamic> map = {};
+    map['button'] = button.toDictionary();
+    map['page'] = page.toDictionary();
+    map['id'] = id;
     map['active'] = active;
-
+    map['businessHeaderBackgroundColor'] = businessHeaderBackgroundColor;
+    map['businessHeaderBorderColor'] = businessHeaderBorderColor;
+    map['buttonBackgroundColor'] = buttonBackgroundColor;
+    map['buttonBackgroundDisabledColor'] = buttonBackgroundDisabledColor;
+    map['buttonBorderRadius'] = buttonBorderRadius;
+    map['buttonTextColor'] = buttonTextColor;
+    map['inputBackgroundColor'] = inputBackgroundColor;
+    map['inputBorderColor'] = inputBorderColor;
+    map['inputBorderRadius'] = inputBorderRadius;
+    map['inputTextPrimaryColor'] = inputTextPrimaryColor;
+    map['inputTextSecondaryColor'] = inputTextSecondaryColor;
+    map['pageBackgroundColor'] = pageBackgroundColor;
+    map['pageLineColor'] = pageLineColor;
+    map['pageTextLinkColor'] = pageTextLinkColor;
+    map['pageTextPrimaryColor'] = pageTextPrimaryColor;
+    map['pageTextSecondaryColor'] = pageTextSecondaryColor;
     return map;
   }
 }
@@ -232,7 +254,7 @@ class ButtonStyle {
   Map<String, dynamic> toDictionary() {
     Map<String, dynamic> map = {};
     map['corners'] = corners;
-    map['color'] = color;
+    map['color'] = color.toDictionary();
     return map;
   }
 }

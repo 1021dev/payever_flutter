@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/apis/api_service.dart';
@@ -46,8 +45,6 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       yield* getConnectConfig();
     } else if (event is GetChannelSet) {
       yield* getCheckoutFlow();
-    } else if (event is UpdateCheckoutSettingsEvent) {
-      yield* updateCheckoutSettings(event);
     }
   }
 
@@ -364,14 +361,4 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     );
   }
 
-  Stream<CheckoutScreenState> updateCheckoutSettings(UpdateCheckoutSettingsEvent event) async* {
-    Checkout checkout = event.checkout;
-    Map<String, dynamic>body = event.checkout.settings.toDictionary();
-    dynamic response = await api.patchCheckout(GlobalUtils.activeToken.accessToken, event.businessId, checkout.id, body);
-    if (!(response is DioError)) {
-      yield state.copyWith(defaultCheckout: event.checkout);
-    } else {
-      yield CheckoutScreenStateFailure(error: response);
-    }
-  }
 }

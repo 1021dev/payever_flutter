@@ -15,12 +15,12 @@ bool _isPortrait;
 bool _isTablet;
 
 class CheckoutSwitchScreen extends StatefulWidget {
-  final CheckoutScreenBloc screenBloc;
+  final CheckoutScreenBloc checkoutScreenBloc;
   final String businessId;
   final Function onOpen;
 
   CheckoutSwitchScreen({
-    this.screenBloc,
+    this.checkoutScreenBloc,
     this.businessId,
     this.onOpen,
   });
@@ -39,7 +39,7 @@ class _CheckoutSwitchScreenState extends State<CheckoutSwitchScreen> {
 
   @override
   void initState() {
-    screenBloc = CheckoutSwitchScreenBloc(checkoutScreenBloc: widget.screenBloc);
+    screenBloc = CheckoutSwitchScreenBloc(checkoutScreenBloc: widget.checkoutScreenBloc);
     screenBloc.add(CheckoutSwitchScreenInitEvent(business: widget.businessId));
     super.initState();
   }

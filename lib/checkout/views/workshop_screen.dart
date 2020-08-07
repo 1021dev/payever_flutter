@@ -163,7 +163,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
 
       return CheckoutSwitchScreen(
         businessId: state.business,
-        screenBloc: widget.checkoutScreenBloc,
+        checkoutScreenBloc: widget.checkoutScreenBloc,
         onOpen: (Checkout checkout) {
           setState(() {
             switchCheckout = false;
