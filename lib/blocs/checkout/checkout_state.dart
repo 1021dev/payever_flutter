@@ -27,6 +27,7 @@ class CheckoutScreenState {
   final List<Section> sections1;
   final List<Section> sections2;
   final List<Section> sections3;
+  final List<Section> availableSections;
 
   CheckoutScreenState({
     this.isLoading = false,
@@ -51,6 +52,7 @@ class CheckoutScreenState {
     this.sections1 = const [],
     this.sections2 = const [],
     this.sections3 = const [],
+    this.availableSections = const [],
   });
 
   List<Object> get props => [
@@ -76,6 +78,7 @@ class CheckoutScreenState {
     this.sections1,
     this.sections2,
     this.sections3,
+    this.availableSections,
   ];
 
   CheckoutScreenState copyWith({
@@ -101,6 +104,7 @@ class CheckoutScreenState {
     List<Section> sections1,
     List<Section> sections2,
     List<Section> sections3,
+    List<Section> availableSections,
   }) {
     return CheckoutScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -125,6 +129,7 @@ class CheckoutScreenState {
       sections1: sections1 ?? this.sections1,
       sections2: sections2 ?? this.sections2,
       sections3: sections3 ?? this.sections3,
+      availableSections: availableSections ?? this.availableSections,
     );
   }
 }

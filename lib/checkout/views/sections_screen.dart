@@ -16,7 +16,9 @@ class SectionsScreen extends StatefulWidget {
 }
 
 class _SectionsScreenState extends State<SectionsScreen> {
-  int _selectedSectionIndex = -1;
+  bool isExpandedSection1 = false;
+  bool isExpandedSection2 = false;
+  bool isExpandedSection3 = false;
 
   @override
   Widget build(BuildContext context) {
@@ -37,10 +39,10 @@ class _SectionsScreenState extends State<SectionsScreen> {
                 SectionItem(
                   title: 'Step 1',
                   detail: 'Shopping cart details',
-                  isExpanded: _selectedSectionIndex == 0,
+                  isExpanded: isExpandedSection1,
                   onTap: () {
                     setState(() {
-                      _selectedSectionIndex = _selectedSectionIndex == 0 ? -1 : 0;
+                      isExpandedSection1 = !isExpandedSection1;
                     });
                   },
                   sections: widget.checkoutScreenBloc.state.sections1,
@@ -56,14 +58,13 @@ class _SectionsScreenState extends State<SectionsScreen> {
                   thickness: 0.5,
                   color: Colors.grey,
                 ),
-                _getStepOneDetail(),
                 SectionItem(
                   title: 'Step 2',
                   detail: 'Customer & payment details',
-                  isExpanded: _selectedSectionIndex == 1,
+                  isExpanded: isExpandedSection2,
                   onTap: () {
                     setState(() {
-                      _selectedSectionIndex = _selectedSectionIndex == 1 ? -1 : 1;
+                      isExpandedSection2 = !isExpandedSection2;
                     });
                   },
                   sections: widget.checkoutScreenBloc.state.sections2,
@@ -79,14 +80,13 @@ class _SectionsScreenState extends State<SectionsScreen> {
                   thickness: 0.5,
                   color: Colors.grey,
                 ),
-                _getStepTwoDetail(),
                 SectionItem(
                   title: 'Step 3',
                   detail: 'After sale details',
-                  isExpanded: _selectedSectionIndex == 2,
+                  isExpanded: isExpandedSection3,
                   onTap: () {
                     setState(() {
-                      _selectedSectionIndex = _selectedSectionIndex == 2 ? -1 : 2;
+                      isExpandedSection3 = isExpandedSection3;
                     });
                   },
                   sections: widget.checkoutScreenBloc.state.sections3,
@@ -102,7 +102,6 @@ class _SectionsScreenState extends State<SectionsScreen> {
                   thickness: 0.5,
                   color: Colors.grey,
                 ),
-                _getStepThreeDetail(),
                 Container(
                   height: 65,
                   decoration: BoxDecoration(
@@ -129,33 +128,5 @@ class _SectionsScreenState extends State<SectionsScreen> {
         ),
       ),
     );
-  }
-
-  ///---------------------------------------------------------------------------
-  ///                   Section Details - Step 1
-  ///---------------------------------------------------------------------------
-  Widget _getStepOneDetail() {
-    return SectionDetailItem(title: 'Order', isSelected: _selectedSectionIndex == 0,);
-  }
-
-  ///---------------------------------------------------------------------------
-  ///                   Section Details - Step 2
-  ///---------------------------------------------------------------------------
-  Widget _getStepTwoDetail() {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        SectionDetailItem(title: 'User Details', isSelected: _selectedSectionIndex == 1, isDisable: true,),
-        SectionDetailItem(title: 'Address', isSelected: _selectedSectionIndex == 1, isDisable: true,),
-        SectionDetailItem(title: 'Choose Payment', isSelected: _selectedSectionIndex == 1,),
-        SectionDetailItem(title: 'Payment Details', isSelected: _selectedSectionIndex == 1,),
-      ],
-    );
-  }
-  ///---------------------------------------------------------------------------
-  ///                   Section Details - Step 3
-  ///---------------------------------------------------------------------------
-  Widget _getStepThreeDetail() {
-    return SectionDetailItem(title: 'Confirmation', isSelected: _selectedSectionIndex == 2,);
   }
 }

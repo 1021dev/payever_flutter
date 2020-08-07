@@ -42,6 +42,10 @@ class GetConnectConfig extends CheckoutScreenEvent {
 
 }
 
+class GetSectionDetails extends CheckoutScreenEvent {
+
+}
+
 class GetPhoneNumbers extends CheckoutScreenEvent {
 
 }

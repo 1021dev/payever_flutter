@@ -53,6 +53,8 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       yield* reorderSections2(event.oldIndex, event.newIndex);
     } else if (event is ReorderSection3Event) {
       yield* reorderSections3(event.oldIndex, event.newIndex);
+    } else if (event is GetSectionDetails) {
+      yield* getSectionDetails();
     }
   }
 
@@ -368,26 +370,18 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     );
   }
 
-  Stream<CheckoutScreenState> getCheckoutSections() async* {
-    yield state.copyWith(
-    );
-
-    if (state.defaultCheckout != null) {
-      List<Section> availableSections = [];
-      dynamic sectionsResponse = await api.getAvailableSections(
-          token, state.business, state.defaultCheckout.id);
-      if (sectionsResponse is List) {
-        sectionsResponse.forEach((element) {
-          availableSections.add(Section.fromMap(element));
-        });
-      }
+  Stream<CheckoutScreenState> getSectionDetails() async* {
+    if (state.defaultCheckout == null) {
+      return;
+    }
+    dynamic response = await api.getAvailableSections(token, state.business, state.defaultCheckout.id);
+    List<Section> availableSections = [];
+    if (response is List) {
+      response.forEach((element) {
+        availableSections.add(Section.fromMap(element));
+      });
     }
 
-    yield state.copyWith(
-    );
-  }
-
-  Stream<CheckoutScreenState> getSectionDetails() async* {
     List<Section> sections = [];
     List<Section> sections1 = [];
     List<Section> sections2 = [];
@@ -410,7 +404,12 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       }
     }
 
-    yield state.copyWith(sections1: sections1, sections2: sections2, sections3: sections3);
+    yield state.copyWith(
+      sections1: sections1,
+      sections2: sections2,
+      sections3: sections3,
+      availableSections: availableSections,
+    );
   }
 
   Stream<CheckoutScreenState> updateCheckoutSections(List<Section> sections) async* {

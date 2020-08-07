@@ -11,7 +11,7 @@ class SectionItem extends StatelessWidget {
   final ReorderCallback onReorder;
   final Function onDelete;
 
-  const SectionItem({
+  SectionItem({
     this.title,
     this.detail,
     this.isExpanded,
@@ -23,15 +23,15 @@ class SectionItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Wrap(
       children: <Widget>[
         GestureDetector(
           onTap: onTap,
           child: Container(
+            padding: EdgeInsets.only(left: 16, right: 16,),
             height: 65,
             color: Colors.black87,
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
@@ -42,44 +42,49 @@ class SectionItem extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  width: 8,
+                  width: 24,
                 ),
                 Flexible(
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Flexible(
                         child: Text(
                           detail,
                           maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 14,
                           ),
                         ),
                       ),
-                      Spacer(),
-                      MaterialButton(
-                        onPressed: () {},
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        height: 24,
-                        minWidth: 0,
-                        padding: EdgeInsets.only(left: 12, right: 12),
-                        child: Text(
-                          Language.getCheckoutStrings('checkout_sdk.action.edit'),
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.white,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          MaterialButton(
+                            onPressed: () {},
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            height: 24,
+                            minWidth: 0,
+                            padding: EdgeInsets.only(left: 12, right: 12),
+                            child: Text(
+                              Language.getCheckoutStrings('checkout_sdk.action.edit'),
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.white,
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 8,
-                      ),
-                      Icon(
-                        isExpanded ? Icons.remove : Icons.add,
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Icon(
+                            isExpanded ? Icons.remove : Icons.add,
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -88,62 +93,68 @@ class SectionItem extends StatelessWidget {
             ),
           ),
         ),
-        isExpanded ? ReorderableListView(
-          scrollDirection: Axis.vertical,
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          children: title == 'Step 3' ? List.generate(sections.length, (index) {
-            return Container(
-              padding: EdgeInsets.only(left: 16, right: 16,),
-              key: Key('$title$index'),
-              height: 50,
-              child: Row(
-                children: <Widget>[
-                  SizedBox(
-                    width: 64,
-                    child: sections[index].fixed ? Container(): MaterialButton(
-                      onPressed: onDelete(sections[index]),
-                      child: Center(
-                        child: Icon(Icons.remove),
+        isExpanded ? Container(
+          height: title == 'Step 3' ? 1: sections.length * 50.0,
+          child: ReorderableListView(
+            scrollDirection: Axis.vertical,
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            children: title == 'Step 3' ? List.generate(1, (index) {
+              return Container(
+                key: Key('$title$index'),
+                height: 50,
+                child: Row(
+                  children: <Widget>[
+                    SizedBox(
+                      width: 64,
+                    ),
+                    Flexible(
+                      child: Text(
+                        'Confirmation',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontFamily: 'Helvetica Neue',
+                        ),
                       ),
                     ),
-                  ),
-                  Flexible(
-                    child: Text(
-                      getTitleFromCode(sections[index].code),
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontFamily: 'Helvetica Neue',
+                  ],
+                ),
+              );
+            }): List.generate(sections.length, (index) {
+              Section section = sections[index];
+              print(section.code);
+              return Container(
+                padding: EdgeInsets.only(left: 16, right: 16,),
+                key: Key('$title$index'),
+                height: 50,
+                child: Row(
+                  children: <Widget>[
+                    SizedBox(
+                      width: 64,
+                      child: sections[index].fixed ? Container(): MaterialButton(
+                        onPressed: onDelete(sections[index]),
+                        child: Center(
+                          child: Icon(Icons.remove),
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            );
-          }
-          ): List.generate(1, (index) {
-            return Container(
-              height: 50,
-              child: Row(
-                children: <Widget>[
-                  SizedBox(
-                    width: 64,
-                  ),
-                  Flexible(
-                    child: Text(
-                      'Confirmation',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontFamily: 'Helvetica Neue',
+                    Flexible(
+                      child: Text(
+                        getTitleFromCode(sections[index].code),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontFamily: 'Helvetica Neue',
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            );
-          }),
-          onReorder: onReorder,
+                  ],
+                ),
+              );
+            }
+            ),
+            onReorder: onReorder,
+          ),
         ): Container(),
       ],
     );

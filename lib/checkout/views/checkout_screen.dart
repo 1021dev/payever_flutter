@@ -195,6 +195,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             screenBloc.add(GetChannelConfig());
           } else if (index == 3) {
             screenBloc.add(GetConnectConfig());
+          } else if (index == 4) {
+            screenBloc.add(GetSectionDetails());
           }
         },
         tabs: <Widget>[
