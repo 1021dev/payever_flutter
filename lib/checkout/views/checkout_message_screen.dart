@@ -1,55 +1,54 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
+import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
-import 'package:payever/login/login_screen.dart';
 
 class CheckoutMessageScreen extends StatefulWidget {
 
-  final CheckoutScreenBloc checkoutScreenBloc;
+  final CheckoutSettingScreenBloc settingBloc;
+  final String businessId;
+  final String checkoutId;
+  final CheckoutSettings settings;
 
-  CheckoutMessageScreen({this.checkoutScreenBloc});
+  CheckoutMessageScreen(
+      {this.settingBloc, this.businessId, this.checkoutId, this.settings});
 
   _CheckoutMessageScreenState createState() => _CheckoutMessageScreenState();
 
 }
 
 class _CheckoutMessageScreenState extends State<CheckoutMessageScreen> {
-
+  TextEditingController controller;
   @override
   void initState() {
     super.initState();
+    controller = TextEditingController(text: widget.settings.message);
   }
 
   @override
   void dispose() {
     super.dispose();
+    controller.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocListener(
-        bloc: widget.checkoutScreenBloc,
-        listener: (BuildContext context, CheckoutScreenState state) async {
-          if (state is CheckoutScreenStateFailure) {
-            Navigator.pushReplacement(
-              context,
-              PageTransition(
-                child: LoginScreen(),
-                type: PageTransitionType.fade,
-              ),
-            );
+        bloc: widget.settingBloc,
+        listener: (BuildContext context, CheckoutSettingScreenState state) async {
+          if (state is CheckoutSettingScreenStateSuccess) {
+            Navigator.pop(context);
+          } else if (state is CheckoutSettingScreenStateFailure) {
           }
         },
-      child: BlocBuilder<CheckoutScreenBloc, CheckoutScreenState>(
-        bloc: widget.checkoutScreenBloc,
-        builder: (BuildContext context, CheckoutScreenState state) {
+      child: BlocBuilder<CheckoutSettingScreenBloc, CheckoutSettingScreenState>(
+        bloc: widget.settingBloc,
+        builder: (BuildContext context, CheckoutSettingScreenState state) {
           return Scaffold(
             backgroundColor: Colors.black,
             resizeToAvoidBottomPadding: false,
@@ -72,7 +71,7 @@ class _CheckoutMessageScreenState extends State<CheckoutMessageScreen> {
     );
   }
 
-  Widget _appBar(CheckoutScreenState state) {
+  Widget _appBar(CheckoutSettingScreenState state) {
     return AppBar(
       centerTitle: false,
       elevation: 0,
@@ -110,7 +109,7 @@ class _CheckoutMessageScreenState extends State<CheckoutMessageScreen> {
     );
   }
 
-  Widget _getBody(CheckoutScreenState state) {
+  Widget _getBody(CheckoutSettingScreenState state) {
     return Container(
       width: Measurements.width,
       padding: EdgeInsets.all(16),
@@ -131,6 +130,7 @@ class _CheckoutMessageScreenState extends State<CheckoutMessageScreen> {
                       setState(() {
                       });
                     },
+                    controller: controller,
                     validator: (value) {
                       return null;
                     },
@@ -145,7 +145,6 @@ class _CheckoutMessageScreenState extends State<CheckoutMessageScreen> {
                     ),
                     style: TextStyle(fontSize: 16),
                     keyboardType: TextInputType.url,
-                    initialValue: state.defaultCheckout.settings.message,
                   ),
                 ),
               ),
@@ -154,10 +153,18 @@ class _CheckoutMessageScreenState extends State<CheckoutMessageScreen> {
                 child: SizedBox.expand(
                   child: MaterialButton(
                     onPressed: () {
-
+                      widget.settings.message = controller.text;
+                      widget.settingBloc.add(UpdateCheckoutSettingsEvent(
+                          widget.businessId,
+                          widget.checkoutId,
+                          widget.settings));
                     },
                     color: Colors.black,
-                    child: Text(
+                    child: state.isUpdating
+                        ? CircularProgressIndicator(
+                      strokeWidth: 2,
+                    )
+                        : Text(
                       Language.getCommerceOSStrings('actions.save'),
                     ),
                   ),

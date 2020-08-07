@@ -38,7 +38,7 @@ class SectionItem extends StatelessWidget {
               right: 16,
             ),
             height: 65,
-            color: Colors.black87,
+            color: Colors.black54,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[

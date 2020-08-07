@@ -198,7 +198,8 @@ class CheckoutSettings {
     map['languages'] = langs;
     map['message'] = message;
     map['phoneNumber'] = phoneNumber;
-    map['styles'] = styles.toDictionary();
+    if (styles != null)
+      map['styles'] = styles.toDictionary();
     map['testingMode'] = testingMode;
     return {'settings':map};
   }
@@ -289,8 +290,10 @@ class Style {
 
   Map<String, dynamic> toDictionary() {
     Map<String, dynamic> map = {};
-    map['button'] = button.toDictionary();
-    map['page'] = page.toDictionary();
+    if (button != null)
+      map['button'] = button.toDictionary();
+    if (page != null)
+      map['page'] = page.toDictionary();
     map['id'] = id;
     map['active'] = active;
     map['businessHeaderBackgroundColor'] = businessHeaderBackgroundColor;
@@ -343,7 +346,8 @@ class ButtonStyle {
   Map<String, dynamic> toDictionary() {
     Map<String, dynamic> map = {};
     map['corners'] = corners;
-    map['color'] = color.toDictionary();
+    if (color != null)
+      map['color'] = color.toDictionary();
     return map;
   }
 }

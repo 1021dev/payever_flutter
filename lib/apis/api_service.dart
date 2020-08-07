@@ -6,7 +6,6 @@ import 'package:payever/apis/baseClient.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/env.dart';
-import 'package:payever/connect/models/connect.dart';
 import 'package:payever/shop/models/models.dart';
 
 class ApiService {

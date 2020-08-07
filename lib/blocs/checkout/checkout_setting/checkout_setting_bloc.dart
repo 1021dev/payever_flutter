@@ -28,13 +28,12 @@ class CheckoutSettingScreenBloc extends Bloc<CheckoutSettingScreenEvent, Checkou
 
   Stream<CheckoutSettingScreenState> updateCheckoutSettings(UpdateCheckoutSettingsEvent event) async* {
     yield state.copyWith(isUpdating: true);
-    Checkout checkout = event.checkout;
-    Map<String, dynamic>body = event.checkout.settings.toDictionary();
-    dynamic response = await api.patchCheckout(GlobalUtils.activeToken.accessToken, event.businessId, checkout.id, body);
-    if (!(response is DioError)) {
-      yield CheckoutSettingScreenStateSuccess();
+    Map<String, dynamic>body = event.settings.toDictionary();
+    dynamic response = await api.patchCheckout(GlobalUtils.activeToken.accessToken, event.businessId, event.checkoutId, body);
+    if (response is DioError) {
+      yield CheckoutSettingScreenStateFailure(error: response.message);
     } else {
-      yield CheckoutSettingScreenStateFailure(error: response);
+      yield CheckoutSettingScreenStateSuccess();
     }
     yield state.copyWith(isUpdating: false);
   }

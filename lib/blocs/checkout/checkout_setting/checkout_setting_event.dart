@@ -24,7 +24,16 @@ class CheckoutSettingScreenInitEvent extends CheckoutSettingScreenEvent {
 
 class UpdateCheckoutSettingsEvent extends CheckoutSettingScreenEvent {
   final String businessId;
-  final Checkout checkout;
+  final String checkoutId;
+  final CheckoutSettings settings;
 
-  UpdateCheckoutSettingsEvent({this.businessId, this.checkout,});
+  UpdateCheckoutSettingsEvent(this.businessId, this.checkoutId, this.settings);
+
+  @override
+  List<Object> get props => [
+    this.businessId,
+    this.checkoutId,
+    this.settings,
+  ];
+
 }

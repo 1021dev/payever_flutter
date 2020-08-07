@@ -1,20 +1,21 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
-import 'package:payever/login/login_screen.dart';
 
 class CheckoutCSPAllowedHostScreen extends StatefulWidget {
-  final CheckoutScreenBloc checkoutScreenBloc;
+  final CheckoutSettingScreenBloc settingBloc;
+  final String businessId;
+  final String checkoutId;
   final CheckoutSettings settings;
-  CheckoutCSPAllowedHostScreen({this.checkoutScreenBloc, this.settings});
+
+  CheckoutCSPAllowedHostScreen(
+      {this.settingBloc, this.businessId, this.checkoutId, this.settings});
 
   _CheckoutCSPAllowedHostScreenState createState() =>
       _CheckoutCSPAllowedHostScreenState();
@@ -22,36 +23,41 @@ class CheckoutCSPAllowedHostScreen extends StatefulWidget {
 
 class _CheckoutCSPAllowedHostScreenState
     extends State<CheckoutCSPAllowedHostScreen> {
-  List<String>tempHots = [''];
+  List<TextEditingController> controllers = [];
+
   @override
   void initState() {
     super.initState();
+    if (widget.settings.cspAllowedHosts.isEmpty == false) {
+      widget.settings.cspAllowedHosts.forEach((element) {
+        controllers.add(TextEditingController(text: element));
+      });
+    } else {
+      controllers.add(TextEditingController());
+    }
   }
 
   @override
   void dispose() {
     super.dispose();
+    controllers.forEach((element) {
+      element.dispose();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-
     return BlocListener(
-      bloc: widget.checkoutScreenBloc,
-      listener: (BuildContext context, CheckoutScreenState state) async {
-        if (state is CheckoutScreenStateFailure) {
-          Navigator.pushReplacement(
-            context,
-            PageTransition(
-              child: LoginScreen(),
-              type: PageTransitionType.fade,
-            ),
-          );
+      bloc: widget.settingBloc,
+      listener: (BuildContext context, CheckoutSettingScreenState state) async {
+        if (state is CheckoutSettingScreenStateSuccess) {
+          Navigator.pop(context);
+        } else if (state is CheckoutSettingScreenStateFailure) {
         }
       },
-      child: BlocBuilder<CheckoutScreenBloc, CheckoutScreenState>(
-        bloc: widget.checkoutScreenBloc,
-        builder: (BuildContext context, CheckoutScreenState state) {
+      child: BlocBuilder<CheckoutSettingScreenBloc, CheckoutSettingScreenState>(
+        bloc: widget.settingBloc,
+        builder: (BuildContext context, CheckoutSettingScreenState state) {
           return Scaffold(
             backgroundColor: Colors.black,
             resizeToAvoidBottomPadding: false,
@@ -75,7 +81,7 @@ class _CheckoutCSPAllowedHostScreenState
     );
   }
 
-  Widget _appBar(CheckoutScreenState state) {
+  Widget _appBar(CheckoutSettingScreenState state) {
     return AppBar(
       centerTitle: false,
       elevation: 0,
@@ -109,7 +115,7 @@ class _CheckoutCSPAllowedHostScreenState
     );
   }
 
-  Widget _getBody(CheckoutScreenState state) {
+  Widget _getBody(CheckoutSettingScreenState state) {
     return Container(
       width: Measurements.width,
       padding: EdgeInsets.all(16),
@@ -119,59 +125,14 @@ class _CheckoutCSPAllowedHostScreenState
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Wrap(
-                children: List.generate(widget.settings.cspAllowedHosts.length,
-                    (index) {
-                  // Hosts
-                  return Container(
-                    height: 56,
-                    color: Colors.black38,
-                    child: Row(
-                      children: <Widget>[
-                        Flexible(
-                          child: TextFormField(
-                            onSaved: (val) {},
-                            onChanged: (val) {
-                              setState(() {});
-                            },
-                            validator: (value) {
-                              return null;
-                            },
-                            decoration: new InputDecoration(
-                              labelText: 'Host',
-                              border: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.blue,
-                                ),
-                              ),
-                              contentPadding:
-                                  EdgeInsets.only(left: 16, right: 16),
-                            ),
-                            style: TextStyle(fontSize: 16),
-                            keyboardType: TextInputType.url,
-                            initialValue:
-                                widget.settings.cspAllowedHosts[index],
-                          ),
-                        ),
-                        MaterialButton(
-                          onPressed: () {},
-                          minWidth: 0,
-                          child:
-                              SvgPicture.asset('assets/images/closeicon.svg'),
-                        )
-                      ],
-                    ),
-                  );
-                }).toList(),
-              ),
-              _host(),
+              _currentHosts(),
               Container(
                 height: 50,
                 child: SizedBox.expand(
                   child: MaterialButton(
                     onPressed: () {
                       setState(() {
-                        tempHots.add('');
+                        controllers.add(TextEditingController());
                       });
                     },
                     padding: EdgeInsets.only(left: 16, right: 16),
@@ -190,12 +151,24 @@ class _CheckoutCSPAllowedHostScreenState
                 child: SizedBox.expand(
                   child: MaterialButton(
                     onPressed: () {
-                      setState(() {});
+                      List<String> hosts = [];
+                      controllers.forEach((element) {
+                        hosts.add(element.text);
+                      });
+                      widget.settings.cspAllowedHosts = hosts;
+                      widget.settingBloc.add(UpdateCheckoutSettingsEvent(
+                          widget.businessId,
+                          widget.checkoutId,
+                          widget.settings));
                     },
                     color: Colors.black,
-                    child: Text(
-                      Language.getCommerceOSStrings('actions.save'),
-                    ),
+                    child: state.isUpdating
+                        ? CircularProgressIndicator(
+                            strokeWidth: 2,
+                          )
+                        : Text(
+                            Language.getCommerceOSStrings('actions.save'),
+                          ),
                   ),
                 ),
               ),
@@ -206,9 +179,9 @@ class _CheckoutCSPAllowedHostScreenState
     );
   }
 
-  Widget _host() {
+  Widget _currentHosts() {
     return Container(
-      height: 56.0 * tempHots.length,
+      height: 56.0 * controllers.length,
       child: ListView.separated(
           itemBuilder: (context, index) {
             return Container(
@@ -222,6 +195,7 @@ class _CheckoutCSPAllowedHostScreenState
                       onChanged: (val) {
                         setState(() {});
                       },
+                      controller: controllers[index],
                       validator: (value) {
                         return null;
                       },
@@ -232,8 +206,7 @@ class _CheckoutCSPAllowedHostScreenState
                             color: Colors.blue,
                           ),
                         ),
-                        contentPadding:
-                        EdgeInsets.only(left: 16, right: 16),
+                        contentPadding: EdgeInsets.only(left: 16, right: 16),
                       ),
                       style: TextStyle(fontSize: 16),
                       keyboardType: TextInputType.url,
@@ -242,12 +215,11 @@ class _CheckoutCSPAllowedHostScreenState
                   MaterialButton(
                     onPressed: () {
                       setState(() {
-                        tempHots.removeAt(index);
+                        controllers.removeAt(index);
                       });
                     },
                     minWidth: 0,
-                    child:
-                    SvgPicture.asset('assets/images/closeicon.svg'),
+                    child: SvgPicture.asset('assets/images/closeicon.svg'),
                   )
                 ],
               ),
@@ -259,8 +231,7 @@ class _CheckoutCSPAllowedHostScreenState
               thickness: 1,
             );
           },
-          itemCount: tempHots.length,
-      ),
+          itemCount: controllers.length),
     );
   }
 }

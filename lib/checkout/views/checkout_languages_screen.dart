@@ -1,20 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
-import 'package:payever/login/login_screen.dart';
 
 class CheckoutLanguagesScreen extends StatefulWidget {
 
-  final CheckoutScreenBloc checkoutScreenBloc;
+  final CheckoutSettingScreenBloc settingBloc;
+  final String businessId;
+  final String checkoutId;
+  final CheckoutSettings settings;
 
-  CheckoutLanguagesScreen({this.checkoutScreenBloc});
+  CheckoutLanguagesScreen(
+      {this.settingBloc, this.businessId, this.checkoutId, this.settings});
 
   _CheckoutLanguagesScreenState createState() => _CheckoutLanguagesScreenState();
 
@@ -35,21 +37,14 @@ class _CheckoutLanguagesScreenState extends State<CheckoutLanguagesScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocListener(
-        bloc: widget.checkoutScreenBloc,
-        listener: (BuildContext context, CheckoutScreenState state) async {
-          if (state is CheckoutScreenStateFailure) {
-            Navigator.pushReplacement(
-              context,
-              PageTransition(
-                child: LoginScreen(),
-                type: PageTransitionType.fade,
-              ),
-            );
+        bloc: widget.settingBloc,
+        listener: (BuildContext context, CheckoutSettingScreenState state) async {
+          if (state is CheckoutSettingScreenStateFailure) {
           }
         },
-      child: BlocBuilder<CheckoutScreenBloc, CheckoutScreenState>(
-        bloc: widget.checkoutScreenBloc,
-        builder: (BuildContext context, CheckoutScreenState state) {
+      child: BlocBuilder<CheckoutSettingScreenBloc, CheckoutSettingScreenState>(
+        bloc: widget.settingBloc,
+        builder: (BuildContext context, CheckoutSettingScreenState state) {
           return Scaffold(
             backgroundColor: Colors.black,
             resizeToAvoidBottomPadding: false,
@@ -72,7 +67,7 @@ class _CheckoutLanguagesScreenState extends State<CheckoutLanguagesScreen> {
     );
   }
 
-  Widget _appBar(CheckoutScreenState state) {
+  Widget _appBar(CheckoutSettingScreenState state) {
     return AppBar(
       centerTitle: false,
       elevation: 0,
@@ -110,8 +105,8 @@ class _CheckoutLanguagesScreenState extends State<CheckoutLanguagesScreen> {
     );
   }
 
-  Widget _getBody(CheckoutScreenState state) {
-    if (state.defaultCheckout == null) {
+  Widget _getBody(CheckoutSettingScreenState state) {
+    if (widget.checkoutId == null) {
       return Container();
     }
     return Container(
@@ -124,7 +119,7 @@ class _CheckoutLanguagesScreenState extends State<CheckoutLanguagesScreen> {
               ListView.separated(
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
-                  Lang lang = state.defaultCheckout.settings.languages[index];
+                  Lang lang = widget.settings.languages[index];
                   return Container(
                     height: 50,
                     padding: EdgeInsets.only(left: 16, right: 16),
@@ -148,7 +143,13 @@ class _CheckoutLanguagesScreenState extends State<CheckoutLanguagesScreen> {
                               Language.getPosStrings('edit_locales.default'),
                             ): (lang.active ? MaterialButton(
                               onPressed: () {
-
+                                widget.settings.languages.forEach((element) {
+                                  element.isDefault = (element == lang);
+                                });
+                                widget.settingBloc.add(UpdateCheckoutSettingsEvent(
+                                    widget.businessId,
+                                    widget.checkoutId,
+                                    widget.settings));
                               },
                               color: Colors.black54,
                               elevation: 0,
@@ -168,7 +169,11 @@ class _CheckoutLanguagesScreenState extends State<CheckoutLanguagesScreen> {
                             CupertinoSwitch(
                               value: lang.active,
                               onChanged: (val) {
-
+                                lang.active = val;
+                                widget.settingBloc.add(UpdateCheckoutSettingsEvent(
+                                    widget.businessId,
+                                    widget.checkoutId,
+                                    widget.settings));
                               },
                             )
                           ],
@@ -184,7 +189,7 @@ class _CheckoutLanguagesScreenState extends State<CheckoutLanguagesScreen> {
                     color: Colors.grey,
                   );
                 },
-                itemCount: state.defaultCheckout.settings.languages.length,
+                itemCount: widget.settings.languages.length,
               ),
             ],
           ),
