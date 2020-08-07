@@ -98,6 +98,17 @@ class CheckoutSettings {
     }
 
   }
+
+  Map<String, dynamic> toDictionary() {
+    Map<String, dynamic> map = {};
+    map['cspAllowedHosts'] = cspAllowedHosts;
+    map['languages'] = languages;
+    map['message'] = message;
+    map['phoneNumber'] = phoneNumber;
+    map['styles'] = styles;
+    map['testingMode'] = testingMode;
+    return {'settings':map};
+  }
 }
 
 class Lang {
@@ -119,6 +130,17 @@ class Lang {
     id = obj['id'];
   }
 
+  Map<String, dynamic> toDictionary() {
+    Map<String, dynamic> map = {};
+    map['active'] = active;
+    map['code'] = code;
+    map['isDefault'] = isDefault;
+    map['isHovered'] = isHovered;
+    map['isToggleButton'] = isToggleButton;
+    map['name'] = name;
+    map['id'] = id;
+    return map;
+  }
 }
 
 class Style {
@@ -172,6 +194,12 @@ class Style {
     pageTextSecondaryColor = obj['pageTextSecondaryColor'];
   }
 
+  Map<String, dynamic> toDictionary() {
+    Map<String, dynamic> map = {};
+    map['active'] = active;
+
+    return map;
+  }
 }
 
 class PageStyle {
@@ -179,6 +207,12 @@ class PageStyle {
 
   PageStyle.fromMap(dynamic obj) {
     background = obj['background'];
+  }
+
+  Map<String, dynamic> toDictionary() {
+    Map<String, dynamic> map = {};
+    map['background'] = background;
+    return map;
   }
 }
 
@@ -194,6 +228,13 @@ class ButtonStyle {
       color = ButtonColorStyle.fromMap(colorObj);
     }
   }
+
+  Map<String, dynamic> toDictionary() {
+    Map<String, dynamic> map = {};
+    map['corners'] = corners;
+    map['color'] = color;
+    return map;
+  }
 }
 
 class ButtonColorStyle {
@@ -207,6 +248,13 @@ class ButtonColorStyle {
     text = obj['text'];
   }
 
+  Map<String, dynamic> toDictionary() {
+    Map<String, dynamic> map = {};
+    map['borders'] = borders;
+    map['fill'] = fill;
+    map['text'] = text;
+    return map;
+  }
 }
 
 class CheckoutFlow {

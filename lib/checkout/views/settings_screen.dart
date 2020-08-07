@@ -11,8 +11,9 @@ import 'package:payever/commons/commons.dart';
 
 class CheckoutSettingsScreen extends StatefulWidget {
   final CheckoutScreenBloc checkoutScreenBloc;
-
-  CheckoutSettingsScreen({this.checkoutScreenBloc});
+  final String businessId;
+  final Checkout checkout;
+  CheckoutSettingsScreen({this.checkoutScreenBloc, this.businessId, this.checkout});
 
   @override
   _CheckoutSettingsScreenState createState() => _CheckoutSettingsScreenState();
@@ -22,7 +23,7 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.checkoutScreenBloc.state.defaultCheckout == null) {
+    if (widget.checkout == null) {
       return Center(
         child: Container(
           width: 32,
@@ -33,7 +34,7 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
         ),
       );
     }
-    if (widget.checkoutScreenBloc.state.defaultCheckout.settings.styles == null) {
+    if (widget.checkout.settings.styles == null) {
       return Center(
         child: Container(
           width: 32,
@@ -45,7 +46,7 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
       );
     }
     String defaultLanguage = '';
-    List<Lang> langs = widget.checkoutScreenBloc.state.defaultCheckout.settings.languages.where((element) => element.active).toList();
+    List<Lang> langs = widget.checkout.settings.languages.where((element) => element.active).toList();
     if (langs.length > 0) {
       defaultLanguage = langs.first.name;
     }
@@ -75,8 +76,11 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                         ),
                       ),
                       CupertinoSwitch(
-                        value: widget.checkoutScreenBloc.state.defaultCheckout.settings.testingMode,
-                        onChanged: (value) {},
+                        value: widget.checkout.settings.testingMode,
+                        onChanged: (value) {
+                          widget.checkout.settings.testingMode = value;
+                          widget.checkoutScreenBloc.add(UpdateCheckoutSettingsEvent(businessId: widget.businessId, checkout:widget.checkout));
+                        },
                       ),
                     ],
                   ),
@@ -150,7 +154,7 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                       Row(
                         children: <Widget>[
                           CupertinoSwitch(
-                            value: widget.checkoutScreenBloc.state.defaultCheckout.settings.styles.active ?? false,
+                            value: widget.checkout.settings.styles.active ?? false,
                             onChanged: (value) {},
                           ),
                           MaterialButton(
@@ -259,7 +263,7 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                       ),
                       Flexible(
                         child: Text(
-                          widget.checkoutScreenBloc.state.defaultCheckout.settings.phoneNumber ?? '',
+                          widget.checkout.settings.phoneNumber ?? '',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
@@ -323,7 +327,7 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                       ),
                       Flexible(
                         child: Text(
-                          widget.checkoutScreenBloc.state.defaultCheckout.settings.message ?? '',
+                          widget.checkout.settings.message ?? '',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
@@ -426,7 +430,7 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                       ),
                       Flexible(
                         child: Text(
-                          widget.checkoutScreenBloc.state.defaultCheckout.id,
+                          widget.checkout.id,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(

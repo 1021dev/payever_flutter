@@ -45,10 +45,11 @@ class GetPhoneNumbers extends CheckoutScreenEvent {
 
 }
 
-class UpdateCheckoutSettings extends CheckoutScreenEvent {
-  final CheckoutSettings settings;
+class UpdateCheckoutSettingsEvent extends CheckoutScreenEvent {
+  final String businessId;
+  final Checkout checkout;
 
-  UpdateCheckoutSettings({this.settings});
+  UpdateCheckoutSettingsEvent({this.businessId, this.checkout,});
 }
 
 class PatchCheckoutOrderEvent extends CheckoutScreenEvent {

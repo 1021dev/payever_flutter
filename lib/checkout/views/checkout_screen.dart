@@ -525,6 +525,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       case 5:
         return CheckoutSettingsScreen(
           checkoutScreenBloc: screenBloc,
+          businessId: state.business,
+          checkout: screenBloc.state.defaultCheckout,
         );
     }
     return Container();
