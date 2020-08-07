@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/apis/api_service.dart';
@@ -55,6 +56,8 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       yield* reorderSections3(event.oldIndex, event.newIndex);
     } else if (event is GetSectionDetails) {
       yield* getSectionDetails();
+    } else if (event is UpdateCheckoutSections) {
+      yield* updateCheckoutSections();
     }
   }
 
@@ -66,14 +69,14 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     List<String> integrations = [];
     Checkout defaultCheckout;
 
-    if (state.defaultCheckout == null) {
-      dynamic checkoutsResponse = await api.getCheckout(token, business);
-      if (checkoutsResponse is List) {
-        checkoutsResponse.forEach((element) {
-          checkouts.add(Checkout.fromMap(element));
-        });
-      }
+    dynamic checkoutsResponse = await api.getCheckout(token, business);
+    if (checkoutsResponse is List) {
+      checkoutsResponse.forEach((element) {
+        checkouts.add(Checkout.fromMap(element));
+      });
+    }
 
+    if (state.defaultCheckout == null) {
       List defaults = checkouts.where((element) => element.isDefault).toList();
 
       if (defaults.length > 0) {
@@ -85,7 +88,6 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       }
     } else {
       defaultCheckout = state.defaultCheckout;
-      checkouts.addAll(state.checkouts);
     }
 
     if (defaultCheckout != null) {
@@ -99,12 +101,20 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     }
 
     await api.toggleSetUpStatus(token, business, 'checkout');
-    
+    dynamic response = await api.getAvailableSections(token, state.business, state.defaultCheckout.id);
+    List<Section> availableSections = [];
+    if (response is List) {
+      response.forEach((element) {
+        availableSections.add(Section.fromMap(element));
+      });
+    }
+
     yield state.copyWith(
       isLoading: false,
       checkouts: checkouts,
       integrations: integrations,
       defaultCheckout: defaultCheckout,
+      availableSections: availableSections,
     );
 
     add(GetChannelSet());
@@ -118,14 +128,14 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
         channelSets.add(ChannelSet.toMap(element));
       });
     }
-    ChannelSet channelSet = channelSets.firstWhere((element) => element.type == 'link');
+
+    ChannelSet channelSet = channelSets.firstWhere((element) => (element.checkout == state.defaultCheckout.id && element.type == 'link'));
+
     CheckoutFlow checkoutFlow;
     Lang defaultLang;
-    if (state.defaultCheckout != null) {
-      List<Lang> langList = state.defaultCheckout.settings.languages.where((element) => element.active).toList();
-      if (langList.length > 0) {
-        defaultLang = langList.first;
-      }
+    List<Lang> langList = state.defaultCheckout.settings.languages.where((element) => element.active).toList();
+    if (langList.length > 0) {
+      defaultLang = langList.first;
     }
 
     String langCode = defaultLang != null ? defaultLang.code: 'en';
@@ -189,7 +199,6 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
   Stream<CheckoutScreenState> getPhoneNumbers() async* {
     List<String> phoneNumbers = [];
     IntegrationModel twilioIntegration;
-    print(state.connections);
     List<IntegrationModel> list = state.connections.where((element) => element.integration == 'twilio').toList();
     if (list.length > 0) {
       twilioIntegration = list.first;
@@ -371,22 +380,15 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
   }
 
   Stream<CheckoutScreenState> getSectionDetails() async* {
-    if (state.defaultCheckout == null) {
+    if (state.checkoutFlow == null) {
       return;
-    }
-    dynamic response = await api.getAvailableSections(token, state.business, state.defaultCheckout.id);
-    List<Section> availableSections = [];
-    if (response is List) {
-      response.forEach((element) {
-        availableSections.add(Section.fromMap(element));
-      });
     }
 
     List<Section> sections = [];
     List<Section> sections1 = [];
     List<Section> sections2 = [];
     List<Section> sections3 = [];
-    sections.addAll(state.defaultCheckout.sections);
+    sections.addAll(state.checkoutFlow.sections);
     for (int i = 0; i < sections.length; i++) {
       Section section = sections[i];
       if (section.code == 'order') {
@@ -408,15 +410,17 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       sections1: sections1,
       sections2: sections2,
       sections3: sections3,
-      availableSections: availableSections,
     );
   }
 
-  Stream<CheckoutScreenState> updateCheckoutSections(List<Section> sections) async* {
+  Stream<CheckoutScreenState> updateCheckoutSections() async* {
     yield state.copyWith(
       sectionUpdate: true,
     );
 
+    List<Section> sections = [];
+    sections.addAll(state.sections1);
+    sections.addAll(state.sections2);
     Map<String, dynamic> body = {};
     List<Map<String, dynamic>> sectionMapList = [];
     sections.forEach((section) {
@@ -426,35 +430,37 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     body['sections'] = sectionMapList;
     dynamic sectionsResponse = await api.patchCheckout(token, state.business, state.defaultCheckout.id, body);
 
+    ChannelSet channelSet = state.channelSets.firstWhere((element) => (element.checkout == state.defaultCheckout.id && element.type == 'link'));
+    CheckoutFlow checkoutFlow;
+    dynamic channelFlowResponse = await api.getCheckoutChannelFlow(token, channelSet.id);
+    if (channelFlowResponse is Map) {
+      checkoutFlow = CheckoutFlow.fromMap(channelFlowResponse);
+    }
+
     yield state.copyWith(
       sectionUpdate: false,
+      checkoutFlow: checkoutFlow,
     );
-
-    add(CheckoutScreenInitEvent());
   }
 
   Stream<CheckoutScreenState> reorderSections1(int oldIndex, int newIndex) async* {
-    if (newIndex > oldIndex) {
-      newIndex -= 1;
-    }
     List<Section> sections1 = [];
     sections1.addAll(state.sections1);
-    Section item = sections1.removeAt(oldIndex);
+    final item = sections1[oldIndex];
+    sections1.removeAt(oldIndex);
     sections1.insert(newIndex, item);
 
     yield state.copyWith(sections1: sections1);
   }
 
   Stream<CheckoutScreenState> reorderSections2(int oldIndex, int newIndex) async* {
-    if (newIndex > oldIndex) {
-      newIndex -= 1;
-    }
     List<Section> sections2 = [];
     sections2.addAll(state.sections2);
-    Section item = sections2.removeAt(oldIndex);
+    final item = sections2[oldIndex];
+    sections2.removeAt(oldIndex);
     sections2.insert(newIndex, item);
 
-    yield state.copyWith(sections1: sections2);
+    yield state.copyWith(sections2: sections2);
   }
 
   Stream<CheckoutScreenState> reorderSections3(int oldIndex, int newIndex) async* {

@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/checkout/models/models.dart';
-import 'package:payever/checkout/widgets/section_detail_item.dart';
 import 'package:payever/checkout/widgets/section_item.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
@@ -26,6 +26,14 @@ class _SectionsScreenState extends State<SectionsScreen> {
   }
 
   Widget _body() {
+    return BlocBuilder<CheckoutScreenBloc, CheckoutScreenState>(
+      bloc: widget.checkoutScreenBloc,
+      builder: (BuildContext context, state) {
+        return _getBody(state);
+      },
+    );
+  }
+  Widget _getBody(CheckoutScreenState state) {
     return Container(
       width: Measurements.width,
       padding: EdgeInsets.all(16),
@@ -45,7 +53,7 @@ class _SectionsScreenState extends State<SectionsScreen> {
                       isExpandedSection1 = !isExpandedSection1;
                     });
                   },
-                  sections: widget.checkoutScreenBloc.state.sections1,
+                  sections: state.sections1,
                   onReorder: (oldIndex, newIndex) {
                     widget.checkoutScreenBloc.add(ReorderSection1Event(oldIndex: oldIndex, newIndex: newIndex));
                   },
@@ -67,9 +75,9 @@ class _SectionsScreenState extends State<SectionsScreen> {
                       isExpandedSection2 = !isExpandedSection2;
                     });
                   },
-                  sections: widget.checkoutScreenBloc.state.sections2,
+                  sections: state.sections2,
                   onReorder: (oldIndex, newIndex) {
-                    widget.checkoutScreenBloc.add(ReorderSection1Event(oldIndex: oldIndex, newIndex: newIndex));
+                    widget.checkoutScreenBloc.add(ReorderSection2Event(oldIndex: oldIndex, newIndex: newIndex));
                   },
                   onDelete: (Section section) {
 
@@ -86,15 +94,14 @@ class _SectionsScreenState extends State<SectionsScreen> {
                   isExpanded: isExpandedSection3,
                   onTap: () {
                     setState(() {
-                      isExpandedSection3 = isExpandedSection3;
+                      isExpandedSection3 = !isExpandedSection3;
                     });
                   },
-                  sections: widget.checkoutScreenBloc.state.sections3,
+                  sections: state.sections3,
                   onReorder: (oldIndex, newIndex) {
-                    widget.checkoutScreenBloc.add(ReorderSection1Event(oldIndex: oldIndex, newIndex: newIndex));
+                    widget.checkoutScreenBloc.add(ReorderSection3Event(oldIndex: oldIndex, newIndex: newIndex));
                   },
                   onDelete: (Section section) {
-
                   },
                 ),
                 Divider(
@@ -111,8 +118,14 @@ class _SectionsScreenState extends State<SectionsScreen> {
                       bottomRight: Radius.circular(10),
                     ),
                   ),
-                  child: MaterialButton(
-                    onPressed: () {},
+                  child: state.sectionUpdate ? Center(
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                    ),
+                  ) : MaterialButton(
+                    onPressed: () {
+                      widget.checkoutScreenBloc.add(UpdateCheckoutSections());
+                    },
                     child: Text(
                       'Save',
                       style: TextStyle(
