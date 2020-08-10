@@ -143,78 +143,82 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
   }
 
   Stream<DashboardScreenState> _fetchInitialData() async* {
-    List<BusinessApps> businessWidgets = [];
-    List<AppWidget> widgetApps = [];
-    List<Business> businesses = [];
-    Business activeBusiness;
-    FetchWallpaper fetchWallpaper;
-    String language;
-    String currentWallpaper;
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String refreshToken = await _storage.read(key: GlobalUtils.REFRESH_TOKEN) ?? '';
-    String accessToken = await _storage.read(key: GlobalUtils.TOKEN) ?? '';
-    GlobalUtils.activeToken = Token(accessToken: accessToken, refreshToken: refreshToken);
+    try {
+      List<BusinessApps> businessWidgets = [];
+      List<AppWidget> widgetApps = [];
+      List<Business> businesses = [];
+      Business activeBusiness;
+      FetchWallpaper fetchWallpaper;
+      String language;
+      String currentWallpaper;
+      SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+      String refreshToken = await _storage.read(key: GlobalUtils.REFRESH_TOKEN) ?? '';
+      String accessToken = await _storage.read(key: GlobalUtils.TOKEN) ?? '';
+      GlobalUtils.activeToken = Token(accessToken: accessToken, refreshToken: refreshToken);
 
-    dynamic user = await api.getUser(accessToken);
-    User tempUser = User.map(user);
+      dynamic user = await api.getUser(accessToken);
+      User tempUser = User.map(user);
 
-    yield state.copyWith(user: tempUser);
-    if (tempUser.language != sharedPreferences.getString(GlobalUtils.LANGUAGE)) {
-      language = tempUser.language;
-      // TODO:// setLanguage
-    }
+      yield state.copyWith(user: tempUser);
+      if (tempUser.language != sharedPreferences.getString(GlobalUtils.LANGUAGE)) {
+        language = tempUser.language;
+        // TODO:// setLanguage
+      }
 
-    dynamic businessObj = await api.getBusinesses(accessToken);
-    businesses.clear();
-    businessObj.forEach((item) {
-      businesses.add(Business.map(item));
-    });
-    if (businesses != null) {
-      businesses.forEach((b) {
-        if (b.id == sharedPreferences.getString(GlobalUtils.BUSINESS)) {
-          activeBusiness = b;
-        }
+      dynamic businessObj = await api.getBusinesses(accessToken);
+      businesses.clear();
+      businessObj.forEach((item) {
+        businesses.add(Business.map(item));
       });
-    }
-    if (activeBusiness != null) {
-      dynamic wallpaperObj = await api.getWallpaper(
-          activeBusiness.id, accessToken);
-      FetchWallpaper fetchWallpaper = FetchWallpaper.map(wallpaperObj);
-      sharedPreferences.setString(
-          GlobalUtils.WALLPAPER, wallpaperBase + fetchWallpaper.currentWallpaper.wallpaper);
-      currentWallpaper = '$wallpaperBase${fetchWallpaper.currentWallpaper.wallpaper}';
-      dynamic widgetAppsObj = await api.getWidgets(
-        sharedPreferences.getString(GlobalUtils.BUSINESS),
-        accessToken,
+      if (businesses != null) {
+        businesses.forEach((b) {
+          if (b.id == sharedPreferences.getString(GlobalUtils.BUSINESS)) {
+            activeBusiness = b;
+          }
+        });
+      }
+      if (activeBusiness != null) {
+        dynamic wallpaperObj = await api.getWallpaper(
+            activeBusiness.id, accessToken);
+        FetchWallpaper fetchWallpaper = FetchWallpaper.map(wallpaperObj);
+        sharedPreferences.setString(
+            GlobalUtils.WALLPAPER, wallpaperBase + fetchWallpaper.currentWallpaper.wallpaper);
+        currentWallpaper = '$wallpaperBase${fetchWallpaper.currentWallpaper.wallpaper}';
+        dynamic widgetAppsObj = await api.getWidgets(
+          sharedPreferences.getString(GlobalUtils.BUSINESS),
+          accessToken,
+        );
+        widgetApps.clear();
+        widgetAppsObj.forEach((item) {
+          widgetApps.add(AppWidget.map(item));
+        });
+
+        dynamic businessAppsObj = await api.getBusinessApps(
+          sharedPreferences.getString(GlobalUtils.BUSINESS),
+          accessToken,
+        );
+        businessWidgets.clear();
+        businessAppsObj.forEach((item) {
+          businessWidgets.add(BusinessApps.fromMap(item));
+        });
+      }
+      yield state.copyWith(
+        isInitialScreen: false,
+        isLoading: false,
+        businesses: businesses,
+        currentWidgets: widgetApps,
+        activeBusiness: activeBusiness,
+        businessWidgets: businessWidgets,
+        wallpaper: fetchWallpaper,
+        currentWallpaper: fetchWallpaper != null ? fetchWallpaper.currentWallpaper: null,
+        curWall: currentWallpaper,
+        language: language,
       );
-      widgetApps.clear();
-      widgetAppsObj.forEach((item) {
-        widgetApps.add(AppWidget.map(item));
-      });
 
-      dynamic businessAppsObj = await api.getBusinessApps(
-        sharedPreferences.getString(GlobalUtils.BUSINESS),
-        accessToken,
-      );
-      businessWidgets.clear();
-      businessAppsObj.forEach((item) {
-        businessWidgets.add(BusinessApps.fromMap(item));
-      });
+      add(FetchMonthlyEvent(business: activeBusiness));
+    } catch (error) {
+      yield DashboardScreenLogout();
     }
-    yield state.copyWith(
-      isInitialScreen: false,
-      isLoading: false,
-      businesses: businesses,
-      currentWidgets: widgetApps,
-      activeBusiness: activeBusiness,
-      businessWidgets: businessWidgets,
-      wallpaper: fetchWallpaper,
-      currentWallpaper: fetchWallpaper != null ? fetchWallpaper.currentWallpaper: null,
-      curWall: currentWallpaper,
-      language: language,
-    );
-
-    add(FetchMonthlyEvent(business: activeBusiness));
   }
 
   Stream<DashboardScreenState> _fetchInitialDataRenew(Token token, bool renew) async* {

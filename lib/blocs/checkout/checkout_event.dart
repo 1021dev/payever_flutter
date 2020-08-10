@@ -66,15 +66,27 @@ class ReorderSection1Event extends CheckoutScreenEvent {
 
   ReorderSection1Event({this.oldIndex, this.newIndex});
 }
+
 class ReorderSection2Event extends CheckoutScreenEvent {
   final int oldIndex;
   final int newIndex;
 
   ReorderSection2Event({this.oldIndex, this.newIndex});
 }
+
 class ReorderSection3Event extends CheckoutScreenEvent {
   final int oldIndex;
   final int newIndex;
 
   ReorderSection3Event({this.oldIndex, this.newIndex});
+}
+
+class AddSectionEvent extends CheckoutScreenEvent {
+  final int section;
+  AddSectionEvent({this.section});
+}
+
+class RemoveSectionEvent extends CheckoutScreenEvent {
+  final Section section;
+  RemoveSectionEvent({this.section});
 }

@@ -238,7 +238,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                     child: Row(
                       children: <Widget>[
                         Text(
-                          '${currency}${state.channelSetFlow.amount.toStringAsFixed(2)}',
+                          state.channelSetFlow != null ? '$currency${state.channelSetFlow.amount.toStringAsFixed(2)}': '',
                           style: TextStyle(
                             color: Colors.black54,
                             fontSize: 14,
@@ -388,6 +388,9 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
   }
 
   Widget _orderView(CheckoutScreenState state) {
+    if (state.channelSetFlow == null) {
+      return Container();
+    }
     controllerAmount = TextEditingController(text: (state.channelSetFlow == null || state.channelSetFlow.amount == 0) ? '' : '${state.channelSetFlow.amount}');
     controllerReference = TextEditingController(text: state.channelSetFlow.reference != null ? state.channelSetFlow.reference : '');
     return Visibility(

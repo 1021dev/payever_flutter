@@ -12,6 +12,7 @@ class SectionItem extends StatelessWidget {
   final List<Section> sections;
   final ReorderCallback onReorder;
   final Function onDelete;
+  final Function onEdit;
 
   SectionItem({
     this.title,
@@ -21,6 +22,7 @@ class SectionItem extends StatelessWidget {
     this.sections = const [],
     this.onReorder,
     this.onDelete,
+    this.onEdit,
   });
 
   DraggingMode _draggingMode = DraggingMode.iOS;
@@ -71,7 +73,7 @@ class SectionItem extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
                           MaterialButton(
-                            onPressed: () {},
+                            onPressed: onEdit,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
@@ -161,6 +163,9 @@ class SectionItem extends StatelessWidget {
                           isFirst: index == 0,
                           isLast: index == sections.length - 1,
                           draggingMode: _draggingMode,
+                          onDelete: (Section s) {
+                            onDelete(s);
+                          },
                         );
                       },
                       childCount: sections.length,
@@ -198,12 +203,14 @@ class Item extends StatelessWidget {
     this.isFirst,
     this.isLast,
     this.draggingMode,
+    this.onDelete,
   });
 
   final Section section;
   final bool isFirst;
   final bool isLast;
   final DraggingMode draggingMode;
+  final Function onDelete;
 
   Widget _buildChild(BuildContext context, ReorderableItemState state) {
     BoxDecoration decoration;
@@ -253,7 +260,10 @@ class Item extends StatelessWidget {
                 children: <Widget>[
                   Container(
                     width: 50,
-                    child: !(section.fixed ?? false) ? Icon(Icons.remove): Container(),
+                    child: !(section.fixed ?? false) ? MaterialButton(
+                      child: Icon(Icons.remove),
+                      onPressed: onDelete(section),
+                    ): Container(),
                   ),
                   Expanded(
                       child: Padding(

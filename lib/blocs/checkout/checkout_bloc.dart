@@ -50,17 +50,20 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       yield* reorderSections1(event.oldIndex, event.newIndex);
     } else if (event is ReorderSection2Event) {
       yield* reorderSections2(event.oldIndex, event.newIndex);
-    } else if (event is ReorderSection3Event) {
-      yield* reorderSections3(event.oldIndex, event.newIndex);
     } else if (event is GetSectionDetails) {
       yield* getSectionDetails();
     } else if (event is UpdateCheckoutSections) {
       yield* updateCheckoutSections();
+    } else if (event is AddSectionEvent) {
+      yield state.copyWith(addSection: event.section,);
+      yield* getAvailableSections();
+    } else if (event is RemoveSectionEvent) {
+      yield* removeSection(event.section);
     }
   }
 
-  Stream<CheckoutScreenState> fetchConnectInstallations(String business, {bool isLoading = false}) async* {
-
+  Stream<CheckoutScreenState> fetchConnectInstallations(String business,
+      {bool isLoading = false}) async* {
     yield state.copyWith(isLoading: isLoading);
 
     List<Checkout> checkouts = [];
@@ -89,7 +92,8 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     }
 
     if (defaultCheckout != null) {
-      dynamic integrationsResponse = await api.getCheckoutIntegration(business, defaultCheckout.id, token);
+      dynamic integrationsResponse = await api.getCheckoutIntegration(
+          business, defaultCheckout.id, token);
 
       if (integrationsResponse is List) {
         integrationsResponse.forEach((element) {
@@ -99,7 +103,8 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     }
 
     await api.toggleSetUpStatus(token, business, 'checkout');
-    dynamic response = await api.getAvailableSections(token, state.business, state.defaultCheckout.id);
+    dynamic response = await api.getAvailableSections(
+        token, state.business, state.defaultCheckout.id);
     List<Section> availableSections = [];
     if (response is List) {
       response.forEach((element) {
@@ -124,29 +129,34 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     if (channelSetResponse is List) {
       channelSetResponse.forEach((element) {
         ChannelSet channelSet = ChannelSet.toMap(element);
-        if (channelSet.checkout != null && channelSet.checkout == state.defaultCheckout.id)
+        if (channelSet.checkout != null &&
+            channelSet.checkout == state.defaultCheckout.id)
           channelSets.add(ChannelSet.toMap(element));
       });
     }
 
-    ChannelSet channelSet = channelSets.firstWhere((element) => (element.checkout == state.defaultCheckout.id && element.type == 'link'));
+    ChannelSet channelSet = channelSets.firstWhere((element) =>
+    (element.checkout == state.defaultCheckout.id && element.type == 'link'));
 
     CheckoutFlow checkoutFlow;
     Lang defaultLang;
-    List<Lang> langList = state.defaultCheckout.settings.languages.where((element) => element.active).toList();
+    List<Lang> langList = state.defaultCheckout.settings.languages.where((
+        element) => element.active).toList();
     if (langList.length > 0) {
       defaultLang = langList.first;
     }
 
-    String langCode = defaultLang != null ? defaultLang.code: 'en';
+    String langCode = defaultLang != null ? defaultLang.code : 'en';
 
-    dynamic channelFlowResponse = await api.getCheckoutChannelFlow(token, channelSet.id);
+    dynamic channelFlowResponse = await api.getCheckoutChannelFlow(
+        token, channelSet.id);
     if (channelFlowResponse is Map) {
       checkoutFlow = CheckoutFlow.fromMap(channelFlowResponse);
     }
 
     ChannelSetFlow channelSetFlow;
-    dynamic checkoutFlowResponse = await api.getCheckoutFlow(token, langCode, channelSet.id);
+    dynamic checkoutFlowResponse = await api.getCheckoutFlow(
+        token, langCode, channelSet.id);
     if (checkoutFlowResponse is Map) {
       channelSetFlow = ChannelSetFlow.fromMap(checkoutFlowResponse);
     }
@@ -158,13 +168,13 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       channelSetFlow: channelSetFlow,
       checkoutFlow: checkoutFlow,
     );
-
   }
 
   Stream<CheckoutScreenState> getPaymentData() async* {
     yield state.copyWith(loadingPaymentOption: true);
     List<ConnectModel> integrations = [];
-    dynamic integrationsResponse = await api.getCheckoutIntegrations(state.business, token);
+    dynamic integrationsResponse = await api.getCheckoutIntegrations(
+        state.business, token);
     if (integrationsResponse is List) {
       integrationsResponse.forEach((element) {
         integrations.add(ConnectModel.toMap(element));
@@ -174,14 +184,16 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     List<IntegrationModel> connections = [];
     List<IntegrationModel> checkoutConnections = [];
 
-    dynamic connectionResponse = await api.getConnections(state.business, token);
+    dynamic connectionResponse = await api.getConnections(
+        state.business, token);
     if (connectionResponse is List) {
       connectionResponse.forEach((element) {
         connections.add(IntegrationModel.fromMap(element));
       });
     }
 
-    dynamic checkoutConnectionResponse = await api.getCheckoutConnections(state.business, token, state.defaultCheckout.id);
+    dynamic checkoutConnectionResponse = await api.getCheckoutConnections(
+        state.business, token, state.defaultCheckout.id);
     if (checkoutConnectionResponse is List) {
       checkoutConnectionResponse.forEach((element) {
         checkoutConnections.add(IntegrationModel.fromMap(element));
@@ -201,7 +213,8 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       isUpdating: true,
     );
     ChannelSetFlow channelSetFlow;
-    dynamic response = await api.patchCheckoutFlow(token, state.channelSetFlow.id, 'en', body);
+    dynamic response = await api.patchCheckoutFlow(
+        token, state.channelSetFlow.id, 'en', body);
     if (response is Map) {
       channelSetFlow = ChannelSetFlow.fromMap(response);
     }
@@ -233,7 +246,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     List<String> titles = [];
     List<ChannelSet> list = [];
     list.addAll(state.channelSets);
-    for(ChannelSet channelSet in list) {
+    for (ChannelSet channelSet in list) {
       if (!titles.contains(channelSet.type)) {
         titles.add(channelSet.type);
       }
@@ -285,7 +298,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
         );
         items.add(item);
       } else if (title == 'pos') {
-        ChannelItem item= new ChannelItem(
+        ChannelItem item = new ChannelItem(
           title: 'Point of Sale',
           button: 'Open',
           checkValue: null,
@@ -301,21 +314,23 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
         );
         items.add(item);
       } else {
-        ConnectModel connectModel = connectInstallations.firstWhere((element) => element.integration.name == title);
+        ConnectModel connectModel = connectInstallations.firstWhere((
+            element) => element.integration.name == title);
         if (connectModel != null) {
           String iconType = connectModel.integration.displayOptions.icon ?? '';
           iconType = iconType.replaceAll('#icon-', '');
           iconType = iconType.replaceAll('#', '');
 
           ChannelItem item = new ChannelItem(
-              title: Language.getPosConnectStrings(connectModel.integration.displayOptions.title),
+              title: Language.getPosConnectStrings(
+                  connectModel.integration.displayOptions.title),
               button: 'Open',
               checkValue: connectModel.installed,
-              image: SvgPicture.asset(Measurements.channelIcon(iconType), height: 24,)
+              image: SvgPicture.asset(
+                Measurements.channelIcon(iconType), height: 24,)
           );
           items.add(item);
         }
-
       }
     }
 
@@ -349,10 +364,12 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
         iconType = iconType.replaceAll('#', '');
 
         ChannelItem item = new ChannelItem(
-            title: Language.getPosConnectStrings(connectModel.integration.displayOptions.title),
+            title: Language.getPosConnectStrings(
+                connectModel.integration.displayOptions.title),
             button: 'Open',
             checkValue: connectModel.installed,
-            image: SvgPicture.asset(Measurements.channelIcon(iconType), height: 24,)
+            image: SvgPicture.asset(
+              Measurements.channelIcon(iconType), height: 24,)
         );
         items.add(item);
       }
@@ -372,7 +389,6 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     List<Section> sections = [];
     List<Section> sections1 = [];
     List<Section> sections2 = [];
-    List<Section> sections3 = [];
     sections.addAll(state.checkoutFlow.sections);
     for (int i = 0; i < sections.length; i++) {
       Section section = sections[i];
@@ -394,7 +410,6 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     yield state.copyWith(
       sections1: sections1,
       sections2: sections2,
-      sections3: sections3,
     );
   }
 
@@ -413,11 +428,14 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     });
 
     body['sections'] = sectionMapList;
-    dynamic sectionsResponse = await api.patchCheckout(token, state.business, state.defaultCheckout.id, body);
+    dynamic sectionsResponse = await api.patchCheckout(
+        token, state.business, state.defaultCheckout.id, body);
 
-    ChannelSet channelSet = state.channelSets.firstWhere((element) => (element.checkout == state.defaultCheckout.id && element.type == 'link'));
+    ChannelSet channelSet = state.channelSets.firstWhere((element) =>
+    (element.checkout == state.defaultCheckout.id && element.type == 'link'));
     CheckoutFlow checkoutFlow;
-    dynamic channelFlowResponse = await api.getCheckoutChannelFlow(token, channelSet.id);
+    dynamic channelFlowResponse = await api.getCheckoutChannelFlow(
+        token, channelSet.id);
     if (channelFlowResponse is Map) {
       checkoutFlow = CheckoutFlow.fromMap(channelFlowResponse);
     }
@@ -428,7 +446,8 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     );
   }
 
-  Stream<CheckoutScreenState> reorderSections1(int oldIndex, int newIndex) async* {
+  Stream<CheckoutScreenState> reorderSections1(int oldIndex,
+      int newIndex) async* {
     List<Section> sections1 = [];
     sections1.addAll(state.sections1);
     final item = sections1[oldIndex];
@@ -438,7 +457,8 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     yield state.copyWith(sections1: sections1);
   }
 
-  Stream<CheckoutScreenState> reorderSections2(int oldIndex, int newIndex) async* {
+  Stream<CheckoutScreenState> reorderSections2(int oldIndex,
+      int newIndex) async* {
     List<Section> sections2 = [];
     sections2.addAll(state.sections2);
     final item = sections2[oldIndex];
@@ -448,16 +468,70 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     yield state.copyWith(sections2: sections2);
   }
 
-  Stream<CheckoutScreenState> reorderSections3(int oldIndex, int newIndex) async* {
-    if (newIndex > oldIndex) {
-      newIndex -= 1;
-    }
-    List<Section> sections3 = [];
-    sections3.addAll(state.sections3);
-    Section item = sections3.removeAt(oldIndex);
-    sections3.insert(newIndex, item);
+  Stream<CheckoutScreenState> getAvailableSections() async* {
+    List<Section> availableSections = [];
+    availableSections.addAll(state.availableSections);
 
-    yield state.copyWith(sections3: sections3);
+    if (state.sections1.length > 1) {
+      yield state.copyWith(availableSections1: []);
+    } else {
+      List list = availableSections.where((element) =>
+      element.code == 'send_to_device').toList();
+      if (list.length > 0) {
+        yield state.copyWith(availableSections1: list);
+      }
+    }
+    if (state.sections2.length > 3) {
+      yield state.copyWith(availableSections2: []);
+    } else {
+      List listUser = availableSections.where((element) =>
+      element.code == 'user').toList();
+      List listAddress = availableSections.where((element) =>
+      element.code == 'address').toList();
+      List<Section> available2 = [];
+      if (state.sections2
+          .where((element) => element.code == 'user')
+          .toList()
+          .length == 0) {
+        if (listUser.length > 0) {
+          available2.add(listUser.first);
+        }
+      }
+      if (state.sections2
+          .where((element) => element.code == 'address')
+          .toList()
+          .length == 0) {
+        if (listUser.length > 0) {
+          available2.add(listAddress.first);
+        }
+      }
+
+      yield state.copyWith(availableSections2: available2);
+    }
   }
 
+  Stream<CheckoutScreenState> removeSection(Section section) async* {
+    List<Section> section1 = [];
+    List<Section> section2 = [];
+    section1.addAll(state.sections1);
+    section2.addAll(state.sections2);
+    if (section.code == 'user') {
+      int index = section2.indexWhere((element) => element.code == 'user');
+      if (index >= 0) {
+        section2.removeAt(index);
+      }
+    } else if (section.code == 'address') {
+      int index = section2.indexWhere((element) => element.code == 'address');
+      if (index >= 0) {
+        section2.removeAt(index);
+      }
+    } else if (section.code == 'send_to_device') {
+      int index = section1.indexWhere((element) => element.code == 'send_to_device');
+      if (index >= 0) {
+        section1.removeAt(index);
+      }
+    }
+
+    yield state.copyWith(sections1: section1, sections2: section2);
+  }
 }

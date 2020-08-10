@@ -25,8 +25,10 @@ class CheckoutScreenState {
   final List<ChannelItem> connectItems;
   final List<Section> sections1;
   final List<Section> sections2;
-  final List<Section> sections3;
+  final List<Section> availableSections1;
+  final List<Section> availableSections2;
   final List<Section> availableSections;
+  final int addSection;
 
   CheckoutScreenState({
     this.isLoading = false,
@@ -49,8 +51,10 @@ class CheckoutScreenState {
     this.connectItems = const [],
     this.sections1 = const [],
     this.sections2 = const [],
-    this.sections3 = const [],
+    this.availableSections1 = const [],
+    this.availableSections2 = const [],
     this.availableSections = const [],
+    this.addSection = 0,
   });
 
   List<Object> get props => [
@@ -74,8 +78,10 @@ class CheckoutScreenState {
     this.connectItems,
     this.sections1,
     this.sections2,
-    this.sections3,
+    this.availableSections1,
+    this.availableSections2,
     this.availableSections,
+    this.addSection,
   ];
 
   CheckoutScreenState copyWith({
@@ -100,8 +106,10 @@ class CheckoutScreenState {
     List<ChannelItem> connectItems,
     List<Section> sections1,
     List<Section> sections2,
-    List<Section> sections3,
+    List<Section> availableSections1,
+    List<Section> availableSections2,
     List<Section> availableSections,
+    int addSection,
   }) {
     return CheckoutScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -124,8 +132,10 @@ class CheckoutScreenState {
       connectItems: connectItems ?? this.connectItems,
       sections1: sections1 ?? this.sections1,
       sections2: sections2 ?? this.sections2,
-      sections3: sections3 ?? this.sections3,
+      availableSections1: availableSections1 ?? this.availableSections1,
+      availableSections2: availableSections2 ?? this.availableSections2,
       availableSections: availableSections ?? this.availableSections,
+      addSection: addSection ?? this.addSection,
     );
   }
 }

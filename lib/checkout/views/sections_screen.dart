@@ -29,10 +29,11 @@ class _SectionsScreenState extends State<SectionsScreen> {
     return BlocBuilder<CheckoutScreenBloc, CheckoutScreenState>(
       bloc: widget.checkoutScreenBloc,
       builder: (BuildContext context, state) {
-        return _getBody(state);
+        return state.addSection == 0 ? _getBody(state) : _getAddSectionWidget(state);
       },
     );
   }
+
   Widget _getBody(CheckoutScreenState state) {
     return Container(
       width: Measurements.width,
@@ -58,7 +59,10 @@ class _SectionsScreenState extends State<SectionsScreen> {
                     widget.checkoutScreenBloc.add(ReorderSection1Event(oldIndex: oldIndex, newIndex: newIndex));
                   },
                   onDelete: (Section section) {
-
+                    widget.checkoutScreenBloc.add(RemoveSectionEvent(section: section));
+                  },
+                  onEdit: () {
+                    widget.checkoutScreenBloc.add(AddSectionEvent(section: 1));
                   },
                 ),
                 Divider(
@@ -80,7 +84,10 @@ class _SectionsScreenState extends State<SectionsScreen> {
                     widget.checkoutScreenBloc.add(ReorderSection2Event(oldIndex: oldIndex, newIndex: newIndex));
                   },
                   onDelete: (Section section) {
-
+                    widget.checkoutScreenBloc.add(RemoveSectionEvent(section: section));
+                  },
+                  onEdit: () {
+                    widget.checkoutScreenBloc.add(AddSectionEvent(section: 2));
                   },
                 ),
                 Divider(
@@ -97,11 +104,14 @@ class _SectionsScreenState extends State<SectionsScreen> {
                       isExpandedSection3 = !isExpandedSection3;
                     });
                   },
-                  sections: state.sections3,
+                  sections: [],
                   onReorder: (oldIndex, newIndex) {
                     widget.checkoutScreenBloc.add(ReorderSection3Event(oldIndex: oldIndex, newIndex: newIndex));
                   },
                   onDelete: (Section section) {
+                    widget.checkoutScreenBloc.add(RemoveSectionEvent(section: section));
+                  },
+                  onEdit: () {
                   },
                 ),
                 Divider(
@@ -135,6 +145,54 @@ class _SectionsScreenState extends State<SectionsScreen> {
                     ),
                   ),
                 )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _getAddSectionWidget(CheckoutScreenState state) {
+    return Container(
+      width: Measurements.width,
+      padding: EdgeInsets.all(16),
+      child: Center(
+        child: BlurEffectView(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Container(
+                  height: 50,
+                  color: Colors.black54,
+                  padding: EdgeInsets.only(left: 16,),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        'Sections',
+                      ),
+                      CloseButton(
+                        onPressed: () {
+                          widget.checkoutScreenBloc.add(AddSectionEvent(section: 0));
+                        },
+                      )
+                    ],
+                  ),
+                ),
+                ListView.separated(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return Container();
+                  },
+                  separatorBuilder: (context, index) {
+                    return Divider(color: Colors.transparent,);
+                  },
+                  itemCount: state.availableSections1.length,
+                ),
               ],
             ),
           ),
