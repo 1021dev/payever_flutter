@@ -2153,7 +2153,7 @@ class ApiService {
     }
   }
 
-  Future<dynamic> patchCheckoutOrder(String token, String checkoutFlowId, String local, Map<String, dynamic>body) async {
+  Future<dynamic> patchCheckoutFlow(String token, String checkoutFlowId, String local, Map<String, dynamic>body) async {
     try {
       print('$TAG - patchCheckoutOrder()');
       var rand = randomString(8);
@@ -2161,11 +2161,7 @@ class ApiService {
       dynamic response = await _client.patchTypeless(
           '$checkoutV3/$checkoutFlowId?_locale=$local&rand=$rand',
           body: body,
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {

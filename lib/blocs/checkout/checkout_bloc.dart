@@ -38,8 +38,8 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       yield* fetchConnectInstallations(state.business, isLoading: true);
     } else if (event is GetPaymentConfig) {
       yield* getPaymentData();
-    } else if (event is PatchCheckoutOrderEvent) {
-      yield* patchCheckoutOrder(event);
+    } else if (event is PatchCheckoutFlowEvent) {
+      yield* patchCheckoutFlow(event.body);
     } else if (event is GetChannelConfig) {
       yield* getChannelConfig();
     } else if (event is GetConnectConfig) {
@@ -196,15 +196,18 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     );
   }
 
-  Stream<CheckoutScreenState> patchCheckoutOrder(PatchCheckoutOrderEvent event) async* {
+  Stream<CheckoutScreenState> patchCheckoutFlow(Map body) async* {
     yield state.copyWith(
-      isOrdering: true,
+      isUpdating: true,
     );
-    Map<String, dynamic> body = {'amount': event.amount, 'reference': event.reference};
-//    dynamic response = await api.patchCheckoutOrder(token, 'en', body);
-    await Future.delayed(Duration(milliseconds: 1000));
+    ChannelSetFlow channelSetFlow;
+    dynamic response = await api.patchCheckoutFlow(token, state.channelSetFlow.id, 'en', body);
+    if (response is Map) {
+      channelSetFlow = ChannelSetFlow.fromMap(response);
+    }
     yield state.copyWith(
-      isOrdering: false,
+      isUpdating: false,
+      channelSetFlow: channelSetFlow,
     );
   }
 

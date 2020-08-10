@@ -49,16 +49,14 @@ class GetSectionDetails extends CheckoutScreenEvent {
 class UpdateCheckoutSections extends CheckoutScreenEvent {
 }
 
-class PatchCheckoutOrderEvent extends CheckoutScreenEvent {
-  final double amount;
-  final String reference;
+class PatchCheckoutFlowEvent extends CheckoutScreenEvent {
+  final Map<String, dynamic> body;
 
-  PatchCheckoutOrderEvent({this.amount, this.reference});
+  PatchCheckoutFlowEvent({this.body,});
 
   @override
   List<Object> get props => [
-    this.amount,
-    this.reference,
+    this.body,
   ];
 }
 

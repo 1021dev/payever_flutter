@@ -32,6 +32,9 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
   String currency = '';
   bool editOrder = false;
 
+  var controllerAmount = TextEditingController();
+  var controllerReference = TextEditingController();
+
   bool switchCheckout = false;
 
   List<String> titles = [
@@ -46,6 +49,18 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
     'Choose payment option',
     'Your payment option'
   ];
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    controllerAmount.dispose();
+    controllerReference.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -173,7 +188,6 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
     }
     return Container(
       color: Colors.white,
-//      margin: const EdgeInsets.all(16),
       child: Container(
         height: double.infinity,
         child: Column(
@@ -225,7 +239,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                     child: Row(
                       children: <Widget>[
                         Text(
-                          '${currency}3432.00',
+                          '${currency}${state.channelSetFlow.amount.toStringAsFixed(2)}',
                           style: TextStyle(
                             color: Colors.black54,
                             fontSize: 14,
@@ -350,9 +364,11 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
   }
 
   Widget _orderView(CheckoutScreenState state) {
-
+    controllerAmount = TextEditingController(text: (state.channelSetFlow == null || state.channelSetFlow.amount == 0) ? '' : '${state.channelSetFlow.amount}');
+    controllerReference = TextEditingController(text: state.channelSetFlow.reference != null ? state.channelSetFlow.reference : '');
     return Column(
       children: <Widget>[
+        _cautionTestMode(),
         WorkshopHeader(
           title: Language.getCheckoutStrings('checkout_order_summary.title'),
           isExpanded: _selectedSectionIndex == 0,
@@ -378,12 +394,18 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                       child: TextFormField(
                         style: TextStyle(
                           fontSize: 16,
-                          color:Colors.black54,
+                          color:Colors.black87,
                           fontWeight: FontWeight.w400,
                         ),
                         onChanged: (val) {
                         },
-                        initialValue: '',
+                        controller: controllerAmount,
+                        validator: (text) {
+                          if (text.isEmpty){
+                            return 'Amount required';
+                          }
+                          return null;
+                        },
                         decoration: InputDecoration(
                           prefixIcon: Container(
                             width: 44,
@@ -391,7 +413,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                               child: Text(
                                 currency,
                                 style: TextStyle(
-                                  color: Colors.black54,
+                                  color: Colors.black87,
                                   fontSize: 16,
                                   fontWeight: FontWeight.w400,
                                 ),
@@ -430,7 +452,13 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                         ),
                         onChanged: (val) {
                         },
-                        initialValue: '',
+                        controller: controllerReference,
+                        validator: (text) {
+                          if (text.isEmpty){
+                            return 'Reference required';
+                          }
+                          return null;
+                        },
                         decoration: InputDecoration(
                           labelText: Language.getCartStrings('checkout_cart_edit.form.label.reference'),
                           labelStyle: TextStyle(
@@ -464,9 +492,9 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                 child: SizedBox.expand(
                   child: MaterialButton(
                     onPressed: () {
-                      if (!state.isOrdering) {
+                      if (!state.isUpdating) {
                         widget.checkoutScreenBloc.add(
-                            PatchCheckoutOrderEvent(amount: 100, reference: 'Test'));
+                            PatchCheckoutFlowEvent(body: {'amount': double.parse(controllerAmount.text), 'reference': controllerReference.text}));
                         _selectedSectionIndex = 1;
                         isAccountApproved = true;
                       }
@@ -475,7 +503,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                       borderRadius: BorderRadius.circular(4),
                     ),
                     color: Colors.black87,
-                    child: state.isOrdering ?
+                    child: state.isUpdating ?
                     CircularProgressIndicator() :
                     Text(
                       'Next Step',
@@ -496,6 +524,9 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
     );
   }
 
+  Widget _cautionTestMode() {
+    return Container();
+}
   Widget _editOrderView(CheckoutScreenState state) {
     return Column(
       children: <Widget>[
@@ -596,9 +627,9 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
           child: SizedBox.expand(
             child: MaterialButton(
               onPressed: () {
-                if (!state.isOrdering) {
-                  widget.checkoutScreenBloc.add(
-                      PatchCheckoutOrderEvent(amount: 100, reference: 'Test'));
+                if (!state.isUpdating) {
+//                  widget.checkoutScreenBloc.add(
+//                      PatchCheckoutOrderEvent(amount: 100, reference: 'Test'));
                   _selectedSectionIndex = 1;
                   isAccountApproved = true;
                 }
@@ -607,7 +638,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                 borderRadius: BorderRadius.circular(4),
               ),
               color: Colors.black87,
-              child: state.isOrdering ?
+              child: state.isUpdating ?
               CircularProgressIndicator() :
               Text(
                 'Save',
@@ -654,7 +685,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                       child: TextFormField(
                         style: TextStyle(
                           fontSize: 16,
-                          color:Colors.black54,
+                          color:Colors.black87,
                           fontWeight: FontWeight.w400,
                         ),
                         onChanged: (val) {
@@ -688,7 +719,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                       child: TextFormField(
                         style: TextStyle(
                           fontSize: 16,
-                          color:Colors.black54,
+                          color:Colors.black87,
                           fontWeight: FontWeight.w400,
                         ),
                         onChanged: (val) {
@@ -737,7 +768,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(4),
                           ),
-                          child: state.isOrdering ?
+                          child: state.isUpdating ?
                           CircularProgressIndicator() :
                           Text(
                             Language.getCheckoutStrings('checkout_send_flow.action.skip'),
@@ -762,7 +793,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                             borderRadius: BorderRadius.circular(4),
                           ),
                           color: Colors.black87,
-                          child: state.isOrdering ?
+                          child: state.isUpdating ?
                           CircularProgressIndicator() :
                           Text(
                             Language.getCheckoutStrings('checkout_send_flow.action.continue'),
@@ -870,7 +901,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                       child: SizedBox.expand(
                         child: MaterialButton(
                           onPressed: () {
-                            if (!state.isOrdering) {
+                            if (!state.isUpdating) {
                               setState(() {
                                 _selectedSectionIndex++;
                               });
@@ -879,7 +910,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(4),
                           ),
-                          child: state.isOrdering ?
+                          child: state.isUpdating ?
                           CircularProgressIndicator() :
                           Text(
                             Language.getCheckoutStrings('checkout_send_flow.action.skip'),
@@ -904,7 +935,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                             borderRadius: BorderRadius.circular(4),
                           ),
                           color: Colors.black87,
-                          child: state.isOrdering ?
+                          child: state.isUpdating ?
                           CircularProgressIndicator() :
                           Text(
                             Language.getCheckoutStrings('checkout_send_flow.action.continue'),
@@ -1019,7 +1050,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(4),
                           ),
-                          child: state.isOrdering ?
+                          child: state.isUpdating ?
                           CircularProgressIndicator() :
                           Text(
                             Language.getCheckoutStrings('checkout_send_flow.action.skip'),
@@ -1044,7 +1075,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                             borderRadius: BorderRadius.circular(4),
                           ),
                           color: Colors.black87,
-                          child: state.isOrdering ?
+                          child: state.isUpdating ?
                           CircularProgressIndicator() :
                           Text(
                             Language.getCheckoutStrings('checkout_send_flow.action.continue'),
@@ -1159,7 +1190,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(4),
                           ),
-                          child: state.isOrdering ?
+                          child: state.isUpdating ?
                           CircularProgressIndicator() :
                           Text(
                             Language.getCheckoutStrings('checkout_send_flow.action.skip'),
@@ -1184,7 +1215,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                             borderRadius: BorderRadius.circular(4),
                           ),
                           color: Colors.black87,
-                          child: state.isOrdering ?
+                          child: state.isUpdating ?
                           CircularProgressIndicator() :
                           Text(
                             Language.getCheckoutStrings('checkout_send_flow.action.continue'),
@@ -1296,7 +1327,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(4),
                           ),
-                          child: state.isOrdering ?
+                          child: state.isUpdating ?
                           CircularProgressIndicator() :
                           Text(
                             Language.getCheckoutStrings('checkout_send_flow.action.skip'),
@@ -1318,7 +1349,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                             borderRadius: BorderRadius.circular(4),
                           ),
                           color: Colors.black87,
-                          child: state.isOrdering ?
+                          child: state.isUpdating ?
                           CircularProgressIndicator() :
                           Text(
                             Language.getCheckoutStrings('checkout_send_flow.action.continue'),
@@ -1381,7 +1412,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                     ),
                     Container(
                       child: Text(
-                        '${currency}0.00',
+                        '${currency}${state.channelSetFlow.amount.toStringAsFixed(2)}',
                         style: TextStyle(
                           color: Colors.black54,
                           fontSize: 12,

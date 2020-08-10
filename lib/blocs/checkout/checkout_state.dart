@@ -6,7 +6,7 @@ import 'package:payever/connect/models/connect.dart';
 
 class CheckoutScreenState {
   final bool isLoading;
-  final bool isOrdering;
+  final bool isUpdating;
   final bool loadingChannel;
   final bool loadingConnect;
   final bool loadingPaymentOption;
@@ -30,7 +30,7 @@ class CheckoutScreenState {
 
   CheckoutScreenState({
     this.isLoading = false,
-    this.isOrdering = false,
+    this.isUpdating = false,
     this.loadingChannel = false,
     this.loadingConnect = false,
     this.loadingPaymentOption = false,
@@ -55,7 +55,7 @@ class CheckoutScreenState {
 
   List<Object> get props => [
     this.isLoading,
-    this.isOrdering,
+    this.isUpdating,
     this.loadingPaymentOption,
     this.loadingConnect,
     this.loadingChannel,
@@ -80,7 +80,7 @@ class CheckoutScreenState {
 
   CheckoutScreenState copyWith({
     bool isLoading,
-    bool isOrdering,
+    bool isUpdating,
     bool loadingChannel,
     bool loadingConnect,
     bool loadingPaymentOption,
@@ -105,7 +105,7 @@ class CheckoutScreenState {
   }) {
     return CheckoutScreenState(
       isLoading: isLoading ?? this.isLoading,
-      isOrdering: isOrdering ?? this.isOrdering,
+      isUpdating: isUpdating ?? this.isUpdating,
       loadingChannel: loadingChannel ?? this.loadingChannel,
       loadingConnect: loadingConnect ?? this.loadingConnect,
       loadingPaymentOption: loadingPaymentOption ?? this.loadingPaymentOption,
