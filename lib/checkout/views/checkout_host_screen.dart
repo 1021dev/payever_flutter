@@ -10,12 +10,10 @@ import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 
 class CheckoutCSPAllowedHostScreen extends StatefulWidget {
   final CheckoutSettingScreenBloc settingBloc;
-  final String businessId;
-  final String checkoutId;
-  final CheckoutSettings settings;
+  final Checkout checkout;
 
   CheckoutCSPAllowedHostScreen(
-      {this.settingBloc, this.businessId, this.checkoutId, this.settings});
+      {this.settingBloc, this.checkout});
 
   _CheckoutCSPAllowedHostScreenState createState() =>
       _CheckoutCSPAllowedHostScreenState();
@@ -28,8 +26,8 @@ class _CheckoutCSPAllowedHostScreenState
   @override
   void initState() {
     super.initState();
-    if (widget.settings.cspAllowedHosts.isEmpty == false) {
-      widget.settings.cspAllowedHosts.forEach((element) {
+    if (widget.checkout.settings.cspAllowedHosts.isEmpty == false) {
+      widget.checkout.settings.cspAllowedHosts.forEach((element) {
         controllers.add(TextEditingController(text: element));
       });
     } else {
@@ -155,11 +153,8 @@ class _CheckoutCSPAllowedHostScreenState
                       controllers.forEach((element) {
                         hosts.add(element.text);
                       });
-                      widget.settings.cspAllowedHosts = hosts;
-                      widget.settingBloc.add(UpdateCheckoutSettingsEvent(
-                          widget.businessId,
-                          widget.checkoutId,
-                          widget.settings));
+                      widget.checkout.settings.cspAllowedHosts = hosts;
+                      widget.settingBloc.add(UpdateCheckoutSettingsEvent());
                     },
                     color: Colors.black,
                     child: state.isUpdating

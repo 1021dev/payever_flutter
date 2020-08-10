@@ -11,12 +11,10 @@ import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 class CheckoutMessageScreen extends StatefulWidget {
 
   final CheckoutSettingScreenBloc settingBloc;
-  final String businessId;
-  final String checkoutId;
-  final CheckoutSettings settings;
+  final Checkout checkout;
 
   CheckoutMessageScreen(
-      {this.settingBloc, this.businessId, this.checkoutId, this.settings});
+      {this.settingBloc, this.checkout});
 
   _CheckoutMessageScreenState createState() => _CheckoutMessageScreenState();
 
@@ -27,7 +25,7 @@ class _CheckoutMessageScreenState extends State<CheckoutMessageScreen> {
   @override
   void initState() {
     super.initState();
-    controller = TextEditingController(text: widget.settings.message);
+    controller = TextEditingController(text: widget.checkout.settings.message);
   }
 
   @override
@@ -153,11 +151,8 @@ class _CheckoutMessageScreenState extends State<CheckoutMessageScreen> {
                 child: SizedBox.expand(
                   child: MaterialButton(
                     onPressed: () {
-                      widget.settings.message = controller.text;
-                      widget.settingBloc.add(UpdateCheckoutSettingsEvent(
-                          widget.businessId,
-                          widget.checkoutId,
-                          widget.settings));
+                      widget.checkout.settings.message = controller.text;
+                      widget.settingBloc.add(UpdateCheckoutSettingsEvent());
                     },
                     color: Colors.black,
                     child: state.isUpdating

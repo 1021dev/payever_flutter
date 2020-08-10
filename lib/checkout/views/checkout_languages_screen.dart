@@ -11,12 +11,10 @@ import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 class CheckoutLanguagesScreen extends StatefulWidget {
 
   final CheckoutSettingScreenBloc settingBloc;
-  final String businessId;
-  final String checkoutId;
-  final CheckoutSettings settings;
+  final Checkout checkout;
 
   CheckoutLanguagesScreen(
-      {this.settingBloc, this.businessId, this.checkoutId, this.settings});
+      {this.settingBloc, this.checkout});
 
   _CheckoutLanguagesScreenState createState() => _CheckoutLanguagesScreenState();
 
@@ -106,7 +104,7 @@ class _CheckoutLanguagesScreenState extends State<CheckoutLanguagesScreen> {
   }
 
   Widget _getBody(CheckoutSettingScreenState state) {
-    if (widget.checkoutId == null) {
+    if (widget.checkout.id == null) {
       return Container();
     }
     return Container(
@@ -119,7 +117,7 @@ class _CheckoutLanguagesScreenState extends State<CheckoutLanguagesScreen> {
               ListView.separated(
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
-                  Lang lang = widget.settings.languages[index];
+                  Lang lang = widget.checkout.settings.languages[index];
                   return Container(
                     height: 50,
                     padding: EdgeInsets.only(left: 16, right: 16),
@@ -143,13 +141,10 @@ class _CheckoutLanguagesScreenState extends State<CheckoutLanguagesScreen> {
                               Language.getPosStrings('edit_locales.default'),
                             ): (lang.active ? MaterialButton(
                               onPressed: () {
-                                widget.settings.languages.forEach((element) {
+                                widget.checkout.settings.languages.forEach((element) {
                                   element.isDefault = (element == lang);
                                 });
-                                widget.settingBloc.add(UpdateCheckoutSettingsEvent(
-                                    widget.businessId,
-                                    widget.checkoutId,
-                                    widget.settings));
+                                widget.settingBloc.add(UpdateCheckoutSettingsEvent());
                               },
                               color: Colors.black54,
                               elevation: 0,
@@ -170,10 +165,7 @@ class _CheckoutLanguagesScreenState extends State<CheckoutLanguagesScreen> {
                               value: lang.active,
                               onChanged: (val) {
                                 lang.active = val;
-                                widget.settingBloc.add(UpdateCheckoutSettingsEvent(
-                                    widget.businessId,
-                                    widget.checkoutId,
-                                    widget.settings));
+                                widget.settingBloc.add(UpdateCheckoutSettingsEvent());
                               },
                             )
                           ],
@@ -189,7 +181,7 @@ class _CheckoutLanguagesScreenState extends State<CheckoutLanguagesScreen> {
                     color: Colors.grey,
                   );
                 },
-                itemCount: widget.settings.languages.length,
+                itemCount: widget.checkout.settings.languages.length,
               ),
             ],
           ),

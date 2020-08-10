@@ -21,20 +21,66 @@ class CheckoutSettingScreenBloc extends Bloc<CheckoutSettingScreenEvent, Checkou
   @override
   Stream<CheckoutSettingScreenState> mapEventToState(
       CheckoutSettingScreenEvent event) async* {
-    if (event is UpdateCheckoutSettingsEvent) {
-      yield* updateCheckoutSettings(event);
+    if (event is CheckoutSettingScreenInitEvent) {
+      if (event.businessId != null) {
+        yield state.copyWith(
+          business: event.businessId,
+          checkout: event.checkout,
+        );
+      }
+    } else if (event is UpdateCheckoutSettingsEvent) {
+      yield* updateCheckoutSettings();
+    } else if (event is GetPhoneNumbers) {
+      yield* getPhoneNumbers();
     }
   }
 
-  Stream<CheckoutSettingScreenState> updateCheckoutSettings(UpdateCheckoutSettingsEvent event) async* {
+  Stream<CheckoutSettingScreenState> updateCheckoutSettings() async* {
     yield state.copyWith(isUpdating: true);
-    Map<String, dynamic>body = event.settings.toDictionary();
-    dynamic response = await api.patchCheckout(GlobalUtils.activeToken.accessToken, event.businessId, event.checkoutId, body);
+    Map<String, dynamic>body = state.checkout.settings.toDictionary();
+    dynamic response = await api.patchCheckout(GlobalUtils.activeToken.accessToken, state.business, state.checkout.id, body);
     if (response is DioError) {
       yield CheckoutSettingScreenStateFailure(error: response.message);
     } else {
       yield CheckoutSettingScreenStateSuccess();
     }
     yield state.copyWith(isUpdating: false);
+  }
+
+  Stream<CheckoutSettingScreenState> getPhoneNumbers() async* {
+    yield state.copyWith(isLoading: true,);
+    List<IntegrationModel> connections = [];
+    List<String> phoneNumbers = [];
+    if (state.phoneNumbers.isEmpty) {
+      // Get Connections
+      if (checkoutScreenBloc.state.connections.isEmpty) {
+        dynamic connectionResponse = await api.getConnections(state.business, token);
+        if (connectionResponse is List) {
+          connectionResponse.forEach((element) {
+            connections.add(IntegrationModel.fromMap(element));
+          });
+        }
+//        yield state.copyWith(connections: connections);
+      } else {
+        connections = checkoutScreenBloc.state.connections;
+      }
+
+      IntegrationModel twilioIntegration;
+      List<IntegrationModel> list = connections.where((element) => element.integration == 'twilio').toList();
+      if (list.length > 0) {
+        twilioIntegration = list.first;
+      }
+      if (twilioIntegration != null) {
+        dynamic phoneResponse = await api.getPhoneNumbers(state.business, token, twilioIntegration.id);
+        if (phoneResponse is List) {
+          phoneResponse.forEach((element) {
+            phoneNumbers.add(element);
+          });
+        }
+      }
+    } else {
+      phoneNumbers = state.phoneNumbers;
+    }
+    yield state.copyWith(isLoading:false, phoneNumbers: phoneNumbers);
   }
 }

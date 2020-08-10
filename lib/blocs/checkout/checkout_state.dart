@@ -21,7 +21,6 @@ class CheckoutScreenState {
   final List<IntegrationModel> connections;
   final List<IntegrationModel> checkoutConnections;
   final List<ConnectModel> connects;
-  final List<String> phoneNumbers;
   final List<ChannelItem> channelItems;
   final List<ChannelItem> connectItems;
   final List<Section> sections1;
@@ -46,7 +45,6 @@ class CheckoutScreenState {
     this.connections = const [],
     this.checkoutConnections = const [],
     this.connects = const [],
-    this.phoneNumbers = const [],
     this.channelItems = const [],
     this.connectItems = const [],
     this.sections1 = const [],
@@ -72,7 +70,6 @@ class CheckoutScreenState {
     this.connects,
     this.connections,
     this.checkoutConnections,
-    this.phoneNumbers,
     this.channelItems,
     this.connectItems,
     this.sections1,
@@ -123,7 +120,6 @@ class CheckoutScreenState {
       connections: connections ?? this.connections,
       checkoutConnections: checkoutConnections ?? this.checkoutConnections,
       connects: connects ?? this.connects,
-      phoneNumbers: phoneNumbers ?? this.phoneNumbers,
       channelItems: channelItems ?? this.channelItems,
       connectItems: connectItems ?? this.connectItems,
       sections1: sections1 ?? this.sections1,

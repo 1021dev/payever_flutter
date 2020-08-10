@@ -1,19 +1,20 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
+import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
-import 'package:payever/login/login_screen.dart';
 
 class CheckoutPhoneNumberScreen extends StatefulWidget {
 
-  final CheckoutScreenBloc checkoutScreenBloc;
-
-  CheckoutPhoneNumberScreen({this.checkoutScreenBloc});
+  final CheckoutSettingScreenBloc settingBloc;
+  final Checkout checkout;
+  String phoneNum;
+  CheckoutPhoneNumberScreen({this.settingBloc, this.checkout}){
+    phoneNum = checkout.settings.phoneNumber;
+  }
 
   _CheckoutPhoneNumberScreenState createState() => _CheckoutPhoneNumberScreenState();
 
@@ -23,7 +24,7 @@ class _CheckoutPhoneNumberScreenState extends State<CheckoutPhoneNumberScreen> {
 
   @override
   void initState() {
-    widget.checkoutScreenBloc.add(GetPhoneNumbers());
+    widget.settingBloc.add(GetPhoneNumbers());
     super.initState();
   }
 
@@ -35,21 +36,17 @@ class _CheckoutPhoneNumberScreenState extends State<CheckoutPhoneNumberScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocListener(
-        bloc: widget.checkoutScreenBloc,
-        listener: (BuildContext context, CheckoutScreenState state) async {
-          if (state is CheckoutScreenStateFailure) {
-            Navigator.pushReplacement(
-              context,
-              PageTransition(
-                child: LoginScreen(),
-                type: PageTransitionType.fade,
-              ),
-            );
+        bloc: widget.settingBloc,
+        listener: (BuildContext context, CheckoutSettingScreenState state) async {
+          if (state is CheckoutSettingScreenStateSuccess) {
+            Navigator.pop(context);
+          } else if (state is CheckoutSettingScreenStateFailure) {
+
           }
         },
-      child: BlocBuilder<CheckoutScreenBloc, CheckoutScreenState>(
-        bloc: widget.checkoutScreenBloc,
-        builder: (BuildContext context, CheckoutScreenState state) {
+      child: BlocBuilder<CheckoutSettingScreenBloc, CheckoutSettingScreenState>(
+        bloc: widget.settingBloc,
+        builder: (BuildContext context, CheckoutSettingScreenState state) {
           return Scaffold(
             backgroundColor: Colors.black,
             resizeToAvoidBottomPadding: false,
@@ -72,7 +69,7 @@ class _CheckoutPhoneNumberScreenState extends State<CheckoutPhoneNumberScreen> {
     );
   }
 
-  Widget _appBar(CheckoutScreenState state) {
+  Widget _appBar(CheckoutSettingScreenState state) {
     return AppBar(
       centerTitle: false,
       elevation: 0,
@@ -110,7 +107,7 @@ class _CheckoutPhoneNumberScreenState extends State<CheckoutPhoneNumberScreen> {
     );
   }
 
-  Widget _getBody(CheckoutScreenState state) {
+  Widget _getBody(CheckoutSettingScreenState state) {
     return Container(
       width: Measurements.width,
       padding: EdgeInsets.all(16),
@@ -136,11 +133,13 @@ class _CheckoutPhoneNumberScreenState extends State<CheckoutPhoneNumberScreen> {
                       );
                     }).toList(),
                     onChanged: (val) {
+                      setState(() {
+                        widget.phoneNum = val;
+                      });
                     },
                     hint: Padding(
                       padding: EdgeInsets.only(left: 16),
-                      child: Text(
-                        'Phone number',
+                      child: Text(widget.phoneNum != null ? widget.phoneNum : 'Phone number',
                       ),
                     ),
                   ),
@@ -151,10 +150,15 @@ class _CheckoutPhoneNumberScreenState extends State<CheckoutPhoneNumberScreen> {
                 child: SizedBox.expand(
                   child: MaterialButton(
                     onPressed: () {
-
+                      widget.checkout.settings.phoneNumber = widget.phoneNum;
+                      widget.settingBloc.add(UpdateCheckoutSettingsEvent());
                     },
                     color: Colors.black,
-                    child: Text(
+                    child: state.isUpdating
+                        ? CircularProgressIndicator(
+                      strokeWidth: 2,
+                    )
+                        : Text(
                       Language.getCommerceOSStrings('actions.save'),
                     ),
                   ),

@@ -46,10 +46,6 @@ class GetSectionDetails extends CheckoutScreenEvent {
 
 }
 
-class GetPhoneNumbers extends CheckoutScreenEvent {
-
-}
-
 class UpdateCheckoutSections extends CheckoutScreenEvent {
 }
 

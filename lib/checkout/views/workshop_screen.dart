@@ -173,7 +173,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
     }
     return Container(
       color: Colors.white,
-      margin: const EdgeInsets.all(16),
+//      margin: const EdgeInsets.all(16),
       child: Container(
         height: double.infinity,
         child: Column(

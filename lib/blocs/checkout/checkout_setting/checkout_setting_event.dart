@@ -11,29 +11,23 @@ class CheckoutSettingScreenEvent extends Equatable {
 
 class CheckoutSettingScreenInitEvent extends CheckoutSettingScreenEvent {
   final String businessId;
-
+  final Checkout checkout;
   CheckoutSettingScreenInitEvent({
     this.businessId,
+    this.checkout,
   });
 
   @override
   List<Object> get props => [
     this.businessId,
+    this.checkout,
   ];
 }
 
 class UpdateCheckoutSettingsEvent extends CheckoutSettingScreenEvent {
-  final String businessId;
-  final String checkoutId;
-  final CheckoutSettings settings;
 
-  UpdateCheckoutSettingsEvent(this.businessId, this.checkoutId, this.settings);
+}
 
-  @override
-  List<Object> get props => [
-    this.businessId,
-    this.checkoutId,
-    this.settings,
-  ];
+class GetPhoneNumbers extends CheckoutSettingScreenEvent {
 
 }

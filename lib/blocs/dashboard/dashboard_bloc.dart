@@ -250,7 +250,7 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
 
     terminals.forEach((terminal) async {
       channelSets.forEach((channelSet) async {
-        if (terminal.channelSet == channelSet.id) {
+        if (terminal.channelSet == channelSet.id && channelSet.checkout != null && channelSet.checkout.length > 0) {
           dynamic paymentObj = await api.getCheckoutIntegration(activeBusiness.id, channelSet.checkout, token);
           paymentObj.forEach((pm) {
             terminal.paymentMethods.add(pm);

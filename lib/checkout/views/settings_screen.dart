@@ -26,7 +26,7 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
   @override
   void initState() {
     screenBloc = CheckoutSettingScreenBloc(checkoutScreenBloc: widget.checkoutScreenBloc);
-    screenBloc.add(CheckoutSettingScreenInitEvent(businessId: widget.businessId));
+    screenBloc.add(CheckoutSettingScreenInitEvent(businessId: widget.businessId, checkout: widget.checkout));
     super.initState();
   }
 
@@ -92,7 +92,7 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                               value: widget.checkout.settings.testingMode,
                               onChanged: (value) {
                                 widget.checkout.settings.testingMode = value;
-                                screenBloc.add(UpdateCheckoutSettingsEvent(widget.businessId, widget.checkout.id, widget.checkout.settings));
+                                screenBloc.add(UpdateCheckoutSettingsEvent());
                               },
                             ),
                           ],
@@ -122,9 +122,7 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                                   PageTransition(
                                     child: CheckoutCSPAllowedHostScreen(
                                       settingBloc: screenBloc,
-                                      businessId: widget.businessId,
-                                      checkoutId: widget.checkout.id,
-                                      settings: widget.checkout.settings,
+                                      checkout: widget.checkout,
                                     ),
                                     type: PageTransitionType.fade,
                                   ),
@@ -173,7 +171,7 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                                   value: widget.checkout.settings.styles.active ?? false,
                                   onChanged: (value) {
                                     widget.checkout.settings.styles.active = value;
-                                    screenBloc.add(UpdateCheckoutSettingsEvent(widget.businessId, widget.checkout.id, widget.checkout.settings));
+                                    screenBloc.add(UpdateCheckoutSettingsEvent());
                                   },
                                 ),
                                 MaterialButton(
@@ -237,9 +235,7 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                                   PageTransition(
                                     child: CheckoutLanguagesScreen(
                                       settingBloc: screenBloc,
-                                      businessId: widget.businessId,
-                                      checkoutId: widget.checkout.id,
-                                      settings: widget.checkout.settings
+                                      checkout: widget.checkout,
                                     ),
                                     type: PageTransitionType.fade,
                                   ),
@@ -303,7 +299,8 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                                   context,
                                   PageTransition(
                                     child: CheckoutPhoneNumberScreen(
-                                      checkoutScreenBloc: widget.checkoutScreenBloc,
+                                      settingBloc: this.screenBloc,
+                                      checkout: widget.checkout,
                                     ),
                                     type: PageTransitionType.fade,
                                   ),
@@ -368,9 +365,7 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                                   PageTransition(
                                     child: CheckoutMessageScreen(
                                       settingBloc: screenBloc,
-                                      businessId: widget.businessId,
-                                      checkoutId: widget.checkout.id,
-                                      settings: widget.checkout.settings,
+                                      checkout: widget.checkout,
                                     ),
                                     type: PageTransitionType.fade,
                                   ),
