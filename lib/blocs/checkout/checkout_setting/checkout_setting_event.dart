@@ -24,10 +24,20 @@ class CheckoutSettingScreenInitEvent extends CheckoutSettingScreenEvent {
   ];
 }
 
-class UpdateCheckoutSettingsEvent extends CheckoutSettingScreenEvent {
+class UpdateCheckoutSettingsEvent extends CheckoutSettingScreenEvent {}
 
-}
+class GetPhoneNumbers extends CheckoutSettingScreenEvent {}
 
-class GetPhoneNumbers extends CheckoutSettingScreenEvent {
+class UpdatePolicyEvent extends CheckoutSettingScreenEvent {
 
+  final String channelId;
+  final bool policyEnabled;
+
+  UpdatePolicyEvent({this.channelId, this.policyEnabled});
+
+  @override
+  List<Object> get props => [
+    this.channelId,
+    this.policyEnabled,
+  ];
 }

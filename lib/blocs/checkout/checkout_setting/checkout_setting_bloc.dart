@@ -32,6 +32,8 @@ class CheckoutSettingScreenBloc extends Bloc<CheckoutSettingScreenEvent, Checkou
       yield* updateCheckoutSettings();
     } else if (event is GetPhoneNumbers) {
       yield* getPhoneNumbers();
+    } else if (event is UpdatePolicyEvent) {
+      yield* updateChannelSetPolicyEnable(event.channelId, event.policyEnabled);
     }
   }
 
@@ -82,5 +84,16 @@ class CheckoutSettingScreenBloc extends Bloc<CheckoutSettingScreenEvent, Checkou
       phoneNumbers = state.phoneNumbers;
     }
     yield state.copyWith(isLoading:false, phoneNumbers: phoneNumbers);
+  }
+
+  Stream<CheckoutSettingScreenState> updateChannelSetPolicyEnable(String channelId, bool enabled) async* {
+    yield state.copyWith(isUpdating: true);
+    dynamic response = await api.patchCheckoutChannelSetPolicy(GlobalUtils.activeToken.accessToken, state.business, channelId, enabled);
+    if (response is DioError) {
+      yield CheckoutSettingScreenStateFailure(error: response.message);
+    } else {
+      yield CheckoutSettingScreenStateSuccess();
+    }
+    yield state.copyWith(isUpdating: false);
   }
 }

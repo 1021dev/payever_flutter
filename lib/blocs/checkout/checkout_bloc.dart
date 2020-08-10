@@ -123,7 +123,9 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     dynamic channelSetResponse = await api.getChannelSet(state.business, token);
     if (channelSetResponse is List) {
       channelSetResponse.forEach((element) {
-        channelSets.add(ChannelSet.toMap(element));
+        ChannelSet channelSet = ChannelSet.toMap(element);
+        if (channelSet.checkout != null && channelSet.checkout == state.defaultCheckout.id)
+          channelSets.add(ChannelSet.toMap(element));
       });
     }
 

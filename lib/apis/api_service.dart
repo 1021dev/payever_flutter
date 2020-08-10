@@ -2264,6 +2264,22 @@ class ApiService {
     }
   }
 
+  Future<dynamic> patchCheckoutChannelSetPolicy(String token, String business, String channelId, bool policyEnabled) async {
+    try {
+      print('$TAG - patchCheckoutChannelSetPolicy()');
+      dynamic response = await _client.patchTypeless(
+          '${Env.checkout}/api/business/$business/channelSet/$channelId',
+          body: {
+            'policyEnabled': policyEnabled,
+          },
+          headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<dynamic> getAvailableSections(String token, String business, String checkoutId) async {
     try {
       print('$TAG - getAvailableSections() -> CheckoutId => $checkoutId');

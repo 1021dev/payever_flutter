@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
@@ -8,12 +9,14 @@ import 'package:payever/checkout/views/checkout_host_screen.dart';
 import 'package:payever/checkout/views/checkout_languages_screen.dart';
 import 'package:payever/checkout/views/checkout_message_screen.dart';
 import 'package:payever/checkout/views/checkout_phone_number_screen.dart';
+import 'package:payever/checkout/views/checkout_policy_screen.dart';
 import 'package:payever/commons/commons.dart';
 
 class CheckoutSettingsScreen extends StatefulWidget {
   final CheckoutScreenBloc checkoutScreenBloc;
   final String businessId;
   final Checkout checkout;
+  bool isCopiedChannelSetId = false;
   CheckoutSettingsScreen({this.checkoutScreenBloc, this.businessId, this.checkout});
 
   @override
@@ -38,6 +41,7 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     return BlocListener(
       bloc: screenBloc,
       listener: (BuildContext context, state) {
@@ -409,7 +413,19 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                               ),
                             ),
                             MaterialButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  PageTransition(
+                                    child: CheckoutPoliciesScreen(
+                                      checkoutScreenBloc: widget.checkoutScreenBloc,
+                                      settingBloc: screenBloc,
+                                      checkout: widget.checkout,
+                                    ),
+                                    type: PageTransitionType.fade,
+                                  ),
+                                );
+                              },
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
@@ -450,7 +466,7 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                             ),
                             Flexible(
                               child: Text(
-                                widget.checkout.id,
+                                widget.checkoutScreenBloc.state.channelSetFlow.channelSetId,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
@@ -463,7 +479,14 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                               padding: EdgeInsets.only(left: 8),
                             ),
                             MaterialButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                setState(() {
+                                  widget.isCopiedChannelSetId = true;
+                                });
+                                Clipboard.setData(ClipboardData(
+                                    text: widget.checkoutScreenBloc.state
+                                        .channelSetFlow.channelSetId));
+                              },
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
@@ -472,7 +495,9 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                               height: 24,
                               minWidth: 0,
                               child: Text(
-                                Language.getPosStrings('actions.copy'),
+                                widget.isCopiedChannelSetId
+                                    ? 'copied'
+                                    : Language.getPosStrings('actions.copy'),
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: Colors.white,
