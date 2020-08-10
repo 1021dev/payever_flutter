@@ -167,6 +167,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     yield state.copyWith(
       isLoading: false,
       channelSets: channelSets,
+      channelSet: channelSet,
       channelSetFlow: channelSetFlow,
       checkoutFlow: checkoutFlow,
     );

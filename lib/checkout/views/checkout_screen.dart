@@ -368,17 +368,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           child: BackgroundBase(
             true,
             backgroudColor: Color.fromRGBO(20, 20, 0, 0.4),
-//            body: Container(
-//              child: Column(
-//                crossAxisAlignment: CrossAxisAlignment.stretch,
-//                children: <Widget>[
-//                  _topBar(state),
-//                  Expanded(
-//                    child: _getBody(state),
-//                  ),
-//                ],
-//              ),
-//            ) ,
             body: TabBarView(
               physics: NeverScrollableScrollPhysics(),
               children: <Widget>[

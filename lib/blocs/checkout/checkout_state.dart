@@ -14,6 +14,7 @@ class CheckoutScreenState {
   final String business;
   final List<Checkout> checkouts;
   final List<ChannelSet> channelSets;
+  final ChannelSet channelSet;
   final List<String> integrations;
   final Checkout defaultCheckout;
   final CheckoutFlow checkoutFlow;
@@ -40,6 +41,7 @@ class CheckoutScreenState {
     this.business,
     this.checkouts = const [],
     this.channelSets = const [],
+    this.channelSet,
     this.integrations = const [],
     this.defaultCheckout,
     this.checkoutFlow,
@@ -67,6 +69,7 @@ class CheckoutScreenState {
     this.business,
     this.checkouts,
     this.channelSets,
+    this.checkouts,
     this.integrations,
     this.defaultCheckout,
     this.checkoutFlow,
@@ -94,6 +97,7 @@ class CheckoutScreenState {
     String business,
     List<Checkout> checkouts,
     List<ChannelSet> channelSets,
+    ChannelSet channelSet,
     List<String> integrations,
     Checkout defaultCheckout,
     CheckoutFlow checkoutFlow,
@@ -121,6 +125,7 @@ class CheckoutScreenState {
       business: business ?? this.business,
       checkouts: checkouts ?? this.checkouts,
       channelSets: channelSets ?? this.channelSets,
+      channelSet: channelSet ?? this.channelSet,
       integrations: integrations ?? this.integrations,
       defaultCheckout: defaultCheckout ?? this.defaultCheckout,
       checkoutFlow: checkoutFlow ?? this.checkoutFlow,
