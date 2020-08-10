@@ -1,15 +1,19 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:payever/blocs/payever_bloc_delegate.dart';
-import 'package:payever/commons/views/screens/dashboard/new_dashboard/dashboard_screen.dart';
+import 'package:payever/commons/commons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 
 import 'commons/view_models/view_models.dart';
-import 'commons/views/screens/screens.dart';
 import 'commons/utils/utils.dart';
 import 'commons/network/network.dart';
+import 'dashboard/dashboard_screen.dart';
+import 'login/login_screen.dart';
 
 void main() {
   BlocSupervisor.delegate = PayeverBlocDelegate();
@@ -51,7 +55,6 @@ class _MyAppState extends State<MyApp> {
   bool _haveCredentials;
   String wallpaper;
 
-  RestDataSource api = RestDataSource();
   GlobalStateModel globalStateModel = GlobalStateModel();
 
   @override
@@ -79,22 +82,26 @@ class _MyAppState extends State<MyApp> {
         title: 'payever',
         theme: _payeverTheme,
         routes: {
-//            '/dashboard': (context) => DashboardMidScreen(wallpaper),
         },
         home: _loadCredentials.value
             ? Center(child: CircularProgressIndicator())
-            : _haveCredentials ? DashboardScreen(wallpaper: wallpaper,) : LoginScreen(),//DashboardMidScreen(wallpaper) : LoginScreen(),
+            : _haveCredentials ? DashboardScreenInit(refresh: false,) : LoginScreen(),
       ),
     );
   }
 
   _storedCredentials() async {
+    String fingerPrint = '${Platform.operatingSystem}  ${Platform.operatingSystemVersion}';
+    FlutterSecureStorage storage = new FlutterSecureStorage();
+
     preferences = await SharedPreferences.getInstance();
-    wallpaper = preferences.getString(GlobalUtils.WALLPAPER) ?? "";
-    String bus = preferences.getString(GlobalUtils.BUSINESS) ?? "";
-    String rfToken = preferences.getString(GlobalUtils.REFRESH_TOKEN) ?? "";
-    GlobalUtils.fingerprint =
-        preferences.getString(GlobalUtils.FINGERPRINT) ?? "";
+    wallpaper = preferences.getString(GlobalUtils.WALLPAPER) ?? '';
+    String bus = preferences.getString(GlobalUtils.BUSINESS) ?? '';
+    String rfToken = await storage.read(key: GlobalUtils.REFRESH_TOKEN) ?? '';
+    GlobalUtils.fingerprint = preferences.getString(GlobalUtils.FINGERPRINT) ?? fingerPrint;
+    print('Refresh Token $rfToken');
+    print('Finger print ${GlobalUtils.fingerprint}');
+
     _loadCredentials.value = false;
     _haveCredentials = rfToken.isNotEmpty && bus.isNotEmpty;
   }

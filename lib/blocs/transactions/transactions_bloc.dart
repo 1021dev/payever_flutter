@@ -1,13 +1,12 @@
 import 'package:bloc/bloc.dart';
-import 'package:flutter/material.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/transactions/transactions.dart';
-import 'package:payever/transactions/views/filter_content_view.dart';
 
 import '../bloc.dart';
 
 class TransactionsScreenBloc extends Bloc<TransactionsScreenEvent, TransactionsScreenState> {
-  TransactionsScreenBloc();
+  final DashboardScreenBloc dashboardScreenBloc;
+  TransactionsScreenBloc({this.dashboardScreenBloc});
   TransactionsApi api = TransactionsApi();
 
   @override
@@ -59,8 +58,8 @@ class TransactionsScreenBloc extends Bloc<TransactionsScreenEvent, TransactionsS
     }
     try {
       dynamic obj = await api.getTransactionList(state.currentBusiness.id, GlobalUtils.activeToken.accessToken, queryString);
-      TransactionScreenData data = TransactionScreenData(obj);
-      yield state.copyWith(isLoading: false, isSearchLoading: false, data: data);
+      Transaction transaction = Transaction.toMap(obj);
+      yield state.copyWith(isLoading: false, isSearchLoading: false, transaction: transaction);
 
     } catch (error) {
       if (error.toString().contains('401')) {

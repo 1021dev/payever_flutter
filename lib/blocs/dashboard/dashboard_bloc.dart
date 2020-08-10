@@ -1,14 +1,17 @@
 import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:package_info/package_info.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/blocs/dashboard/dashboard.dart';
+import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/commons.dart';
+import 'package:payever/connect/models/connect.dart';
 import 'package:payever/commons/models/fetchwallpaper.dart';
-import 'package:payever/commons/network/rest_ds.dart';
+import 'package:payever/products/models/models.dart';
 import 'package:payever/settings/network/employees_api.dart';
+import 'package:payever/shop/models/models.dart';
 import 'package:payever/transactions/transactions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -17,6 +20,7 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
   DashboardScreenBloc();
   ApiService api = ApiService();
   String uiKit = '${Env.commerceOs}/assets/ui-kit/icons-png/';
+  final _storage = FlutterSecureStorage();
 
   @override
   DashboardScreenState get initialState => DashboardScreenState();
@@ -24,153 +28,121 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
   @override
   Stream<DashboardScreenState> mapEventToState(DashboardScreenEvent event) async* {
     if (event is DashboardScreenInitEvent) {
-      yield* _checkVersion();
+      yield* _checkVersion(event.wallpaper, event.isRefresh);
+    } else if (event is DashboardScreenLoadDataEvent) {
+      yield* _fetchInitialData();
     } else if (event is FetchPosEvent) {
       yield* fetchPOSCard(event.business);
+    } else if (event is FetchMonthlyEvent) {
+      yield* getDaily(event.business);
+    } else if (event is FetchTutorials) {
+      yield* getTutorials(event.business);
+    } else if (event is FetchProducts) {
+      yield* getProductsPopularMonthRandom(event.business);
+    } else if (event is FetchConnects) {
+      yield* getConnects(event.business);
+    } else if (event is FetchShops) {
+      yield* getShops(event.business);
+    } else if (event is FetchNotifications) {
+      yield* fetchNotifications();
+    } else if (event is DeleteNotification) {
+      yield* deleteNotification(event.notificationId);
     }
   }
 
-  Stream<DashboardScreenState> _checkVersion() async* {
+  Stream<DashboardScreenState> _checkVersion(String wallpaper, bool refresh) async* {
+    yield state.copyWith(curWall: wallpaper);
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     String version = packageInfo.version;
     var environment = await api.getEnv();
-    Env.map(environment);
+    if (environment is Map) {
+      Env.map(environment);
+    } else {
+      add(DashboardScreenInitEvent(wallpaper: wallpaper, isRefresh: true));
+    }
     var v = await api.getVersion();
     Version vv = Version.map(v);
     print("version:$version");
     print("_version:${vv.minVersion}");
     print("compare:${version.compareTo(vv.minVersion)}");
 
-    if(version.compareTo(vv.minVersion)<0){
-//          showPopUp(context, _version);
+    if (version.compareTo(vv.minVersion) < 0) {
       print('Not Supported Version');
     }else{
-      yield* loadData();
+      if (refresh) {
+        yield* loadData();
+      } else {
+        yield* _fetchInitialData();
+      }
     }
   }
 
-  Stream<DashboardScreenState> _loadUserData(var dataLoaded) async* {
-    if (dataLoaded != null) {
-      var data = json.decode(dataLoaded);
-      var responseMsg = data['responseMsg'];
-      switch (responseMsg) {
-        case 'refreshToken':
-          yield* _fetchInitialDataRenew(data['token'], false);
-          break;
-        case 'refreshTokenLogin':
-          yield* _fetchInitialDataRenew(data['token'], true);
-          break;
-        case 'error':
-          Future.delayed(Duration(milliseconds: 1500)).then((value) async => loadData());
-          break;
-        case 'goToLogin':
+  Stream<DashboardScreenState> _reLogin() async* {
+    var preferences = await SharedPreferences.getInstance();
+    if (DateTime.now().difference(DateTime.parse(preferences.getString(GlobalUtils.LAST_OPEN))).inHours < 720) {
+      try {
+        var refreshTokenLogin = await api.login(
+          preferences.getString(GlobalUtils.EMAIL),
+          preferences.getString(GlobalUtils.PASSWORD),
+        );
+        Token tokenData = Token.map(refreshTokenLogin);
+
+        preferences.setString(GlobalUtils.LAST_OPEN, DateTime.now().toString());
+        print('REFRESH TOKEN = ${tokenData.refreshToken}');
+        await _storage.write(key: GlobalUtils.REFRESH_TOKEN, value: tokenData.refreshToken);
+        await _storage.write(key: GlobalUtils.TOKEN, value: tokenData.accessToken);
+
+        GlobalUtils.activeToken = tokenData;
+        yield* _fetchInitialData();
+      } catch (error) {
+        if (error.toString().contains('SocketException')) {
+          Future.delayed(Duration(milliseconds: 1500)).then((value) async =>
+              _reLogin());
+        } else {
+          await _storage.deleteAll();
           yield DashboardScreenLogout();
-          break;
-        default:
-          break;
+        }
       }
+    } else {
+      await _storage.deleteAll();
+      yield DashboardScreenLogout();
     }
   }
 
   Stream<DashboardScreenState> loadData() async* {
     var preferences = await SharedPreferences.getInstance();
-    //  var environment = await api.getEnv();
-    // Env.map(environment);
-    if (DateTime.now().difference(DateTime.fromMillisecondsSinceEpoch(Measurements.parseJwt(preferences
-            .getString(GlobalUtils.REFRESH_TOKEN))['exp'] * 1000)).inHours < 0) {
+    String rfTokenString = await _storage.read(key: GlobalUtils.REFRESH_TOKEN) ?? '';
+    dynamic interval = Measurements.parseJwt(rfTokenString)['exp'] * 1000;
+    if (DateTime.now().difference(DateTime.fromMillisecondsSinceEpoch(interval)).inHours < 1) {
       try {
-        var refreshToken = await api.refreshToken(
-          preferences.getString(GlobalUtils.REFRESH_TOKEN),
+        dynamic refreshToken = await api.refreshToken(
+          rfTokenString,
           preferences.getString(GlobalUtils.FINGERPRINT),
         );
         if (refreshToken != null) {
-          yield* _loadUserData(
-              json.encode(
-                  {
-                    'responseMsg': 'refreshToken',
-                    'token': refreshToken,
-                    'renew': false,
-                  }
-              )
-          );
+          if (refreshToken is Map) {
+            Token token = Token.map(refreshToken);
+            yield* _fetchInitialDataRenew(token, true);
+          } else {
+            yield* _reLogin();
+          }
         } else {
-          yield* _loadUserData(
-              json.encode(
-                  {
-                    'responseMsg': 'error',
-                    'token': '',
-                    'renew': false,
-                  }
-              )
-          )
-          ;
+          yield* _reLogin();
         }
       } catch (e) {
         print('Refresh Token Error = > $e');
         if (e.toString().contains('SocketException')) {
-          yield* _loadUserData(null);
+          yield* loadData();
         } else {
-          yield* _loadUserData(
-              json.encode(
-                  {
-                    'responseMsg': 'goToLogin',
-                    'token': '',
-                    'renew': false,
-                  }
-              )
-          );
+          yield* _reLogin();
         }
       }
     } else {
-      if (DateTime.now().difference(
-          DateTime.parse(preferences.getString(GlobalUtils.LAST_OPEN))).inHours < 720) {
-        try {
-          var refreshTokenLogin = await api.login(
-              preferences.getString(GlobalUtils.EMAIL),
-              preferences.getString(GlobalUtils.PASSWORD),
-              preferences.getString(GlobalUtils.fingerprint),
-          );
-          if (refreshTokenLogin != null) {
-            yield* _loadUserData(
-                json.encode(
-                    {
-                      'responseMsg': 'refreshTokenLogin',
-                      'token': refreshTokenLogin,
-                      'renew': false,
-                    }
-                )
-            );
-          } else {
-            yield* _loadUserData(
-                json.encode(
-                    {
-                      'responseMsg': 'error',
-                      'token': '',
-                      'renew': false,
-                    }
-                )
-            );
-          }
-        } catch (e) {
-          if (e.toString().contains('SocketException')) {
-            yield* _loadUserData(null);
-          } else {
-            yield* _loadUserData(
-                json.encode(
-                    {
-                      'responseMsg': 'goToLogin',
-                      'token': '',
-                      'renew': false,
-                    }
-                )
-            );
-          }
-        }
-      }
+      yield* _reLogin();
     }
   }
 
-  Stream<DashboardScreenState> _fetchInitialDataRenew(dynamic token, bool renew) async* {
+  Stream<DashboardScreenState> _fetchInitialData() async* {
     List<BusinessApps> businessWidgets = [];
     List<AppWidget> widgetApps = [];
     List<Business> businesses = [];
@@ -178,17 +150,10 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
     FetchWallpaper fetchWallpaper;
     String language;
     String currentWallpaper;
-
-    var _token = !renew ? Token.map(token) : token;
-    GlobalUtils.activeToken = _token;
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    if (!renew) {
-      GlobalUtils.activeToken.refreshToken = sharedPreferences.getString(GlobalUtils.REFRESH_TOKEN);
-    }
-    sharedPreferences.setString(GlobalUtils.TOKEN, GlobalUtils.activeToken.accessToken);
-    sharedPreferences.setString(GlobalUtils.REFRESH_TOKEN, GlobalUtils.activeToken.refreshToken);
-    sharedPreferences.setString(GlobalUtils.LAST_OPEN, DateTime.now().toString());
-    String accessToken = GlobalUtils.activeToken.accessToken;
+    String refreshToken = await _storage.read(key: GlobalUtils.REFRESH_TOKEN) ?? '';
+    String accessToken = await _storage.read(key: GlobalUtils.TOKEN) ?? '';
+    GlobalUtils.activeToken = Token(accessToken: accessToken, refreshToken: refreshToken);
 
     dynamic user = await api.getUser(accessToken);
     User tempUser = User.map(user);
@@ -249,7 +214,20 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
       language: language,
     );
 
-    add(FetchPosEvent(business: activeBusiness));
+    add(FetchMonthlyEvent(business: activeBusiness));
+  }
+
+  Stream<DashboardScreenState> _fetchInitialDataRenew(Token token, bool renew) async* {
+
+    GlobalUtils.activeToken = token;
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    if (!renew) {
+      GlobalUtils.activeToken.refreshToken = await _storage.read(key: GlobalUtils.REFRESH_TOKEN) ?? '';
+    }
+
+    await _storage.write(key: GlobalUtils.TOKEN, value: GlobalUtils.activeToken.accessToken);
+    sharedPreferences.setString(GlobalUtils.LAST_OPEN, DateTime.now().toString());
+    add(DashboardScreenLoadDataEvent());
   }
 
   Stream<DashboardScreenState> fetchPOSCard(Business activeBusiness) async* {
@@ -258,21 +236,21 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
     List<Terminal> terminals = [];
     List<ChannelSet> channelSets = [];
     dynamic terminalsObj = await api.getTerminal(activeBusiness.id, token);
-    terminalsObj.forEach((terminal) {
-      terminals.add(Terminal.toMap(terminal));
-    });
-//    if (terminals.isEmpty) {
-//      _parts._noTerminals = true;
-//      _parts._mainCardLoading.value = false;
-//    }
+    if (terminalsObj != null){
+      terminalsObj.forEach((terminal) {
+        terminals.add(Terminal.toMap(terminal));
+      });
+    }
     dynamic channelsObj = await api.getChannelSet(activeBusiness.id, token);
-    channelsObj.forEach((channelSet) {
-      channelSets.add(ChannelSet.toMap(channelSet));
-    });
+    if (channelsObj != null){
+      channelsObj.forEach((channelSet) {
+        channelSets.add(ChannelSet.toMap(channelSet));
+      });
+    }
 
     terminals.forEach((terminal) async {
       channelSets.forEach((channelSet) async {
-        if (terminal.channelSet == channelSet.id) {
+        if (terminal.channelSet == channelSet.id && channelSet.checkout != null && channelSet.checkout.length > 0) {
           dynamic paymentObj = await api.getCheckoutIntegration(activeBusiness.id, channelSet.checkout, token);
           paymentObj.forEach((pm) {
             terminal.paymentMethods.add(pm);
@@ -294,9 +272,15 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
         }
       });
     });
+    Terminal activeTerminal;
 
-    Terminal activeTerminal = terminals.where((element) => element.active).toList().first;
+    if (terminals.length > 0) {
+      activeTerminal = terminals.firstWhere((element) => element.active);
+    }
     yield state.copyWith(activeTerminal: activeTerminal, terminalList: terminals, isPosLoading: false);
+    if (this.isBroadcast) {
+      add(FetchProducts(business: activeBusiness));
+    }
   }
 
   Future<dynamic> fetchDaily(Business currentBusiness) {
@@ -309,44 +293,60 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
         currentBusiness.id, GlobalUtils.activeToken.accessToken);
   }
 
-  Future<dynamic> fetchTotal(Business currentBusiness) {
-    return api.getTransactionList(
-        currentBusiness.id, GlobalUtils.activeToken.accessToken, '');
-  }
-
-  Future<dynamic> getDaily(Business currentBusiness) async {
+  Stream<DashboardScreenState> getDaily(Business currentBusiness) async* {
     List<Day> lastMonth = [];
     var days = await fetchDaily(currentBusiness);
     days.forEach((day) {
       lastMonth.add(Day.map(day));
     });
-    state.copyWith(lastMonth: lastMonth);
-    return getMonthly(currentBusiness);
+    yield state.copyWith(lastMonth: lastMonth);
+    yield* getMonthly(currentBusiness);
   }
 
-  Future<dynamic> getMonthly(Business currentBusiness) async {
+  Stream<DashboardScreenState> getMonthly(Business currentBusiness) async* {
     List<Month> lastYear = [];
     List<double> monthlySum = [];
     var months = await fetchMonthly(currentBusiness);
     months.forEach((month) {
       lastYear.add(Month.map(month));
     });
-    num sum;
+    num sum = 0;
     for (int i = (lastYear.length - 1); i >= 0; i--) {
       sum += lastYear[i].amount;
-      monthlySum.add(sum);
+      monthlySum.add(sum.toDouble());
     }
 
-    state.copyWith(lastYear: lastYear, monthlySum: monthlySum);
-    return getTotal(currentBusiness);
+    yield state.copyWith(lastYear: lastYear, monthlySum: monthlySum);
+    yield* getTotal(currentBusiness);
   }
 
-  Future<dynamic> getTotal(Business currentBusiness) async {
-    var _total = await fetchTotal(currentBusiness);
-    state.copyWith(total: Transaction.toMap(_total).paginationData.amount.toDouble());
-    return _total;
+  Stream<DashboardScreenState> getTotal(Business currentBusiness) async* {
+    dynamic response = await api.getTransactionList(
+        currentBusiness.id, GlobalUtils.activeToken.accessToken, '');
+    yield state.copyWith(total: Transaction.toMap(response).paginationData.amount.toDouble());
+
+    add(FetchShops(business: currentBusiness));
   }
 
+  Stream<DashboardScreenState> getTutorials(Business currentBusiness) async* {
+    dynamic response = await api.getTutorials(GlobalUtils.activeToken.accessToken, currentBusiness.id);
+    List<Tutorial> tutorials = [];
+    response.forEach((element) {
+      tutorials.add(Tutorial.map(element));
+    });
+    yield state.copyWith(tutorials: tutorials);
+    yield* getCheckout();
+  }
+
+  Stream<DashboardScreenState> getConnects(Business currentBusiness) async* {
+    dynamic response = await api.getNotInstalledByCountry(GlobalUtils.activeToken.accessToken, currentBusiness.id);
+    List<ConnectModel> connects = [];
+    response.forEach((element) {
+      connects.add(ConnectModel.toMap(element));
+    });
+    yield state.copyWith(connects: connects);
+    add(FetchTutorials(business: currentBusiness));
+  }
 
   Future<List<WallpaperCategory>> getWallpaper() => EmployeesApi().getWallpapers()
       .then((wallpapers){
@@ -356,4 +356,114 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
     });
     return _list;
   });
+
+  Stream<DashboardScreenState> getProductsPopularMonthRandom(Business currentBusiness) async* {
+    List<Products> lastSales = [];
+    dynamic response = await api.getProductsPopularMonthRandom(currentBusiness.id, GlobalUtils.activeToken.accessToken);
+    response.forEach((element) {
+      lastSales.add(Products.toMap(element));
+    });
+    yield state.copyWith(lastSalesRandom: lastSales);
+    add(FetchConnects(business: currentBusiness));
+  }
+
+  Stream<DashboardScreenState> getShops(Business currentBusiness) async* {
+    List<ShopModel> shops = [];
+    dynamic response = await api.getShops(currentBusiness.id, GlobalUtils.activeToken.accessToken);
+    if (response is List) {
+      response.forEach((element) {
+        shops.add(ShopModel.toMap(element));
+      });
+    }
+    ShopModel activeShop;
+    if (shops.length > 0) {
+      activeShop = shops.firstWhere((element) => element.active);
+    }
+
+    yield state.copyWith(shops: shops, activeShop: activeShop);
+    add(FetchPosEvent(business: currentBusiness));
+  }
+
+  Stream<DashboardScreenState> fetchNotifications() async* {
+    yield state.copyWith(notifications: {});
+    Map<String, List<NotificationModel>> notifications = {};
+    dynamic response = await api.getNotifications(GlobalUtils.activeToken.accessToken, 'business', state.activeBusiness.id, 'dashboard');
+    response.forEach((noti) {
+      NotificationModel notificationModel = NotificationModel.fromMap(noti);
+      String app = notificationModel.app;
+      if (notifications.containsKey(app)) {
+        List<NotificationModel> list = [];
+        list.addAll(notifications[app]);
+        list.add(notificationModel);
+        notifications[app] = list;
+      } else {
+        notifications[app] = [notificationModel];
+      }
+    });
+    yield state.copyWith(notifications: notifications);
+
+    dynamic shopsResponse = await api.getNotifications(GlobalUtils.activeToken.accessToken, 'business', state.activeBusiness.id, 'shops');
+    if (shopsResponse is List) {
+      List<NotificationModel> notiArr = [];
+      shopsResponse.forEach((noti) {
+        notiArr.add(NotificationModel.fromMap(noti));
+      });
+      if (notiArr.length > 0) {
+        notifications['shops'] = notiArr;
+      }
+      yield state.copyWith(notifications: notifications);
+    }
+
+    dynamic mailResponse = await api.getNotifications(GlobalUtils.activeToken.accessToken, 'business', state.activeBusiness.id, 'mail');
+    if (mailResponse is List) {
+      List<NotificationModel> notiArr = [];
+      mailResponse.forEach((noti) {
+        notiArr.add(NotificationModel.fromMap(noti));
+      });
+      if (notiArr.length > 0) {
+        notifications['mail'] = notiArr;
+      }
+      yield state.copyWith(notifications: notifications);
+    }
+
+    dynamic posResponse = await api.getNotifications(GlobalUtils.activeToken.accessToken, 'business', state.activeBusiness.id, 'pos');
+    if (posResponse is List) {
+      List<NotificationModel> notiArr = [];
+      posResponse.forEach((noti) {
+        notiArr.add(NotificationModel.fromMap(noti));
+      });
+      if (notiArr.length > 0) {
+        notifications['pos'] = notiArr;
+      }
+      yield state.copyWith(notifications: notifications);
+    }
+  }
+
+  Stream<DashboardScreenState> deleteNotification(String notificationId) async* {
+    dynamic response = await api.deleteNotification(GlobalUtils.activeToken.accessToken, notificationId);
+    yield* fetchNotifications();
+  }
+
+  Stream<DashboardScreenState> getCheckout() async* {
+    List<Checkout> checkouts = [];
+    Checkout defaultCheckout;
+    dynamic checkoutsResponse = await api.getCheckout(GlobalUtils.activeToken.accessToken, state.activeBusiness.id);
+    if (checkoutsResponse is List) {
+      checkoutsResponse.forEach((element) {
+        checkouts.add(Checkout.fromMap(element));
+      });
+    }
+    List defaults = checkouts.where((element) => element.isDefault).toList();
+
+    if (defaults.length > 0) {
+      defaultCheckout = defaults.first;
+    } else {
+      if (checkouts.length > 0) {
+        defaultCheckout = checkouts.first;
+      }
+    }
+
+    yield state.copyWith(checkouts: checkouts, defaultCheckout: defaultCheckout);
+    add(FetchNotifications());
+  }
 }

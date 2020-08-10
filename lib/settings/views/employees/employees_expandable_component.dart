@@ -5,8 +5,8 @@ import '../../utils/utils.dart';
 
 
 class EmployeesExpandableComponent extends StatefulWidget {
-  ValueNotifier openedRow;
-  Employees roleData;
+  final ValueNotifier openedRow;
+  final Employees roleData;
   bool isOpen = false;
   IconData iconData;
   String title;
@@ -77,15 +77,13 @@ class _EmployeesExpandableComponentState
                   IconButton(
                     icon: Icon(widget.isOpen ? Icons.remove : Icons.add),
                     onPressed: () {
-                      widget.openedRow.notifyListeners();
-                      widget.openedRow.value = 0;
+                      widget.openedRow.value(0);
                     },
                   ),
                 ],
               ),
               onTap: () {
-                widget.openedRow.notifyListeners();
-                widget.openedRow.value = 0;
+                widget.openedRow.value(0);
               },
             ),
           ),

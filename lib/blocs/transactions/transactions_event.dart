@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:payever/commons/commons.dart';
-import 'package:payever/transactions/views/filter_content_view.dart';
 
 abstract class TransactionsScreenEvent extends Equatable {
   TransactionsScreenEvent();

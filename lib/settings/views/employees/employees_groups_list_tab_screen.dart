@@ -3,10 +3,10 @@ import 'package:flutter/rendering.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:payever/login/login_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../../../commons/views/custom_elements/custom_elements.dart';
-import '../../../commons/views/screens/login/login.dart';
 import '../../view_models/view_models.dart';
 import '../../network/network.dart';
 import '../../models/models.dart';

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@mipmap/home"
+            android:title="@string/home" />
+        <item
+            android:id="@+id/nav_terminal_option"
+            android:icon="@mipmap/terminal_options"
+            android:title="@string/terminal_options" />
+        <item
+            android:id="@+id/nav_transaction_option"
+            android:icon="@mipmap/transactions_option"
+            android:title="@string/transaction_options" />
+        <item
+            android:id="@+id/nav_transaction_logs"
+            android:icon="@mipmap/transaction_log"
+            android:title="@string/transaction_logs" />
+
+        <item
+            android:id="@+id/nav_library_info"
+            android:icon="@mipmap/library_info"
+            android:title="@string/library_info" />
+    </group>
+</menu>

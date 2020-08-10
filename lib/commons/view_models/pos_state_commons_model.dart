@@ -2,10 +2,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:payever/checkout/models/models.dart';
+import 'package:payever/products/models/models.dart';
 
 import 'global_state_model.dart';
 import '../models/models.dart';
-import '../network/network.dart';
 import '../utils/utils.dart';
 
 ValueNotifier<GraphQLClient> clientFor({

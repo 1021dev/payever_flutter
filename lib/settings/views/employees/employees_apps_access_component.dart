@@ -371,15 +371,13 @@ class _EmployeesAppsAccessComponentState
                       ? Icons.keyboard_arrow_up
                       : Icons.keyboard_arrow_down),
                   onPressed: () {
-                    widget.openedRow.notifyListeners();
-                    widget.openedRow.value = 1;
+                    widget.openedRow.value(1);
                   },
                 ),
               ],
             ),
             onTap: () {
-              widget.openedRow.notifyListeners();
-              widget.openedRow.value = 1;
+              widget.openedRow.value(1);
             },
           ),
         ),

@@ -25,15 +25,17 @@ class BaseClient {
     );
   }
 
-  Future<Response> deleteTypeless(
+  Future<dynamic> deleteTypeless(
       String path, {
         Map<String, dynamic> queryParameters,
         Map<String, dynamic> headers,
+        Map<String, dynamic> body,
       }) async {
     return _requestTypeless(
       path,
       RestCallType.delete,
       queryParameters: queryParameters,
+      data: body,
       headers: headers,
     );
   }
@@ -100,6 +102,21 @@ class BaseClient {
     );
   }
 
+  Future<dynamic> patchTypeless(
+      String path, {
+        Map<String, dynamic> queryParameters,
+        Map<String, dynamic> headers,
+        dynamic body,
+      }) async {
+    return _requestTypeless(
+      path,
+      RestCallType.patch,
+      queryParameters: queryParameters,
+      headers: headers,
+      data: body,
+    );
+  }
+
   Future<T> post<T extends Jsonable>(
       String path, {
         Map<String, dynamic> queryParameters,
@@ -117,7 +134,7 @@ class BaseClient {
     );
   }
 
-  Future<Response> postForm(
+  Future<dynamic> postForm(
       String path, {
         Map<String, dynamic> queryParameters,
         Map<String, dynamic> headers,
@@ -126,6 +143,36 @@ class BaseClient {
     return _requestTypeless(
       path,
       RestCallType.formPost,
+      queryParameters: queryParameters,
+      headers: headers,
+      data: body,
+    );
+  }
+
+  Future<dynamic> postFormTypeless(
+      String path, {
+        Map<String, dynamic> queryParameters,
+        Map<String, dynamic> headers,
+        FormData body,
+      }) async {
+    return _requestTypeless(
+      path,
+      RestCallType.formPost,
+      queryParameters: queryParameters,
+      headers: headers,
+      data: body,
+    );
+  }
+
+  Future<dynamic> postTypeLess(
+      String path, {
+        Map<String, dynamic> queryParameters,
+        Map<String, dynamic> headers,
+        Map<String, dynamic> body,
+      }) async {
+    return _requestTypeless(
+      path,
+      RestCallType.post,
       queryParameters: queryParameters,
       headers: headers,
       data: body,
@@ -147,7 +194,7 @@ class BaseClient {
     );
   }
 
-  Future<Response> putTypeless(
+  Future<dynamic> putTypeless(
       String path, {
         Map<String, dynamic> queryParameters,
         Map<String, dynamic> headers,
@@ -272,6 +319,7 @@ class BaseClient {
       }) async {
     Response response;
 
+    print(path);
       if (headers == null) {
         headers = {};
       }
@@ -309,6 +357,8 @@ class BaseClient {
             ),
           );
         } else if (callType == RestCallType.put) {
+          print(data);
+          print(headers);
           response = await _dio.put(
             path,
             data: data,
@@ -322,6 +372,7 @@ class BaseClient {
           response = await _dio.delete(
             path,
             queryParameters: queryParameters,
+            data: data,
             options: Options(
               headers: headers,
               followRedirects: false,
@@ -345,19 +396,6 @@ class BaseClient {
       } on DioError catch (e) {
         debugPrint('Dio error: $e');
         return e;
-//        if (e.response.statusCode == 403) {
-//          bool reAuthResult = await _authService.reAuth();
-//          if (reAuthResult) {
-//            reAuthRequired = true;
-//            continue;
-//          } else {
-//            // TODO: throw error? (that app caches and sends you back to login?)
-//            reAuthRequired = false;
-//          }
-//        } else {
-//          // allow all non-auth errors to bubble up to callers
-//          rethrow;
-//        }
       }
   }
 }

@@ -9,7 +9,7 @@ class BusinessApps {
   final String microUuid;
   final int order;
   final DateTime startAt;
-  final bool started;
+  final String setupStatus;
   final String tag;
   final String url;
 
@@ -24,7 +24,7 @@ class BusinessApps {
       this.microUuid,
       this.order,
       this.startAt,
-      this.started,
+      this.setupStatus,
       this.tag,
       this.url});
 
@@ -42,7 +42,7 @@ class BusinessApps {
       microUuid: app['microUuid'],
       order: app['order'],
       startAt: app['startAt'] != null ? DateTime.parse(app['startAt']) : DateTime.now(),
-      started: app['started'],
+      setupStatus: app['setupStatus'],
       tag: app['tag'],
       url: app['url'],
     );

@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/commons/commons.dart';
@@ -16,39 +15,31 @@ class BusinessAppCell extends StatelessWidget {
     this.onTap
   });
 
-  String uiKit = 'https://payeverstage.azureedge.net/icons-png/';
   @override
   Widget build(BuildContext context) {
+    String icon = currentApp.dashboardInfo.icon;
+    icon = icon.replaceAll('32', '64');
     return GestureDetector(
       onTap: onTap,
       child: Container(
+        height: 72,
         child: Column(
           children: [
-            Stack(
-              alignment: AlignmentDirectional.center,
-              children: [
-                Container(
-                  width: 50,
-                  height: 50,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(6),
-                      color: Colors.black38
+            Container(
+              width: 64,
+              height: 64,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: NetworkImage(
+                    '${Env.cdnIcon}$icon',
                   ),
+                  fit: BoxFit.cover,
                 ),
-                Container(
-                  width: 50,
-                  height: 50,
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: NetworkImage(
-                              '$uiKit${currentApp.dashboardInfo.icon.replaceAll('32', '64')}'),
-                          fit: BoxFit.cover)),
-                ),
-              ],
+              ),
             ),
             SizedBox(height: 2),
             Text(
-              currentApp.dashboardInfo.title.replaceAll('dashboard.apps.', '') ?? '',
+              Language.getCommerceOSStrings(currentApp.dashboardInfo.title),
               style: TextStyle(
                   fontSize: 10,
                   color: Colors.white

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorPrimary">#FFFFFF</color>
+    <color name="colorAccent">#f38b00</color>
+
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorBackground">#e3dfd7</color>
+    <color name="colorGrey">#969696</color>
+
+    <!--Mastercard Colors-->
+    <color name="colorLightGrey">#e3dfd7</color>
+    <color name="colorDarkGrey">#141413</color>
+    <color name="colorRed">#d22a2f</color>
+    <color name="colorOrange">#ff671b</color>
+    <color name="colorGold">#f38b00</color>
+    <color name="colorYellow">#ffc81f</color>
+    <color name="colorGreen">#8db92e</color>
+
+    <!-- Progress wheel -->
+    <color name="progress_wheel_bar_green">#8db92e</color>
+    <color name="progress_wheel_bar_orange">#ff671b</color>
+    <color name="progress_wheel_bar_red">#d22a2f</color>
+</resources>

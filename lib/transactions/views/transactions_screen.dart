@@ -4,37 +4,37 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_inner_drawer/inner_drawer.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_tags/flutter_tags.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:intl/intl.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
+import 'package:payever/commons/views/custom_elements/wallpaper.dart';
+import 'package:payever/dashboard/sub_view/dashboard_menu_view.dart';
+import 'package:payever/login/login_screen.dart';
+import 'package:payever/notifications/notifications_screen.dart';
+import 'package:payever/switcher/switcher_page.dart';
 import 'package:payever/transactions/models/enums.dart';
 import 'package:payever/transactions/views/filter_content_view.dart';
 import 'package:payever/transactions/views/sort_content_view.dart';
 import 'package:payever/transactions/views/export_content_view.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utils/utils.dart';
 import '../view_models/view_models.dart';
 import '../network/network.dart';
 import '../../commons/view_models/view_models.dart';
 import '../../commons/models/models.dart';
-import '../../commons/views/screens/login/login.dart';
-import '../../commons/views/screens/dashboard/transaction_card.dart';
 import 'sub_view/search_text_content_view.dart';
 import 'transactions_details_screen.dart';
 
 bool _isPortrait;
 bool _isTablet;
 final GlobalKey<TagsState> _tagStateKey = GlobalKey<TagsState>();
-// Allows you to get a list of all the ItemTags
-_getAllItem(){
-  List<Item> lst = _tagStateKey.currentState?.getAllItem;
-  if(lst!=null)
-    lst.where((a) => a.active==true).forEach( ( a) => print(a.title));
-}
 
 class TagItemModel {
   String title;
@@ -43,21 +43,28 @@ class TagItemModel {
 }
 
 class TransactionScreenInit extends StatelessWidget {
+  final DashboardScreenBloc dashboardScreenBloc;
 
+  TransactionScreenInit({this.dashboardScreenBloc});
   @override
   Widget build(BuildContext context) {
     GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context);
 
-    return TransactionScreen(globalStateModel: globalStateModel,);
+    return TransactionScreen(
+      globalStateModel: globalStateModel,
+      dashboardScreenBloc: dashboardScreenBloc,
+    );
   }
 }
 
 class TransactionScreen extends StatefulWidget {
 
-  GlobalStateModel globalStateModel;
+  final GlobalStateModel globalStateModel;
+  final DashboardScreenBloc dashboardScreenBloc;
 
   TransactionScreen({
     this.globalStateModel,
+    this.dashboardScreenBloc,
   });
 
   @override
@@ -65,7 +72,7 @@ class TransactionScreen extends StatefulWidget {
 }
 
 class _TransactionScreenState extends State<TransactionScreen> {
-  TransactionsScreenBloc screenBloc = TransactionsScreenBloc();
+  TransactionsScreenBloc screenBloc;
   String wallpaper;
   num _quantity;
   String _currency;
@@ -74,10 +81,14 @@ class _TransactionScreenState extends State<TransactionScreen> {
   bool noTransactions = false;
   List<TagItemModel> _filterItems;
   int _searchTagIndex = -1;
+  final GlobalKey<InnerDrawerState> _innerDrawerKey = GlobalKey<InnerDrawerState>();
 
   @override
   void initState() {
     super.initState();
+    screenBloc = TransactionsScreenBloc(
+      dashboardScreenBloc: widget.dashboardScreenBloc,
+    );
     screenBloc.add(TransactionsScreenInitEvent(widget.globalStateModel.currentBusiness));
   }
 
@@ -114,10 +125,11 @@ class _TransactionScreenState extends State<TransactionScreen> {
       child: BlocBuilder<TransactionsScreenBloc, TransactionsScreenState>(
         bloc: screenBloc,
         builder: (BuildContext context, state) {
-          if (state.data != null) {
-            _quantity = state.data.transaction.paginationData.total ?? 0;
-            _currency = state.data.currency(widget.globalStateModel.currentBusiness.currency);
-            _totalAmount = state.data.transaction.paginationData.amount ?? 0;
+          NumberFormat format = NumberFormat();
+          if (state.transaction != null) {
+            _quantity = state.transaction.paginationData.total ?? 0;
+            _currency = format.simpleCurrencySymbol(widget.globalStateModel.currentBusiness.currency);
+            _totalAmount = state.transaction.paginationData.amount ?? 0;
           } else {
             _quantity = 0;
             _currency = '';
@@ -127,7 +139,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
           _filterItems = [];
           if (state.filterTypes.length > 0) {
             for (int i = 0; i < state.filterTypes.length; i++) {
-              String filterString = '${filter_labels[state.filterTypes[i].type]} ${filter_conditions[state.filterTypes[i].condition]}: ${state.filterTypes[i].disPlayName}';
+              String filterString = '${filterLabels[state.filterTypes[i].type]} ${filterConditions[state.filterTypes[i].condition]}: ${state.filterTypes[i].disPlayName}';
               TagItemModel item = TagItemModel(title: filterString, type: state.filterTypes[i].type);
               _filterItems.add(item);
             }
@@ -136,292 +148,329 @@ class _TransactionScreenState extends State<TransactionScreen> {
             _filterItems.add(TagItemModel(title: 'Search is: ${state.searchText}', type: null));
             _searchTagIndex = _filterItems.length - 1;
           }
-          return Scaffold(
-            backgroundColor: Colors.black,
-            resizeToAvoidBottomPadding: false,
-            appBar: _appBar(state),
-            body: SafeArea(
-              child: BackgroundBase(
-                true,
-                body: state.isLoading ?
-                Center(
-                  child: CircularProgressIndicator(),
-                ): Column(
+          return DashboardMenuView(
+            innerDrawerKey: _innerDrawerKey,
+            onLogout: () async {
+              FlutterSecureStorage storage = FlutterSecureStorage();
+              await storage.delete(key: GlobalUtils.TOKEN);
+              await storage.delete(key: GlobalUtils.BUSINESS);
+              await storage.delete(key: GlobalUtils.REFRESH_TOKEN);
+              SharedPreferences.getInstance().then((p) {
+                p.setString(GlobalUtils.BUSINESS, '');
+                p.setString(GlobalUtils.DEVICE_ID, '');
+                p.setString(GlobalUtils.DB_TOKEN_ACC, '');
+                p.setString(GlobalUtils.DB_TOKEN_RFS, '');
+              });
+              Navigator.pushReplacement(
+                  context,
+                  PageTransition(
+                      child: LoginScreen(), type: PageTransitionType.fade));
+            },
+            onSwitchBusiness: () async {
+              final result = await Navigator.pushReplacement(
+                  context,
+                  PageTransition(
+                      child: SwitcherScreen(), type: PageTransitionType.fade));
+            },
+            onPersonalInfo: () {
+
+            },
+            onAddBusiness: () {
+
+            },
+            onClose: () {
+              _innerDrawerKey.currentState.toggle();
+            },
+            scaffold: _body(state),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _body(TransactionsScreenState state) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      resizeToAvoidBottomPadding: false,
+      appBar: _appBar(state),
+      body: SafeArea(
+        child: BackgroundBase(
+          true,
+          body: state.isLoading ?
+          Center(
+            child: CircularProgressIndicator(),
+          ): Column(
+            children: [
+              Container(
+                height: 50,
+                color: Colors.black38,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
-                      height: 50,
-                      color: Colors.black38,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              SizedBox(
-                                width: 12,
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  if (state.isSearchLoading) return;
-                                  showSearchTextDialog(state);
-                                },
-                                child: Icon(
-                                  Icons.search,
-                                  size: 24,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 16,
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  if (state.isSearchLoading) return;
-                                  showCupertinoModalPopup(
-                                      context: context,
-                                      builder: (builder) {
-                                        return FilterContentView(
-                                          onSelected: (FilterItem val) {
-                                            Navigator.pop(context);
-                                            List<FilterItem> filterTypes = [];
-                                            filterTypes.addAll(state.filterTypes);
-                                            if (val != null) {
-                                              if (filterTypes.length > 0) {
-                                                int isExist = filterTypes.indexWhere((element) => element.type == val.type);
-                                                if (isExist > -1) {
-                                                  filterTypes[isExist] = val;
-                                                } else {
-                                                  filterTypes.add(val);
-                                                }
-                                              } else {
-                                                filterTypes.add(val);
-                                              }
-                                            } else {
-                                              if (filterTypes.length > 0) {
-                                                int isExist = filterTypes.indexWhere((element) => element.type == val.type);
-                                                if (isExist != null) {
-                                                  filterTypes.removeAt(isExist);
-                                                }
-                                              }
-                                            }
-                                            screenBloc.add(
-                                                UpdateFilterTypes(filterTypes: filterTypes)
-                                            );
-                                          },
-                                        );
-                                      });
-                                },
-                                child: Container(
-                                  width: 30,
-                                  height: 30,
-                                  alignment: Alignment.center,
-                                  child: Icon(
-                                    Icons.filter_list,
-                                    size: 24,
-                                  ),
-                                ),
-                              ),
-                              FlatButton(
-                                onPressed: () {
-                                  if (state.isSearchLoading) return;
-                                  showGeneralDialog(
-                                      barrierLabel: 'Export',
-                                      barrierDismissible: true,
-                                      barrierColor: Colors.black.withOpacity(0.5),
-                                      transitionDuration: Duration(milliseconds: 350),
-                                      context: context,
-                                      pageBuilder: (context, anim1, anim2) {
-                                        return Align(
-                                          alignment: Alignment.bottomCenter,
-                                          child: ExportContentView(
-                                            onSelectType: (index) {},
-                                          ),
-                                        );
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 12,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            if (state.isSearchLoading) return;
+                            showSearchTextDialog(state);
+                          },
+                          child: Icon(
+                            Icons.search,
+                            size: 24,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 16,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            if (state.isSearchLoading) return;
+                            showCupertinoModalPopup(
+                                context: context,
+                                builder: (builder) {
+                                  return FilterContentView(
+                                    onSelected: (FilterItem val) {
+                                      Navigator.pop(context);
+                                      List<FilterItem> filterTypes = [];
+                                      filterTypes.addAll(state.filterTypes);
+                                      if (val != null) {
+                                        if (filterTypes.length > 0) {
+                                          int isExist = filterTypes.indexWhere((element) => element.type == val.type);
+                                          if (isExist > -1) {
+                                            filterTypes[isExist] = val;
+                                          } else {
+                                            filterTypes.add(val);
+                                          }
+                                        } else {
+                                          filterTypes.add(val);
+                                        }
+                                      } else {
+                                        if (filterTypes.length > 0) {
+                                          int isExist = filterTypes.indexWhere((element) => element.type == val.type);
+                                          if (isExist != null) {
+                                            filterTypes.removeAt(isExist);
+                                          }
+                                        }
                                       }
+                                      screenBloc.add(
+                                          UpdateFilterTypes(filterTypes: filterTypes)
+                                      );
+                                    },
                                   );
-                                },
-                                child: Text(
-                                  'Export',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              InkWell(
-                                onTap: () {
-                                  if (state.isSearchLoading) return;
-                                  showCupertinoModalPopup(
-                                      context: context,
-                                      builder: (builder) {
-                                        return SortContentView(
-                                          selectedIndex: state.curSortType ,
-                                          onSelected: (val) {
-                                            Navigator.pop(context);
-                                            screenBloc.add(
-                                                UpdateSortType(sortType: val)
-                                            );
-                                          },
-                                        );
-                                      });
-                                },
-                                child: Icon(
-                                  Icons.sort,
-                                  size: 24,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 24,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    _filterItems.length > 0 ?
-                    Container(
-                      width: Device.width,
-                      padding: EdgeInsets.only(
-                        left: 16, right: 16, top: 8, bottom: 8,
-                      ),
-                      child: Tags(
-                        key: _tagStateKey,
-                        itemCount: _filterItems.length,
-                        alignment: WrapAlignment.start,
-                        spacing: 4,
-                        runSpacing: 8,
-                        itemBuilder: (int index) {
-                          return ItemTags(
-                            key: Key('filterItem$index'),
-                            index: index,
-                            title: _filterItems[index].title,
-                            color: Colors.white12,
-                            activeColor: Colors.white12,
-                            textActiveColor: Colors.white,
-                            textColor: Colors.white,
-                            elevation: 0,
-                            padding: EdgeInsets.only(
-                              left: 16, top: 8, bottom: 8, right: 16,
+                                });
+                          },
+                          child: Container(
+                            width: 30,
+                            height: 30,
+                            alignment: Alignment.center,
+                            child: Icon(
+                              Icons.filter_list,
+                              size: 24,
                             ),
-                            removeButton: ItemTagsRemoveButton(
-                                backgroundColor: Colors.transparent,
-                                onRemoved: () {
-                                  if (index == _searchTagIndex) {
-                                    _searchTagIndex = -1;
-                                    screenBloc.add(
-                                        UpdateSearchText(searchText: '')
-                                    );
-                                  } else {
-                                    List<FilterItem> filterTypes = [];
-                                    filterTypes.addAll(state.filterTypes);
-                                    filterTypes.removeAt(index);
-                                    screenBloc.add(
-                                        UpdateFilterTypes(filterTypes: filterTypes)
-                                    );
-                                  }
-                                  return true;
+                          ),
+                        ),
+                        FlatButton(
+                          onPressed: () {
+                            if (state.isSearchLoading) return;
+                            showGeneralDialog(
+                                barrierLabel: 'Export',
+                                barrierDismissible: true,
+                                barrierColor: Colors.black.withOpacity(0.5),
+                                transitionDuration: Duration(milliseconds: 350),
+                                context: context,
+                                pageBuilder: (context, anim1, anim2) {
+                                  return Align(
+                                    alignment: Alignment.bottomCenter,
+                                    child: ExportContentView(
+                                      onSelectType: (index) {},
+                                    ),
+                                  );
                                 }
+                            );
+                          },
+                          child: Text(
+                            'Export',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
                             ),
-                          );
-                        },
-                      ),
-                    ): Container(height: 0,),
-                    Container(
-                      height: 35,
-                      color: Colors.black45,
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            width: 16,
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              'Channel',
-                              style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.white70,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              'Type',
-                              style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.white70,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          Expanded(
-                            flex: 2,
-                            child: Text(
-                              'Customer name',
-                              style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.white70,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          Expanded(
-                            flex: 2,
-                            child: Text(
-                              'Total',
-                              style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.white70,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: state.isSearchLoading ? Center(
-                        child: CircularProgressIndicator(),
-                      ) : (state.data.transaction.collection.length > 0 ? CustomList(widget.globalStateModel,
-                          state.data != null ? state.data.transaction.collection : [],
-                          state.data,
-                          state):
-                      Center(
-                        child: Text(
-                          'The list is empty',
-                          style: TextStyle(
-                            color: Colors.white70,
-                            fontSize: 24,
-                            fontWeight: FontWeight.w200,
                           ),
                         ),
-                      )),
+                      ],
                     ),
-                    Container(
-                      height: 50,
-                      color: Colors.black87,
-                      alignment: Alignment.center,
-                      child: !noTransactions ? AutoSizeText(
-                        Language.getTransactionStrings('total_orders.heading')
-                            .toString()
-                            .replaceFirst('{{total_count}}', '${_quantity ?? 0}')
-                            .replaceFirst('{{total_sum}}',
-                            '${_currency ?? '€'}${f.format(_totalAmount ?? 0)}'),
-                        overflow: TextOverflow.fade,
-                        maxLines: 1,
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white70,
+                    Row(
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            if (state.isSearchLoading) return;
+                            showCupertinoModalPopup(
+                                context: context,
+                                builder: (builder) {
+                                  return SortContentView(
+                                    selectedIndex: state.curSortType ,
+                                    onSelected: (val) {
+                                      Navigator.pop(context);
+                                      screenBloc.add(
+                                          UpdateSortType(sortType: val)
+                                      );
+                                    },
+                                  );
+                                });
+                          },
+                          child: Icon(
+                            Icons.sort,
+                            size: 24,
+                          ),
                         ),
-                      )
-                          : Container(),
-                    )
+                        SizedBox(
+                          width: 24,
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
-            ),
-          );
-        },
+              _filterItems.length > 0 ?
+              Container(
+                width: Device.width,
+                padding: EdgeInsets.only(
+                  left: 16, right: 16, top: 8, bottom: 8,
+                ),
+                child: Tags(
+                  key: _tagStateKey,
+                  itemCount: _filterItems.length,
+                  alignment: WrapAlignment.start,
+                  spacing: 4,
+                  runSpacing: 8,
+                  itemBuilder: (int index) {
+                    return ItemTags(
+                      key: Key('filterItem$index'),
+                      index: index,
+                      title: _filterItems[index].title,
+                      color: Colors.white12,
+                      activeColor: Colors.white12,
+                      textActiveColor: Colors.white,
+                      textColor: Colors.white,
+                      elevation: 0,
+                      padding: EdgeInsets.only(
+                        left: 16, top: 8, bottom: 8, right: 16,
+                      ),
+                      removeButton: ItemTagsRemoveButton(
+                          backgroundColor: Colors.transparent,
+                          onRemoved: () {
+                            if (index == _searchTagIndex) {
+                              _searchTagIndex = -1;
+                              screenBloc.add(
+                                  UpdateSearchText(searchText: '')
+                              );
+                            } else {
+                              List<FilterItem> filterTypes = [];
+                              filterTypes.addAll(state.filterTypes);
+                              filterTypes.removeAt(index);
+                              screenBloc.add(
+                                  UpdateFilterTypes(filterTypes: filterTypes)
+                              );
+                            }
+                            return true;
+                          }
+                      ),
+                    );
+                  },
+                ),
+              ): Container(height: 0,),
+              Container(
+                height: 35,
+                color: Colors.black45,
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 16,
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Text(
+                        'Channel',
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.white70,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Text(
+                        'Type',
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.white70,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        'Customer name',
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.white70,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        'Total',
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.white70,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: state.isSearchLoading ? Center(
+                  child: CircularProgressIndicator(),
+                ) : (state.transaction.collection.length > 0 ? CustomList(widget.globalStateModel,
+                    state.transaction != null ? state.transaction.collection : [],
+                    state):
+                Center(
+                  child: Text(
+                    'The list is empty',
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w200,
+                    ),
+                  ),
+                )),
+              ),
+              Container(
+                height: 50,
+                color: Colors.black87,
+                alignment: Alignment.center,
+                child: !noTransactions ? AutoSizeText(
+                  Language.getTransactionStrings('total_orders.heading')
+                      .toString()
+                      .replaceFirst('{{total_count}}', '${_quantity ?? 0}')
+                      .replaceFirst('{{total_sum}}',
+                      '${_currency ?? '€'}${f.format(_totalAmount ?? 0)}'),
+                  overflow: TextOverflow.fade,
+                  maxLines: 1,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white70,
+                  ),
+                )
+                    : Container(),
+              )
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -504,8 +553,34 @@ class _TransactionScreenState extends State<TransactionScreen> {
             color: Colors.white,
             size: 24,
           ),
-          onPressed: () {
+          onPressed: () async{
+            Provider.of<GlobalStateModel>(context,listen: false)
+                .setCurrentBusiness(widget.dashboardScreenBloc.state.activeBusiness);
+            Provider.of<GlobalStateModel>(context,listen: false)
+                .setCurrentWallpaper(widget.dashboardScreenBloc.state.curWall);
 
+            await showGeneralDialog(
+              barrierColor: null,
+              transitionBuilder: (context, a1, a2, wg) {
+                final curvedValue = Curves.ease.transform(a1.value) -   1.0;
+                return Transform(
+                  transform: Matrix4.translationValues(-curvedValue * 200, 0.0, 0),
+                  child: NotificationsScreen(
+                    business: widget.dashboardScreenBloc.state.activeBusiness,
+                    businessApps: widget.dashboardScreenBloc.state.businessWidgets,
+                    dashboardScreenBloc: widget.dashboardScreenBloc,
+                    type: 'transactions',
+                  ),
+                );
+              },
+              transitionDuration: Duration(milliseconds: 200),
+              barrierDismissible: true,
+              barrierLabel: '',
+              context: context,
+              pageBuilder: (context, animation1, animation2) {
+                return null;
+              },
+            );
           },
         ),
         IconButton(
@@ -521,7 +596,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
             size: 24,
           ),
           onPressed: () {
-
+            _innerDrawerKey.currentState.toggle();
           },
         ),
         IconButton(
@@ -573,9 +648,8 @@ class _TransactionScreenState extends State<TransactionScreen> {
 class CustomList extends StatefulWidget {
   final GlobalStateModel globalStateModel;
   final List<Collection> collection;
-  final TransactionScreenData data;
   final TransactionsScreenState screenState;
-  CustomList(this.globalStateModel, this.collection, this.data, this.screenState);
+  CustomList(this.globalStateModel, this.collection, this.screenState);
 
   @override
   _CustomListState createState() => _CustomListState();
@@ -596,7 +670,7 @@ class _CustomListState extends State<CustomList> {
   }
 
   void _scrollListener() {
-    pageCount = (widget.data.transaction.paginationData.total / 50).ceil();
+    pageCount = (widget.screenState.transaction.paginationData.total / 50).ceil();
     if (controller.position.extentAfter < 500) {
       if (page < pageCount && !isLoading.value) {
         setState(() {
@@ -668,13 +742,13 @@ class _CustomListState extends State<CustomList> {
               ? TabletTableRow(
             globalStateModel: widget.globalStateModel,
             currentTransaction: widget.collection[index],
-            data: widget.data,
+            state: widget.screenState,
             isHeader: false,
           )
               : PhoneTableRow(
             globalStateModel: widget.globalStateModel,
             currentTransaction: widget.collection[index],
-            data: widget.data,
+            state: widget.screenState,
             isHeader: false,
           ),
         );
@@ -685,7 +759,7 @@ class _CustomListState extends State<CustomList> {
 
 class PhoneTableRow extends StatelessWidget {
   final Collection currentTransaction;
-  final TransactionScreenData data;
+  final TransactionsScreenState state;
   final GlobalStateModel globalStateModel;
   final bool isHeader;
 
@@ -693,7 +767,7 @@ class PhoneTableRow extends StatelessWidget {
     this.globalStateModel,
     this.currentTransaction,
     this.isHeader,
-    this.data,
+    this.state,
   });
 
   final f = NumberFormat('###,###.00', 'en_US');
@@ -859,7 +933,7 @@ class PhoneTableRow extends StatelessWidget {
 
 class TabletTableRow extends StatelessWidget {
   final Collection currentTransaction;
-  final TransactionScreenData data;
+  final TransactionsScreenState state;
   final GlobalStateModel globalStateModel;
   final bool isHeader;
 
@@ -867,7 +941,7 @@ class TabletTableRow extends StatelessWidget {
     this.globalStateModel,
     this.currentTransaction,
     this.isHeader,
-    this.data,
+    this.state,
   });
 
   final f = NumberFormat('###,##0.00', 'en_US');
@@ -931,14 +1005,18 @@ class TabletTableRow extends StatelessWidget {
                       child: !isHeader
                           ? AutoSizeText('#${currentTransaction.originalId}',
                           style: TextStyle(
-                              fontSize: AppStyle.fontSizeListRow()))
+                              fontSize: AppStyle.fontSizeListRow(),
+                          ),
+                      )
                           : AutoSizeText(
                           Language.getTransactionStrings(
                               'form.filter.labels.original_id'),
                           maxLines: 1,
                           textAlign: TextAlign.left,
                           style: TextStyle(
-                              fontSize: AppStyle.fontSizeListRow())),
+                              fontSize: AppStyle.fontSizeListRow(),
+                          ),
+                      ),
                     ),
                   ),
                   Expanded(
@@ -994,16 +1072,20 @@ class TabletTableRow extends StatelessWidget {
                       child: !isHeader
                           ? Measurements.statusWidget(currentTransaction.status)
                           : Text(
-                          Language.getTransactionStrings(
-                              'form.filter.labels.status'),
+                          Language.getTransactionStrings('form.filter.labels.status'),
                           style: TextStyle(
-                              fontSize: AppStyle.fontSizeListRow())),
+                              fontSize: AppStyle.fontSizeListRow(),
+                          ),
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
-            Divider(height: 1, color: Colors.white.withOpacity(0.5)),
+            Divider(
+              height: 0,
+              color: Colors.white.withOpacity(0.5),
+            ),
           ],
         ),
       ),

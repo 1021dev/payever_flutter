@@ -303,7 +303,7 @@ class AlertDialog extends StatelessWidget {
       children.add(Padding(
         padding: titlePadding ?? EdgeInsets.fromLTRB(24.0, 24.0, 24.0, content == null ? 20.0 : 0.0),
         child: DefaultTextStyle(
-          style: titleTextStyle ?? dialogTheme.titleTextStyle ?? theme.textTheme.title,
+          style: titleTextStyle ?? dialogTheme.titleTextStyle ?? theme.textTheme.headline6,
           child: Semantics(
             child: title,
             namesRoute: true,
@@ -319,6 +319,16 @@ class AlertDialog extends StatelessWidget {
         case TargetPlatform.android:
         case TargetPlatform.fuchsia:
           label = semanticLabel ?? MaterialLocalizations.of(context)?.alertDialogLabel;
+          break;
+        case TargetPlatform.linux:
+          // TODO: Handle this case.
+          break;
+        case TargetPlatform.macOS:
+          // TODO: Handle this case.
+          break;
+        case TargetPlatform.windows:
+          // TODO: Handle this case.
+          break;
       }
     }
 
@@ -327,7 +337,7 @@ class AlertDialog extends StatelessWidget {
         child: Padding(
           padding: contentPadding,
           child: DefaultTextStyle(
-            style: contentTextStyle ?? dialogTheme.contentTextStyle ?? theme.textTheme.subhead,
+            style: contentTextStyle ?? dialogTheme.contentTextStyle ?? theme.textTheme.subtitle1,
             child: content,
           ),
         ),
@@ -335,11 +345,14 @@ class AlertDialog extends StatelessWidget {
     }
 
     if (actions != null) {
-      children.add(ButtonTheme.bar(
-        child: ButtonBar(
-          children: actions,
+      children.add(
+        ButtonBarTheme(
+          data: ButtonBarThemeData(),
+          child: ButtonBar(
+            children: actions,
+          ),
         ),
-      ));
+      );
     }
 
     Widget dialogChild = IntrinsicWidth(
@@ -586,7 +599,7 @@ class SimpleDialog extends StatelessWidget {
       body.add(Padding(
         padding: titlePadding,
         child: DefaultTextStyle(
-          style: Theme.of(context).textTheme.title,
+          style: Theme.of(context).textTheme.headline6,
           child: Semantics(namesRoute: true, child: title),
         ),
       ));
@@ -598,6 +611,16 @@ class SimpleDialog extends StatelessWidget {
         case TargetPlatform.android:
         case TargetPlatform.fuchsia:
           label = semanticLabel ?? MaterialLocalizations.of(context)?.dialogLabel;
+          break;
+        case TargetPlatform.linux:
+          // TODO: Handle this case.
+          break;
+        case TargetPlatform.macOS:
+          // TODO: Handle this case.
+          break;
+        case TargetPlatform.windows:
+          // TODO: Handle this case.
+          break;
       }
     }
 

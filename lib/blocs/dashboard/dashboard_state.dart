@@ -1,6 +1,10 @@
 import 'package:flutter/cupertino.dart';
+import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/commons.dart';
+import 'package:payever/connect/models/connect.dart';
 import 'package:payever/commons/models/fetchwallpaper.dart';
+import 'package:payever/products/models/models.dart';
+import 'package:payever/shop/models/models.dart';
 
 class DashboardScreenState {
   final bool isLoading;
@@ -13,6 +17,7 @@ class DashboardScreenState {
   final FetchWallpaper wallpaper;
   final CurrentWallpaper currentWallpaper;
   final Terminal activeTerminal;
+  final ShopModel activeShop;
   final List<Terminal> terminalList;
   final double total;
   final List<AppWidget> currentWidgets;
@@ -23,6 +28,14 @@ class DashboardScreenState {
   final List<Widget> activeWid;
   final String language;
   final String curWall;
+  final List<Business> searchBusinesses;
+  final List<Collection> searchTransactions;
+  final List<Products> lastSalesRandom;
+  final List<ConnectModel> connects;
+  final List<ShopModel> shops;
+  final Map<String, List<NotificationModel>> notifications;
+  final List<Checkout> checkouts;
+  final Checkout defaultCheckout;
 
   DashboardScreenState({
     this.isLoading = false,
@@ -35,8 +48,8 @@ class DashboardScreenState {
     this.user,
     this.wallpaper,
     this.currentWallpaper,
-    this.total = 0.0,
-    this.terminalList = const [],
+    this.total = 0,
+    this.terminalList,
     this.activeTerminal,
     this.lastYear = const [],
     this.monthlySum = const [],
@@ -45,6 +58,15 @@ class DashboardScreenState {
     this.activeWid = const [],
     this.language,
     this.curWall,
+    this.searchBusinesses = const [],
+    this.searchTransactions = const [],
+    this.lastSalesRandom,
+    this.connects,
+    this.shops = const [],
+    this.activeShop,
+    this.notifications = const {},
+    this.checkouts = const [],
+    this.defaultCheckout,
   });
 
   List<Object> get props => [
@@ -68,6 +90,15 @@ class DashboardScreenState {
     this.isInitialScreen,
     this.language,
     this.curWall,
+    this.searchBusinesses,
+    this.searchTransactions,
+    this.lastSalesRandom,
+    this.connects,
+    this.shops,
+    this.activeShop,
+    this.notifications,
+    this.checkouts,
+    this.defaultCheckout,
   ];
 
   DashboardScreenState copyWith({
@@ -91,6 +122,15 @@ class DashboardScreenState {
     List<Widget> activeWid,
     String language,
     String curWall,
+    List<Business> searchBusinesses,
+    List<Collection> searchTransactions,
+    List<Products> lastSalesRandom,
+    List<ConnectModel> connects,
+    List<ShopModel> shops,
+    ShopModel activeShop,
+    Map<String, List<NotificationModel>> notifications,
+    List<Checkout> checkouts,
+    Checkout defaultCheckout,
   }) {
     return DashboardScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -113,6 +153,15 @@ class DashboardScreenState {
       activeWid: activeWid ?? this.activeWid,
       language: language ?? this.language,
       curWall: curWall ?? this.curWall,
+      searchBusinesses: searchBusinesses ?? this.searchBusinesses,
+      searchTransactions: searchTransactions ?? this.searchTransactions,
+      lastSalesRandom: lastSalesRandom ?? this.lastSalesRandom,
+      connects: connects ?? this.connects,
+      shops: shops ?? this.shops,
+      activeShop: activeShop ?? this.activeShop,
+      notifications: notifications ?? this.notifications,
+      checkouts: checkouts ?? this.checkouts,
+      defaultCheckout: defaultCheckout ?? this.defaultCheckout,
     );
   }
 }

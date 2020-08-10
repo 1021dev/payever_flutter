@@ -68,171 +68,116 @@ class Transaction {
 }
 
 class Collection {
-  bool _actionRunning;
-  num _amount;
-  BillingAddress _billingAddress;
-  int _businessOptionId;
-  String _businessUuid;
-  String _channel;
-  String _channelSetUuid;
-  String _createdAt;
-  String _currency;
-  String _customerEmail;
-  String _customerName;
-  List<TDHistory> _history = List();
-  String _merchantEmail;
-  String _merchantName;
-  String _originalId;
-  List<String> _paymentDetails = List();
-  String _paymentFlowId;
-  String _place;
-  String _reference;
-  List<String> _santanderApplications = List();
-  String _status;
-  num _total;
-  String _type;
-  String _updatedAt;
-  String _uuid;
-  String _id;
+  bool actionRunning;
+  num amount;
+  BillingAddress billingAddress;
+  int businessOptionId;
+  String businessUuid;
+  String channel;
+  String channelSetUuid;
+  String createdAt;
+  String currency;
+  String customerEmail;
+  String customerName;
+  List<TDHistory> history = List();
+  String merchantEmail;
+  String merchantName;
+  String originalId;
+  List<String> paymentDetails = List();
+  String paymentFlowId;
+  String place;
+  String reference;
+  List<String> santanderApplications = List();
+  String status;
+  num total;
+  String type;
+  String updatedAt;
+  String uuid;
+  String id;
 
   Collection.toMap(dynamic obj) {
-    _actionRunning = obj[GlobalUtils.DB_TRANSACTIONS_C_ACTION_R];
+    actionRunning = obj[GlobalUtils.DB_TRANSACTIONS_C_ACTION_R];
 
-    _amount = obj[GlobalUtils.DB_TRANSACTIONS_C_AMOUNT];
+    amount = obj[GlobalUtils.DB_TRANSACTIONS_C_AMOUNT];
 
-    _billingAddress =
+    billingAddress =
         BillingAddress.toMap(obj[GlobalUtils.DB_TRANSACTIONS_C_BILLING]);
-    _currency = obj[GlobalUtils.DB_TRANSACTIONS_C_CURRENCY];
-    _businessOptionId = obj[GlobalUtils.DB_TRANSACTIONS_C_BUS_OPT];
-    _businessUuid = obj[GlobalUtils.DB_TRANSACTIONS_C_BUS_UUID];
-    _channel = obj[GlobalUtils.DB_TRANSACTIONS_C_CHANNEL];
-    _channelSetUuid = obj[GlobalUtils.DB_TRANSACTIONS_C_CH_SET];
-    _createdAt = obj[GlobalUtils.DB_TRANSACTIONS_C_CREATED_AT];
-    _customerEmail = obj[GlobalUtils.DB_TRANSACTIONS_C_CUSTOMER_E];
-    _customerName = obj[GlobalUtils.DB_TRANSACTIONS_C_CUSTOMER_N];
-    _merchantEmail = obj[GlobalUtils.DB_TRANSACTIONS_C_MERCHANT_E];
-    _merchantName = obj[GlobalUtils.DB_TRANSACTIONS_C_MERCHANT_N];
-    _originalId = obj[GlobalUtils.DB_TRANSACTIONS_C_ORIGINAL_ID];
-    _paymentFlowId = obj[GlobalUtils.DB_TRANSACTIONS_C_PAYMENT_FLO];
-    _place = obj[GlobalUtils.DB_TRANSACTIONS_C_PLACE];
-    _reference = obj[GlobalUtils.DB_TRANSACTIONS_C_REFERENCE];
-    _status = obj[GlobalUtils.DB_TRANSACTIONS_C_STATUS];
-    _total = obj[GlobalUtils.DB_TRANSACTIONS_C_TOTAL];
-    _type = obj[GlobalUtils.DB_TRANSACTIONS_C_TYPE];
-    _updatedAt = obj[GlobalUtils.DB_TRANSACTIONS_C_UPDATED_AT];
-    _uuid = obj[GlobalUtils.DB_TRANSACTIONS_C_UUID];
-    _id = obj[GlobalUtils.DB_TRANSACTIONS_C_ID];
+    currency = obj[GlobalUtils.DB_TRANSACTIONS_C_CURRENCY];
+    businessOptionId = obj[GlobalUtils.DB_TRANSACTIONS_C_BUS_OPT];
+    businessUuid = obj[GlobalUtils.DB_TRANSACTIONS_C_BUS_UUID];
+    channel = obj[GlobalUtils.DB_TRANSACTIONS_C_CHANNEL];
+    channelSetUuid = obj[GlobalUtils.DB_TRANSACTIONS_C_CH_SET];
+    createdAt = obj[GlobalUtils.DB_TRANSACTIONS_C_CREATED_AT];
+    customerEmail = obj[GlobalUtils.DB_TRANSACTIONS_C_CUSTOMER_E];
+    customerName = obj[GlobalUtils.DB_TRANSACTIONS_C_CUSTOMER_N];
+    merchantEmail = obj[GlobalUtils.DB_TRANSACTIONS_C_MERCHANT_E];
+    merchantName = obj[GlobalUtils.DB_TRANSACTIONS_C_MERCHANT_N];
+    originalId = obj[GlobalUtils.DB_TRANSACTIONS_C_ORIGINAL_ID];
+    paymentFlowId = obj[GlobalUtils.DB_TRANSACTIONS_C_PAYMENT_FLO];
+    place = obj[GlobalUtils.DB_TRANSACTIONS_C_PLACE];
+    reference = obj[GlobalUtils.DB_TRANSACTIONS_C_REFERENCE];
+    status = obj[GlobalUtils.DB_TRANSACTIONS_C_STATUS];
+    total = obj[GlobalUtils.DB_TRANSACTIONS_C_TOTAL];
+    type = obj[GlobalUtils.DB_TRANSACTIONS_C_TYPE];
+    updatedAt = obj[GlobalUtils.DB_TRANSACTIONS_C_UPDATED_AT];
+    uuid = obj[GlobalUtils.DB_TRANSACTIONS_C_UUID];
+    id = obj[GlobalUtils.DB_TRANSACTIONS_C_ID];
 
     dynamic tempHist = obj[GlobalUtils.DB_TRANSACTIONS_C_HISTORY];
 
     tempHist.forEach((_histories) {
-      _history.add(TDHistory.toMap(_histories));
+      history.add(TDHistory.toMap(_histories));
     });
 
     dynamic tempSant = obj[GlobalUtils.DB_TRANSACTIONS_C_SANTANDER];
 
     tempSant.forEach((sant) {
-      _santanderApplications.add(sant);
+      santanderApplications.add(sant);
     });
   }
-
-  bool get actionRunning => _actionRunning;
-
-  num get amount => _amount;
-
-  BillingAddress get billingAddress => _billingAddress;
-
-  int get businessOptionId => _businessOptionId;
-
-  String get businessUuid => _businessUuid;
-
-  String get channel => _channel;
-
-  String get channelSetUuid => _channelSetUuid;
-
-  String get createdAt => _createdAt;
-
-  String get currency => _currency;
-
-  String get customerEmail => _customerEmail;
-
-  String get customerName => _customerName;
-
-  List<TDHistory> get history => _history;
-
-  String get merchantEmail => _merchantEmail;
-
-  String get merchantName => _merchantName;
-
-  String get originalId => _originalId;
-
-  List<String> get paymentDetails => _paymentDetails;
-
-  String get paymentFlowId => _paymentFlowId;
-
-  String get place => _place;
-
-  String get reference => _reference;
-
-  List<String> get santanderApplications => _santanderApplications;
-
-  String get status => _status;
-
-  num get total => _total;
-
-  String get type => _type;
-
-  String get updatedAt => _updatedAt;
-
-  String get uuid => _uuid;
-
-  String get id => _id;
 }
 
 class BillingAddress {
-  String _city;
-  String _country;
-  String _countryName;
-  String _email;
-  String _firstName;
-  String _lastName;
-  String _salutation;
-  String _street;
-  String _zipCode;
-  String _id;
+  String city;
+  String country;
+  String countryName;
+  String email;
+  String firstName;
+  String lastName;
+  String salutation;
+  String street;
+  String zipCode;
+  String id;
+  String company;
+  String fullAddress;
+  String phone;
+  String socialSecurityNumber;
+  String streetName;
+  String streetNumber;
+  String type;
+  String userUuid;
 
   BillingAddress.toMap(dynamic obj) {
-    _city = obj[GlobalUtils.DB_TRANSACTIONS_C_B_CITY];
-    _country = obj[GlobalUtils.DB_TRANSACTIONS_C_B_COUNTRY];
-    _countryName = obj[GlobalUtils.DB_TRANSACTIONS_C_B_COUNTRY_N];
-    _email = obj[GlobalUtils.DB_TRANSACTIONS_C_B_EMAIL];
-    _firstName = obj[GlobalUtils.DB_TRANSACTIONS_C_B_FIRST_NAME];
-    _lastName = obj[GlobalUtils.DB_TRANSACTIONS_C_B_LAST_NAME];
-    _salutation = obj[GlobalUtils.DB_TRANSACTIONS_C_B_SALUTATION];
-    _street = obj[GlobalUtils.DB_TRANSACTIONS_C_B_STREET];
-    _zipCode = obj[GlobalUtils.DB_TRANSACTIONS_C_B_ZIP_CODE];
-    _id = obj[GlobalUtils.DB_TRANSACTIONS_C_B_ID];
+    city = obj[GlobalUtils.DB_TRANSACTIONS_C_B_CITY];
+    country = obj[GlobalUtils.DB_TRANSACTIONS_C_B_COUNTRY];
+    countryName = obj[GlobalUtils.DB_TRANSACTIONS_C_B_COUNTRY_N];
+    email = obj[GlobalUtils.DB_TRANSACTIONS_C_B_EMAIL];
+    firstName = obj[GlobalUtils.DB_TRANSACTIONS_C_B_FIRST_NAME];
+    lastName = obj[GlobalUtils.DB_TRANSACTIONS_C_B_LAST_NAME];
+    salutation = obj[GlobalUtils.DB_TRANSACTIONS_C_B_SALUTATION];
+    street = obj[GlobalUtils.DB_TRANSACTIONS_C_B_STREET];
+    zipCode = obj[GlobalUtils.DB_TRANSACTIONS_C_B_ZIP_CODE];
+    id = obj[GlobalUtils.DB_TRANSACTIONS_C_B_ID];
+    company = obj['company'];
+    fullAddress = obj['full_address'];
+    phone = obj['phone'];
+    socialSecurityNumber = obj['social_security_number'];
+    streetName = obj['street_name'];
+    streetNumber = obj['street_number'];
+    type = obj['type'];
+    userUuid = obj['user_uuid'];
   }
 
-  String get city => _city;
-
-  String get country => _country;
-
-  String get countryName => _countryName;
-
-  String get email => _email;
-
-  String get firstName => _firstName;
-
-  String get lastName => _lastName;
-
-  String get salutation => _salutation;
-
-  String get street => _street;
-
-  String get zipCode => _zipCode;
-
-  String get id => _id;
 }
 
 class History {

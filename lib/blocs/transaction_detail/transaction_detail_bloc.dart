@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:payever/blocs/transaction_detail/transaction_detail.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/transactions/transactions.dart';
-import 'package:payever/transactions/views/filter_content_view.dart';
 
 import '../bloc.dart';
 

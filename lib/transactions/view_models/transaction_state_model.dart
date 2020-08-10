@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:payever/transactions/models/enums.dart';
-import 'package:payever/transactions/views/filter_content_view.dart';
+
+import '../transactions.dart';
 
 class TransactionStateModel extends ChangeNotifier {
   

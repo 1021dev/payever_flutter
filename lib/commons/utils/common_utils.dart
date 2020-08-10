@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,14 +11,14 @@ import 'utils.dart';
 
 class Styles {
   static TextStyle noAvatarPhone = TextStyle(
-    color: Colors.black.withOpacity(0.7),
+    color: Colors.white.withOpacity(0.7),
     fontSize: Measurements.height * 0.035,
-    fontWeight: FontWeight.w100,
+    fontWeight: FontWeight.w500,
   );
   static TextStyle noAvatarTablet = TextStyle(
-    color: Colors.black.withOpacity(0.7),
+    color: Colors.white.withOpacity(0.7),
     fontSize: Measurements.height * 0.025,
-    fontWeight: FontWeight.w100,
+    fontWeight: FontWeight.w500,
   );
 }
 
@@ -309,6 +310,9 @@ class Measurements {
     return displayName = displayName.toUpperCase();
   }
 }
+Color hexToColor(String code) {
+  return new Color(int.parse(code.substring(1, 9), radix: 16) + 0xFF000000);
+}
 
 class GlobalUtils {
   static Token activeToken;
@@ -333,9 +337,8 @@ class GlobalUtils {
   //static String  mail= 'service@payever.de';//staging 2
 
   //static const String COMMERCE_OS_URL = 'https://commerceos.test.devpayever.com';//test
-//   static const String COMMERCE_OS_URL = 'https://commerceos.staging.devpayever.com';//staging
-  static const String COMMERCE_OS_URL = 'https://commerceos.staging.devpayever.com';//staging
-//  static const String COMMERCE_OS_URL = 'https://commerceos.payever.org'; //live
+//  static const String COMMERCE_OS_URL = 'https://commerceos.staging.devpayever.com';//staging
+  static const String COMMERCE_OS_URL = 'https://commerceos.payever.org'; //live
 
   static const String POS_URL = 'https://getpayever.com/pos';
 
@@ -650,15 +653,18 @@ class GlobalUtils {
   static const String DB_PROD_MODEL_BARCODE = 'barcode';
   static const String DB_PROD_MODEL_CATEGORIES = 'categories';
   static const String DB_PROD_MODEL_CURRENCY = 'currency';
+  static const String DB_PROD_MODEL_VAT_RATE = 'vatRate';
   static const String DB_PROD_MODEL_DESCRIPTION = 'description';
   static const String DB_PROD_MODEL_ENABLE = 'enable';
   static const String DB_PROD_MODEL_HIDDEN = 'hidden';
+  static const String DB_PROD_MODEL_ACTIVE = 'active';
   static const String DB_PROD_MODEL_IMAGES = 'images';
   static const String DB_PROD_MODEL_PRICE = 'price';
   static const String DB_PROD_MODEL_SALE_PRICE = 'salePrice';
   static const String DB_PROD_MODEL_SKU = 'sku';
   static const String DB_PROD_MODEL_TITLE = 'title';
   static const String DB_PROD_MODEL_TYPE = 'type';
+  static const String DB_PROD_MODEL_SALES = 'onSales';
   static const String DB_PROD_MODEL_VARIANTS = 'variants';
   static const String DB_PROD_MODEL_SHIPPING = 'shipping';
   static const String DB_PROD_MODEL_CHANNEL_SET = 'channelSets';
@@ -721,6 +727,7 @@ class GlobalUtils {
   static const String DB_CHECKOUT_SECTIONS = 'sections';
   static const String DB_CHECKOUT_SECTIONS_CODE = 'code';
   static const String DB_CHECKOUT_SECTIONS_ENABLED = 'enabled';
+  static const String DB_CHECKOUT_SECTIONS_DEFAULT_ENABLED = 'defaultEnabled';
   static const String DB_CHECKOUT_SECTIONS_FIXED = 'fixed';
   static const String DB_CHECKOUT_SECTIONS_ORDER = 'order';
   static const String DB_CHECKOUT_SECTIONS_EXCLUDED = 'excluded_channels';
@@ -747,6 +754,7 @@ class GlobalUtils {
   // env__
   static const String ENV_CUSTOM = 'custom';
   static const String ENV_BACKEND = 'backend';
+  static const String ENV_PHP = 'php';
   static const String ENV_AUTH = 'auth';
   static const String ENV_USER = 'users';
   static const String ENV_BUSINESS = 'business';
@@ -755,7 +763,9 @@ class GlobalUtils {
   static const String ENV_WIDGET = 'widgets';
   static const String ENV_BUILDER = 'builder';
   static const String ENV_BUILDER_CLIENT = 'builderClient';
+  static const String ENV_BUILDER_SHOP = 'builderShop';
   static const String ENV_COMMERCE_OS = 'commerceos';
+  static const String ENV_COMMON = 'common';
   static const String ENV_FRONTEND = 'frontend';
   static const String ENV_TRANSACTIONS = 'transactions';
   static const String ENV_POS = 'pos';
@@ -765,13 +775,73 @@ class GlobalUtils {
   static const String ENV_MEDIA = 'media';
   static const String ENV_PRODUCTS = 'products';
   static const String ENV_INVENTORY = 'inventory';
+  static const String ENV_SHOP = 'shop';
   static const String ENV_SHOPS = 'shops';
   static const String ENV_WRAPPER = 'checkoutWrapper';
   static const String ENV_EMPLOYEES = 'employees';
   static const String ENV_APP_REGISTRY = 'appRegistry';
+  static const String ENV_CONNECT_QR = 'qr';
+  static const String ENV_CUSTOM_CDN = 'cdn';
+  static const String ENV_BACKEND_DEVICE_PAYMENT = 'devicePayments';
+  static const String ENV_THIRD_PARTY = 'thirdParty';
+  static const String ENV_THIRD_PARTY_COMMUNICATIONS = 'communications';
+  static const String ENV_THIRD_PARTY_PAYMENT = 'payments';
+  static const String ENV_PAYMENT = 'payments';
+  static const String ENV_PAYMENT_STRIPE = 'stripe';
+  static const String ENV_PAYMENT_INSTANT_PAYMENT = 'instantPayment';
+  static const String ENV_PAYMENT_SANTANDERNL = 'santanderNl';
+  static const String ENV_NOTIFICATIONS = 'notifications';
+  static const String ENV_CONTACTS = 'contacts';
+  static const String ENV_FINANCE_EXPRESS = 'financeExpress';
 
   // dashboard_
   static const String CURRENT_WALLPAPER = 'currentWallpaper';
+
+  // Connect
+  static const String DB_CONNECT_INTEGRATION = 'integration';
+  static const String DB_CONNECT_CREATED_AT = 'createdAt';
+  static const String DB_CONNECT_UPDATED_AT = 'updatedAt';
+  static const String DB_CONNECT_INSTALLED = 'installed';
+  static const String DB_CONNECT_V = '__v';
+  static const String DB_CONNECT_ID = '_id';
+  static const String DB_CONNECT_CATEGORY = 'category';
+  static const String DB_CONNECT_ENABLED = 'enabled';
+  static const String DB_CONNECT_NAME = 'name';
+  static const String DB_CONNECT_ORDER = 'order';
+  static const String DB_CONNECT = 'connect';
+  static const String DB_CONNECT_TIMES_INSTALLED = 'timesInstalled';
+  static const String DB_CONNECT_ALLOWED_BUSINESSES = 'allowedBusinesses';
+  static const String DB_CONNECT_VERSIONS = 'versions';
+  static const String DB_CONNECT_REVIEWS = 'reviews';
+  static const String DB_CONNECT_DISPLAY_OPTIONS = 'displayOptions';
+  static const String DB_CONNECT_INSTALLATION_OPTIONS = 'installationOptions';
+  static const String DB_CONNECT_ICON = 'icon';
+  static const String DB_CONNECT_TITLE = 'title';
+  static const String DB_CONNECT_APP_SUPPORT = 'appSupport';
+  static const String DB_CONNECT_COUNTRY_LIST = 'countryList';
+  static const String DB_CONNECT_DESCRIPTION = 'description';
+  static const String DB_CONNECT_DEVELOPER = 'developer';
+  static const String DB_CONNECT_LANGUAGES = 'languages';
+  static const String DB_CONNECT_LINKS = 'links';
+  static const String DB_CONNECT_OPTION_ICON = 'optionIcon';
+  static const String DB_CONNECT_PRICE = 'price';
+  static const String DB_CONNECT_PRICE_LINK = 'pricingLink';
+  static const String DB_CONNECT_WEBSITE = 'website';
+  static const String DB_CONNECT_RATING = 'rating';
+  static const String DB_CONNECT_REVIEW_DATE = 'reviewDate';
+  static const String DB_CONNECT_TEXT = 'text';
+  static const String DB_CONNECT_USER_FULL_NAME = 'userFullName';
+  static const String DB_CONNECT_USER_ID = 'userId';
+  static const String DB_CONNECT_TYPE = 'type';
+  static const String DB_CONNECT_URL = 'url';
+
+
+  num rating;
+  String reviewDate;
+  String text;
+  String title;
+  String userFullName;
+  String userId;
 
   // fetch wallpaper
   static const String DB_BUSINESS_WALLPAPER_ID = '_id';
@@ -803,7 +873,12 @@ class GlobalUtils {
   static const String APP_WID_LAST_DATE = 'date';
   static const String APP_WID_LAST_AMOUNT = 'amount';
 
-  static void clearCredentials() {
+  static void clearCredentials() async {
+    FlutterSecureStorage storage = FlutterSecureStorage();
+    await storage.delete(key: GlobalUtils.TOKEN);
+    await storage.delete(key: GlobalUtils.BUSINESS);
+    await storage.delete(key: GlobalUtils.REFRESH_TOKEN);
+
     SharedPreferences.getInstance().then((p) {
       p.setString(GlobalUtils.BUSINESS, '');
       p.setString(GlobalUtils.WALLPAPER, '');

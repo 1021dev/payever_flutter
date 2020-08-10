@@ -1,216 +1,342 @@
+import 'package:payever/commons/models/fetchwallpaper.dart';
+import 'package:payever/shop/models/models.dart';
+
 import '../utils/utils.dart';
 
 class Business {
-  String _id;
-  bool _active;
-  bool _hidden;
-  String _createdAt;
-  String _updatedAt;
-  String _currency;
-  String _email;
-  String _logo;
-  String _name;
-  CompanyAddress _companyAddress;
-  CompanyDetails _companyDetails;
-  ContactDetails _contactDetails;
+  String id;
+  bool active;
+  bool hidden;
+  String createdAt;
+  String updatedAt;
+  String currency;
+  String email;
+  String logo;
+  String name;
+  String userId;
+  num v;
+  String defaultLanguage;
+  CompanyAddress companyAddress;
+  CompanyDetails companyDetails;
+  ContactDetails contactDetails;
+  BackAccount bankAccount;
+  List<dynamic> contactEmails;
+  List<dynamic> cspAllowedHosts;
+  CurrentWallpaper currentWallpaper;
+  Documents documents;
+  ThemeSetting themeSettings;
+  Taxes taxes;
 
   Business.map(dynamic obj) {
-    this._id = obj[GlobalUtils.DB_BUSINESS_ID];
-    this._updatedAt = obj[GlobalUtils.DB_BUSINESS_UPDATED_AT];
-    this._createdAt = obj[GlobalUtils.DB_BUSINESS_CREATE_AT];
-    this._email = obj[GlobalUtils.DB_BUSINESS_EMAIL];
-    this._logo = obj[GlobalUtils.DB_BUSINESS_LOGO];
-    this._active = obj[GlobalUtils.DB_BUSINESS_ACTIVE];
-    this._hidden = obj[GlobalUtils.DB_BUSINESS_HIDDEN];
-    this._currency = obj[GlobalUtils.DB_BUSINESS_CURRENCY];
-    this._name = obj[GlobalUtils.DB_BUSINESS_NAME];
+    this.id = obj[GlobalUtils.DB_BUSINESS_ID];
+    this.updatedAt = obj[GlobalUtils.DB_BUSINESS_UPDATED_AT];
+    this.createdAt = obj[GlobalUtils.DB_BUSINESS_CREATE_AT];
+    this.email = obj[GlobalUtils.DB_BUSINESS_EMAIL];
+    this.logo = obj[GlobalUtils.DB_BUSINESS_LOGO];
+    this.active = obj[GlobalUtils.DB_BUSINESS_ACTIVE];
+    this.hidden = obj[GlobalUtils.DB_BUSINESS_HIDDEN];
+    this.currency = obj[GlobalUtils.DB_BUSINESS_CURRENCY];
+    this.name = obj[GlobalUtils.DB_BUSINESS_NAME];
 
-    this._companyAddress =
-        CompanyAddress.map(obj[GlobalUtils.DB_BUSINESS_COMPANY_ADDRESS]);
-    this._companyDetails =
-        CompanyDetails.map(obj[GlobalUtils.DB_BUSINESS_COMPANY_DETAILS]);
-    this._contactDetails =
-        ContactDetails.map(obj[GlobalUtils.DB_BUSINESS_CONTACT_DETAILS]);
+    this.v = obj['v'];
+    this.userId = obj['userId'];
+    this.defaultLanguage = obj['defaultLanguage'];
+
+    if (obj[GlobalUtils.DB_BUSINESS_COMPANY_ADDRESS] != null) {
+      this.companyAddress =
+          CompanyAddress.map(obj[GlobalUtils.DB_BUSINESS_COMPANY_ADDRESS]);
+    }
+    if (obj[GlobalUtils.DB_BUSINESS_COMPANY_DETAILS] != null) {
+      this.companyDetails =
+          CompanyDetails.map(obj[GlobalUtils.DB_BUSINESS_COMPANY_DETAILS]);
+    }
+    if (obj[GlobalUtils.DB_BUSINESS_CONTACT_DETAILS] != null) {
+      this.contactDetails =
+          ContactDetails.map(obj[GlobalUtils.DB_BUSINESS_CONTACT_DETAILS]);
+    }
+    if (obj['bankAccount'] != null) {
+      this.bankAccount =
+          BackAccount.fromMap(obj['bankAccount']);
+    }
+    if (obj['contactEmails'] != null) {
+      List list = obj['contactEmails'];
+      if (list != null) {
+        list.forEach((element) {
+          this.contactEmails.add(element);
+        });
+      }
+    }
+    if (obj['cspAllowedHosts'] != null) {
+      List list = obj['cspAllowedHosts'];
+      if (list != null) {
+        list.forEach((element) {
+          this.cspAllowedHosts.add(element);
+        });
+      }
+    }
+    if (obj['currentWallpaper'] != null) {
+      this.currentWallpaper =
+          CurrentWallpaper.map(obj['currentWallpaper']);
+    }
+    if (obj['documents'] != null) {
+      this.documents =
+          Documents.fromMap(obj['documents']);
+    }
+    if (obj['themeSettings'] != null) {
+      this.themeSettings =
+          ThemeSetting.fromMap(obj['themeSettings']);
+    }
+    if (obj['taxes'] != null) {
+      this.taxes =
+          Taxes.fromMap(obj['taxes']);
+    } else {
+      this.taxes = Taxes();
+    }
   }
-
-  String get id => _id;
-
-  String get updatedAt => _updatedAt;
-
-  String get createdAt => _createdAt;
-
-  String get email => _email;
-
-  String get logo => _logo;
-
-  bool get active => _active;
-
-  bool get hidden => _hidden;
-
-  String get currency => _currency;
-
-  String get name => _name;
-
-  CompanyAddress get companyAddress => _companyAddress;
-
-  CompanyDetails get companyDetails => _companyDetails;
-
-  ContactDetails get contactDetails => _contactDetails;
 
   Map<String, dynamic> toMap() {
     var map = new Map<String, dynamic>();
 
-    map[GlobalUtils.DB_BUSINESS_ID] = _id;
-    map[GlobalUtils.DB_BUSINESS_UPDATED_AT] = _updatedAt;
-    map[GlobalUtils.DB_BUSINESS_CREATE_AT] = _createdAt;
-    map[GlobalUtils.DB_BUSINESS_EMAIL] = _email;
-    map[GlobalUtils.DB_BUSINESS_LOGO] = _logo;
-    map[GlobalUtils.DB_BUSINESS_ACTIVE] = _active;
-    map[GlobalUtils.DB_BUSINESS_HIDDEN] = _hidden;
-    map[GlobalUtils.DB_BUSINESS_CURRENCY] = _currency;
-    map[GlobalUtils.DB_BUSINESS_NAME] = _name;
+    map[GlobalUtils.DB_BUSINESS_ID] = id;
+    map[GlobalUtils.DB_BUSINESS_UPDATED_AT] = updatedAt;
+    map[GlobalUtils.DB_BUSINESS_CREATE_AT] = createdAt;
+    map[GlobalUtils.DB_BUSINESS_EMAIL] = email;
+    map[GlobalUtils.DB_BUSINESS_LOGO] = logo;
+    map[GlobalUtils.DB_BUSINESS_ACTIVE] = active;
+    map[GlobalUtils.DB_BUSINESS_HIDDEN] = hidden;
+    map[GlobalUtils.DB_BUSINESS_CURRENCY] = currency;
+    map[GlobalUtils.DB_BUSINESS_NAME] = name;
 
     return map;
   }
 }
 
 class CompanyAddress {
-  String _city;
-  String _country;
-  String _createdAt;
-  String _updatedAt;
-  String _street;
-  String _zipCode;
-  String _id;
+  String city;
+  String country;
+  String createdAt;
+  String updatedAt;
+  String street;
+  String zipCode;
+  String id;
+  String googleAutocomplete;
 
   CompanyAddress.map(dynamic obj) {
-    this._city = obj[GlobalUtils.DB_BUSINESS_CA_CITY];
-    this._country = obj[GlobalUtils.DB_BUSINESS_CA_COUNTRY];
-    this._createdAt = obj[GlobalUtils.DB_BUSINESS_CA_CREATED_AT];
-    this._updatedAt = obj[GlobalUtils.DB_BUSINESS_CA_UPDATED_AT];
-    this._street = obj[GlobalUtils.DB_BUSINESS_CA_STREET];
-    this._zipCode = obj[GlobalUtils.DB_BUSINESS_CA_ZIP_CODE];
-    this._id = obj[GlobalUtils.DB_BUSINESS_CA_ID];
+    this.city = obj[GlobalUtils.DB_BUSINESS_CA_CITY];
+    this.country = obj[GlobalUtils.DB_BUSINESS_CA_COUNTRY];
+    this.createdAt = obj[GlobalUtils.DB_BUSINESS_CA_CREATED_AT];
+    this.updatedAt = obj[GlobalUtils.DB_BUSINESS_CA_UPDATED_AT];
+    this.street = obj[GlobalUtils.DB_BUSINESS_CA_STREET];
+    this.zipCode = obj[GlobalUtils.DB_BUSINESS_CA_ZIP_CODE];
+    this.id = obj[GlobalUtils.DB_BUSINESS_CA_ID];
+    this.googleAutocomplete = obj['googleAutocomplete'];
   }
 
-  String get city => _city;
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> map = {};
+    map['city'] = city;
+    map['country'] = country;
+    map['googleAutocomplete'] = googleAutocomplete;
+    map['street'] = street;
+    map['zipCode'] = zipCode;
 
-  String get country => _country;
-
-  String get createdAt => _createdAt;
-
-  String get updatedAt => _updatedAt;
-
-  String get street => _street;
-
-  String get zipCode => _zipCode;
-
-  String get id => _id;
+    return map;
+  }
 }
 
 class CompanyDetails {
-  String _createdAt;
-  String _foundationYear;
-  String _industry;
-  String _product;
-  String _updatedAt;
-  String _id;
-  SalesRange _salesRange;
-  EmployeesRange _employeesRange;
+  String createdAt;
+  String foundationYear;
+  String industry;
+  String product;
+  String updatedAt;
+  String legalForm;
+  String urlWebsite;
+  String id;
+  SalesRange salesRange;
+  EmployeesRange employeesRange;
 
   CompanyDetails.map(dynamic obj) {
-    this._createdAt = obj[GlobalUtils.DB_BUSINESS_CMDT_CREATED_AT];
-    this._foundationYear = obj[GlobalUtils.DB_BUSINESS_CMDT_FOUNDATION_YEAR];
-    this._industry = obj[GlobalUtils.DB_BUSINESS_CMDT_INDUSTRY];
-    this._product = obj[GlobalUtils.DB_BUSINESS_CMDT_PRODUCT];
-    this._updatedAt = obj[GlobalUtils.DB_BUSINESS_CMDT_UPDATED_AT];
-    this._id = obj[GlobalUtils.DB_BUSINESS_CMDT_ID];
+    this.createdAt = obj[GlobalUtils.DB_BUSINESS_CMDT_CREATED_AT];
+    this.foundationYear = obj[GlobalUtils.DB_BUSINESS_CMDT_FOUNDATION_YEAR];
+    this.industry = obj[GlobalUtils.DB_BUSINESS_CMDT_INDUSTRY];
+    this.product = obj[GlobalUtils.DB_BUSINESS_CMDT_PRODUCT];
+    this.updatedAt = obj[GlobalUtils.DB_BUSINESS_CMDT_UPDATED_AT];
+    this.id = obj[GlobalUtils.DB_BUSINESS_CMDT_ID];
+    this.legalForm = obj['legalForm'];
+    this.urlWebsite = obj['urlWebsite'];
 
     if (obj[GlobalUtils.DB_BUSINESS_CMDT_SALES_RANGE] != null) {
-      this._salesRange =
+      this.salesRange =
           SalesRange.map(obj[GlobalUtils.DB_BUSINESS_CMDT_SALES_RANGE]);
     }
     if (obj[GlobalUtils.DB_BUSINESS_CMDT_EMPLOYEES_RANGE] != null) {
-      this._employeesRange =
+      this.employeesRange =
           EmployeesRange.map(obj[GlobalUtils.DB_BUSINESS_CMDT_EMPLOYEES_RANGE]);
     }
   }
 
-  String get createdAt => _createdAt;
-
-  String get foundationYear => _foundationYear;
-
-  String get industry => _industry;
-
-  String get product => _product;
-
-  String get updatedAt => _updatedAt;
-
-  String get id => _id;
-
-  SalesRange get salesRange => _salesRange;
-
-  EmployeesRange get employeesRange => _employeesRange;
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> map = {};
+    map['foundationYear'] = foundationYear;
+    map['industry'] = industry;
+    map['legalForm'] = legalForm;
+    map['product'] = product;
+    map['urlWebsite'] = urlWebsite;
+    return map;
+  }
 }
 
 class EmployeesRange {
-  int _max;
-  int _min;
-  String _id;
+  int max;
+  int min;
+  String id;
 
   EmployeesRange.map(dynamic obj) {
-    this._min = obj[GlobalUtils.DB_BUSINESS_CMDT_EMP_RANGE_MIN];
-    this._max = obj[GlobalUtils.DB_BUSINESS_CMDT_EMP_RANGE_MAX];
-    this._id = obj[GlobalUtils.DB_BUSINESS_CMDT_EMP_RANGE_ID];
+    this.min = obj[GlobalUtils.DB_BUSINESS_CMDT_EMP_RANGE_MIN];
+    this.max = obj[GlobalUtils.DB_BUSINESS_CMDT_EMP_RANGE_MAX];
+    this.id = obj[GlobalUtils.DB_BUSINESS_CMDT_EMP_RANGE_ID];
   }
-
-  int get max => _max;
-
-  int get min => _min;
-
-  String get id => _id;
 }
 
 class SalesRange {
-  int _max;
-  int _min;
-  String _id;
+  int max;
+  int min;
+  String id;
 
   SalesRange.map(dynamic obj) {
-    this._min = obj[GlobalUtils.DB_BUSINESS_CMDT_SALES_RANGE_MIN];
-    this._max = obj[GlobalUtils.DB_BUSINESS_CMDT_SALES_RANGE_MAX];
-    this._id = obj[GlobalUtils.DB_BUSINESS_CMDT_SALES_RANGE_ID];
+    this.min = obj[GlobalUtils.DB_BUSINESS_CMDT_SALES_RANGE_MIN];
+    this.max = obj[GlobalUtils.DB_BUSINESS_CMDT_SALES_RANGE_MAX];
+    this.id = obj[GlobalUtils.DB_BUSINESS_CMDT_SALES_RANGE_ID];
   }
-
-  int get max => _max;
-
-  int get min => _min;
-
-  String get id => _id;
 }
 
 class ContactDetails {
-  String _createdAt;
-  String _firstName;
-  String _lastName;
-  String _updatedAt;
-  String _id;
+  String additionalPhone;
+  String createdAt;
+  String fax;
+  String firstName;
+  String lastName;
+  String phone;
+  String salutation;
+  String updatedAt;
+  String id;
 
   ContactDetails.map(dynamic obj) {
-    this._createdAt = obj[GlobalUtils.DB_BUSINESS_CNDT_CREATED_AT];
-    this._firstName = obj[GlobalUtils.DB_BUSINESS_CNDT_FIRST_NAME];
-    this._lastName = obj[GlobalUtils.DB_BUSINESS_CNDT_LAST_NAME];
-    this._updatedAt = obj[GlobalUtils.DB_BUSINESS_CNDT_UPDATED_AT];
-    this._id = obj[GlobalUtils.DB_BUSINESS_CNDT_ID];
+    this.createdAt = obj[GlobalUtils.DB_BUSINESS_CNDT_CREATED_AT];
+    this.firstName = obj[GlobalUtils.DB_BUSINESS_CNDT_FIRST_NAME];
+    this.lastName = obj[GlobalUtils.DB_BUSINESS_CNDT_LAST_NAME];
+    this.updatedAt = obj[GlobalUtils.DB_BUSINESS_CNDT_UPDATED_AT];
+    this.id = obj[GlobalUtils.DB_BUSINESS_CNDT_ID];
+    this.additionalPhone = obj['additionalPhone'];
+    this.fax = obj['fax'];
+    this.phone = obj['phone'];
+    this.salutation = obj['salutation'];
   }
 
-  String get createdAt => _createdAt;
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> map = {};
+    map['additionalPhone'] = additionalPhone;
+    map['fax'] = fax;
+    map['firstName'] = firstName;
+    map['lastName'] = lastName;
+    map['phone'] = phone;
+    map['salutation'] = salutation;
+    return map;
+  }
+}
 
-  String get fistName => _firstName;
+class BackAccount {
+  String bankName;
+  String bic;
+  String city;
+  String country;
+  String createdAt;
+  String iban;
+  String owner;
+  String updatedAt;
+  String id;
 
-  String get lastName => _lastName;
+  BackAccount.fromMap(dynamic obj) {
+    bankName = obj['bankName'];
+    bic = obj['bic'];
+    city = obj['city'];
+    country = obj['country'];
+    createdAt = obj['createdAt'];
+    iban = obj['iban'];
+    owner = obj['owner'];
+    updatedAt = obj['updatedAt'];
+    id = obj['_id'];
+  }
 
-  String get updatedAt => _updatedAt;
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> map = {};
+    map['bankName'] = bankName;
+    map['bic'] = bic;
+    map['city'] = city;
+    map['country'] = country;
+    map['iban'] = iban;
+    map['owner'] = owner;
+    return map;
+  }
+}
 
-  String get id => _id;
+class Documents {
+  String commercialRegisterExcerptFilename;
+  String createdAt;
+  String updatedAt;
+  String id;
+
+  Documents.fromMap(dynamic obj) {
+    commercialRegisterExcerptFilename = obj['commercialRegisterExcerptFilename'];
+    createdAt = obj['createdAt'];
+    updatedAt = obj['updatedAt'];
+    id = obj['_id'];
+  }
+}
+
+class ThemeSetting {
+  String createdAt;
+  String theme;
+  String updatedAt;
+  String id;
+
+  ThemeSetting.fromMap(dynamic obj) {
+    theme = obj['theme'];
+    createdAt = obj['createdAt'];
+    updatedAt = obj['updatedAt'];
+    id = obj['_id'];
+  }
+
+}
+
+class Taxes {
+  String companyRegisterNumber;
+  String createdAt;
+  String taxId;
+  String taxNumber;
+  bool turnoverTaxAct;
+  String updatedAt;
+  String id;
+
+  Taxes();
+
+  Taxes.fromMap(dynamic obj) {
+    companyRegisterNumber = obj['companyRegisterNumber'];
+    createdAt = obj['createdAt'];
+    taxId = obj['taxId'];
+    taxNumber = obj['taxNumber'];
+    turnoverTaxAct = obj['turnoverTaxAct'];
+    updatedAt = obj['updatedAt'];
+    id = obj['_id'];
+  }
+
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> map = {};
+    map['companyRegisterNumber'] = companyRegisterNumber;
+    map['taxId'] = taxId;
+    map['taxNumber'] = taxNumber;
+    map['turnoverTaxAct'] = turnoverTaxAct;
+    return map;
+  }
 }
