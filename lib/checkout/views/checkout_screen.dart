@@ -157,7 +157,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               );
               if (result == 'refresh') {
               }
-
             },
             onPersonalInfo: () {
 

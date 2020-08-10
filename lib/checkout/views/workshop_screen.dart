@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/checkout/checkout_bloc.dart';
@@ -12,6 +14,7 @@ import 'package:payever/checkout/views/checkout_switch_screen.dart';
 import 'package:payever/checkout/widgets/checkout_top_button.dart';
 import 'package:payever/checkout/widgets/workshop_header_item.dart';
 import 'package:payever/commons/commons.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class WorkshopScreen extends StatefulWidget {
   final CheckoutScreenBloc checkoutScreenBloc;
@@ -233,7 +236,8 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
           height: 16,
         ),
         onTap: () async {
-          setState(() {});
+          Clipboard.setData(new ClipboardData(text: url));
+          Fluttertoast.showToast(msg: 'Link successfully copied');
         },
       ),
       CheckOutPopupButton(
@@ -244,7 +248,6 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
           height: 16,
         ),
         onTap: () async {
-          setState(() {});
         },
       ),
       CheckOutPopupButton(
@@ -255,7 +258,10 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
           height: 16,
         ),
         onTap: () async {
-          setState(() {});
+          _sendMail('', 'Pay by payever Link', 'Dear customer, \\n'
+              '${widget.checkoutScreenBloc.dashboardScreenBloc.state.activeBusiness.name} would like to invite you to pay online via payever. Please click the link below in order to pay for your purchase at ${widget.checkoutScreenBloc.dashboardScreenBloc.state.activeBusiness.name}.\\n'
+              '$url\\n'
+              ' For any questions to ${widget.checkoutScreenBloc.dashboardScreenBloc.state.activeBusiness.name} regarding the purchase itself, please reply to this email, for technical questions or questions regarding your payment, please email support@payever.de.');
         },
       ),
       CheckOutPopupButton(
@@ -270,5 +276,14 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
         },
       ),
     ];
+  }
+
+  _sendMail(String toMailId, String subject, String body) async {
+    var url = Uri.encodeFull('mailto:$toMailId?subject=$subject&body=$body');
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }
