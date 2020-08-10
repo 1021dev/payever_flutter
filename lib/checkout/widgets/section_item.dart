@@ -159,7 +159,6 @@ class SectionItem extends StatelessWidget {
                             Section section = sections[index];
                         return Item(
                           section: section,
-                          // first and last attributes affect border drawn during dragging
                           isFirst: index == 0,
                           isLast: index == sections.length - 1,
                           draggingMode: _draggingMode,
@@ -262,7 +261,9 @@ class Item extends StatelessWidget {
                     width: 50,
                     child: !(section.fixed ?? false) ? MaterialButton(
                       child: Icon(Icons.remove),
-                      onPressed: onDelete(section),
+                      onPressed: () {
+                        onDelete(section);
+                      },
                     ): Container(),
                   ),
                   Expanded(

@@ -59,6 +59,8 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       yield* getAvailableSections();
     } else if (event is RemoveSectionEvent) {
       yield* removeSection(event.section);
+    } else if (event is AddSectionToStepEvent) {
+      yield* addSection(event.section, event.step);
     }
   }
 
@@ -471,24 +473,25 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
   Stream<CheckoutScreenState> getAvailableSections() async* {
     List<Section> availableSections = [];
     availableSections.addAll(state.availableSections);
+    List<Section> available1 = [];
+    List<Section> available2 = [];
 
     if (state.sections1.length > 1) {
-      yield state.copyWith(availableSections1: []);
     } else {
       List list = availableSections.where((element) =>
       element.code == 'send_to_device').toList();
       if (list.length > 0) {
-        yield state.copyWith(availableSections1: list);
+        available1.add(list.first);
       }
     }
+
+    print('Available Step1 => ${available1.toList()}');
     if (state.sections2.length > 3) {
-      yield state.copyWith(availableSections2: []);
     } else {
       List listUser = availableSections.where((element) =>
       element.code == 'user').toList();
       List listAddress = availableSections.where((element) =>
       element.code == 'address').toList();
-      List<Section> available2 = [];
       if (state.sections2
           .where((element) => element.code == 'user')
           .toList()
@@ -506,8 +509,8 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
         }
       }
 
-      yield state.copyWith(availableSections2: available2);
     }
+    yield state.copyWith(availableSections1: available1, availableSections2: available2);
   }
 
   Stream<CheckoutScreenState> removeSection(Section section) async* {
@@ -533,5 +536,26 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     }
 
     yield state.copyWith(sections1: section1, sections2: section2);
+  }
+
+  Stream<CheckoutScreenState> addSection(Section section, int step) async* {
+    List<Section> section1 = [];
+    List<Section> section2 = [];
+    section1.addAll(state.sections1);
+    section2.addAll(state.sections2);
+    if (step == 1) {
+      if (section.code == 'send_to_device') {
+        section1.add(section);
+      }
+    } else {
+      if (section.code == 'user') {
+        section2.add(section);
+      } else if (section.code == 'address') {
+        section2.add(section);
+      }
+    }
+
+    yield state.copyWith(sections1: section1, sections2: section2);
+    add(AddSectionEvent(section: step));
   }
 }

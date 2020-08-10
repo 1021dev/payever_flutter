@@ -90,3 +90,9 @@ class RemoveSectionEvent extends CheckoutScreenEvent {
   final Section section;
   RemoveSectionEvent({this.section});
 }
+
+class AddSectionToStepEvent extends CheckoutScreenEvent {
+  final Section section;
+  final int step;
+  AddSectionToStepEvent({this.section, this.step});
+}

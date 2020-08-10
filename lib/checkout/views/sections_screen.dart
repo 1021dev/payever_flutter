@@ -109,7 +109,6 @@ class _SectionsScreenState extends State<SectionsScreen> {
                     widget.checkoutScreenBloc.add(ReorderSection3Event(oldIndex: oldIndex, newIndex: newIndex));
                   },
                   onDelete: (Section section) {
-                    widget.checkoutScreenBloc.add(RemoveSectionEvent(section: section));
                   },
                   onEdit: () {
                   },
@@ -154,6 +153,7 @@ class _SectionsScreenState extends State<SectionsScreen> {
   }
 
   Widget _getAddSectionWidget(CheckoutScreenState state) {
+    List<Section> sections = state.addSection == 1 ? state.availableSections1: state.availableSections2;
     return Container(
       width: Measurements.width,
       padding: EdgeInsets.all(16),
@@ -182,16 +182,44 @@ class _SectionsScreenState extends State<SectionsScreen> {
                     ],
                   ),
                 ),
-                ListView.separated(
+                sections.length == 0 ? Container(
+                  height: 50,
+                  padding: EdgeInsets.only(left: 16),
+                  child: Row(
+                    children: <Widget>[
+                      Text(
+                        'No available sections',
+                      ),
+                    ],
+                  ),
+                ) : ListView.separated(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
-                    return Container();
+                    return Container(
+                      height: 50,
+                      child: SizedBox.expand(
+                        child: MaterialButton(
+                          onPressed: () {
+                            widget.checkoutScreenBloc.add(AddSectionToStepEvent(section: sections[index], step: state.addSection));
+                          },
+                          child: Row(
+                            children: <Widget>[
+                              Icon(Icons.add),
+                              SizedBox(width: 8,),
+                              Text(
+                                getTitleFromCode(sections[index].code),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
                   },
                   separatorBuilder: (context, index) {
-                    return Divider(color: Colors.transparent,);
+                    return Divider(color: Colors.transparent, height: 0,);
                   },
-                  itemCount: state.availableSections1.length,
+                  itemCount: sections.length,
                 ),
               ],
             ),
