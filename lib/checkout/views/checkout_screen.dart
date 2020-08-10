@@ -9,6 +9,7 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/dashboard/dashboard_bloc.dart';
 import 'package:payever/checkout/models/models.dart';
 import 'package:payever/checkout/views/channels_screeen.dart';
+import 'package:payever/checkout/views/checkout_link_edit_screen.dart';
 import 'package:payever/checkout/views/connect_screen.dart';
 import 'package:payever/checkout/views/payment_options_screen.dart';
 import 'package:payever/checkout/views/sections_screen.dart';
@@ -477,6 +478,18 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     checkoutScreenBloc: screenBloc,
                     business: state.business,
                     category: 'marketing',
+                  ),
+                  type: PageTransitionType.fade,
+                  duration: Duration(milliseconds: 500),
+                ),
+              );
+            } else if (model.button == 'Edit') {
+              Navigator.push(
+                context,
+                PageTransition(
+                  child: CheckoutLinkEditScreen(
+                    screenBloc: screenBloc,
+                    type: model.title,
                   ),
                   type: PageTransitionType.fade,
                   duration: Duration(milliseconds: 500),

@@ -637,8 +637,8 @@ class FinanceExpress {
   num size = 0;
   String textColor;
   bool visibility = true;
-  num alignment;
-  dynamic corners;
+  String alignment;
+  String corners;
   num height;
   num textSize;
   num width;
