@@ -1,15 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:payever/blocs/bloc.dart';
 import 'package:payever/checkout/models/models.dart';
-import 'package:payever/checkout/views/checkout_connect_screen.dart';
-import 'package:payever/checkout/widgets/checkout_top_button.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/connect/models/connect.dart';
-import 'package:payever/pos/views/pos_twillo_add_phonenumber.dart';
 
 class PaymentOptionsScreen extends StatefulWidget {
 

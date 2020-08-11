@@ -320,6 +320,8 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
       return Color(int.parse("0xFF"+color));
     } else if (color.length == 8) {
       return Color(int.parse("0x"+color));
+    } else {
+      return Colors.transparent;
     }
   }
 }

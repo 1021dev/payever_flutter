@@ -1,7 +1,5 @@
-import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:payever/apis/api_service.dart';
-import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import '../checkout_bloc.dart';

@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 import 'package:payever/checkout/models/models.dart';
 
 abstract class CheckoutScreenEvent extends Equatable {

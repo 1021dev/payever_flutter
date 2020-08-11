@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:payever/blocs/checkout/checkout_bloc.dart';
 import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/utils/common_utils.dart';

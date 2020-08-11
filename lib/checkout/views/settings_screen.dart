@@ -16,7 +16,6 @@ class CheckoutSettingsScreen extends StatefulWidget {
   final CheckoutScreenBloc checkoutScreenBloc;
   final String businessId;
   final Checkout checkout;
-  bool isCopiedChannelSetId = false;
   CheckoutSettingsScreen({this.checkoutScreenBloc, this.businessId, this.checkout});
 
   @override
@@ -25,11 +24,17 @@ class CheckoutSettingsScreen extends StatefulWidget {
 
 class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
   CheckoutSettingScreenBloc screenBloc;
-
+  String clipboardString;
   @override
   void initState() {
     screenBloc = CheckoutSettingScreenBloc(checkoutScreenBloc: widget.checkoutScreenBloc);
     screenBloc.add(CheckoutSettingScreenInitEvent(businessId: widget.businessId, checkout: widget.checkout));
+    Clipboard.getData('text/plain').then((value) {
+      setState(() {
+        clipboardString = value.text;
+      });
+    });
+
     super.initState();
   }
 
@@ -480,12 +485,13 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                             ),
                             MaterialButton(
                               onPressed: () {
-                                setState(() {
-                                  widget.isCopiedChannelSetId = true;
-                                });
                                 Clipboard.setData(ClipboardData(
                                     text: widget.checkoutScreenBloc.state
                                         .channelSetFlow.channelSetId));
+                                setState(() {
+                                  clipboardString = widget.checkoutScreenBloc.state
+                                      .channelSetFlow.channelSetId;
+                                });
                               },
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
@@ -495,7 +501,8 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                               height: 24,
                               minWidth: 0,
                               child: Text(
-                                widget.isCopiedChannelSetId
+                                clipboardString == widget.checkoutScreenBloc.state
+                                    .channelSetFlow.channelSetId
                                     ? 'copied'
                                     : Language.getPosStrings('actions.copy'),
                                 style: TextStyle(

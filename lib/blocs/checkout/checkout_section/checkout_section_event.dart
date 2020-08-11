@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:payever/checkout/models/models.dart';
-import 'checkout_section.dart';
 
 class CheckoutSectionScreenEvent extends Equatable {
 
