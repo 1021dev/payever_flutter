@@ -96,3 +96,9 @@ class AddSectionToStepEvent extends CheckoutScreenEvent {
   final int step;
   AddSectionToStepEvent({this.section, this.step});
 }
+
+class GetOpenUrlEvent extends CheckoutScreenEvent {
+  final String openUrl;
+
+  GetOpenUrlEvent(this.openUrl);
+}

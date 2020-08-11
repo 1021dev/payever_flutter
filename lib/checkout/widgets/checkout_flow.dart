@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:payever/blocs/checkout/checkout_bloc.dart';
+import 'package:payever/blocs/checkout/checkout_event.dart';
 
 class CheckoutFlowWebView extends StatefulWidget {
+  final CheckoutScreenBloc checkoutScreenBloc;
   final String checkoutUrl;
-  String url;
-  CheckoutFlowWebView({this.checkoutUrl, this.url});
+  CheckoutFlowWebView({this.checkoutScreenBloc, this.checkoutUrl});
   @override
   _CheckoutFlowState createState() => _CheckoutFlowState();
 }
@@ -38,14 +40,10 @@ class _CheckoutFlowState extends State<CheckoutFlowWebView> {
                 webView = controller;
               },
               onLoadStart: (InAppWebViewController controller, String url) {
-                setState(() {
-                  widget.url = url;
-                });
+                  widget.checkoutScreenBloc.add(GetOpenUrlEvent(url));
               },
               onLoadStop: (InAppWebViewController controller, String url) async {
-                setState(() {
-                  widget.url = url;
-                });
+                  widget.checkoutScreenBloc.add(GetOpenUrlEvent(url));
               },
               onProgressChanged: (InAppWebViewController controller, int progress) {
                 setState(() {

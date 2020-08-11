@@ -61,6 +61,8 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       yield* removeSection(event.section);
     } else if (event is AddSectionToStepEvent) {
       yield* addSection(event.section, event.step);
+    } else if (event is GetOpenUrlEvent) {
+      yield state.copyWith(openUrl: event.openUrl);
     }
   }
 

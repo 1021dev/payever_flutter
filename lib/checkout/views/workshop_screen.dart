@@ -33,7 +33,6 @@ class WorkshopScreen extends StatefulWidget {
 
 class _WorkshopScreenState extends State<WorkshopScreen> {
   String currency = '';
-  String url = '';
   InAppWebViewController webView;
 
   @override
@@ -56,15 +55,16 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
             children: <Widget>[
               WorkshopTopBar(
                 checkoutScreenBloc: widget.checkoutScreenBloc,
-                url: url,
+                title: 'Your checkout',
                 onOpenTap: () {
-                  widget.onOpen(url);
+                  widget.onOpen(state.openUrl);
                 },
               ),
               Flexible(
                 child: state.channelSet == null
                     ? Container()
                     : CheckoutFlowWebView(
+                        checkoutScreenBloc: widget.checkoutScreenBloc,
                         checkoutUrl:
                             'https://checkout.payever.org/pay/create-flow/channel-set-id/${state.channelSet.id}',
                       ),

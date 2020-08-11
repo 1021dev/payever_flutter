@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/checkout/checkout_bloc.dart';
 import 'package:payever/checkout/models/models.dart';
+import 'package:payever/checkout/views/channels_checkout_flow_screen.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 
@@ -112,7 +114,17 @@ class _ChannelsScreenState extends State<ChannelsScreen> {
                                   ) : Container(),
                                   MaterialButton(
                                     onPressed: () {
-                                      widget.onTapOpen(model);
+//                                      widget.onTapOpen(model);
+                                      Navigator.push(
+                                        context,
+                                        PageTransition(
+                                          child: ChannelCheckoutFlowScreen(
+                                            checkoutScreenBloc: widget.checkoutScreenBloc,
+                                            url: 'https://checkout.payever.org/pay/create-flow/channel-set-id/${widget.checkoutScreenBloc.state.channelSet.id}',
+                                          ),
+                                          type: PageTransitionType.fade,
+                                        ),
+                                      );
                                     },
                                     color: Colors.black38,
                                     elevation: 0,
