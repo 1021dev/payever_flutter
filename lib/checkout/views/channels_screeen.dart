@@ -112,38 +112,30 @@ class _ChannelsScreenState extends State<ChannelsScreen> {
                                       },
                                     ),
                                   ) : Container(),
-                                  MaterialButton(
-                                    onPressed: () {
-//                                      widget.onTapOpen(model);
-                                      Navigator.push(
-                                        context,
-                                        PageTransition(
-                                          child: ChannelCheckoutFlowScreen(
-                                            checkoutScreenBloc: widget.checkoutScreenBloc,
-                                            url: 'https://checkout.payever.org/pay/create-flow/channel-set-id/${widget.checkoutScreenBloc.state.channelSet.id}',
-                                          ),
-                                          type: PageTransitionType.fade,
+                                      MaterialButton(
+                                        onPressed: () {
+                                          widget.onTapOpen(model);
+                                        },
+                                        color: Colors.black38,
+                                        elevation: 0,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
                                         ),
-                                      );
-                                    },
-                                    color: Colors.black38,
-                                    elevation: 0,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    height: 24,
-                                    minWidth: 0,
-                                    padding: EdgeInsets.only(left: 8, right: 8),
-                                    child: Text(
-                                      model.button,
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12,
-                                        fontFamily: 'HelveticaNeueMed',
-                                      ),
-                                    ),
-                                  )
-                                ],
+                                        height: 24,
+                                        minWidth: 0,
+                                        padding:
+                                            EdgeInsets.only(left: 8, right: 8),
+                                        child: Text(
+                                          model.button,
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12,
+                                            fontFamily: 'HelveticaNeueMed',
+                                          ),
+                                        ),
+                                      )
+                                    ],
                               )
                             ],
                           ),

@@ -78,7 +78,8 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 50,
+      height: 120,
+      alignment: Alignment.bottomCenter,
       child: WorkshopTopBar(
         checkoutScreenBloc: checkoutScreenBloc,
         title: 'Pay by Link Editing',
@@ -88,7 +89,6 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
       ),
     );
   }
-
   @override
   Size get preferredSize => Size.fromHeight(50);
 }

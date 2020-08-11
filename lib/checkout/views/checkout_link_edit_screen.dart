@@ -117,6 +117,8 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
         return _getTextLinkWidget(state);
       case 'Calculator':
         return _getTextLinkWidget(state);
+      default:
+        return _getTextLinkWidget(state);
     }
     return Container();
   }
@@ -124,22 +126,208 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
   Widget _getTextLinkWidget(CheckoutScreenState state) {
     return Container(
       height: 64,
+      color: Colors.black45,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
+            SizedBox(width: 30,),
             Text(
               'Height',
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
-            Expanded(
-              child: TextField(
-                controller: heightController,
-                decoration: InputDecoration.collapsed(
-                  hintText: '',
+            Container(
+              alignment: Alignment.center,
+              margin: EdgeInsets.only(left: 15, right: 30),
+              width: 60,
+              height: 30,
+              decoration: BoxDecoration(
+                color: Color.fromRGBO(100, 100, 100, 1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: TextFormField(
+                onSaved: (val) {},
+                onChanged: (val) {
+
+                },
+                initialValue: '58',
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Height required';
+                  } else {
+                    return null;
+                  }
+                },
+                textAlign: TextAlign.center,
+                decoration: new InputDecoration(
+                  border: InputBorder.none,
                 ),
+                style: TextStyle(fontSize: 16),
+                keyboardType: TextInputType.number,
               ),
             ),
+            Text(
+              'Text Size',
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+            Container(
+              alignment: Alignment.center,
+              margin: EdgeInsets.only(left: 15, right: 30),
+              width: 60,
+              height: 30,
+              decoration: BoxDecoration(
+                color: Color.fromRGBO(100, 100, 100, 1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: TextFormField(
+                onSaved: (val) {},
+                onChanged: (val) {
 
+                },
+                initialValue: '58',
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Height required';
+                  } else {
+                    return null;
+                  }
+                },
+                textAlign: TextAlign.center,
+                decoration: new InputDecoration(
+                  border: InputBorder.none,
+                ),
+                style: TextStyle(fontSize: 16),
+                keyboardType: TextInputType.number,
+              ),
+            ),
+            Text(
+              'Alignment',
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+            Container(
+              alignment: Alignment.center,
+              margin: EdgeInsets.only(left: 15, right: 30),
+              width: 60,
+              height: 30,
+              decoration: BoxDecoration(
+                color: Color.fromRGBO(100, 100, 100, 1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: TextFormField(
+                onSaved: (val) {},
+                onChanged: (val) {
+
+                },
+                initialValue: '58',
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Height required';
+                  } else {
+                    return null;
+                  }
+                },
+                textAlign: TextAlign.center,
+                decoration: new InputDecoration(
+                  border: InputBorder.none,
+                ),
+                style: TextStyle(fontSize: 16),
+                keyboardType: TextInputType.number,
+              ),
+            ),
+            Text(
+              'Link Color',
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+            Container(
+              alignment: Alignment.center,
+              margin: EdgeInsets.only(left: 15, right: 30),
+              width: 60,
+              height: 30,
+              decoration: BoxDecoration(
+                color: Color.fromRGBO(100, 100, 100, 1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: TextFormField(
+                onSaved: (val) {},
+                onChanged: (val) {
+
+                },
+                initialValue: '58',
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Height required';
+                  } else {
+                    return null;
+                  }
+                },
+                textAlign: TextAlign.center,
+                decoration: new InputDecoration(
+                  border: InputBorder.none,
+                ),
+                style: TextStyle(fontSize: 16),
+                keyboardType: TextInputType.number,
+              ),
+            ),
+            Container(
+              width: 2,
+              height: 30,
+              color: Colors.grey,
+            ),
+            SizedBox(width: 30,),
+            Text(
+              'Visibility',
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(width: 30,),
+            CupertinoSwitch(
+              value: true,
+              onChanged: (val) {
+
+              },
+            ),
+            SizedBox(width: 30,),
+            Text(
+              'Adaptive',
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(width: 30,),
+            CupertinoSwitch(
+              value: true,
+              onChanged: (val) {
+
+              },
+            ),
+            Container(
+              margin: EdgeInsets.only(left: 30, right: 30),
+              width: 2,
+              height: 30,
+              color: Colors.grey,
+            ),
+            Text(
+              'Finance Express',
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(width: 30,),
+            CupertinoSwitch(
+              value: false,
+              onChanged: (val) {
+
+              },
+            ),
+            SizedBox(width: 30,),
+            Text(
+              'Overlay',
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(width: 30,),
+            CupertinoSwitch(
+              value: true,
+              onChanged: (val) {
+
+              },
+            ),
+            SizedBox(width: 30,),
           ],
         ),
       ),

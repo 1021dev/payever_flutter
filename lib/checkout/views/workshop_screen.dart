@@ -6,6 +6,7 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/checkout/checkout_bloc.dart';
 import 'package:payever/blocs/checkout/checkout_state.dart';
@@ -17,6 +18,8 @@ import 'package:payever/checkout/widgets/workshop_header_item.dart';
 import 'package:payever/checkout/widgets/workshop_top_bar.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import 'channels_checkout_flow_screen.dart';
 
 class WorkshopScreen extends StatefulWidget {
   final CheckoutScreenBloc checkoutScreenBloc;
@@ -57,7 +60,17 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                 checkoutScreenBloc: widget.checkoutScreenBloc,
                 title: 'Your checkout',
                 onOpenTap: () {
-                  widget.onOpen(state.openUrl);
+//                  widget.onOpen(state.openUrl);
+                  Navigator.push(
+                    context,
+                    PageTransition(
+                      child: ChannelCheckoutFlowScreen(
+                        checkoutScreenBloc: widget.checkoutScreenBloc,
+                        url: 'https://checkout.payever.org/pay/create-flow/channel-set-id/${widget.checkoutScreenBloc.state.channelSet.id}',
+                      ),
+                      type: PageTransitionType.fade,
+                    ),
+                  );
                 },
               ),
               Flexible(

@@ -26,6 +26,7 @@ import 'package:payever/switcher/switcher_page.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'channels_checkout_flow_screen.dart';
 import 'checkout_channelset_screen.dart';
 import 'checkout_connect_screen.dart';
 
@@ -444,7 +445,20 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             );
           },
           onTapOpen: (ChannelItem model) {
-            if (model.title == 'Point of Sale') {
+            if (model.title == 'Pay by Link') {
+              Navigator.push(
+                context,
+                PageTransition(
+                  child: ChannelCheckoutFlowScreen(
+                    checkoutScreenBloc:screenBloc,
+                    url:
+                    'https://checkout.payever.org/pay/create-flow/channel-set-id/${state.channelSet.id}',
+                  ),
+                  type: PageTransitionType.fade,
+                ),
+              );
+            }
+            else if (model.title == 'Point of Sale') {
               Navigator.push(
                 context,
                 PageTransition(
@@ -457,7 +471,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   duration: Duration(milliseconds: 500),
                 ),
               );
-            } else if (model.title == 'Shop') {
+            }
+            else if (model.title == 'Shop') {
               Navigator.push(
                 context,
                 PageTransition(
@@ -470,7 +485,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   duration: Duration(milliseconds: 500),
                 ),
               );
-            } else if (model.title == 'Mail') {
+            }
+            else if (model.title == 'Mail') {
               Navigator.push(
                 context,
                 PageTransition(
@@ -483,7 +499,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   duration: Duration(milliseconds: 500),
                 ),
               );
-            } else if (model.button == 'Edit') {
+            }
+            else if (model.button == 'Edit') {
               Navigator.push(
                 context,
                 PageTransition(
