@@ -106,7 +106,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
 
     await api.toggleSetUpStatus(token, business, 'checkout');
     dynamic response = await api.getAvailableSections(
-        token, state.business, state.defaultCheckout.id);
+        token, state.business, defaultCheckout.id);
     List<Section> availableSections = [];
     if (response is List) {
       response.forEach((element) {

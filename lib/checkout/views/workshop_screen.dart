@@ -11,8 +11,10 @@ import 'package:payever/blocs/checkout/checkout_bloc.dart';
 import 'package:payever/blocs/checkout/checkout_state.dart';
 import 'package:payever/checkout/models/models.dart';
 import 'package:payever/checkout/views/checkout_switch_screen.dart';
+import 'package:payever/checkout/widgets/checkout_flow.dart';
 import 'package:payever/checkout/widgets/checkout_top_button.dart';
 import 'package:payever/checkout/widgets/workshop_header_item.dart';
+import 'package:payever/checkout/widgets/workshop_top_bar.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -20,43 +22,19 @@ class WorkshopScreen extends StatefulWidget {
   final CheckoutScreenBloc checkoutScreenBloc;
   final Function onOpen;
 
-  WorkshopScreen({this.checkoutScreenBloc, this.onOpen,});
+  WorkshopScreen({
+    this.checkoutScreenBloc,
+    this.onOpen,
+  });
 
   @override
   _WorkshopScreenState createState() => _WorkshopScreenState();
 }
 
 class _WorkshopScreenState extends State<WorkshopScreen> {
-
-  int _selectedSectionIndex = 0;
-  bool isOrderApproved = true;
-  bool isAccountApproved = false;
-  bool isSendDeviceApproved = false;
-  bool isSelectPaymentApproved = false;
-  bool isBillingApproved = false;
   String currency = '';
-  bool editOrder = false;
-
-  var controllerAmount = TextEditingController();
-  var controllerReference = TextEditingController();
-
-  bool switchCheckout = false;
-  double progress = 0;
   String url = '';
   InAppWebViewController webView;
-
-  List<String> titles = [
-    'ACCOUNT',
-    'BILLING & SHIPPING',
-    'ELEGIR METODO DE PAGO',
-    'PAYMENT'
-  ];
-  List<String> values = [
-    'Login or enter your email',
-    'Add your billing and shipping address',
-    'Choose payment option',
-    'Your payment option'
-  ];
 
   @override
   void initState() {
@@ -66,224 +44,35 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
   @override
   void dispose() {
     super.dispose();
-    controllerAmount.dispose();
-    controllerReference.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-
     return BlocBuilder<CheckoutScreenBloc, CheckoutScreenState>(
       bloc: widget.checkoutScreenBloc,
       builder: (BuildContext context, state) {
         return Container(
           child: Column(
             children: <Widget>[
-              _topBar(),
+              WorkshopTopBar(
+                checkoutScreenBloc: widget.checkoutScreenBloc,
+                url: url,
+                onOpenTap: () {
+                  widget.onOpen(url);
+                },
+              ),
               Flexible(
-                child: _body(state),
+                child: state.channelSet == null
+                    ? Container()
+                    : CheckoutFlowWebView(
+                        checkoutUrl:
+                            'https://checkout.payever.org/pay/create-flow/channel-set-id/${state.channelSet.id}',
+                      ),
               ),
             ],
           ),
         );
       },
     );
-  }
-
-  Widget _topBar() {
-    return Container(
-      height: 50,
-      color: Colors.black87,
-      child: Row(
-        children: <Widget>[
-          SizedBox(
-            width: 10,
-          ),
-          Text(
-            'Your checkout',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-          Spacer(),
-          InkWell(
-            onTap: () {
-              widget.onOpen(url);
-            },
-            child: Container(
-              height: 30,
-              width: 80,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                color: Colors.white,
-              ),
-              child: Center(
-                child: Text(
-                  'Open',
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          SizedBox(width: 10,),
-          Container(
-            height: 30,
-            width: 30,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
-            ),
-            child: PopupMenuButton<CheckOutPopupButton>(
-              child: Icon(
-                Icons.more_horiz,
-                color: Colors.black,
-              ),
-              offset: Offset(0, 100),
-              onSelected: (CheckOutPopupButton item) => item.onTap(),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              color: Colors.black87,
-              itemBuilder: (BuildContext context) {
-                return _morePopup(context).map((CheckOutPopupButton item) {
-                  return PopupMenuItem<CheckOutPopupButton>(
-                    value: item,
-                    child: Row(
-                      children: <Widget>[
-                        item.icon,
-                        SizedBox(width: 8,),
-                        Text(
-                          item.title,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                }).toList();
-              },
-            ),
-          ),
-          SizedBox(width: 10,),
-        ],
-      ),
-    );
-  }
-
-  Widget _body(CheckoutScreenState state) {
-    if (state.channelSet == null) {
-      return Container();
-    }
-    String checkoutUrl = 'https://checkout.payever.org/pay/create-flow/channel-set-id/${state.channelSet.id}';
-    return Container(
-      color: Colors.white,
-      child: Column(
-        children: <Widget>[
-          Container(
-              padding: EdgeInsets.all(0.0),
-              child: progress < 1.0
-                  ? LinearProgressIndicator(value: progress)
-                  : Container()
-          ),
-          Expanded(
-            child: InAppWebView(
-              initialUrl: checkoutUrl,
-              initialHeaders: {},
-              initialOptions: InAppWebViewGroupOptions(
-                  crossPlatform: InAppWebViewOptions(
-                    debuggingEnabled: true,
-                  )
-              ),
-              onWebViewCreated: (InAppWebViewController controller) {
-                webView = controller;
-              },
-              onLoadStart: (InAppWebViewController controller, String url) {
-                setState(() {
-                  this.url = url;
-                });
-              },
-              onLoadStop: (InAppWebViewController controller, String url) async {
-                setState(() {
-                  this.url = url;
-                });
-              },
-              onProgressChanged: (InAppWebViewController controller, int progress) {
-                setState(() {
-                  this.progress = progress / 100;
-                });
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  List<CheckOutPopupButton> _morePopup(BuildContext context) {
-    return [
-      CheckOutPopupButton(
-        title: 'Copy pay link',
-        icon: SvgPicture.asset(
-          'assets/images/pay_link.svg',
-          width: 16,
-          height: 16,
-        ),
-        onTap: () async {
-          Clipboard.setData(new ClipboardData(text: url));
-          Fluttertoast.showToast(msg: 'Link successfully copied');
-        },
-      ),
-      CheckOutPopupButton(
-        title: 'Copy prefilled link',
-        icon: SvgPicture.asset(
-          'assets/images/prefilled_link.svg',
-          width: 16,
-          height: 16,
-        ),
-        onTap: () async {
-        },
-      ),
-      CheckOutPopupButton(
-        title: 'E-mail prefilled link',
-        icon: SvgPicture.asset(
-          'assets/images/email_link.svg',
-          width: 16,
-          height: 16,
-        ),
-        onTap: () async {
-          _sendMail('', 'Pay by payever Link', 'Dear customer, \\n'
-              '${widget.checkoutScreenBloc.dashboardScreenBloc.state.activeBusiness.name} would like to invite you to pay online via payever. Please click the link below in order to pay for your purchase at ${widget.checkoutScreenBloc.dashboardScreenBloc.state.activeBusiness.name}.\\n'
-              '$url\\n'
-              ' For any questions to ${widget.checkoutScreenBloc.dashboardScreenBloc.state.activeBusiness.name} regarding the purchase itself, please reply to this email, for technical questions or questions regarding your payment, please email support@payever.de.');
-        },
-      ),
-      CheckOutPopupButton(
-        title: 'Prefilled QR code',
-        icon: SvgPicture.asset(
-          'assets/images/prefilled_qr.svg',
-          width: 16,
-          height: 16,
-        ),
-        onTap: () async {
-          setState(() {});
-        },
-      ),
-    ];
-  }
-
-  _sendMail(String toMailId, String subject, String body) async {
-    var url = Uri.encodeFull('mailto:$toMailId?subject=$subject&body=$body');
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
   }
 }
