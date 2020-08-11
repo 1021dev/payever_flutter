@@ -506,7 +506,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 PageTransition(
                   child: CheckoutLinkEditScreen(
                     screenBloc: screenBloc,
-                    type: model.title,
+                    title: model.title,
                   ),
                   type: PageTransitionType.fade,
                   duration: Duration(milliseconds: 500),

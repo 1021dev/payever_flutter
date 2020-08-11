@@ -63,6 +63,8 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       yield* addSection(event.section, event.step);
     } else if (event is GetOpenUrlEvent) {
       yield state.copyWith(openUrl: event.openUrl);
+    } else if (event is FinanceExpressTypeEvent) {
+      yield* getFinanceExpressType(event.type);
     }
   }
 
@@ -560,5 +562,24 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
 
     yield state.copyWith(sections1: section1, sections2: section2);
     add(AddSectionEvent(section: step));
+  }
+
+  Stream<CheckoutScreenState> getFinanceExpressType(String type) async* {
+    yield state.copyWith(isLoading: true);
+    dynamic response = await api.getFinanceExpressSettings('18f90cc5-cc76-49e3-a7ac-cced33a62a63',
+        type);
+    FinanceExpress express;
+    if (response is Map) {
+      express = FinanceExpress.fromMap(response);
+    }
+    if (type == 'text-link') {
+      yield state.copyWith(isLoading: false, financeTextLink: express);
+    } else if (type == 'button') {
+      yield state.copyWith(isLoading: false, financeButton: express);
+    } else if (type == 'banner-and-rate') {
+      yield state.copyWith(isLoading: false, financeCalculator: express);
+    } else {
+      yield state.copyWith(isLoading: false, financeBubble: express);
+    }
   }
 }

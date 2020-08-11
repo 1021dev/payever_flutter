@@ -11,10 +11,20 @@ import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 class CheckoutLinkEditScreen extends StatefulWidget {
 
   final CheckoutScreenBloc screenBloc;
-  final String type;
-
+  final String title;
+  String type;
   CheckoutLinkEditScreen(
-      {this.screenBloc, this.type});
+      {this.screenBloc, this.title}){
+    if (title == 'Text Link') {
+      type = 'text-link';
+    } else if (title == 'Button') {
+      type = 'button';
+    } else if (title == 'Calculator') {
+      type = 'banner-and-rate';
+    } else if (title == 'Bubble') {
+      type = 'bubble';
+    }
+  }
 
   _CheckoutLinkEditScreenState createState() => _CheckoutLinkEditScreenState();
 
@@ -27,6 +37,7 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
   @override
   void initState() {
     super.initState();
+    widget.screenBloc.add(FinanceExpressTypeEvent(widget.type));
   }
 
   @override
@@ -76,7 +87,7 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
       automaticallyImplyLeading: false,
       backgroundColor: Colors.black87,
       title: Text(
-        widget.type,
+        widget.title,
         style: TextStyle(
           color: Colors.white,
           fontSize: 16,
@@ -108,7 +119,7 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
   }
 
   Widget _getBody(CheckoutScreenState state) {
-    switch (widget.type) {
+    switch (widget.title) {
       case 'Text Link':
         return _getTextLinkWidget(state);
       case 'Button':
@@ -151,7 +162,7 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
                 onChanged: (val) {
 
                 },
-                initialValue: '58',
+                initialValue: '${state.financeTextLink.height}',
                 validator: (value) {
                   if (value.isEmpty) {
                     return 'Height required';
@@ -171,36 +182,29 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
               'Text Size',
               style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
-            Container(
-              alignment: Alignment.center,
-              margin: EdgeInsets.only(left: 15, right: 30),
-              width: 60,
-              height: 30,
-              decoration: BoxDecoration(
-                color: Color.fromRGBO(100, 100, 100, 1),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: TextFormField(
-                onSaved: (val) {},
-                onChanged: (val) {
+            SizedBox(width: 15,),
+            MaterialButton(
+              onPressed: () {
 
-                },
-                initialValue: '58',
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Height required';
-                  } else {
-                    return null;
-                  }
-                },
-                textAlign: TextAlign.center,
-                decoration: new InputDecoration(
-                  border: InputBorder.none,
+              },
+              color: Color.fromRGBO(100, 100, 100, 1),
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius:
+                BorderRadius.circular(8),
+              ),
+              height: 30,
+              minWidth: 0,
+              child: Text(
+                state.financeTextLink.textSize,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                  fontFamily: 'HelveticaNeueMed',
                 ),
-                style: TextStyle(fontSize: 16),
-                keyboardType: TextInputType.number,
               ),
             ),
+            SizedBox(width: 30,),
             Text(
               'Alignment',
               style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
@@ -240,34 +244,10 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
               style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
             Container(
-              alignment: Alignment.center,
               margin: EdgeInsets.only(left: 15, right: 30),
-              width: 60,
+              width: 30,
               height: 30,
-              decoration: BoxDecoration(
-                color: Color.fromRGBO(100, 100, 100, 1),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: TextFormField(
-                onSaved: (val) {},
-                onChanged: (val) {
-
-                },
-                initialValue: '58',
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Height required';
-                  } else {
-                    return null;
-                  }
-                },
-                textAlign: TextAlign.center,
-                decoration: new InputDecoration(
-                  border: InputBorder.none,
-                ),
-                style: TextStyle(fontSize: 16),
-                keyboardType: TextInputType.number,
-              ),
+              color: colorConvert(state.financeTextLink.linkColor),
             ),
             Container(
               width: 2,
@@ -281,7 +261,7 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
             ),
             SizedBox(width: 30,),
             CupertinoSwitch(
-              value: true,
+              value: state.financeTextLink.visibility,
               onChanged: (val) {
 
               },
@@ -293,7 +273,7 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
             ),
             SizedBox(width: 30,),
             CupertinoSwitch(
-              value: true,
+              value: state.financeTextLink.adaptiveDesign,
               onChanged: (val) {
 
               },
@@ -332,5 +312,14 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
         ),
       ),
     );
+  }
+
+  Color colorConvert(String color) {
+    color = color.replaceAll("#", "");
+    if (color.length == 6) {
+      return Color(int.parse("0xFF"+color));
+    } else if (color.length == 8) {
+      return Color(int.parse("0x"+color));
+    }
   }
 }

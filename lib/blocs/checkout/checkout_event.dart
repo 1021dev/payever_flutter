@@ -102,3 +102,10 @@ class GetOpenUrlEvent extends CheckoutScreenEvent {
 
   GetOpenUrlEvent(this.openUrl);
 }
+
+class FinanceExpressTypeEvent extends CheckoutScreenEvent {
+  final String type;
+
+  FinanceExpressTypeEvent(this.type);
+
+}

@@ -2139,9 +2139,8 @@ class ApiService {
   Future<dynamic> getFinanceExpressSettings(String id, String type) async {
     try {
       print('$TAG - getCheckoutConnections()');
-      dynamic response = await _client.postTypeLess(
+      dynamic response = await _client.getTypeless(
           '${Env.financeExpressPhp}/api/settings/$id/$type',
-          body: {},
           headers: {
             HttpHeaders.contentTypeHeader: 'application/json',
             HttpHeaders.userAgentHeader: GlobalUtils.fingerprint

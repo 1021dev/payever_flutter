@@ -31,6 +31,10 @@ class CheckoutScreenState {
   final List<Section> availableSections2;
   final List<Section> availableSections;
   final int addSection;
+  final FinanceExpress financeTextLink;
+  final FinanceExpress financeButton;
+  final FinanceExpress financeCalculator;
+  final FinanceExpress financeBubble;
 
   CheckoutScreenState({
     this.isLoading = false,
@@ -59,6 +63,10 @@ class CheckoutScreenState {
     this.availableSections2 = const [],
     this.availableSections = const [],
     this.addSection = 0,
+    this.financeTextLink,
+    this.financeButton,
+    this.financeCalculator,
+    this.financeBubble,
   });
 
   List<Object> get props => [
@@ -88,6 +96,10 @@ class CheckoutScreenState {
     this.availableSections2,
     this.availableSections,
     this.addSection,
+    this.financeTextLink,
+    this.financeButton,
+    this.financeCalculator,
+    this.financeBubble,
   ];
 
   CheckoutScreenState copyWith({
@@ -118,6 +130,10 @@ class CheckoutScreenState {
     List<Section> availableSections2,
     List<Section> availableSections,
     int addSection,
+    FinanceExpress financeTextLink,
+    FinanceExpress financeButton,
+    FinanceExpress financeCalculator,
+    FinanceExpress financeBubble,
   }) {
     return CheckoutScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -146,6 +162,10 @@ class CheckoutScreenState {
       availableSections2: availableSections2 ?? this.availableSections2,
       availableSections: availableSections ?? this.availableSections,
       addSection: addSection ?? this.addSection,
+      financeTextLink: financeTextLink ?? this.financeTextLink,
+      financeButton: financeButton ?? this.financeButton,
+      financeCalculator: addSection ?? this.financeCalculator,
+      financeBubble: financeBubble ?? this.financeBubble,
     );
   }
 }

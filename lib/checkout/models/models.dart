@@ -640,7 +640,7 @@ class FinanceExpress {
   String alignment;
   String corners;
   num height;
-  num textSize;
+  String textSize;
   num width;
 
   FinanceExpress.fromMap(dynamic obj) {
