@@ -10,6 +10,7 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/connect/models/connect.dart';
 import 'package:http/http.dart' as http;
+import 'package:payever/pos/models/models.dart';
 
 import 'checkout.dart';
 
@@ -76,7 +77,27 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     } else if (event is UpdateCheckoutDevicePaymentSettings) {
       yield state.copyWith(devicePaymentSettings: event.settings);
     } else if (event is SaveCheckoutDevicePaymentSettings) {
-
+      yield* saveDevicePaymentSettings();
+    } else if (event is GetCheckoutTwilioSettings) {
+      yield* getTwilioSettings();
+    } else if (event is AddCheckoutPhoneNumberSettings) {
+      yield* addPhoneNumberSettings(event.action, event.id);
+    } else if (event is SearchCheckoutPhoneNumberEvent) {
+      yield* searchPhoneNumbers(
+        event.action,
+        event.country,
+        event.excludeAny,
+        event.excludeForeign,
+        event.excludeLocal,
+        event.phoneNumber,
+        event.id,
+      );
+    } else if (event is PurchaseCheckoutNumberEvent) {
+      yield* purchasePhoneNumber(event.action, event.phone, event.id, event.price);
+    } else if (event is RemoveCheckoutPhoneNumberSettings) {
+      yield* removePhoneNumber(event.action, event.id, event.sid);
+    } else if (event is UpdateCheckoutAddPhoneNumberSettings) {
+      yield state.copyWith(settingsModel: event.settingsModel);
     }
   }
 
@@ -682,5 +703,185 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     yield state.copyWith(devicePaymentSettings: devicePayment, isLoading: false, isUpdating: false);
   }
 
+
+  Stream<CheckoutScreenState> getTwilioSettings() async* {
+    yield state.copyWith(isLoading: true);
+    dynamic response = await api.getTwilioSettings(
+      GlobalUtils.activeToken.accessToken,
+      state.business,
+    );
+    yield state.copyWith(twilioForm: response, isLoading: false);
+  }
+
+  Stream<CheckoutScreenState> addPhoneNumberSettings(
+      String action,
+      String id,
+      ) async* {
+    yield state.copyWith(isLoading: true);
+    dynamic response = await api.addPhoneNumberSettings(
+      GlobalUtils.activeToken.accessToken,
+      state.business,
+      action,
+      id,
+    );
+    List<CountryDropdownItem> dropdownItems = [];
+    AddPhoneNumberSettingsModel model = AddPhoneNumberSettingsModel();
+    dynamic fieldsetData = {};
+    List contentData = [];
+    if (response != null) {
+      if (response is Map) {
+        dynamic form = response['form'];
+        if (form['actionContext'] is Map) {
+          model.id = form['actionContext']['id'];
+        } else if (form['actionContext'] is String){
+          model.id = form['actionContext'];
+        }
+        dynamic content = form['content'] != null ? form['content'] : null;
+        if (content != null) {
+          if (content['fieldset'] != null) {
+            List<dynamic> contentFields = content['fieldset'];
+            contentFields.forEach((field) {
+              if (field['type'] == 'select') {
+                dynamic selectSettings = field['selectSettings'];
+                if (selectSettings != null) {
+                  if (selectSettings['options'] != null) {
+                    List<dynamic> options = selectSettings['options'];
+                    options.forEach((element) {
+                      CountryDropdownItem item = CountryDropdownItem(
+                          label: element['label'], value: element['value']);
+                      if (!dropdownItems.contains(item)) {
+                        dropdownItems.add(item);
+                      }
+                    });
+                    print(content['fieldsetData']);
+                  }
+                }
+              }
+            });
+          }
+          if (content['fieldsetData'] != null) {
+            fieldsetData = content['fieldsetData'];
+            model.excludeLocal = fieldsetData['excludeLocal'];
+            model.excludeForeign = fieldsetData['excludeForeign'];
+          }
+
+          if (content['data'] != null) {
+            contentData = content['data'];
+          }
+        }
+      }
+    }
+    model.country = dropdownItems.firstWhere((element) => element.value == fieldsetData['country']);
+
+    yield state.copyWith(dropdownItems: dropdownItems, settingsModel: model, isLoading: false, twilioAddPhoneForm: contentData);
+  }
+
+  Stream<CheckoutScreenState> searchPhoneNumbers(
+      String action,
+      String country,
+      bool excludeAny,
+      bool excludeForeign,
+      bool excludeLocal,
+      String phoneNumber,
+      String id,
+      ) async* {
+    yield state.copyWith(isPhoneSearch: true);
+    dynamic response = await api.searchPhoneNumberSettings(
+      GlobalUtils.activeToken.accessToken,
+      state.business,
+      action,
+      country,
+      excludeAny,
+      excludeForeign,
+      excludeLocal,
+      phoneNumber,
+      id,
+    );
+    List<CountryDropdownItem> dropdownItems = [];
+    AddPhoneNumberSettingsModel model = AddPhoneNumberSettingsModel();
+    dynamic fieldsetData = {};
+    List contentData = [];
+    if (response != null) {
+      if (response is Map) {
+        dynamic form = response['form'];
+        if (form['actionContext'] is Map) {
+          model.id = form['actionContext']['id'];
+        } else if (form['actionContext'] is String){
+          model.id = form['actionContext'];
+        }
+        dynamic content = form['content'] != null ? form['content'] : null;
+        if (content != null) {
+          if (content['fieldset'] != null) {
+            List<dynamic> contentFields = content['fieldset'];
+            contentFields.forEach((field) {
+              if (field['type'] == 'select') {
+                dynamic selectSettings = field['selectSettings'];
+                if (selectSettings != null) {
+                  if (selectSettings['options'] != null) {
+                    List<dynamic> options = selectSettings['options'];
+                    options.forEach((element) {
+                      CountryDropdownItem item = CountryDropdownItem(
+                          label: element['label'], value: element['value']);
+                      if (!dropdownItems.contains(item)) {
+                        dropdownItems.add(item);
+                      }
+                    });
+                    print(content['fieldsetData']);
+                  }
+                }
+              }
+            });
+          }
+          if (content['fieldsetData'] != null) {
+            fieldsetData = content['fieldsetData'];
+            model.excludeLocal = fieldsetData['excludeLocal'];
+            model.excludeForeign = fieldsetData['excludeForeign'];
+          }
+
+          if (content['data'] != null) {
+            contentData = content['data'];
+          }
+        }
+      }
+    }
+    model.country = dropdownItems.firstWhere((element) => element.value == fieldsetData['country']);
+
+    yield state.copyWith(twilioAddPhoneForm: contentData, settingsModel: model, isPhoneSearch: false);
+  }
+
+  Stream<CheckoutScreenState> purchasePhoneNumber(
+      String action,
+      String phone,
+      String id,
+      String price,
+      ) async* {
+    yield state.copyWith(isLoading: true);
+    dynamic response = await api.purchasePhoneNumberSettings(
+      GlobalUtils.activeToken.accessToken,
+      state.business,
+      action,
+      phone,
+      id,
+      price,
+    );
+    yield state.copyWith(isLoading: false);
+    add(GetCheckoutTwilioSettings());
+  }
+
+  Stream<CheckoutScreenState> removePhoneNumber(
+      String action,
+      String id,
+      String sid,
+      ) async* {
+    yield state.copyWith(isLoading: true);
+    dynamic response = await api.removePhoneNumberSettings(
+      GlobalUtils.activeToken.accessToken,
+      state.business,
+      action,
+      id,
+      sid,
+    );
+    yield state.copyWith(twilioForm: response, isLoading: false);
+  }
 
 }

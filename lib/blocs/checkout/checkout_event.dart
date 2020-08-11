@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/commons.dart';
+import 'package:payever/pos/models/models.dart';
 
 abstract class CheckoutScreenEvent extends Equatable {
   CheckoutScreenEvent();
@@ -128,3 +129,130 @@ class UpdateCheckoutDevicePaymentSettings extends CheckoutScreenEvent{
 }
 
 class SaveCheckoutDevicePaymentSettings extends CheckoutScreenEvent{}
+
+class GetCheckoutTwilioSettings extends CheckoutScreenEvent {}
+
+class GetCheckoutAddTwilioPhoneFrom extends CheckoutScreenEvent {}
+
+class AddCheckoutPhoneNumberSettings extends CheckoutScreenEvent {
+  final String action;
+  final String id;
+
+  AddCheckoutPhoneNumberSettings({
+    this.action,
+    this.id,
+  });
+
+  @override
+  List<Object> get props => [
+    this.action,
+    this.id,
+  ];
+}
+
+class RemoveCheckoutPhoneNumberSettings extends CheckoutScreenEvent {
+  final String action;
+  final String id;
+  final String sid;
+
+  RemoveCheckoutPhoneNumberSettings({
+    this.action,
+    this.id,
+    this.sid,
+  });
+
+  @override
+  List<Object> get props => [
+    this.action,
+    this.id,
+    this.sid,
+  ];
+}
+
+class SearchCheckoutPhoneNumberEvent extends CheckoutScreenEvent {
+  final String action;
+  final String country;
+  final bool excludeAny;
+  final bool excludeForeign;
+  final bool excludeLocal;
+  final String id;
+  final String phoneNumber;
+
+  SearchCheckoutPhoneNumberEvent({
+    this.action,
+    this.country,
+    this.excludeAny,
+    this.excludeForeign,
+    this.excludeLocal,
+    this.id,
+    this.phoneNumber,
+  });
+
+  @override
+  List<Object> get props => [
+    this.action,
+    this.country,
+    this.excludeAny,
+    this.excludeForeign,
+    this.excludeLocal,
+    this.id,
+    this.phoneNumber,
+  ];
+}
+
+class PurchaseCheckoutNumberEvent extends CheckoutScreenEvent {
+  final String action;
+  final String id;
+  final String phone;
+  final String price;
+
+  PurchaseCheckoutNumberEvent({
+    this.action,
+    this.id,
+    this.phone,
+    this.price,
+  });
+
+  @override
+  List<Object> get props => [
+    this.action,
+    this.id,
+    this.phone,
+    this.price,
+  ];
+}
+
+class UpdateCheckoutAddPhoneNumberSettings extends CheckoutScreenEvent {
+  final AddPhoneNumberSettingsModel settingsModel;
+
+  UpdateCheckoutAddPhoneNumberSettings({
+    this.settingsModel,
+  });
+
+  @override
+  List<Object> get props => [
+    this.settingsModel,
+  ];
+}
+
+class UpdateCheckoutAddPhoneNumber extends CheckoutScreenEvent {
+  final String action;
+  final String id;
+  final String value;
+  final String phone;
+
+  UpdateCheckoutAddPhoneNumber({
+    this.action,
+    this.id,
+    this.value,
+    this.phone,
+  });
+
+  @override
+  List<Object> get props => [
+    this.action,
+    this.id,
+    this.value,
+    this.phone,
+  ];
+}

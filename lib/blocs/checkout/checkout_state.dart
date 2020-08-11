@@ -4,6 +4,7 @@ import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/models/pos.dart';
 import 'package:payever/connect/models/connect.dart';
+import 'package:payever/pos/models/models.dart';
 
 class CheckoutScreenState {
   final bool isLoading;
@@ -40,6 +41,12 @@ class CheckoutScreenState {
   final dynamic qrForm;
   final dynamic qrImage;
   final DevicePaymentSettings devicePaymentSettings;
+  final dynamic twilioForm;
+  final List twilioAddPhoneForm;
+  final AddPhoneNumberSettingsModel settingsModel;
+  final List<CountryDropdownItem> dropdownItems;
+  final dynamic fieldSetData;
+  final bool isPhoneSearch;
 
   CheckoutScreenState({
     this.isLoading = false,
@@ -76,6 +83,12 @@ class CheckoutScreenState {
     this.qrForm,
     this.qrImage,
     this.devicePaymentSettings,
+    this.twilioForm,
+    this.twilioAddPhoneForm = const [],
+    this.settingsModel,
+    this.dropdownItems = const [],
+    this.fieldSetData,
+    this.isPhoneSearch = false,
   });
 
   List<Object> get props => [
@@ -113,6 +126,12 @@ class CheckoutScreenState {
     this.qrForm,
     this.qrImage,
     this.devicePaymentSettings,
+    this.twilioForm,
+    this.twilioAddPhoneForm,
+    this.settingsModel,
+    this.dropdownItems,
+    this.fieldSetData,
+    this.isPhoneSearch,
   ];
 
   CheckoutScreenState copyWith({
@@ -151,6 +170,12 @@ class CheckoutScreenState {
     dynamic qrForm,
     dynamic qrImage,
     DevicePaymentSettings devicePaymentSettings,
+    dynamic twilioForm,
+    List twilioAddPhoneForm,
+    AddPhoneNumberSettingsModel settingsModel,
+    List<CountryDropdownItem> dropdownItems,
+    dynamic fieldSetData,
+    bool isPhoneSearch,
   }) {
     return CheckoutScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -186,7 +211,13 @@ class CheckoutScreenState {
       qrIntegration: qrIntegration,
       qrForm: qrForm,
       qrImage: qrImage,
-      devicePaymentSettings: devicePaymentSettings ?? this.devicePaymentSettings
+      devicePaymentSettings: devicePaymentSettings ?? this.devicePaymentSettings,
+      twilioForm: twilioForm ?? this.twilioForm,
+      twilioAddPhoneForm: twilioAddPhoneForm ?? this.twilioAddPhoneForm,
+      settingsModel: settingsModel ?? this.settingsModel,
+      dropdownItems: dropdownItems ?? this.dropdownItems,
+      fieldSetData: fieldSetData ?? this.fieldSetData,
+      isPhoneSearch: isPhoneSearch ?? this.isPhoneSearch,
     );
   }
 }

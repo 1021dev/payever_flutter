@@ -11,6 +11,7 @@ import 'package:payever/checkout/models/models.dart';
 import 'package:payever/checkout/views/channels_screeen.dart';
 import 'package:payever/checkout/views/checkout_device_payment_screen.dart';
 import 'package:payever/checkout/views/checkout_link_edit_screen.dart';
+import 'package:payever/checkout/views/checkout_twillo_settings.dart';
 import 'package:payever/checkout/views/connect_screen.dart';
 import 'package:payever/checkout/views/payment_options_screen.dart';
 import 'package:payever/checkout/views/sections_screen.dart';
@@ -555,6 +556,17 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 context,
                 PageTransition(
                   child: CheckoutDevicePaymentScreen(
+                    screenBloc: screenBloc,
+                  ),
+                  type: PageTransitionType.fade,
+                  duration: Duration(milliseconds: 500),
+                ),
+              );
+            } else if (title.contains('Twilio')) {
+              Navigator.push(
+                context,
+                PageTransition(
+                  child: CheckoutTwilioScreen(
                     screenBloc: screenBloc,
                   ),
                   type: PageTransitionType.fade,
