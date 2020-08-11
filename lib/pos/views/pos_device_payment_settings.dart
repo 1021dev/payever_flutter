@@ -240,13 +240,16 @@ class _PosDevicePaymentSettingsState extends State<PosDevicePaymentSettings> {
                             fontWeight: FontWeight.w200,
                           ),
                         ),
-                        CupertinoSwitch(
-                          value: state.devicePaymentSettings.secondFactor,
-                          onChanged: (value) {
-                            DevicePaymentSettings settings = state.devicePaymentSettings;
-                            settings.secondFactor = value;
-                            widget.screenBloc.add(UpdateDevicePaymentSettings(settings: settings));
-                          },
+                        Transform.scale(
+                          scale: 0.8,
+                          child: CupertinoSwitch(
+                            value: state.devicePaymentSettings.secondFactor,
+                            onChanged: (value) {
+                              DevicePaymentSettings settings = state.devicePaymentSettings;
+                              settings.secondFactor = value;
+                              widget.screenBloc.add(UpdateDevicePaymentSettings(settings: settings));
+                            },
+                          ),
                         ),
                       ],
                     ),
@@ -272,13 +275,16 @@ class _PosDevicePaymentSettingsState extends State<PosDevicePaymentSettings> {
                             fontWeight: FontWeight.w200,
                           ),
                         ),
-                        CupertinoSwitch(
-                          value: state.devicePaymentSettings.autoresponderEnabled,
-                          onChanged: (value) {
-                            DevicePaymentSettings settings = state.devicePaymentSettings;
-                            settings.autoresponderEnabled = value;
-                            widget.screenBloc.add(UpdateDevicePaymentSettings(settings: settings));
-                          },
+                        Transform.scale(
+                          scale: 0.8,
+                          child: CupertinoSwitch(
+                            value: state.devicePaymentSettings.autoresponderEnabled,
+                            onChanged: (value) {
+                              DevicePaymentSettings settings = state.devicePaymentSettings;
+                              settings.autoresponderEnabled = value;
+                              widget.screenBloc.add(UpdateDevicePaymentSettings(settings: settings));
+                            },
+                          ),
                         ),
                       ],
                     ),

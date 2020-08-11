@@ -665,19 +665,22 @@ class _ShopScreenState extends State<ShopScreen> {
                     Text(
                       Language.getWidgetStrings('widgets.store.live-status'),
                     ),
-                    CupertinoSwitch(
-                      value: state.activeShop.accessConfig.isLive,
-                      onChanged: (value) {
-                        AccessConfig config = state.activeShop.accessConfig;
-                        config.isLive = value;
-                        screenBloc.add(
-                          UpdateShopSettings(
-                            businessId: widget.globalStateModel.currentBusiness.id,
-                            shopId: state.activeShop.id,
-                            config: config,
-                          ),
-                        );
-                      },
+                    Transform.scale(
+                      scale: 0.8,
+                      child: CupertinoSwitch(
+                        value: state.activeShop.accessConfig.isLive,
+                        onChanged: (value) {
+                          AccessConfig config = state.activeShop.accessConfig;
+                          config.isLive = value;
+                          screenBloc.add(
+                            UpdateShopSettings(
+                              businessId: widget.globalStateModel.currentBusiness.id,
+                              shopId: state.activeShop.id,
+                              config: config,
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ],
                 ),

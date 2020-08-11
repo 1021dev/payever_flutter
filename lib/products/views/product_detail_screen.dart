@@ -709,8 +709,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     Padding(
                       padding: EdgeInsets.only(left: 4),
                     ),
-                    CupertinoSwitch(
-                      onChanged: (val) {
+                    Transform.scale(
+                      scale: 0.8,
+                      child: CupertinoSwitch(
+                        onChanged: (val) {
 //                        ProductsModel productModel = state.productDetail;
 //                        productModel.enabled = val;
 //                        widget.screenBloc.add(
@@ -719,9 +721,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 //                              increaseStock: state.increaseStock,
 //                            )
 //                        );
-                      },
-                      value: false,
-                    )
+                        },
+                        value: false,
+                      ),
+                    ),
                   ],
                 ),
               ],
@@ -1026,13 +1029,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 Expanded(
                   child: Row(
                     children: <Widget>[
-                      CupertinoSwitch(
-                        onChanged: (val) {
-                          InventoryModel inventory = state.inventory;
-                          inventory.isTrackable = val;
-                          widget.screenBloc.add(UpdateProductDetail(inventoryModel: inventory));
-                        },
-                        value: state.inventory.isTrackable,
+                      Transform.scale(
+                        scale: 0.8,
+                        child: CupertinoSwitch(
+                          onChanged: (val) {
+                            InventoryModel inventory = state.inventory;
+                            inventory.isTrackable = val;
+                            widget.screenBloc.add(UpdateProductDetail(inventoryModel: inventory));
+                          },
+                          value: state.inventory.isTrackable,
+                        ),
                       ),
                       Padding(
                         padding: EdgeInsets.only(left: 4),
@@ -1505,26 +1511,29 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         fontSize: 14,
                       ),
                     ),
-                    CupertinoSwitch(
-                      value: isSet,
-                      onChanged: (val) {
-                        ProductsModel productDetail = state.productDetail;
-                        List<ChannelSet> channelSets = productDetail.channels;
-                        if (val) {
-                          channelSets.add(ChannelSet(terminal.channelSet, terminal.name, 'pos'));
-                        } else {
-                          channelSets.removeWhere((element) => element.id == terminal.channelSet);
-                        }
-                        productDetail.channels = channelSets;
-                        widget.screenBloc.add(
-                            UpdateProductDetail(
-                              productsModel: productDetail,
-                              increaseStock: state.increaseStock,
-                              inventoryModel: state.inventory,
-                            )
-                        );
-                      },
-                    )
+                    Transform.scale(
+                      scale: 0.8,
+                      child: CupertinoSwitch(
+                        value: isSet,
+                        onChanged: (val) {
+                          ProductsModel productDetail = state.productDetail;
+                          List<ChannelSet> channelSets = productDetail.channels;
+                          if (val) {
+                            channelSets.add(ChannelSet(terminal.channelSet, terminal.name, 'pos'));
+                          } else {
+                            channelSets.removeWhere((element) => element.id == terminal.channelSet);
+                          }
+                          productDetail.channels = channelSets;
+                          widget.screenBloc.add(
+                              UpdateProductDetail(
+                                productsModel: productDetail,
+                                increaseStock: state.increaseStock,
+                                inventoryModel: state.inventory,
+                              )
+                          );
+                        },
+                      ),
+                    ),
                   ],
                 ),
               );
@@ -1573,25 +1582,28 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         fontSize: 14,
                       ),
                     ),
-                    CupertinoSwitch(
-                      value: isSet,
-                      onChanged: (val) {
-                        ProductsModel productDetail = state.productDetail;
-                        List<ChannelSet> channelSets = productDetail.channels;
-                        if (val) {
-                          channelSets.add(ChannelSet(shop.channelSet, shop.name, 'shop'));
-                        } else {
-                          channelSets.removeWhere((element) => element.id == shop.channelSet);
-                        }
-                        productDetail.channels = channelSets;
-                        widget.screenBloc.add(
-                            UpdateProductDetail(
-                              productsModel: productDetail,
-                              increaseStock: state.increaseStock,
-                            )
-                        );
-                      },
-                    )
+                    Transform.scale(
+                      scale: 0.8,
+                      child: CupertinoSwitch(
+                        value: isSet,
+                        onChanged: (val) {
+                          ProductsModel productDetail = state.productDetail;
+                          List<ChannelSet> channelSets = productDetail.channels;
+                          if (val) {
+                            channelSets.add(ChannelSet(shop.channelSet, shop.name, 'shop'));
+                          } else {
+                            channelSets.removeWhere((element) => element.id == shop.channelSet);
+                          }
+                          productDetail.channels = channelSets;
+                          widget.screenBloc.add(
+                              UpdateProductDetail(
+                                productsModel: productDetail,
+                                increaseStock: state.increaseStock,
+                              )
+                          );
+                        },
+                      ),
+                    ),
                   ],
                 ),
               );
@@ -1929,19 +1941,22 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 fontWeight: FontWeight.w300,
               ),
             ),
-            CupertinoSwitch(
-              onChanged: (val) {
-                ProductsModel productModel = state.productDetail;
-                productModel.active = val;
-                widget.screenBloc.add(
-                    UpdateProductDetail(
-                      productsModel: productModel,
-                      increaseStock: state.increaseStock,
-                    )
-                );
-              },
-              value: state.productDetail.active ?? false,
-            )
+            Transform.scale(
+              scale: 0.8,
+              child: CupertinoSwitch(
+                onChanged: (val) {
+                  ProductsModel productModel = state.productDetail;
+                  productModel.active = val;
+                  widget.screenBloc.add(
+                      UpdateProductDetail(
+                        productsModel: productModel,
+                        increaseStock: state.increaseStock,
+                      )
+                  );
+                },
+                value: state.productDetail.active ?? false,
+              ),
+            ),
           ],
         ),
       ),

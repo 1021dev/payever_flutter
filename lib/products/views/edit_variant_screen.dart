@@ -697,12 +697,15 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                                   Text(
                                     'Sale',
                                   ),
-                                  CupertinoSwitch(
-                                    onChanged: (val) {
+                                  Transform.scale(
+                                    scale: 0.8,
+                                    child: CupertinoSwitch(
+                                      onChanged: (val) {
 
-                                    },
-                                    value: state.variants.onSales ?? false,
-                                  )
+                                      },
+                                      value: state.variants.onSales ?? false,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -805,14 +808,17 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                                       'Should payever track inventory',
                                     ),
                                   ),
-                                  CupertinoSwitch(
-                                    onChanged: (val) {
-                                      InventoryModel inventory = state.inventory ?? InventoryModel();
-                                      inventory.isTrackable = !inventory.isTrackable;
-                                      screenBloc.add(UpdateVariantDetail(increaseStock: state.increaseStock, variants: state.variants, inventoryModel: inventory));
-                                    },
-                                    value: state.inventory != null ? state.inventory.isTrackable: false,
-                                  )
+                                  Transform.scale(
+                                    scale: 0.8,
+                                    child: CupertinoSwitch(
+                                      onChanged: (val) {
+                                        InventoryModel inventory = state.inventory ?? InventoryModel();
+                                        inventory.isTrackable = !inventory.isTrackable;
+                                        screenBloc.add(UpdateVariantDetail(increaseStock: state.increaseStock, variants: state.variants, inventoryModel: inventory));
+                                      },
+                                      value: state.inventory != null ? state.inventory.isTrackable: false,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),

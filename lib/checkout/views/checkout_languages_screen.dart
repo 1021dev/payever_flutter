@@ -161,13 +161,16 @@ class _CheckoutLanguagesScreenState extends State<CheckoutLanguagesScreen> {
                             Padding(
                               padding: EdgeInsets.only(left: 8),
                             ),
-                            CupertinoSwitch(
-                              value: lang.active,
-                              onChanged: (val) {
-                                lang.active = val;
-                                widget.settingBloc.add(UpdateCheckoutSettingsEvent());
-                              },
-                            )
+                            Transform.scale(
+                              scale: 0.8,
+                              child: CupertinoSwitch(
+                                value: lang.active,
+                                onChanged: (val) {
+                                  lang.active = val;
+                                  widget.settingBloc.add(UpdateCheckoutSettingsEvent());
+                                },
+                              ),
+                            ),
                           ],
                         ),
                       ],

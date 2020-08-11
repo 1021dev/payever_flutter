@@ -277,14 +277,17 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
               'Filterable',
             ),
           ),
-          CupertinoSwitch(
-            value: isFilterable,
-            onChanged: (val) {
-              setState(() {
-                isFilterable = val;
-              });
-            },
-            trackColor: Colors.black26,
+          Transform.scale(
+            scale: 0.8,
+            child: CupertinoSwitch(
+              value: isFilterable,
+              onChanged: (val) {
+                setState(() {
+                  isFilterable = val;
+                });
+              },
+              trackColor: Colors.black26,
+            ),
           ),
         ],
       ),
@@ -304,14 +307,17 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
               'Value editable only by admin',
             ),
           ),
-          CupertinoSwitch(
-            value: isOnlyAdmin,
-            onChanged: (val) {
-              setState(() {
-                isOnlyAdmin = val;
-              });
-            },
-            trackColor: Colors.black26,
+          Transform.scale(
+            scale: 0.8,
+            child: CupertinoSwitch(
+              value: isOnlyAdmin,
+              onChanged: (val) {
+                setState(() {
+                  isOnlyAdmin = val;
+                });
+              },
+              trackColor: Colors.black26,
+            ),
           ),
         ],
       ),
@@ -331,14 +337,17 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
               'Show on person cards',
             ),
           ),
-          CupertinoSwitch(
-            value: isShowPerson,
-            onChanged: (val) {
-              setState(() {
-                isShowPerson = val;
-              });
-            },
-            trackColor: Colors.black26,
+          Transform.scale(
+            scale: 0.8,
+            child: CupertinoSwitch(
+              value: isShowPerson,
+              onChanged: (val) {
+                setState(() {
+                  isShowPerson = val;
+                });
+              },
+              trackColor: Colors.black26,
+            ),
           ),
         ],
       ),
@@ -358,14 +367,17 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
               'Show on company cards',
             ),
           ),
-          CupertinoSwitch(
-            value: isShowCompany,
-            onChanged: (val) {
-              setState(() {
-                isShowCompany = val;
-              });
-            },
-            trackColor: Colors.black26,
+          Transform.scale(
+            scale: 0.8,
+            child: CupertinoSwitch(
+              value: isShowCompany,
+              onChanged: (val) {
+                setState(() {
+                  isShowCompany = val;
+                });
+              },
+              trackColor: Colors.black26,
+            ),
           ),
         ],
       ),

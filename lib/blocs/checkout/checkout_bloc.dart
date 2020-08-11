@@ -350,6 +350,14 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       loadingConnect: true,
     );
     List<ConnectModel> connectInstallations = [];
+    dynamic accountingResponse = await api.getConnectIntegrationByCategory(
+        token, state.business, 'accounting');
+    if (accountingResponse is List) {
+      accountingResponse.forEach((element) {
+        connectInstallations.add(ConnectModel.toMap(element));
+      });
+    }
+
     dynamic categoryResponse = await api.getConnectIntegrationByCategory(
         token, state.business, 'communications');
     if (categoryResponse is List) {

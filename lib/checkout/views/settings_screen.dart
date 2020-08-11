@@ -97,12 +97,15 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                                 fontSize: 16,
                               ),
                             ),
-                            CupertinoSwitch(
-                              value: widget.checkout.settings.testingMode,
-                              onChanged: (value) {
-                                widget.checkout.settings.testingMode = value;
-                                screenBloc.add(UpdateCheckoutSettingsEvent());
-                              },
+                            Transform.scale(
+                              scale: 0.8,
+                              child: CupertinoSwitch(
+                                value: widget.checkout.settings.testingMode,
+                                onChanged: (value) {
+                                  widget.checkout.settings.testingMode = value;
+                                  screenBloc.add(UpdateCheckoutSettingsEvent());
+                                },
+                              ),
                             ),
                           ],
                         ),
@@ -176,12 +179,15 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                             ),
                             Row(
                               children: <Widget>[
-                                CupertinoSwitch(
-                                  value: widget.checkout.settings.styles.active ?? false,
-                                  onChanged: (value) {
-                                    widget.checkout.settings.styles.active = value;
-                                    screenBloc.add(UpdateCheckoutSettingsEvent());
-                                  },
+                                Transform.scale(
+                                  scale: 0.8,
+                                  child: CupertinoSwitch(
+                                    value: widget.checkout.settings.styles.active ?? false,
+                                    onChanged: (value) {
+                                      widget.checkout.settings.styles.active = value;
+                                      screenBloc.add(UpdateCheckoutSettingsEvent());
+                                    },
+                                  ),
                                 ),
                                 MaterialButton(
                                   onPressed: () {},

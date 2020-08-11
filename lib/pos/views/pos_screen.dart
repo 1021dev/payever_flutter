@@ -591,19 +591,22 @@ class _PosScreenState extends State<PosScreen> {
                               ),
                               Row(
                                 children: <Widget>[
-                                  CupertinoSwitch(
-                                    value: terminalIntegrations.contains(integrations[index].integration.name),
-                                    onChanged: (value) {
-                                      screenBloc.add(value ? InstallTerminalDevicePaymentEvent(
-                                        payment: integrations[index].integration.name,
-                                        businessId: widget.globalStateModel.currentBusiness.id,
-                                        terminalId: state.activeTerminal.id,
-                                      ): UninstallTerminalDevicePaymentEvent(
-                                        payment: integrations[index].integration.name,
-                                        businessId: widget.globalStateModel.currentBusiness.id,
-                                        terminalId: state.activeTerminal.id,
-                                      ));
-                                    },
+                                  Transform.scale(
+                                    scale: 0.8,
+                                    child: CupertinoSwitch(
+                                      value: terminalIntegrations.contains(integrations[index].integration.name),
+                                      onChanged: (value) {
+                                        screenBloc.add(value ? InstallTerminalDevicePaymentEvent(
+                                          payment: integrations[index].integration.name,
+                                          businessId: widget.globalStateModel.currentBusiness.id,
+                                          terminalId: state.activeTerminal.id,
+                                        ): UninstallTerminalDevicePaymentEvent(
+                                          payment: integrations[index].integration.name,
+                                          businessId: widget.globalStateModel.currentBusiness.id,
+                                          terminalId: state.activeTerminal.id,
+                                        ));
+                                      },
+                                    ),
                                   ),
                                   Padding(
                                     padding: EdgeInsets.only(left: 8),

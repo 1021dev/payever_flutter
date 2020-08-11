@@ -135,14 +135,17 @@ class _CheckoutPoliciesScreenState extends State<CheckoutPoliciesScreen> {
                         ),
                       ),
                     ),
-                    CupertinoSwitch(
-                      value: channelSet.policyEnabled,
-                      onChanged: (val) {
-                        channelSet.policyEnabled = val;
-                        widget.settingBloc
-                            .add(UpdatePolicyEvent(channelId: channelSet.id, policyEnabled: val));
-                      },
-                    )
+                    Transform.scale(
+                      scale: 0.8,
+                      child: CupertinoSwitch(
+                        value: channelSet.policyEnabled,
+                        onChanged: (val) {
+                          channelSet.policyEnabled = val;
+                          widget.settingBloc
+                              .add(UpdatePolicyEvent(channelId: channelSet.id, policyEnabled: val));
+                        },
+                      ),
+                    ),
                   ],
                 ),
               );

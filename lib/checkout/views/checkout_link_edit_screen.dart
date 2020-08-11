@@ -260,11 +260,14 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
               style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
             SizedBox(width: 30,),
-            CupertinoSwitch(
-              value: state.financeTextLink.visibility,
-              onChanged: (val) {
+            Transform.scale(
+              scale: 0.8,
+              child: CupertinoSwitch(
+                value: state.financeTextLink.visibility,
+                onChanged: (val) {
 
-              },
+                },
+              ),
             ),
             SizedBox(width: 30,),
             Text(
@@ -272,11 +275,14 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
               style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
             SizedBox(width: 30,),
-            CupertinoSwitch(
-              value: state.financeTextLink.adaptiveDesign,
-              onChanged: (val) {
+            Transform.scale(
+              scale: 0.8,
+              child: CupertinoSwitch(
+                value: state.financeTextLink.adaptiveDesign,
+                onChanged: (val) {
 
-              },
+                },
+              ),
             ),
             Container(
               margin: EdgeInsets.only(left: 30, right: 30),
@@ -289,11 +295,14 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
               style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
             SizedBox(width: 30,),
-            CupertinoSwitch(
-              value: false,
-              onChanged: (val) {
+            Transform.scale(
+              scale: 0.8,
+              child: CupertinoSwitch(
+                value: false,
+                onChanged: (val) {
 
-              },
+                },
+              ),
             ),
             SizedBox(width: 30,),
             Text(
@@ -301,11 +310,14 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
               style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
             SizedBox(width: 30,),
-            CupertinoSwitch(
-              value: true,
-              onChanged: (val) {
+            Transform.scale(
+              scale: 0.8,
+              child: CupertinoSwitch(
+                value: true,
+                onChanged: (val) {
 
-              },
+                },
+              ),
             ),
             SizedBox(width: 30,),
           ],
