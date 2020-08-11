@@ -32,6 +32,7 @@ class ConnectIntegration {
   ConnectDisplayOptions displayOptions;
   bool enabled;
   ConnectInstallationOptions installationOptions;
+  IntegrationExtension extension;
   String name;
   num order;
   List<ReviewModel> reviews = [];
@@ -84,6 +85,34 @@ class ConnectIntegration {
     if (installationOptionsObj != null) {
       installationOptions = ConnectInstallationOptions.toMap(installationOptionsObj);
     }
+    dynamic extensionObj = obj['extension'];
+    if (extensionObj is Map) {
+      extension = IntegrationExtension.fromMap(extensionObj);
+    }
+  }
+}
+
+class IntegrationExtension {
+  FormAction formAction;
+  String url;
+
+  IntegrationExtension.fromMap(dynamic obj) {
+    dynamic formActionObj = obj['formAction'];
+    if (formActionObj is Map) {
+      formAction = FormAction.fromMap(formActionObj);
+    }
+    url = obj['url'];
+  }
+
+}
+
+class FormAction {
+  String endpoint;
+  String method;
+
+  FormAction.fromMap(dynamic obj) {
+    endpoint = obj['endpoint'];
+    method = obj['method'];
   }
 }
 

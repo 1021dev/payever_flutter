@@ -19,6 +19,7 @@ import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
+import 'package:payever/connect/models/connect.dart';
 import 'package:payever/dashboard/sub_view/dashboard_menu_view.dart';
 import 'package:payever/login/login_screen.dart';
 import 'package:payever/notifications/notifications_screen.dart';
@@ -29,6 +30,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'channels_checkout_flow_screen.dart';
 import 'checkout_channelset_screen.dart';
 import 'checkout_connect_screen.dart';
+import 'checkout_qr_integration.dart';
 
 class CheckoutInitScreen extends StatelessWidget {
   final DashboardScreenBloc dashboardScreenBloc;
@@ -520,7 +522,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           checkoutScreenBloc: screenBloc,
           isLoading: state.loadingConnect,
           onChangeSwitch: (val) {
-
           },
           onTapAdd: () {
             Navigator.push(
@@ -536,8 +537,20 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               ),
             );
           },
-          onTapOpen: ( ) {
-
+          onTapOpen: (String title) {
+            if (title.contains('QR')) {
+              Navigator.push(
+                context,
+                PageTransition(
+                  child: CheckoutQRIntegrationScreen(
+                    screenBloc: screenBloc,
+                    title: 'QR',
+                  ),
+                  type: PageTransitionType.fade,
+                  duration: Duration(milliseconds: 500),
+                ),
+              );
+            }
           },
         );
       case 4:

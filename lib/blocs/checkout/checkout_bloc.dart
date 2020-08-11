@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/apis/api_service.dart';
@@ -6,6 +8,7 @@ import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/connect/models/connect.dart';
+import 'package:http/http.dart' as http;
 
 import 'checkout.dart';
 
@@ -63,6 +66,10 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       yield state.copyWith(openUrl: event.openUrl);
     } else if (event is FinanceExpressTypeEvent) {
       yield* getFinanceExpressType(event.type);
+    } else if (event is GetQrIntegration) {
+      yield* getQrIntegration();
+    } else if (event is ClearQrIntegration) {
+      yield state.copyWith(qrForm: null, qrImage: null, qrIntegration: null);
     }
   }
 
@@ -377,12 +384,13 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
         iconType = iconType.replaceAll('#', '');
 
         ChannelItem item = new ChannelItem(
-            title: Language.getPosConnectStrings(
-                connectModel.integration.displayOptions.title),
-            button: 'Open',
-            checkValue: connectModel.installed,
-            image: SvgPicture.asset(
-              Measurements.channelIcon(iconType), height: 24,)
+          title: Language.getPosConnectStrings(
+              connectModel.integration.displayOptions.title),
+          button: 'Open',
+          checkValue: connectModel.installed,
+          image: SvgPicture.asset(
+            Measurements.channelIcon(iconType), height: 24,
+          ),
         );
         items.add(item);
       }
@@ -588,4 +596,64 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       yield state.copyWith(isLoading: false, financeBubble: express);
     }
   }
+  
+  Stream<CheckoutScreenState> getQrIntegration() async* {
+    ConnectIntegration integration;
+    dynamic integrationResponse = await api.getConnectIntegration(token, 'qr');
+    if (integrationResponse is Map) {
+      integration = ConnectIntegration.toMap(integrationResponse);
+    }
+
+    if (dashboardScreenBloc.state.activeTerminal == null) {
+      return;
+    }
+
+    dynamic response = await api.postGenerateTerminalQRCode(
+      GlobalUtils.activeToken.accessToken,
+      state.business,
+      dashboardScreenBloc.state.activeBusiness.name,
+      '$imageBase${dashboardScreenBloc.state.activeTerminal.logo}',
+      dashboardScreenBloc.state.activeTerminal.id,
+      '${Env.checkout}/pay/create-flow-from-qr/channel-set-id/${dashboardScreenBloc.state.activeTerminal.channelSet}',
+    );
+
+    String imageData;
+    if (response is Map) {
+      dynamic form = response['form'];
+      String contentType = form['contentType'] != null
+          ? form['contentType']
+          : '';
+      dynamic content = form['content'] != null ? form['content'] : null;
+      if (content != null) {
+        List<dynamic> contentData = content[contentType];
+        for (int i = 0; i < contentData.length; i++) {
+          dynamic data = content[contentType][i];
+          if (data['data'] != null) {
+            List<dynamic> list = data['data'];
+            for (dynamic w in list) {
+              if (w[0]['type'] == 'image') {
+                imageData = w[0]['value'];
+              }
+            }
+          }
+        }
+      }
+    }
+    http.Response qrResponse;
+    if (imageData != null) {
+      var headers = {
+        HttpHeaders.authorizationHeader: 'Bearer ${GlobalUtils.activeToken.accessToken}',
+        HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+      };
+      print('url => $imageData');
+      qrResponse = await http.get(
+        imageData,
+        headers:  headers,
+      );
+    }
+    yield state.copyWith(qrIntegration: integration, qrForm: response, qrImage: qrResponse.bodyBytes);
+
+  }
+
 }

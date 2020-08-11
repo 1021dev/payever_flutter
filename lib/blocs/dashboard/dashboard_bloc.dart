@@ -51,28 +51,37 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
   }
 
   Stream<DashboardScreenState> _checkVersion(String wallpaper, bool refresh) async* {
-    yield state.copyWith(curWall: wallpaper);
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    String version = packageInfo.version;
-    var environment = await api.getEnv();
-    if (environment is Map) {
-      Env.map(environment);
-    } else {
-      add(DashboardScreenInitEvent(wallpaper: wallpaper, isRefresh: true));
-    }
-    var v = await api.getVersion();
-    Version vv = Version.map(v);
-    print("version:$version");
-    print("_version:${vv.minVersion}");
-    print("compare:${version.compareTo(vv.minVersion)}");
-
-    if (version.compareTo(vv.minVersion) < 0) {
-      print('Not Supported Version');
-    }else{
-      if (refresh) {
-        yield* loadData();
+    try {
+      yield state.copyWith(curWall: wallpaper);
+      PackageInfo packageInfo = await PackageInfo.fromPlatform();
+      String version = packageInfo.version;
+      var environment = await api.getEnv();
+      if (environment is Map) {
+        Env.map(environment);
       } else {
-        yield* _fetchInitialData();
+        add(DashboardScreenInitEvent(wallpaper: wallpaper, isRefresh: true));
+      }
+      var v = await api.getVersion();
+      Version vv = Version.map(v);
+      print("version:$version");
+      print("_version:${vv.minVersion}");
+      print("compare:${version.compareTo(vv.minVersion)}");
+
+      if (version.compareTo(vv.minVersion) < 0) {
+        print('Not Supported Version');
+      }else{
+        if (refresh) {
+          yield* loadData();
+        } else {
+          yield* _fetchInitialData();
+        }
+      }
+    } catch (error) {
+      print(error.toString());
+      if (error.toString().contains('SocketException')) {
+        add(DashboardScreenInitEvent(wallpaper: wallpaper, isRefresh: true));
+      } else {
+        yield DashboardScreenLogout();
       }
     }
   }

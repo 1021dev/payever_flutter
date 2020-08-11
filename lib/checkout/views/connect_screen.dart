@@ -109,7 +109,9 @@ class ConnectScreenState extends State<ConnectScreen> {
                                   ),
                                 ) : Container(),
                                 MaterialButton(
-                                  onPressed: widget.onTapOpen,
+                                  onPressed:(){
+                                    widget.onTapOpen(model.title);
+                                  },
                                   color: Colors.black38,
                                   elevation: 0,
                                   shape: RoundedRectangleBorder(

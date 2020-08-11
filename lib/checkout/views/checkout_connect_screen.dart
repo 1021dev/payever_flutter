@@ -5,6 +5,7 @@ import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
+import 'package:payever/checkout/views/checkout_qr_integration.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
@@ -196,7 +197,21 @@ class _CheckoutConnectScreenState extends State<CheckoutConnectScreen> {
                           ),
                           MaterialButton(
                             onPressed: () {
-
+                              if (connectModel.installed) {
+                                if (connectModel.integration.displayOptions.title.contains('qr')) {
+                                  Navigator.push(
+                                    context,
+                                    PageTransition(
+                                      child: CheckoutQRIntegrationScreen(
+                                        screenBloc: widget.checkoutScreenBloc,
+                                        title: 'QR',
+                                      ),
+                                      type: PageTransitionType.fade,
+                                      duration: Duration(milliseconds: 500),
+                                    ),
+                                  );
+                                }
+                              }
                             },
                             color: Colors.black38,
                             elevation: 0,

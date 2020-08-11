@@ -1,59 +1,31 @@
-import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:page_transition/page_transition.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:payever/blocs/bloc.dart';
-import 'package:payever/commons/commons.dart';
+import 'package:payever/checkout/models/models.dart';
+import 'package:payever/commons/utils/common_utils.dart';
+import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
-import 'package:payever/login/login_screen.dart';
 
-bool _isPortrait;
-bool _isTablet;
+// ignore: must_be_immutable
+class CheckoutQRIntegrationScreen extends StatefulWidget {
 
-List<String> dropdownItems = [
-  'Verify by code',
-  'Verify by ID',
-];
-class PosQRAppScreen extends StatefulWidget {
+  final CheckoutScreenBloc screenBloc;
+  final String title;
+  CheckoutQRIntegrationScreen({this.screenBloc, this.title});
 
-  final PosScreenBloc screenBloc;
-  final String businessId;
-  final String businessName;
-
-  PosQRAppScreen({
-    this.screenBloc,
-    this.businessId,
-    this.businessName,
-  });
-
-  @override
-  createState() => _PosQRAppScreenState();
+  _CheckoutQRIntegrationScreenState createState() => _CheckoutQRIntegrationScreenState();
 }
 
-class _PosQRAppScreenState extends State<PosQRAppScreen> {
-
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
-  String wallpaper;
-  String selectedState = '';
+class _CheckoutQRIntegrationScreenState extends State<CheckoutQRIntegrationScreen> {
   bool isOpened = true;
 
   @override
   void initState() {
-    widget.screenBloc.add(
-      GenerateQRCodeEvent(
-        businessId: widget.businessId,
-        businessName: widget.businessName,
-        avatarUrl: '$imageBase${widget.screenBloc.state.activeTerminal.logo}',
-        id: widget.screenBloc.state.activeTerminal.id,
-        url: '${Env.checkout}/pay/create-flow-from-qr/channel-set-id/${widget.screenBloc.state.activeTerminal.channelSet}',
-      ),
-    );
     super.initState();
+    widget.screenBloc.add(GetQrIntegration());
   }
 
   @override
@@ -63,54 +35,50 @@ class _PosQRAppScreenState extends State<PosQRAppScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
-    Measurements.height = (_isPortrait
-        ? MediaQuery.of(context).size.height
-        : MediaQuery.of(context).size.width);
-    Measurements.width = (_isPortrait
-        ? MediaQuery.of(context).size.width
-        : MediaQuery.of(context).size.height);
-    _isTablet = Measurements.width < 600 ? false : true;
-
     return BlocListener(
-      bloc: widget.screenBloc,
-      listener: (BuildContext context, PosScreenState state) async {
-        if (state is PosScreenFailure) {
-          Navigator.pushReplacement(
-            context,
-            PageTransition(
-              child: LoginScreen(),
-              type: PageTransitionType.fade,
+        bloc: widget.screenBloc,
+        listener: (BuildContext context, CheckoutScreenState state) async {
+          if (state is CheckoutScreenStateFailure) {
+          }
+        },
+      child: BlocBuilder<CheckoutScreenBloc, CheckoutScreenState>(
+        bloc: widget.screenBloc,
+        builder: (BuildContext context, CheckoutScreenState state) {
+          return Scaffold(
+            backgroundColor: Colors.black,
+            resizeToAvoidBottomPadding: false,
+            appBar: _appBar(state),
+            body: SafeArea(
+              child: BackgroundBase(
+                true,
+                backgroudColor: Color.fromRGBO(20, 20, 0, 0.4),
+                body: state.isLoading ?
+                Center(
+                  child: CircularProgressIndicator(),
+                ): Center(
+                  child: _getBody(state),
+                ),
+              ),
             ),
           );
-        }
-      },
-      child: BlocBuilder<PosScreenBloc, PosScreenState>(
-        bloc: widget.screenBloc,
-        builder: (BuildContext context, PosScreenState state) {
-          return _body(state);
         },
       ),
     );
   }
 
-  Widget _appBar(PosScreenState state) {
+  Widget _appBar(CheckoutScreenState state) {
     return AppBar(
       centerTitle: false,
       elevation: 0,
       automaticallyImplyLeading: false,
       backgroundColor: Colors.black87,
-      title: Row(
-        children: <Widget>[
-          Text(
-            Language.getPosTpmStrings('tpm.communications.qr.title'),
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
+      title: Text(
+        widget.title,
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+        ),
       ),
       actions: <Widget>[
         IconButton(
@@ -126,6 +94,7 @@ class _PosQRAppScreenState extends State<PosQRAppScreen> {
             size: 24,
           ),
           onPressed: () {
+            widget.screenBloc.add(GetQrIntegration());
             Navigator.pop(context);
           },
         ),
@@ -136,30 +105,7 @@ class _PosQRAppScreenState extends State<PosQRAppScreen> {
     );
   }
 
-  Widget _body(PosScreenState state) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      resizeToAvoidBottomPadding: false,
-      appBar: _appBar(state),
-      body: SafeArea(
-        child: BackgroundBase(
-          true,
-          body: state.isLoading ?
-          Center(
-            child: CircularProgressIndicator(),
-          ): Column(
-            children: <Widget>[
-              Expanded(
-                child: _getBody(state),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _getBody(PosScreenState state) {
+  Widget _getBody(CheckoutScreenState state) {
     dynamic response = state.qrForm;
     List<Widget> widgets = [];
     widgets.add(
@@ -218,10 +164,10 @@ class _PosQRAppScreenState extends State<PosQRAppScreen> {
             List<dynamic> list = data['data'];
             for(dynamic w in list) {
               if (w[0]['type'] == 'image') {
-                Widget imageWidget = isOpened ? Container(
+                Widget imageWidget = state.qrImage != null ? (isOpened ? Container(
                     height: 300,
                     color: Colors.white,
-                    child: state.qrImage != null ? Image.memory(state.qrImage, fit: BoxFit.fitHeight,) :Container()
+                    child:  Image.memory(state.qrImage, fit: BoxFit.fitHeight,)):Container()
                 ): Container();
                 widgets.add(imageWidget);
               } else if (w[0]['type'] == 'text') {
@@ -232,7 +178,7 @@ class _PosQRAppScreenState extends State<PosQRAppScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text(
-                          Language.getPosTpmStrings(w[0]['value']),
+                        Language.getPosTpmStrings(w[0]['value']),
                       ),
                       MaterialButton(
                         minWidth: 0,
@@ -242,6 +188,7 @@ class _PosQRAppScreenState extends State<PosQRAppScreen> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
+                        elevation: 0,
                         color: Colors.black26,
                         child: Text(
                           Language.getPosTpmStrings(w[1]['text']),
@@ -255,6 +202,7 @@ class _PosQRAppScreenState extends State<PosQRAppScreen> {
                     ],
                   ),
                 ): Container();
+                if (isOpened) widgets.add(Divider(height: 0, color: Colors.grey, thickness: 0.5,));
                 widgets.add(textWidget);
               }
             }
@@ -262,23 +210,22 @@ class _PosQRAppScreenState extends State<PosQRAppScreen> {
         }
       }
     }
-    return Center(
-      child: Container(
-        padding: EdgeInsets.only(left: 16, right: 16),
-        height: isOpened ? 300.0 + 64.0 * 3.0: 64.0,
+
+    return Container(
+      width: Measurements.width,
+      padding: EdgeInsets.all(16),
+      child: Center(
         child: BlurEffectView(
-          color: Color.fromRGBO(20, 20, 20, 0.2),
-          blur: 15,
-          radius: 12,
-          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: widgets.map((e) => e).toList(),
+          radius: 20,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: widgets.map((e) => e).toList(),
+            ),
           ),
         ),
       ),
     );
   }
-}
 
+}

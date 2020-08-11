@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/checkout/models/models.dart';
+import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/models/pos.dart';
 import 'package:payever/connect/models/connect.dart';
 
@@ -35,6 +36,9 @@ class CheckoutScreenState {
   final FinanceExpress financeButton;
   final FinanceExpress financeCalculator;
   final FinanceExpress financeBubble;
+  final ConnectIntegration qrIntegration;
+  final dynamic qrForm;
+  final dynamic qrImage;
 
   CheckoutScreenState({
     this.isLoading = false,
@@ -67,6 +71,9 @@ class CheckoutScreenState {
     this.financeButton,
     this.financeCalculator,
     this.financeBubble,
+    this.qrIntegration,
+    this.qrForm,
+    this.qrImage,
   });
 
   List<Object> get props => [
@@ -100,6 +107,9 @@ class CheckoutScreenState {
     this.financeButton,
     this.financeCalculator,
     this.financeBubble,
+    this.qrIntegration,
+    this.qrForm,
+    this.qrImage,
   ];
 
   CheckoutScreenState copyWith({
@@ -134,6 +144,9 @@ class CheckoutScreenState {
     FinanceExpress financeButton,
     FinanceExpress financeCalculator,
     FinanceExpress financeBubble,
+    ConnectIntegration qrIntegration,
+    dynamic qrForm,
+    dynamic qrImage,
   }) {
     return CheckoutScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -166,6 +179,9 @@ class CheckoutScreenState {
       financeButton: financeButton ?? this.financeButton,
       financeCalculator: addSection ?? this.financeCalculator,
       financeBubble: financeBubble ?? this.financeBubble,
+      qrIntegration: qrIntegration,
+      qrForm: qrForm,
+      qrImage: qrImage,
     );
   }
 }

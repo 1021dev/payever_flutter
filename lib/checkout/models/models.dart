@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
+import 'package:payever/commons/views/custom_elements/updatedialog.dart';
 import 'package:payever/connect/models/connect.dart';
 
 class Checkout {

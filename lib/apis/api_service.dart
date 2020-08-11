@@ -2288,6 +2288,21 @@ class ApiService {
     }
   }
 
+  Future<dynamic> getConnectIntegration(String token, String id) async {
+    try {
+      print('$TAG - getConnectIntegration()');
+      dynamic response = await _client.getTypeless(
+        '${Env.connect}/api/integration/$id',
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+
+
   ///***************************************************************************
   ///****                      UTILS                                       *****
   ///***************************************************************************
