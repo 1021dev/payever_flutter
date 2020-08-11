@@ -39,6 +39,7 @@ class CheckoutScreenState {
   final ConnectIntegration qrIntegration;
   final dynamic qrForm;
   final dynamic qrImage;
+  final DevicePaymentSettings devicePaymentSettings;
 
   CheckoutScreenState({
     this.isLoading = false,
@@ -74,6 +75,7 @@ class CheckoutScreenState {
     this.qrIntegration,
     this.qrForm,
     this.qrImage,
+    this.devicePaymentSettings,
   });
 
   List<Object> get props => [
@@ -110,6 +112,7 @@ class CheckoutScreenState {
     this.qrIntegration,
     this.qrForm,
     this.qrImage,
+    this.devicePaymentSettings,
   ];
 
   CheckoutScreenState copyWith({
@@ -147,6 +150,7 @@ class CheckoutScreenState {
     ConnectIntegration qrIntegration,
     dynamic qrForm,
     dynamic qrImage,
+    DevicePaymentSettings devicePaymentSettings,
   }) {
     return CheckoutScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -182,6 +186,7 @@ class CheckoutScreenState {
       qrIntegration: qrIntegration,
       qrForm: qrForm,
       qrImage: qrImage,
+      devicePaymentSettings: devicePaymentSettings ?? this.devicePaymentSettings
     );
   }
 }

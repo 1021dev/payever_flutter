@@ -17,23 +17,19 @@ List<String> dropdownItems = [
   'Verify by code',
   'Verify by ID',
 ];
-class PosDevicePaymentSettings extends StatefulWidget {
+class CheckoutDevicePaymentScreen extends StatefulWidget {
 
-  final PosScreenBloc screenBloc;
-  final String businessId;
-  final bool installed;
+  final CheckoutScreenBloc screenBloc;
 
-  PosDevicePaymentSettings({
+  CheckoutDevicePaymentScreen({
     this.screenBloc,
-    this.businessId,
-    this.installed = true,
   });
 
   @override
-  createState() => _PosDevicePaymentSettingsState();
+  createState() => _CheckoutDevicePaymentScreenState();
 }
 
-class _PosDevicePaymentSettingsState extends State<PosDevicePaymentSettings> {
+class _CheckoutDevicePaymentScreenState extends State<CheckoutDevicePaymentScreen> {
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
@@ -43,11 +39,7 @@ class _PosDevicePaymentSettingsState extends State<PosDevicePaymentSettings> {
 
   @override
   void initState() {
-    if (widget.installed) {
-      widget.screenBloc.add(GetPosDevicePaymentSettings(businessId: widget.businessId));
-    } else {
-      widget.screenBloc.add(InstallDevicePaymentEvent(businessId: widget.businessId));
-    }
+    widget.screenBloc.add(GetDevicePaymentSettings());
     super.initState();
   }
 
@@ -69,7 +61,7 @@ class _PosDevicePaymentSettingsState extends State<PosDevicePaymentSettings> {
 
     return BlocListener(
       bloc: widget.screenBloc,
-      listener: (BuildContext context, PosScreenState state) async {
+      listener: (BuildContext context, CheckoutScreenState state) async {
         if (state is PosScreenFailure) {
           Navigator.pushReplacement(
             context,
@@ -80,16 +72,16 @@ class _PosDevicePaymentSettingsState extends State<PosDevicePaymentSettings> {
           );
         }
       },
-      child: BlocBuilder<PosScreenBloc, PosScreenState>(
+      child: BlocBuilder<CheckoutScreenBloc, CheckoutScreenState>(
         bloc: widget.screenBloc,
-        builder: (BuildContext context, PosScreenState state) {
+        builder: (BuildContext context, CheckoutScreenState state) {
           return _body(state);
         },
       ),
     );
   }
 
-  Widget _appBar(PosScreenState state) {
+  Widget _appBar(CheckoutScreenState state) {
     return AppBar(
       centerTitle: false,
       elevation: 0,
@@ -131,7 +123,7 @@ class _PosDevicePaymentSettingsState extends State<PosDevicePaymentSettings> {
     );
   }
 
-  Widget _body(PosScreenState state) {
+  Widget _body(CheckoutScreenState state) {
     return Scaffold(
       backgroundColor: Colors.black,
       resizeToAvoidBottomPadding: false,
@@ -144,7 +136,6 @@ class _PosDevicePaymentSettingsState extends State<PosDevicePaymentSettings> {
             child: CircularProgressIndicator(),
           ): Column(
             children: <Widget>[
-              _toolBar(state),
               Expanded(
                 child: _getBody(state),
               ),
@@ -155,15 +146,7 @@ class _PosDevicePaymentSettingsState extends State<PosDevicePaymentSettings> {
     );
   }
 
-  Widget _toolBar(PosScreenState state) {
-    return Container(
-      height: 44,
-      color: Colors.black87,
-      child: Container(),
-    );
-  }
-
-  Widget _getBody(PosScreenState state) {
+  Widget _getBody(CheckoutScreenState state) {
     if (state.devicePaymentSettings == null) {
       return Center(
         child: CircularProgressIndicator(),
@@ -247,7 +230,7 @@ class _PosDevicePaymentSettingsState extends State<PosDevicePaymentSettings> {
                             onChanged: (value) {
                               DevicePaymentSettings settings = state.devicePaymentSettings;
                               settings.secondFactor = value;
-                              widget.screenBloc.add(UpdateDevicePaymentSettings(settings: settings));
+                              widget.screenBloc.add(UpdateCheckoutDevicePaymentSettings(settings: settings));
                             },
                           ),
                         ),
@@ -282,7 +265,7 @@ class _PosDevicePaymentSettingsState extends State<PosDevicePaymentSettings> {
                             onChanged: (value) {
                               DevicePaymentSettings settings = state.devicePaymentSettings;
                               settings.autoresponderEnabled = value;
-                              widget.screenBloc.add(UpdateDevicePaymentSettings(settings: settings));
+                              widget.screenBloc.add(UpdateCheckoutDevicePaymentSettings(settings: settings));
                             },
                           ),
                         ),
@@ -322,7 +305,7 @@ class _PosDevicePaymentSettingsState extends State<PosDevicePaymentSettings> {
                             onChanged: (value) {
                               DevicePaymentSettings settings = state.devicePaymentSettings;
                               settings.verificationType = dropdownItems.indexOf(value, 0);
-                              widget.screenBloc.add(UpdateDevicePaymentSettings(settings: settings));
+                              widget.screenBloc.add(UpdateCheckoutDevicePaymentSettings(settings: settings));
                             },
                             items: dropdownItems.map((label) => DropdownMenuItem(
                               child: Text(
@@ -353,13 +336,7 @@ class _PosDevicePaymentSettingsState extends State<PosDevicePaymentSettings> {
                 child: SizedBox.expand(
                   child: MaterialButton(
                     onPressed: () {
-                      DevicePaymentSettings settings = state.devicePaymentSettings;
-                      widget.screenBloc.add(SaveDevicePaymentSettings(
-                        businessId: widget.businessId,
-                        autoresponderEnabled: settings.autoresponderEnabled,
-                        secondFactor: settings.secondFactor,
-                        verificationType: settings.verificationType,
-                      ));
+                      widget.screenBloc.add(SaveCheckoutDevicePaymentSettings());
                     },
                     child: state.isUpdating ? Container(
                       child: CircularProgressIndicator(),

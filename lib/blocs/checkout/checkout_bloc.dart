@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/apis/api_service.dart';
+import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/dashboard/dashboard_bloc.dart';
 import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/commons.dart';
@@ -70,6 +71,12 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       yield* getQrIntegration();
     } else if (event is ClearQrIntegration) {
       yield state.copyWith(qrForm: null, qrImage: null, qrIntegration: null);
+    } else if (event is GetDevicePaymentSettings) {
+      yield* getDevicePaymentSettings(state.business);
+    } else if (event is UpdateCheckoutDevicePaymentSettings) {
+      yield state.copyWith(devicePaymentSettings: event.settings);
+    } else if (event is SaveCheckoutDevicePaymentSettings) {
+
     }
   }
 
@@ -655,5 +662,25 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     yield state.copyWith(qrIntegration: integration, qrForm: response, qrImage: qrResponse.bodyBytes);
 
   }
+
+  Stream<CheckoutScreenState> getDevicePaymentSettings(String businessId) async* {
+    dynamic devicePaymentSettingsObj = await api.getPosDevicePaymentSettings(businessId, GlobalUtils.activeToken.accessToken);
+    DevicePaymentSettings devicePayment = DevicePaymentSettings.toMap(devicePaymentSettingsObj);
+    yield state.copyWith(devicePaymentSettings: devicePayment,);
+  }
+
+  Stream<CheckoutScreenState> saveDevicePaymentSettings() async* {
+    yield state.copyWith(isUpdating: true);
+    dynamic devicePaymentSettingsObj = await api.putDevicePaymentSettings(
+      state.business,
+      GlobalUtils.activeToken.accessToken,
+      state.devicePaymentSettings.autoresponderEnabled,
+      state.devicePaymentSettings.secondFactor,
+      state.devicePaymentSettings.verificationType,
+    );
+    DevicePaymentSettings devicePayment = DevicePaymentSettings.toMap(devicePaymentSettingsObj);
+    yield state.copyWith(devicePaymentSettings: devicePayment, isLoading: false, isUpdating: false);
+  }
+
 
 }

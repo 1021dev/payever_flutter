@@ -9,6 +9,7 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/dashboard/dashboard_bloc.dart';
 import 'package:payever/checkout/models/models.dart';
 import 'package:payever/checkout/views/channels_screeen.dart';
+import 'package:payever/checkout/views/checkout_device_payment_screen.dart';
 import 'package:payever/checkout/views/checkout_link_edit_screen.dart';
 import 'package:payever/checkout/views/connect_screen.dart';
 import 'package:payever/checkout/views/payment_options_screen.dart';
@@ -19,7 +20,6 @@ import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
-import 'package:payever/connect/models/connect.dart';
 import 'package:payever/dashboard/sub_view/dashboard_menu_view.dart';
 import 'package:payever/login/login_screen.dart';
 import 'package:payever/notifications/notifications_screen.dart';
@@ -545,6 +545,17 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   child: CheckoutQRIntegrationScreen(
                     screenBloc: screenBloc,
                     title: 'QR',
+                  ),
+                  type: PageTransitionType.fade,
+                  duration: Duration(milliseconds: 500),
+                ),
+              );
+            } else if (title.contains('Device')) {
+              Navigator.push(
+                context,
+                PageTransition(
+                  child: CheckoutDevicePaymentScreen(
+                    screenBloc: screenBloc,
                   ),
                   type: PageTransitionType.fade,
                   duration: Duration(milliseconds: 500),

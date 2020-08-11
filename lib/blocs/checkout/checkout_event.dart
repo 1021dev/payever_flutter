@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:payever/checkout/models/models.dart';
+import 'package:payever/commons/commons.dart';
 
 abstract class CheckoutScreenEvent extends Equatable {
   CheckoutScreenEvent();
@@ -110,4 +111,20 @@ class FinanceExpressTypeEvent extends CheckoutScreenEvent {
 }
 
 class GetQrIntegration extends CheckoutScreenEvent {}
+
 class ClearQrIntegration extends CheckoutScreenEvent {}
+
+class GetDevicePaymentSettings extends CheckoutScreenEvent {}
+
+class UpdateCheckoutDevicePaymentSettings extends CheckoutScreenEvent{
+  final DevicePaymentSettings settings;
+
+  UpdateCheckoutDevicePaymentSettings({this.settings});
+
+  @override
+  List<Object> get props => [
+    this.settings,
+  ];
+}
+
+class SaveCheckoutDevicePaymentSettings extends CheckoutScreenEvent{}

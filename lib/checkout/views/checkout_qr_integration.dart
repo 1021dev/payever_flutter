@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/blocs/bloc.dart';
-import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
@@ -227,5 +226,4 @@ class _CheckoutQRIntegrationScreenState extends State<CheckoutQRIntegrationScree
       ),
     );
   }
-
 }
