@@ -20,7 +20,7 @@ class CheckoutLinkEditScreen extends StatefulWidget {
     if (title == 'Text Link') {
       type = Finance.TEXT_LINK;
     } else if (title == 'Button') {
-      type = Finance.BUBBLE;
+      type = Finance.BUTTON;
     } else if (title == 'Calculator') {
       type = Finance.CALCULATOR;
     } else if (title == 'Bubble') {
@@ -137,10 +137,10 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
         return _getTextLinkWidget(state);
       case 'Button':
         financeExpress = state.financeButton;
-        return _getTextLinkWidget(state);
+        return _getButtonWidget(state);
       case 'Bubble':
         financeExpress = state.financeBubble;
-        return _getTextLinkWidget(state);
+        return _getBubbleWidget(state);
       case 'Calculator':
         financeExpress = state.financeCalculator;
         return _getTextLinkWidget(state);
@@ -160,209 +160,297 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             SizedBox(width: 30,),
-            Text(
-              'Height',
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-            ),
-            Container(
-              alignment: Alignment.center,
-              margin: EdgeInsets.only(left: 15, right: 30),
-              width: 60,
-              height: 30,
-              decoration: BoxDecoration(
-                color: Color.fromRGBO(100, 100, 100, 1),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: TextFormField(
-                onSaved: (val) {},
-                onChanged: (val) {
-                  financeExpress.height = int.parse(val);
-                  widget.screenBloc.add(UpdateFinanceExpressTypeEvent(widget.type));
-                },
-                initialValue: '${state.financeTextLink.height}',
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Height required';
-                  } else {
-                    return null;
-                  }
-                },
-                textAlign: TextAlign.center,
-                decoration: new InputDecoration(
-                  border: InputBorder.none,
-                ),
-                style: TextStyle(fontSize: 16),
-                keyboardType: TextInputType.number,
-              ),
-            ),
-            Text(
-              'Text Size',
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(width: 15,),
-            Container(
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: Color.fromRGBO(100, 100, 100, 1),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              height: 30,
-              width: 45,
-              child: PopupMenuButton<CheckOutPopupButton>(
-                child: Text(
-                  state.financeTextLink.textSize,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontFamily: 'HelveticaNeueMed',
-                  ),
-                ),
-                offset: Offset(0, 100),
-                onSelected: (CheckOutPopupButton item) => item.onTap(),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                color: Colors.black87,
-                itemBuilder: (BuildContext context) {
-                  return _textSizePopup(context, state).map((CheckOutPopupButton item) {
-                    return PopupMenuItem<CheckOutPopupButton>(
-                      value: item,
-                      child: Row(
-                        children: <Widget>[
-                          item.icon,
-                          SizedBox(
-                            width: 8,
-                          ),
-                          Text(
-                            item.title,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }).toList();
-                },
-              ),
-            ),
+            _height(),
+            _textSize(state),
             SizedBox(width: 30,),
-            Text(
-              'Alignment',
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            _alignment(state),
+            _colorPad('Link Color'),
+            SizedBox(width: 30,),
+            _divider(),
+            SizedBox(width: 30,),
+            _visibilityAdaptive(true),
+            SizedBox(width: 30,),
+            _divider(),
+            SizedBox(width: 30,),
+            _financeExpressOverlay(),
+            SizedBox(width: 30,),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _getButtonWidget(CheckoutScreenState state) {
+    return Container(
+      height: 64,
+      color: Colors.black45,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            SizedBox(width: 30,),
+            _height(),
+            _textSize(state),
+//            _colorPad('Text color'),
+//            _colorPad('Button color'),
+            _alignment(state),
+            _visibilityAdaptive(true),
+            _financeExpressOverlay(),
+            SizedBox(width: 30,),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _getBubbleWidget(CheckoutScreenState state) {
+    return Container(
+      height: 64,
+      color: Colors.black45,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            SizedBox(width: 30,),
+            _visibilityAdaptive(false),
+            SizedBox(width: 30,),
+            _financeExpressOverlay(),
+            SizedBox(width: 30,),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _height() {
+    return Row(
+      children: <Widget>[
+        Text(
+          'Height',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        Container(
+          alignment: Alignment.center,
+          margin: EdgeInsets.only(left: 15, right: 30),
+          width: 60,
+          height: 30,
+          decoration: BoxDecoration(
+            color: Color.fromRGBO(100, 100, 100, 1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: TextFormField(
+            onSaved: (val) {},
+            onChanged: (val) {
+              financeExpress.height = int.parse(val);
+              widget.screenBloc.add(UpdateFinanceExpressTypeEvent(widget.type));
+            },
+            initialValue: '${financeExpress.height}',
+            validator: (value) {
+              if (value.isEmpty) {
+                return 'Height required';
+              } else {
+                return null;
+              }
+            },
+            textAlign: TextAlign.center,
+            decoration: new InputDecoration(
+              border: InputBorder.none,
             ),
-            Container(
-              alignment: Alignment.center,
-              margin: EdgeInsets.only(left: 15, right: 30),
-              width: 30,
-              height: 30,
-              decoration: BoxDecoration(
-                color: Color.fromRGBO(100, 100, 100, 1),
-                borderRadius: BorderRadius.circular(8),
+            style: TextStyle(fontSize: 16),
+            keyboardType: TextInputType.number,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _textSize(CheckoutScreenState state) {
+    return Row(
+      children: <Widget>[
+        Text(
+          'Text Size',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(width: 15,),
+        Container(
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: Color.fromRGBO(100, 100, 100, 1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          height: 30,
+          width: 45,
+          child: PopupMenuButton<CheckOutPopupButton>(
+            child: Text(
+              financeExpress.textSize,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontFamily: 'HelveticaNeueMed',
               ),
-              child: PopupMenuButton<CheckOutPopupButton>(
-                child: _alignmentImg(financeExpress.alignment),
-                offset: Offset(0, 100),
-                onSelected: (CheckOutPopupButton item) => item.onTap(),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                color: Colors.black87,
-                itemBuilder: (BuildContext context) {
-                  return _alignmentPopup(context, state).map((CheckOutPopupButton item) {
-                    return PopupMenuItem<CheckOutPopupButton>(
-                      value: item,
-                      child: Row(
-                        children: <Widget>[
-                          item.icon,
-                          SizedBox(
-                            width: 8,
-                          ),
-                          Text(
-                            item.title,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }).toList();
-                },
-              ),
             ),
-            Text(
-              'Link Color',
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            offset: Offset(0, 100),
+            onSelected: (CheckOutPopupButton item) => item.onTap(),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
             ),
-            GestureDetector(
-              onTap: (){
-                showDialog(
-                  context: context,
-                  child: AlertDialog(
-                    title: const Text('Pick a color!'),
-                    content: SingleChildScrollView(
-                      child: ColorPicker(
-                        pickerColor: pickerColor == null
-                            ? colorConvert(widget
-                                .screenBloc.state.financeTextLink.linkColor)
-                            : pickerColor,
-                        onColorChanged: changeColor,
-                        showLabel: true,
-                        pickerAreaHeightPercent: 0.8,
+            color: Colors.black87,
+            itemBuilder: (BuildContext context) {
+              return _textSizePopup(context, state).map((CheckOutPopupButton item) {
+                return PopupMenuItem<CheckOutPopupButton>(
+                  value: item,
+                  child: Row(
+                    children: <Widget>[
+                      item.icon,
+                      SizedBox(
+                        width: 8,
                       ),
-                    ),
-                    actions: <Widget>[
-                      FlatButton(
-                        child: const Text('Got it'),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          var hex = '${pickerColor.value.toRadixString(16)}';
-                          state.financeTextLink.linkColor = '#${hex.substring(2)}';
-                          widget.screenBloc.add(
-                              UpdateFinanceExpressTypeEvent(widget.type));
-                        },
+                      Text(
+                        item.title,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
                     ],
                   ),
                 );
-              },
-              child: Container(
-                margin: EdgeInsets.only(left: 15, right: 30),
-                width: 30,
-                height: 30,
-                color: pickerColor == null
-                    ? colorConvert(widget
-                    .screenBloc.state.financeTextLink.linkColor)
-                    : pickerColor,
+              }).toList();
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _alignment(CheckoutScreenState state) {
+    return Row(
+      children: <Widget>[
+        Text(
+          'Alignment',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        Container(
+          alignment: Alignment.center,
+          margin: EdgeInsets.only(left: 15, right: 30),
+          width: 30,
+          height: 30,
+          decoration: BoxDecoration(
+            color: Color.fromRGBO(100, 100, 100, 1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: PopupMenuButton<CheckOutPopupButton>(
+            child: _alignmentImg(financeExpress.alignment),
+            offset: Offset(0, 100),
+            onSelected: (CheckOutPopupButton item) => item.onTap(),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            color: Colors.black87,
+            itemBuilder: (BuildContext context) {
+              return _alignmentPopup(context, state).map((CheckOutPopupButton item) {
+                return PopupMenuItem<CheckOutPopupButton>(
+                  value: item,
+                  child: Row(
+                    children: <Widget>[
+                      item.icon,
+                      SizedBox(
+                        width: 8,
+                      ),
+                      Text(
+                        item.title,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }).toList();
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _colorPad(String title) {
+    return Row(
+      children: <Widget>[
+        Text(
+          title,
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        GestureDetector(
+          onTap: (){
+            showDialog(
+              context: context,
+              child: AlertDialog(
+                title: const Text('Pick a color!'),
+                content: SingleChildScrollView(
+                  child: ColorPicker(
+                    pickerColor: pickerColor == null
+                        ? colorConvert(financeExpress.linkColor)
+                        : pickerColor,
+                    onColorChanged: changeColor,
+                    showLabel: true,
+                    pickerAreaHeightPercent: 0.8,
+                  ),
+                ),
+                actions: <Widget>[
+                  FlatButton(
+                    child: const Text('Got it'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      var hex = '${pickerColor.value.toRadixString(16)}';
+                      financeExpress.linkColor = '#${hex.substring(2)}';
+                      widget.screenBloc.add(
+                          UpdateFinanceExpressTypeEvent(widget.type));
+                    },
+                  ),
+                ],
               ),
-            ),
-            Container(
-              width: 2,
-              height: 30,
-              color: Colors.grey,
-            ),
-            SizedBox(width: 30,),
-            Text(
-              'Visibility',
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(width: 30,),
-            Transform.scale(
-              scale: 0.8,
-              child: CupertinoSwitch(
-                value: state.financeTextLink.visibility,
-                onChanged: (val) {
-                  state.financeTextLink.visibility = val;
-                  widget.screenBloc.add(
-                      UpdateFinanceExpressTypeEvent(widget.type));
-                },
-              ),
-            ),
+            );
+          },
+          child: Container(
+            margin: EdgeInsets.only(left: 15),
+            width: 30,
+            height: 30,
+            color: pickerColor == null
+                ? colorConvert(financeExpress.linkColor)
+                : pickerColor,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _visibilityAdaptive(bool showAdaptive) {
+    return Row(
+      children: <Widget>[
+        Text(
+          'Visibility',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(width: 30,),
+        Transform.scale(
+          scale: 0.8,
+          child: CupertinoSwitch(
+            value: financeExpress.visibility,
+            onChanged: (val) {
+              financeExpress.visibility = val;
+              widget.screenBloc.add(
+                  UpdateFinanceExpressTypeEvent(widget.type));
+            },
+          ),
+        ),
+        showAdaptive ? Row(
+          children: <Widget>[
             SizedBox(width: 30,),
             Text(
               'Adaptive',
@@ -372,55 +460,63 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
             Transform.scale(
               scale: 0.8,
               child: CupertinoSwitch(
-                value: state.financeTextLink.adaptiveDesign,
+                value: financeExpress.adaptiveDesign,
                 onChanged: (val) {
-                  state.financeTextLink.adaptiveDesign = val;
+                  financeExpress.adaptiveDesign = val;
                   widget.screenBloc.add(
                       UpdateFinanceExpressTypeEvent(widget.type));
                 },
               ),
             ),
-            Container(
-              margin: EdgeInsets.only(left: 30, right: 30),
-              width: 2,
-              height: 30,
-              color: Colors.grey,
-            ),
-            Text(
-              'Finance Express',
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(width: 30,),
-            Transform.scale(
-              scale: 0.8,
-              child: CupertinoSwitch(
-                value: state.financeTextLink.linkTo == 'finance_express',
-                onChanged: (val) {
-                  state.financeTextLink.linkTo = val ? 'finance_express' : '';
-                  widget.screenBloc.add(UpdateFinanceExpressTypeEvent(widget.type));
-                },
-              ),
-            ),
-            SizedBox(width: 30,),
-            Text(
-              'Overlay',
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(width: 30,),
-            Transform.scale(
-              scale: 0.8,
-              child: CupertinoSwitch(
-                value: state.financeTextLink.linkTo == 'finance_calculator',
-                onChanged: (val) {
-                  state.financeTextLink.linkTo = val ? 'finance_calculator' : '';
-                  widget.screenBloc.add(UpdateFinanceExpressTypeEvent(widget.type));
-                },
-              ),
-            ),
-            SizedBox(width: 30,),
           ],
+        ): Container(),
+      ],
+    );
+  }
+
+  Widget _divider() {
+    return Container(
+      width: 2,
+      height: 30,
+      color: Colors.grey,
+    );
+  }
+
+  Widget _financeExpressOverlay() {
+    return Row(
+      children: <Widget>[
+        Text(
+          'Finance Express',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-      ),
+        SizedBox(width: 30,),
+        Transform.scale(
+          scale: 0.8,
+          child: CupertinoSwitch(
+            value: financeExpress.linkTo == 'finance_express',
+            onChanged: (val) {
+              financeExpress.linkTo = val ? 'finance_express' : '';
+              widget.screenBloc.add(UpdateFinanceExpressTypeEvent(widget.type));
+            },
+          ),
+        ),
+        SizedBox(width: 30,),
+        Text(
+          'Overlay',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(width: 30,),
+        Transform.scale(
+          scale: 0.8,
+          child: CupertinoSwitch(
+            value: financeExpress.linkTo == 'finance_calculator',
+            onChanged: (val) {
+              financeExpress.linkTo = val ? 'finance_calculator' : '';
+              widget.screenBloc.add(UpdateFinanceExpressTypeEvent(widget.type));
+            },
+          ),
+        ),
+      ],
     );
   }
 
