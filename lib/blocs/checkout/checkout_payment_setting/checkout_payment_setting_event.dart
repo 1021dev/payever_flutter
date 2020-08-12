@@ -23,3 +23,23 @@ class CheckoutPaymentSettingScreenInitEvent extends CheckoutPaymentSettingScreen
     this.connectModel,
   ];
 }
+
+class AddPaymentOptionEvent extends CheckoutPaymentSettingScreenEvent {
+  final String name;
+  final String paymentMethod;
+
+  AddPaymentOptionEvent({this.name, this.paymentMethod,});
+}
+
+class DeletePaymentOptionEvent extends CheckoutPaymentSettingScreenEvent {
+  final String id;
+
+  DeletePaymentOptionEvent({this.id});
+}
+
+class UpdatePaymentOptionEvent extends CheckoutPaymentSettingScreenEvent {
+  final String id;
+  final Map<String, dynamic> body;
+
+  UpdatePaymentOptionEvent({this.id, this.body});
+}

@@ -20,8 +20,16 @@ class CheckoutPaymentSettingScreenBloc extends Bloc<CheckoutPaymentSettingScreen
   Stream<CheckoutPaymentSettingScreenState> mapEventToState(
       CheckoutPaymentSettingScreenEvent event) async* {
     if (event is CheckoutPaymentSettingScreenInitEvent) {
-      yield state.copyWith(business: event.business, connectModel: event.connectModel);
-      yield* fetchInitialData(event.business);
+      if (event.business != null) {
+        yield state.copyWith(business: event.business, connectModel: event.connectModel);
+      }
+      yield* fetchInitialData(state.business);
+    } else if (event is AddPaymentOptionEvent) {
+      yield* addPaymentOption(event.name);
+    } else if (event is DeletePaymentOptionEvent) {
+      yield* deletePaymentOption(event.id);
+    } else if (event is UpdatePaymentOptionEvent) {
+      yield* updatePaymentOption(event.id, event.body);
     }
   }
 
@@ -67,7 +75,31 @@ class CheckoutPaymentSettingScreenBloc extends Bloc<CheckoutPaymentSettingScreen
     );
   }
 
-  Stream<CheckoutPaymentSettingScreenState> getConnectIntegration() async* {
+  Stream<CheckoutPaymentSettingScreenState> deletePaymentOption(String id) async* {
+    yield state.copyWith(deleting: int.parse(id));
+    dynamic response = await api.deletePaymentOption(token, id);
+    yield state.copyWith(deleting: 0);
+    add(CheckoutPaymentSettingScreenInitEvent());
+  }
 
+  Stream<CheckoutPaymentSettingScreenState> addPaymentOption(String name) async* {
+    yield state.copyWith(isAdding: true);
+    Map<String, dynamic> body = {
+      'name': name,
+      'payment_method': state.connectModel.integration.name,
+    };
+    dynamic response = await api.addPaymentOption(token, state.business, body);
+
+    yield state.copyWith(isAdding: false);
+    yield CheckoutPaymentSettingScreenSuccess(business: state.business, connectModel: state.connectModel);
+  }
+
+  Stream<CheckoutPaymentSettingScreenState> updatePaymentOption(String id, Map<String, dynamic> body) async* {
+    yield state.copyWith(isSaving: true);
+    print(body);
+    dynamic response = await api.updatePaymentOption(token, id, body);
+
+    yield state.copyWith(isSaving: false);
+    add(CheckoutPaymentSettingScreenInitEvent());
   }
 }

@@ -3,6 +3,9 @@ import 'package:payever/connect/models/connect.dart';
 
 class CheckoutPaymentSettingScreenState {
   final bool isLoading;
+  final bool isAdding;
+  final bool isSaving;
+  final num deleting;
   final String business;
   final List<Payment> paymentOptions;
   final Map<String, PaymentVariant> paymentVariants;
@@ -12,6 +15,9 @@ class CheckoutPaymentSettingScreenState {
 
   CheckoutPaymentSettingScreenState({
     this.isLoading = false,
+    this.isAdding = false,
+    this.isSaving = false,
+    this.deleting,
     this.business,
     this.paymentOptions = const [],
     this.paymentVariants = const {},
@@ -22,6 +28,9 @@ class CheckoutPaymentSettingScreenState {
 
   List<Object> get props => [
     this.isLoading,
+    this.isAdding,
+    this.isSaving,
+    this.deleting,
     this.business,
     this.paymentOptions,
     this.paymentVariants,
@@ -32,6 +41,9 @@ class CheckoutPaymentSettingScreenState {
 
   CheckoutPaymentSettingScreenState copyWith({
     bool isLoading,
+    bool isAdding,
+    bool isSaving,
+    num deleting,
     String business,
     List<Payment> paymentOptions,
     Map<String, PaymentVariant> paymentVariants,
@@ -41,6 +53,9 @@ class CheckoutPaymentSettingScreenState {
   }) {
     return CheckoutPaymentSettingScreenState(
       isLoading: isLoading ?? this.isLoading,
+      isAdding: isAdding ?? this.isAdding,
+      isSaving: isSaving ?? this.isSaving,
+      deleting: deleting ?? this.deleting,
       business: business ?? this.business,
       paymentOptions: paymentOptions ?? this.paymentOptions,
       paymentVariants: paymentVariants ?? this.paymentVariants,
@@ -51,7 +66,12 @@ class CheckoutPaymentSettingScreenState {
   }
 }
 
-class CheckoutPaymentSettingScreenSuccess extends CheckoutPaymentSettingScreenState {}
+class CheckoutPaymentSettingScreenSuccess extends CheckoutPaymentSettingScreenState {
+  final String business;
+  final ConnectModel connectModel;
+
+  CheckoutPaymentSettingScreenSuccess({this.business, this.connectModel,});
+}
 
 class CheckoutPaymentSettingScreenFailure extends CheckoutPaymentSettingScreenState {
   final String error;

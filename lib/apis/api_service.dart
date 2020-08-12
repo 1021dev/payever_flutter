@@ -973,6 +973,59 @@ class ApiService {
     }
   }
 
+  Future<dynamic> addPaymentOption(String token, String business, Map body) async {
+    try {
+      print('$TAG - addPaymentOption()');
+      dynamic response = await _client.postTypeLess(
+          '${Env.checkoutPhp}/api/rest/v3/business-payment-option/$business',
+          body: body,
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> updatePaymentOption(String token, String id, Map body) async {
+    try {
+      print('$TAG - updatePaymentOption()');
+      dynamic response = await _client.postTypeLess(
+          '${Env.checkoutPhp}/api/rest/v1/business-payment-option/$id',
+          body: body,
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> deletePaymentOption(String token, String id) async {
+    try {
+      print('$TAG - deletePaymentOption()');
+      dynamic response = await _client.deleteTypeless(
+          '${Env.checkoutPhp}/api/rest/v3/business-payment-option/$id',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<dynamic> getPaymentVariants(String token, String business) async {
     try {
       print('$TAG - getPaymentVariants()');
