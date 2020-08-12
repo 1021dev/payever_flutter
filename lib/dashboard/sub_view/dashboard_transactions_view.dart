@@ -51,8 +51,6 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
     if (widget.lastYear.length > 0) {
       NumberFormat format = NumberFormat();
       currency = format.simpleCurrencySymbol(widget.lastYear.last.currency);
-
-      print('Last monthly => ${widget.lastYear.last.amount}');
     }
     if (widget.businessApps.setupStatus == 'completed') {
       return BlurEffectView(

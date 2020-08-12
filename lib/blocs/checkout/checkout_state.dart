@@ -206,7 +206,7 @@ class CheckoutScreenState {
       addSection: addSection ?? this.addSection,
       financeTextLink: financeTextLink ?? this.financeTextLink,
       financeButton: financeButton ?? this.financeButton,
-      financeCalculator: addSection ?? this.financeCalculator,
+      financeCalculator: financeCalculator ?? this.financeCalculator,
       financeBubble: financeBubble ?? this.financeBubble,
       qrIntegration: qrIntegration,
       qrForm: qrForm,

@@ -72,19 +72,20 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
                           child: CircularProgressIndicator(),
                         )
                       : Column(
-                          children: <Widget>[
-                            _getBody(state),
-                            Expanded(
-                              child: Container(
-                                child: state.isUpdating
-                                    ? Center(
-                                        child: CircularProgressIndicator(),
-                                      )
-                                    : Container(),
-                              ),
-                            ),
-                          ],
-                        )),
+                    children: <Widget>[
+                      _getBody(state),
+                      Expanded(
+                        child: Container(
+                          child: state.isUpdating
+                              ? Center(
+                            child: CircularProgressIndicator(),
+                          )
+                              : Container(),
+                        ),
+                      ),
+                    ],
+                  ),
+              ),
             ),
           );
         },
@@ -134,16 +135,17 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
     switch (widget.title) {
       case 'Text Link':
         financeExpress = state.financeTextLink;
-        return _getTextLinkWidget(state);
+        return state.financeTextLink != null
+            ? _getTextLinkWidget(state) : Container();
       case 'Button':
         financeExpress = state.financeButton;
-        return _getButtonWidget(state);
+        return state.financeButton != null ? _getButtonWidget(state) : Container();
       case 'Bubble':
         financeExpress = state.financeBubble;
-        return _getBubbleWidget(state);
+        return state.financeBubble != null ? _getBubbleWidget(state) : Container();
       case 'Calculator':
         financeExpress = state.financeCalculator;
-        return _getTextLinkWidget(state);
+        return state.financeCalculator != null ? _getCalculatorWidget(state) : Container();
       default:
         financeExpress = state.financeTextLink;
         return _getTextLinkWidget(state);
@@ -159,21 +161,23 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            SizedBox(width: 30,),
+            SizedBox(width: 16,),
             _height(),
+            SizedBox(width: 16,),
             _textSize(state),
-            SizedBox(width: 30,),
+            SizedBox(width: 16,),
             _alignment(state),
-            _colorPad('Link Color'),
-            SizedBox(width: 30,),
+            SizedBox(width: 16,),
+            _colorPad('Link Color', state.financeTextLink.linkColor),
+            SizedBox(width: 16,),
             _divider(),
-            SizedBox(width: 30,),
+            SizedBox(width: 16,),
             _visibilityAdaptive(true),
-            SizedBox(width: 30,),
+            SizedBox(width: 16,),
             _divider(),
-            SizedBox(width: 30,),
+            SizedBox(width: 16,),
             _financeExpressOverlay(),
-            SizedBox(width: 30,),
+            SizedBox(width: 16,),
           ],
         ),
       ),
@@ -189,7 +193,7 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            SizedBox(width: 30,),
+            SizedBox(width: 16,),
             _height(),
             _textSize(state),
 //            _colorPad('Text color'),
@@ -197,7 +201,7 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
             _alignment(state),
             _visibilityAdaptive(true),
             _financeExpressOverlay(),
-            SizedBox(width: 30,),
+            SizedBox(width: 16,),
           ],
         ),
       ),
@@ -213,11 +217,41 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            SizedBox(width: 30,),
+            SizedBox(width: 16,),
             _visibilityAdaptive(false),
-            SizedBox(width: 30,),
+            SizedBox(width: 16,),
             _financeExpressOverlay(),
-            SizedBox(width: 30,),
+            SizedBox(width: 16,),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _getCalculatorWidget(CheckoutScreenState state) {
+    return Container(
+      height: 64,
+      color: Colors.black45,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            SizedBox(width: 16,),
+            _colorPad('Text Color', state.financeCalculator.textColor),
+            SizedBox(width: 16,),
+            _colorPad('Button Color', state.financeCalculator.buttonColor),
+            SizedBox(width: 16,),
+            _colorPad('Frame Color', state.financeCalculator.borderColor),
+            SizedBox(width: 16,),
+            _divider(),
+            SizedBox(width: 16),
+            _visibilityAdaptive(true),
+            SizedBox(width: 16,),
+            _divider(),
+            SizedBox(width: 16,),
+            _financeExpressOverlay(),
+            SizedBox(width: 16,),
           ],
         ),
       ),
@@ -379,7 +413,7 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
     );
   }
 
-  Widget _colorPad(String title) {
+  Widget _colorPad(String title, String color) {
     return Row(
       children: <Widget>[
         Text(
@@ -422,7 +456,7 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
             width: 30,
             height: 30,
             color: pickerColor == null
-                ? colorConvert(financeExpress.linkColor)
+                ? colorConvert(color)
                 : pickerColor,
           ),
         ),
