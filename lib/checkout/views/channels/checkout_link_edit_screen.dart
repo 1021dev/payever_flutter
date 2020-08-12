@@ -7,9 +7,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/checkout/models/models.dart';
 import 'package:payever/checkout/widgets/checkout_top_button.dart';
-import 'package:payever/commons/utils/common_utils.dart';
-import 'package:payever/commons/utils/translations.dart';
-import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 
 class CheckoutLinkEditScreen extends StatefulWidget {
@@ -17,6 +14,7 @@ class CheckoutLinkEditScreen extends StatefulWidget {
   final CheckoutScreenBloc screenBloc;
   final String title;
   Finance type;
+
   CheckoutLinkEditScreen(
       {this.screenBloc, this.title}){
     if (title == 'Text Link') {
@@ -36,9 +34,9 @@ class CheckoutLinkEditScreen extends StatefulWidget {
 
 class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
 
+  FinanceExpress financeExpress;
   TextEditingController heightController = TextEditingController();
   Color pickerColor;
-  String alignment = 'center';
   @override
   void initState() {
     super.initState();
@@ -67,18 +65,26 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
             resizeToAvoidBottomPadding: false,
             appBar: _appBar(state),
             body: SafeArea(
-              child: BackgroundBase(
-                true,
-                backgroudColor: Color.fromRGBO(20, 20, 0, 0.4),
-                body: state.isLoading ?
-                Center(
-                  child: CircularProgressIndicator(),
-                ): Column(
-                  children: <Widget>[
-                    _getBody(state),
-                  ],
-                )
-              ),
+              child: BackgroundBase(true,
+                  backgroudColor: Color.fromRGBO(20, 20, 0, 0.4),
+                  body: state.isLoading
+                      ? Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : Column(
+                          children: <Widget>[
+                            _getBody(state),
+                            Expanded(
+                              child: Container(
+                                child: state.isUpdating
+                                    ? Center(
+                                        child: CircularProgressIndicator(),
+                                      )
+                                    : Container(),
+                              ),
+                            ),
+                          ],
+                        )),
             ),
           );
         },
@@ -127,18 +133,21 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
   Widget _getBody(CheckoutScreenState state) {
     switch (widget.title) {
       case 'Text Link':
-        alignment = widget.screenBloc.state.financeTextLink.alignment;
+        financeExpress = state.financeTextLink;
         return _getTextLinkWidget(state);
       case 'Button':
+        financeExpress = state.financeButton;
         return _getTextLinkWidget(state);
       case 'Bubble':
+        financeExpress = state.financeBubble;
         return _getTextLinkWidget(state);
       case 'Calculator':
+        financeExpress = state.financeCalculator;
         return _getTextLinkWidget(state);
       default:
+        financeExpress = state.financeTextLink;
         return _getTextLinkWidget(state);
     }
-    return Container();
   }
 
   Widget _getTextLinkWidget(CheckoutScreenState state) {
@@ -167,7 +176,8 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
               child: TextFormField(
                 onSaved: (val) {},
                 onChanged: (val) {
-
+                  financeExpress.height = int.parse(val);
+                  widget.screenBloc.add(UpdateFinanceExpressTypeEvent(widget.type));
                 },
                 initialValue: '${state.financeTextLink.height}',
                 validator: (value) {
@@ -190,25 +200,52 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
               style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
             SizedBox(width: 15,),
-            MaterialButton(
-              onPressed: () {
-
-              },
-              color: Color.fromRGBO(100, 100, 100, 1),
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                borderRadius:
-                BorderRadius.circular(8),
+            Container(
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: Color.fromRGBO(100, 100, 100, 1),
+                borderRadius: BorderRadius.circular(8),
               ),
               height: 30,
-              minWidth: 0,
-              child: Text(
-                state.financeTextLink.textSize,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
-                  fontFamily: 'HelveticaNeueMed',
+              width: 45,
+              child: PopupMenuButton<CheckOutPopupButton>(
+                child: Text(
+                  state.financeTextLink.textSize,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontFamily: 'HelveticaNeueMed',
+                  ),
                 ),
+                offset: Offset(0, 100),
+                onSelected: (CheckOutPopupButton item) => item.onTap(),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                color: Colors.black87,
+                itemBuilder: (BuildContext context) {
+                  return _textSizePopup(context, state).map((CheckOutPopupButton item) {
+                    return PopupMenuItem<CheckOutPopupButton>(
+                      value: item,
+                      child: Row(
+                        children: <Widget>[
+                          item.icon,
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Text(
+                            item.title,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList();
+                },
               ),
             ),
             SizedBox(width: 30,),
@@ -219,25 +256,43 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
             Container(
               alignment: Alignment.center,
               margin: EdgeInsets.only(left: 15, right: 30),
-              width: 60,
+              width: 30,
               height: 30,
               decoration: BoxDecoration(
                 color: Color.fromRGBO(100, 100, 100, 1),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: MaterialButton(
-                onPressed: () {
-
-                },
-                color: Color.fromRGBO(100, 100, 100, 1),
-                elevation: 0,
+              child: PopupMenuButton<CheckOutPopupButton>(
+                child: _alignmentImg(financeExpress.alignment),
+                offset: Offset(0, 100),
+                onSelected: (CheckOutPopupButton item) => item.onTap(),
                 shape: RoundedRectangleBorder(
-                  borderRadius:
-                  BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                height: 30,
-                minWidth: 0,
-                child: _alignmentImg(),
+                color: Colors.black87,
+                itemBuilder: (BuildContext context) {
+                  return _alignmentPopup(context, state).map((CheckOutPopupButton item) {
+                    return PopupMenuItem<CheckOutPopupButton>(
+                      value: item,
+                      child: Row(
+                        children: <Widget>[
+                          item.icon,
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Text(
+                            item.title,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList();
+                },
               ),
             ),
             Text(
@@ -266,10 +321,10 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
                         child: const Text('Got it'),
                         onPressed: () {
                           Navigator.of(context).pop();
-                          var hex = '#${pickerColor.value.toRadixString(16)}';
-                          state.financeTextLink.linkColor = hex;
+                          var hex = '${pickerColor.value.toRadixString(16)}';
+                          state.financeTextLink.linkColor = '#${hex.substring(2)}';
                           widget.screenBloc.add(
-                              UpdateFinanceExpressTypeEvent(Finance.TEXT_LINK));
+                              UpdateFinanceExpressTypeEvent(widget.type));
                         },
                       ),
                     ],
@@ -304,7 +359,7 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
                 onChanged: (val) {
                   state.financeTextLink.visibility = val;
                   widget.screenBloc.add(
-                      UpdateFinanceExpressTypeEvent(Finance.TEXT_LINK));
+                      UpdateFinanceExpressTypeEvent(widget.type));
                 },
               ),
             ),
@@ -341,9 +396,8 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
               child: CupertinoSwitch(
                 value: state.financeTextLink.linkTo == 'finance_express',
                 onChanged: (val) {
-                  state.financeTextLink.adaptiveDesign = val;
-                  widget.screenBloc.add(
-                      UpdateFinanceExpressTypeEvent(widget.type));
+                  state.financeTextLink.linkTo = val ? 'finance_express' : '';
+                  widget.screenBloc.add(UpdateFinanceExpressTypeEvent(widget.type));
                 },
               ),
             ),
@@ -358,7 +412,8 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
               child: CupertinoSwitch(
                 value: state.financeTextLink.linkTo == 'finance_calculator',
                 onChanged: (val) {
-
+                  state.financeTextLink.linkTo = val ? 'finance_calculator' : '';
+                  widget.screenBloc.add(UpdateFinanceExpressTypeEvent(widget.type));
                 },
               ),
             ),
@@ -380,7 +435,7 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
     }
   }
 
-  SvgPicture _alignmentImg() {
+  SvgPicture _alignmentImg(String alignment) {
     String asset;
     switch (alignment) {
       case 'center':
@@ -403,50 +458,76 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
     setState(() => pickerColor = color);
   }
 
-  List<CheckOutPopupButton> _morePopup(BuildContext context) {
+  List<CheckOutPopupButton> _alignmentPopup(BuildContext context, CheckoutScreenState state) {
     return [
       CheckOutPopupButton(
-        title: 'Copy pay link',
-        icon: SvgPicture.asset(
-          'assets/images/pay_link.svg',
-          width: 16,
-          height: 16,
-        ),
+        title: '',
+        icon:_alignmentImg('center'),
         onTap: () async {
-
+          updateAlignment('center');
         },
       ),
       CheckOutPopupButton(
-        title: 'Copy prefilled link',
-        icon: SvgPicture.asset(
-          'assets/images/prefilled_link.svg',
-          width: 16,
-          height: 16,
-        ),
-        onTap: () async {},
-      ),
-      CheckOutPopupButton(
-        title: 'E-mail prefilled link',
-        icon: SvgPicture.asset(
-          'assets/images/email_link.svg',
-          width: 16,
-          height: 16,
-        ),
+        title: '',
+        icon: _alignmentImg('left'),
         onTap: () async {
-
+          updateAlignment('left');
         },
       ),
       CheckOutPopupButton(
-        title: 'Prefilled QR code',
-        icon: SvgPicture.asset(
-          'assets/images/prefilled_qr.svg',
-          width: 16,
-          height: 16,
-        ),
+        title: '',
+        icon: _alignmentImg('right'),
         onTap: () async {
-          setState(() {});
+          updateAlignment('right');
         },
       ),
     ];
+  }
+
+  List<CheckOutPopupButton> _textSizePopup(BuildContext context, CheckoutScreenState state) {
+    return [
+      CheckOutPopupButton(
+        title: '12px',
+        icon: Container(),
+        onTap: () async {
+          updateTextSize('12px');
+        },
+      ),
+      CheckOutPopupButton(
+        title: '14px',
+        icon: Container(),
+        onTap: () async {
+          updateTextSize('14px');
+        },
+      ),
+      CheckOutPopupButton(
+        title: '16px',
+        icon: Container(),
+        onTap: () async {
+          updateTextSize('16px');
+        },
+      ),
+      CheckOutPopupButton(
+        title: '18px',
+        icon: Container(),
+        onTap: () async {
+          updateTextSize('18px');
+        },
+      ),
+    ];
+  }
+
+  void updateAlignment(String alignment) {
+    setState(() {
+      financeExpress.alignment = alignment;
+    });
+    widget.screenBloc.add(UpdateFinanceExpressTypeEvent(widget.type));
+  }
+
+  void updateTextSize(String size) {
+    setState(() {
+      financeExpress.textSize = size;
+    });
+    widget.screenBloc.add(UpdateFinanceExpressTypeEvent(widget.type));
   }
 }
