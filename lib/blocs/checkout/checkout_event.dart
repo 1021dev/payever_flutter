@@ -111,6 +111,13 @@ class FinanceExpressTypeEvent extends CheckoutScreenEvent {
 
 }
 
+class UpdateFinanceExpressTypeEvent extends CheckoutScreenEvent {
+  final Finance type;
+
+  UpdateFinanceExpressTypeEvent(this.type);
+
+}
+
 class GetQrIntegration extends CheckoutScreenEvent {}
 
 class ClearQrIntegration extends CheckoutScreenEvent {}

@@ -69,6 +69,8 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       yield state.copyWith(openUrl: event.openUrl);
     } else if (event is FinanceExpressTypeEvent) {
       yield* getFinanceExpressType(event.type);
+    } else if (event is UpdateFinanceExpressTypeEvent) {
+      yield* updateFinanceExpressType(event.type);
     } else if (event is GetQrIntegration) {
       yield* getQrIntegration();
     } else if (event is ClearQrIntegration) {
@@ -681,9 +683,68 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
         }
         break;
     }
-
   }
-  
+
+  Stream<CheckoutScreenState> updateFinanceExpressType(Finance type) async* {
+    yield state.copyWith(isUpdating: true);
+    ChannelSet channelSetFinance = state.channelSets.firstWhere((element) =>
+    (element.checkout == state.defaultCheckout.id && element.type == 'finance_express'));
+    if (channelSetFinance == null || channelSetFinance.id == null) {
+      yield CheckoutScreenStateFailure(error: 'Something wrong!');
+      return;
+    }
+    switch(type) {
+      case Finance.TEXT_LINK:
+          Map<String, dynamic>body = state.financeTextLink.toDictionary();
+          dynamic response = await api.updateFinanceExpressSettings(channelSetFinance.id,
+              FinanceType[type], body);
+          if (response is DioError) {
+            yield CheckoutScreenStateFailure(error: response.message);
+          } else if (response is Map) {
+            yield state.copyWith(isUpdating: false,);
+          } else {
+            yield CheckoutScreenStateFailure(error: 'Something wrong!');
+          }
+        break;
+      case Finance.BUTTON:
+        Map<String, dynamic>body = state.financeButton.toDictionary();
+        dynamic response = await api.updateFinanceExpressSettings(channelSetFinance.id,
+            FinanceType[type], body);
+        if (response is DioError) {
+          yield CheckoutScreenStateFailure(error: response.message);
+        } else if (response is Map) {
+          yield state.copyWith(isUpdating: false,);
+        } else {
+          yield CheckoutScreenStateFailure(error: 'Something wrong!');
+        }
+        break;
+      case Finance.CALCULATOR:
+        Map<String, dynamic>body = state.financeCalculator.toDictionary();
+        dynamic response = await api.updateFinanceExpressSettings(channelSetFinance.id,
+            FinanceType[type], body);
+        if (response is DioError) {
+          yield CheckoutScreenStateFailure(error: response.message);
+        } else if (response is Map) {
+          yield state.copyWith(isUpdating: false,);
+        } else {
+          yield CheckoutScreenStateFailure(error: 'Something wrong!');
+        }
+        break;
+      case Finance.BUBBLE:
+        Map<String, dynamic>body = state.financeBubble.toDictionary();
+        dynamic response = await api.updateFinanceExpressSettings(channelSetFinance.id,
+            FinanceType[type], body);
+        if (response is DioError) {
+          yield CheckoutScreenStateFailure(error: response.message);
+        } else if (response is Map) {
+          yield state.copyWith(isUpdating: false,);
+        } else {
+          yield CheckoutScreenStateFailure(error: 'Something wrong!');
+        }
+        break;
+    }
+  }
+
   Stream<CheckoutScreenState> getQrIntegration() async* {
     ConnectIntegration integration;
     dynamic integrationResponse = await api.getConnectIntegration(token, 'qr');

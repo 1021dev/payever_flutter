@@ -662,6 +662,28 @@ class FinanceExpress {
     textSize = obj['textSize'];
     width = obj['width'];
   }
+
+  Map<String, dynamic> toDictionary() {
+    Map<String, dynamic> map = {};
+    if (adaptiveDesign != null)       map['adaptiveDesign'] = adaptiveDesign;
+    if (bgColor != null)              map['bgColor'] = bgColor;
+    if (borderColor != null)          map['borderColor'] = borderColor;
+    if (buttonColor != null)          map['buttonColor'] = buttonColor;
+    if (displayType != null)          map['displayType'] = displayType;
+    if (linkColor != null)            map['linkColor'] = linkColor;
+    if (linkTo != null)               map['linkTo'] = linkTo;
+    if (order != null)                map['order'] = order;
+    if (size != null)                 map['size'] = size;
+    if (textColor != null)            map['textColor'] = textColor;
+    if (visibility != null)           map['visibility'] = visibility;
+    if (alignment != null)            map['alignment'] = alignment;
+    if (corners != null)              map['corners'] = corners;
+    if (height != null)               map['height'] = height;
+    if (textSize != null)             map['textSize'] = textSize;
+    map['width'] = width;
+
+    return map;
+  }
 }
 
 class ChannelItem {

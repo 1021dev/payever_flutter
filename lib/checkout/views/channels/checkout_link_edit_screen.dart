@@ -37,14 +37,12 @@ class CheckoutLinkEditScreen extends StatefulWidget {
 class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
 
   TextEditingController heightController = TextEditingController();
-  Color pickerColor = Color(0xFFFFFFFF);
+  Color pickerColor;
   String alignment = 'center';
   @override
   void initState() {
     super.initState();
     widget.screenBloc.add(FinanceExpressTypeEvent(widget.type));
-    pickerColor = colorConvert(widget.screenBloc.state.financeTextLink.linkColor);
-    alignment = widget.screenBloc.state.financeTextLink.alignment;
   }
 
   @override
@@ -129,6 +127,7 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
   Widget _getBody(CheckoutScreenState state) {
     switch (widget.title) {
       case 'Text Link':
+        alignment = widget.screenBloc.state.financeTextLink.alignment;
         return _getTextLinkWidget(state);
       case 'Button':
         return _getTextLinkWidget(state);
@@ -253,7 +252,10 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
                     title: const Text('Pick a color!'),
                     content: SingleChildScrollView(
                       child: ColorPicker(
-                        pickerColor: pickerColor,
+                        pickerColor: pickerColor == null
+                            ? colorConvert(widget
+                                .screenBloc.state.financeTextLink.linkColor)
+                            : pickerColor,
                         onColorChanged: changeColor,
                         showLabel: true,
                         pickerAreaHeightPercent: 0.8,
@@ -264,10 +266,10 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
                         child: const Text('Got it'),
                         onPressed: () {
                           Navigator.of(context).pop();
-                          setState(() {
-                            var hex = '#${pickerColor.value.toRadixString(16)}';
-
-                          });
+                          var hex = '#${pickerColor.value.toRadixString(16)}';
+                          state.financeTextLink.linkColor = hex;
+                          widget.screenBloc.add(
+                              UpdateFinanceExpressTypeEvent(Finance.TEXT_LINK));
                         },
                       ),
                     ],
@@ -278,7 +280,10 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
                 margin: EdgeInsets.only(left: 15, right: 30),
                 width: 30,
                 height: 30,
-                color: colorConvert(state.financeTextLink.linkColor),
+                color: pickerColor == null
+                    ? colorConvert(widget
+                    .screenBloc.state.financeTextLink.linkColor)
+                    : pickerColor,
               ),
             ),
             Container(
@@ -297,7 +302,9 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
               child: CupertinoSwitch(
                 value: state.financeTextLink.visibility,
                 onChanged: (val) {
-
+                  state.financeTextLink.visibility = val;
+                  widget.screenBloc.add(
+                      UpdateFinanceExpressTypeEvent(Finance.TEXT_LINK));
                 },
               ),
             ),
@@ -312,7 +319,9 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
               child: CupertinoSwitch(
                 value: state.financeTextLink.adaptiveDesign,
                 onChanged: (val) {
-
+                  state.financeTextLink.adaptiveDesign = val;
+                  widget.screenBloc.add(
+                      UpdateFinanceExpressTypeEvent(widget.type));
                 },
               ),
             ),
@@ -332,7 +341,9 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
               child: CupertinoSwitch(
                 value: state.financeTextLink.linkTo == 'finance_express',
                 onChanged: (val) {
-
+                  state.financeTextLink.adaptiveDesign = val;
+                  widget.screenBloc.add(
+                      UpdateFinanceExpressTypeEvent(widget.type));
                 },
               ),
             ),

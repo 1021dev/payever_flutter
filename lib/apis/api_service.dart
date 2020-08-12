@@ -2152,6 +2152,23 @@ class ApiService {
     }
   }
 
+  Future<dynamic> updateFinanceExpressSettings(String id, String type, Map<String, dynamic>body) async {
+    try {
+      print('$TAG - getCheckoutConnections()');
+      dynamic response = await _client.putTypeless(
+          '${Env.financeExpressPhp}/api/settings/$id/$type',
+          body:body,
+          headers: {
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<dynamic> patchCheckoutFlow(String token, String checkoutFlowId, String local, Map<String, dynamic>body) async {
     try {
       print('$TAG - patchCheckoutOrder()');
