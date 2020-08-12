@@ -5,11 +5,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/checkout/models/models.dart';
-import 'package:payever/checkout/views/checkout_host_screen.dart';
-import 'package:payever/checkout/views/checkout_languages_screen.dart';
-import 'package:payever/checkout/views/checkout_message_screen.dart';
-import 'package:payever/checkout/views/checkout_phone_number_screen.dart';
-import 'package:payever/checkout/views/checkout_policy_screen.dart';
+import 'package:payever/checkout/views/settings/checkout_host_screen.dart';
+import 'package:payever/checkout/views/settings/checkout_languages_screen.dart';
+import 'package:payever/checkout/views/settings/checkout_message_screen.dart';
+import 'package:payever/checkout/views/settings/checkout_phone_number_screen.dart';
+import 'package:payever/checkout/views/settings/checkout_policy_screen.dart';
 import 'package:payever/commons/commons.dart';
 
 class CheckoutSettingsScreen extends StatefulWidget {

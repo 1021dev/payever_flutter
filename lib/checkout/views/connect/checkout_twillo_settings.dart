@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
-import 'package:payever/checkout/views/checkout_twillo_add_phonenumber.dart';
+import 'package:payever/checkout/views/connect/checkout_twillo_add_phonenumber.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/pos/views/pos_twillo_add_phonenumber.dart';

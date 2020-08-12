@@ -11,7 +11,7 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/checkout/checkout_bloc.dart';
 import 'package:payever/blocs/checkout/checkout_state.dart';
 import 'package:payever/checkout/models/models.dart';
-import 'package:payever/checkout/views/checkout_switch_screen.dart';
+import 'package:payever/checkout/views/workshop/checkout_switch_screen.dart';
 import 'package:payever/checkout/widgets/checkout_flow.dart';
 import 'package:payever/checkout/widgets/checkout_top_button.dart';
 import 'package:payever/checkout/widgets/workshop_header_item.dart';
@@ -19,7 +19,7 @@ import 'package:payever/checkout/widgets/workshop_top_bar.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'channels_checkout_flow_screen.dart';
+import '../channels/channels_checkout_flow_screen.dart';
 
 class WorkshopScreen extends StatefulWidget {
   final CheckoutScreenBloc checkoutScreenBloc;
