@@ -105,7 +105,7 @@ class GetOpenUrlEvent extends CheckoutScreenEvent {
 }
 
 class FinanceExpressTypeEvent extends CheckoutScreenEvent {
-  final String type;
+  final Finance type;
 
   FinanceExpressTypeEvent(this.type);
 

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/apis/api_service.dart';
@@ -606,23 +607,81 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     add(AddSectionEvent(section: step));
   }
 
-  Stream<CheckoutScreenState> getFinanceExpressType(String type) async* {
+  Stream<CheckoutScreenState> getFinanceExpressType(Finance type) async* {
     yield state.copyWith(isLoading: true);
-    dynamic response = await api.getFinanceExpressSettings('18f90cc5-cc76-49e3-a7ac-cced33a62a63',
-        type);
-    FinanceExpress express;
-    if (response is Map) {
-      express = FinanceExpress.fromMap(response);
+    ChannelSet channelSetFinance = state.channelSets.firstWhere((element) =>
+    (element.checkout == state.defaultCheckout.id && element.type == 'finance_express'));
+    if (channelSetFinance == null || channelSetFinance.id == null) {
+      yield CheckoutScreenStateFailure(error: 'Something wrong!');
+      return;
     }
-    if (type == 'text-link') {
-      yield state.copyWith(isLoading: false, financeTextLink: express);
-    } else if (type == 'button') {
-      yield state.copyWith(isLoading: false, financeButton: express);
-    } else if (type == 'banner-and-rate') {
-      yield state.copyWith(isLoading: false, financeCalculator: express);
-    } else {
-      yield state.copyWith(isLoading: false, financeBubble: express);
+    switch(type) {
+      case Finance.TEXT_LINK:
+        if (state.financeTextLink != null) {
+          yield state.copyWith(isLoading: false);
+        } else {
+          dynamic response = await api.getFinanceExpressSettings(channelSetFinance.id,
+              FinanceType[type]);
+          if (response is DioError) {
+            yield CheckoutScreenStateFailure(error: response.message);
+          } else if (response is Map) {
+            FinanceExpress express = FinanceExpress.fromMap(response);
+            yield state.copyWith(isLoading: false, financeTextLink: express);
+          } else {
+            yield CheckoutScreenStateFailure(error: 'Something wrong!');
+          }
+        }
+        break;
+      case Finance.BUTTON:
+        if (state.financeButton != null) {
+          yield state.copyWith(isLoading: false);
+        } else {
+          dynamic response = await api.getFinanceExpressSettings(channelSetFinance.id,
+              FinanceType[type]);
+          if (response is DioError) {
+            yield CheckoutScreenStateFailure(error: response.message);
+          } else if (response is Map) {
+            FinanceExpress express = FinanceExpress.fromMap(response);
+            yield state.copyWith(isLoading: false, financeButton: express);
+          } else {
+            yield CheckoutScreenStateFailure(error: 'Something wrong!');
+          }
+        }
+        break;
+      case Finance.CALCULATOR:
+        if (state.financeCalculator != null) {
+          yield state.copyWith(isLoading: false);
+        } else {
+          dynamic response = await api.getFinanceExpressSettings(channelSetFinance.id,
+              FinanceType[type]);
+          if (response is DioError) {
+            yield CheckoutScreenStateFailure(error: response.message);
+          } else if (response is Map) {
+            FinanceExpress express = FinanceExpress.fromMap(response);
+            yield state.copyWith(isLoading: false, financeCalculator: express);
+          } else {
+            yield CheckoutScreenStateFailure(error: 'Something wrong!');
+          }
+        }
+        break;
+      case Finance.BUBBLE:
+        if (state.financeBubble != null) {
+          yield state.copyWith(isLoading: false);
+        } else {
+          dynamic response = await api.getFinanceExpressSettings(channelSetFinance.id,
+              FinanceType[type]);
+          if (response is DioError) {
+            yield CheckoutScreenStateFailure(error: response.message);
+          } else if (response is Map) {
+            FinanceExpress express = FinanceExpress.fromMap(response);
+            yield state.copyWith(isLoading: false, financeBubble: express);
+          } else {
+            yield CheckoutScreenStateFailure(error: 'Something wrong!');
+          }
+        }
+        break;
     }
+
   }
   
   Stream<CheckoutScreenState> getQrIntegration() async* {

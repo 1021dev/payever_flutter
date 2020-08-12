@@ -690,3 +690,12 @@ String getTitleFromCode(String code) {
   }
   return '';
 }
+
+enum Finance {TEXT_LINK, BUTTON, CALCULATOR, BUBBLE}
+const Map<Finance, String> FinanceType = {
+  Finance.TEXT_LINK: 'text-link',
+  Finance.BUTTON: 'button',
+  Finance.CALCULATOR: 'banner-and-rate',
+  Finance.BUBBLE: 'bubble',
+};
+
