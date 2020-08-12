@@ -680,7 +680,7 @@ class FinanceExpress {
     if (corners != null)              map['corners'] = corners;
     if (height != null)               map['height'] = height;
     if (textSize != null)             map['textSize'] = textSize;
-    map['width'] = width;
+    if (width != null)                map['width'] = width;
 
     return map;
   }

@@ -51,12 +51,12 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocListener(
-        bloc: widget.screenBloc,
-        listener: (BuildContext context, CheckoutScreenState state) async {
-          if (state is CheckoutScreenStateFailure) {
-            Fluttertoast.showToast(msg: state.error);
-          }
-        },
+      bloc: widget.screenBloc,
+      listener: (BuildContext context, CheckoutScreenState state) async {
+        if (state is CheckoutScreenStateFailure) {
+          Fluttertoast.showToast(msg: state.error);
+        }
+      },
       child: BlocBuilder<CheckoutScreenBloc, CheckoutScreenState>(
         bloc: widget.screenBloc,
         builder: (BuildContext context, CheckoutScreenState state) {
@@ -69,8 +69,8 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
                   backgroudColor: Color.fromRGBO(20, 20, 0, 0.4),
                   body: state.isLoading
                       ? Center(
-                          child: CircularProgressIndicator(),
-                        )
+                    child: CircularProgressIndicator(),
+                  )
                       : Column(
                     children: <Widget>[
                       _getBody(state),
@@ -84,8 +84,7 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
                         ),
                       ),
                     ],
-                  ),
-              ),
+                  )),
             ),
           );
         },
@@ -135,17 +134,16 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
     switch (widget.title) {
       case 'Text Link':
         financeExpress = state.financeTextLink;
-        return state.financeTextLink != null
-            ? _getTextLinkWidget(state) : Container();
+        return financeExpress != null ? _getTextLinkWidget(state) : Container();
       case 'Button':
         financeExpress = state.financeButton;
-        return state.financeButton != null ? _getButtonWidget(state) : Container();
+        return financeExpress != null ?  _getButtonWidget(state) : Container();
       case 'Bubble':
         financeExpress = state.financeBubble;
-        return state.financeBubble != null ? _getBubbleWidget(state) : Container();
+        return financeExpress != null ? _getBubbleWidget(state) : Container();
       case 'Calculator':
         financeExpress = state.financeCalculator;
-        return state.financeCalculator != null ? _getCalculatorWidget(state) : Container();
+        return financeExpress != null ? _getCalculatorWidget(state) : Container();
       default:
         financeExpress = state.financeTextLink;
         return _getTextLinkWidget(state);
@@ -163,12 +161,10 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
           children: <Widget>[
             SizedBox(width: 16,),
             _height(),
-            SizedBox(width: 16,),
             _textSize(state),
             SizedBox(width: 16,),
             _alignment(state),
-            SizedBox(width: 16,),
-            _colorPad('Link Color', state.financeTextLink.linkColor),
+            _colorPad('Link Color', financeExpress.linkColor),
             SizedBox(width: 16,),
             _divider(),
             SizedBox(width: 16,),
@@ -196,10 +192,20 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
             SizedBox(width: 16,),
             _height(),
             _textSize(state),
-//            _colorPad('Text color'),
-//            _colorPad('Button color'),
+            SizedBox(width: 16,),
+            _colorPad('Text color', financeExpress.textColor),
+            SizedBox(width: 16,),
+            _colorPad('Button color', financeExpress.buttonColor),
+            SizedBox(width: 16,),
             _alignment(state),
+            _corners(state),
+            _divider(),
+            SizedBox(width: 16,),
             _visibilityAdaptive(true),
+            SizedBox(width: 16,),
+            _width(),
+            _divider(),
+            SizedBox(width: 16,),
             _financeExpressOverlay(),
             SizedBox(width: 16,),
           ],
@@ -238,15 +244,17 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             SizedBox(width: 16,),
-            _colorPad('Text Color', state.financeCalculator.textColor),
+            _colorPad('Text color', state.financeCalculator.textColor),
             SizedBox(width: 16,),
-            _colorPad('Button Color', state.financeCalculator.buttonColor),
+            _colorPad('Button color', state.financeCalculator.buttonColor),
             SizedBox(width: 16,),
-            _colorPad('Frame Color', state.financeCalculator.borderColor),
+            _colorPad('Frame color', state.financeCalculator.borderColor),
             SizedBox(width: 16,),
             _divider(),
             SizedBox(width: 16),
             _visibilityAdaptive(true),
+            SizedBox(width: 16),
+            _sortRate(state),
             SizedBox(width: 16,),
             _divider(),
             SizedBox(width: 16,),
@@ -300,6 +308,49 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
     );
   }
 
+  Widget _width() {
+    return Row(
+      children: <Widget>[
+        Text(
+          'Width',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(width: 10,),
+        Container(
+          alignment: Alignment.center,
+          margin: EdgeInsets.only(left: 15, right: 30),
+          width: 60,
+          height: 30,
+          decoration: BoxDecoration(
+            color: Color.fromRGBO(100, 100, 100, 1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: TextFormField(
+            onSaved: (val) {},
+            onChanged: (val) {
+              financeExpress.width = int.parse(val);
+              widget.screenBloc.add(UpdateFinanceExpressTypeEvent(widget.type));
+            },
+            initialValue: '${financeExpress.width}',
+            validator: (value) {
+              if (value.isEmpty) {
+                return 'Width required';
+              } else {
+                return null;
+              }
+            },
+            textAlign: TextAlign.center,
+            decoration: new InputDecoration(
+              border: InputBorder.none,
+            ),
+            style: TextStyle(fontSize: 16),
+            keyboardType: TextInputType.number,
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _textSize(CheckoutScreenState state) {
     return Row(
       children: <Widget>[
@@ -333,6 +384,66 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
             color: Colors.black87,
             itemBuilder: (BuildContext context) {
               return _textSizePopup(context, state).map((CheckOutPopupButton item) {
+                return PopupMenuItem<CheckOutPopupButton>(
+                  value: item,
+                  child: Row(
+                    children: <Widget>[
+                      item.icon,
+                      SizedBox(
+                        width: 8,
+                      ),
+                      Text(
+                        item.title,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }).toList();
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _sortRate(CheckoutScreenState state) {
+    return Row(
+      children: <Widget>[
+        Text(
+          'Sort rates by price',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(width: 15,),
+        Container(
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: Color.fromRGBO(100, 100, 100, 1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          height: 30,
+          width: 100,
+          child: PopupMenuButton<CheckOutPopupButton>(
+            child: Text(
+              financeExpress.order == 'asc' ? 'Ascending' : 'Descending',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontFamily: 'HelveticaNeueMed',
+              ),
+            ),
+            offset: Offset(0, 100),
+            onSelected: (CheckOutPopupButton item) => item.onTap(),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            color: Colors.black87,
+            itemBuilder: (BuildContext context) {
+              return _sortOrderPopup(context, state).map((CheckOutPopupButton item) {
                 return PopupMenuItem<CheckOutPopupButton>(
                   value: item,
                   child: Row(
@@ -413,6 +524,59 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
     );
   }
 
+  Widget _corners(CheckoutScreenState state) {
+    return Row(
+      children: <Widget>[
+        Text(
+          'Corners',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        Container(
+          alignment: Alignment.center,
+          margin: EdgeInsets.only(left: 15, right: 30),
+          width: 30,
+          height: 30,
+          decoration: BoxDecoration(
+            color: Color.fromRGBO(100, 100, 100, 1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: PopupMenuButton<CheckOutPopupButton>(
+            child: _cornerImg(financeExpress.corners),
+            offset: Offset(0, 100),
+            onSelected: (CheckOutPopupButton item) => item.onTap(),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            color: Colors.black87,
+            itemBuilder: (BuildContext context) {
+              return _cornerPopup(context, state).map((CheckOutPopupButton item) {
+                return PopupMenuItem<CheckOutPopupButton>(
+                  value: item,
+                  child: Row(
+                    children: <Widget>[
+                      item.icon,
+                      SizedBox(
+                        width: 8,
+                      ),
+                      Text(
+                        item.title,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }).toList();
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _colorPad(String title, String color) {
     return Row(
       children: <Widget>[
@@ -428,9 +592,7 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
                 title: const Text('Pick a color!'),
                 content: SingleChildScrollView(
                   child: ColorPicker(
-                    pickerColor: pickerColor == null
-                        ? colorConvert(financeExpress.linkColor)
-                        : pickerColor,
+                    pickerColor: colorConvert(color),
                     onColorChanged: changeColor,
                     showLabel: true,
                     pickerAreaHeightPercent: 0.8,
@@ -442,9 +604,8 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
                     onPressed: () {
                       Navigator.of(context).pop();
                       var hex = '${pickerColor.value.toRadixString(16)}';
-                      financeExpress.linkColor = '#${hex.substring(2)}';
-                      widget.screenBloc.add(
-                          UpdateFinanceExpressTypeEvent(widget.type));
+                      color = '#${hex.substring(2)}';
+                      updateColor(title, color);
                     },
                   ),
                 ],
@@ -455,9 +616,7 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
             margin: EdgeInsets.only(left: 15),
             width: 30,
             height: 30,
-            color: pickerColor == null
-                ? colorConvert(color)
-                : pickerColor,
+            color: colorConvert(color),
           ),
         ),
       ],
@@ -471,7 +630,7 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
           'Visibility',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        SizedBox(width: 30,),
+        SizedBox(width: 10,),
         Transform.scale(
           scale: 0.8,
           child: CupertinoSwitch(
@@ -485,12 +644,12 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
         ),
         showAdaptive ? Row(
           children: <Widget>[
-            SizedBox(width: 30,),
+            SizedBox(width: 16,),
             Text(
               'Adaptive',
               style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
-            SizedBox(width: 30,),
+            SizedBox(width: 10,),
             Transform.scale(
               scale: 0.8,
               child: CupertinoSwitch(
@@ -523,7 +682,7 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
           'Finance Express',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        SizedBox(width: 30,),
+        SizedBox(width: 10,),
         Transform.scale(
           scale: 0.8,
           child: CupertinoSwitch(
@@ -534,12 +693,12 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
             },
           ),
         ),
-        SizedBox(width: 30,),
+        SizedBox(width: 16,),
         Text(
           'Overlay',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        SizedBox(width: 30,),
+        SizedBox(width: 10,),
         Transform.scale(
           scale: 0.8,
           child: CupertinoSwitch(
@@ -584,6 +743,25 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
       height: 16,);
   }
 
+  SvgPicture _cornerImg(String corners) {
+    String asset;
+    switch (corners) {
+      case 'round':
+        asset = 'assets/images/corner-round.svg';
+        break;
+      case 'circle':
+        asset = 'assets/images/corner-circle.svg';
+        break;
+      case 'square':
+        asset = 'assets/images/corner-square.svg';
+        break;
+      default:
+        asset = 'assets/images/corner-square.svg';
+    }
+    return SvgPicture.asset(asset, width: 40,
+      height: 40,);
+  }
+
   void changeColor(Color color) {
     setState(() => pickerColor = color);
   }
@@ -609,6 +787,32 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
         icon: _alignmentImg('right'),
         onTap: () async {
           updateAlignment('right');
+        },
+      ),
+    ];
+  }
+
+  List<CheckOutPopupButton> _cornerPopup(BuildContext context, CheckoutScreenState state) {
+    return [
+      CheckOutPopupButton(
+        title: '',
+        icon:_cornerImg('circle'),
+        onTap: () async {
+          updateCorners('circle');
+        },
+      ),
+      CheckOutPopupButton(
+        title: '',
+        icon: _cornerImg('round'),
+        onTap: () async {
+          updateCorners('round');
+        },
+      ),
+      CheckOutPopupButton(
+        title: '',
+        icon: _cornerImg('square'),
+        onTap: () async {
+          updateCorners('square');
         },
       ),
     ];
@@ -647,9 +851,56 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
     ];
   }
 
+  List<CheckOutPopupButton> _sortOrderPopup(BuildContext context, CheckoutScreenState state) {
+    return [
+      CheckOutPopupButton(
+        title: 'Ascending',
+        icon: Container(),
+        onTap: () async {
+          updateSortOrder('asc');
+        },
+      ),
+      CheckOutPopupButton(
+        title: 'Descending',
+        icon: Container(),
+        onTap: () async {
+          updateSortOrder('desc');
+        },
+      ),
+    ];
+  }
+
+  void updateColor(String title, String color) {
+    switch(title) {
+      case 'Link Color' :
+        financeExpress.linkColor = color;
+        break;
+      case 'Text color':
+        financeExpress.textColor = color;
+        break;
+      case 'Button color':
+        financeExpress.buttonColor = color;
+        break;
+      case 'Frame color':
+        financeExpress.borderColor = color;
+        break;
+      case 'Border color':
+        financeExpress.borderColor = color;
+        break;
+    }
+    widget.screenBloc.add(UpdateFinanceExpressTypeEvent(widget.type));
+  }
+
   void updateAlignment(String alignment) {
     setState(() {
       financeExpress.alignment = alignment;
+    });
+    widget.screenBloc.add(UpdateFinanceExpressTypeEvent(widget.type));
+  }
+
+  void updateCorners(String corners) {
+    setState(() {
+      financeExpress.corners = corners;
     });
     widget.screenBloc.add(UpdateFinanceExpressTypeEvent(widget.type));
   }
@@ -660,4 +911,12 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
     });
     widget.screenBloc.add(UpdateFinanceExpressTypeEvent(widget.type));
   }
+
+  void updateSortOrder(String order) {
+    setState(() {
+      financeExpress.order = order;
+    });
+    widget.screenBloc.add(UpdateFinanceExpressTypeEvent(widget.type));
+  }
+
 }

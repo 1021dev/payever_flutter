@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/checkout/views/connect/checkout_qr_integration.dart';
+import 'package:payever/checkout/views/payments/checkout_payment_settings_screen.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
@@ -210,6 +211,20 @@ class _CheckoutConnectScreenState extends State<CheckoutConnectScreen> {
                                       duration: Duration(milliseconds: 500),
                                     ),
                                   );
+                                } else if (connectModel.integration.category == 'payments') {
+                                  Navigator.push(
+                                    context,
+                                    PageTransition(
+                                      child: CheckoutPaymentSettingsScreen(
+                                        checkoutScreenBloc: widget.checkoutScreenBloc,
+                                        business: state.business,
+                                        connectModel: connectModel,
+                                      ),
+                                      type: PageTransitionType.fade,
+                                      duration: Duration(milliseconds: 500),
+                                    ),
+                                  );
+
                                 }
                               }
                             },
