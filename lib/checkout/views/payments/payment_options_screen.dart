@@ -37,16 +37,18 @@ class _PaymentOptionsScreenState extends State<PaymentOptionsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<IntegrationModel> checkoutConnections = [];
+    List<ConnectModel> checkoutConnections = [];
     widget.checkoutIntegrations.forEach((checkoutIntegration) {
       bool isConnected = false;
-      widget.paymentOptions.forEach((payment) {
-        if (payment.name == checkoutIntegration.integration) {
+      ConnectModel connectModel;
+      widget.connects.forEach((connect) {
+        if (connect.integration.name == checkoutIntegration.integration && connect.integration.category == 'payments') {
           isConnected = true;
+          connectModel = connect;
         }
       });
       if (isConnected) {
-        checkoutConnections.add(checkoutIntegration);
+        checkoutConnections.add(connectModel);
       }
     });
 
@@ -70,7 +72,7 @@ class _PaymentOptionsScreenState extends State<PaymentOptionsScreen> {
           ) : SingleChildScrollView(
             child: Column(
               children: List.generate(checkoutConnections.length + 1, (index) {
-                if (index == widget.integrations.length) {
+                if (index == checkoutConnections.length) {
                   return Container(
                     height: 50,
                     child: SizedBox.expand(
@@ -88,77 +90,75 @@ class _PaymentOptionsScreenState extends State<PaymentOptionsScreen> {
                     ),
                   );
                 } else {
-                  IntegrationModel integrationModel = widget.integrations[index];
-                  ConnectModel connectModel = widget.connects.firstWhere((element) {
-                    return element.integration.name == integrationModel.integration;
-                  });
-                  if (integrationModel == null) {
-                    return Container();
-                  } else {
-
-                    return Column(
-                      children: <Widget>[
-                        Container(
-                          height: 50,
-                          padding: EdgeInsets.only(left: 16, right: 16),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Flexible(
-                                child: Text(
-                                  Language.getPosConnectStrings(connectModel.integration.displayOptions.title ?? ''),
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14,
-                                    fontFamily: 'Helvetica Neue',
-                                  ),
+                  ConnectModel connectModel = checkoutConnections[index];
+                  List list = widget.integrations.where((element) => element.integration == connectModel.integration.name).toList();
+                  bool installed = false;
+                  if (list.length > 0) {
+                    installed = true;
+                  }
+                  return Column(
+                    children: <Widget>[
+                      Container(
+                        height: 50,
+                        padding: EdgeInsets.only(left: 16, right: 16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Flexible(
+                              child: Text(
+                                Language.getPosConnectStrings(connectModel.integration.displayOptions.title ?? ''),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontFamily: 'Helvetica Neue',
                                 ),
                               ),
-                              Row(
-                                children: <Widget>[
-                                  Transform.scale(
-                                    scale: 0.8,
-                                    child: CupertinoSwitch(
-                                      value: connectModel.installed,
-                                      onChanged: (val) {
-                                        val ? widget.onTapInstall(integrationModel) : widget.onTapUninstall(integrationModel);
-                                      },
+                            ),
+                            Row(
+                              children: <Widget>[
+                                Transform.scale(
+                                  scale: 0.8,
+                                  child: CupertinoSwitch(
+                                    value: installed,
+                                    onChanged: (val) {
+                                      IntegrationModel integrationModel = widget.checkoutIntegrations.singleWhere((element) => element.integration == connectModel.integration.name);
+                                      val ? widget.onTapInstall(integrationModel) : widget.onTapUninstall(integrationModel);
+                                    },
+                                  ),
+                                ),
+                                MaterialButton(
+                                  onPressed: () {
+                                    widget.onTapOpen(connectModel);
+                                  },
+                                  color: Colors.black38,
+                                  elevation: 0,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  height: 24,
+                                  minWidth: 0,
+                                  padding: EdgeInsets.only(left: 8, right: 8),
+                                  child: Text(
+                                    Language.getConnectStrings('actions.open'),
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                      fontFamily: 'HelveticaNeueMed',
                                     ),
                                   ),
-                                  MaterialButton(
-                                    onPressed: () {
-                                      widget.onTapOpen(connectModel);
-                                    },
-                                    color: Colors.black38,
-                                    elevation: 0,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    height: 24,
-                                    minWidth: 0,
-                                    padding: EdgeInsets.only(left: 8, right: 8),
-                                    child: Text(
-                                      Language.getConnectStrings('actions.open'),
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12,
-                                        fontFamily: 'HelveticaNeueMed',
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              )
-                            ],
-                          ),
+                                )
+                              ],
+                            )
+                          ],
                         ),
-                        Divider(
-                          height: 0,
-                          thickness: 0.5,
-                          color: Colors.white70,
-                        ),
-                      ],
-                    );
-                  }
+                      ),
+                      Divider(
+                        height: 0,
+                        thickness: 0.5,
+                        color: Colors.white70,
+                      ),
+                    ],
+                  );
                 }
               }),
             ),

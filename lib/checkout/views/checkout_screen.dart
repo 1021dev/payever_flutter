@@ -403,7 +403,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           integrations: state.checkoutConnections,
           isLoading: state.loadingPaymentOption,
           paymentOptions: state.paymentOptions,
-          checkoutIntegrations: state.checkoutConnections,
+          checkoutIntegrations: state.connections,
           onTapAdd: () {
             Navigator.push(
               context,

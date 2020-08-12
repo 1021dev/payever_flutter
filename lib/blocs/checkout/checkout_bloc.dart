@@ -228,15 +228,6 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       });
     }
 
-    List<Payment> paymentOptions = [];
-
-    dynamic paymentOptionsResponse = await api.getPaymentOptions(token);
-    if (paymentOptionsResponse is List) {
-      paymentOptionsResponse.forEach((element) {
-        paymentOptions.add(Payment.fromMap(element));
-      });
-    }
-
     List<IntegrationModel> connections = [];
     List<IntegrationModel> checkoutConnections = [];
 
@@ -261,7 +252,6 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       connects: integrations,
       connections: connections,
       checkoutConnections: checkoutConnections,
-      paymentOptions: paymentOptions,
     );
   }
 
@@ -1020,12 +1010,27 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
 
   Stream<CheckoutScreenState> installPayment(IntegrationModel integrationModel) async* {
     dynamic response = await api.installCheckoutPayment(token, state.business, state.defaultCheckout.id, integrationModel.id);
-    add(GetPaymentConfig());
+    List<IntegrationModel> connections = [];
+    dynamic checkoutConnectionResponse = await api.getCheckoutConnections(
+        state.business, token, state.defaultCheckout.id);
+    if (checkoutConnectionResponse is List) {
+      checkoutConnectionResponse.forEach((element) {
+        connections.add(IntegrationModel.fromMap(element));
+      });
+    }
+    yield state.copyWith(checkoutConnections: connections);
   }
 
   Stream<CheckoutScreenState> uninstallPayment(IntegrationModel integrationModel) async* {
     dynamic response = await api.uninstallCheckoutPayment(token, state.business, state.defaultCheckout.id, integrationModel.id);
-    add(GetPaymentConfig());
+    List<IntegrationModel> connections = [];
+    dynamic checkoutConnectionResponse = await api.getCheckoutConnections(
+        state.business, token, state.defaultCheckout.id);
+    if (checkoutConnectionResponse is List) {
+      checkoutConnectionResponse.forEach((element) {
+        connections.add(IntegrationModel.fromMap(element));
+      });
+    }
+    yield state.copyWith(checkoutConnections: connections);
   }
-
 }
