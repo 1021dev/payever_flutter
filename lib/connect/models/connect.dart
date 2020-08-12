@@ -27,7 +27,7 @@ class ConnectModel {
 class ConnectIntegration {
   List<dynamic> allowedBusinesses = [];
   String category;
-  dynamic connect;
+  IntegrationExtension connect;
   String createdAt;
   ConnectDisplayOptions displayOptions;
   bool enabled;
@@ -73,7 +73,7 @@ class ConnectIntegration {
 
     dynamic connectObj = obj[GlobalUtils.DB_CONNECT];
     if (connectObj != null) {
-      connect = ConnectIntegration.toMap(connectObj);
+      connect = IntegrationExtension.fromMap(connectObj);
     }
 
     dynamic displayOptionsObj = obj[GlobalUtils.DB_CONNECT_DISPLAY_OPTIONS];

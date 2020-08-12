@@ -13,6 +13,7 @@ import 'package:payever/checkout/views/connect/checkout_device_payment_screen.da
 import 'package:payever/checkout/views/channels/checkout_link_edit_screen.dart';
 import 'package:payever/checkout/views/connect/checkout_twillo_settings.dart';
 import 'package:payever/checkout/views/connect/connect_screen.dart';
+import 'package:payever/checkout/views/payments/checkout_payment_settings_screen.dart';
 import 'package:payever/checkout/views/payments/payment_options_screen.dart';
 import 'package:payever/checkout/views/sections/sections_screen.dart';
 import 'package:payever/checkout/views/settings/settings_screen.dart';
@@ -419,7 +420,18 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             );
           },
           onTapOpen: (connectModel) {
-
+            Navigator.push(
+              context,
+              PageTransition(
+                child: CheckoutPaymentSettingsScreen(
+                  checkoutScreenBloc: screenBloc,
+                  business: state.business,
+                  connectModel: connectModel,
+                ),
+                type: PageTransitionType.fade,
+                duration: Duration(milliseconds: 500),
+              ),
+            );
           },
           onTapInstall: (integrationModel) {
             screenBloc.add(InstallCheckoutPaymentEvent(integrationModel: integrationModel));
