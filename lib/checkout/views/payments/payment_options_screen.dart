@@ -9,6 +9,8 @@ class PaymentOptionsScreen extends StatefulWidget {
 
   final List<ConnectModel> connects;
   final List<IntegrationModel> integrations;
+  final List<IntegrationModel> checkoutIntegrations;
+  final List<Payment> paymentOptions;
   final Function onTapAdd;
   final Function onTapOpen;
   final Function onTapInstall;
@@ -18,6 +20,8 @@ class PaymentOptionsScreen extends StatefulWidget {
   PaymentOptionsScreen({
     this.connects = const [],
     this.integrations = const [],
+    this.paymentOptions = const [],
+    this.checkoutIntegrations = const [],
     this.onTapAdd,
     this.onTapOpen,
     this.onTapInstall,
@@ -33,6 +37,19 @@ class _PaymentOptionsScreenState extends State<PaymentOptionsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    List<IntegrationModel> checkoutConnections = [];
+    widget.checkoutIntegrations.forEach((checkoutIntegration) {
+      bool isConnected = false;
+      widget.paymentOptions.forEach((payment) {
+        if (payment.name == checkoutIntegration.integration) {
+          isConnected = true;
+        }
+      });
+      if (isConnected) {
+        checkoutConnections.add(checkoutIntegration);
+      }
+    });
+
     return Container(
       width: Measurements.width,
       padding: EdgeInsets.all(16),
@@ -52,7 +69,7 @@ class _PaymentOptionsScreenState extends State<PaymentOptionsScreen> {
             ],
           ) : SingleChildScrollView(
             child: Column(
-              children: List.generate(widget.integrations.length + 1, (index) {
+              children: List.generate(checkoutConnections.length + 1, (index) {
                 if (index == widget.integrations.length) {
                   return Container(
                     height: 50,
@@ -78,6 +95,7 @@ class _PaymentOptionsScreenState extends State<PaymentOptionsScreen> {
                   if (integrationModel == null) {
                     return Container();
                   } else {
+
                     return Column(
                       children: <Widget>[
                         Container(
@@ -101,9 +119,9 @@ class _PaymentOptionsScreenState extends State<PaymentOptionsScreen> {
                                   Transform.scale(
                                     scale: 0.8,
                                     child: CupertinoSwitch(
-                                      value: true,
+                                      value: connectModel.installed,
                                       onChanged: (val) {
-
+                                        val ? widget.onTapInstall(integrationModel) : widget.onTapUninstall(integrationModel);
                                       },
                                     ),
                                   ),

@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/commons.dart';
+import 'package:payever/connect/models/connect.dart';
 import 'package:payever/pos/models/models.dart';
 
 abstract class CheckoutScreenEvent extends Equatable {
@@ -262,4 +263,14 @@ class UpdateCheckoutAddPhoneNumber extends CheckoutScreenEvent {
     this.value,
     this.phone,
   ];
+}
+
+class UninstallCheckoutPaymentEvent extends CheckoutScreenEvent {
+  final IntegrationModel integrationModel;
+  UninstallCheckoutPaymentEvent({this.integrationModel});
+}
+
+class InstallCheckoutPaymentEvent extends CheckoutScreenEvent {
+  final IntegrationModel integrationModel;
+  InstallCheckoutPaymentEvent({this.integrationModel});
 }

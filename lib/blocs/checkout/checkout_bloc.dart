@@ -101,6 +101,10 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       yield* removePhoneNumber(event.action, event.id, event.sid);
     } else if (event is UpdateCheckoutAddPhoneNumberSettings) {
       yield state.copyWith(settingsModel: event.settingsModel);
+    } else if (event is InstallCheckoutPaymentEvent) {
+      yield* installPayment(event.integrationModel);
+    } else if (event is UninstallCheckoutPaymentEvent) {
+      yield* uninstallPayment(event.integrationModel);
     }
   }
 
@@ -224,6 +228,15 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       });
     }
 
+    List<Payment> paymentOptions = [];
+
+    dynamic paymentOptionsResponse = await api.getPaymentOptions(token);
+    if (paymentOptionsResponse is List) {
+      paymentOptionsResponse.forEach((element) {
+        paymentOptions.add(Payment.fromMap(element));
+      });
+    }
+
     List<IntegrationModel> connections = [];
     List<IntegrationModel> checkoutConnections = [];
 
@@ -248,6 +261,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       connects: integrations,
       connections: connections,
       checkoutConnections: checkoutConnections,
+      paymentOptions: paymentOptions,
     );
   }
 
@@ -1002,6 +1016,16 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       sid,
     );
     yield state.copyWith(twilioForm: response, isLoading: false);
+  }
+
+  Stream<CheckoutScreenState> installPayment(IntegrationModel integrationModel) async* {
+    dynamic response = await api.installCheckoutPayment(token, state.business, state.defaultCheckout.id, integrationModel.id);
+    add(GetPaymentConfig());
+  }
+
+  Stream<CheckoutScreenState> uninstallPayment(IntegrationModel integrationModel) async* {
+    dynamic response = await api.uninstallCheckoutPayment(token, state.business, state.defaultCheckout.id, integrationModel.id);
+    add(GetPaymentConfig());
   }
 
 }

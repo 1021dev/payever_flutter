@@ -402,6 +402,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           connects: state.connects,
           integrations: state.checkoutConnections,
           isLoading: state.loadingPaymentOption,
+          paymentOptions: state.paymentOptions,
+          checkoutIntegrations: state.checkoutConnections,
           onTapAdd: () {
             Navigator.push(
               context,
@@ -419,11 +421,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           onTapOpen: (connectModel) {
 
           },
-          onTapInstall: () {
-
+          onTapInstall: (integrationModel) {
+            screenBloc.add(InstallCheckoutPaymentEvent(integrationModel: integrationModel));
           },
-          onTapUninstall: () {
-
+          onTapUninstall: (integrationModel) {
+            screenBloc.add(UninstallCheckoutPaymentEvent(integrationModel: integrationModel));
           },
         );
       case 2:

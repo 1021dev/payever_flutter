@@ -47,6 +47,7 @@ class CheckoutScreenState {
   final List<CountryDropdownItem> dropdownItems;
   final dynamic fieldSetData;
   final bool isPhoneSearch;
+  final List<Payment> paymentOptions;
 
   CheckoutScreenState({
     this.isLoading = false,
@@ -89,6 +90,7 @@ class CheckoutScreenState {
     this.dropdownItems = const [],
     this.fieldSetData,
     this.isPhoneSearch = false,
+    this.paymentOptions = const [],
   });
 
   List<Object> get props => [
@@ -132,6 +134,7 @@ class CheckoutScreenState {
     this.dropdownItems,
     this.fieldSetData,
     this.isPhoneSearch,
+    this.paymentOptions,
   ];
 
   CheckoutScreenState copyWith({
@@ -176,6 +179,7 @@ class CheckoutScreenState {
     List<CountryDropdownItem> dropdownItems,
     dynamic fieldSetData,
     bool isPhoneSearch,
+    List<Payment> paymentOptions,
   }) {
     return CheckoutScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -218,6 +222,7 @@ class CheckoutScreenState {
       dropdownItems: dropdownItems ?? this.dropdownItems,
       fieldSetData: fieldSetData ?? this.fieldSetData,
       isPhoneSearch: isPhoneSearch ?? this.isPhoneSearch,
+      paymentOptions: paymentOptions ?? this.paymentOptions,
     );
   }
 }

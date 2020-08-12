@@ -2318,6 +2318,42 @@ class ApiService {
     }
   }
 
+  Future<dynamic> installCheckoutPayment(String token, String business, String checkoutId, String connectionId) async {
+    try {
+      print('$TAG - installCheckoutPayment()');
+      dynamic response = await _client.patchTypeless(
+          '${Env.checkout}/api/business/$business/checkout/$checkoutId/connection/$connectionId/install',
+          body: {},
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> uninstallCheckoutPayment(String token, String business, String checkoutId, String connectionId) async {
+    try {
+      print('$TAG - uninstallCheckoutPayment()');
+      dynamic response = await _client.patchTypeless(
+          '${Env.checkout}/api/business/$business/checkout/$checkoutId/connection/$connectionId/uninstall',
+          body: {},
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
 
 
   ///***************************************************************************
