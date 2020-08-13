@@ -565,18 +565,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
               width: 20,
             ),
             onTap: () {
-
-            },
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.all(6),
-          child: InkWell(
-            child: SvgPicture.asset(
-              'assets/images/list.svg',
-              width: 20,
-            ),
-            onTap: () {
               _innerDrawerKey.currentState.toggle();
             },
           ),
@@ -1025,6 +1013,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
           child: CircularProgressIndicator(),
         ),
       );
+    }
+    if (state.productsInfo == null) {
+      return Container();
     }
     if (state.addToCollection) {
       List<Widget> collectionItems  = [];
@@ -1485,7 +1476,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             SvgPicture.asset(
-              'assets/images/productsicon.svg',
+              'assets/images/collection.svg',
               width: 80,
               height: 80,
             ),

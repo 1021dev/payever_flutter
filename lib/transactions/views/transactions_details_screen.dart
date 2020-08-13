@@ -270,7 +270,7 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
                     ? Container()
                     : Center(
                   child: SvgPicture.asset(
-                    'assets/images/noimage.svg',
+                    'assets/images/no_image.svg',
                     height: Measurements.height * 0.05,
                     color: Colors.white.withOpacity(0.6),
                   ),

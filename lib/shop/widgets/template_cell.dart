@@ -63,19 +63,24 @@ class TemplateCell extends StatelessWidget {
               ),
               errorWidget: (context, url, error) =>  Container(
                 color: Colors.white,
-                child: SvgPicture.asset(
-                  'assets/images/noimage.svg',
-                  color: Colors.black54,
-                  width: 64,
-                  height: 64,
+                child: Center(
+                  child: SvgPicture.asset(
+                    'assets/images/no_image.svg',
+                    color: Colors.black54,
+                    width: 100,
+                    height: 100,
+                  ),
                 ),
               ),
             ) : Container(
               color: Colors.white,
-              child: SvgPicture.asset('assets/images/noimage.svg',
-                color: Colors.black54,
-                width: 64,
-                height: 64,
+              child: Center(
+                child: SvgPicture.asset(
+                  'assets/images/no_image.svg',
+                  color: Colors.black54,
+                  width: 100,
+                  height: 100,
+                ),
               ),
             ),
           ),

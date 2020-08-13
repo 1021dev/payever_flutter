@@ -39,7 +39,18 @@ class CollectionDetailImageView extends StatelessWidget {
             ),
           ),
           errorWidget: (context, url, error) =>  Container(
-            child: SvgPicture.asset('assets/images/noimage.svg', color: Colors.black54, width: 100, height: 100,),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(Radius.circular(12.0)),
+            ),
+            child: Center(
+              child: SvgPicture.asset(
+                'assets/images/no_image.svg',
+                color: Colors.black54,
+                width: 100,
+                height: 100,
+              ),
+            ),
           ),
         );
       } else {

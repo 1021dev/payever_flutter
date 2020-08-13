@@ -39,12 +39,12 @@ class ConnectItemImageView extends StatelessWidget {
             ),
           ),
           errorWidget: (context, url, error) =>  Container(
-            child: SvgPicture.asset('assets/images/noimage.svg', color: Colors.black54, width: 100, height: 100,),
+            child: SvgPicture.asset('assets/images/no_image.svg', color: Colors.black54, width: 100, height: 100,),
           ),
         );
       } else {
         return Container(
-          child: SvgPicture.asset('assets/images/noimage.svg', color: Colors.black54, width: 100, height: 100,),
+          child: SvgPicture.asset('assets/images/no_image.svg', color: Colors.black54, width: 100, height: 100,),
         );
       }
     }

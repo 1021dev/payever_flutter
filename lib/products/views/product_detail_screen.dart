@@ -1326,7 +1326,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 color: Colors.white10,
                               ),
                               child: Center(
-                                child: SvgPicture.asset('assets/images/noimage.svg', width: 20, height: 20,),
+                                child: SvgPicture.asset('assets/images/no_image.svg', width: 20, height: 20,),
                               ),
                             );
                           },
@@ -1338,7 +1338,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             color: Colors.white10,
                           ),
                           child: Center(
-                            child: SvgPicture.asset('assets/images/noimage.svg', width: 20, height: 20,),
+                            child: SvgPicture.asset('assets/images/no_image.svg', width: 20, height: 20,),
                           ),
                         ),
                         Padding(
