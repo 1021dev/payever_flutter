@@ -23,7 +23,7 @@ class TutorialCell extends StatelessWidget {
                   SvgPicture.asset('assets/images/video.svg',),
                   SizedBox(width: 12),
                   Text(
-                    tutorial.title,
+                    tutorial.title ?? '',
                     softWrap: true,
                     style: TextStyle(
                       color: Colors.white, fontSize: 12,
@@ -44,7 +44,6 @@ class TutorialCell extends StatelessWidget {
                     },
                     child: Container(
                       height: 20,
-                      width: 60,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                           color: Colors.black.withAlpha(100)
@@ -52,15 +51,17 @@ class TutorialCell extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          SizedBox(width: 6),
                           SvgPicture.asset('assets/images/icon_arrow.svg',),
                           SizedBox(width: 4),
                           Text(
-                            Language.getCommerceOSStrings('actions.open'),
+                            Language.getWidgetStrings('widgets.tutorial.watch'),
                             style: TextStyle(
                                 fontSize: 10,
                                 color: Colors.white
                             ),
-                          )
+                          ),
+                          SizedBox(width: 6),
                         ],
                       ),
                     ),

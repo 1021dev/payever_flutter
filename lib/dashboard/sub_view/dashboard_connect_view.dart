@@ -182,7 +182,6 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                                   String iconType = widget.connects[index].integration.displayOptions.icon ?? '';
                                   iconType = iconType.replaceAll('#icon-', '');
                                   iconType = iconType.replaceAll('#', '');
-                                  print('$iconType');
                                   return Container(
                                     width: 35,
                                     height: 35,

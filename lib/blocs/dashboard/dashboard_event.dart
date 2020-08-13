@@ -114,3 +114,9 @@ class DeleteNotification extends DashboardScreenEvent {
     this.notificationId,
   ];
 }
+
+class WatchTutorials extends DashboardScreenEvent {
+  final Tutorial tutorial;
+
+  WatchTutorials({this.tutorial});
+}

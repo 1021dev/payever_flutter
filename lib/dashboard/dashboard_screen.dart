@@ -27,6 +27,7 @@ import 'package:payever/transactions/transactions.dart';
 import 'package:payever/welcome/welcome_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'sub_view/dashboard_advertising_view.dart';
 import 'sub_view/dashboard_app_pos.dart';
@@ -369,7 +370,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       List<NotificationModel> notifications = [];
       if (state.notifications.containsKey('transactions')){
         notifications = state.notifications['transactions'];
-        print('transactions- notifications => $notifications');
       }
       dashboardWidgets.add(
           DashboardTransactionsView(
@@ -430,7 +430,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
           appWidgets: state.currentWidgets,
           onTapEdit: () {},
           onTapWidget: (BusinessApps aw) {
-            print('app code => ${aw.code}');
             Provider.of<GlobalStateModel>(context,listen: false)
                 .setCurrentBusiness(state.activeBusiness);
             Provider.of<GlobalStateModel>(context,listen: false)
@@ -525,7 +524,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       List<NotificationModel> notifications = [];
       if (state.notifications.containsKey('shops')){
         notifications = state.notifications['shops'];
-        print('shops- notifications => $notifications');
       }
       dashboardWidgets.add(
           DashboardShopView(
@@ -599,7 +597,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       List<NotificationModel> notifications = [];
       if (state.notifications.containsKey('pos')){
         notifications = state.notifications['pos'];
-        print('pos- notifications => $notifications');
       }
       dashboardWidgets.add(
           DashboardAppPosView(
@@ -624,7 +621,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   duration: Duration(milliseconds: 500),
                 ),
               );
-              print('Terminal Update Result => $result');
               if ((result != null) && (result == 'Terminal Updated')) {
                 screenBloc.add(FetchPosEvent(business: state.activeBusiness));
               }
@@ -679,7 +675,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         List<NotificationModel> notifications = [];
         if (state.notifications.containsKey('checkout')){
           notifications = state.notifications['checkout'];
-          print('checkout- notifications => $notifications');
         }
         dashboardWidgets.add(
             DashboardCheckoutView(
@@ -723,7 +718,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
 //      List<NotificationModel> notifications = [];
 //      if (state.notifications.containsKey('marketing')){
 //        notifications = state.notifications['marketing'];
-//        print('marketing- notifications => $notifications');
 //      }
 //      dashboardWidgets.add(
 //          DashboardMailView(
@@ -747,7 +741,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
 //      List<NotificationModel> notifications = [];
 //      if (state.notifications.containsKey('studio')){
 //        notifications = state.notifications['studio'];
-//        print('studio- notifications => $notifications');
 //      }
 //      dashboardWidgets.add(
 //          DashboardStudioView(
@@ -771,7 +764,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
 //      List<NotificationModel> notifications = [];
 //      if (state.notifications.containsKey('ads')){
 //        notifications = state.notifications['ads'];
-//        print('ads- notifications => $notifications');
 //      }
 //      dashboardWidgets.add(
 //          DashboardAdvertisingView(
@@ -795,7 +787,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       List<NotificationModel> notifications = [];
       if (state.notifications.containsKey('contacts')){
         notifications = state.notifications['contacts'];
-        print('contacts- notifications => $notifications');
       }
       dashboardWidgets.add(
           DashboardContactView(
@@ -819,7 +810,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       List<NotificationModel> notifications = [];
       if (state.notifications.keys.toList().contains('products')){
         notifications = state.notifications['products'];
-        print('products- notifications => $notifications');
       }
       dashboardWidgets.add(
           DashboardProductsView(
@@ -874,7 +864,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   duration: Duration(milliseconds: 500),
                 ),
               );
-              print('Products Update Result => $result');
               if ((result != null) && (result == 'Products Updated')) {
               }
             },
@@ -923,7 +912,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       List<NotificationModel> notifications = [];
       if (state.notifications.containsKey('connect')){
         notifications = state.notifications['connect'];
-        print('connect- notifications => $notifications');
       }
       dashboardWidgets.add(
           DashboardConnectView(
@@ -963,7 +951,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
 //      List<NotificationModel> notifications = [];
 //      if (state.notifications.containsKey('settings')){
 //        notifications = state.notifications['settings'];
-//        print('settings- notifications => $notifications');
 //      }
 //      dashboardWidgets.add(
 //          DashboardSettingsView(
@@ -984,7 +971,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
         DashboardTutorialView(
           tutorials: state.tutorials,
           onWatchTutorial: (Tutorial tutorial) {
-
+            if (tutorial.urls.length > 0) {
+              String lang = state.activeBusiness.defaultLanguage;
+              List<Urls> urls = tutorial.urls.where((element) => element.language == lang).toList();
+              if (urls.length > 0) {
+                _launchURL(urls.first.url);
+              } else {
+                _launchURL(tutorial.url);
+              }
+            } else {
+              _launchURL(tutorial.url);
+            }
           },
         )
     );
@@ -1257,5 +1254,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
       ),
     );
+  }
+
+  _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }

@@ -363,7 +363,7 @@ class _ShopScreenState extends State<ShopScreen> {
           child: InkWell(
             child: SvgPicture.asset(
               'assets/images/closeicon.svg',
-              width: 20,
+              width: 16,
             ),
             onTap: () {
               Navigator.pop(context);

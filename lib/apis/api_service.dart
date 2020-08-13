@@ -1114,6 +1114,24 @@ class ApiService {
     }
   }
 
+  Future<dynamic> watchTutorial(String token, String id, String video) async {
+    try {
+      print('$TAG - watchTutorial()');
+      dynamic response = await _client.patchTypeless(
+          '$widgets/api/business/$id/widget-tutorial/$video/watched',
+          body: {},
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<dynamic> toggleInstalled(String token, String id, String uuid) async {
     try {
       print('$TAG - toggleInstalled()');

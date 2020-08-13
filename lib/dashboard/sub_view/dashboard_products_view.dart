@@ -151,12 +151,26 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
                   SizedBox(height: 8),
                   widget.lastSales != null
                       ? Container(
-                    height: 92,
-                    child: ListView.builder(
-                      itemBuilder: _itemBuilder,
-                      itemCount: widget.lastSales.length > 3 ? 3: widget.lastSales.length,
-                      scrollDirection: Axis.horizontal,
-                    ),
+                    height: 100,
+                    child: GridView.count(
+                      crossAxisCount: 3,
+                      physics: NeverScrollableScrollPhysics(),
+                      children: widget.lastSales.length > 3 ? List.generate(3, (index) => ProductCell(
+                        product: widget.lastSales[index],
+                        business: widget.business,
+                        onTap: (Products product) {
+                          widget.onSelect(product);
+                        },
+                      ),
+                      ).toList() : widget.lastSales.map((e) => ProductCell(
+                        product: e,
+                        business: widget.business,
+                        onTap: (Products product) {
+                          widget.onSelect(product);
+                        },
+                      )).toList(),
+                      childAspectRatio: (Measurements.width - 32) / 3.0 / 92.0,
+                    )
                   ): Container(
                     height: 92,
                     child: Center(

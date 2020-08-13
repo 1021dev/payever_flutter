@@ -1,39 +1,40 @@
 import '../utils/utils.dart';
 
 class Tutorial {
-  bool _init;
-  String _icon;
-  num _order;
-  String _title;
-  String _type;
-  String _url;
-  bool _watched;
-  String __id;
+  bool init;
+  String icon;
+  num order;
+  String title;
+  String type;
+  String url;
+  bool watched;
+  String id;
+  List<Urls> urls = [];
 
   Tutorial.map(dynamic obj) {
-    _init = obj[GlobalUtils.DB_TUTORIAL_INIT];
-    _icon = obj[GlobalUtils.DB_TUTORIAL_ICON];
-    _order = obj[GlobalUtils.DB_TUTORIAL_ORDER];
-    _title = obj[GlobalUtils.DB_TUTORIAL_TITLE];
-    _type = obj[GlobalUtils.DB_TUTORIAL_TYPE];
-    _url = obj[GlobalUtils.DB_TUTORIAL_URL];
-    _watched = obj[GlobalUtils.DB_TUTORIAL_WATCHED];
-    __id = obj[GlobalUtils.DB_TUTORIAL_ID];
+    init = obj[GlobalUtils.DB_TUTORIAL_INIT];
+    icon = obj[GlobalUtils.DB_TUTORIAL_ICON];
+    order = obj[GlobalUtils.DB_TUTORIAL_ORDER];
+    title = obj[GlobalUtils.DB_TUTORIAL_TITLE];
+    type = obj[GlobalUtils.DB_TUTORIAL_TYPE];
+    url = obj[GlobalUtils.DB_TUTORIAL_URL];
+    watched = obj[GlobalUtils.DB_TUTORIAL_WATCHED];
+    id = obj[GlobalUtils.DB_TUTORIAL_ID];
+    dynamic urlsObj = obj['urls'];
+    if (urlsObj is List) {
+      urlsObj.forEach((element) {
+        urls.add(Urls.fromMap(element));
+      });
+    }
   }
+}
 
-  bool get init => _init;
+class Urls {
+  String language;
+  String url;
 
-  String get icon => _icon;
-
-  num get order => _order;
-
-  String get title => _title;
-
-  String get type => _type;
-
-  String get url => _url;
-
-  bool get watched => _watched;
-
-  String get id => __id;
+  Urls.fromMap(dynamic obj) {
+    language = obj['language'];
+    url = obj['url'];
+  }
 }

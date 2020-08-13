@@ -47,6 +47,8 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
       yield* fetchNotifications();
     } else if (event is DeleteNotification) {
       yield* deleteNotification(event.notificationId);
+    } else if (event is WatchTutorials) {
+      yield* watchTutorial(event.tutorial);
     }
   }
 
@@ -478,5 +480,10 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
 
     yield state.copyWith(checkouts: checkouts, defaultCheckout: defaultCheckout);
     add(FetchNotifications());
+  }
+
+  Stream<DashboardScreenState> watchTutorial(Tutorial tutorial) async* {
+    dynamic response = await api.patchTutorials(GlobalUtils.activeToken.accessToken, state.activeBusiness.id, tutorial.id);
+    add(FetchTutorials(business: state.activeBusiness));
   }
 }

@@ -324,7 +324,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
           child: InkWell(
             child: SvgPicture.asset(
               'assets/images/closeicon.svg',
-              width: 20,
+              width: 16,
             ),
             onTap: () {
               Navigator.pop(context);
