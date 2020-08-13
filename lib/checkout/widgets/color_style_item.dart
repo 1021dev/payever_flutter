@@ -1,17 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:payever/blocs/checkout/checkout_setting/checkout_setting_bloc.dart';
+import 'package:payever/blocs/checkout/checkout_setting/checkout_setting_event.dart';
+import 'package:payever/blocs/checkout/checkout_setting/checkout_setting_state.dart';
 import 'package:payever/checkout/models/models.dart';
 
+import 'checkout_top_button.dart';
+
 class ColorStyleItem extends StatelessWidget {
-  final Style style;
+  final CheckoutSettingScreenBloc settingBloc;
+  Style style;
   final String title;
   final String icon;
   final bool isExpanded;
   final Function onTap;
 
   ColorStyleItem({
-    this.style,
+    this.settingBloc,
     this.title,
     this.icon,
     this.isExpanded,
@@ -22,6 +29,18 @@ class ColorStyleItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    return BlocBuilder<CheckoutSettingScreenBloc, CheckoutSettingScreenState>(
+      bloc: settingBloc,
+      builder: (BuildContext context, state) {
+        return state.isLoading ?
+          Center(child: CircularProgressIndicator(),):
+          _getBody(context, state);
+      },
+    );
+  }
+
+  Widget _getBody(BuildContext context, CheckoutSettingScreenState state) {
+    style = state.checkout.settings.styles;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
@@ -95,9 +114,13 @@ class ColorStyleItem extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              _colorPad(context, 'Fill', style.businessHeaderBackgroundColor),
+              _colorPad(context, 'Fill', style.businessHeaderBackgroundColor, (color) =>
+                style.businessHeaderBackgroundColor = color
+              ),
               SizedBox(width: 30,),
-              _colorPad(context, 'Border', style.businessHeaderBorderColor),
+              _colorPad(context, 'Border', style.businessHeaderBorderColor, (color) =>
+                style.businessHeaderBorderColor = color
+              ),
             ],
           ),
         ],
@@ -107,7 +130,6 @@ class ColorStyleItem extends StatelessWidget {
 
   Widget _pageItems(BuildContext context) {
     return Container(
-      height: 100,
       margin: EdgeInsets.only(left: 20, right: 20),
       child: Column(
         children: <Widget>[
@@ -120,9 +142,13 @@ class ColorStyleItem extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    _colorPad(context, 'Fill', style.pageBackgroundColor),
+                    _colorPad(context, 'Fill', style.pageBackgroundColor, (color) =>
+                      style.pageBackgroundColor = color
+                    ),
                     SizedBox(width: 30,),
-                    _colorPad(context, 'Lines', style.pageLineColor),
+                    _colorPad(context, 'Lines', style.pageLineColor, (color) =>
+                      style.pageLineColor = color
+                    ),
                   ],
                 ),
               ],
@@ -138,11 +164,17 @@ class ColorStyleItem extends StatelessWidget {
                 children: <Widget>[
                   Text('Text color'),
                   SizedBox(width: 30,),
-                  _colorPad(context, 'Primary', style.pageTextPrimaryColor),
+                  _colorPad(context, 'Primary', style.pageTextPrimaryColor, (color) =>
+                    style.pageTextPrimaryColor = color
+                  ),
                   SizedBox(width: 30,),
-                  _colorPad(context, 'Secondary', style.pageTextSecondaryColor),
+                  _colorPad(context, 'Secondary', style.pageTextSecondaryColor, (color) =>
+                      style.pageTextSecondaryColor = color
+                  ),
                   SizedBox(width: 30,),
-                  _colorPad(context, 'Link', style.pageTextLinkColor),
+                  _colorPad(context, 'Link', style.pageTextLinkColor, (color) =>
+                    style.pageTextLinkColor = color
+                  ),
                 ],
               ),
             ),
@@ -154,41 +186,81 @@ class ColorStyleItem extends StatelessWidget {
 
   Widget _buttonItems(BuildContext context) {
     return Container(
-      height: 100,
+      margin: EdgeInsets.only(left: 20, right: 20),
       child: Column(
         children: <Widget>[
           Container(
-            margin: EdgeInsets.only(left: 10, right: 20),
             height: 50,
-            child: Row(
-              children: <Widget>[
-                Text('Background colors'),
-                Spacer(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    _colorPad(context, 'Fill', style.businessHeaderBackgroundColor),
-                    SizedBox(width: 30,),
-                    _colorPad(context, 'Lines', style.businessHeaderBorderColor),
-                  ],
-                ),
-              ],
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text('Colors'),
+                  SizedBox(width: 30,),
+                  _colorPad(context, 'Text', style.buttonTextColor, (color) =>
+                    style.buttonTextColor = color
+                  ),
+                  SizedBox(width: 30,),
+                  _colorPad(context, 'Fill', style.buttonBackgroundColor, (color) =>
+                    style.buttonBackgroundColor = color
+                  ),
+                  SizedBox(width: 30,),
+                  _colorPad(context, 'Disabled', style.buttonBackgroundDisabledColor, (color) =>
+                    style.buttonBackgroundDisabledColor = color
+                  ),
+                ],
+              ),
             ),
           ),
+          _divider(),
           Container(
-            margin: EdgeInsets.only(left: 10, right: 20),
             height: 50,
             child: Row(
               children: <Widget>[
-                Text('Background colors'),
+                Text('Corners'),
                 Spacer(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    _colorPad(context, 'Fill', style.businessHeaderBackgroundColor),
-                    SizedBox(width: 30,),
-                    _colorPad(context, 'Lines', style.businessHeaderBorderColor),
-                  ],
+                Container(
+                  alignment: Alignment.center,
+                  margin: EdgeInsets.only(left: 15, right: 30),
+                  width: 30,
+                  height: 30,
+                  decoration: BoxDecoration(
+                    color: Color.fromRGBO(100, 100, 100, 1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: PopupMenuButton<CheckOutPopupButton>(
+                    child: _cornerImg(convertCornerAssets(style.buttonBorderRadius)),
+                    offset: Offset(0, 100),
+                    onSelected: (CheckOutPopupButton item) => item.onTap(),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    color: Colors.black87,
+                    itemBuilder: (BuildContext context) {
+                      return _cornerPopup(context).map((CheckOutPopupButton item) {
+                        return PopupMenuItem<CheckOutPopupButton>(
+                          value: item,
+                          child: Row(
+                            children: <Widget>[
+                              item.icon,
+                              SizedBox(
+                                width: 8,
+                              ),
+                              Text(
+                                item.title,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList();
+                    },
+                  ),
                 ),
               ],
             ),
@@ -200,41 +272,96 @@ class ColorStyleItem extends StatelessWidget {
 
   Widget _inputItems(BuildContext context) {
     return Container(
-      height: 100,
+      margin: EdgeInsets.only(left: 20, right: 20),
       child: Column(
         children: <Widget>[
           Container(
-            margin: EdgeInsets.only(left: 10, right: 20),
             height: 50,
             child: Row(
               children: <Widget>[
-                Text('Background colors'),
+                Text('Text color'),
                 Spacer(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    _colorPad(context, 'Fill', style.businessHeaderBackgroundColor),
+                    _colorPad(context, 'Primary', style.inputTextPrimaryColor, (color) =>
+                      style.inputTextPrimaryColor = color
+                    ),
                     SizedBox(width: 30,),
-                    _colorPad(context, 'Lines', style.businessHeaderBorderColor),
+                    _colorPad(context, 'Secondary', style.inputTextSecondaryColor, (color) =>
+                      style.inputTextSecondaryColor = color
+                    ),
                   ],
                 ),
               ],
             ),
           ),
+          _divider(),
           Container(
-            margin: EdgeInsets.only(left: 10, right: 20),
+            height: 50,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text('Background color'),
+                SizedBox(width: 30,),
+                _colorPad(context, 'Fill', style.inputBackgroundColor, (color) =>
+                  style.inputBackgroundColor = color
+                ),
+                SizedBox(width: 30,),
+                _colorPad(context, 'Border', style.inputBorderColor, (color) =>
+                  style.inputBorderColor = color
+                ),
+              ],
+            ),
+          ),
+          _divider(),
+          Container(
             height: 50,
             child: Row(
               children: <Widget>[
-                Text('Background colors'),
+                Text('Corners'),
                 Spacer(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    _colorPad(context, 'Fill', style.businessHeaderBackgroundColor),
-                    SizedBox(width: 30,),
-                    _colorPad(context, 'Lines', style.businessHeaderBorderColor),
-                  ],
+                Container(
+                  alignment: Alignment.center,
+                  margin: EdgeInsets.only(left: 15, right: 30),
+                  width: 30,
+                  height: 30,
+                  decoration: BoxDecoration(
+                    color: Color.fromRGBO(100, 100, 100, 1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: PopupMenuButton<CheckOutPopupButton>(
+                    child: _cornerImg(convertCornerAssets(style.inputBorderRadius)),
+                    offset: Offset(0, 100),
+                    onSelected: (CheckOutPopupButton item) => item.onTap(),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    color: Colors.black87,
+                    itemBuilder: (BuildContext context) {
+                      return _cornerPopup(context).map((CheckOutPopupButton item) {
+                        return PopupMenuItem<CheckOutPopupButton>(
+                          value: item,
+                          child: Row(
+                            children: <Widget>[
+                              item.icon,
+                              SizedBox(
+                                width: 8,
+                              ),
+                              Text(
+                                item.title,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList();
+                    },
+                  ),
                 ),
               ],
             ),
@@ -244,7 +371,7 @@ class ColorStyleItem extends StatelessWidget {
     );
   }
 
-  Widget _colorPad(BuildContext context, String title, String color) {
+  Widget _colorPad(BuildContext context, String title, String color, Function callback) {
     return Row(
       children: <Widget>[
         Text(
@@ -269,10 +396,9 @@ class ColorStyleItem extends StatelessWidget {
                   FlatButton(
                     child: const Text('Got it'),
                     onPressed: () {
-//                      Navigator.of(context).pop();
                       var hex = '${pickerColor.value.toRadixString(16)}';
-                      color = '#${hex.substring(2)}';
-//                      updateColor(title, color);
+                      callback('#${hex.substring(2)}');
+                      settingBloc.add(UpdateCheckoutSettingsEvent());
                     },
                   ),
                 ],
@@ -295,7 +421,7 @@ class ColorStyleItem extends StatelessWidget {
   }
 
   void changeColor(Color color) {
-//    setState(() => pickerColor = color);
+    pickerColor = color;
   }
 
   Color colorConvert(String color) {
@@ -305,7 +431,7 @@ class ColorStyleItem extends StatelessWidget {
     } else if (color.length == 8) {
       return Color(int.parse("0x"+color));
     } else {
-      return Colors.transparent;
+      return Colors.white;
     }
   }
 
@@ -315,6 +441,67 @@ class ColorStyleItem extends StatelessWidget {
       thickness: 0.5,
       color: Colors.grey,
     );
+  }
+  List<CheckOutPopupButton> _cornerPopup(BuildContext context) {
+    return [
+      CheckOutPopupButton(
+        title: '',
+        icon: _cornerImg('round'),
+        onTap: () async {
+          updateCorners('round');
+        },
+      ),
+      CheckOutPopupButton(
+        title: '',
+        icon:_cornerImg('circle'),
+        onTap: () async {
+          updateCorners('circle');
+        },
+      ),
+      CheckOutPopupButton(
+        title: '',
+        icon: _cornerImg('square'),
+        onTap: () async {
+          updateCorners('square');
+        },
+      ),
+    ];
+  }
+
+  SvgPicture _cornerImg(String corners) {
+    String asset;
+    switch (corners) {
+      case 'round':
+        asset = 'assets/images/corner-round.svg';
+        break;
+      case 'circle':
+        asset = 'assets/images/corner-circle.svg';
+        break;
+      case 'square':
+        asset = 'assets/images/corner-square.svg';
+        break;
+      default:
+        asset = 'assets/images/corner-square.svg';
+    }
+    return SvgPicture.asset(asset, width: 40,
+      height: 40,);
+  }
+
+  String convertCornerAssets(String corner) {
+    switch (corner) {
+      case '4px':
+        return 'round';
+      case '12px':
+        return 'circle';
+      case '0px':
+        return 'square';
+      default:
+        return 'round';
+    }
+  }
+
+  updateCorners(String corner) {
+
   }
 }
 

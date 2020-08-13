@@ -121,7 +121,7 @@ class _CheckoutColorStyleScreenState
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 ColorStyleItem(
-                  style: widget.checkout.settings.styles,
+                  settingBloc: widget.settingBloc,
                   title: 'Header',
                   icon: 'assets/images/style-header.svg',
                   isExpanded: isExpandedSection1,
@@ -135,7 +135,7 @@ class _CheckoutColorStyleScreenState
                 ),
                 _divider(),
                 ColorStyleItem(
-                  style: widget.checkout.settings.styles,
+                  settingBloc: widget.settingBloc,
                   title: 'Page',
                   icon: 'assets/images/style-page.svg',
                   isExpanded: isExpandedSection2,
@@ -149,7 +149,7 @@ class _CheckoutColorStyleScreenState
                 ),
                 _divider(),
                 ColorStyleItem(
-                  style: widget.checkout.settings.styles,
+                  settingBloc: widget.settingBloc,
                   title: 'Buttons',
                   icon: 'assets/images/style-button.svg',
                   isExpanded: isExpandedSection3,
@@ -163,7 +163,7 @@ class _CheckoutColorStyleScreenState
                 ),
                 _divider(),
                 ColorStyleItem(
-                  style: widget.checkout.settings.styles,
+                  settingBloc: widget.settingBloc,
                   title: 'Inputs',
                   icon: 'assets/images/style-input.svg',
                   isExpanded: isExpandedSection4,

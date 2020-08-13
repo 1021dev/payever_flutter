@@ -582,7 +582,7 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
       children: <Widget>[
         Text(
           title,
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w400),
         ),
         GestureDetector(
           onTap: (){
@@ -616,7 +616,11 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
             margin: EdgeInsets.only(left: 15),
             width: 30,
             height: 30,
-            color: colorConvert(color),
+            decoration: BoxDecoration(
+              color: colorConvert(color),
+              border: Border.all(width: 1, color: Colors.white),
+              borderRadius: BorderRadius.circular(4),
+            ),
           ),
         ),
       ],
@@ -720,7 +724,7 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
     } else if (color.length == 8) {
       return Color(int.parse("0x"+color));
     } else {
-      return Colors.transparent;
+      return Colors.white;
     }
   }
 
