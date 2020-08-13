@@ -121,45 +121,57 @@ class _CheckoutColorStyleScreenState
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 ColorStyleItem(
+                  style: widget.checkout.settings.styles,
                   title: 'Header',
                   icon: 'assets/images/style-header.svg',
                   isExpanded: isExpandedSection1,
                   onTap: () {
                     setState(() {
                       isExpandedSection1 = !isExpandedSection1;
+                      if (isExpandedSection1)
+                        isExpandedSection2 = isExpandedSection3 = isExpandedSection4 = false;
                     });
                   },
                 ),
                 _divider(),
                 ColorStyleItem(
+                  style: widget.checkout.settings.styles,
                   title: 'Page',
                   icon: 'assets/images/style-page.svg',
                   isExpanded: isExpandedSection2,
                   onTap: () {
                     setState(() {
                       isExpandedSection2 = !isExpandedSection2;
+                      if (isExpandedSection2)
+                        isExpandedSection1 = isExpandedSection3 = isExpandedSection4 = false;
                     });
                   },
                 ),
                 _divider(),
                 ColorStyleItem(
+                  style: widget.checkout.settings.styles,
                   title: 'Buttons',
                   icon: 'assets/images/style-button.svg',
                   isExpanded: isExpandedSection3,
                   onTap: () {
                     setState(() {
                       isExpandedSection3 = !isExpandedSection3;
+                      if (isExpandedSection3)
+                        isExpandedSection1 = isExpandedSection2 = isExpandedSection4 = false;
                     });
                   },
                 ),
                 _divider(),
                 ColorStyleItem(
+                  style: widget.checkout.settings.styles,
                   title: 'Inputs',
                   icon: 'assets/images/style-input.svg',
-                  isExpanded: isExpandedSection3,
+                  isExpanded: isExpandedSection4,
                   onTap: () {
                     setState(() {
-                      isExpandedSection3 = !isExpandedSection3;
+                      isExpandedSection4 = !isExpandedSection4;
+                      if (isExpandedSection4)
+                        isExpandedSection1 = isExpandedSection2 = isExpandedSection3 = false;
                     });
                   },
                 ),
@@ -167,7 +179,7 @@ class _CheckoutColorStyleScreenState
                 Container(
                   height: 65,
                   decoration: BoxDecoration(
-                    color: Colors.black87,
+                    color: Colors.grey[600],
                     borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(10),
                       bottomRight: Radius.circular(10),

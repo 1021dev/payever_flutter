@@ -1,25 +1,27 @@
-
 import 'package:flutter/material.dart';
-import 'package:flutter_reorderable_list/flutter_reorderable_list.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/checkout/models/models.dart';
-import 'package:payever/commons/commons.dart';
 
 class ColorStyleItem extends StatelessWidget {
+  final Style style;
   final String title;
   final String icon;
   final bool isExpanded;
   final Function onTap;
 
   ColorStyleItem({
+    this.style,
     this.title,
     this.icon,
     this.isExpanded,
     this.onTap,
   });
 
+  Color pickerColor;
   @override
   Widget build(BuildContext context) {
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
@@ -35,9 +37,14 @@ class ColorStyleItem extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                SvgPicture.asset(icon, width: 16,
-                  height: 16,),
-                SizedBox(width: 10,),
+                SvgPicture.asset(
+                  icon,
+                  width: 16,
+                  height: 16,
+                ),
+                SizedBox(
+                  width: 10,
+                ),
                 Text(
                   title,
                   style: TextStyle(
@@ -47,176 +54,267 @@ class ColorStyleItem extends StatelessWidget {
                 ),
                 Spacer(),
                 Icon(
-                  isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                  isExpanded
+                      ? Icons.keyboard_arrow_up
+                      : Icons.keyboard_arrow_down,
                 ),
               ],
             ),
           ),
         ),
-        isExpanded ? (
-            title == 'Step 3' ?
-            Container(
-          decoration: BoxDecoration(color: Colors.transparent),
-          child: SafeArea(
-            top: false,
-            bottom: false,
-            child: Opacity(
-              opacity: 1,
-              child: Container(
-                height: 50.0,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    SizedBox(
-                      width: 50,
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding:
-                        EdgeInsets.symmetric(vertical: 14.0, horizontal: 14.0),
-                        child: Text(
-                            'Confirmation',
-                            style: Theme
-                                .of(context)
-                                .textTheme
-                                .subtitle1),
-                      ),
-                    ),
-                    // Triggers the reordering
-                    Container(
-                      padding: EdgeInsets.only(right: 18.0, left: 18.0),
-                      color: Colors.transparent,
-                      child: Center(
-                        child: Icon(Icons.reorder, color: Color(0xFF888888)),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ):
-            Container(
-          height: 3 * 50.0,
-          child: Container(),
-        )
-        ): Container(),
+        isExpanded
+            ? _subItems(context)
+            : Container(),
       ],
     );
   }
 
-
-}
-
-class Item extends StatelessWidget {
-  Item({
-    this.section,
-    this.isFirst,
-    this.isLast,
-    this.draggingMode,
-    this.onDelete,
-  });
-
-  final Section section;
-  final bool isFirst;
-  final bool isLast;
-  final DraggingMode draggingMode;
-  final Function onDelete;
-
-  Widget _buildChild(BuildContext context, ReorderableItemState state) {
-    BoxDecoration decoration;
-    if (state == ReorderableItemState.dragProxy ||
-        state == ReorderableItemState.dragProxyFinished) {
-      // slightly transparent background white dragging (just like on iOS)
-      decoration = BoxDecoration(color: Colors.transparent);
-    } else {
-      bool placeholder = state == ReorderableItemState.placeholder;
-      decoration = BoxDecoration(
-          border: Border(
-              top: isFirst && !placeholder
-                  ? Divider.createBorderSide(context) //
-                  : BorderSide.none,
-              bottom: isLast && placeholder
-                  ? BorderSide.none //
-                  : Divider.createBorderSide(context)),
-          color: placeholder ? null : Colors.black12);
+  Widget _subItems(BuildContext context) {
+    switch(title) {
+      case 'Header':
+        return _headerItems(context);
+      case 'Page':
+        return _pageItems(context);
+      case 'Buttons':
+        return _buttonItems(context);
+      case 'Inputs':
+        return _inputItems(context);
+      default:
+        return _headerItems(context);
     }
+  }
 
-    // For iOS dragging mode, there will be drag handle on the right that triggers
-    // reordering; For android mode it will be just an empty container
-    Widget dragHandle = !(section.fixed ?? false) ? (draggingMode == DraggingMode.iOS
-        ? ReorderableListener(
-      child: Container(
-        padding: EdgeInsets.only(right: 18.0, left: 18.0),
-        color: Colors.transparent,
-        child: Center(
-          child: Icon(Icons.reorder, color: Color(0xFF888888)),
-        ),
+  Widget _headerItems(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(left: 20, right: 20),
+      height: 50,
+      child: Row(
+        children: <Widget>[
+          Text('Fill color'),
+          Spacer(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              _colorPad(context, 'Fill', style.businessHeaderBackgroundColor),
+              SizedBox(width: 30,),
+              _colorPad(context, 'Border', style.businessHeaderBorderColor),
+            ],
+          ),
+        ],
       ),
-    )
-        : Container()): Container();
+    );
+  }
 
-    Widget content = Container(
-      decoration: decoration,
-      child: SafeArea(
-          top: false,
-          bottom: false,
-          child: Opacity(
-            // hide content for placeholder
-            opacity: state == ReorderableItemState.placeholder ? 0.0 : 1.0,
-            child: Container(
-              height: 50.0,
+  Widget _pageItems(BuildContext context) {
+    return Container(
+      height: 100,
+      margin: EdgeInsets.only(left: 20, right: 20),
+      child: Column(
+        children: <Widget>[
+          Container(
+            height: 50,
+            child: Row(
+              children: <Widget>[
+                Text('Background colors'),
+                Spacer(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    _colorPad(context, 'Fill', style.pageBackgroundColor),
+                    SizedBox(width: 30,),
+                    _colorPad(context, 'Lines', style.pageLineColor),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          _divider(),
+          Container(
+            height: 50,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Container(
-                    width: 50,
-                    child: !(section.fixed ?? false) ? MaterialButton(
-                      child: Icon(Icons.remove),
-                      onPressed: () {
-                        onDelete(section);
-                      },
-                    ): Container(),
-                  ),
-                  Expanded(
-                      child: Padding(
-                        padding:
-                        EdgeInsets.symmetric(vertical: 14.0, horizontal: 14.0),
-                        child: Text(
-                            getTitleFromCode(section.code),
-                            style: Theme
-                                .of(context)
-                                .textTheme
-                                .subtitle1),
-                      )),
-                  // Triggers the reordering
-                  dragHandle,
+                  Text('Text color'),
+                  SizedBox(width: 30,),
+                  _colorPad(context, 'Primary', style.pageTextPrimaryColor),
+                  SizedBox(width: 30,),
+                  _colorPad(context, 'Secondary', style.pageTextSecondaryColor),
+                  SizedBox(width: 30,),
+                  _colorPad(context, 'Link', style.pageTextLinkColor),
                 ],
               ),
             ),
-          )),
+          ),
+        ],
+      ),
     );
+  }
 
-    // For android dragging mode, wrap the entire content in DelayedReorderableListener
-    if (draggingMode == DraggingMode.Android) {
-      content = DelayedReorderableListener(
-        child: content,
-      );
+  Widget _buttonItems(BuildContext context) {
+    return Container(
+      height: 100,
+      child: Column(
+        children: <Widget>[
+          Container(
+            margin: EdgeInsets.only(left: 10, right: 20),
+            height: 50,
+            child: Row(
+              children: <Widget>[
+                Text('Background colors'),
+                Spacer(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    _colorPad(context, 'Fill', style.businessHeaderBackgroundColor),
+                    SizedBox(width: 30,),
+                    _colorPad(context, 'Lines', style.businessHeaderBorderColor),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(left: 10, right: 20),
+            height: 50,
+            child: Row(
+              children: <Widget>[
+                Text('Background colors'),
+                Spacer(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    _colorPad(context, 'Fill', style.businessHeaderBackgroundColor),
+                    SizedBox(width: 30,),
+                    _colorPad(context, 'Lines', style.businessHeaderBorderColor),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _inputItems(BuildContext context) {
+    return Container(
+      height: 100,
+      child: Column(
+        children: <Widget>[
+          Container(
+            margin: EdgeInsets.only(left: 10, right: 20),
+            height: 50,
+            child: Row(
+              children: <Widget>[
+                Text('Background colors'),
+                Spacer(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    _colorPad(context, 'Fill', style.businessHeaderBackgroundColor),
+                    SizedBox(width: 30,),
+                    _colorPad(context, 'Lines', style.businessHeaderBorderColor),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(left: 10, right: 20),
+            height: 50,
+            child: Row(
+              children: <Widget>[
+                Text('Background colors'),
+                Spacer(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    _colorPad(context, 'Fill', style.businessHeaderBackgroundColor),
+                    SizedBox(width: 30,),
+                    _colorPad(context, 'Lines', style.businessHeaderBorderColor),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _colorPad(BuildContext context, String title, String color) {
+    return Row(
+      children: <Widget>[
+        Text(
+          title,
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w400),
+        ),
+        GestureDetector(
+          onTap: (){
+            showDialog(
+              context: context,
+              child: AlertDialog(
+                title: const Text('Pick a color!'),
+                content: SingleChildScrollView(
+                  child: ColorPicker(
+                    pickerColor: colorConvert(color),
+                    onColorChanged: changeColor,
+                    showLabel: true,
+                    pickerAreaHeightPercent: 0.8,
+                  ),
+                ),
+                actions: <Widget>[
+                  FlatButton(
+                    child: const Text('Got it'),
+                    onPressed: () {
+//                      Navigator.of(context).pop();
+                      var hex = '${pickerColor.value.toRadixString(16)}';
+                      color = '#${hex.substring(2)}';
+//                      updateColor(title, color);
+                    },
+                  ),
+                ],
+              ),
+            );
+          },
+          child: Container(
+            margin: EdgeInsets.only(left: 15),
+            width: 30,
+            height: 30,
+            decoration: BoxDecoration(
+              color: colorConvert(color),
+              border: Border.all(width: 1, color: Colors.white),
+              borderRadius: BorderRadius.circular(4),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  void changeColor(Color color) {
+//    setState(() => pickerColor = color);
+  }
+
+  Color colorConvert(String color) {
+    color = color.replaceAll("#", "");
+    if (color.length == 6) {
+      return Color(int.parse("0xFF"+color));
+    } else if (color.length == 8) {
+      return Color(int.parse("0x"+color));
+    } else {
+      return Colors.transparent;
     }
-
-    return content;
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return ReorderableItem(
-      key: Key(section.code),
-      childBuilder: _buildChild,
+  Widget _divider() {
+    return Divider(
+      height: 0,
+      thickness: 0.5,
+      color: Colors.grey,
     );
   }
 }
 
-enum DraggingMode {
-  iOS,
-  Android,
-}
