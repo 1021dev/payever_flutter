@@ -231,96 +231,66 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ],
       ),
       actions: <Widget>[
-        IconButton(
-          constraints: BoxConstraints(
-              maxHeight: 32,
-              maxWidth: 32,
-              minHeight: 32,
-              minWidth: 32
+        Padding(
+          padding: EdgeInsets.all(6),
+          child: InkWell(
+            child: SvgPicture.asset('assets/images/business_person.svg', width: 20,),
+            onTap: () {
+            },
           ),
-          icon: Icon(
-            Icons.person_pin,
-            color: Colors.white,
-            size: 24,
-          ),
-          onPressed: () {
-
-          },
-        ),
-        IconButton(
-          constraints: BoxConstraints(
-              maxHeight: 32,
-              maxWidth: 32,
-              minHeight: 32,
-              minWidth: 32
-          ),
-          icon: Icon(
-            Icons.search,
-            color: Colors.white,
-            size: 24,
-          ),
-          onPressed: () {
-
-          },
-        ),
-        IconButton(
-          constraints: BoxConstraints(
-              maxHeight: 32,
-              maxWidth: 32,
-              minHeight: 32,
-              minWidth: 32
-          ),
-          icon: Icon(
-            Icons.notifications,
-            color: Colors.white,
-            size: 24,
-          ),
-          onPressed: () async {
-            Provider.of<GlobalStateModel>(context,listen: false)
-                .setCurrentBusiness(state.activeBusiness);
-            Provider.of<GlobalStateModel>(context,listen: false)
-                .setCurrentWallpaper(state.curWall);
-
-            await showGeneralDialog(
-                barrierColor: null,
-                transitionBuilder: (context, a1, a2, widget) {
-                  final curvedValue = Curves.ease.transform(a1.value) -   1.0;
-                  return Transform(
-                    transform: Matrix4.translationValues(-curvedValue * 200, 0.0, 0),
-                    child: NotificationsScreen(
-                      business: state.activeBusiness,
-                      businessApps: state.businessWidgets,
-                      dashboardScreenBloc: screenBloc,
-                    ),
-                  );
-                },
-                transitionDuration: Duration(milliseconds: 200),
-                barrierDismissible: true,
-                barrierLabel: '',
-                context: context,
-                pageBuilder: (context, animation1, animation2) {
-                  return null;
-                });
-          },
-        ),
-        IconButton(
-          constraints: BoxConstraints(
-              maxHeight: 32,
-              maxWidth: 32,
-              minHeight: 32,
-              minWidth: 32
-          ),
-          icon: Icon(
-            Icons.menu,
-            color: Colors.white,
-            size: 24,
-          ),
-          onPressed: () {
-            _innerDrawerKey.currentState.toggle();
-          },
         ),
         Padding(
-          padding: EdgeInsets.only(right: 16),
+          padding: EdgeInsets.all(6),
+          child: InkWell(
+            child: SvgPicture.asset('assets/images/searchicon.svg', width: 20,),
+            onTap: () {
+            },
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.all(6),
+          child: InkWell(
+            child: SvgPicture.asset('assets/images/notificationicon.svg', width: 20,),
+            onTap: () async {
+              Provider.of<GlobalStateModel>(context,listen: false)
+                  .setCurrentBusiness(state.activeBusiness);
+              Provider.of<GlobalStateModel>(context,listen: false)
+                  .setCurrentWallpaper(state.curWall);
+
+              await showGeneralDialog(
+                  barrierColor: null,
+                  transitionBuilder: (context, a1, a2, widget) {
+                    final curvedValue = Curves.ease.transform(a1.value) -   1.0;
+                    return Transform(
+                      transform: Matrix4.translationValues(-curvedValue * 200, 0.0, 0),
+                      child: NotificationsScreen(
+                        business: state.activeBusiness,
+                        businessApps: state.businessWidgets,
+                        dashboardScreenBloc: screenBloc,
+                      ),
+                    );
+                  },
+                  transitionDuration: Duration(milliseconds: 200),
+                  barrierDismissible: true,
+                  barrierLabel: '',
+                  context: context,
+                  pageBuilder: (context, animation1, animation2) {
+                    return null;
+                  });
+            },
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.all(6),
+          child: InkWell(
+            child: SvgPicture.asset('assets/images/list.svg', width: 20,),
+            onTap: () {
+              _innerDrawerKey.currentState.toggle();
+            },
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(right: 8),
         ),
       ],
     );
@@ -747,75 +717,75 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
 
     // Mail
-    if (widgets.where((element) => element.type == 'marketing' ).toList().length > 0) {
-      appWidget = widgets.where((element) => element.type == 'marketing' ).toList().first;
-      businessApp = businessApps.where((element) => element.code == 'marketing' ).toList().first;
-      List<NotificationModel> notifications = [];
-      if (state.notifications.containsKey('marketing')){
-        notifications = state.notifications['marketing'];
-        print('marketing- notifications => $notifications');
-      }
-      dashboardWidgets.add(
-          DashboardMailView(
-            businessApps: businessApp,
-            appWidget: appWidget,
-            notifications: notifications,
-            openNotification: (NotificationModel model) {
-            },
-            deleteNotification: (NotificationModel model) {
-              screenBloc.add(DeleteNotification(notificationId: model.id));
-            },
-          )
-      );
-    }
+//    if (widgets.where((element) => element.type == 'marketing' ).toList().length > 0) {
+//      appWidget = widgets.where((element) => element.type == 'marketing' ).toList().first;
+//      businessApp = businessApps.where((element) => element.code == 'marketing' ).toList().first;
+//      List<NotificationModel> notifications = [];
+//      if (state.notifications.containsKey('marketing')){
+//        notifications = state.notifications['marketing'];
+//        print('marketing- notifications => $notifications');
+//      }
+//      dashboardWidgets.add(
+//          DashboardMailView(
+//            businessApps: businessApp,
+//            appWidget: appWidget,
+//            notifications: notifications,
+//            openNotification: (NotificationModel model) {
+//            },
+//            deleteNotification: (NotificationModel model) {
+//              screenBloc.add(DeleteNotification(notificationId: model.id));
+//            },
+//          )
+//      );
+//    }
 
     // Studio
-    if (widgets.where((element) => element.type == 'studio' ).toList().length > 0) {
-      appWidget = widgets.where((element) => element.type == 'studio' ).toList().first;
-      businessApp = businessApps.where((element) => element.code == 'studio' ).toList().length > 0
-          ? businessApps.where((element) => element.code == 'studio' ).toList().first : null;
-      List<NotificationModel> notifications = [];
-      if (state.notifications.containsKey('studio')){
-        notifications = state.notifications['studio'];
-        print('studio- notifications => $notifications');
-      }
-      dashboardWidgets.add(
-          DashboardStudioView(
-            businessApps: businessApp,
-            appWidget: appWidget,
-            notifications: notifications,
-            openNotification: (NotificationModel model) {
-            },
-            deleteNotification: (NotificationModel model) {
-              screenBloc.add(DeleteNotification(notificationId: model.id));
-            },
-          )
-      );
-    }
+//    if (widgets.where((element) => element.type == 'studio' ).toList().length > 0) {
+//      appWidget = widgets.where((element) => element.type == 'studio' ).toList().first;
+//      businessApp = businessApps.where((element) => element.code == 'studio' ).toList().length > 0
+//          ? businessApps.where((element) => element.code == 'studio' ).toList().first : null;
+//      List<NotificationModel> notifications = [];
+//      if (state.notifications.containsKey('studio')){
+//        notifications = state.notifications['studio'];
+//        print('studio- notifications => $notifications');
+//      }
+//      dashboardWidgets.add(
+//          DashboardStudioView(
+//            businessApps: businessApp,
+//            appWidget: appWidget,
+//            notifications: notifications,
+//            openNotification: (NotificationModel model) {
+//            },
+//            deleteNotification: (NotificationModel model) {
+//              screenBloc.add(DeleteNotification(notificationId: model.id));
+//            },
+//          )
+//      );
+//    }
 
     // Ads
-    if (widgets.where((element) => element.type == 'ads' ).toList().length > 0) {
-      appWidget = widgets.where((element) => element.type == 'ads' ).toList().first;
-      businessApp = businessApps.where((element) => element.code == 'ads' ).toList().length > 0
-          ? businessApps.where((element) => element.code == 'ads' ).toList().first : null;
-      List<NotificationModel> notifications = [];
-      if (state.notifications.containsKey('ads')){
-        notifications = state.notifications['ads'];
-        print('ads- notifications => $notifications');
-      }
-      dashboardWidgets.add(
-          DashboardAdvertisingView(
-            businessApps: businessApp,
-            appWidget: appWidget,
-            notifications: notifications,
-            openNotification: (NotificationModel model) {
-            },
-            deleteNotification: (NotificationModel model) {
-              screenBloc.add(DeleteNotification(notificationId: model.id));
-            },
-          )
-      );
-    }
+//    if (widgets.where((element) => element.type == 'ads' ).toList().length > 0) {
+//      appWidget = widgets.where((element) => element.type == 'ads' ).toList().first;
+//      businessApp = businessApps.where((element) => element.code == 'ads' ).toList().length > 0
+//          ? businessApps.where((element) => element.code == 'ads' ).toList().first : null;
+//      List<NotificationModel> notifications = [];
+//      if (state.notifications.containsKey('ads')){
+//        notifications = state.notifications['ads'];
+//        print('ads- notifications => $notifications');
+//      }
+//      dashboardWidgets.add(
+//          DashboardAdvertisingView(
+//            businessApps: businessApp,
+//            appWidget: appWidget,
+//            notifications: notifications,
+//            openNotification: (NotificationModel model) {
+//            },
+//            deleteNotification: (NotificationModel model) {
+//              screenBloc.add(DeleteNotification(notificationId: model.id));
+//            },
+//          )
+//      );
+//    }
 
     // Contacts
     if (widgets.where((element) => element.type == 'contacts' ).toList().length > 0) {
@@ -987,27 +957,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
 
     // Settings
-    if (widgets.where((element) => element.type == 'settings' ).toList().length > 0) {
-      appWidget = widgets.where((element) => element.type == 'settings' ).toList().first;
-      businessApp = businessApps.where((element) => element.code == 'settings' ).toList().first;
-      List<NotificationModel> notifications = [];
-      if (state.notifications.containsKey('settings')){
-        notifications = state.notifications['settings'];
-        print('settings- notifications => $notifications');
-      }
-      dashboardWidgets.add(
-          DashboardSettingsView(
-            businessApps: businessApp,
-            appWidget: appWidget,
-            notifications: notifications,
-            openNotification: (NotificationModel model) {
-            },
-            deleteNotification: (NotificationModel model) {
-              screenBloc.add(DeleteNotification(notificationId: model.id));
-            },
-          )
-      );
-    }
+//    if (widgets.where((element) => element.type == 'settings' ).toList().length > 0) {
+//      appWidget = widgets.where((element) => element.type == 'settings' ).toList().first;
+//      businessApp = businessApps.where((element) => element.code == 'settings' ).toList().first;
+//      List<NotificationModel> notifications = [];
+//      if (state.notifications.containsKey('settings')){
+//        notifications = state.notifications['settings'];
+//        print('settings- notifications => $notifications');
+//      }
+//      dashboardWidgets.add(
+//          DashboardSettingsView(
+//            businessApps: businessApp,
+//            appWidget: appWidget,
+//            notifications: notifications,
+//            openNotification: (NotificationModel model) {
+//            },
+//            deleteNotification: (NotificationModel model) {
+//              screenBloc.add(DeleteNotification(notificationId: model.id));
+//            },
+//          )
+//      );
+//    }
 
     // Tutorials
     dashboardWidgets.add(
@@ -1040,11 +1010,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           shape: CircleBorder(),
           elevation: 4,
           fillColor: Color(0xFF222222),
-          child:Icon(
-            Icons.help_outline,
-            color: Colors.white,
-            size: 24,
-          ),
+          child: SvgPicture.asset('assets/images/help.svg', width: 24,),
           onPressed: () {
           },
         ),
@@ -1140,11 +1106,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         height: 40,
         child: Row(
           children: [
-            Icon(
-              Icons.search,
-              color: Colors.white,
-              size: 20,
-            ),
+            SvgPicture.asset('assets/images/searchicon.svg'),
             SizedBox(width: 8),
             Expanded(
               child: Row(

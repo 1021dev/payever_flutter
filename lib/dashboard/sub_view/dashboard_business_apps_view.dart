@@ -26,7 +26,10 @@ class _DashboardBusinessAppsViewState extends State<DashboardBusinessAppsView> {
     List<BusinessApps> businessApps = widget.businessApps.where((element) {
       String title = element.dashboardInfo.title ?? '';
       if (element.installed && title != '') {
-        return true;
+        if (title == 'shop' || title == 'pos' || title == 'transactions' || title == 'connect' || title == 'contact' || title == 'checkout') {
+          return true;
+        }
+        return false;
       } else {
         return false;
       }
@@ -46,9 +49,11 @@ class _DashboardBusinessAppsViewState extends State<DashboardBusinessAppsView> {
                       width: 20,
                       height: 20,
                       decoration: BoxDecoration(
-                          image: DecorationImage(
-                              image: NetworkImage('${Env.cdnIcon}icons-apps-white/icon-apps-white-dashboard.png'),
-                              fit: BoxFit.scaleDown)),
+                        image: DecorationImage(
+                          image: NetworkImage('${Env.cdnIcon}icons-apps-white/icon-apps-white-dashboard.png'),
+                          fit: BoxFit.scaleDown,
+                        ),
+                      ),
                     ),
                     SizedBox(width: 8,),
                     Text(
@@ -57,7 +62,7 @@ class _DashboardBusinessAppsViewState extends State<DashboardBusinessAppsView> {
                         color: Colors.white,
                         fontSize: 12,
                       ),
-                    )
+                    ),
                   ],
                 ),
                 InkWell(
@@ -66,15 +71,15 @@ class _DashboardBusinessAppsViewState extends State<DashboardBusinessAppsView> {
                     height: 20,
                     width: 40,
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.black.withAlpha(100)
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.black.withAlpha(100),
                     ),
                     child: Center(
                       child: Text(
                         Language.getCommerceOSStrings('Edit'),
                         style: TextStyle(
-                            fontSize: 10,
-                            color: Colors.white
+                          fontSize: 10,
+                          color: Colors.white,
                         ),
                       ),
                     ),

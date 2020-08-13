@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
@@ -110,7 +111,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 }).toList();
                 BusinessApps businessApps;
                 if (bList.length > 0) {
-                  print(bList.first.code);
                   businessApps = bList.first;
                 }
                 return NotificationCell(
@@ -219,19 +219,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         ),
       ),
       actions: <Widget>[
-        IconButton(
-          constraints: BoxConstraints(
-              maxHeight: 32,
-              maxWidth: 32,
-              minHeight: 32,
-              minWidth: 32
-          ),
-          icon: Icon(
-            Icons.close,
-            color: Colors.white,
-            size: 24,
-          ),
-          onPressed: () {
+        InkWell(
+          child: SvgPicture.asset('assets/images/closeicon.svg',),
+          onTap: () {
             Navigator.pop(context);
           },
         ),

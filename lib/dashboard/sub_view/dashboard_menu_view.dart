@@ -50,11 +50,7 @@ class DashboardMenuView extends StatelessWidget {
                     shape: CircleBorder(),
                     minWidth: 0,
                     padding: EdgeInsets.all(8),
-                    child: Icon(
-                      Icons.close,
-                      color: Colors.white,
-                      size: 24,
-                    ),
+                    child: SvgPicture.asset('assets/images/closeicon.svg'),
                     onPressed: onClose,
                   ),
                 ),
@@ -69,7 +65,9 @@ class DashboardMenuView extends StatelessWidget {
                           width: 25,
                           child: Center(
                             child: SvgPicture.asset(
-                              "assets/images/switch.svg", width: 20,),
+                              'assets/images/switch.svg',
+                              width: 20,
+                            ),
                           ),
                         ),
                         SizedBox(width: 8,),
@@ -77,7 +75,7 @@ class DashboardMenuView extends StatelessWidget {
                           Language.getCommerceOSStrings('dashboard.profile_menu.switch_profile'),
                           style: TextStyle(
                               fontSize: 14,
-                              color: Colors.white
+                              color: Colors.white,
                           ),
                         )
                       ],
@@ -98,9 +96,9 @@ class DashboardMenuView extends StatelessWidget {
                         Container(
                           width: 25,
                           child: Center(
-                            child: Icon(
-                              Icons.person_pin,
-                              size: 20,
+                            child: SvgPicture.asset(
+                              'assets/images/business_person.svg',
+                              width: 20,
                             ),
                           ),
                         ),
@@ -130,9 +128,8 @@ class DashboardMenuView extends StatelessWidget {
                         Container(
                           width: 25,
                           child: Center(
-                            child: Icon(
-                              Icons.add_circle,
-                              size: 20,
+                            child: SvgPicture.asset(
+                              'assets/images/add.svg', width: 20,
                             ),
                           ),
                         ),
@@ -163,7 +160,9 @@ class DashboardMenuView extends StatelessWidget {
                           width: 25,
                           child: Center(
                             child: SvgPicture.asset(
-                              "assets/images/logout.svg", width: 16,),
+                              'assets/images/logout.svg',
+                              width: 16,
+                            ),
                           ),
                         ),
                         SizedBox(width: 8,),
@@ -184,7 +183,7 @@ class DashboardMenuView extends StatelessWidget {
                 ),
                 InkWell(
                   onTap: () {
-                    _sendMail("service@payever.de", "Contact payever", "");
+                    _sendMail('service@payever.de', 'Contact payever', '');
                   },
                   child: Container(
                     height: 50,
@@ -195,7 +194,9 @@ class DashboardMenuView extends StatelessWidget {
                           width: 25,
                           child: Center(
                             child: SvgPicture.asset(
-                              "assets/images/contact.svg", width: 16,),
+                              'assets/images/contact.svg',
+                              width: 16,
+                            ),
                           ),
                         ),
                         SizedBox(width: 8,),
@@ -217,8 +218,7 @@ class DashboardMenuView extends StatelessWidget {
                 InkWell(
                   onTap: () {
                     _sendMail(
-                        "service@payever.de", "Feedback for the payever-Team", "");
-
+                        'service@payever.de', 'Feedback for the payever-Team', '');
                   },
                   child: Container(
                     height: 50,
@@ -229,7 +229,9 @@ class DashboardMenuView extends StatelessWidget {
                           width: 25,
                           child: Center(
                             child: SvgPicture.asset(
-                              "assets/images/feedback.svg", width: 16,),
+                              'assets/images/feedback.svg',
+                              width: 16,
+                            ),
                           ),
                         ),
                         SizedBox(width: 8,),

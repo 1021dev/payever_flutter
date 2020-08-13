@@ -251,49 +251,22 @@ class _ContactScreenState extends State<ContactScreen> {
         ],
       ),
       actions: <Widget>[
-        IconButton(
-          constraints: BoxConstraints(
-              maxHeight: 32,
-              maxWidth: 32,
-              minHeight: 32,
-              minWidth: 32
-          ),
-          icon: Icon(
-            Icons.person_pin,
-            color: Colors.white,
-            size: 24,
-          ),
+        MaterialButton(
+          child: SvgPicture.asset('assets/images/account.svg', width: 24,),
+          minWidth: 0,
           onPressed: () {
           },
         ),
-        IconButton(
-          constraints: BoxConstraints(
-              maxHeight: 32,
-              maxWidth: 32,
-              minHeight: 32,
-              minWidth: 32
-          ),
-          icon: Icon(
-            Icons.search,
-            color: Colors.white,
-            size: 24,
-          ),
+        MaterialButton(
+          child: SvgPicture.asset('assets/images/searchicon.svg', width: 24,),
+          minWidth: 0,
           onPressed: () {
 
           },
         ),
-        IconButton(
-          constraints: BoxConstraints(
-              maxHeight: 32,
-              maxWidth: 32,
-              minHeight: 32,
-              minWidth: 32
-          ),
-          icon: Icon(
-            Icons.notifications,
-            color: Colors.white,
-            size: 24,
-          ),
+        MaterialButton(
+          child: SvgPicture.asset('assets/images/notificationicon.svg', width: 24,),
+          minWidth: 0,
           onPressed: () async{
             await showGeneralDialog(
               barrierColor: null,
@@ -319,34 +292,16 @@ class _ContactScreenState extends State<ContactScreen> {
             );
           },
         ),
-        IconButton(
-          constraints: BoxConstraints(
-              maxHeight: 32,
-              maxWidth: 32,
-              minHeight: 32,
-              minWidth: 32
-          ),
-          icon: Icon(
-            Icons.menu,
-            color: Colors.white,
-            size: 24,
-          ),
+        MaterialButton(
+          child: SvgPicture.asset('assets/images/list.svg', width: 24,),
+          minWidth: 0,
           onPressed: () {
             _innerDrawerKey.currentState.toggle();
           },
         ),
-        IconButton(
-          constraints: BoxConstraints(
-              maxHeight: 32,
-              maxWidth: 32,
-              minHeight: 32,
-              minWidth: 32
-          ),
-          icon: Icon(
-            Icons.close,
-            color: Colors.white,
-            size: 24,
-          ),
+        MaterialButton(
+          child: SvgPicture.asset('assets/images/closeicon.svg', width: 24,),
+          minWidth: 0,
           onPressed: () {
             Navigator.pop(context);
           },
