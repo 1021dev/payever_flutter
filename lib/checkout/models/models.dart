@@ -239,26 +239,29 @@ class Lang {
 }
 
 class Style {
-  ButtonStyle button;
-  PageStyle page;
+  Style();
+
+  ButtonStyle button = ButtonStyle();
+  PageStyle page = PageStyle();
   String id = '';
-  bool active = false;
-  String businessHeaderBackgroundColor = '';
-  String businessHeaderBorderColor = '';
-  String buttonBackgroundColor = '';
-  String buttonBackgroundDisabledColor = '';
-  String buttonBorderRadius = '';
-  String buttonTextColor = '';
-  String inputBackgroundColor = '';
-  String inputBorderColor = '';
-  String inputBorderRadius = '';
-  String inputTextPrimaryColor = '';
-  String inputTextSecondaryColor = '';
-  String pageBackgroundColor = '';
-  String pageLineColor = '';
-  String pageTextLinkColor = '';
-  String pageTextPrimaryColor = '';
-  String pageTextSecondaryColor = '';
+  String id1 = '';
+  bool active = true;
+  String businessHeaderBackgroundColor = '#fff';
+  String businessHeaderBorderColor = '#dfdfdf';
+  String buttonBackgroundColor = '#333333';
+  String buttonBackgroundDisabledColor = '#656565';
+  String buttonBorderRadius = '4px';
+  String buttonTextColor = '#ffffff';
+  String inputBackgroundColor = '#ffffff';
+  String inputBorderColor = '#dfdfdf';
+  String inputBorderRadius = '4px';
+  String inputTextPrimaryColor = '#3a3a3a';
+  String inputTextSecondaryColor = '#999999';
+  String pageBackgroundColor = '#f7f7f7';
+  String pageLineColor = '#dfdfdf';
+  String pageTextLinkColor = '#444444';
+  String pageTextPrimaryColor = '#777777';
+  String pageTextSecondaryColor = '#8e8e8e';
 
   Style.fromMap(dynamic obj) {
     dynamic buttonObj = obj['button'];
@@ -269,7 +272,8 @@ class Style {
     if (pageObj is Map) {
       page = PageStyle.fromMap(pageObj);
     }
-    id = obj['_id'];
+    id = obj['id'];
+    id1 = obj['_id'];
     active = obj['active'];
     businessHeaderBackgroundColor = obj['businessHeaderBackgroundColor'];
     businessHeaderBorderColor = obj['businessHeaderBorderColor'];
@@ -296,6 +300,7 @@ class Style {
     if (page != null)
       map['page'] = page.toDictionary();
     map['id'] = id;
+    map['_id'] = id1;
     map['active'] = active;
     map['businessHeaderBackgroundColor'] = businessHeaderBackgroundColor;
     map['businessHeaderBorderColor'] = businessHeaderBorderColor;
@@ -313,12 +318,16 @@ class Style {
     map['pageTextLinkColor'] = pageTextLinkColor;
     map['pageTextPrimaryColor'] = pageTextPrimaryColor;
     map['pageTextSecondaryColor'] = pageTextSecondaryColor;
+
     return map;
   }
 }
 
 class PageStyle {
-  String background = '';
+
+  PageStyle();
+
+  String background = '#ffffff';
 
   PageStyle.fromMap(dynamic obj) {
     background = obj['background'];
@@ -332,8 +341,11 @@ class PageStyle {
 }
 
 class ButtonStyle {
-  String corners = '';
-  ButtonColorStyle color;
+
+  ButtonStyle();
+
+  String corners = 'round-32';
+  ButtonColorStyle color = ButtonColorStyle();
 
   ButtonStyle.fromMap(dynamic obj) {
     corners = obj['corners'];
@@ -354,9 +366,12 @@ class ButtonStyle {
 }
 
 class ButtonColorStyle {
-  String borders = '';
-  String fill = '';
-  String text = '';
+
+  ButtonColorStyle();
+
+  String borders = '#fff';
+  String fill = '#fff';
+  String text = '#fff';
 
   ButtonColorStyle.fromMap(dynamic obj) {
     borders = obj['borders'];

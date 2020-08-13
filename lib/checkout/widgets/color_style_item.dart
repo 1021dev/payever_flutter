@@ -238,7 +238,10 @@ class ColorStyleItem extends StatelessWidget {
                     ),
                     color: Colors.black87,
                     itemBuilder: (BuildContext context) {
-                      return _cornerPopup(context).map((CheckOutPopupButton item) {
+                      return _cornerPopup(context, (corner) {
+                        style.buttonBorderRadius = corner;
+                        settingBloc.add(UpdateCheckoutSettingsEvent());
+                      }).map((CheckOutPopupButton item) {
                         return PopupMenuItem<CheckOutPopupButton>(
                           value: item,
                           child: Row(
@@ -339,7 +342,10 @@ class ColorStyleItem extends StatelessWidget {
                     ),
                     color: Colors.black87,
                     itemBuilder: (BuildContext context) {
-                      return _cornerPopup(context).map((CheckOutPopupButton item) {
+                      return _cornerPopup(context, (corner) {
+                        style.inputBorderRadius = corner;
+                        settingBloc.add(UpdateCheckoutSettingsEvent());
+                      }).map((CheckOutPopupButton item) {
                         return PopupMenuItem<CheckOutPopupButton>(
                           value: item,
                           child: Row(
@@ -396,6 +402,7 @@ class ColorStyleItem extends StatelessWidget {
                   FlatButton(
                     child: const Text('Got it'),
                     onPressed: () {
+                      Navigator.of(context).pop();
                       var hex = '${pickerColor.value.toRadixString(16)}';
                       callback('#${hex.substring(2)}');
                       settingBloc.add(UpdateCheckoutSettingsEvent());
@@ -442,27 +449,27 @@ class ColorStyleItem extends StatelessWidget {
       color: Colors.grey,
     );
   }
-  List<CheckOutPopupButton> _cornerPopup(BuildContext context) {
+  List<CheckOutPopupButton> _cornerPopup(BuildContext context, Function callback) {
     return [
       CheckOutPopupButton(
         title: '',
         icon: _cornerImg('round'),
-        onTap: () async {
-          updateCorners('round');
+        onTap: () {
+          callback('4px');
         },
       ),
       CheckOutPopupButton(
         title: '',
         icon:_cornerImg('circle'),
-        onTap: () async {
-          updateCorners('circle');
+        onTap: () {
+          callback('12px');
         },
       ),
       CheckOutPopupButton(
         title: '',
         icon: _cornerImg('square'),
-        onTap: () async {
-          updateCorners('square');
+        onTap: () {
+          callback('0px');
         },
       ),
     ];
@@ -498,10 +505,6 @@ class ColorStyleItem extends StatelessWidget {
       default:
         return 'round';
     }
-  }
-
-  updateCorners(String corner) {
-
   }
 }
 

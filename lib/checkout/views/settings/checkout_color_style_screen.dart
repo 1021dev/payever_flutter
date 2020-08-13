@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/checkout/models/models.dart';
 import 'package:payever/checkout/widgets/color_style_item.dart';
 import 'package:payever/commons/utils/common_utils.dart';
-import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 
@@ -41,37 +39,28 @@ class _CheckoutColorStyleScreenState
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener(
+    return BlocBuilder<CheckoutSettingScreenBloc, CheckoutSettingScreenState>(
       bloc: widget.settingBloc,
-      listener: (BuildContext context, CheckoutSettingScreenState state) async {
-        if (state is CheckoutSettingScreenStateSuccess) {
-          Navigator.pop(context);
-        } else if (state is CheckoutSettingScreenStateFailure) {
-        }
-      },
-      child: BlocBuilder<CheckoutSettingScreenBloc, CheckoutSettingScreenState>(
-        bloc: widget.settingBloc,
-        builder: (BuildContext context, CheckoutSettingScreenState state) {
-          return Scaffold(
-            backgroundColor: Colors.black,
-            resizeToAvoidBottomPadding: false,
-            appBar: _appBar(state),
-            body: SafeArea(
-              child: BackgroundBase(
-                true,
-                backgroudColor: Color.fromRGBO(20, 20, 0, 0.4),
-                body: state.isLoading
-                    ? Center(
-                        child: CircularProgressIndicator(),
-                      )
-                    : Center(
-                        child: _getBody(state),
-                      ),
+      builder: (BuildContext context, CheckoutSettingScreenState state) {
+        return Scaffold(
+          backgroundColor: Colors.black,
+          resizeToAvoidBottomPadding: false,
+          appBar: _appBar(state),
+          body: SafeArea(
+            child: BackgroundBase(
+              true,
+              backgroudColor: Color.fromRGBO(20, 20, 0, 0.4),
+              body: state.isLoading
+                  ? Center(
+                child: CircularProgressIndicator(),
+              )
+                  : Center(
+                child: _getBody(state),
               ),
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 
@@ -191,7 +180,7 @@ class _CheckoutColorStyleScreenState
                     ),
                   ) : MaterialButton(
                     onPressed: () {
-//                      widget.checkoutScreenBloc.add(UpdateCheckoutSections());
+                      resetStyles();
                     },
                     child: Text(
                       'Reset styles',
@@ -208,6 +197,14 @@ class _CheckoutColorStyleScreenState
         ),
       ),
     );
+  }
+
+  void resetStyles() {
+    Style style = Style();
+    style.id = widget.checkout.settings.styles.id;
+    style.id1 = widget.checkout.settings.styles.id1;
+    widget.checkout.settings.styles = style;
+    widget.settingBloc.add(UpdateCheckoutSettingsEvent());
   }
 
   Widget _divider() {
