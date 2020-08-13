@@ -25,6 +25,7 @@ import 'package:payever/products/widgets/product_filter_content_view.dart';
 import 'package:payever/products/widgets/product_grid_item.dart';
 import 'package:payever/products/widgets/product_sort_content_view.dart';
 import 'package:payever/products/widgets/products_top_button.dart';
+import 'package:payever/search/views/search_screen.dart';
 import 'package:payever/switcher/switcher_page.dart';
 import 'package:payever/transactions/models/enums.dart';
 import 'package:payever/transactions/views/sub_view/search_text_content_view.dart';
@@ -473,24 +474,48 @@ class _ProductsScreenState extends State<ProductsScreen> {
         Padding(
           padding: EdgeInsets.all(6),
           child: InkWell(
-            child: SvgPicture.asset(
-              'assets/images/business_person.svg',
-              width: 20,
+            child: Row(
+              children: <Widget>[
+                SvgPicture.asset(
+                  'assets/images/business_person.svg',
+                  width: 20,
+                ),
+                _isTablet || !_isPortrait ? Padding(
+                  padding: EdgeInsets.only(left: 4, right: 4),
+                  child: Text(
+                    widget.dashboardScreenBloc.state.activeBusiness.name,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                    ),
+                  ),
+                ): Container(),
+              ],
             ),
             onTap: () {
-
             },
           ),
         ),
         Padding(
           padding: EdgeInsets.all(6),
           child: InkWell(
-            child: SvgPicture.asset(
-              'assets/images/searchicon.svg',
-              width: 20,
-            ),
+            child: SvgPicture.asset('assets/images/searchicon.svg', width: 20,),
             onTap: () {
-
+              Navigator.push(
+                context,
+                PageTransition(
+                  child: SearchScreen(
+                    dashboardScreenBloc: widget.dashboardScreenBloc,
+                    businessId: widget.dashboardScreenBloc.state.activeBusiness.id,
+                    searchQuery: '',
+                    appWidgets: widget.dashboardScreenBloc.state.currentWidgets,
+                    activeBusiness: widget.dashboardScreenBloc.state.activeBusiness,
+                    currentWall: widget.dashboardScreenBloc.state.curWall,
+                  ),
+                  type: PageTransitionType.fade,
+                  duration: Duration(milliseconds: 500),
+                ),
+              );
             },
           ),
         ),

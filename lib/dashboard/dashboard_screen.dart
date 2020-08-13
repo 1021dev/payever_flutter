@@ -74,12 +74,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final GlobalKey<InnerDrawerState> _innerDrawerKey = GlobalKey<InnerDrawerState>();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   DashboardScreenBloc screenBloc;
-  bool isTablet = false;
   bool isLoaded = false;
   String searchString = '';
   TextEditingController searchController = TextEditingController();
   FocusNode searchFocus = FocusNode();
   GlobalStateModel globalStateModel;
+  bool _isPortrait;
+  bool _isTablet;
 
   @override
   void initState() {
@@ -107,7 +108,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     });
     Locale myLocale = Localizations.localeOf(context);
     print('Language - ${myLocale.languageCode}');
-    bool _isPortrait =
+    _isPortrait =
         Orientation.portrait == MediaQuery.of(context).orientation;
     Measurements.height = (_isPortrait
         ? MediaQuery.of(context).size.height
@@ -115,7 +116,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     Measurements.width = (_isPortrait
         ? MediaQuery.of(context).size.width
         : MediaQuery.of(context).size.height);
-    isTablet = MediaQuery.of(context).size.width > 600;
+    _isTablet = MediaQuery.of(context).size.width > 600;
     Measurements.loadImages(context);
     if (globalStateModel.refresh) {
       screenBloc.add(DashboardScreenInitEvent(wallpaper: widget.wallpaper));
@@ -186,8 +187,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
               backgroundColor: Colors.transparent,
               body: Center(
                 child: Container(
-                  height: Measurements.width * (isTablet ? 0.05 : 0.1),
-                  width: Measurements.width * (isTablet ? 0.05 : 0.1),
+                  height: Measurements.width * (_isTablet ? 0.05 : 0.1),
+                  width: Measurements.width * (_isTablet ? 0.05 : 0.1),
                   child: CircularProgressIndicator(),
                 ),
               ),
@@ -235,7 +236,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
         Padding(
           padding: EdgeInsets.all(6),
           child: InkWell(
-            child: SvgPicture.asset('assets/images/business_person.svg', width: 20,),
+            child: Row(
+              children: <Widget>[
+                SvgPicture.asset(
+                  'assets/images/business_person.svg',
+                  width: 20,
+                ),
+                _isTablet || !_isPortrait ? Padding(
+                  padding: EdgeInsets.only(left: 4, right: 4),
+                  child: Text(
+                    state.activeBusiness.name,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                    ),
+                  ),
+                ): Container(),
+              ],
+            ),
             onTap: () {
             },
           ),
@@ -245,6 +263,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
           child: InkWell(
             child: SvgPicture.asset('assets/images/searchicon.svg', width: 20,),
             onTap: () {
+              Navigator.push(
+                context,
+                PageTransition(
+                  child: SearchScreen(
+                    dashboardScreenBloc: screenBloc,
+                    businessId: state.activeBusiness.id,
+                    searchQuery: '',
+                    appWidgets: state.currentWidgets,
+                    activeBusiness: state.activeBusiness,
+                    currentWall: state.curWall,
+                  ),
+                  type: PageTransitionType.fade,
+                  duration: Duration(milliseconds: 500),
+                ),
+              );
             },
           ),
         ),
