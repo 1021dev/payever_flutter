@@ -10,6 +10,7 @@ import 'package:payever/checkout/views/settings/checkout_languages_screen.dart';
 import 'package:payever/checkout/views/settings/checkout_message_screen.dart';
 import 'package:payever/checkout/views/settings/checkout_phone_number_screen.dart';
 import 'package:payever/checkout/views/settings/checkout_policy_screen.dart';
+import 'package:payever/checkout/views/settings/checkout_color_style_screen.dart';
 import 'package:payever/commons/commons.dart';
 
 class CheckoutSettingsScreen extends StatefulWidget {
@@ -190,7 +191,18 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                                   ),
                                 ),
                                 MaterialButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      PageTransition(
+                                        child: CheckoutColorStyleScreen(
+                                          settingBloc: screenBloc,
+                                          checkout: widget.checkout,
+                                        ),
+                                        type: PageTransitionType.fade,
+                                      ),
+                                    );
+                                  },
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12),
                                   ),
