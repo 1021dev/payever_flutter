@@ -33,44 +33,45 @@ class _ChannelsScreenState extends State<ChannelsScreen> {
 
   Widget _body() {
     return Container(
-      width: Measurements.width,
       padding: EdgeInsets.all(16),
       child: Center(
-        child: BlurEffectView(
-          child: widget.isLoading ?
-          Wrap(
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.all(8),
-                child: Center(
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
+        child: Container(
+          width: Measurements.width,
+          child: BlurEffectView(
+            child: widget.isLoading ?
+            Wrap(
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.all(8),
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ) : SingleChildScrollView(
-            child: Column(
-              children: List.generate(widget.checkoutScreenBloc.state.channelItems.length + 1, (index) {
-                if (index == widget.checkoutScreenBloc.state.channelItems.length) {
-                  return Container(
-                    height: 50,
-                    child: SizedBox.expand(
-                      child: MaterialButton(
-                        onPressed: widget.onTapAdd,
-                        child: Row(
-                          children: <Widget>[
-                            Text(
-                              '+ Add',
-                              textAlign: TextAlign.start,
-                            ),
-                          ],
+              ],
+            ) : SingleChildScrollView(
+              child: Column(
+                children: List.generate(widget.checkoutScreenBloc.state.channelItems.length + 1, (index) {
+                  if (index == widget.checkoutScreenBloc.state.channelItems.length) {
+                    return Container(
+                      height: 50,
+                      child: SizedBox.expand(
+                        child: MaterialButton(
+                          onPressed: widget.onTapAdd,
+                          child: Row(
+                            children: <Widget>[
+                              Text(
+                                '+ Add',
+                                textAlign: TextAlign.start,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                } else {
-                  ChannelItem model = widget.checkoutScreenBloc.state.channelItems[index];
+                    );
+                  } else {
+                    ChannelItem model = widget.checkoutScreenBloc.state.channelItems[index];
                     return Column(
                       children: <Widget>[
                         Container(
@@ -110,30 +111,30 @@ class _ChannelsScreenState extends State<ChannelsScreen> {
                                       },
                                     ),
                                   ) : Container(),
-                                      MaterialButton(
-                                        onPressed: () {
-                                          widget.onTapOpen(model);
-                                        },
-                                        color: Colors.black38,
-                                        elevation: 0,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                        ),
-                                        height: 24,
-                                        minWidth: 0,
-                                        padding:
-                                            EdgeInsets.only(left: 8, right: 8),
-                                        child: Text(
-                                          model.button,
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 12,
-                                            fontFamily: 'HelveticaNeueMed',
-                                          ),
-                                        ),
-                                      )
-                                    ],
+                                  MaterialButton(
+                                    onPressed: () {
+                                      widget.onTapOpen(model);
+                                    },
+                                    color: Colors.black38,
+                                    elevation: 0,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                      BorderRadius.circular(12),
+                                    ),
+                                    height: 24,
+                                    minWidth: 0,
+                                    padding:
+                                    EdgeInsets.only(left: 8, right: 8),
+                                    child: Text(
+                                      model.button,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                        fontFamily: 'HelveticaNeueMed',
+                                      ),
+                                    ),
+                                  )
+                                ],
                               )
                             ],
                           ),
@@ -146,7 +147,8 @@ class _ChannelsScreenState extends State<ChannelsScreen> {
                       ],
                     );
                   }
-              }),
+                }),
+              ),
             ),
           ),
         ),

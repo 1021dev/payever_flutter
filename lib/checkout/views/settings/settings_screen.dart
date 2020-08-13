@@ -12,6 +12,7 @@ import 'package:payever/checkout/views/settings/checkout_phone_number_screen.dar
 import 'package:payever/checkout/views/settings/checkout_policy_screen.dart';
 import 'package:payever/checkout/views/settings/checkout_color_style_screen.dart';
 import 'package:payever/commons/commons.dart';
+import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 
 class CheckoutSettingsScreen extends StatefulWidget {
   final CheckoutScreenBloc checkoutScreenBloc;
@@ -73,466 +74,472 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
           if (langs.length > 0) {
             defaultLanguage = langs.first.name;
           }
-          return Center(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
+          if (widget.checkoutScreenBloc.state.channelSetFlow == null) {
+            return Container(
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+          return Container(
+            padding: EdgeInsets.all(16),
+            child: Center(
               child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.black26,
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                ),
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Container(
-                        height: 50,
-                        padding: EdgeInsets.only(left: 16, right: 16,),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Text(
-                              'Testing mode',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                              ),
-                            ),
-                            Transform.scale(
-                              scale: 0.8,
-                              child: CupertinoSwitch(
-                                value: widget.checkout.settings.testingMode,
-                                onChanged: (value) {
-                                  widget.checkout.settings.testingMode = value;
-                                  screenBloc.add(UpdateCheckoutSettingsEvent());
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Divider(
-                        height: 1,
-                        color: Colors.grey,
-                      ),
-                      Container(
-                        height: 50,
-                        padding: EdgeInsets.only(left: 16, right: 16,),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Text(
-                              'CSP allowed hosts',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                              ),
-                            ),
-                            MaterialButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  PageTransition(
-                                    child: CheckoutCSPAllowedHostScreen(
-                                      settingBloc: screenBloc,
-                                      checkout: widget.checkout,
-                                    ),
-                                    type: PageTransitionType.fade,
-                                  ),
-                                );
-                              },
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              color: Colors.black54,
-                              elevation: 0,
-                              height: 24,
-                              minWidth: 0,
-                              child: Text(
-                                Language.getPosStrings('actions.edit'),
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Divider(
-                        height: 1,
-                        color: Colors.grey,
-                      ),
-                      Container(
-                        height: 50,
-                        padding: EdgeInsets.only(left: 16, right: 16,),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Flexible(
-                              child: Text(
-                                'Color and style',
+                width: Measurements.width,
+                child: BlurEffectView(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Container(
+                          height: 50,
+                          padding: EdgeInsets.only(left: 16, right: 16,),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(
+                                'Testing mode',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 16,
                                 ),
                               ),
-                            ),
-                            Row(
-                              children: <Widget>[
-                                Transform.scale(
-                                  scale: 0.8,
-                                  child: CupertinoSwitch(
-                                    value: widget.checkout.settings.styles.active ?? false,
-                                    onChanged: (value) {
-                                      widget.checkout.settings.styles.active = value;
-                                      screenBloc.add(UpdateCheckoutSettingsEvent());
-                                    },
-                                  ),
-                                ),
-                                MaterialButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      PageTransition(
-                                        child: CheckoutColorStyleScreen(
-                                          settingBloc: screenBloc,
-                                          checkout: widget.checkout,
-                                        ),
-                                        type: PageTransitionType.fade,
-                                      ),
-                                    );
+                              Transform.scale(
+                                scale: 0.8,
+                                child: CupertinoSwitch(
+                                  value: widget.checkout.settings.testingMode,
+                                  onChanged: (value) {
+                                    widget.checkout.settings.testingMode = value;
+                                    screenBloc.add(UpdateCheckoutSettingsEvent());
                                   },
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  color: Colors.black54,
-                                  elevation: 0,
-                                  height: 24,
-                                  minWidth: 0,
-                                  child: Text(
-                                    Language.getPosStrings('actions.edit'),
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.white,
-                                    ),
-                                  ),
                                 ),
-                              ],
-                            ),
-                          ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      Divider(
-                        height: 1,
-                        color: Colors.grey,
-                      ),
-                      Container(
-                        height: 50,
-                        padding: EdgeInsets.only(left: 16, right: 16,),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Text(
-                              'Language',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 8),
-                            ),
-                            Flexible(
-                              child: Text(
-                                '$defaultLanguage (default)',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 8),
-                            ),
-                            MaterialButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  PageTransition(
-                                    child: CheckoutLanguagesScreen(
-                                      settingBloc: screenBloc,
-                                      checkout: widget.checkout,
-                                    ),
-                                    type: PageTransitionType.fade,
-                                  ),
-                                );
-                              },
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              color: Colors.black54,
-                              elevation: 0,
-                              height: 24,
-                              minWidth: 0,
-                              child: Text(
-                                Language.getPosStrings('actions.edit'),
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ],
+                        Divider(
+                          height: 1,
+                          color: Colors.grey,
                         ),
-                      ),
-                      Divider(
-                        height: 1,
-                        color: Colors.grey,
-                      ),
-                      Container(
-                        height: 50,
-                        padding: EdgeInsets.only(left: 16, right: 16,),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Text(
-                              'Phone number',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 8),
-                            ),
-                            Flexible(
-                              child: Text(
-                                widget.checkout.settings.phoneNumber ?? '',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 8),
-                            ),
-                            MaterialButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  PageTransition(
-                                    child: CheckoutPhoneNumberScreen(
-                                      settingBloc: this.screenBloc,
-                                      checkout: widget.checkout,
-                                    ),
-                                    type: PageTransitionType.fade,
-                                  ),
-                                );
-                              },
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              color: Colors.black54,
-                              elevation: 0,
-                              height: 24,
-                              minWidth: 0,
-                              child: Text(
-                                Language.getPosStrings('actions.edit'),
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Divider(
-                        height: 1,
-                        color: Colors.grey,
-                      ),
-                      Container(
-                        height: 50,
-                        padding: EdgeInsets.only(left: 16, right: 16,),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Text(
-                              'Message',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 8),
-                            ),
-                            Flexible(
-                              child: Text(
-                                widget.checkout.settings.message ?? '',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 8),
-                            ),
-                            MaterialButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  PageTransition(
-                                    child: CheckoutMessageScreen(
-                                      settingBloc: screenBloc,
-                                      checkout: widget.checkout,
-                                    ),
-                                    type: PageTransitionType.fade,
-                                  ),
-                                );
-                              },
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              color: Colors.black54,
-                              elevation: 0,
-                              height: 24,
-                              minWidth: 0,
-                              child: Text(
-                                Language.getPosStrings('actions.edit'),
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Divider(
-                        height: 1,
-                        color: Colors.grey,
-                      ),
-                      Container(
-                        height: 50,
-                        padding: EdgeInsets.only(left: 16, right: 16,),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Flexible(
-                              child: Text(
-                                'Policies',
+                        Container(
+                          height: 50,
+                          padding: EdgeInsets.only(left: 16, right: 16,),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(
+                                'CSP allowed hosts',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 16,
                                 ),
                               ),
-                            ),
-                            MaterialButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  PageTransition(
-                                    child: CheckoutPoliciesScreen(
-                                      checkoutScreenBloc: widget.checkoutScreenBloc,
-                                      settingBloc: screenBloc,
-                                      checkout: widget.checkout,
+                              MaterialButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    PageTransition(
+                                      child: CheckoutCSPAllowedHostScreen(
+                                        settingBloc: screenBloc,
+                                        checkout: widget.checkout,
+                                      ),
+                                      type: PageTransitionType.fade,
                                     ),
-                                    type: PageTransitionType.fade,
+                                  );
+                                },
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                color: Colors.black54,
+                                elevation: 0,
+                                height: 24,
+                                minWidth: 0,
+                                child: Text(
+                                  Language.getPosStrings('actions.edit'),
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.white,
                                   ),
-                                );
-                              },
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              color: Colors.black54,
-                              elevation: 0,
-                              height: 24,
-                              minWidth: 0,
-                              child: Text(
-                                Language.getPosStrings('actions.edit'),
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.white,
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      Divider(
-                        height: 1,
-                        color: Colors.grey,
-                      ),
-                      Container(
-                        height: 50,
-                        padding: EdgeInsets.only(left: 16, right: 16,),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Text(
-                              'Channel Set ID',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 8),
-                            ),
-                            Flexible(
-                              child: Text(
-                                widget.checkoutScreenBloc.state.channelSetFlow.channelSetId,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 8),
-                            ),
-                            MaterialButton(
-                              onPressed: () {
-                                Clipboard.setData(ClipboardData(
-                                    text: widget.checkoutScreenBloc.state
-                                        .channelSetFlow.channelSetId));
-                                setState(() {
-                                  clipboardString = widget.checkoutScreenBloc.state
-                                      .channelSetFlow.channelSetId;
-                                });
-                              },
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              color: Colors.black54,
-                              elevation: 0,
-                              height: 24,
-                              minWidth: 0,
-                              child: Text(
-                                clipboardString == widget.checkoutScreenBloc.state
-                                    .channelSetFlow.channelSetId
-                                    ? 'copied'
-                                    : Language.getPosStrings('actions.copy'),
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ],
+                        Divider(
+                          height: 1,
+                          color: Colors.grey,
                         ),
-                      ),
-                    ],
+                        Container(
+                          height: 50,
+                          padding: EdgeInsets.only(left: 16, right: 16,),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Flexible(
+                                child: Text(
+                                  'Color and style',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                              Row(
+                                children: <Widget>[
+                                  Transform.scale(
+                                    scale: 0.8,
+                                    child: CupertinoSwitch(
+                                      value: widget.checkout.settings.styles.active ?? false,
+                                      onChanged: (value) {
+                                        widget.checkout.settings.styles.active = value;
+                                        screenBloc.add(UpdateCheckoutSettingsEvent());
+                                      },
+                                    ),
+                                  ),
+                                  MaterialButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        PageTransition(
+                                          child: CheckoutColorStyleScreen(
+                                            settingBloc: screenBloc,
+                                            checkout: widget.checkout,
+                                          ),
+                                          type: PageTransitionType.fade,
+                                        ),
+                                      );
+                                    },
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    color: Colors.black54,
+                                    elevation: 0,
+                                    height: 24,
+                                    minWidth: 0,
+                                    child: Text(
+                                      Language.getPosStrings('actions.edit'),
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        Divider(
+                          height: 1,
+                          color: Colors.grey,
+                        ),
+                        Container(
+                          height: 50,
+                          padding: EdgeInsets.only(left: 16, right: 16,),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(
+                                'Language',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(left: 8),
+                              ),
+                              Flexible(
+                                child: Text(
+                                  '$defaultLanguage (default)',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(left: 8),
+                              ),
+                              MaterialButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    PageTransition(
+                                      child: CheckoutLanguagesScreen(
+                                        settingBloc: screenBloc,
+                                        checkout: widget.checkout,
+                                      ),
+                                      type: PageTransitionType.fade,
+                                    ),
+                                  );
+                                },
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                color: Colors.black54,
+                                elevation: 0,
+                                height: 24,
+                                minWidth: 0,
+                                child: Text(
+                                  Language.getPosStrings('actions.edit'),
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Divider(
+                          height: 1,
+                          color: Colors.grey,
+                        ),
+                        Container(
+                          height: 50,
+                          padding: EdgeInsets.only(left: 16, right: 16,),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(
+                                'Phone number',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(left: 8),
+                              ),
+                              Flexible(
+                                child: Text(
+                                  widget.checkout.settings.phoneNumber ?? '',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(left: 8),
+                              ),
+                              MaterialButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    PageTransition(
+                                      child: CheckoutPhoneNumberScreen(
+                                        settingBloc: this.screenBloc,
+                                        checkout: widget.checkout,
+                                      ),
+                                      type: PageTransitionType.fade,
+                                    ),
+                                  );
+                                },
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                color: Colors.black54,
+                                elevation: 0,
+                                height: 24,
+                                minWidth: 0,
+                                child: Text(
+                                  Language.getPosStrings('actions.edit'),
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Divider(
+                          height: 1,
+                          color: Colors.grey,
+                        ),
+                        Container(
+                          height: 50,
+                          padding: EdgeInsets.only(left: 16, right: 16,),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(
+                                'Message',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(left: 8),
+                              ),
+                              Flexible(
+                                child: Text(
+                                  widget.checkout.settings.message ?? '',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(left: 8),
+                              ),
+                              MaterialButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    PageTransition(
+                                      child: CheckoutMessageScreen(
+                                        settingBloc: screenBloc,
+                                        checkout: widget.checkout,
+                                      ),
+                                      type: PageTransitionType.fade,
+                                    ),
+                                  );
+                                },
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                color: Colors.black54,
+                                elevation: 0,
+                                height: 24,
+                                minWidth: 0,
+                                child: Text(
+                                  Language.getPosStrings('actions.edit'),
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Divider(
+                          height: 1,
+                          color: Colors.grey,
+                        ),
+                        Container(
+                          height: 50,
+                          padding: EdgeInsets.only(left: 16, right: 16,),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Flexible(
+                                child: Text(
+                                  'Policies',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                              MaterialButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    PageTransition(
+                                      child: CheckoutPoliciesScreen(
+                                        checkoutScreenBloc: widget.checkoutScreenBloc,
+                                        settingBloc: screenBloc,
+                                        checkout: widget.checkout,
+                                      ),
+                                      type: PageTransitionType.fade,
+                                    ),
+                                  );
+                                },
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                color: Colors.black54,
+                                elevation: 0,
+                                height: 24,
+                                minWidth: 0,
+                                child: Text(
+                                  Language.getPosStrings('actions.edit'),
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Divider(
+                          height: 1,
+                          color: Colors.grey,
+                        ),
+                        Container(
+                          height: 50,
+                          padding: EdgeInsets.only(left: 16, right: 16,),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(
+                                'Channel Set ID',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(left: 8),
+                              ),
+                              Flexible(
+                                child: Text(
+                                  widget.checkoutScreenBloc.state.channelSetFlow.channelSetId,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(left: 8),
+                              ),
+                              MaterialButton(
+                                onPressed: () {
+                                  Clipboard.setData(ClipboardData(
+                                      text: widget.checkoutScreenBloc.state
+                                          .channelSetFlow.channelSetId));
+                                  setState(() {
+                                    clipboardString = widget.checkoutScreenBloc.state
+                                        .channelSetFlow.channelSetId;
+                                  });
+                                },
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                color: Colors.black54,
+                                elevation: 0,
+                                height: 24,
+                                minWidth: 0,
+                                child: Text(
+                                  clipboardString == widget.checkoutScreenBloc.state
+                                      .channelSetFlow.channelSetId
+                                      ? 'copied'
+                                      : Language.getPosStrings('actions.copy'),
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

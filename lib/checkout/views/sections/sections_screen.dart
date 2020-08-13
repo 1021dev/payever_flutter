@@ -36,115 +36,117 @@ class _SectionsScreenState extends State<SectionsScreen> {
 
   Widget _getBody(CheckoutScreenState state) {
     return Container(
-      width: Measurements.width,
       padding: EdgeInsets.all(16),
       child: Center(
-        child: BlurEffectView(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                SectionItem(
-                  title: 'Step 1',
-                  detail: 'Shopping cart details',
-                  isExpanded: isExpandedSection1,
-                  onTap: () {
-                    setState(() {
-                      isExpandedSection1 = !isExpandedSection1;
-                    });
-                  },
-                  sections: state.sections1,
-                  onReorder: (oldIndex, newIndex) {
-                    widget.checkoutScreenBloc.add(ReorderSection1Event(oldIndex: oldIndex, newIndex: newIndex));
-                  },
-                  onDelete: (Section section) {
-                    widget.checkoutScreenBloc.add(RemoveSectionEvent(section: section));
-                  },
-                  onEdit: () {
-                    widget.checkoutScreenBloc.add(AddSectionEvent(section: 1));
-                  },
-                ),
-                Divider(
-                  height: 0,
-                  thickness: 0.5,
-                  color: Colors.grey,
-                ),
-                SectionItem(
-                  title: 'Step 2',
-                  detail: 'Customer & payment details',
-                  isExpanded: isExpandedSection2,
-                  onTap: () {
-                    setState(() {
-                      isExpandedSection2 = !isExpandedSection2;
-                    });
-                  },
-                  sections: state.sections2,
-                  onReorder: (oldIndex, newIndex) {
-                    widget.checkoutScreenBloc.add(ReorderSection2Event(oldIndex: oldIndex, newIndex: newIndex));
-                  },
-                  onDelete: (Section section) {
-                    widget.checkoutScreenBloc.add(RemoveSectionEvent(section: section));
-                  },
-                  onEdit: () {
-                    widget.checkoutScreenBloc.add(AddSectionEvent(section: 2));
-                  },
-                ),
-                Divider(
-                  height: 0,
-                  thickness: 0.5,
-                  color: Colors.grey,
-                ),
-                SectionItem(
-                  title: 'Step 3',
-                  detail: 'After sale details',
-                  isExpanded: isExpandedSection3,
-                  onTap: () {
-                    setState(() {
-                      isExpandedSection3 = !isExpandedSection3;
-                    });
-                  },
-                  sections: [],
-                  onReorder: (oldIndex, newIndex) {
-                    widget.checkoutScreenBloc.add(ReorderSection3Event(oldIndex: oldIndex, newIndex: newIndex));
-                  },
-                  onDelete: (Section section) {
-                  },
-                  onEdit: () {
-                  },
-                ),
-                Divider(
-                  height: 0,
-                  thickness: 0.5,
-                  color: Colors.grey,
-                ),
-                Container(
-                  height: 65,
-                  decoration: BoxDecoration(
-                    color: Colors.black87,
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(10),
-                      bottomRight: Radius.circular(10),
-                    ),
-                  ),
-                  child: state.sectionUpdate ? Center(
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                    ),
-                  ) : MaterialButton(
-                    onPressed: () {
-                      widget.checkoutScreenBloc.add(UpdateCheckoutSections());
+        child: Container(
+          width: Measurements.width,
+          child: BlurEffectView(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  SectionItem(
+                    title: 'Step 1',
+                    detail: 'Shopping cart details',
+                    isExpanded: isExpandedSection1,
+                    onTap: () {
+                      setState(() {
+                        isExpandedSection1 = !isExpandedSection1;
+                      });
                     },
-                    child: Text(
-                      'Save',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
+                    sections: state.sections1,
+                    onReorder: (oldIndex, newIndex) {
+                      widget.checkoutScreenBloc.add(ReorderSection1Event(oldIndex: oldIndex, newIndex: newIndex));
+                    },
+                    onDelete: (Section section) {
+                      widget.checkoutScreenBloc.add(RemoveSectionEvent(section: section));
+                    },
+                    onEdit: () {
+                      widget.checkoutScreenBloc.add(AddSectionEvent(section: 1));
+                    },
+                  ),
+                  Divider(
+                    height: 0,
+                    thickness: 0.5,
+                    color: Colors.grey,
+                  ),
+                  SectionItem(
+                    title: 'Step 2',
+                    detail: 'Customer & payment details',
+                    isExpanded: isExpandedSection2,
+                    onTap: () {
+                      setState(() {
+                        isExpandedSection2 = !isExpandedSection2;
+                      });
+                    },
+                    sections: state.sections2,
+                    onReorder: (oldIndex, newIndex) {
+                      widget.checkoutScreenBloc.add(ReorderSection2Event(oldIndex: oldIndex, newIndex: newIndex));
+                    },
+                    onDelete: (Section section) {
+                      widget.checkoutScreenBloc.add(RemoveSectionEvent(section: section));
+                    },
+                    onEdit: () {
+                      widget.checkoutScreenBloc.add(AddSectionEvent(section: 2));
+                    },
+                  ),
+                  Divider(
+                    height: 0,
+                    thickness: 0.5,
+                    color: Colors.grey,
+                  ),
+                  SectionItem(
+                    title: 'Step 3',
+                    detail: 'After sale details',
+                    isExpanded: isExpandedSection3,
+                    onTap: () {
+                      setState(() {
+                        isExpandedSection3 = !isExpandedSection3;
+                      });
+                    },
+                    sections: [],
+                    onReorder: (oldIndex, newIndex) {
+                      widget.checkoutScreenBloc.add(ReorderSection3Event(oldIndex: oldIndex, newIndex: newIndex));
+                    },
+                    onDelete: (Section section) {
+                    },
+                    onEdit: () {
+                    },
+                  ),
+                  Divider(
+                    height: 0,
+                    thickness: 0.5,
+                    color: Colors.grey,
+                  ),
+                  Container(
+                    height: 65,
+                    decoration: BoxDecoration(
+                      color: Colors.black87,
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(10),
+                        bottomRight: Radius.circular(10),
                       ),
                     ),
-                  ),
-                )
-              ],
+                    child: state.sectionUpdate ? Center(
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                      ),
+                    ) : MaterialButton(
+                      onPressed: () {
+                        widget.checkoutScreenBloc.add(UpdateCheckoutSections());
+                      },
+                      child: Text(
+                        'Save',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ),
