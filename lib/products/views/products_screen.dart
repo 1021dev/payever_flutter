@@ -608,6 +608,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
       body: SafeArea(
         child: BackgroundBase(
           true,
+          backgroudColor: Color.fromRGBO(0, 0, 0, 0.75),
           body: state.isLoading ?
           Center(
             child: CircularProgressIndicator(),
@@ -697,7 +698,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                       },
                       child: Container(
                         padding: EdgeInsets.all(8),
-                        child: Icon(Icons.search),
+                        child: SvgPicture.asset('assets/images/searchicon.svg', width: 20,),
                       ),
                     ),
                     InkWell(
@@ -739,7 +740,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                       },
                       child: Container(
                         padding: EdgeInsets.all(8),
-                        child: Icon(Icons.filter_list),
+                        child: SvgPicture.asset('assets/images/filter.svg', width: 20,),
                       ),
                     ),
                   ],
@@ -838,7 +839,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                     },
                     child: Container(
                       padding: EdgeInsets.all(8),
-                      child: Icon(Icons.sort),
+                      child: SvgPicture.asset('assets/images/sort-by-button.svg', width: 20,),
                     ),
                   ),
                 ) : Container(),
@@ -1076,9 +1077,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
           child: CustomScrollView(
             slivers: <Widget>[
               SliverGrid.count(
-                crossAxisCount: 1,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
+                crossAxisCount: _isTablet ? 3: (_isPortrait ? 1: 2),
+                crossAxisSpacing: _isTablet ? 12: (_isPortrait ? 12: 6),
+                mainAxisSpacing: _isTablet ? 12: (_isPortrait ? 12: 6),
                 childAspectRatio: 1,
                 children: List.generate(
                   collectionItems.length,
@@ -1170,9 +1171,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
             child: CustomScrollView(
               slivers: <Widget>[
                 SliverGrid.count(
-                  crossAxisCount: 1,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
+                  crossAxisCount: _isTablet ? 3: (_isPortrait ? 1: 2),
+                  crossAxisSpacing: _isTablet ? 12: (_isPortrait ? 12: 6),
+                  mainAxisSpacing: _isTablet ? 12: (_isPortrait ? 12: 6),
                   childAspectRatio: 0.75,
                   children: List.generate(
                     productsItems.length,
@@ -1244,9 +1245,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
             child: CustomScrollView(
               slivers: <Widget>[
                 SliverGrid.count(
-                  crossAxisCount: 1,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
+                  crossAxisCount: _isTablet ? 3: (_isPortrait ? 1: 2),
+                  crossAxisSpacing: _isTablet ? 12: (_isPortrait ? 12: 6),
+                  mainAxisSpacing: _isTablet ? 12: (_isPortrait ? 12: 6),
                   childAspectRatio: 1,
                   children: List.generate(
                     collectionItems.length,
@@ -1404,7 +1405,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
 
   Widget getAddProductItem(ProductsScreenState state) {
     return Container(
-      margin: EdgeInsets.only(left: 16, right: 16, top: 8),
+      margin: EdgeInsets.only(left: 16, right: 16,),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(12.0)),
           color: Color.fromRGBO(0, 0, 0, 0.3)

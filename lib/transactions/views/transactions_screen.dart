@@ -197,6 +197,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
       body: SafeArea(
         child: BackgroundBase(
           true,
+          backgroudColor: Color.fromRGBO(0, 0, 0, 0.75),
           body: state.isLoading ?
           Center(
             child: CircularProgressIndicator(),
@@ -218,10 +219,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                             if (state.isSearchLoading) return;
                             showSearchTextDialog(state);
                           },
-                          child: Icon(
-                            Icons.search,
-                            size: 24,
-                          ),
+                          child: SvgPicture.asset('assets/images/searchicon.svg', width: 20,),
                         ),
                         SizedBox(
                           width: 16,
@@ -267,10 +265,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                             width: 30,
                             height: 30,
                             alignment: Alignment.center,
-                            child: Icon(
-                              Icons.filter_list,
-                              size: 24,
-                            ),
+                            child: SvgPicture.asset('assets/images/filter.svg', width: 20,),
                           ),
                         ),
                         FlatButton(
@@ -321,10 +316,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                   );
                                 });
                           },
-                          child: Icon(
-                            Icons.sort,
-                            size: 24,
-                          ),
+                          child: SvgPicture.asset('assets/images/sort-by-button.svg', width: 20,),
                         ),
                         SizedBox(
                           width: 24,
@@ -905,7 +897,8 @@ class PhoneTableRow extends StatelessWidget {
                       child: !isHeader
                           ? Icon(
                         IconData(58849,
-                            fontFamily: 'MaterialIcons'),
+                            fontFamily: 'MaterialIcons',
+                        ),
                         size: Measurements.width * 0.04,
                       )
                           : Container(),
