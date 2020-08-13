@@ -288,113 +288,90 @@ class _ShopScreenState extends State<ShopScreen> {
         ],
       ),
       actions: <Widget>[
-        IconButton(
-          constraints: BoxConstraints(
-              maxHeight: 32,
-              maxWidth: 32,
-              minHeight: 32,
-              minWidth: 32
+        Padding(
+          padding: EdgeInsets.all(6),
+          child: InkWell(
+            child: SvgPicture.asset(
+              'assets/images/business_person.svg',
+              width: 20,
+            ),
+            onTap: () {},
           ),
-          icon: Icon(
-            Icons.person_pin,
-            color: Colors.white,
-            size: 24,
-          ),
-          onPressed: () {
-          },
-        ),
-        IconButton(
-          constraints: BoxConstraints(
-              maxHeight: 32,
-              maxWidth: 32,
-              minHeight: 32,
-              minWidth: 32
-          ),
-          icon: Icon(
-            Icons.search,
-            color: Colors.white,
-            size: 24,
-          ),
-          onPressed: () {
-
-          },
-        ),
-        IconButton(
-          constraints: BoxConstraints(
-              maxHeight: 32,
-              maxWidth: 32,
-              minHeight: 32,
-              minWidth: 32
-          ),
-          icon: Icon(
-            Icons.notifications,
-            color: Colors.white,
-            size: 24,
-          ),
-          onPressed: () async{
-            Provider.of<GlobalStateModel>(context,listen: false)
-                .setCurrentBusiness(widget.dashboardScreenBloc.state.activeBusiness);
-            Provider.of<GlobalStateModel>(context,listen: false)
-                .setCurrentWallpaper(widget.dashboardScreenBloc.state.curWall);
-
-            await showGeneralDialog(
-              barrierColor: null,
-              transitionBuilder: (context, a1, a2, wg) {
-                final curvedValue = Curves.ease.transform(a1.value) -   1.0;
-                return Transform(
-                  transform: Matrix4.translationValues(-curvedValue * 200, 0.0, 0),
-                  child: NotificationsScreen(
-                    business: widget.dashboardScreenBloc.state.activeBusiness,
-                    businessApps: widget.dashboardScreenBloc.state.businessWidgets,
-                    dashboardScreenBloc: widget.dashboardScreenBloc,
-                    type: 'shops',
-                  ),
-                );
-              },
-              transitionDuration: Duration(milliseconds: 200),
-              barrierDismissible: true,
-              barrierLabel: '',
-              context: context,
-              pageBuilder: (context, animation1, animation2) {
-                return null;
-              },
-            );
-          },
-        ),
-        IconButton(
-          constraints: BoxConstraints(
-              maxHeight: 32,
-              maxWidth: 32,
-              minHeight: 32,
-              minWidth: 32
-          ),
-          icon: Icon(
-            Icons.menu,
-            color: Colors.white,
-            size: 24,
-          ),
-          onPressed: () {
-            _innerDrawerKey.currentState.toggle();
-          },
-        ),
-        IconButton(
-          constraints: BoxConstraints(
-              maxHeight: 32,
-              maxWidth: 32,
-              minHeight: 32,
-              minWidth: 32
-          ),
-          icon: Icon(
-            Icons.close,
-            color: Colors.white,
-            size: 24,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
         ),
         Padding(
-          padding: EdgeInsets.only(right: 16),
+          padding: EdgeInsets.all(6),
+          child: InkWell(
+            child: SvgPicture.asset(
+              'assets/images/searchicon.svg',
+              width: 20,
+            ),
+            onTap: () {},
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.all(6),
+          child: InkWell(
+            child: SvgPicture.asset(
+              'assets/images/notificationicon.svg',
+              width: 20,
+            ),
+            onTap: () async {
+              Provider.of<GlobalStateModel>(context,listen: false)
+                  .setCurrentBusiness(widget.dashboardScreenBloc.state.activeBusiness);
+              Provider.of<GlobalStateModel>(context,listen: false)
+                  .setCurrentWallpaper(widget.dashboardScreenBloc.state.curWall);
+
+              await showGeneralDialog(
+                barrierColor: null,
+                transitionBuilder: (context, a1, a2, wg) {
+                  final curvedValue = Curves.ease.transform(a1.value) -   1.0;
+                  return Transform(
+                    transform: Matrix4.translationValues(-curvedValue * 200, 0.0, 0),
+                    child: NotificationsScreen(
+                      business: widget.dashboardScreenBloc.state.activeBusiness,
+                      businessApps: widget.dashboardScreenBloc.state.businessWidgets,
+                      dashboardScreenBloc: widget.dashboardScreenBloc,
+                      type: 'shops',
+                    ),
+                  );
+                },
+                transitionDuration: Duration(milliseconds: 200),
+                barrierDismissible: true,
+                barrierLabel: '',
+                context: context,
+                pageBuilder: (context, animation1, animation2) {
+                  return null;
+                },
+              );
+            },
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.all(6),
+          child: InkWell(
+            child: SvgPicture.asset(
+              'assets/images/list.svg',
+              width: 20,
+            ),
+            onTap: () {
+              _innerDrawerKey.currentState.toggle();
+            },
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.all(6),
+          child: InkWell(
+            child: SvgPicture.asset(
+              'assets/images/closeicon.svg',
+              width: 20,
+            ),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(right: 8),
         ),
       ],
     );

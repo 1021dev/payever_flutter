@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/env.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
@@ -66,10 +67,9 @@ class _DashboardTutorialViewState extends State<DashboardTutorialView> {
                             color: Colors.black45
                         ),
                         child: Center(
-                          child: Icon(
-                            isExpanded ? Icons.clear : Icons.add,
-                            color: Colors.white,
-                            size: 12,
+                          child: SvgPicture.asset(
+                            isExpanded ? 'assets/images/closeicon.svg' : 'assets/images/icon_plus.svg',
+                            width: 8,
                           ),
                         ),
                       ),
@@ -88,7 +88,8 @@ class _DashboardTutorialViewState extends State<DashboardTutorialView> {
                       },
                     );
                   }, itemCount: widget.tutorials.length > 0 ? 2: 0,
-                    physics: NeverScrollableScrollPhysics(),),
+                    physics: NeverScrollableScrollPhysics(),
+                  ),
                 ),
                 SizedBox(height: 8),
               ],

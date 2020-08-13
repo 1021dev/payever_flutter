@@ -20,17 +20,14 @@ class TutorialCell extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Icon(
-                    Icons.videocam,
-                    color: Colors.white,
-                    size: 20,
-                  ),
+                  SvgPicture.asset('assets/images/video.svg',),
                   SizedBox(width: 12),
                   Text(
                     tutorial.title,
                     softWrap: true,
                     style: TextStyle(
-                        color: Colors.white, fontSize: 12),
+                      color: Colors.white, fontSize: 12,
+                    ),
                   ),
                   SizedBox(width: 12),
                 ],
@@ -39,11 +36,7 @@ class TutorialCell extends StatelessWidget {
                 children: [
                   tutorial.watched ? Padding(
                     padding: EdgeInsets.only(right: 8),
-                    child: Icon(
-                      Icons.remove_red_eye,
-                      size: 20,
-                      color: Colors.white38,
-                    ),
+                    child: SvgPicture.asset('assets/images/icon_eye.svg', color: Colors.grey,),
                   ): Container(),
                   InkWell(
                     onTap: () {
@@ -59,11 +52,7 @@ class TutorialCell extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(
-                            Icons.arrow_forward,
-                            color: Colors.white,
-                            size: 12,
-                          ),
+                          SvgPicture.asset('assets/images/icon_arrow.svg',),
                           SizedBox(width: 4),
                           Text(
                             Language.getCommerceOSStrings('actions.open'),

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/models/app_widget.dart';
 import 'package:payever/commons/models/business_apps.dart';
@@ -56,9 +57,11 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                             width: 16,
                             height: 16,
                             decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    image: NetworkImage('${Env.cdnIcon}icons-apps-white/icon-apps-white-${widget.appWidget.type}.png'),
-                                    fit: BoxFit.fitWidth)),
+                              image: DecorationImage(
+                                image: NetworkImage('${Env.cdnIcon}icons-apps-white/icon-apps-white-${widget.appWidget.type}.png'),
+                                fit: BoxFit.fitWidth,
+                              ),
+                            ),
                           ),
                           SizedBox(width: 8,),
                           Text(
@@ -130,10 +133,9 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                                           color: Colors.black45
                                       ),
                                       child: Center(
-                                        child: Icon(
-                                          isExpanded ? Icons.clear : Icons.add,
-                                          color: Colors.white,
-                                          size: 12,
+                                        child: SvgPicture.asset(
+                                          isExpanded ? 'assets/images/closeicon.svg' : 'assets/images/icon_plus.svg',
+                                          width: 8,
                                         ),
                                       ),
                                     ),
@@ -168,7 +170,7 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Icon(Icons.local_grocery_store),
+                                  SvgPicture.asset('assets/images/link.svg', width: 24,),
                                   SizedBox(width: 8),
                                   Text(
                                     'Link',
@@ -201,7 +203,7 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Icon(Icons.edit),
+                                  SvgPicture.asset('assets/images/edit_pen.svg', width: 24,),
                                   SizedBox(width: 8),
                                   Text(
                                     'Manage',

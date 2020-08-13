@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:payever/commons/models/app_widget.dart';
 import 'package:payever/commons/models/business_apps.dart';
 import 'package:payever/commons/models/models.dart';
@@ -150,10 +151,9 @@ class _DashboardShopViewState extends State<DashboardShopView> {
                                           color: Colors.black45
                                       ),
                                       child: Center(
-                                        child: Icon(
-                                          isExpanded ? Icons.clear : Icons.add,
-                                          color: Colors.white,
-                                          size: 12,
+                                        child: SvgPicture.asset(
+                                          isExpanded ? 'assets/images/closeicon.svg' : 'assets/images/icon_plus.svg',
+                                          width: 8,
                                         ),
                                       ),
                                     ),
@@ -247,7 +247,7 @@ class _DashboardShopViewState extends State<DashboardShopView> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Icon(Icons.edit),
+                                    SvgPicture.asset('assets/images/edit_pen.svg', width: 24,),
                                     SizedBox(width: 8),
                                     Text(
                                       'Edit',

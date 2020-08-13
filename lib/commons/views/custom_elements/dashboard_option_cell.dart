@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/commons/models/models.dart';
 import 'package:payever/commons/utils/translations.dart';
@@ -86,11 +87,7 @@ class DashboardOptionCell extends StatelessWidget {
                           color: Colors.white12
                       ),
                       child: Center(
-                        child: Icon(
-                          Icons.clear,
-                          color: Colors.white.withAlpha(200),
-                          size: 12,
-                        ),
+                        child: SvgPicture.asset('assets/images/closeicon.svg', width: 8,),
                       ),
                     ),
                   )

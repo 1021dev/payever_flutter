@@ -1106,7 +1106,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         height: 40,
         child: Row(
           children: [
-            SvgPicture.asset('assets/images/searchicon.svg'),
+            SvgPicture.asset('assets/images/search_place_holder.svg',),
             SizedBox(width: 8),
             Expanded(
               child: Row(
@@ -1199,10 +1199,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     elevation: 0,
                     height: 20,
                     minWidth: 20,
-                    child: Icon(
-                      Icons.close,
-                      size: 12,
-                    ),
+                    child: SvgPicture.asset('assets/images/closeicon.svg', width: 8,),
                   ),
                   searchController.text.isEmpty ? Container() : MaterialButton(
                     onPressed: () async {

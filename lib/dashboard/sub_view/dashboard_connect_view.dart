@@ -130,10 +130,9 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                                           color: Colors.black45
                                       ),
                                       child: Center(
-                                        child: Icon(
-                                          isExpanded ? Icons.clear : Icons.add,
-                                          color: Colors.white,
-                                          size: 12,
+                                        child: SvgPicture.asset(
+                                          isExpanded ? 'assets/images/closeicon.svg' : 'assets/images/icon_plus.svg',
+                                          width: 8,
                                         ),
                                       ),
                                     ),

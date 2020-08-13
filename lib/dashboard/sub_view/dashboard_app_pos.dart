@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/dashboard_option_cell.dart';
@@ -147,10 +148,9 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                                           color: Colors.black45
                                       ),
                                       child: Center(
-                                        child: Icon(
-                                          isExpanded ? Icons.clear : Icons.add,
-                                          color: Colors.white,
-                                          size: 12,
+                                        child: SvgPicture.asset(
+                                          isExpanded ? 'assets/images/closeicon.svg' : 'assets/images/icon_plus.svg',
+                                          width: 8,
                                         ),
                                       ),
                                     ),
@@ -248,7 +248,7 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(Icons.edit),
+                                SvgPicture.asset('assets/images/edit_pen.svg', width: 24,),
                                 SizedBox(width: 8),
                                 Text(
                                   'Edit',

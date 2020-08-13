@@ -26,7 +26,13 @@ class _DashboardBusinessAppsViewState extends State<DashboardBusinessAppsView> {
     List<BusinessApps> businessApps = widget.businessApps.where((element) {
       String title = element.dashboardInfo.title ?? '';
       if (element.installed && title != '') {
-        if (title == 'shop' || title == 'pos' || title == 'transactions' || title == 'connect' || title == 'contact' || title == 'checkout') {
+        if (title.contains('store') ||
+            title.contains('transactions') ||
+            title.contains('connect') ||
+            title.contains('checkout') ||
+            title.contains('contacts') ||
+            title.contains('products') ||
+            title.contains('pos')) {
           return true;
         }
         return false;
