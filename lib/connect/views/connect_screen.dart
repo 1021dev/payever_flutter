@@ -72,6 +72,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
 
   bool _isPortrait;
   bool _isTablet;
+  bool openCategory = false;
 
   ConnectScreenBloc screenBloc;
   final GlobalKey<InnerDrawerState> _innerDrawerKey = GlobalKey<InnerDrawerState>();
@@ -415,25 +416,31 @@ class _ConnectScreenState extends State<ConnectScreen> {
             children: <Widget>[
               InkWell(
                 onTap: () async {
-                  await showGeneralDialog(
+                  setState(() {
+                    openCategory = !openCategory;
+                  });
+                  if (_isTablet || !_isPortrait) {
+                  } else {
+                    await showGeneralDialog(
                       barrierColor: null,
                       transitionBuilder: (context, a1, a2, wg) {
-                    final curvedValue = 1.0 - Curves.ease.transform(a1.value);
-                    return Transform(
-                      transform: Matrix4.translationValues(-curvedValue * 200, 0.0, 0),
-                      child: ConnectCategoriesScreen(
-                        screenBloc: screenBloc,
-                      ),
+                        final curvedValue = 1.0 - Curves.ease.transform(a1.value);
+                        return Transform(
+                          transform: Matrix4.translationValues(-curvedValue * 200, 0.0, 0),
+                          child: ConnectCategoriesScreen(
+                            screenBloc: screenBloc,
+                          ),
+                        );
+                      },
+                      transitionDuration: Duration(milliseconds: 200),
+                      barrierDismissible: true,
+                      barrierLabel: '',
+                      context: context,
+                      pageBuilder: (context, animation1, animation2) {
+                        return null;
+                      },
                     );
-                  },
-                  transitionDuration: Duration(milliseconds: 200),
-                  barrierDismissible: true,
-                  barrierLabel: '',
-                  context: context,
-                  pageBuilder: (context, animation1, animation2) {
-                  return null;
-                  },
-                  );
+                  }
                 },
                 child: Container(
                   padding: EdgeInsets.all(8),
@@ -576,9 +583,63 @@ class _ConnectScreenState extends State<ConnectScreen> {
   }
 
   Widget _getBody(ConnectScreenState state) {
-    return selectedStyle == 0
-        ? _getListBody(state)
-        : _getGridBody(state);
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        openCategory && (_isTablet || !_isPortrait)? Flexible(
+          flex: 1,
+          child: ListView.separated(
+            padding: EdgeInsets.all(8),
+            itemBuilder: (context, index) {
+              String category = screenBloc.state.categories[index];
+              return GestureDetector(
+                onTap: () {
+                  screenBloc.add(ConnectCategorySelected(category: category));
+                },
+                child: Container(
+                  height: 44,
+                  padding: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: screenBloc.state.selectedCategory == category ? Color(0x26FFFFFF): Colors.transparent,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    children: <Widget>[
+                      Container(
+                        child: SvgPicture.asset(
+                          Measurements.channelIcon(category),
+                          height: 32,
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 8),
+                      ),
+                      Text(
+                        Language.getConnectStrings('categories.$category.title'),
+                      )
+                    ],
+                  ),
+                ),
+              );
+            },
+            separatorBuilder: (context, index) {
+              return Container();
+            },
+            itemCount: screenBloc.state.categories.length,
+          ),
+        ): Container(),
+        openCategory && (_isTablet || !_isPortrait)? Container(
+          width: 1,
+          color: Colors.grey,
+        ): Container(),
+        Flexible(
+          flex: 2,
+          child: selectedStyle == 0
+              ? _getListBody(state)
+              : _getGridBody(state),
+        ),
+      ],
+    );
   }
 
   Widget _getListBody(ConnectScreenState state) {

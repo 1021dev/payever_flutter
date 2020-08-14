@@ -43,125 +43,127 @@ class _ConnectCategoriesScreenState extends State<ConnectCategoriesScreen> {
         ? MediaQuery.of(context).size.width : MediaQuery.of(context).size.height);
     _isTablet = Measurements.width < 600 ? false : true;
 
-    Map<String, List<NotificationModel>> notifications = {};
-    return Scaffold(
-      backgroundColor: Color(0x80111111),
-      resizeToAvoidBottomPadding: false,
-      body: BlurEffectView(
-        radius: 0,
-        color: Colors.transparent,
-        child: SafeArea(
-          child: Container(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Container(
-                  height: 44,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.only(left: 16),
-                          child: Icon(Icons.close),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.only(right: 16),
-                          child: Text(
-                            'Reset',
+    return new OrientationBuilder(builder: (context, orientation) {
+      return Scaffold(
+        backgroundColor: Color(0x80111111),
+        resizeToAvoidBottomPadding: false,
+        body: BlurEffectView(
+          radius: 0,
+          color: Colors.transparent,
+          child: SafeArea(
+            child: Container(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  Container(
+                    height: 44,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        InkWell(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 16),
+                            child: Icon(Icons.close),
                           ),
                         ),
-                      ),
-                    ],
+                        InkWell(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.only(right: 16),
+                            child: Text(
+                              'Reset',
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                Container(
-                  margin: EdgeInsets.all(24),
-                  height: 44,
-                  constraints: BoxConstraints.expand(height: 44),
-                  child: SizedBox(
-                    child: MaterialButton(
-                      onPressed: () {
-                        widget.screenBloc.add(ConnectCategorySelected(category: selectedCategory));
-                        Navigator.pop(context);
-                      },
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      color: Color(0xFF525151),
-                      child: Text(
-                        'Done',
+                  Container(
+                    margin: EdgeInsets.all(24),
+                    height: 44,
+                    constraints: BoxConstraints.expand(height: 44),
+                    child: SizedBox(
+                      child: MaterialButton(
+                        onPressed: () {
+                          widget.screenBloc.add(ConnectCategorySelected(category: selectedCategory));
+                          Navigator.pop(context);
+                        },
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        color: Color(0xFF525151),
+                        child: Text(
+                          'Done',
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Container(
-                  padding: EdgeInsets.only(left: 24, bottom: 16),
-                  child: Text(
-                    'Category',
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                  Container(
+                    padding: EdgeInsets.only(left: 24, bottom: 16),
+                    child: Text(
+                      'Category',
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                ),
-                Expanded(
-                  child: ListView.separated(
-                    padding: EdgeInsets.all(8),
-                    itemBuilder: (context, index) {
-                      String category = widget.screenBloc.state.categories[index];
-                      return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            selectedCategory = category;
-                          });
-                        },
-                        child: Container(
-                          height: 44,
-                          padding: EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: selectedCategory == category ? Color(0x26FFFFFF): Colors.transparent,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Row(
-                            children: <Widget>[
-                              Container(
-                                child: SvgPicture.asset(
-                                  Measurements.channelIcon(category),
-                                  height: 32,
+                  Expanded(
+                    child: ListView.separated(
+                      padding: EdgeInsets.all(8),
+                      itemBuilder: (context, index) {
+                        String category = widget.screenBloc.state.categories[index];
+                        return GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              selectedCategory = category;
+                            });
+                          },
+                          child: Container(
+                            height: 44,
+                            padding: EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: selectedCategory == category ? Color(0x26FFFFFF): Colors.transparent,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Row(
+                              children: <Widget>[
+                                Container(
+                                  child: SvgPicture.asset(
+                                    Measurements.channelIcon(category),
+                                    height: 32,
+                                  ),
                                 ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(left: 8),
-                              ),
-                              Text(
-                                Language.getConnectStrings('categories.$category.title'),
-                              )
-                            ],
+                                Padding(
+                                  padding: EdgeInsets.only(left: 8),
+                                ),
+                                Text(
+                                  Language.getConnectStrings('categories.$category.title'),
+                                )
+                              ],
+                            ),
                           ),
-                        ),
-                      );
-                    },
-                    separatorBuilder: (context, index) {
-                      return Container();
-                    },
-                    itemCount: widget.screenBloc.state.categories.length,
+                        );
+                      },
+                      separatorBuilder: (context, index) {
+                        return Container();
+                      },
+                      itemCount: widget.screenBloc.state.categories.length,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
-      ),
+      );
+    }
     );
   }
 }
