@@ -24,6 +24,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'connect_categories_screen.dart';
+import 'connect_payment_settings_screen.dart';
 
 
 class ConnectInitScreen extends StatelessWidget {
@@ -379,18 +380,13 @@ class _ConnectScreenState extends State<ConnectScreen> {
         child: BackgroundBase(
           true,
           backgroudColor: Color.fromRGBO(0, 0, 0, 0.75),
-          body: state.isLoading ?
-          Center(
-            child: CircularProgressIndicator(),
-          ): Center(
-            child: Column(
-              children: <Widget>[
-                _topBar(state),
-                Expanded(
-                  child: _getBody(state),
-                ),
-              ],
-            ),
+          body: Column(
+            children: <Widget>[
+              _topBar(state),
+              Expanded(
+                child: _getBody(state),
+              ),
+            ],
           ),
         ),
       ),
@@ -634,7 +630,14 @@ class _ConnectScreenState extends State<ConnectScreen> {
         ): Container(),
         Flexible(
           flex: 2,
-          child: selectedStyle == 0
+          child: state.isLoading ?
+          Expanded(
+            child: Container(
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            ),
+          ): selectedStyle == 0
               ? _getListBody(state)
               : _getGridBody(state),
         ),
@@ -721,17 +724,31 @@ class _ConnectScreenState extends State<ConnectScreen> {
                   isTablet: _isTablet,
                   installingConnect: state.connectInstallations[index].integration.name == state.installingConnect,
                   onOpen: (model) {
-                    Navigator.push(
-                      context,
-                      PageTransition(
-                        child: ConnectSettingScreen(
-                          screenBloc: screenBloc,
-                          connectIntegration: model.integration,
+                    if (model.integration.category == 'payments') {
+                      Navigator.push(
+                        context,
+                        PageTransition(
+                          child: ConnectPaymentSettingsScreen(
+                            connectScreenBloc: screenBloc,
+                            connectModel: model,
+                          ),
+                          type: PageTransitionType.fade,
+                          duration: Duration(milliseconds: 500),
                         ),
-                        type: PageTransitionType.fade,
-                        duration: Duration(milliseconds: 500),
-                      ),
-                    );
+                      );
+                    } else {
+                      Navigator.push(
+                        context,
+                        PageTransition(
+                          child: ConnectSettingScreen(
+                            screenBloc: screenBloc,
+                            connectIntegration: model.integration,
+                          ),
+                          type: PageTransitionType.fade,
+                          duration: Duration(milliseconds: 500),
+                        ),
+                      );
+                    }
                   },
                   onInstall: (model) {
                     screenBloc.add(InstallConnectAppEvent(model: model));
@@ -883,17 +900,31 @@ class _ConnectScreenState extends State<ConnectScreen> {
                           onPressed: () {
                             Navigator.pop(context);
                             if (install) {
-                              Navigator.push(
-                                context,
-                                PageTransition(
-                                  child: ConnectSettingScreen(
-                                    screenBloc: screenBloc,
-                                    connectIntegration: model.integration,
+                              if (model.integration.category == 'payments') {
+                                Navigator.push(
+                                  context,
+                                  PageTransition(
+                                    child: ConnectPaymentSettingsScreen(
+                                      connectScreenBloc: screenBloc,
+                                      connectModel: model,
+                                    ),
+                                    type: PageTransitionType.fade,
+                                    duration: Duration(milliseconds: 500),
                                   ),
-                                  type: PageTransitionType.fade,
-                                  duration: Duration(milliseconds: 500),
-                                ),
-                              );
+                                );
+                              } else {
+                                Navigator.push(
+                                  context,
+                                  PageTransition(
+                                    child: ConnectSettingScreen(
+                                      screenBloc: screenBloc,
+                                      connectIntegration: model.integration,
+                                    ),
+                                    type: PageTransitionType.fade,
+                                    duration: Duration(milliseconds: 500),
+                                  ),
+                                );
+                              }
                             }
                           },
                           shape: RoundedRectangleBorder(

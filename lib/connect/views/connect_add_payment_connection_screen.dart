@@ -8,18 +8,18 @@ import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 
-class CheckoutAddConnectionScreen extends StatefulWidget {
+class ConnectAddPaymentConnectionScreen extends StatefulWidget {
 
-  final CheckoutPaymentSettingScreenBloc screenBloc;
+  final ConnectSettingsDetailScreenBloc screenBloc;
 
-  CheckoutAddConnectionScreen(
+  ConnectAddPaymentConnectionScreen(
       {this.screenBloc,});
 
-  _CheckoutAddConnectionScreenState createState() => _CheckoutAddConnectionScreenState();
+  _ConnectAddPaymentConnectionScreenState createState() => _ConnectAddPaymentConnectionScreenState();
 
 }
 
-class _CheckoutAddConnectionScreenState extends State<CheckoutAddConnectionScreen> {
+class _ConnectAddPaymentConnectionScreenState extends State<ConnectAddPaymentConnectionScreen> {
   TextEditingController controller = TextEditingController();
 
   @override
@@ -37,16 +37,16 @@ class _CheckoutAddConnectionScreenState extends State<CheckoutAddConnectionScree
   Widget build(BuildContext context) {
     return BlocListener(
         bloc: widget.screenBloc,
-        listener: (BuildContext context, CheckoutPaymentSettingScreenState state) async {
+        listener: (BuildContext context, ConnectSettingsDetailScreenState state) async {
           if (state is CheckoutSettingScreenStateFailure) {
           } else if (state is CheckoutPaymentSettingScreenSuccess) {
             Navigator.pop(context);
-            widget.screenBloc.add(CheckoutPaymentSettingScreenInitEvent(business: state.business, connectModel: state.connectModel));
+            widget.screenBloc.add(ConnectSettingsDetailScreenInitEvent(business: state.business, connectModel: state.connectModel));
           }
         },
-      child: BlocBuilder<CheckoutPaymentSettingScreenBloc, CheckoutPaymentSettingScreenState>(
+      child: BlocBuilder<ConnectSettingsDetailScreenBloc, ConnectSettingsDetailScreenState>(
         bloc: widget.screenBloc,
-        builder: (BuildContext context, CheckoutPaymentSettingScreenState state) {
+        builder: (BuildContext context, ConnectSettingsDetailScreenState state) {
           return Scaffold(
             backgroundColor: Colors.black,
             resizeToAvoidBottomPadding: false,
@@ -69,7 +69,7 @@ class _CheckoutAddConnectionScreenState extends State<CheckoutAddConnectionScree
     );
   }
 
-  Widget _appBar(CheckoutPaymentSettingScreenState state) {
+  Widget _appBar(ConnectSettingsDetailScreenState state) {
     return AppBar(
       centerTitle: false,
       elevation: 0,
@@ -107,7 +107,7 @@ class _CheckoutAddConnectionScreenState extends State<CheckoutAddConnectionScree
     );
   }
 
-  Widget _getBody(CheckoutPaymentSettingScreenState state) {
+  Widget _getBody(ConnectSettingsDetailScreenState state) {
     return Container(
       width: Measurements.width,
       padding: EdgeInsets.all(16),
@@ -155,7 +155,7 @@ class _CheckoutAddConnectionScreenState extends State<CheckoutAddConnectionScree
                         Fluttertoast.showToast(msg: 'Name required');
                         return;
                       }
-                      widget.screenBloc.add(AddPaymentOptionEvent(name: controller.text));
+                      widget.screenBloc.add(ConnectAddPaymentOptionEvent(name: controller.text));
                     },
                     color: Colors.black,
                     child: state.isAdding

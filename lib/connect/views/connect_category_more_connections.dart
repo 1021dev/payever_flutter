@@ -17,6 +17,7 @@ import 'package:payever/connect/widgets/connect_list_item.dart';
 import 'package:payever/connect/widgets/connect_top_button.dart';
 
 import 'connect_detail_screen.dart';
+import 'connect_payment_settings_screen.dart';
 import 'connect_setting_screen.dart';
 
 class ConnectCategoryMoreScreen extends StatefulWidget {
@@ -280,17 +281,31 @@ class _ConnectCategoryMoreScreenState extends State<ConnectCategoryMoreScreen> {
                   isTablet: _isTablet,
                   installingConnect: state.categoryConnects[index].integration.name == state.installingConnect,
                   onOpen: (model) {
-                    Navigator.push(
-                      context,
-                      PageTransition(
-                        child: ConnectSettingScreen(
-                          screenBloc: widget.screenBloc.connectScreenBloc,
-                          connectIntegration: model.integration,
+                    if (model.integration.category == 'payments') {
+                      Navigator.push(
+                        context,
+                        PageTransition(
+                          child: ConnectPaymentSettingsScreen(
+                            connectScreenBloc: widget.screenBloc.connectScreenBloc,
+                            connectModel: model,
+                          ),
+                          type: PageTransitionType.fade,
+                          duration: Duration(milliseconds: 500),
                         ),
-                        type: PageTransitionType.fade,
-                        duration: Duration(milliseconds: 500),
-                      ),
-                    );
+                      );
+                    } else {
+                      Navigator.push(
+                        context,
+                        PageTransition(
+                          child: ConnectSettingScreen(
+                            screenBloc: widget.screenBloc.connectScreenBloc,
+                            connectIntegration: model.integration,
+                          ),
+                          type: PageTransitionType.fade,
+                          duration: Duration(milliseconds: 500),
+                        ),
+                      );
+                    }
                   },
                   onInstall: (model) {
                     widget.screenBloc.add(InstallMoreConnectEvent(model: model));

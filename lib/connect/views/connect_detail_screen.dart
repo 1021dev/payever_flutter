@@ -13,6 +13,7 @@ import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
+import 'package:payever/connect/views/connect_payment_settings_screen.dart';
 import 'package:payever/login/login_screen.dart';
 import 'package:payever/connect/models/connect.dart';
 import 'package:payever/connect/views/connect_category_more_connections.dart';
@@ -299,17 +300,31 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                                     padding: EdgeInsets.all(0),
                                     child: MaterialButton(
                                       onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          PageTransition(
-                                            child: ConnectSettingScreen(
-                                              screenBloc: widget.screenBloc,
-                                              connectIntegration: state.editConnect,
+                                        if (widget.connectModel.integration.category == 'payments') {
+                                          Navigator.push(
+                                            context,
+                                            PageTransition(
+                                              child: ConnectPaymentSettingsScreen(
+                                                connectScreenBloc: widget.screenBloc,
+                                                connectModel: widget.connectModel,
+                                              ),
+                                              type: PageTransitionType.fade,
+                                              duration: Duration(milliseconds: 500),
                                             ),
-                                            type: PageTransitionType.fade,
-                                            duration: Duration(milliseconds: 500),
-                                          ),
-                                        );
+                                          );
+                                        } else {
+                                          Navigator.push(
+                                            context,
+                                            PageTransition(
+                                              child: ConnectSettingScreen(
+                                                screenBloc: widget.screenBloc,
+                                                connectIntegration: state.editConnect,
+                                              ),
+                                              type: PageTransitionType.fade,
+                                              duration: Duration(milliseconds: 500),
+                                            ),
+                                          );
+                                        }
                                       },
                                       color: Color.fromRGBO(255, 255, 255, 0.1),
                                       height: 26,
@@ -428,17 +443,32 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                                 padding: EdgeInsets.all(0),
                                 child: MaterialButton(
                                   onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      PageTransition(
-                                        child: ConnectSettingScreen(
-                                          screenBloc: widget.screenBloc,
-                                          connectIntegration: state.editConnect,
+                                    if (widget.connectModel.integration.category == 'payments') {
+                                      Navigator.push(
+                                        context,
+                                        PageTransition(
+                                          child: ConnectPaymentSettingsScreen(
+                                            connectScreenBloc: widget.screenBloc,
+                                            connectModel: widget.connectModel,
+                                          ),
+                                          type: PageTransitionType.fade,
+                                          duration: Duration(milliseconds: 500),
                                         ),
-                                        type: PageTransitionType.fade,
-                                        duration: Duration(milliseconds: 500),
-                                      ),
-                                    );
+                                      );
+                                    } else {
+                                      Navigator.push(
+                                        context,
+                                        PageTransition(
+                                          child: ConnectSettingScreen(
+                                            screenBloc: widget.screenBloc,
+                                            connectIntegration: state
+                                                .editConnect,
+                                          ),
+                                          type: PageTransitionType.fade,
+                                          duration: Duration(milliseconds: 500),
+                                        ),
+                                      );
+                                    }
                                   },
                                   color: Color.fromRGBO(255, 255, 255, 0.1),
                                   height: 26,
@@ -1541,17 +1571,31 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                                         padding: EdgeInsets.all(0),
                                         child: MaterialButton(
                                           onPressed: () {
-                                            Navigator.push(
-                                              context,
-                                              PageTransition(
-                                                child: ConnectSettingScreen(
-                                                  screenBloc: widget.screenBloc,
-                                                  connectIntegration: connect.integration,
+                                            if (widget.connectModel.integration.category == 'payments') {
+                                              Navigator.push(
+                                                context,
+                                                PageTransition(
+                                                  child: ConnectPaymentSettingsScreen(
+                                                    connectScreenBloc: widget.screenBloc,
+                                                    connectModel: widget.connectModel,
+                                                  ),
+                                                  type: PageTransitionType.fade,
+                                                  duration: Duration(milliseconds: 500),
                                                 ),
-                                                type: PageTransitionType.fade,
-                                                duration: Duration(milliseconds: 500),
-                                              ),
-                                            );
+                                              );
+                                            } else {
+                                              Navigator.push(
+                                                context,
+                                                PageTransition(
+                                                  child: ConnectSettingScreen(
+                                                    screenBloc: widget.screenBloc,
+                                                    connectIntegration: connect.integration,
+                                                  ),
+                                                  type: PageTransitionType.fade,
+                                                  duration: Duration(milliseconds: 500),
+                                                ),
+                                              );
+                                            }
                                           },
                                           color: Color.fromRGBO(255, 255, 255, 0.1),
                                           height: 26,
@@ -1746,17 +1790,31 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
                         onPressed: () {
                           Navigator.pop(context);
                           if (install) {
-                            Navigator.push(
-                              context,
-                              PageTransition(
-                                child: ConnectSettingScreen(
-                                  screenBloc: widget.screenBloc,
-                                  connectIntegration: model.integration,
+                            if (widget.connectModel.integration.category == 'payments') {
+                              Navigator.push(
+                                context,
+                                PageTransition(
+                                  child: ConnectPaymentSettingsScreen(
+                                    connectScreenBloc: widget.screenBloc,
+                                    connectModel: widget.connectModel,
+                                  ),
+                                  type: PageTransitionType.fade,
+                                  duration: Duration(milliseconds: 500),
                                 ),
-                                type: PageTransitionType.fade,
-                                duration: Duration(milliseconds: 500),
-                              ),
-                            );
+                              );
+                            } else {
+                              Navigator.push(
+                                context,
+                                PageTransition(
+                                  child: ConnectSettingScreen(
+                                    screenBloc: widget.screenBloc,
+                                    connectIntegration: model.integration,
+                                  ),
+                                  type: PageTransitionType.fade,
+                                  duration: Duration(milliseconds: 500),
+                                ),
+                              );
+                            }
                           }
                         },
                         shape: RoundedRectangleBorder(

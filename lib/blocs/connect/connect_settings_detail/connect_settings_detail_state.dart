@@ -4,83 +4,83 @@ import 'package:payever/connect/models/connect.dart';
 
 class ConnectSettingsDetailScreenState {
   final bool isLoading;
-  final bool installing;
+  final bool isAdding;
+  final bool isSaving;
+  final num deleting;
   final String business;
-  final String selectedCategory;
-  final List<ConnectModel> categoryConnects;
-  final ConnectIntegration editConnect;
-  final bool isReview;
-  final bool installed;
-  final String installingConnect;
-  final String installedNewConnect;
-  final String uninstalledNewConnect;
+  final List<Payment> paymentOptions;
+  final Map<String, PaymentVariant> paymentVariants;
+  final List<ConnectModel> connectInstallations;
+  final ConnectModel connectModel;
+  final ConnectIntegration integration;
 
   ConnectSettingsDetailScreenState({
     this.isLoading = false,
-    this.installing = false,
+    this.isAdding = false,
+    this.isSaving = false,
+    this.deleting,
     this.business,
-    this.categoryConnects = const [],
-    this.selectedCategory,
-    this.editConnect,
-    this.isReview = false,
-    this.installed = false,
-    this.installingConnect,
-    this.installedNewConnect,
-    this.uninstalledNewConnect,
+    this.paymentOptions = const [],
+    this.paymentVariants = const {},
+    this.connectInstallations = const [],
+    this.connectModel,
+    this.integration,
   });
 
   List<Object> get props => [
     this.isLoading,
-    this.installing,
+    this.isAdding,
+    this.isSaving,
+    this.deleting,
     this.business,
-    this.categoryConnects,
-    this.selectedCategory,
-    this.editConnect,
-    this.isReview,
-    this.installed,
-    this.installingConnect,
-    this.installedNewConnect,
-    this.uninstalledNewConnect,
+    this.paymentOptions,
+    this.paymentVariants,
+    this.connectInstallations,
+    this.connectModel,
+    this.integration,
   ];
 
   ConnectSettingsDetailScreenState copyWith({
     bool isLoading,
-    bool installing,
+    bool isAdding,
+    bool isSaving,
+    num deleting,
     String business,
-    List<ConnectModel> categoryConnects,
-    String selectedCategory,
-    ConnectIntegration editConnect,
-    bool isReview,
-    bool installed,
-    String installingConnect,
-    String installedNewConnect,
-    String uninstalledNewConnect,
+    List<Payment> paymentOptions,
+    Map<String, PaymentVariant> paymentVariants,
+    List<ConnectModel> connectInstallations,
+    ConnectModel connectModel,
+    ConnectIntegration integration
   }) {
     return ConnectSettingsDetailScreenState(
       isLoading: isLoading ?? this.isLoading,
-      installing: installing ?? this.installing,
+      isAdding: isAdding ?? this.isAdding,
+      isSaving: isSaving ?? this.isSaving,
+      deleting: deleting ?? this.deleting,
       business: business ?? this.business,
-      categoryConnects: categoryConnects ?? this.categoryConnects,
-      selectedCategory: selectedCategory ?? this.selectedCategory,
-      editConnect: editConnect ?? this.editConnect,
-      isReview: isReview ?? this.isReview,
-      installed: installed ?? this.installed,
-      installingConnect: installingConnect ?? this.installingConnect,
-      installedNewConnect: installedNewConnect ?? this.installedNewConnect,
-      uninstalledNewConnect: uninstalledNewConnect ?? this.uninstalledNewConnect,
+      paymentOptions: paymentOptions ?? this.paymentOptions,
+      paymentVariants: paymentVariants ?? this.paymentVariants,
+      connectInstallations: connectInstallations ?? this.connectInstallations,
+      connectModel: connectModel ?? this.connectModel,
+      integration: integration ?? this.integration,
     );
   }
 }
 
-class ConnectSettingsDetailScreenStateSuccess extends ConnectSettingsDetailScreenState {}
+class ConnectSettingsDetailScreenSuccess extends ConnectSettingsDetailScreenState {
+  final String business;
+  final ConnectModel connectModel;
 
-class ConnectSettingsDetailScreenStateFailure extends ConnectSettingsDetailScreenState {
+  ConnectSettingsDetailScreenSuccess({this.business, this.connectModel,});
+}
+
+class ConnectSettingsDetailScreenFailure extends ConnectSettingsDetailScreenState {
   final String error;
 
-  ConnectSettingsDetailScreenStateFailure({@required this.error}) : super();
+  ConnectSettingsDetailScreenFailure({@required this.error}) : super();
 
   @override
   String toString() {
-    return 'ConnectSettingsDetailScreenStateFailure { error $error }';
+    return 'ConnectSettingsDetailScreenFailure { error $error }';
   }
 }

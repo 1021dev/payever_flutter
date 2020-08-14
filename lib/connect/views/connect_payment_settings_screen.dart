@@ -4,35 +4,35 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
+import 'package:payever/checkout/views/payments/checkout_add_connection_screen.dart';
 import 'package:payever/commons/commons.dart';
-import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/connect/models/connect.dart';
+import 'package:payever/connect/views/connect_add_payment_connection_screen.dart';
 import 'package:payever/login/login_screen.dart';
 
-bool _isPortrait;
-bool _isTablet;
+class ConnectPaymentSettingsScreen extends StatefulWidget {
 
-class ConnectSettingScreen extends StatefulWidget {
+  final ConnectScreenBloc connectScreenBloc;
+  final String business;
+  final ConnectModel connectModel;
 
-  final ConnectScreenBloc screenBloc;
-  final ConnectIntegration connectIntegration;
-
-  ConnectSettingScreen({
-    this.screenBloc,
-    this.connectIntegration,
+  ConnectPaymentSettingsScreen({
+    this.connectScreenBloc,
+    this.business,
+    this.connectModel,
   });
 
   @override
-  createState() => _ConnectSettingScreenState();
+  _ConnectPaymentSettingsScreenState createState() => _ConnectPaymentSettingsScreenState();
 }
 
-class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
-
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
-  ConnectSettingsDetailScreenBloc screenBloc;
+class _ConnectPaymentSettingsScreenState extends State<ConnectPaymentSettingsScreen> {
+  bool _isPortrait;
+  bool _isTablet;
+  double iconSize;
+  double margin;
   String wallpaper;
   String selectedState = '';
   int isOpened = 0;
@@ -44,14 +44,15 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
   Map<String, PaymentVariant> variants;
   List<Payment> paymentOptions;
   PaymentVariant variant;
+
+  ConnectSettingsDetailScreenBloc screenBloc;
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
-    screenBloc = ConnectSettingsDetailScreenBloc(connectScreenBloc: widget.screenBloc);
-    business = widget.screenBloc.dashboardScreenBloc.state.activeBusiness;
-    variants = widget.screenBloc.state.paymentVariants;
-    paymentOptions = widget.screenBloc.state.paymentOptions;
-
-    variant = variants[widget.connectIntegration.name];
+    screenBloc = ConnectSettingsDetailScreenBloc(connectScreenBloc: widget.connectScreenBloc);
+    screenBloc.add(ConnectSettingsDetailScreenInitEvent(business: widget.business, connectModel: widget.connectModel,));
     super.initState();
   }
 
@@ -75,7 +76,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
     return BlocListener(
       bloc: screenBloc,
       listener: (BuildContext context, ConnectSettingsDetailScreenState state) async {
-        if (state is ConnectSettingsDetailScreenFailure) {
+        if (state is CheckoutPaymentSettingScreenFailure) {
           Navigator.pushReplacement(
             context,
             PageTransition(
@@ -88,7 +89,31 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
       child: BlocBuilder<ConnectSettingsDetailScreenBloc, ConnectSettingsDetailScreenState>(
         bloc: screenBloc,
         builder: (BuildContext context, ConnectSettingsDetailScreenState state) {
-          return _body(state);
+          iconSize = _isTablet ? 120: 80;
+          margin = _isTablet ? 24: 16;
+          return Scaffold(
+            backgroundColor: Colors.black,
+            resizeToAvoidBottomPadding: false,
+            appBar: _appBar(state),
+            body: SafeArea(
+              child: BackgroundBase(
+                true,
+                backgroudColor: Color.fromRGBO(20, 20, 0, 0.4),
+                body: state.isLoading ?
+                Center(
+                  child: CircularProgressIndicator(),
+                ): Center(
+                  child: Column(
+                    children: <Widget>[
+                      Expanded(
+                        child: _getBody(state),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
         },
       ),
     );
@@ -101,7 +126,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
       automaticallyImplyLeading: false,
       backgroundColor: Colors.black87,
       title: Text(
-        Language.getPosConnectStrings(widget.connectIntegration.displayOptions.title),
+        Language.getPosConnectStrings(widget.connectModel.integration.displayOptions.title ?? ''),
         style: TextStyle(
           color: Colors.white,
           fontSize: 16,
@@ -132,35 +157,15 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
     );
   }
 
-  Widget _body(ConnectSettingsDetailScreenState state) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      resizeToAvoidBottomPadding: false,
-      appBar: _appBar(state),
-      body: SafeArea(
-        child: BackgroundBase(
-          true,
-          body: state.isLoading ?
-          Center(
-            child: CircularProgressIndicator(),
-          ): Center(
-            child: SingleChildScrollView(
-              child: Container(
-                width: Measurements.width,
-                child: Column(
-                  children: <Widget>[
-                    _getBody(state),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget _getBody(ConnectSettingsDetailScreenState state) {
+    if (state.paymentVariants.length == 0) {
+      return Container();
+    }
+    business = widget.connectScreenBloc.dashboardScreenBloc.state.activeBusiness;
+    variants = state.paymentVariants;
+    paymentOptions = state.paymentOptions;
+
+    variant = variants[state.integration.name];
     MissingSteps missingSteps = variant.missingSteps;
 
     List<Widget> widgets = [];
@@ -1324,211 +1329,231 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
 
       } else if (missingStep.type == 'missing-credentials') {
-        Widget header = Container(
-          height: 56,
-          color: Colors.black45,
-          child: SizedBox.expand(
-            child: MaterialButton(
-              onPressed: () {
-                setState(() {
-                  if (isOpened == i) {
-                    isOpened = -1;
-                  } else {
-                    isOpened = i;
-                  }
-                });
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Expanded(
-                    child: Row(
-                      children: <Widget>[
-                        Icon(Icons.vpn_key),
-                        Padding(
-                          padding: EdgeInsets.only(left: 8),
-                        ),
-                        Expanded(
-                          child: Text(
-                            'Default',
-                            maxLines: 1,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
+        for (Variant v in variant.variants) {
+          Widget header = Container(
+            height: 56,
+            color: Colors.black45,
+            child: SizedBox.expand(
+              child: MaterialButton(
+                onPressed: () {
+                  setState(() {
+                    if (isOpened == v.id) {
+                      isOpened = -1;
+                    } else {
+                      isOpened = v.id;
+                    }
+                  });
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Expanded(
+                      child: Row(
+                        children: <Widget>[
+                          Icon(Icons.vpn_key),
+                          Padding(
+                            padding: EdgeInsets.only(left: 8),
+                          ),
+                          Expanded(
+                            child: Text(
+                              v.isDefault ? 'Default': v.name ?? '',
+                              maxLines: 1,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ),
+                        ],
+                      ),
+                    ),
+                    Row(
+                      children: <Widget>[
+                        v.credentialsValid ? MaterialButton(
+                          onPressed: () {
+                            if (v.isDefault) {
+                            } else {
+                              screenBloc.add(ConnectDeletePaymentOptionEvent(id: '${v.id}'));
+                            }
+                          },
+                          minWidth: 0,
+                          color: Colors.black45,
+                          elevation: 0,
+                          padding: EdgeInsets.only(left: 8, right: 8),
+                          height: 24,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: state.deleting == v.id ? Container(
+                              width: 12,
+                              height: 12,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 1,
+                              ),
+                          ): Text(
+                            v.isDefault ? 'Disconnect': 'Delete',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ): Container(),
+                        Icon(
+                          isOpened == v.id ? Icons.keyboard_arrow_up : Icons
+                              .keyboard_arrow_down,
+                          size: 20,
                         ),
                       ],
                     ),
-                  ),
-                  Row(
-                    children: <Widget>[
-                      variant.variants.first.credentialsValid ? MaterialButton(
-                        onPressed: () {
-
-                        },
-                        minWidth: 0,
-                        color: Colors.black45,
-                        elevation: 0,
-                        padding: EdgeInsets.all(4),
-                        height: 24,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Text(
-                          'Disconnect',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ): Container(),
-                      Icon(
-                        isOpened == i ? Icons.keyboard_arrow_up : Icons
-                            .keyboard_arrow_down,
-                        size: 20,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-
-        widgets.add(header);
-        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
-        if (variant.variants.first.credentialsValid) {
-          Widget redirectAllow = isOpened == i ? Container(
-            height: 64,
-            child: CheckboxListTile(
-              onChanged: (val) {
-                setState(() {
-                  variant.variants.first.shopRedirectEnabled = val;
-                });
-              },
-              value: variant.variants.first.shopRedirectEnabled ?? false,
-              activeColor: Colors.white,
-              checkColor: Colors.black,
-              title: Text(
-                'Do redirect to the shop after success or failure',
-              ),
-            ),
-          ): Container();
-
-          widgets.add(redirectAllow);
-          widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
-
-          Widget connectButton = isOpened == i ? Container(
-            height: 56,
-            child: SizedBox.expand(
-              child: MaterialButton(
-                minWidth: 0,
-                onPressed: () {
-
-                },
-                color: Colors.black87,
-                child: Text(
-                  Language.getConnectStrings('Save'),
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  ],
                 ),
               ),
             ),
-          ) : Container();
-          widgets.add(connectButton);
-        } else {
-          Widget vendorNumberField = isOpened == i ? Container(
-            height: 64,
-            child: Center(
-              child: TextFormField(
-                style: TextStyle(fontSize: 16),
-                onTap: () {
+          );
 
-                },
+          widgets.add(header);
+          widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
+          if (v.credentialsValid) {
+            Widget redirectAllow = isOpened == v.id ? Container(
+              height: 64,
+              child: CheckboxListTile(
                 onChanged: (val) {
                   setState(() {
-
+                    v.shopRedirectEnabled = val;
                   });
                 },
-                initialValue: '',
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.only(left: 16, right: 16),
-                  labelText: Language.getPosTpmStrings('Vendor Number'),
-                  labelStyle: TextStyle(
-                    color: Colors.grey,
-                  ),
-                  enabledBorder: InputBorder.none,
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blue, width: 0.5),
-                  ),
+                value: v.shopRedirectEnabled ?? false,
+                activeColor: Colors.white,
+                checkColor: Colors.black,
+                title: Text(
+                  'Do redirect to the shop after success or failure',
                 ),
-                keyboardType: TextInputType.text,
               ),
-            ),
-          ): Container();
+            ): Container();
 
-          widgets.add(vendorNumberField);
-          widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
+            widgets.add(redirectAllow);
+            widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
 
-          Widget passwordField = isOpened == i ? Container(
-            height: 64,
-            child: Center(
-              child: TextFormField(
-                style: TextStyle(fontSize: 16),
-                onTap: () {
-
-                },
-                onChanged: (val) {
-                  setState(() {
-
-                  });
-                },
-                initialValue: '',
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.only(left: 16, right: 16),
-                  labelText: Language.getPosTpmStrings('Password'),
-                  labelStyle: TextStyle(
-                    color: Colors.grey,
-                  ),
-                  enabledBorder: InputBorder.none,
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blue, width: 0.5),
-                  ),
-                ),
-                keyboardType: TextInputType.text,
-              ),
-            ),
-          ): Container();
-
-          widgets.add(passwordField);
-          widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
-
-          Widget connectButton = isOpened == i ? Container(
-            height: 56,
-            child: SizedBox.expand(
-              child: MaterialButton(
-                minWidth: 0,
-                onPressed: () {
-
-                },
-                color: Colors.black87,
-                child: Text(
-                  Language.getConnectStrings('Connect'),
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
+            Widget connectButton = isOpened == v.id ? Container(
+              height: 56,
+              child: SizedBox.expand(
+                child: MaterialButton(
+                  minWidth: 0,
+                  onPressed: () {
+                    Map<String, dynamic> body = {
+                      'business_payment_option': {
+                        'shop_redirect_enabled': v.shopRedirectEnabled,
+                      }
+                    };
+                    screenBloc.add(ConnectUpdatePaymentOptionEvent(id: '${v.id}', body: body));
+                  },
+                  color: Colors.black87,
+                  child: state.isSaving ? Center(
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                    ),
+                  ): Text(
+                    Language.getConnectStrings('Save'),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
               ),
-            ),
-          ) : Container();
-          widgets.add(connectButton);
+            ) : Container();
+            widgets.add(connectButton);
+          } else {
+            Widget vendorNumberField = isOpened == v.id ? Container(
+              height: 64,
+              child: Center(
+                child: TextFormField(
+                  style: TextStyle(fontSize: 16),
+                  onTap: () {
+
+                  },
+                  onChanged: (val) {
+                    setState(() {
+
+                    });
+                  },
+                  initialValue: '',
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.only(left: 16, right: 16),
+                    labelText: Language.getPosTpmStrings('Vendor Number'),
+                    labelStyle: TextStyle(
+                      color: Colors.grey,
+                    ),
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                    ),
+                  ),
+                  keyboardType: TextInputType.text,
+                ),
+              ),
+            ): Container();
+
+            widgets.add(vendorNumberField);
+            widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
+
+            Widget passwordField = isOpened == v.id ? Container(
+              height: 64,
+              child: Center(
+                child: TextFormField(
+                  style: TextStyle(fontSize: 16),
+                  onTap: () {
+
+                  },
+                  onChanged: (val) {
+                    setState(() {
+
+                    });
+                  },
+                  initialValue: '',
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.only(left: 16, right: 16),
+                    labelText: Language.getPosTpmStrings('Password'),
+                    labelStyle: TextStyle(
+                      color: Colors.grey,
+                    ),
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                    ),
+                  ),
+                  keyboardType: TextInputType.text,
+                ),
+              ),
+            ): Container();
+
+            widgets.add(passwordField);
+            widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
+
+            Widget connectButton = isOpened == v.id ? Container(
+              height: 56,
+              child: SizedBox.expand(
+                child: MaterialButton(
+                  minWidth: 0,
+                  onPressed: () {
+
+                  },
+                  color: Colors.black87,
+                  child: Text(
+                    Language.getConnectStrings('Connect'),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ),
+            ) : Container();
+            widgets.add(connectButton);
+          }
         }
 
       } else if (missingStep.type == '') {
@@ -1542,7 +1567,16 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         child: MaterialButton(
           minWidth: 0,
           onPressed: () {
-
+            Navigator.push(
+              context,
+              PageTransition(
+                child: ConnectAddPaymentConnectionScreen(
+                  screenBloc: screenBloc,
+                ),
+                type: PageTransitionType.fade,
+                duration: Duration(milliseconds: 500),
+              ),
+            );
           },
           color: Colors.black54,
           child: Text(
@@ -1583,33 +1617,3 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
     );
   }
 }
-
-//DropDownFormField(
-//filled: false,
-//titleText: Language.getProductStrings('Product must match'),
-//hintText: Language.getProductStrings('Product must match'),
-//value: conditionOption,
-//onChanged: (value) {
-//setState(() {
-//conditionOption = value;
-//if (conditionOption != 'No Conditions') {
-//CollectionModel collection = state.collectionDetail;
-//FillCondition fillCondition = collection
-//    .automaticFillConditions;
-//fillCondition.strict =
-//conditionOption == 'All Conditions';
-//collection.automaticFillConditions = fillCondition;
-//widget.screenBloc.add(
-//UpdateCollectionDetail(collectionModel: collection));
-//}
-//});
-//},
-//dataSource: productConditionOptions.map((e) {
-//return {
-//'display': e,
-//'value': e,
-//};
-//}).toList(),
-//textField: 'display',
-//valueField: 'value',
-//)
