@@ -8,6 +8,7 @@ class CheckoutConnectScreenState {
   final Map<String, PaymentVariant> paymentVariants;
   final List<ConnectModel> connectInstallations;
   final String category;
+  final String installing;
 
   CheckoutConnectScreenState({
     this.isLoading = false,
@@ -16,6 +17,7 @@ class CheckoutConnectScreenState {
     this.paymentVariants = const {},
     this.connectInstallations = const [],
     this.category,
+    this.installing,
   });
 
   List<Object> get props => [
@@ -25,6 +27,7 @@ class CheckoutConnectScreenState {
     this.paymentVariants,
     this.connectInstallations,
     this.category,
+    this.installing,
   ];
 
   CheckoutConnectScreenState copyWith({
@@ -34,6 +37,7 @@ class CheckoutConnectScreenState {
     Map<String, PaymentVariant> paymentVariants,
     List<ConnectModel> connectInstallations,
     String category,
+    String installing,
   }) {
     return CheckoutConnectScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -42,6 +46,7 @@ class CheckoutConnectScreenState {
       paymentVariants: paymentVariants ?? this.paymentVariants,
       connectInstallations: connectInstallations ?? this.connectInstallations,
       category: category ?? this.category,
+      installing: installing ?? this.installing,
     );
   }
 }

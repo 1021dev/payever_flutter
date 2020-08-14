@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:payever/connect/models/connect.dart';
 
 abstract class CheckoutConnectScreenEvent extends Equatable {
   CheckoutConnectScreenEvent();
@@ -21,4 +22,10 @@ class CheckoutConnectScreenInitEvent extends CheckoutConnectScreenEvent {
     this.business,
     this.category,
   ];
+}
+
+class InstallCheckoutConnect extends CheckoutConnectScreenEvent {
+  final ConnectModel connectModel;
+
+  InstallCheckoutConnect({this.connectModel});
 }

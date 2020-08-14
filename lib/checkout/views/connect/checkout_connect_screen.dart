@@ -5,6 +5,7 @@ import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
+import 'package:payever/checkout/views/channels/checkout_channel_shopsystem_screen.dart';
 import 'package:payever/checkout/views/connect/checkout_qr_integration.dart';
 import 'package:payever/checkout/views/payments/checkout_payment_settings_screen.dart';
 import 'package:payever/commons/commons.dart';
@@ -224,8 +225,22 @@ class _CheckoutConnectScreenState extends State<CheckoutConnectScreen> {
                                       duration: Duration(milliseconds: 500),
                                     ),
                                   );
-
+                                } else if (connectModel.integration.category == 'shopsystems') {
+                                  Navigator.push(
+                                    context,
+                                    PageTransition(
+                                      child: CheckoutChannelShopSystemScreen(
+                                        checkoutScreenBloc: widget.checkoutScreenBloc,
+                                        business: state.business,
+                                        connectModel: connectModel,
+                                      ),
+                                      type: PageTransitionType.fade,
+                                      duration: Duration(milliseconds: 500),
+                                    ),
+                                  );
                                 }
+                              } else {
+                                screenBloc.add(InstallCheckoutConnect(connectModel: connectModel));
                               }
                             },
                             color: Colors.black38,
@@ -236,7 +251,17 @@ class _CheckoutConnectScreenState extends State<CheckoutConnectScreen> {
                             height: 24,
                             minWidth: 0,
                             padding: EdgeInsets.only(left: 8, right: 8),
-                            child: Text(
+                            child: state.installing == connectModel.integration.name ? Center(
+                              child: Container(
+                                width: 16,
+                                height: 16,
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ),
+                                ),
+                              ),
+                            ): Text(
                               connectModel.installed
                                   ? Language.getConnectStrings('actions.open')
                                   : Language.getPosConnectStrings('integrations.actions.install'),

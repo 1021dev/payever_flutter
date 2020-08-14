@@ -109,7 +109,7 @@ class _CheckoutChannelShopSystemScreenState extends State<CheckoutChannelShopSys
               child: BackgroundBase(
                 true,
                 backgroudColor: Color.fromRGBO(20, 20, 0, 0.4),
-                body: state.isLoading || state.shopSystem == null ?
+                body: state.isLoading ?
                 Center(
                   child: CircularProgressIndicator(),
                 ): Center(
@@ -188,16 +188,16 @@ class _CheckoutChannelShopSystemScreenState extends State<CheckoutChannelShopSys
     return Container(
       child: Column(
         children: <Widget>[
-          shopSystemItem('Download', isExpandedSection1, ()=>{
+          state.shopSystem != null ? shopSystemItem('Download', isExpandedSection1, ()=>{
             setState(() {
               isExpandedSection1 = !isExpandedSection1;
               if (isExpandedSection1)
                 isExpandedSection2 = false;
             })
-          }),
-          _divider(),
-          _downloads(state),
-          _divider(),
+          }) : Container(),
+          state.shopSystem != null ? _divider() : Container(),
+          state.shopSystem != null ? _downloads(state) : Container(),
+          state.shopSystem != null ? _divider() : Container(),
           shopSystemItem('API keys', isExpandedSection2, ()=>{
             setState(() {
               isExpandedSection2 = !isExpandedSection2;

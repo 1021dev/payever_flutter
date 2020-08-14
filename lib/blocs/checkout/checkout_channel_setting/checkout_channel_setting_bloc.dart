@@ -38,16 +38,12 @@ class CheckoutChannelSettingScreenBloc extends Bloc<CheckoutChannelSettingScreen
       ShopSystem shopSystem; List<APIkey>apiKeys = [];
       yield state.copyWith(isLoading: true);
       dynamic response = await api.getPluginShopSystem(token, state.connectModel.integration.name);
-      if (response is DioError) {
-        yield CheckoutChannelSettingScreenFailure(error:response.message);
-      } else {
+      if (response is Map) {
         shopSystem = ShopSystem.fromMap(response);
       }
       List<String>clients = [];
       dynamic clientsResponse = await api.getShopSystemClients(token, state.business, state.connectModel.integration.name);
-      if (response is DioError) {
-        yield CheckoutChannelSettingScreenFailure(error:response.message);
-      } else if(clientsResponse is List){
+      if(clientsResponse is List){
         clientsResponse.forEach((element) {
           clients.add(element);
         });
