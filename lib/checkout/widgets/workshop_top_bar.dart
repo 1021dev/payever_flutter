@@ -10,10 +10,11 @@ class WorkshopTopBar extends StatefulWidget {
   final CheckoutScreenBloc checkoutScreenBloc;
   final Function onOpenTap;
   final Function onCloseTap;
+  final Function onSwitchTap;
   final String title;
 
   WorkshopTopBar(
-      {this.checkoutScreenBloc, this.onOpenTap, this.title, this.onCloseTap});
+      {this.checkoutScreenBloc, this.onOpenTap, this.onSwitchTap, this.title, this.onCloseTap});
 
   @override
   _WorkshopTopBarState createState() => _WorkshopTopBarState();
@@ -129,7 +130,7 @@ class _WorkshopTopBarState extends State<WorkshopTopBar> {
   }
 
   List<CheckOutPopupButton> _morePopup(BuildContext context) {
-    return [
+    List<CheckOutPopupButton> checkoutPopups = [
       CheckOutPopupButton(
         title: 'Copy pay link',
         icon: SvgPicture.asset(
@@ -181,6 +182,20 @@ class _WorkshopTopBarState extends State<WorkshopTopBar> {
         },
       ),
     ];
+
+    if (widget.onSwitchTap != null) {
+      checkoutPopups.insert(
+        0,
+        CheckOutPopupButton(
+          title: 'Switch Checkout',
+          icon: Container(),
+          onTap: () async {
+            widget.onSwitchTap();
+          },
+        ),
+      );
+    }
+    return checkoutPopups;
   }
 
   _sendMail(String toMailId, String subject, String body) async {

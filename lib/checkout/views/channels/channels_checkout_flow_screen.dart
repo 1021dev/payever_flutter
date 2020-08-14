@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/checkout/checkout_bloc.dart';
 import 'package:payever/checkout/widgets/checkout_flow.dart';
@@ -20,7 +19,6 @@ class ChannelCheckoutFlowScreen extends StatefulWidget {
 }
 
 class _ChannelCheckoutFlowScreenState extends State<ChannelCheckoutFlowScreen> {
-  InAppWebViewController webView;
 
   @override
   void initState() {
