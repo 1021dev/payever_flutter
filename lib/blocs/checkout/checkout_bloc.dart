@@ -105,6 +105,8 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       yield* installPayment(event.integrationModel);
     } else if (event is UninstallCheckoutPaymentEvent) {
       yield* uninstallPayment(event.integrationModel);
+    } else if (event is GetPluginsEvent) {
+      yield* getPlugins();
     }
   }
 
@@ -1032,5 +1034,18 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       });
     }
     yield state.copyWith(checkoutConnections: connections);
+  }
+
+  Stream<CheckoutScreenState> getPlugins() async* {
+    if (state.shopware == null) {
+      yield state.copyWith(isLoading: true);
+      dynamic response = await api.getPluginShopware(token);
+      if (response is DioError) {
+        yield CheckoutScreenStateFailure(error:response.message);
+      } else {
+        Shopware shopware = Shopware.fromMap(response);
+        yield state.copyWith(isLoading: false, shopware: shopware);
+      }
+    }
   }
 }

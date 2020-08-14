@@ -48,6 +48,7 @@ class CheckoutScreenState {
   final dynamic fieldSetData;
   final bool isPhoneSearch;
   final List<Payment> paymentOptions;
+  final Shopware shopware;
 
   CheckoutScreenState({
     this.isLoading = false,
@@ -91,6 +92,7 @@ class CheckoutScreenState {
     this.fieldSetData,
     this.isPhoneSearch = false,
     this.paymentOptions = const [],
+    this.shopware,
   });
 
   List<Object> get props => [
@@ -135,6 +137,7 @@ class CheckoutScreenState {
     this.fieldSetData,
     this.isPhoneSearch,
     this.paymentOptions,
+    this.shopware,
   ];
 
   CheckoutScreenState copyWith({
@@ -180,6 +183,7 @@ class CheckoutScreenState {
     dynamic fieldSetData,
     bool isPhoneSearch,
     List<Payment> paymentOptions,
+    Shopware shopware,
   }) {
     return CheckoutScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -223,6 +227,7 @@ class CheckoutScreenState {
       fieldSetData: fieldSetData ?? this.fieldSetData,
       isPhoneSearch: isPhoneSearch ?? this.isPhoneSearch,
       paymentOptions: paymentOptions ?? this.paymentOptions,
+      shopware: shopware ?? this.shopware,
     );
   }
 }

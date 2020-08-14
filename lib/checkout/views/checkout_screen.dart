@@ -9,6 +9,7 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/dashboard/dashboard_bloc.dart';
 import 'package:payever/checkout/models/models.dart';
 import 'package:payever/checkout/views/channels/channels_screeen.dart';
+import 'package:payever/checkout/views/channels/checkout_channel_shopware_screen.dart';
 import 'package:payever/checkout/views/connect/checkout_device_payment_screen.dart';
 import 'package:payever/checkout/views/channels/checkout_link_edit_screen.dart';
 import 'package:payever/checkout/views/connect/checkout_twillo_settings.dart';
@@ -535,6 +536,19 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   child: CheckoutLinkEditScreen(
                     screenBloc: screenBloc,
                     title: model.title,
+                  ),
+                  type: PageTransitionType.fade,
+                  duration: Duration(milliseconds: 500),
+                ),
+              );
+            }
+            else if (model.title == 'Shopware') {
+              Navigator.push(
+                context,
+                PageTransition(
+                  child: CheckoutChannelShopwareScreen(
+                    checkoutScreenBloc: screenBloc,
+                    business: state.business,
                   ),
                   type: PageTransitionType.fade,
                   duration: Duration(milliseconds: 500),

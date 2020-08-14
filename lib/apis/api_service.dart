@@ -2427,8 +2427,8 @@ class ApiService {
 
   Future<dynamic> getPluginShopware(String token) async {
     try {
-      print('$TAG - patchCheckoutChannelSetPolicy()');
-      dynamic response = await _client.patchTypeless(
+      print('$TAG - getPluginShopware()');
+      dynamic response = await _client.getTypeless(
         '${Env.plugins}/api/plugin/channel/shopware',
         headers: _getHeaders(token),
       );

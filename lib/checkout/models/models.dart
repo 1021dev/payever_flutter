@@ -707,7 +707,7 @@ class Shopware {
   String description;
   String documentation;
   String marketplace;
-  List<Plugin>pluginFiles;
+  List<Plugin>pluginFiles = [];
   String updatedAt;
   String id;
 
