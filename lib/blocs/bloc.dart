@@ -22,3 +22,4 @@ export './checkout/checkout_channel_set/checkout_channel_set.dart';
 export './checkout/checkout_section/checkout_section.dart';
 export './checkout/checkout_setting/checkout_setting.dart';
 export './checkout/checkout_payment_setting/checkout_payment_setting.dart';
+export './checkout/checkout_channel_setting/checkout_channel_setting.dart';

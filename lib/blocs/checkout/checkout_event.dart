@@ -275,33 +275,3 @@ class InstallCheckoutPaymentEvent extends CheckoutScreenEvent {
   InstallCheckoutPaymentEvent({this.integrationModel});
 }
 
-class GetPluginsEvent extends CheckoutScreenEvent {}
-
-class CreateCheckoutAPIkeyEvent extends CheckoutScreenEvent {
-  final String name;
-  final String redirectUri;
-
-  CreateCheckoutAPIkeyEvent({
-    this.name,
-    this.redirectUri = '',
-  });
-
-  @override
-  List<Object> get props => [
-    this.name,
-    this.redirectUri,
-  ];
-}
-
-class DeleteCheckoutAPIkeyEvent extends CheckoutScreenEvent {
-  final String client;
-
-  DeleteCheckoutAPIkeyEvent({
-    this.client,
-  });
-
-  @override
-  List<Object> get props => [
-    this.client,
-  ];
-}

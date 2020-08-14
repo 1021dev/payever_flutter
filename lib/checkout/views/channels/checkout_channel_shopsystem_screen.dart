@@ -30,6 +30,8 @@ class CheckoutChannelShopSystemScreen extends StatefulWidget {
 }
 
 class _CheckoutChannelShopSystemScreenState extends State<CheckoutChannelShopSystemScreen> {
+
+  CheckoutChannelSettingScreenBloc screenBloc;
   bool _isPortrait;
   bool _isTablet;
   double iconSize;
@@ -47,7 +49,11 @@ class _CheckoutChannelShopSystemScreenState extends State<CheckoutChannelShopSys
 
   @override
   void initState() {
-    widget.checkoutScreenBloc.add(GetPluginsEvent());
+    screenBloc = CheckoutChannelSettingScreenBloc(checkoutScreenBloc: widget.checkoutScreenBloc);
+    screenBloc.add(CheckoutChannelSettingScreenInitEvent(
+      business: widget.business,
+      connectModel: widget.connectModel,
+    ));
     super.initState();
     Clipboard.getData('text/plain').then((value) {
       setState(() {
@@ -74,8 +80,8 @@ class _CheckoutChannelShopSystemScreenState extends State<CheckoutChannelShopSys
     _isTablet = Measurements.width < 600 ? false : true;
 
     return BlocListener(
-      bloc: widget.checkoutScreenBloc,
-      listener: (BuildContext context, CheckoutScreenState state) async {
+      bloc: screenBloc,
+      listener: (BuildContext context, CheckoutChannelSettingScreenState state) async {
         if (state is CheckoutScreenStateFailure) {
           Navigator.pushReplacement(
             context,
@@ -90,9 +96,9 @@ class _CheckoutChannelShopSystemScreenState extends State<CheckoutChannelShopSys
           });
         }
       },
-      child: BlocBuilder<CheckoutScreenBloc, CheckoutScreenState>(
-        bloc: widget.checkoutScreenBloc,
-        builder: (BuildContext context, CheckoutScreenState state) {
+      child: BlocBuilder<CheckoutChannelSettingScreenBloc, CheckoutChannelSettingScreenState>(
+        bloc: screenBloc,
+        builder: (BuildContext context, CheckoutChannelSettingScreenState state) {
           iconSize = _isTablet ? 120: 80;
           margin = _isTablet ? 24: 16;
           return Scaffold(
@@ -123,7 +129,7 @@ class _CheckoutChannelShopSystemScreenState extends State<CheckoutChannelShopSys
     );
   }
 
-  Widget _appBar(CheckoutScreenState state) {
+  Widget _appBar(CheckoutChannelSettingScreenState state) {
     return AppBar(
       centerTitle: false,
       elevation: 0,
@@ -164,7 +170,7 @@ class _CheckoutChannelShopSystemScreenState extends State<CheckoutChannelShopSys
     );
   }
 
-  Widget _getBody(CheckoutScreenState state) {
+  Widget _getBody(CheckoutChannelSettingScreenState state) {
     return Container(
       width: Measurements.width,
       padding: EdgeInsets.all(16),
@@ -178,11 +184,11 @@ class _CheckoutChannelShopSystemScreenState extends State<CheckoutChannelShopSys
     );
   }
 
-  Widget _getShopSystem(CheckoutScreenState state) {
+  Widget _getShopSystem(CheckoutChannelSettingScreenState state) {
     return Container(
       child: Column(
         children: <Widget>[
-          shopwareItem('Download', ()=>{
+          shopSystemItem('Download', isExpandedSection1, ()=>{
             setState(() {
               isExpandedSection1 = !isExpandedSection1;
               if (isExpandedSection1)
@@ -192,7 +198,7 @@ class _CheckoutChannelShopSystemScreenState extends State<CheckoutChannelShopSys
           _divider(),
           _downloads(state),
           _divider(),
-          shopwareItem('API keys', ()=>{
+          shopSystemItem('API keys', isExpandedSection2, ()=>{
             setState(() {
               isExpandedSection2 = !isExpandedSection2;
               if (isExpandedSection2)
@@ -208,7 +214,7 @@ class _CheckoutChannelShopSystemScreenState extends State<CheckoutChannelShopSys
     );
   }
 
-  Widget _getAdd(CheckoutScreenState state) {
+  Widget _getAdd(CheckoutChannelSettingScreenState state) {
     return Container(
       child: Column(
         children: <Widget>[
@@ -243,11 +249,11 @@ class _CheckoutChannelShopSystemScreenState extends State<CheckoutChannelShopSys
             height: 50,
             color: Colors.black54,
             child: SizedBox.expand(
-              child: state.isUpdating
+              child: state.isUpdating ?? false
                   ? Center(child: CircularProgressIndicator())
                   : MaterialButton(
                       onPressed: () async {
-                        widget.checkoutScreenBloc.add(
+                        screenBloc.add(
                             CreateCheckoutAPIkeyEvent(name: controller.text, redirectUri: ''));
                       },
                       child: Text(
@@ -261,7 +267,7 @@ class _CheckoutChannelShopSystemScreenState extends State<CheckoutChannelShopSys
     );
   }
 
-  Widget shopwareItem(String title, Function onTop) {
+  Widget shopSystemItem(String title, bool open, Function onTop) {
     return  GestureDetector(
       onTap: onTop,
       child: Container(
@@ -291,7 +297,7 @@ class _CheckoutChannelShopSystemScreenState extends State<CheckoutChannelShopSys
             ),
             Spacer(),
             Icon(
-              isExpandedSection1
+              open
                   ? Icons.keyboard_arrow_up
                   : Icons.keyboard_arrow_down,
             ),
@@ -301,7 +307,7 @@ class _CheckoutChannelShopSystemScreenState extends State<CheckoutChannelShopSys
     );
   }
 
-  Widget _downloads(CheckoutScreenState state) {
+  Widget _downloads(CheckoutChannelSettingScreenState state) {
     return isExpandedSection1 ?
         Container(
           child: ListView.separated(
@@ -375,7 +381,7 @@ class _CheckoutChannelShopSystemScreenState extends State<CheckoutChannelShopSys
 
   }
 
-  Widget _apikeys(CheckoutScreenState state) {
+  Widget _apikeys(CheckoutChannelSettingScreenState state) {
     return isExpandedSection2 ?
     Container(
       child: ListView.separated(
@@ -426,7 +432,7 @@ class _CheckoutChannelShopSystemScreenState extends State<CheckoutChannelShopSys
             ),
             MaterialButton(
               onPressed: () async {
-                widget.checkoutScreenBloc.add(DeleteCheckoutAPIkeyEvent(client: apIkey.id));
+                screenBloc.add(DeleteCheckoutAPIkeyEvent(client: apIkey.id));
               },
               color: Colors.black38,
               elevation: 0,

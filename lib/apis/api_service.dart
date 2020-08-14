@@ -2425,11 +2425,11 @@ class ApiService {
     }
   }
 
-  Future<dynamic> getPluginShopware(String token) async {
+  Future<dynamic> getPluginShopSystem(String token, String type) async {
     try {
-      print('$TAG - getPluginShopware()');
+      print('$TAG - getPluginShopSystem()');
       dynamic response = await _client.getTypeless(
-        '${Env.plugins}/api/plugin/channel/shopware',
+        '${Env.plugins}/api/plugin/channel/$type',
         headers: _getHeaders(token),
       );
       return response;
@@ -2438,11 +2438,11 @@ class ApiService {
     }
   }
 
-  Future<dynamic> getShopwareClients(String token, String business) async {
+  Future<dynamic> getShopSystemClients(String token, String business, String type) async {
     try {
-      print('$TAG - getShopwareClients()');
+      print('$TAG - getShopSystemClients()');
       dynamic response = await _client.getTypeless(
-        '${Env.plugins}/api/business/$business/shopsystem/type/shopware/api-key',
+        '${Env.plugins}/api/business/$business/shopsystem/type/$type/api-key',
         headers: _getHeaders(token),
       );
       return response;
@@ -2451,9 +2451,9 @@ class ApiService {
     }
   }
 
-  Future<dynamic> getShopwareAPIKeys(String token, String business, List<String>clients) async {
+  Future<dynamic> getShopSystemAPIKeys(String token, String business, List<String>clients) async {
     try {
-      print('$TAG - getShopwareAPIKeys()');
+      print('$TAG - getShopSystemAPIKeys()');
       dynamic response = await _client.getTypeless(
         '${Env.auth}/oauth/$business/clients',
         queryParameters: {'clients': clients},
@@ -2465,9 +2465,9 @@ class ApiService {
     }
   }
 
-  Future<dynamic> createShopwareAPIkey(String token, String business, String name, String redirectUri) async {
+  Future<dynamic> createShopSystemAPIkey(String token, String business, String name, String redirectUri) async {
     try {
-      print('$TAG - createShopwareAPIkey()');
+      print('$TAG - createShopSystemAPIkey()');
       dynamic response = await _client.postTypeLess(
         '${Env.auth}/oauth/$business/clients',
         body: {'name': name, 'redirectUri': redirectUri},
@@ -2479,11 +2479,11 @@ class ApiService {
     }
   }
 
-  Future<dynamic> postShopwareApikey(String token, String business, String apiKey) async {
+  Future<dynamic> postShopSystemApikey(String token, String business, String apiKey, String type) async {
     try {
-      print('$TAG - getShopwareClients()');
+      print('$TAG - postShopSystemApikey()');
       dynamic response = await _client.postTypeLess(
-        '${Env.plugins}/api/business/$business/shopsystem/type/shopware/api-key',
+        '${Env.plugins}/api/business/$business/shopsystem/type/$type/api-key',
         body: {'id': apiKey},
         headers: _getHeaders(token),
       );
@@ -2493,9 +2493,9 @@ class ApiService {
     }
   }
 
-  Future<dynamic> deleteShopwareAPIkey(String token, String business, String client) async {
+  Future<dynamic> deleteShopSystemAPIkey(String token, String business, String client) async {
     try {
-      print('$TAG - createShopwareAPIkey()');
+      print('$TAG - deleteShopSystemAPIkey()');
       dynamic response = await _client.deleteTypeless(
         '${Env.auth}/oauth/$business/clients/$client',
         headers: _getHeaders(token),

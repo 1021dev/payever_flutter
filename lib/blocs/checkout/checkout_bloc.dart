@@ -105,12 +105,6 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       yield* installPayment(event.integrationModel);
     } else if (event is UninstallCheckoutPaymentEvent) {
       yield* uninstallPayment(event.integrationModel);
-    } else if (event is GetPluginsEvent) {
-      yield* getPlugins();
-    } else if (event is CreateCheckoutAPIkeyEvent) {
-      yield* createShopSystemAPIkey(event.name, event.redirectUri);
-    } else if (event is DeleteCheckoutAPIkeyEvent) {
-      yield* deleteShopSystemAPIkey(event.client);
     }
   }
 
@@ -1039,68 +1033,6 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       });
     }
     yield state.copyWith(checkoutConnections: connections);
-  }
-
-  Stream<CheckoutScreenState> getPlugins() async* {
-    if (state.shopSystem == null) {
-      ShopSystem shopSystem; List<APIkey>apiKeys = [];
-      yield state.copyWith(isLoading: true);
-      dynamic response = await api.getPluginShopware(token);
-      if (response is DioError) {
-        yield CheckoutScreenStateFailure(error:response.message);
-      } else {
-        shopSystem = ShopSystem.fromMap(response);
-      }
-      List<String>clients = [];
-      dynamic clientsResponse = await api.getShopwareClients(token, state.business);
-      if (response is DioError) {
-        yield CheckoutScreenStateFailure(error:response.message);
-      } else if(clientsResponse is List){
-        clientsResponse.forEach((element) {
-          clients.add(element);
-        });
-      }
-      dynamic apiKeysResponse = await api.getShopwareAPIKeys(token, state.business, clients);
-      if (apiKeysResponse is List) {
-        apiKeysResponse.forEach((element) {
-          APIkey apiKey = APIkey.fromMap(element);
-          apiKeys.add(apiKey);
-        });
-      }
-      yield state.copyWith(isLoading: false, shopSystem: shopSystem, apiKeys: apiKeys);
-    }
-  }
-
-
-  Stream<CheckoutScreenState> createShopSystemAPIkey(String name, String redirectUri) async* {
-    List<APIkey> apis = state.apiKeys;
-    yield state.copyWith(isUpdating: true);
-    dynamic response = await api.createShopwareAPIkey(
-        token, state.business, name, redirectUri);
-    if (response is DioError) {
-      yield CheckoutScreenStateFailure(error: response.message);
-    } else {
-      APIkey apiKey = APIkey.fromMap(response);
-      await api.postShopwareApikey(token, state.business, apiKey.id);
-      apis.add(apiKey);
-      yield state.copyWith(isUpdating: false, apiKeys: apis);
-    }
-  }
-
-  Stream<CheckoutScreenState> deleteShopSystemAPIkey(String client) async* {
-
-    yield state.copyWith(isUpdating: true);
-    dynamic response = await api.deleteShopwareAPIkey(
-        token, state.business, client);
-    if (response is DioError) {
-      yield CheckoutScreenStateFailure(error: response.message);
-    } else {
-      List<APIkey> apis = state.apiKeys;
-      APIkey apIkey = apis.where((element) => element.id == client).toList().first;
-      if(apIkey != null)
-        apis.remove(apIkey);
-      yield state.copyWith(isUpdating: false, apiKeys: apis);
-    }
   }
 
 }
