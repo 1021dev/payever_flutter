@@ -2425,7 +2425,18 @@ class ApiService {
     }
   }
 
-
+  Future<dynamic> getPluginShopware(String token) async {
+    try {
+      print('$TAG - patchCheckoutChannelSetPolicy()');
+      dynamic response = await _client.patchTypeless(
+        '${Env.plugins}/api/plugin/channel/shopware',
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
 
   ///***************************************************************************
   ///****                      UTILS                                       *****

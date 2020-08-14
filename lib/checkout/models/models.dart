@@ -701,6 +701,53 @@ class FinanceExpress {
   }
 }
 
+class Shopware {
+  String channel;
+  String createdAt;
+  String description;
+  String documentation;
+  String marketplace;
+  List<Plugin>pluginFiles;
+  String updatedAt;
+  String id;
+
+  Shopware.fromMap(dynamic obj) {
+    channel = obj['channel'];
+    createdAt = obj['createdAt'];
+    description = obj['description'];
+    documentation = obj['documentation'];
+    marketplace = obj['marketplace'];
+    dynamic pluginFilesObj = obj['pluginFiles'];
+    if (pluginFilesObj is List) {
+      pluginFilesObj.forEach((element) {
+        pluginFiles.add(Plugin.fromMap(element));
+      });
+    }
+    updatedAt = obj['updatedAt'];
+    id = obj['_id'];
+  }
+}
+
+class Plugin {
+  String createdAt;
+  String filename;
+  String maxCmsVersion;
+  String minCmsVersion;
+  String updatedAt;
+  String version;
+  String id;
+
+  Plugin.fromMap(dynamic obj) {
+    createdAt = obj['createdAt'];
+    filename = obj['filename'];
+    maxCmsVersion = obj['maxCmsVersion'];
+    minCmsVersion = obj['minCmsVersion'];
+    updatedAt = obj['updatedAt'];
+    version = obj['version'];
+    id = obj['_id'];
+  }
+}
+
 class ChannelItem {
   String title;
   SvgPicture image;

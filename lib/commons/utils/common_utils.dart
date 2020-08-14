@@ -793,6 +793,7 @@ class GlobalUtils {
   static const String ENV_NOTIFICATIONS = 'notifications';
   static const String ENV_CONTACTS = 'contacts';
   static const String ENV_FINANCE_EXPRESS = 'financeExpress';
+  static const String ENV_BACKEND_PLUGINS = 'plugins';
 
   // dashboard_
   static const String CURRENT_WALLPAPER = 'currentWallpaper';
