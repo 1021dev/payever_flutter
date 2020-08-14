@@ -48,7 +48,7 @@ class CheckoutScreenState {
   final dynamic fieldSetData;
   final bool isPhoneSearch;
   final List<Payment> paymentOptions;
-  final Shopware shopware;
+  final ShopSystem shopSystem;
   final List<APIkey> apiKeys;
 
   CheckoutScreenState({
@@ -93,7 +93,7 @@ class CheckoutScreenState {
     this.fieldSetData,
     this.isPhoneSearch = false,
     this.paymentOptions = const [],
-    this.shopware,
+    this.shopSystem,
     this.apiKeys = const [],
   });
 
@@ -139,7 +139,7 @@ class CheckoutScreenState {
     this.fieldSetData,
     this.isPhoneSearch,
     this.paymentOptions,
-    this.shopware,
+    this.shopSystem,
     this.apiKeys,
   ];
 
@@ -186,7 +186,7 @@ class CheckoutScreenState {
     dynamic fieldSetData,
     bool isPhoneSearch,
     List<Payment> paymentOptions,
-    Shopware shopware,
+    ShopSystem shopSystem,
     List<APIkey> apiKeys,
   }) {
     return CheckoutScreenState(
@@ -231,7 +231,7 @@ class CheckoutScreenState {
       fieldSetData: fieldSetData ?? this.fieldSetData,
       isPhoneSearch: isPhoneSearch ?? this.isPhoneSearch,
       paymentOptions: paymentOptions ?? this.paymentOptions,
-      shopware: shopware ?? this.shopware,
+      shopSystem: shopSystem ?? this.shopSystem,
       apiKeys: apiKeys ?? this.apiKeys,
     );
   }

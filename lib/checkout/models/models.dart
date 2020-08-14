@@ -701,7 +701,7 @@ class FinanceExpress {
   }
 }
 
-class Shopware {
+class ShopSystem {
   String channel;
   String createdAt;
   String description;
@@ -711,7 +711,7 @@ class Shopware {
   String updatedAt;
   String id;
 
-  Shopware.fromMap(dynamic obj) {
+  ShopSystem.fromMap(dynamic obj) {
     channel = obj['channel'];
     createdAt = obj['createdAt'];
     description = obj['description'];
@@ -789,8 +789,8 @@ class ChannelItem {
   SvgPicture image;
   String button;
   bool checkValue;
-
-  ChannelItem({this.title, this.image, this.button, this.checkValue,});
+  ConnectModel model;
+  ChannelItem({this.title, this.image, this.button, this.checkValue, this.model,});
 }
 
 String getTitleFromCode(String code) {

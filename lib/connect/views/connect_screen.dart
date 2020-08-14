@@ -380,7 +380,9 @@ class _ConnectScreenState extends State<ConnectScreen> {
         child: BackgroundBase(
           true,
           backgroudColor: Color.fromRGBO(0, 0, 0, 0.75),
-          body: Column(
+          body: state.isLoading ? Center(
+            child: CircularProgressIndicator(),
+          ): Column(
             children: <Widget>[
               _topBar(state),
               Expanded(
@@ -630,14 +632,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
         ): Container(),
         Flexible(
           flex: 2,
-          child: state.isLoading ?
-          Expanded(
-            child: Container(
-              child: Center(
-                child: CircularProgressIndicator(),
-              ),
-            ),
-          ): selectedStyle == 0
+          child: selectedStyle == 0
               ? _getListBody(state)
               : _getGridBody(state),
         ),

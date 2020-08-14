@@ -2438,12 +2438,66 @@ class ApiService {
     }
   }
 
+  Future<dynamic> getShopwareClients(String token, String business) async {
+    try {
+      print('$TAG - getShopwareClients()');
+      dynamic response = await _client.getTypeless(
+        '${Env.plugins}/api/business/$business/shopsystem/type/shopware/api-key',
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getShopwareAPIKeys(String token, String business, List<String>clients) async {
+    try {
+      print('$TAG - getShopwareAPIKeys()');
+      dynamic response = await _client.getTypeless(
+        '${Env.auth}/oauth/$business/clients',
+        queryParameters: {'clients': clients},
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<dynamic> createShopwareAPIkey(String token, String business, String name, String redirectUri) async {
     try {
-      print('$TAG - getPluginShopware()');
+      print('$TAG - createShopwareAPIkey()');
       dynamic response = await _client.postTypeLess(
         '${Env.auth}/oauth/$business/clients',
         body: {'name': name, 'redirectUri': redirectUri},
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> postShopwareApikey(String token, String business, String apiKey) async {
+    try {
+      print('$TAG - getShopwareClients()');
+      dynamic response = await _client.postTypeLess(
+        '${Env.plugins}/api/business/$business/shopsystem/type/shopware/api-key',
+        body: {'id': apiKey},
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> deleteShopwareAPIkey(String token, String business, String client) async {
+    try {
+      print('$TAG - createShopwareAPIkey()');
+      dynamic response = await _client.deleteTypeless(
+        '${Env.auth}/oauth/$business/clients/$client',
         headers: _getHeaders(token),
       );
       return response;

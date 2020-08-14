@@ -292,3 +292,16 @@ class CreateCheckoutAPIkeyEvent extends CheckoutScreenEvent {
     this.redirectUri,
   ];
 }
+
+class DeleteCheckoutAPIkeyEvent extends CheckoutScreenEvent {
+  final String client;
+
+  DeleteCheckoutAPIkeyEvent({
+    this.client,
+  });
+
+  @override
+  List<Object> get props => [
+    this.client,
+  ];
+}
