@@ -719,9 +719,7 @@ class Shopware {
     marketplace = obj['marketplace'];
     dynamic pluginFilesObj = obj['pluginFiles'];
     if (pluginFilesObj is List) {
-      pluginFilesObj.forEach((element) {
-        pluginFiles.add(Plugin.fromMap(element));
-      });
+      pluginFilesObj.forEach((element) => pluginFiles.add(Plugin.fromMap(element)));
     }
     updatedAt = obj['updatedAt'];
     id = obj['_id'];
@@ -747,6 +745,44 @@ class Plugin {
     id = obj['_id'];
   }
 }
+
+class APIkey {
+  String businessId;
+  String createdAt;
+  List<String> grants = [];
+  String id;
+  bool isActive = true;
+  String name;
+  String redirectUri;
+  List<String> scopes =[];
+  String secret;
+  String updatedAt;
+  String user;
+
+  APIkey.fromMap(dynamic obj) {
+    createdAt = obj['createdAt'];
+    businessId = obj['businessId'];
+    dynamic grantsObj = obj['grants'];
+    if (grantsObj is List) {
+      grantsObj.forEach((element) => grants.add(element));
+    }
+
+    dynamic scopesObj = obj['scopes'];
+    if (scopesObj is List) {
+      scopesObj.forEach((element) => scopes.add(element));
+    }
+
+    isActive = obj['isActive'];
+    name = obj['name'];
+    redirectUri = obj['redirectUri'];
+    updatedAt = obj['updatedAt'];
+    secret = obj['secret'];
+    user = obj['user'];
+    id = obj['id'];
+  }
+
+}
+
 
 class ChannelItem {
   String title;

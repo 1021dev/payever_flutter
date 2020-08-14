@@ -107,6 +107,8 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       yield* uninstallPayment(event.integrationModel);
     } else if (event is GetPluginsEvent) {
       yield* getPlugins();
+    } else if (event is CreateCheckoutAPIkeyEvent) {
+      yield* createShopwareAPIkey(event.name, event.redirectUri);
     }
   }
 
@@ -1045,6 +1047,21 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       } else {
         Shopware shopware = Shopware.fromMap(response);
         yield state.copyWith(isLoading: false, shopware: shopware);
+      }
+    }
+  }
+
+  Stream<CheckoutScreenState> createShopwareAPIkey(String name, String redirectUri) async* {
+    List<APIkey>apis = state.apiKeys;
+    if (state.shopware == null) {
+      yield state.copyWith(isLoading: true);
+      dynamic response = await api.createShopwareAPIkey(token, state.business, name, redirectUri);
+      if (response is DioError) {
+        yield CheckoutScreenStateFailure(error:response.message);
+      } else {
+        APIkey apiKey = APIkey.fromMap(response);
+        apis.add(apiKey);
+        yield state.copyWith(isLoading: false, apiKeys: apis);
       }
     }
   }

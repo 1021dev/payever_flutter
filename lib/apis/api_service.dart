@@ -2438,6 +2438,20 @@ class ApiService {
     }
   }
 
+  Future<dynamic> createShopwareAPIkey(String token, String business, String name, String redirectUri) async {
+    try {
+      print('$TAG - getPluginShopware()');
+      dynamic response = await _client.postTypeLess(
+        '${Env.auth}/oauth/$business/clients',
+        body: {'name': name, 'redirectUri': redirectUri},
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   ///***************************************************************************
   ///****                      UTILS                                       *****
   ///***************************************************************************

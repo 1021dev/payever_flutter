@@ -49,6 +49,7 @@ class CheckoutScreenState {
   final bool isPhoneSearch;
   final List<Payment> paymentOptions;
   final Shopware shopware;
+  final List<APIkey> apiKeys;
 
   CheckoutScreenState({
     this.isLoading = false,
@@ -93,6 +94,7 @@ class CheckoutScreenState {
     this.isPhoneSearch = false,
     this.paymentOptions = const [],
     this.shopware,
+    this.apiKeys = const [],
   });
 
   List<Object> get props => [
@@ -138,6 +140,7 @@ class CheckoutScreenState {
     this.isPhoneSearch,
     this.paymentOptions,
     this.shopware,
+    this.apiKeys,
   ];
 
   CheckoutScreenState copyWith({
@@ -184,6 +187,7 @@ class CheckoutScreenState {
     bool isPhoneSearch,
     List<Payment> paymentOptions,
     Shopware shopware,
+    List<APIkey> apiKeys,
   }) {
     return CheckoutScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -228,6 +232,7 @@ class CheckoutScreenState {
       isPhoneSearch: isPhoneSearch ?? this.isPhoneSearch,
       paymentOptions: paymentOptions ?? this.paymentOptions,
       shopware: shopware ?? this.shopware,
+      apiKeys: apiKeys ?? this.apiKeys,
     );
   }
 }

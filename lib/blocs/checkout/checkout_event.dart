@@ -276,3 +276,19 @@ class InstallCheckoutPaymentEvent extends CheckoutScreenEvent {
 }
 
 class GetPluginsEvent extends CheckoutScreenEvent {}
+
+class CreateCheckoutAPIkeyEvent extends CheckoutScreenEvent {
+  final String name;
+  final String redirectUri;
+
+  CreateCheckoutAPIkeyEvent({
+    this.name,
+    this.redirectUri = '',
+  });
+
+  @override
+  List<Object> get props => [
+    this.name,
+    this.redirectUri,
+  ];
+}
