@@ -131,17 +131,17 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
   }
 
   Widget _getBody(CheckoutScreenState state) {
-    switch (widget.title) {
-      case 'Text Link':
+    switch (widget.type) {
+      case Finance.TEXT_LINK:
         financeExpress = state.financeTextLink;
         return financeExpress != null ? _getTextLinkWidget(state) : Container();
-      case 'Button':
+      case Finance.BUTTON:
         financeExpress = state.financeButton;
         return financeExpress != null ?  _getButtonWidget(state) : Container();
-      case 'Bubble':
+      case Finance.BUBBLE:
         financeExpress = state.financeBubble;
         return financeExpress != null ? _getBubbleWidget(state) : Container();
-      case 'Calculator':
+      case Finance.CALCULATOR:
         financeExpress = state.financeCalculator;
         return financeExpress != null ? _getCalculatorWidget(state) : Container();
       default:
@@ -369,7 +369,7 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
           width: 45,
           child: PopupMenuButton<CheckOutPopupButton>(
             child: Text(
-              financeExpress.textSize,
+              financeExpress.textSize != null ? financeExpress.textSize : '',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 16,
@@ -638,7 +638,7 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
         Transform.scale(
           scale: 0.8,
           child: CupertinoSwitch(
-            value: financeExpress.visibility,
+            value: financeExpress.visibility == null ? false : financeExpress.visibility,
             onChanged: (val) {
               financeExpress.visibility = val;
               widget.screenBloc.add(
@@ -657,7 +657,7 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
             Transform.scale(
               scale: 0.8,
               child: CupertinoSwitch(
-                value: financeExpress.adaptiveDesign,
+                value: financeExpress.adaptiveDesign == null ? false : financeExpress.adaptiveDesign,
                 onChanged: (val) {
                   financeExpress.adaptiveDesign = val;
                   widget.screenBloc.add(
@@ -718,6 +718,9 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
   }
 
   Color colorConvert(String color) {
+    if (color == null)
+      return Colors.white;
+
     color = color.replaceAll("#", "");
     if (color.length == 6) {
       return Color(int.parse("0xFF"+color));

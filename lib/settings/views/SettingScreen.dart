@@ -13,6 +13,7 @@ import 'package:payever/dashboard/sub_view/dashboard_menu_view.dart';
 import 'package:payever/login/login_screen.dart';
 import 'package:payever/notifications/notifications_screen.dart';
 import 'package:payever/search/views/search_screen.dart';
+import 'package:payever/settings/models/models.dart';
 import 'package:payever/switcher/switcher_page.dart';
 import 'package:provider/provider.dart';
 import 'package:payever/blocs/bloc.dart';
@@ -35,7 +36,6 @@ class SettingInitScreen extends StatelessWidget {
 }
 
 class SettingScreen extends StatefulWidget {
-
 
   final GlobalStateModel globalStateModel;
   final DashboardScreenBloc dashboardScreenBloc;
@@ -146,57 +146,18 @@ class _SettingScreenState extends State<SettingScreen> {
   }
 
   Widget _appBar(SettingScreenState state) {
-    String defaultCheckoutTitle = '';
-//    if (state.defaultCheckout != null) {
-//      defaultCheckoutTitle = state.defaultCheckout.name;
-//    }
     return AppBar(
       centerTitle: false,
       elevation: 0,
       automaticallyImplyLeading: false,
       backgroundColor: Colors.black87,
-      bottom: TabBar(
-        isScrollable: true,
-        indicatorColor: Colors.white70,
-        onTap: (index) {
-//          if (index == 1) {
-//            screenBloc.add(GetPaymentConfig());
-//          } else if (index == 2) {
-//            screenBloc.add(GetChannelConfig());
-//          } else if (index == 3) {
-//            screenBloc.add(GetConnectConfig());
-//          } else if (index == 4) {
-//            screenBloc.add(GetSectionDetails());
-//          }
-        },
-        tabs: <Widget>[
-          Tab(
-            text: defaultCheckoutTitle,
-          ),
-          Tab(
-            text: Language.getPosConnectStrings('integrations.payments.instant_payment.category'),
-          ),
-          Tab(
-            text: Language.getWidgetStrings('widgets.checkout.channels'),
-          ),
-          Tab(
-            text: Language.getCommerceOSStrings('dashboard.apps.connect'),
-          ),
-          Tab(
-            text: Language.getPosConnectStrings('Sections'),
-          ),
-          Tab(
-            text: Language.getConnectStrings('categories.communications.main.titles.settings'),
-          ),
-        ],
-      ),
       title: Row(
         children: <Widget>[
           Container(
             child: Center(
               child: Container(
                 child: SvgPicture.asset(
-                  'assets/images/checkout.svg',
+                  'assets/images/setting.svg',
                   width: 20,
                   height: 20,
                 ),
@@ -207,7 +168,7 @@ class _SettingScreenState extends State<SettingScreen> {
             padding: EdgeInsets.only(left: 8),
           ),
           Text(
-            Language.getCommerceOSStrings('dashboard.apps.checkout'),
+            Language.getCommerceOSStrings('dashboard.apps.settings'),
             style: TextStyle(
               color: Colors.white,
               fontSize: 16,
@@ -335,8 +296,6 @@ class _SettingScreenState extends State<SettingScreen> {
   }
 
   Widget _body(SettingScreenState state) {
-    iconSize = _isTablet ? 120: 80;
-    margin = _isTablet ? 24: 16;
     return DefaultTabController(
       length: 6,
       initialIndex: 0,
@@ -348,10 +307,104 @@ class _SettingScreenState extends State<SettingScreen> {
           child: BackgroundBase(
             true,
             backgroudColor: Color.fromRGBO(20, 20, 0, 0.4),
-            body: Container(),
+            body: Center(
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 50),
+                child: ListView(
+                  children: <Widget>[
+                    Column(children: <Widget>[
+                      Container(
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(0, 30, 0, 16),
+                          child: CustomCircleAvatar(
+                              widget.globalStateModel.currentBusiness.logo != null
+                                  ? widget.globalStateModel.currentBusiness.logo
+                                  : "business",
+                              widget.globalStateModel.currentBusiness.name),
+                        ),
+                      ),
+                      Text(
+                        widget.globalStateModel.currentBusiness.name,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 24,
+                            fontWeight: FontWeight.w400),
+                      ),
+                      SizedBox(
+                        height: 50,
+                      ),
+                    ]),
+                    GridView.builder(
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) =>
+                            _itemBuilder(state, index),
+                        gridDelegate:
+                        SliverGridDelegateWithFixedCrossAxisCount(
+                            childAspectRatio: 4 / 4, crossAxisCount: (_isTablet || !_isPortrait) ? 3 : 2),
+                        itemCount: 7)
+                  ],
+                ),
+              ),
+            ),
           ),
         ),
       ),
     );
+  }
+
+  Widget _itemBuilder(SettingScreenState state, int index) {
+    return Column(
+      children: <Widget>[
+        GestureDetector(
+          onTap: () => _onTileClicked(index),
+          child: Container(
+            padding: EdgeInsets.all(16),
+            width: 80,
+            height: 80,
+            decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.2),
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.circular(20)),
+            child: SvgPicture.asset(
+              settingItems[index].image,
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Text(settingItems[index].name)
+      ],
+    );
+  }
+
+  void _onTileClicked(int index) {
+    Widget _target;
+    switch (index) {
+      case 0:
+
+        break;
+      case 1:
+        
+        break;
+      case 2:
+
+        break;
+      default:
+
+        break;
+    }
+    if (_target == null) return;
+    Navigator.push(
+      context,
+      PageTransition(
+        child: _target,
+        type: PageTransitionType.fade,
+        duration: Duration(milliseconds: 50),
+      ),
+    );
+    debugPrint("You tapped on item $index");
   }
 }
