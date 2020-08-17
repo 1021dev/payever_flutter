@@ -9,8 +9,8 @@ import 'package:payever/commons/utils/env.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/settings/models/models.dart';
+import 'package:payever/settings/views/wallpaper/wallpaper_categories_screen.dart';
 import 'package:payever/settings/widgets/app_bar.dart';
-import 'package:payever/transactions/views/export_content_view.dart';
 import 'package:payever/blocs/bloc.dart';
 
 
@@ -151,22 +151,26 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
           ),
           IconButton(icon: Icon(Icons.filter_list), onPressed: () => {}),
           FlatButton(
-            onPressed: () {
-//                    if (state.isSearchLoading) return;
-              showGeneralDialog(
-                  barrierLabel: 'Export',
-                  barrierDismissible: true,
-                  barrierColor: Colors.black.withOpacity(0.5),
-                  transitionDuration: Duration(milliseconds: 350),
-                  context: context,
-                  pageBuilder: (context, anim1, anim2) {
-                    return Align(
-                      alignment: Alignment.bottomCenter,
-                      child: ExportContentView(
-                        onSelectType: (index) {},
-                      ),
-                    );
-                  });
+            onPressed: () async {
+              await showGeneralDialog(
+                  barrierColor: null,
+                  transitionBuilder: (context, a1, a2, wg) {
+                final curvedValue = 1.0 - Curves.ease.transform(a1.value);
+                return Transform(
+                  transform: Matrix4.translationValues(-curvedValue * 200, 0.0, 0),
+                  child: WallpaperCategoriesScreen(
+                    screenBloc: widget.setScreenBloc,
+                  ),
+                );
+              },
+              transitionDuration: Duration(milliseconds: 200),
+              barrierDismissible: true,
+              barrierLabel: '',
+              context: context,
+              pageBuilder: (context, animation1, animation2) {
+              return null;
+              },
+              );
             },
             child: Text(
               'Reset',

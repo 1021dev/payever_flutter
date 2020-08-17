@@ -5,6 +5,7 @@ class SettingScreenState {
   final bool isLoading;
   final bool isUpdating;
   final String business;
+  final List<WallpaperCategory> wallpaperCategories;
   final List<WallPaper> wallpapers;
   final List<WallPaper> myWallpapers;
   final String selectedCategory;
@@ -14,6 +15,7 @@ class SettingScreenState {
     this.isLoading = false,
     this.isUpdating = false,
     this.business,
+    this.wallpaperCategories,
     this.wallpapers,
     this.myWallpapers,
     this.selectedCategory,
@@ -24,6 +26,7 @@ class SettingScreenState {
     this.isLoading,
     this.isUpdating,
     this.business,
+    this.wallpaperCategories,
     this.wallpapers,
     this.myWallpapers,
     this.categories,
@@ -34,6 +37,7 @@ class SettingScreenState {
     bool isUpdating,
     String business,
     String selectedCategory,
+    List<WallpaperCategory> wallpaperCategories,
     List<WallPaper> wallpapers,
     List<WallPaper> myWallpapers,
     List<List<String>>categories,
@@ -42,6 +46,7 @@ class SettingScreenState {
       isLoading: isLoading ?? this.isLoading,
       isUpdating: isUpdating ?? this.isUpdating,
       business: business ?? this.business,
+      wallpaperCategories: wallpaperCategories ?? this.wallpaperCategories,
       wallpapers: wallpapers ?? this.wallpapers,
       selectedCategory: selectedCategory ?? this.selectedCategory,
       myWallpapers: myWallpapers ?? this.myWallpapers,

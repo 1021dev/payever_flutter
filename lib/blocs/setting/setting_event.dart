@@ -29,3 +29,16 @@ class UpdateWallpaperEvent extends SettingScreenEvent {
   @override
   List<Object> get props => [body];
 }
+
+class WallpaperCategorySelected extends SettingScreenEvent {
+  final String category;
+
+  WallpaperCategorySelected({
+    this.category,
+  });
+
+  @override
+  List<Object> get props => [
+    this.category,
+  ];
+}

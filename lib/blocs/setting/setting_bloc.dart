@@ -50,12 +50,16 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
   Stream<SettingScreenState> fetchWallpapers() async* {
     String token = GlobalUtils.activeToken.accessToken;
     yield state.copyWith(isLoading: true);
+
+    List<WallpaperCategory> wallpaperCategories = state.wallpaperCategories;
     List<WallPaper>wallpapers = state.wallpapers;
     List<WallPaper>myWallpapers = state.myWallpapers;
+
     if (wallpapers == null) {
+      wallpaperCategories = [];
       wallpapers = [];
       myWallpapers = [];
-      List<WallpaperCategory> wallpaperCategories = [];
+
       dynamic objects = await api.getProductWallpapers(token, state.business);
       if (objects != null && !(objects is DioError)) {
         objects.forEach((element) {
@@ -76,7 +80,11 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
         });
       }
     }
-    yield state.copyWith(isLoading: false, wallpapers: wallpapers, myWallpapers: myWallpapers);
+
+    yield state.copyWith(isLoading: false,
+        wallpaperCategories: wallpaperCategories,
+        wallpapers: wallpapers,
+        myWallpapers: myWallpapers);
   }
 
   Stream<SettingScreenState> updateWallpaper(Map body) async* {
