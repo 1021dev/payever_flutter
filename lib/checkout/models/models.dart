@@ -642,22 +642,24 @@ class FinanceExpressSetting {
 }
 
 class FinanceExpress {
+  FinanceExpress();
+
   bool adaptiveDesign = false;
-  String bgColor;
-  String borderColor;
-  String buttonColor;
-  String displayType;
-  String linkColor;
-  String linkTo;
-  String order;
+  String bgColor = '#fff';
+  String borderColor = '#fff';
+  String buttonColor = '#fff';
+  String displayType = '';
+  String linkColor = '#fff';
+  String linkTo = '';
+  String order = 'asc';
   num size = 0;
-  String textColor;
+  String textColor = '#fff';
   bool visibility = true;
-  String alignment;
-  String corners;
-  num height;
-  String textSize;
-  num width;
+  String alignment = 'center';
+  String corners = 'round';
+  num height = 0;
+  String textSize = '';
+  num width = 0;
 
   FinanceExpress.fromMap(dynamic obj) {
     adaptiveDesign = obj['adaptiveDesign'];

@@ -20,3 +20,12 @@ class SettingScreenInitEvent extends SettingScreenEvent {
     this.business,
   ];
 }
+
+class FetchWallpaperEvent extends SettingScreenEvent {}
+
+class UpdateWallpaperEvent extends SettingScreenEvent {
+  final Map<String, String> body;
+  UpdateWallpaperEvent({this.body});
+  @override
+  List<Object> get props => [body];
+}

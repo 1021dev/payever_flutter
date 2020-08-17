@@ -21,7 +21,7 @@ import 'package:payever/products/models/models.dart';
 import 'package:payever/products/views/product_detail_screen.dart';
 import 'package:payever/products/views/products_screen.dart';
 import 'package:payever/search/views/search_screen.dart';
-import 'package:payever/settings/views/SettingScreen.dart';
+import 'package:payever/settings/views/setting_screen.dart';
 import 'package:payever/shop/views/shop_screen.dart';
 import 'package:payever/switcher/switcher_page.dart';
 import 'package:payever/transactions/transactions.dart';

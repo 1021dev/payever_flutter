@@ -21,3 +21,16 @@ List<SettingItem>settingItems = [
 List<String>detailTitles = [
   'Currency', 'Company','Contact','Address','Bank','Taxes'
 ];
+
+
+class WallPaper {
+  String theme;
+  String wallpaper;
+  String industry;
+
+  WallPaper.map(dynamic obj, String industry) {
+    theme = obj['theme'];
+    wallpaper = obj['wallpaper'];
+    industry = industry;
+  }
+}

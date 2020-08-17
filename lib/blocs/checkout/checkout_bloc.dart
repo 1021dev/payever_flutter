@@ -667,7 +667,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
             FinanceExpress express = FinanceExpress.fromMap(response);
             yield state.copyWith(isLoading: false, financeCalculator: express);
           } else {
-            yield CheckoutScreenStateFailure(error: 'Something wrong!');
+            yield state.copyWith(isLoading: false, financeCalculator: FinanceExpress());
           }
         }
         break;
@@ -683,7 +683,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
             FinanceExpress express = FinanceExpress.fromMap(response);
             yield state.copyWith(isLoading: false, financeBubble: express);
           } else {
-            yield CheckoutScreenStateFailure(error: 'Something wrong!');
+            yield state.copyWith(isLoading: false, financeBubble: FinanceExpress());
           }
         }
         break;

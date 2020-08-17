@@ -2507,6 +2507,39 @@ class ApiService {
   }
 
   ///***************************************************************************
+  ///****                      Setting                                     *****
+  ///***************************************************************************
+
+  Future<dynamic> getProductWallpapers(String token, String businessId) async {
+    try {
+      print('$TAG - getProductWallpapers()');
+      print('$TAG - $wallpaperAll');
+      dynamic response = await _client.getTypeless(
+          wallpaperAll,
+          headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> updateProductWallpaper(String token, String businessId, Map<String, String> body) async {
+    try {
+      print('$TAG - getProductWallpapers()');
+      print('$TAG - $wallpaperUrl$businessId/wallpapers/active');
+      dynamic response = await _client.postTypeLess(
+          '$wallpaperUrl$businessId/wallpapers/active',
+          body: body,
+          headers: _getHeaders(token)
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  ///***************************************************************************
   ///****                      UTILS                                       *****
   ///***************************************************************************
 

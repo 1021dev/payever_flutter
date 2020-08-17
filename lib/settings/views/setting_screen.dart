@@ -47,6 +47,7 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen> {
+  
   bool _isPortrait;
   bool _isTablet;
   double iconSize;
@@ -387,7 +388,7 @@ class _SettingScreenState extends State<SettingScreen> {
 
         break;
       case 1:
-        
+
         break;
       case 2:
 
