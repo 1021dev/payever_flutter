@@ -45,25 +45,60 @@ class WallpaperCategory {
 
 class WallpaperIndustry {
   String code;
-  List<WallPaper> wallpapers = [];
+  List<Wallpaper> wallpapers = [];
 
   WallpaperIndustry.fromMap(dynamic obj) {
     code = obj['code'];
     dynamic wallPapersObj = obj['wallpapers'];
     wallPapersObj.forEach((wallpaper) {
-      wallpapers.add(WallPaper.fromMap(wallpaper, code));
+      wallpapers.add(Wallpaper.fromMap(wallpaper, code));
     });
   }
 }
 
-class WallPaper {
+class Wallpaper {
   String theme;
   String wallpaper;
   String industry;
 
-  WallPaper.fromMap(dynamic obj, String _industry) {
+  Wallpaper.fromMap(dynamic obj, String _industry) {
     theme = obj['theme'];
     wallpaper = obj['wallpaper'];
     industry = _industry;
+  }
+}
+
+class MyWallpaper {
+  String business;
+  String createdAt;
+  Wallpaper currentWallpaper;
+  String industry;
+  List<Wallpaper> myWallpapers = [];
+  String product;
+  String type;
+  String updatedAt;
+  String id;
+
+  MyWallpaper.fromMap(dynamic obj) {
+    business = obj['business'];
+    createdAt = obj['createdAt'];
+    industry = obj['industry'];
+    product = obj['product'];
+    type = obj['type'];
+    updatedAt = obj['updatedAt'];
+    id = obj['_id'];
+
+    dynamic wallpaperObj = obj['currentWallpaper'];
+    if (wallpaperObj is Map) {
+      currentWallpaper = Wallpaper.fromMap(wallpaperObj, industry);
+    }
+
+    dynamic myWallpapersObj = obj['myWallpapers'];
+    if (myWallpapersObj is List) {
+      myWallpapersObj.forEach((element) {
+        myWallpapers.add(Wallpaper.fromMap(element, 'Own'));
+      });
+    }
+
   }
 }

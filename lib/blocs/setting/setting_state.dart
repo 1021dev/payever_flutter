@@ -6,8 +6,8 @@ class SettingScreenState {
   final bool isUpdating;
   final String business;
   final List<WallpaperCategory> wallpaperCategories;
-  final List<WallPaper> wallpapers;
-  final List<WallPaper> myWallpapers;
+  final List<Wallpaper> wallpapers;
+  final List<Wallpaper> myWallpapers;
   final String selectedCategory;
   final List<List<String>>categories;
 
@@ -38,8 +38,8 @@ class SettingScreenState {
     String business,
     String selectedCategory,
     List<WallpaperCategory> wallpaperCategories,
-    List<WallPaper> wallpapers,
-    List<WallPaper> myWallpapers,
+    List<Wallpaper> wallpapers,
+    List<Wallpaper> myWallpapers,
     List<List<String>>categories,
   }) {
     return SettingScreenState(

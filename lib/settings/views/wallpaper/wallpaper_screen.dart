@@ -353,7 +353,7 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
     );
   }
 
-  void updateWallpaper(WallPaper wallpaper) {
+  void updateWallpaper(Wallpaper wallpaper) {
     Map<String, String> body = {
       GlobalUtils.DB_BUSINESS_WALLPAPER_INDUSTRY: wallpaper.industry,
       GlobalUtils.DB_BUSINESS_CURRENT_WALLPAPER_THEME: wallpaper.theme,

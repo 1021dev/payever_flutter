@@ -52,8 +52,8 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
     yield state.copyWith(isLoading: true);
 
     List<WallpaperCategory> wallpaperCategories = state.wallpaperCategories;
-    List<WallPaper>wallpapers = state.wallpapers;
-    List<WallPaper>myWallpapers = state.myWallpapers;
+    List<Wallpaper>wallpapers = state.wallpapers;
+    List<Wallpaper>myWallpapers = state.myWallpapers;
 
     if (wallpapers == null) {
       wallpaperCategories = [];
@@ -75,8 +75,9 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
         });
         // My Wallpapers
         dynamic objects1 = await api.getMyWallpaper(token, state.business,);
-        objects1.forEach((element) {
-          myWallpapers.add(WallPaper.fromMap(element, 'Own'));
+        MyWallpaper myWallpaper = MyWallpaper.fromMap(objects1);
+        myWallpaper.myWallpapers.forEach((wallpaper) {
+          myWallpapers.add(wallpaper);
         });
       }
     }
