@@ -48,6 +48,8 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
       yield* deleteNotification(event.notificationId);
     } else if (event is WatchTutorials) {
       yield* watchTutorial(event.tutorial);
+    } else if(event is UpdateWallpaper) {
+      yield state.copyWith(curWall: event.curWall);
     }
   }
 

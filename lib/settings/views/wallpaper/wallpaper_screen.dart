@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/env.dart';
@@ -77,7 +78,7 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
     return [
       OverflowMenuItem(
         title: 'List',
-        iconData: Icons.list,
+        iconData: 'assets/images/list.svg',
         onTap: () {
           setState(() {
             isGridMode = false;
@@ -86,7 +87,7 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
       ),
       OverflowMenuItem(
         title: 'Grid',
-        iconData: Icons.grid_on,
+        iconData: 'assets/images/grid.svg',
         onTap: () {
           setState(() {
             isGridMode = true;
@@ -168,7 +169,7 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
                   });
             },
             child: Text(
-              'Export',
+              'Reset',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 16,
@@ -201,7 +202,7 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
             ),
           ),
           PopupMenuButton<OverflowMenuItem>(
-            icon: Icon(isGridMode ? Icons.grid_on : Icons.list),
+            icon: SvgPicture.asset(isGridMode ? 'assets/images/grid.svg' : 'assets/images/list.svg'),
             offset: Offset(0, 100),
             onSelected: (OverflowMenuItem item) => item.onTap(),
             shape: RoundedRectangleBorder(
@@ -225,7 +226,7 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
                           ),
                         ),
                       ),
-                      Icon(item.iconData),
+                      SvgPicture.asset(item.iconData),
                     ],
                   ),
                 );
@@ -361,7 +362,7 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
 class OverflowMenuItem {
   final String title;
   final Color textColor;
-  final IconData iconData;
+  final String iconData;
   final Function onTap;
 
   OverflowMenuItem({

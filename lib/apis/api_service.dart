@@ -2524,6 +2524,20 @@ class ApiService {
     }
   }
 
+  Future<dynamic> getMyWallpaper(String token, String businessId) async {
+    try {
+      print('$TAG - getProductWallpapers()');
+      print('$TAG - $wallpaperUrl$businessId/wallpapers');
+      dynamic response = await _client.getTypeless(
+          '$wallpaperUrl$businessId/wallpapers/active',
+          headers: _getHeaders(token)
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<dynamic> updateProductWallpaper(String token, String businessId, Map<String, String> body) async {
     try {
       print('$TAG - getProductWallpapers()');
