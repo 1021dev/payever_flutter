@@ -27,6 +27,8 @@ class WallpaperScreen extends StatefulWidget {
 
 class _WallpaperScreenState extends State<WallpaperScreen> {
   bool isGridMode = true;
+  bool _isPortrait;
+  bool _isTablet;
 
   @override
   void initState() {
@@ -42,6 +44,14 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
 
   @override
   Widget build(BuildContext context) {
+    _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
+    Measurements.height = (_isPortrait
+        ? MediaQuery.of(context).size.height
+        : MediaQuery.of(context).size.width);
+    Measurements.width = (_isPortrait
+        ? MediaQuery.of(context).size.width
+        : MediaQuery.of(context).size.height);
+    _isTablet = Measurements.width < 600 ? false : true;
     return BlocListener(
       bloc: widget.setScreenBloc,
       listener: (BuildContext context, SettingScreenState state) async {
@@ -133,7 +143,7 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
                     itemBuilder: (context, index) =>
                         _gridItemBuilder(state, index),
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        childAspectRatio: 1 / 1, crossAxisCount: 2),
+                        childAspectRatio: 1 / 1, crossAxisCount: _isTablet || !_isPortrait ? 4: 2),
                     itemCount: state.wallpapers.length)
                 : ListView.builder(
                     itemCount: state.wallpapers.length,

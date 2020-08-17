@@ -103,117 +103,118 @@ class _WallpaperCategoriesScreenState extends State<WallpaperCategoriesScreen> {
                       ),
                     ),
                   ),
-                  SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        GestureDetector(
-                          onTap: () {
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          GestureDetector(
+                            onTap: () {
 
-                          },
-                          child: Container(
-                            padding: EdgeInsets.only(left: 24),
-                            height: 44,
-                            child: Row(
-                              children: <Widget>[
-                                Text(
-                                  'My Wallpapers',
-                                  style: TextStyle(
-                                    color: Colors.white70,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
+                            },
+                            child: Container(
+                              padding: EdgeInsets.only(left: 24),
+                              height: 44,
+                              child: Row(
+                                children: <Widget>[
+                                  Text(
+                                    'My Wallpapers',
+                                    style: TextStyle(
+                                      color: Colors.white70,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                ),
-                                Spacer(),
-                                MaterialButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
+                                  Spacer(),
+                                  MaterialButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    height: 24,
+                                    minWidth: 60,
+                                    color: Colors.grey,
+                                    child: Text(
+                                      'Add',
+                                    ),
                                   ),
-                                  height: 24,
-                                  minWidth: 60,
-                                  color: Colors.grey,
-                                  child: Text(
-                                    'Add',
-                                  ),
-                                ),
-                                SizedBox(width: 10,)
-                              ],
-                            ),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-
-                          },
-                          child: Container(
-                            alignment: Alignment.centerLeft,
-                            padding: EdgeInsets.only(left: 24),
-                            height: 44,
-                            child: Text(
-                              'All Wallpapers',
-                              style: TextStyle(
-                                color: Colors.white70,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                                  SizedBox(width: 10,)
+                                ],
                               ),
                             ),
                           ),
-                        ),
-                        ListView.separated(
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          padding: EdgeInsets.symmetric(horizontal: 8),
-                          itemBuilder: (context, index) {
-                            String category = widget.screenBloc.state.wallpaperCategories[index].code;
-                            return GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  selectedCategory = category;
-                                });
-                              },
-                              child: Container(
-                                height: 44,
-                                padding: EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  color: selectedCategory == category ? Color(0x26FFFFFF): Colors.transparent,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Row(
-                                  children: <Widget>[
-                                    Container(
-                                      child: SvgPicture.asset(
-                                        Measurements.channelIcon(category),
-                                        height: 32,
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(left: 8),
-                                    ),
-                                    Text(
-                                      getMainCategory(category),
-                                      style: TextStyle(
-                                        color: Colors.white70,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    )
-                                  ],
+                          GestureDetector(
+                            onTap: () {
+
+                            },
+                            child: Container(
+                              alignment: Alignment.centerLeft,
+                              padding: EdgeInsets.only(left: 24),
+                              height: 44,
+                              child: Text(
+                                'All Wallpapers',
+                                style: TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
-                            );
-                          },
-                          separatorBuilder: (context, index) {
-                            return Container();
-                          },
-                          itemCount: widget.screenBloc.state.wallpaperCategories.length,
-                        ),
-                      ],
+                            ),
+                          ),
+                          ListView.separated(
+                            physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            padding: EdgeInsets.symmetric(horizontal: 8),
+                            itemBuilder: (context, index) {
+                              String category = widget.screenBloc.state.wallpaperCategories[index].code;
+                              return GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    selectedCategory = category;
+                                  });
+                                },
+                                child: Container(
+                                  height: 44,
+                                  padding: EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: selectedCategory == category ? Color(0x26FFFFFF): Colors.transparent,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Container(
+                                        child: SvgPicture.asset(
+                                          Measurements.channelIcon(category),
+                                          height: 32,
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 8),
+                                      ),
+                                      Text(
+                                        getMainCategory(category),
+                                        style: TextStyle(
+                                          color: Colors.white70,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                            separatorBuilder: (context, index) {
+                              return Container();
+                            },
+                            itemCount: widget.screenBloc.state.wallpaperCategories.length,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-
                 ],
               ),
             ),
