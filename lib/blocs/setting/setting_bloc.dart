@@ -100,5 +100,6 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
     } else {
       print('Update Wallpaper failed!');
     }
+    yield state.copyWith(isUpdating: false);
   }
 }

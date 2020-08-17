@@ -61,7 +61,7 @@ class _SettingScreenState extends State<SettingScreen> {
 
   @override
   void initState() {
-    screenBloc = SettingScreenBloc(dashboardScreenBloc: widget.dashboardScreenBloc);
+    screenBloc = SettingScreenBloc(dashboardScreenBloc: widget.dashboardScreenBloc, globalStateModel: widget.globalStateModel);
     screenBloc.add(SettingScreenInitEvent(
       business: widget.globalStateModel.currentBusiness.id,
     ));

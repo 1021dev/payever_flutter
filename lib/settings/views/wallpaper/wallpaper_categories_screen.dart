@@ -130,9 +130,9 @@ class _WallpaperCategoriesScreenState extends State<WallpaperCategoriesScreen> {
                                     Navigator.pop(context);
                                   },
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15),
+                                    borderRadius: BorderRadius.circular(12),
                                   ),
-                                  height: 30,
+                                  height: 24,
                                   minWidth: 60,
                                   color: Colors.grey,
                                   child: Text(

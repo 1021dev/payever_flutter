@@ -13,13 +13,13 @@ import 'package:payever/settings/views/wallpaper/wallpaper_categories_screen.dar
 import 'package:payever/settings/widgets/app_bar.dart';
 import 'package:payever/blocs/bloc.dart';
 
-
 class WallpaperScreen extends StatefulWidget {
-
   final GlobalStateModel globalStateModel;
   final SettingScreenBloc setScreenBloc;
   final bool fromDashboard;
-  WallpaperScreen({this.globalStateModel, this.setScreenBloc, this.fromDashboard = false});
+
+  WallpaperScreen(
+      {this.globalStateModel, this.setScreenBloc, this.fromDashboard = false});
 
   @override
   _WallpaperScreenState createState() => _WallpaperScreenState();
@@ -37,8 +37,7 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
   @override
   void dispose() {
     super.dispose();
-    if (widget.fromDashboard)
-      widget.setScreenBloc.close();
+    if (widget.fromDashboard) widget.setScreenBloc.close();
   }
 
   @override
@@ -58,13 +57,16 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
             resizeToAvoidBottomPadding: false,
             appBar: Appbar('Wallpapers'),
             body: SafeArea(
-              child: BackgroundBase(true,
-                  backgroudColor: Color.fromRGBO(20, 20, 0, 0.4),
-                  body: state.isLoading || state.wallpapers == null
-                      ? Center(
-                    child: CircularProgressIndicator(),
-                  )
-                      :  _getBody(state),
+              child: BackgroundBase(
+                true,
+                backgroudColor: Color.fromRGBO(20, 20, 0, 0.4),
+                body: state.isLoading ||
+                        state.wallpapers == null ||
+                        state.isUpdating
+                    ? Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : _getBody(state),
               ),
             ),
           );
@@ -108,12 +110,16 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
             color: Colors.black45,
             child: Row(
               children: [
-                SizedBox(width: 8,),
+                SizedBox(
+                  width: 8,
+                ),
                 Text('Wallpaper'),
                 Spacer(),
                 Text('Industry'),
                 Spacer(),
-                SizedBox(width: 60,)
+                SizedBox(
+                  width: 60,
+                )
               ],
             ),
           ),
@@ -122,18 +128,17 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
           child: Center(
             child: isGridMode
                 ? GridView.builder(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemBuilder: (context, index) =>
-                    _gridItemBuilder(state, index),
-                gridDelegate:
-                SliverGridDelegateWithFixedCrossAxisCount(
-                    childAspectRatio: 1 / 1, crossAxisCount: 2),
-                itemCount: state.wallpapers.length)
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) =>
+                        _gridItemBuilder(state, index),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        childAspectRatio: 1 / 1, crossAxisCount: 2),
+                    itemCount: state.wallpapers.length)
                 : ListView.builder(
-                itemCount: state.wallpapers.length,
-                itemBuilder: (context, index) =>
-                    _listItemBuilder(state, index)),
+                    itemCount: state.wallpapers.length,
+                    itemBuilder: (context, index) =>
+                        _listItemBuilder(state, index)),
           ),
         ),
       ],
@@ -174,14 +179,12 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
                 );
               }),
           FlatButton(
-            onPressed: () {
-
-            },
+            onPressed: () {},
             child: Text(
               'Reset',
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 16,
+                fontSize: 14,
               ),
             ),
           ),
@@ -194,8 +197,7 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
               ),
               child: Row(
                 children: [
-                  IconButton(
-                      icon: Icon(Icons.search), onPressed: () => {}),
+                  IconButton(icon: Icon(Icons.search), onPressed: () => {}),
                   Expanded(
                     child: TextFormField(
                       style: TextStyle(fontSize: 16),
@@ -211,7 +213,9 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
             ),
           ),
           PopupMenuButton<OverflowMenuItem>(
-            icon: SvgPicture.asset(isGridMode ? 'assets/images/grid.svg' : 'assets/images/list.svg'),
+            icon: SvgPicture.asset(isGridMode
+                ? 'assets/images/grid.svg'
+                : 'assets/images/list.svg'),
             offset: Offset(0, 100),
             onSelected: (OverflowMenuItem item) => item.onTap(),
             shape: RoundedRectangleBorder(
@@ -259,7 +263,7 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
           Expanded(
             child: CachedNetworkImage(
               imageUrl:
-              '${Env.storage}/wallpapers/${state.wallpapers[index].wallpaper}',
+                  '${Env.storage}/wallpapers/${state.wallpapers[index].wallpaper}',
               imageBuilder: (context, imageProvider) => Container(
                 decoration: BoxDecoration(
                   color: Colors.black,
@@ -277,7 +281,7 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
             ),
           ),
           GestureDetector(
-            onTap: (){
+            onTap: () {
               updateWallpaper(state.wallpapers[index]);
             },
             child: Container(
@@ -303,32 +307,36 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
           height: 70,
           child: Row(
             children: [
-              SizedBox(width: 14,),
+              SizedBox(
+                width: 14,
+              ),
               Container(
                 height: 50,
                 width: 50,
                 child: CachedNetworkImage(
                   imageUrl:
-                  '${Env.storage}/wallpapers/${state.wallpapers[index].wallpaper}',
+                      '${Env.storage}/wallpapers/${state.wallpapers[index].wallpaper}',
                   imageBuilder: (context, imageProvider) => Container(
                     decoration: BoxDecoration(
                       color: Colors.black,
-                      borderRadius: BorderRadius.all(Radius.circular(6.0),),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(6.0),
+                      ),
                       image: DecorationImage(
                         image: imageProvider,
                         fit: BoxFit.fill,
                       ),
                     ),
                   ),
-                  placeholder: (context, url) =>
-                      Container(child: Center(child: CircularProgressIndicator())),
+                  placeholder: (context, url) => Container(
+                      child: Center(child: CircularProgressIndicator())),
                 ),
               ),
               Spacer(),
               Text(state.wallpapers[index].industry.toString().toUpperCase()),
               Spacer(),
               InkWell(
-                onTap: (){
+                onTap: () {
                   updateWallpaper(state.wallpapers[index]);
                 },
                 child: Container(
@@ -336,8 +344,7 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
                   width: 40,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: Colors.black.withAlpha(100)
-                  ),
+                      color: Colors.black.withAlpha(100)),
                   child: Center(
                     child: Text(
                       'Set',
@@ -349,7 +356,9 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
                   ),
                 ),
               ),
-              SizedBox(width: 10,)
+              SizedBox(
+                width: 10,
+              )
             ],
           ),
         ),

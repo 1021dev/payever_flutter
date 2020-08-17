@@ -1012,7 +1012,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               );
             },
             onTapOpenWallpaper: () async {
-              SettingScreenBloc settingscreenBloc = SettingScreenBloc(dashboardScreenBloc: screenBloc);
+              SettingScreenBloc settingscreenBloc = SettingScreenBloc(dashboardScreenBloc: screenBloc, globalStateModel: globalStateModel);
               settingscreenBloc.add(SettingScreenInitEvent(
                 business: globalStateModel.currentBusiness.id,
               ));
