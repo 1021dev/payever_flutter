@@ -22,6 +22,7 @@ import 'package:payever/products/views/product_detail_screen.dart';
 import 'package:payever/products/views/products_screen.dart';
 import 'package:payever/search/views/search_screen.dart';
 import 'package:payever/settings/views/setting_screen.dart';
+import 'package:payever/settings/views/wallpaper/wallpaper_screen.dart';
 import 'package:payever/shop/views/shop_screen.dart';
 import 'package:payever/switcher/switcher_page.dart';
 import 'package:payever/transactions/transactions.dart';
@@ -1005,6 +1006,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 context,
                 PageTransition(
                   child: SettingInitScreen(dashboardScreenBloc: screenBloc,),
+                  type: PageTransitionType.fade,
+                  duration: Duration(milliseconds: 50),
+                ),
+              );
+            },
+            onTapOpenWallpaper: () async {
+              SettingScreenBloc settingscreenBloc = SettingScreenBloc(dashboardScreenBloc: screenBloc);
+              settingscreenBloc.add(SettingScreenInitEvent(
+                business: globalStateModel.currentBusiness.id,
+              ));
+              Navigator.push(
+                context,
+                PageTransition(
+                  child: WallpaperScreen(globalStateModel: globalStateModel,setScreenBloc: settingscreenBloc, fromDashboard: true,),
                   type: PageTransitionType.fade,
                   duration: Duration(milliseconds: 50),
                 ),

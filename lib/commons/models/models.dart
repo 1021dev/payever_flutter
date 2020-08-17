@@ -15,7 +15,6 @@ export 'tutorial.dart';
 export 'transaction.dart';
 export 'user.dart';
 export 'version.dart';
-export 'wallpaper.dart';
 
 class NotificationModel {
   String id;

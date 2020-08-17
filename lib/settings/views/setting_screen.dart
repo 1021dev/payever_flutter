@@ -14,6 +14,7 @@ import 'package:payever/login/login_screen.dart';
 import 'package:payever/notifications/notifications_screen.dart';
 import 'package:payever/search/views/search_screen.dart';
 import 'package:payever/settings/models/models.dart';
+import 'package:payever/settings/views/wallpaper/wallpaper_screen.dart';
 import 'package:payever/switcher/switcher_page.dart';
 import 'package:provider/provider.dart';
 import 'package:payever/blocs/bloc.dart';
@@ -47,7 +48,7 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen> {
-  
+
   bool _isPortrait;
   bool _isTablet;
   double iconSize;
@@ -383,20 +384,21 @@ class _SettingScreenState extends State<SettingScreen> {
 
   void _onTileClicked(int index) {
     Widget _target;
-    switch (index) {
-      case 0:
-
-        break;
-      case 1:
-
-        break;
-      case 2:
-
-        break;
-      default:
-
-        break;
-    }
+    _target = WallpaperScreen(globalStateModel: widget.globalStateModel, setScreenBloc: screenBloc,);
+//    switch (index) {
+//      case 0:
+//
+//        break;
+//      case 1:
+//
+//        break;
+//      case 2:
+//
+//        break;
+//      default:
+//
+//        break;
+//    }
     if (_target == null) return;
     Navigator.push(
       context,

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:payever/commons/models/wallpaper.dart';
 
 import '../models/models.dart';
 import '../network/network.dart';
