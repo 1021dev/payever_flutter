@@ -149,28 +149,33 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
           SizedBox(
             width: 8,
           ),
-          IconButton(icon: Icon(Icons.filter_list), onPressed: () => {}),
-          FlatButton(
-            onPressed: () async {
-              await showGeneralDialog(
+          IconButton(
+              icon: Icon(Icons.filter_list),
+              onPressed: () async {
+                await showGeneralDialog(
                   barrierColor: null,
                   transitionBuilder: (context, a1, a2, wg) {
-                final curvedValue = 1.0 - Curves.ease.transform(a1.value);
-                return Transform(
-                  transform: Matrix4.translationValues(-curvedValue * 200, 0.0, 0),
-                  child: WallpaperCategoriesScreen(
-                    screenBloc: widget.setScreenBloc,
-                  ),
+                    final curvedValue = 1.0 - Curves.ease.transform(a1.value);
+                    return Transform(
+                      transform:
+                          Matrix4.translationValues(-curvedValue * 200, 0.0, 0),
+                      child: WallpaperCategoriesScreen(
+                        screenBloc: widget.setScreenBloc,
+                      ),
+                    );
+                  },
+                  transitionDuration: Duration(milliseconds: 200),
+                  barrierDismissible: true,
+                  barrierLabel: '',
+                  context: context,
+                  pageBuilder: (context, animation1, animation2) {
+                    return null;
+                  },
                 );
-              },
-              transitionDuration: Duration(milliseconds: 200),
-              barrierDismissible: true,
-              barrierLabel: '',
-              context: context,
-              pageBuilder: (context, animation1, animation2) {
-              return null;
-              },
-              );
+              }),
+          FlatButton(
+            onPressed: () {
+
             },
             child: Text(
               'Reset',
