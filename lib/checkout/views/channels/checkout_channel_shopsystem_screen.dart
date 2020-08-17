@@ -57,7 +57,8 @@ class _CheckoutChannelShopSystemScreenState extends State<CheckoutChannelShopSys
     super.initState();
     Clipboard.getData('text/plain').then((value) {
       setState(() {
-        clipboardString = value.text;
+        if (value != null)
+          clipboardString = value.text;
       });
     });
   }

@@ -21,6 +21,7 @@ import 'package:payever/products/models/models.dart';
 import 'package:payever/products/views/product_detail_screen.dart';
 import 'package:payever/products/views/products_screen.dart';
 import 'package:payever/search/views/search_screen.dart';
+import 'package:payever/settings/views/SettingScreen.dart';
 import 'package:payever/shop/views/shop_screen.dart';
 import 'package:payever/switcher/switcher_page.dart';
 import 'package:payever/transactions/transactions.dart';
@@ -978,26 +979,40 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
 
     // Settings
-//    if (widgets.where((element) => element.type == 'settings' ).toList().length > 0) {
-//      appWidget = widgets.where((element) => element.type == 'settings' ).toList().first;
-//      businessApp = businessApps.where((element) => element.code == 'settings' ).toList().first;
-//      List<NotificationModel> notifications = [];
-//      if (state.notifications.containsKey('settings')){
-//        notifications = state.notifications['settings'];
-//      }
-//      dashboardWidgets.add(
-//          DashboardSettingsView(
-//            businessApps: businessApp,
-//            appWidget: appWidget,
-//            notifications: notifications,
-//            openNotification: (NotificationModel model) {
-//            },
-//            deleteNotification: (NotificationModel model) {
-//              screenBloc.add(DeleteNotification(notificationId: model.id));
-//            },
-//          )
-//      );
-//    }
+    if (widgets.where((element) => element.type == 'settings' ).toList().length > 0) {
+      appWidget = widgets.where((element) => element.type == 'settings' ).toList().first;
+      businessApp = businessApps.where((element) => element.code == 'settings' ).toList().first;
+      List<NotificationModel> notifications = [];
+      if (state.notifications.containsKey('settings')){
+        notifications = state.notifications['settings'];
+      }
+      dashboardWidgets.add(
+          DashboardSettingsView(
+            businessApps: businessApp,
+            appWidget: appWidget,
+            notifications: notifications,
+            openNotification: (NotificationModel model) {
+            },
+            deleteNotification: (NotificationModel model) {
+              screenBloc.add(DeleteNotification(notificationId: model.id));
+            },
+            onTapOpen: () {
+              Provider.of<GlobalStateModel>(context, listen: false)
+                  .setCurrentBusiness(state.activeBusiness);
+              Provider.of<GlobalStateModel>(context, listen: false)
+                  .setCurrentWallpaper(state.curWall);
+              Navigator.push(
+                context,
+                PageTransition(
+                  child: SettingInitScreen(dashboardScreenBloc: screenBloc,),
+                  type: PageTransitionType.fade,
+                  duration: Duration(milliseconds: 50),
+                ),
+              );
+            },
+          )
+      );
+    }
 
     // Tutorials
     dashboardWidgets.add(

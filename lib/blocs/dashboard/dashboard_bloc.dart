@@ -10,7 +10,6 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/connect/models/connect.dart';
 import 'package:payever/commons/models/fetchwallpaper.dart';
 import 'package:payever/products/models/models.dart';
-import 'package:payever/settings/network/employees_api.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/transactions/transactions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -363,14 +362,14 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
     add(FetchTutorials(business: currentBusiness));
   }
 
-  Future<List<WallpaperCategory>> getWallpaper() => EmployeesApi().getWallpapers()
-      .then((wallpapers){
-    List<WallpaperCategory> _list = List();
-    wallpapers.forEach((cat){
-      _list.add(WallpaperCategory.map(cat));
-    });
-    return _list;
-  });
+//  Future<List<WallpaperCategory>> getWallpaper() => EmployeesApi().getWallpapers()
+//      .then((wallpapers){
+//    List<WallpaperCategory> _list = List();
+//    wallpapers.forEach((cat){
+//      _list.add(WallpaperCategory.map(cat));
+//    });
+//    return _list;
+//  });
 
   Stream<DashboardScreenState> getProductsPopularMonthRandom(Business currentBusiness) async* {
     List<Products> lastSales = [];

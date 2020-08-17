@@ -11,6 +11,7 @@ class DashboardSettingsView extends StatefulWidget {
   final List<NotificationModel> notifications;
   final Function openNotification;
   final Function deleteNotification;
+  final Function onTapOpen;
 
   DashboardSettingsView({
     this.appWidget,
@@ -18,6 +19,7 @@ class DashboardSettingsView extends StatefulWidget {
     this.notifications = const [],
     this.openNotification,
     this.deleteNotification,
+    this.onTapOpen,
   });
   @override
   _DashboardSettingsViewState createState() => _DashboardSettingsViewState();
@@ -56,9 +58,7 @@ class _DashboardSettingsViewState extends State<DashboardSettingsView> {
                   ],
                 ),
                 InkWell(
-                  onTap: () {
-
-                  },
+                  onTap: widget.onTapOpen,
                   child: Container(
                     height: 20,
                     width: 40,

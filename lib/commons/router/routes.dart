@@ -3,7 +3,6 @@ import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 import '../models/models.dart';
-import '../../settings/views/employees/employees.dart';
 
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -37,10 +36,10 @@ class Routes {
 //              child: EmployeeDetailsScreen(),
 //              type: PageTransitionType.fade,
 //            ));
-
-        return MaterialPageRoute(
-            builder: (_) =>
-                Provider.value(value: employee, child: EmployeesScreen()));
+        return null;
+//        return MaterialPageRoute(
+//            builder: (_) =>
+//                Provider.value(value: employee, child: EmployeesScreen()));
 
 //        return MaterialPageRoute(builder: (_) =>
 //            Provider.value(value: employee, child: EmployeeDetailsScreen(employee)));
