@@ -20,6 +20,7 @@ import 'package:payever/switcher/switcher_page.dart';
 import 'package:provider/provider.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'business_details/business_details_screen.dart';
 
 class SettingInitScreen extends StatelessWidget {
 
@@ -391,7 +392,7 @@ class _SettingScreenState extends State<SettingScreen> {
         _target = BusinessInfoScreen(globalStateModel: widget.globalStateModel, setScreenBloc: screenBloc,);
         break;
       case 1:
-
+        _target = BusinessDetailsScreen(globalStateModel: widget.globalStateModel, setScreenBloc: screenBloc,);
         break;
       case 2:
         _target = WallpaperScreen(globalStateModel: widget.globalStateModel, setScreenBloc: screenBloc,);

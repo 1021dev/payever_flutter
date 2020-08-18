@@ -127,3 +127,11 @@ class UpdateWallpaper extends DashboardScreenEvent {
   @override
   List<Object> get props => [this.curWall];
 }
+
+class UpdateBusiness extends DashboardScreenEvent {
+  final Business business;
+  UpdateBusiness(this.business);
+
+  @override
+  List<Object> get props => [this.business];
+}

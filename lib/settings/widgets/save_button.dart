@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 class SaveBtn extends StatelessWidget {
-  final bool isSaving;
-  SaveBtn(this.isSaving);
+  final bool isUpdating;
+  final Function onUpdate;
+  SaveBtn({this.isUpdating = false, this.onUpdate});
 
   @override
   Widget build(BuildContext context) {
@@ -13,15 +14,16 @@ class SaveBtn extends StatelessWidget {
     return Container(
       height: 55,
       decoration: BoxDecoration(
-          color: Colors.grey.withOpacity(0.4),
+          color: Colors.black,
           shape: BoxShape.rectangle,
           borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(8.0),
               bottomRight: Radius.circular(8.0))),
       child: Center(
-          child: isSaving
+          child: isUpdating
               ? CircularProgressIndicator()
-              : Text('Save')),
+              : MaterialButton(onPressed: onUpdate,
+              child: Text('Save'))),
     );
   }
 }

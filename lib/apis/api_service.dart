@@ -2596,6 +2596,19 @@ class ApiService {
     }
   }
 
+  Future<dynamic> patchUpdateBusiness(
+      String token, String businessId, Map<String, dynamic> body) async {
+    try {
+      print('$TAG - patchUpdateBusiness()');
+      print('$TAG - $businessUrl/$businessId');
+      dynamic response = await _client.patchTypeless('$businessUrl/$businessId',
+          body: body, headers: _getHeaders(token));
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   ///***************************************************************************
   ///****                      UTILS                                       *****
   ///***************************************************************************

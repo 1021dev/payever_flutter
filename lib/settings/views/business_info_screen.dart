@@ -22,7 +22,6 @@ class BusinessInfoScreen extends StatefulWidget {
 }
 
 class _BusinessInfoScreenState extends State<BusinessInfoScreen> {
-
   bool isGridMode = true;
   bool _isPortrait;
   bool _isTablet;
@@ -71,11 +70,11 @@ class _BusinessInfoScreenState extends State<BusinessInfoScreen> {
                 true,
                 backgroudColor: Color.fromRGBO(20, 20, 0, 0.4),
                 body: state.isLoading ||
-                    state.wallpapers == null ||
-                    state.isUpdating
+                        state.wallpapers == null ||
+                        state.isUpdating
                     ? Center(
-                  child: CircularProgressIndicator(),
-                )
+                        child: CircularProgressIndicator(),
+                      )
                     : _getBody(state),
               ),
             ),
@@ -85,9 +84,7 @@ class _BusinessInfoScreenState extends State<BusinessInfoScreen> {
     );
   }
 
-
   Widget _getBody(SettingScreenState state) {
-    final _formKey = GlobalKey<FormState>();
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -97,96 +94,89 @@ class _BusinessInfoScreenState extends State<BusinessInfoScreen> {
                 color: Colors.grey.withOpacity(0.25),
                 shape: BoxShape.rectangle,
                 borderRadius: BorderRadius.circular(10)),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        child: Container(
-                          width: 36,
-                          height: 36,
-                          decoration: BoxDecoration(
-                              color: Colors.grey, shape: BoxShape.circle),
-                          child: Icon(Icons.image),
-                        ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: Container(
+                        width: 36,
+                        height: 36,
+                        decoration: BoxDecoration(
+                            color: Colors.grey, shape: BoxShape.circle),
+                        child: Icon(Icons.image),
                       ),
-                      Expanded(
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: Colors.grey.withOpacity(0.3),
-                              shape: BoxShape.rectangle,
-                              borderRadius:
-                              BorderRadius.all(Radius.circular(8.0))),
-                          child: Padding(
-                            padding: const EdgeInsets.all(10),
-                            child: TextFormField(
-                              controller: myController,
-                              validator: (value) {
-                                if (value.isEmpty) {
-                                  return 'Please enter valid name.';
-                                }
-                                return null;
-                              },
-                              keyboardType: TextInputType.text,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                labelText: 'Business name',
-                              ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: Colors.grey.withOpacity(0.3),
+                            shape: BoxShape.rectangle,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(8.0))),
+                        child: Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: TextFormField(
+                            controller: myController,
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Please enter valid name.';
+                              }
+                              return null;
+                            },
+                            keyboardType: TextInputType.text,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              labelText: 'Business name',
                             ),
                           ),
                         ),
                       ),
-                      SizedBox(
-                        width: 10,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(0, 15, 10, 20),
+                  child: GestureDetector(
+                    onTap: null,
+                    child: Container(
+                      padding: EdgeInsets.fromLTRB(10, 3, 10, 3),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.3),
+                        shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
                       ),
-                    ],
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(0, 15, 10, 20),
-                    child: GestureDetector(
-                      onTap: null,
-                      child: Container(
-                        padding: EdgeInsets.fromLTRB(10, 3, 10, 3),
-                        decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.3),
-                          shape: BoxShape.rectangle,
-                          borderRadius:
-                          BorderRadius.all(Radius.circular(20)),
-                        ),
-                        child: Text(
-                          'Delete Business',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 13,
-                          ),
+                      child: Text(
+                        'Delete Business',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 13,
                         ),
                       ),
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      if (_formKey.currentState.validate() &&
-                          !state.isUpdating) {
-                        Map<String, dynamic> body = {
-                          'logo':
-                          widget.globalStateModel.currentBusiness.logo,
-                          'name': myController.text
-                        };
-                        widget.setScreenBloc.add(BusinessUpdateEvent(body));
-                      }
-                    },
-                    child: SaveBtn(state.isUpdating),
-                  ),
-                ],
-              ),
+                ),
+                SaveBtn(
+                  isUpdating: state.isUpdating,
+                  onUpdate: () {
+                    if (!state.isUpdating) {
+                      Map<String, dynamic> body = {
+                        'logo': widget.globalStateModel.currentBusiness.logo,
+                        'name': myController.text
+                      };
+                      widget.setScreenBloc.add(BusinessUpdateEvent(body));
+                    }
+                  },
+                ),
+              ],
             )),
       ),
     );
   }
 }
-

@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:payever/apis/api_service.dart';
@@ -43,7 +42,10 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
       yield state.copyWith(selectedCategory: event.category, subCategories: event.subCategories);
     } else if (event is UploadWallpaperImage) {
       yield* uploadWallpaperImage(event.file);
+    } else if (event is BusinessUpdateEvent) {
+      yield state.copyWith(isUpdating: true);
     }
+
   }
 
   Stream<SettingScreenState> fetchConnectInstallations(String business,
@@ -129,5 +131,21 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
       yield state.copyWith(myWallpapers: myWallpapers, isUpdating: false);
     }
 
+  }
+
+  Stream<SettingScreenState> uploadBusiness(Map body) async* {
+    yield state.copyWith(isUpdating: true);
+    dynamic response = await api.patchUpdateBusiness(token, state.business, body);
+    if (response is DioError) {
+      yield SettingScreenStateFailure(error: response.error);
+    } else if (response is Map){
+      dashboardScreenBloc.add(UpdateBusiness(Business.map(response)));
+      globalStateModel.setCurrentBusiness(Business.map(response),
+          notify: true);
+      yield state.copyWith(isUpdating: false);
+    } else {
+      yield SettingScreenStateFailure(error: 'Update Business name failed');
+      yield state.copyWith(isUpdating: false);
+    }
   }
 }
