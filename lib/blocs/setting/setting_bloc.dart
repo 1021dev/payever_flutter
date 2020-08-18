@@ -43,9 +43,18 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
     } else if (event is UploadWallpaperImage) {
       yield* uploadWallpaperImage(event.file);
     } else if (event is BusinessUpdateEvent) {
-      yield state.copyWith(isUpdating: true);
+      yield* uploadBusiness(event.body);
+    } else if (event is UploadBusinessImage) {
+      yield* uploadBusinessImage(event.file);
     }
 
+  }
+
+  Stream<SettingScreenState> uploadBusinessImage(File file) async* {
+    yield state.copyWith(blobName: '', isUpdatingBusinessImg: true);
+    dynamic response = await api.postImageToBusiness(file, state.business, GlobalUtils.activeToken.accessToken);
+    String blobName = response['blobName'];
+    yield state.copyWith(blobName: blobName, isUpdatingBusinessImg: false);
   }
 
   Stream<SettingScreenState> fetchConnectInstallations(String business,

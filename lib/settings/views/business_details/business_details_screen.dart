@@ -14,10 +14,9 @@ import 'currency_screen.dart';
 class BusinessDetailsScreen extends StatefulWidget {
   final GlobalStateModel globalStateModel;
   final SettingScreenBloc setScreenBloc;
-  final bool fromDashboard;
 
   BusinessDetailsScreen(
-      {this.globalStateModel, this.setScreenBloc, this.fromDashboard = false});
+      {this.globalStateModel, this.setScreenBloc,});
 
   @override
   _BusinessDetailsScreenState createState() => _BusinessDetailsScreenState();
@@ -33,14 +32,12 @@ class _BusinessDetailsScreenState extends State<BusinessDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    widget.setScreenBloc.add(FetchWallpaperEvent());
     myController.text = widget.globalStateModel.currentBusiness.name;
   }
 
   @override
   void dispose() {
     super.dispose();
-    if (widget.fromDashboard) widget.setScreenBloc.close();
   }
 
   @override
@@ -71,9 +68,7 @@ class _BusinessDetailsScreenState extends State<BusinessDetailsScreen> {
               child: BackgroundBase(
                 true,
                 backgroudColor: Color.fromRGBO(20, 20, 0, 0.4),
-                body: state.isLoading ||
-                        state.wallpapers == null ||
-                        state.isUpdating
+                body: state.isLoading
                     ? Center(
                         child: CircularProgressIndicator(),
                       )

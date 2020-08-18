@@ -67,3 +67,14 @@ class BusinessUpdateEvent extends SettingScreenEvent {
   @override
   List<Object> get props => [body];
 }
+
+class UploadBusinessImage extends SettingScreenEvent {
+
+  final File file;
+  UploadBusinessImage({this.file,});
+
+  @override
+  List<Object> get props => [
+    this.file,
+  ];
+}
