@@ -155,6 +155,9 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
       globalStateModel.setCurrentBusiness(Business.map(response),
           notify: true);
       yield state.copyWith(isUpdating: false);
+      yield SettingScreenUpdateSuccess(
+        business: state.business,
+      );
     } else {
       yield SettingScreenStateFailure(error: 'Update Business name failed');
       yield state.copyWith(isUpdating: false);

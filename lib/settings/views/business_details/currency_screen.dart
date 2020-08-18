@@ -69,7 +69,7 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
     return BlocListener(
       bloc: widget.setScreenBloc,
       listener: (BuildContext context, state) {
-        if (state is SettingScreenStateSuccess) {
+        if (state is SettingScreenUpdateSuccess) {
           Navigator.pop(context);
         } else if (state is SettingScreenStateFailure) {}
       },

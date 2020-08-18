@@ -1,8 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
@@ -47,9 +46,12 @@ class _CompanyScreenState extends State<CompanyScreen> {
       legalForm = companyDetails.legalForm;
       product = companyDetails.product;
       saleRange = companyDetails.salesRange;
+      saleRangeString = getSalesString(saleRange);
       employeesRange = companyDetails.employeesRange;
+      employeesRangeString = getEmployeeString(employeesRange);
       industry = companyDetails.industry;
       urlWebsite = companyDetails.urlWebsite;
+      urlController.text = urlWebsite ?? '';
     }
     super.initState();
   }
@@ -83,7 +85,7 @@ class _CompanyScreenState extends State<CompanyScreen> {
     return BlocListener(
       bloc: widget.setScreenBloc,
       listener: (BuildContext context, state) {
-        if (state is SettingScreenStateSuccess) {
+        if (state is SettingScreenUpdateSuccess) {
           Navigator.pop(context);
         } else if (state is SettingScreenStateFailure) {}
       },
@@ -92,7 +94,7 @@ class _CompanyScreenState extends State<CompanyScreen> {
         builder: (context, state) {
 
           List<IndustryModel> industries = [];
-          if (product != null){
+          if (product != null && state.businessProducts.length > 0){
             BusinessProduct businessProduct = state.businessProducts.singleWhere((element) => element.code == product);
             if (businessProduct != null) {
               industries.addAll(businessProduct.industries);
@@ -127,6 +129,7 @@ class _CompanyScreenState extends State<CompanyScreen> {
                                     value: legalForms[index],
                                   );
                                 }).toList(),
+                                value: legalForm,
                                 onChanged: (val) {
                                 },
                                 icon: Icon(
@@ -159,7 +162,11 @@ class _CompanyScreenState extends State<CompanyScreen> {
                                     value: employeeRange[index],
                                   );
                                 }).toList(),
+                                value: employeesRangeString,
                                 onChanged: (val) {
+                                  setState(() {
+                                    employeesRangeString = val;
+                                  });
                                 },
                                 icon: Icon(
                                   Icons.keyboard_arrow_down,
@@ -191,7 +198,11 @@ class _CompanyScreenState extends State<CompanyScreen> {
                                     value: salesRange[index],
                                   );
                                 }).toList(),
+                                value: saleRangeString,
                                 onChanged: (val) {
+                                  setState(() {
+                                    saleRangeString = val;
+                                  });
                                 },
                                 icon: Icon(
                                   Icons.keyboard_arrow_down,
@@ -299,6 +310,9 @@ class _CompanyScreenState extends State<CompanyScreen> {
                                 controller: urlController,
                                 textInputAction: TextInputAction.done,
                                 keyboardType: TextInputType.url,
+                                onChanged: (val) {
+                                  urlWebsite = val;
+                                },
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
                                   labelText: Language.getSettingsStrings('form.create_form.company.url_web.label'),
@@ -314,12 +328,30 @@ class _CompanyScreenState extends State<CompanyScreen> {
                         SaveBtn(
                           isUpdating: state.isUpdating,
                           onUpdate: () {
+                            if (urlWebsite != null && urlWebsite != '') {
+                              if (!Uri.parse(urlWebsite).isAbsolute) {
+                                Fluttertoast.showToast(msg: 'Url not valid');
+                                return;
+                              }
+                            }
                             Map<String, dynamic> body = {};
                             if (legalForm != null) {
                               body['legalForm'] = legalForm;
                             }
-                            if (employeesRange != null) {
-                              body['employeesRange'] = getEmployeeRange(employeesRange);
+                            if (employeesRangeString != null) {
+                              body['employeesRange'] = getEmployeeRange(employeesRangeString);
+                            }
+                            if (saleRangeString != null) {
+                              body['salesRange'] = getSalesRange(employeesRangeString);
+                            }
+                            if (product != null) {
+                              body['product'] = product;
+                            }
+                            if (industry != null) {
+                              body['industry'] = industry;
+                            }
+                            if (urlWebsite != null && urlWebsite != '') {
+                              body['urlWebsite'] = urlWebsite;
                             }
 
                             widget.setScreenBloc.add(BusinessUpdateEvent(
@@ -375,4 +407,78 @@ Map<String, dynamic> getEmployeeRange(String employee) {
       };
     default: return {};
   }
+}
+
+Map<String, dynamic> getSalesRange(String sales) {
+  switch(sales) {
+    case 'RANGE_1':
+      return {
+        'max': 0
+      };
+    case 'RANGE_2':
+      return {
+        'min': 0,
+        'max': 5000
+      };
+    case 'RANGE_3':
+      return {
+        'min': 5000,
+        'max': 50000
+      };
+    case 'RANGE_4':
+      return {
+        'min': 50000,
+        'max': 250000
+      };
+    case 'RANGE_5':
+      return {
+        'min': 250000,
+        'max': 1000000
+      };
+    case 'RANGE_6':
+      return {
+        'min': 1000000,
+      };
+    default: return {};
+  }
+}
+
+String getEmployeeString(EmployeesRange range) {
+  if (range == null) {
+    return null;
+  }
+  if (range.min == 1) {
+    return 'RANGE_1';
+  } else if (range.min == 6) {
+    return 'RANGE_2';
+  } else if (range.min == 19) {
+    return 'RANGE_3';
+  } else if (range.min == 100) {
+    return 'RANGE_4';
+  } else if (range.min == 350) {
+    return 'RANGE_5';
+  } else if (range.min == 1500) {
+    return 'RANGE_6';
+  }
+  return null;
+}
+
+String getSalesString(SalesRange range) {
+  if (range == null) {
+    return null;
+  }
+  if (range.max == 0) {
+    return 'RANGE_1';
+  } else if (range.min == 0) {
+    return 'RANGE_2';
+  } else if (range.min == 5000) {
+    return 'RANGE_3';
+  } else if (range.min == 50000) {
+    return 'RANGE_4';
+  } else if (range.min == 250000) {
+    return 'RANGE_5';
+  } else if (range.min == 1000000) {
+    return 'RANGE_6';
+  }
+  return null;
 }

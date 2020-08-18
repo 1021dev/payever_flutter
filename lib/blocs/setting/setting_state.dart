@@ -71,6 +71,20 @@ class SettingScreenState {
 }
 
 class SettingScreenStateSuccess extends SettingScreenState {}
+class SettingScreenUpdateSuccess extends SettingScreenState {
+  final String business;
+  SettingScreenUpdateSuccess({this.business});
+}
+class SettingScreenUpdateFailure extends SettingScreenState {
+  final String error;
+
+  SettingScreenUpdateFailure({@required this.error}) : super();
+
+  @override
+  String toString() {
+    return 'SettingScreenUpdateFailure { error $error }';
+  }
+}
 
 class SettingScreenStateFailure extends SettingScreenState {
   final String error;
