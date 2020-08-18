@@ -39,6 +39,8 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
       yield* fetchWallpapers();
     } else if (event is UpdateWallpaperEvent) {
       yield* updateWallpaper(event.body);
+    } else if (event is WallpaperCategorySelected) {
+      yield state.copyWith(selectedCategory: event.category, subCategories: event.subCategories);
     }
   }
 

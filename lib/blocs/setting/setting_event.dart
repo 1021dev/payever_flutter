@@ -32,13 +32,16 @@ class UpdateWallpaperEvent extends SettingScreenEvent {
 
 class WallpaperCategorySelected extends SettingScreenEvent {
   final String category;
+  final List<String> subCategories;
 
   WallpaperCategorySelected({
     this.category,
+    this.subCategories,
   });
 
   @override
   List<Object> get props => [
     this.category,
+    this.subCategories,
   ];
 }

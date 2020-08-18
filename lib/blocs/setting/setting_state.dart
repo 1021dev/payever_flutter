@@ -9,7 +9,7 @@ class SettingScreenState {
   final List<Wallpaper> wallpapers;
   final List<Wallpaper> myWallpapers;
   final String selectedCategory;
-  final List<List<String>>categories;
+  final List<String>subCategories;
 
   SettingScreenState({
     this.isLoading = false,
@@ -19,7 +19,7 @@ class SettingScreenState {
     this.wallpapers,
     this.myWallpapers,
     this.selectedCategory,
-    this.categories,
+    this.subCategories,
   });
 
   List<Object> get props => [
@@ -29,7 +29,7 @@ class SettingScreenState {
     this.wallpaperCategories,
     this.wallpapers,
     this.myWallpapers,
-    this.categories,
+    this.subCategories,
   ];
 
   SettingScreenState copyWith({
@@ -40,7 +40,7 @@ class SettingScreenState {
     List<WallpaperCategory> wallpaperCategories,
     List<Wallpaper> wallpapers,
     List<Wallpaper> myWallpapers,
-    List<List<String>>categories,
+    List<String>subCategories,
   }) {
     return SettingScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -50,7 +50,7 @@ class SettingScreenState {
       wallpapers: wallpapers ?? this.wallpapers,
       selectedCategory: selectedCategory ?? this.selectedCategory,
       myWallpapers: myWallpapers ?? this.myWallpapers,
-      categories: categories ?? this.categories,
+      subCategories: subCategories ?? this.subCategories,
     );
   }
 }

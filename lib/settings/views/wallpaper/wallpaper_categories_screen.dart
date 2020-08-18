@@ -5,24 +5,27 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
+import 'package:payever/settings/models/models.dart';
 
 bool _isPortrait;
 bool _isTablet;
 
 class WallpaperCategoriesScreen extends StatefulWidget {
   final SettingScreenBloc screenBloc;
+
   WallpaperCategoriesScreen({
     this.screenBloc,
   });
 
   @override
-  _WallpaperCategoriesScreenState createState() => _WallpaperCategoriesScreenState();
-
+  _WallpaperCategoriesScreenState createState() =>
+      _WallpaperCategoriesScreenState();
 }
 
 class _WallpaperCategoriesScreenState extends State<WallpaperCategoriesScreen> {
-
   String selectedCategory = '';
+  List<String> subCategories = [];
+
   @override
   void initState() {
     selectedCategory = widget.screenBloc.state.selectedCategory;
@@ -38,9 +41,11 @@ class _WallpaperCategoriesScreenState extends State<WallpaperCategoriesScreen> {
   Widget build(BuildContext context) {
     _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
     Measurements.height = (_isPortrait
-        ? MediaQuery.of(context).size.height : MediaQuery.of(context).size.width);
+        ? MediaQuery.of(context).size.height
+        : MediaQuery.of(context).size.width);
     Measurements.width = (_isPortrait
-        ? MediaQuery.of(context).size.width : MediaQuery.of(context).size.height);
+        ? MediaQuery.of(context).size.width
+        : MediaQuery.of(context).size.height);
     _isTablet = Measurements.width < 600 ? false : true;
 
     return new OrientationBuilder(builder: (context, orientation) {
@@ -90,7 +95,8 @@ class _WallpaperCategoriesScreenState extends State<WallpaperCategoriesScreen> {
                     child: SizedBox(
                       child: MaterialButton(
                         onPressed: () {
-                          widget.screenBloc.add(WallpaperCategorySelected(category: selectedCategory));
+                          widget.screenBloc.add(WallpaperCategorySelected(
+                              category: selectedCategory, subCategories: subCategories));
                           Navigator.pop(context);
                         },
                         shape: RoundedRectangleBorder(
@@ -109,8 +115,9 @@ class _WallpaperCategoriesScreenState extends State<WallpaperCategoriesScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           GestureDetector(
-                            onTap: () {
-
+                            onTap: () async {
+                              selectedCategory = 'My Wallpapers';
+                              subCategories = [];
                             },
                             child: Container(
                               padding: EdgeInsets.only(left: 24),
@@ -140,14 +147,17 @@ class _WallpaperCategoriesScreenState extends State<WallpaperCategoriesScreen> {
                                       'Add',
                                     ),
                                   ),
-                                  SizedBox(width: 10,)
+                                  SizedBox(
+                                    width: 10,
+                                  )
                                 ],
                               ),
                             ),
                           ),
                           GestureDetector(
                             onTap: () {
-
+                              selectedCategory = 'All';
+                              subCategories = [];
                             },
                             child: Container(
                               alignment: Alignment.centerLeft,
@@ -168,48 +178,56 @@ class _WallpaperCategoriesScreenState extends State<WallpaperCategoriesScreen> {
                             shrinkWrap: true,
                             padding: EdgeInsets.symmetric(horizontal: 8),
                             itemBuilder: (context, index) {
-                              String category = widget.screenBloc.state.wallpaperCategories[index].code;
-                              return GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    selectedCategory = category;
-                                  });
-                                },
-                                child: Container(
-                                  height: 44,
-                                  padding: EdgeInsets.all(8),
-                                  decoration: BoxDecoration(
-                                    color: selectedCategory == category ? Color(0x26FFFFFF): Colors.transparent,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Row(
-                                    children: <Widget>[
-                                      Container(
-                                        child: SvgPicture.asset(
-                                          Measurements.channelIcon(category),
-                                          height: 32,
-                                        ),
+                              String category = widget.screenBloc.state
+                                  .wallpaperCategories[index].code;
+                              return Column(
+                                children: <Widget>[
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        selectedCategory = isSelected(category)
+                                            ? ''
+                                            : category;
+                                        if (selectedCategory.isEmpty) {
+                                          subCategories = [];
+                                        }
+                                      });
+                                    },
+                                    child: Container(
+                                      height: 44,
+                                      padding: EdgeInsets.all(8),
+                                      child: Row(
+                                        children: <Widget>[
+                                          Padding(
+                                            padding: EdgeInsets.only(left: 8),
+                                          ),
+                                          Text(
+                                            getMainCategory(category),
+                                            style: TextStyle(
+                                              color: Colors.white70,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Spacer(),
+                                          Icon(
+                                            isSelected(category)
+                                                ? Icons.clear
+                                                : Icons.add,
+                                            color: Colors.grey,
+                                          ),
+                                        ],
                                       ),
-                                      Padding(
-                                        padding: EdgeInsets.only(left: 8),
-                                      ),
-                                      Text(
-                                        getMainCategory(category),
-                                        style: TextStyle(
-                                          color: Colors.white70,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      )
-                                    ],
+                                    ),
                                   ),
-                                ),
+                                  _subCategories(widget.screenBloc.state
+                                      .wallpaperCategories[index]),
+                                ],
                               );
                             },
-                            separatorBuilder: (context, index) {
-                              return Container();
-                            },
-                            itemCount: widget.screenBloc.state.wallpaperCategories.length,
+                            separatorBuilder: (context, index) => _divider(),
+                            itemCount: widget
+                                .screenBloc.state.wallpaperCategories.length,
                           ),
                         ],
                       ),
@@ -221,13 +239,88 @@ class _WallpaperCategoriesScreenState extends State<WallpaperCategoriesScreen> {
           ),
         ),
       );
-    }
+    });
+  }
+
+  Widget _subCategories(WallpaperCategory wallpaperCategory) {
+    return isSelected(wallpaperCategory.code)
+        ? ListView.separated(
+            physics: NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            padding: EdgeInsets.symmetric(horizontal: 8),
+            itemBuilder: (context, index) {
+              String subCategory = wallpaperCategory.industries[index].code;
+              return GestureDetector(
+                onTap: () {
+                  setState(() {
+                    if (isContainSubCategory(subCategory))
+                      subCategories.remove(subCategory);
+                    else
+                      subCategories.add(subCategory);
+                  });
+                },
+                child: Container(
+                  height: 44,
+                  padding: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: (isContainSubCategory(subCategory))
+                        ? Color(0x26FFFFFF)
+                        : Colors.transparent,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(left: 8),
+                      ),
+                      Text(
+                        getSubCategory(subCategory),
+                        style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+            separatorBuilder: (context, index) {
+              return _divider();
+            },
+            itemCount: wallpaperCategory.industries.length,
+          )
+        : Container();
+  }
+
+  bool isSelected(String category) {
+    if (selectedCategory == null) return false;
+    return selectedCategory == category;
+  }
+
+  bool isContainSubCategory(String subCategory) {
+    return subCategories.contains(subCategory);
+  }
+
+  Widget _divider() {
+    return Divider(
+      height: 0,
+      thickness: 0.5,
+      color: Colors.white70,
     );
   }
-  
+
   String getMainCategory(String code) {
     code = code.replaceAll('BUSINESS_PRODUCT_', '');
     code = code.replaceAll('_', ' ');
-    return code;
+    return code[0].toUpperCase() + code.substring(1).toLowerCase();
+  }
+
+  String getSubCategory(String code) {
+    String title = code.split('_').first;
+    code = code.replaceAll('${title}_', '');
+    code = code.replaceAll('_', ' ');
+    return code[0].toUpperCase() + code.substring(1).toLowerCase();
   }
 }
