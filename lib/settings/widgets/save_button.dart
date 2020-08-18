@@ -24,7 +24,13 @@ class SaveBtn extends StatelessWidget {
       child: SizedBox.expand(
         child: isUpdating
             ? Center(
-          child:  CircularProgressIndicator(),
+          child: Container(
+            width: 24,
+            height: 24,
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+            ),
+          ),
         ) : MaterialButton(
           onPressed: onUpdate,
           child: Text('Save'),

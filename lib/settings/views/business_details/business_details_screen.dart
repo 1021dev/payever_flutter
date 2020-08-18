@@ -84,14 +84,15 @@ class _BusinessDetailsScreenState extends State<BusinessDetailsScreen> {
   Widget _getBody(SettingScreenState state) {
     return Center(
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 8),
+        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
         child: Container(
+          width: Measurements.width,
           decoration: BoxDecoration(
               color: Colors.black.withOpacity(0.2),
               shape: BoxShape.rectangle,
               borderRadius: BorderRadius.all(Radius.circular(8))),
           child: ListView.separated(
-            physics: NeverScrollableScrollPhysics(),
+            physics: BouncingScrollPhysics(),
             shrinkWrap: true,
             itemCount: detailTitles.length,
             itemBuilder: _itemBuilder,
