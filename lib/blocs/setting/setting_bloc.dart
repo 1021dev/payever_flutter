@@ -109,7 +109,7 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
 
   Stream<SettingScreenState> uploadWallpaperImage(File file) async* {
     yield state.copyWith(isUpdating: true);
-    dynamic response = await api.postImageToBusiness(file, state.business, GlobalUtils.activeToken.accessToken);
+    dynamic response = await api.postImageToWallpaper(file, state.business, GlobalUtils.activeToken.accessToken);
     if (response is DioError) {
       yield SettingScreenStateFailure(error: response.error);
     } else {

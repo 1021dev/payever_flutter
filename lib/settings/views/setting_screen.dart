@@ -14,6 +14,7 @@ import 'package:payever/login/login_screen.dart';
 import 'package:payever/notifications/notifications_screen.dart';
 import 'package:payever/search/views/search_screen.dart';
 import 'package:payever/settings/models/models.dart';
+import 'package:payever/settings/views/business_info_screen.dart';
 import 'package:payever/settings/views/wallpaper/wallpaper_screen.dart';
 import 'package:payever/switcher/switcher_page.dart';
 import 'package:provider/provider.dart';
@@ -384,21 +385,21 @@ class _SettingScreenState extends State<SettingScreen> {
 
   void _onTileClicked(int index) {
     Widget _target;
-    _target = WallpaperScreen(globalStateModel: widget.globalStateModel, setScreenBloc: screenBloc,);
-//    switch (index) {
-//      case 0:
-//
-//        break;
-//      case 1:
-//
-//        break;
-//      case 2:
-//
-//        break;
-//      default:
-//
-//        break;
-//    }
+
+    switch (index) {
+      case 0:
+        _target = BusinessInfoScreen(globalStateModel: widget.globalStateModel, setScreenBloc: screenBloc,);
+        break;
+      case 1:
+
+        break;
+      case 2:
+        _target = WallpaperScreen(globalStateModel: widget.globalStateModel, setScreenBloc: screenBloc,);
+        break;
+      default:
+        _target = WallpaperScreen(globalStateModel: widget.globalStateModel, setScreenBloc: screenBloc,);
+        break;
+    }
     if (_target == null) return;
     Navigator.push(
       context,

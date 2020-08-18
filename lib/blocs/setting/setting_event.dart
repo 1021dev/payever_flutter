@@ -59,3 +59,11 @@ class UploadWallpaperImage extends SettingScreenEvent{
     this.file,
   ];
 }
+
+class BusinessUpdateEvent extends SettingScreenEvent {
+  final Map<String, dynamic> body;
+  BusinessUpdateEvent(this.body);
+
+  @override
+  List<Object> get props => [body];
+}

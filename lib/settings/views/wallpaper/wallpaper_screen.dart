@@ -341,6 +341,7 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
                   ),
                   placeholder: (context, url) => Container(
                       child: Center(child: CircularProgressIndicator())),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
                 ),
               ),
               Spacer(),

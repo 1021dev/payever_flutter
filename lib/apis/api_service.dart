@@ -1688,6 +1688,34 @@ class ApiService {
     return upload;
   }
 
+  Future<dynamic> postImageToWallpaper(
+      File logo,
+      String business,
+      String token,
+      ) async {
+    print('$TAG - postImageToWallpaper()');
+    var headers = {
+      HttpHeaders.authorizationHeader: 'Bearer $token',
+      HttpHeaders.contentTypeHeader: '*/*',
+      HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+    };
+
+    String fileName = logo.path.split('/').last;
+    FormData formData = FormData.fromMap({
+      'file': await MultipartFile.fromFile(
+        logo.path,
+        filename: fileName,
+      ),
+    });
+
+    dynamic upload = await _client.postForm(
+        '$mediaBusiness$business$wallpaperEnd',
+        body: formData,
+        headers: headers
+    );
+    return upload;
+  }
+
   Future<dynamic> createShop(String token, String idBusiness, String name, String logo) async {
     try {
       print('$TAG - createShop()');
