@@ -12,6 +12,7 @@ class SettingScreenState {
   final String selectedCategory;
   final List<String>subCategories;
   final String blobName;
+  final List<BusinessProduct> businessProducts;
 
   SettingScreenState({
     this.isLoading = false,
@@ -24,6 +25,7 @@ class SettingScreenState {
     this.selectedCategory = 'All',
     this.subCategories,
     this.blobName,
+    this.businessProducts = const [],
   });
 
   List<Object> get props => [
@@ -36,6 +38,7 @@ class SettingScreenState {
     this.myWallpapers,
     this.subCategories,
     this.blobName,
+    this.businessProducts,
   ];
 
   SettingScreenState copyWith({
@@ -49,6 +52,7 @@ class SettingScreenState {
     List<Wallpaper> myWallpapers,
     List<String>subCategories,
     String blobName,
+    List<BusinessProduct> businessProducts,
   }) {
     return SettingScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -61,6 +65,7 @@ class SettingScreenState {
       myWallpapers: myWallpapers ?? this.myWallpapers,
       subCategories: subCategories ?? this.subCategories,
       blobName: blobName ?? this.blobName,
+      businessProducts: businessProducts ?? this.businessProducts,
     );
   }
 }

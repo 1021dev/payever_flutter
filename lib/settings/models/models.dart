@@ -112,3 +112,76 @@ class MyWallpaper {
 
   }
 }
+
+class IndustryModel {
+  String code;
+  String industry;
+  String logo;
+  String slug;
+  String wallpaper;
+  String id;
+
+  IndustryModel.fromMap(dynamic obj) {
+    code = obj['code'];
+    industry = obj['industry'];
+    logo = obj['logo'];
+    slug = obj['slug'];
+    wallpaper = obj['wallpaper'];
+    id = obj['_id'];
+  }
+}
+
+class BusinessProduct {
+  String code;
+  List<IndustryModel> industries = [];
+  num order;
+  String id;
+
+  BusinessProduct.fromMap(dynamic obj) {
+    code = obj['code'];
+    order = obj['order'];
+    id = obj['_id'];
+    dynamic industryObj = obj['industries'];
+    if (industryObj is List) {
+      industryObj.forEach((element) {
+        industries.add(IndustryModel.fromMap(element));
+      });
+    }
+  }
+
+}
+
+
+List<String> legalForms = [
+  'LEGAL_FORM_AG',
+  'LEGAL_FORM_EG',
+  'LEGAL_FORM_EINZELUNTERN',
+//  "assets.legal_form.LEGAL_FORM_EINZELUNTERNAHMER",
+  'LEGAL_FORM_EK',
+  'LEGAL_FORM_EV',
+  'LEGAL_FORM_GBR',
+  'LEGAL_FORM_GMBH',
+  'LEGAL_FORM_KG',
+  'LEGAL_FORM_OHG',
+  'LEGAL_FORM_SONSTIGES',
+  'LEGAL_FORM_UG'
+];
+
+List<String> employeeRange = [
+  'RANGE_1',
+  'RANGE_2',
+  'RANGE_3',
+  'RANGE_4',
+  'RANGE_5',
+  'RANGE_6'
+];
+
+List<String> salesRange = [
+  'RANGE_1',
+  'RANGE_2',
+  'RANGE_3',
+  'RANGE_4',
+  'RANGE_5',
+  'RANGE_6'
+];
+

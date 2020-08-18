@@ -1,45 +1,59 @@
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/blocs/bloc.dart';
+import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
+import 'package:payever/commons/views/custom_elements/custom_elements.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
+import 'package:payever/settings/models/models.dart';
 import 'package:payever/settings/widgets/app_bar.dart';
 import 'package:payever/settings/widgets/save_button.dart';
 
-Map<String, String> currencyNames = {
-  'Swiss Franc': 'CHF',
-  'Danish Krone': 'DKK',
-  'Euro': 'EUR',
-  'Pound sterling': 'GBP',
-  'Norwegian': 'NOK',
-  'Swedish Krona': 'SEK',
-  'US Dollar': 'USD'
-};
-
-class CurrencyScreen extends StatefulWidget {
+class CompanyScreen extends StatefulWidget {
   final GlobalStateModel globalStateModel;
   final SettingScreenBloc setScreenBloc;
 
-  CurrencyScreen({this.globalStateModel, this.setScreenBloc});
+  CompanyScreen({this.globalStateModel, this.setScreenBloc});
   @override
-  _CurrencyScreenState createState() => _CurrencyScreenState();
+  _CompanyScreenState createState() => _CompanyScreenState();
 }
 
-class _CurrencyScreenState extends State<CurrencyScreen> {
-  bool _isOpenCurrencyTable = false;
-  String _currency = '';
+class _CompanyScreenState extends State<CompanyScreen> {
 
-  String getCurrency(String currency) {
-    return currencyNames.keys
-        .firstWhere((key) => currencyNames[key] == currency);
-  }
+  TextEditingController urlController = TextEditingController();
+  Business activeBusiness;
+  CompanyDetails companyDetails;
+
+  String legalForm;
+  String product;
+  SalesRange saleRange;
+  String saleRangeString;
+  EmployeesRange employeesRange;
+  String employeesRangeString;
+  String industry;
+  String urlWebsite;
 
   @override
   void initState() {
-    _currency = currencyNames.keys.firstWhere((key) => currencyNames[key] == widget.globalStateModel.currentBusiness.currency);
+    widget.setScreenBloc.add(GetBusinessProductsEvent());
+    activeBusiness = widget.setScreenBloc.dashboardScreenBloc.state.activeBusiness;
+    companyDetails = activeBusiness.companyDetails;
+    if (companyDetails != null) {
+      legalForm = companyDetails.legalForm;
+      product = companyDetails.product;
+      saleRange = companyDetails.salesRange;
+      employeesRange = companyDetails.employeesRange;
+      industry = companyDetails.industry;
+      urlWebsite = companyDetails.urlWebsite;
+    }
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return _body;
@@ -54,7 +68,7 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
   get _body {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: Appbar('Currency'),
+      appBar: Appbar('Company'),
       body: SafeArea(
         child: BackgroundBase(
           true,
@@ -76,125 +90,289 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
       child: BlocBuilder<SettingScreenBloc, SettingScreenState>(
         bloc: widget.setScreenBloc,
         builder: (context, state) {
+
+          List<IndustryModel> industries = [];
+          if (product != null){
+            BusinessProduct businessProduct = state.businessProducts.singleWhere((element) => element.code == product);
+            if (businessProduct != null) {
+              industries.addAll(businessProduct.industries);
+            }
+          }
           return Center(
             child: Container(
+              padding: EdgeInsets.all(16),
               width: Measurements.width,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Stack(
-                  children: [
-                    Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Container(
-                            clipBehavior: Clip.antiAlias,
-                            decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(0.4),
-                              shape: BoxShape.rectangle,
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(8.0),
-                                topRight: Radius.circular(8.0),
-                              ),
+              child: BlurEffectView(
+                color: Color.fromRGBO(20, 20, 20, 0.4),
+                child: SingleChildScrollView(
+                  child: Container(
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          padding: EdgeInsets.only(left: 8, top: 8, right: 8),
+                          child: BlurEffectView(
+                            color: Color.fromRGBO(100, 100, 100, 0.05),
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(8),
+                              topRight: Radius.circular(8),
                             ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Center(
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        _isOpenCurrencyTable = true;
-                                      });
-                                    },
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          color: Colors.grey.withOpacity(0.25),
-                                          shape: BoxShape.rectangle,
-                                          borderRadius: BorderRadius.circular(10)),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                14, 8, 14, 5),
-                                            child: Text(
-                                              'Currency',
-                                              style: TextStyle(
-                                                color: Colors.white54,
-                                                fontSize: 12,
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                14, 0, 14, 10),
-                                            child: Text(
-                                              _currency,
-                                              style:
-                                              TextStyle(
-                                                fontSize: 16,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                            child: Container(
+                              padding: EdgeInsets.only(left: 12, right: 12),
+                              child: DropdownButtonFormField(
+                                items: List.generate(legalForms.length, (index) {
+                                  return DropdownMenuItem(
+                                    child: Text(
+                                      Language.getSettingsStrings('assets.legal_form.${legalForms[index]}'),
                                     ),
-                                  )),
-                            ),
-                          ),
-                          SaveBtn(
-                            isUpdating: state.isUpdating,
-                            onUpdate: () {
-                              if (!state.isUpdating) {
-                                widget.setScreenBloc.add(BusinessUpdateEvent({
-                                  'currency': currencyNames[_currency]
-                                }));
-                              }
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                    Center(
-                      child: Visibility(
-                        visible: _isOpenCurrencyTable,
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: Color(0xFF303030),
-                              shape: BoxShape.rectangle,
-                              borderRadius:
-                              BorderRadius.all(Radius.circular(8.0))),
-                          child: ListView.separated(
-                            shrinkWrap: true,
-                            physics: BouncingScrollPhysics(),
-                            itemCount: currencyNames.length,
-                            itemBuilder: (context, index) {
-                              List<String> keys = currencyNames.keys.toList();
-                              return ListTile(
-                                title: Text(keys[index]),
-                                onTap: () {
-                                  setState(() {
-                                    _currency = getCurrency(currencyNames[keys[index]]);
-                                    _isOpenCurrencyTable = false;
-                                  });
+                                    value: legalForms[index],
+                                  );
+                                }).toList(),
+                                onChanged: (val) {
                                 },
-                              );
-                            },
-                            separatorBuilder: (context, index) => Divider(
-                              height: 1,
+                                icon: Icon(
+                                  Icons.keyboard_arrow_down,
+                                  color: Colors.black54,
+                                ),
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                ),
+                                hint: Text(
+                                  Language.getSettingsStrings('form.create_form.company.legal_form.label'),
+                                ),
+                              ),
                             ),
                           ),
                         ),
-                      ),
+                        Container(
+                          padding: EdgeInsets.only(left: 8, top: 2, right: 8),
+                          child: BlurEffectView(
+                            color: Color.fromRGBO(100, 100, 100, 0.05),
+                            radius: 0,
+                            child: Container(
+                              padding: EdgeInsets.only(left: 12, right: 12),
+                              child: DropdownButtonFormField(
+                                items: List.generate(employeeRange.length, (index) {
+                                  return DropdownMenuItem(
+                                    child: Text(
+                                      Language.getSettingsStrings('assets.employees.${employeeRange[index]}'),
+                                    ),
+                                    value: employeeRange[index],
+                                  );
+                                }).toList(),
+                                onChanged: (val) {
+                                },
+                                icon: Icon(
+                                  Icons.keyboard_arrow_down,
+                                  color: Colors.black54,
+                                ),
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                ),
+                                hint: Text(
+                                  Language.getSettingsStrings('form.create_form.company.employees.label'),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(left: 8, top: 2, right: 8),
+                          child: BlurEffectView(
+                            color: Color.fromRGBO(100, 100, 100, 0.05),
+                            radius: 0,
+                            child: Container(
+                              padding: EdgeInsets.only(left: 12, right: 12),
+                              child: DropdownButtonFormField(
+                                items: List.generate(salesRange.length, (index) {
+                                  return DropdownMenuItem(
+                                    child: Text(
+                                      Language.getSettingsStrings('assets.sales.${salesRange[index]}'),
+                                    ),
+                                    value: salesRange[index],
+                                  );
+                                }).toList(),
+                                onChanged: (val) {
+                                },
+                                icon: Icon(
+                                  Icons.keyboard_arrow_down,
+                                  color: Colors.black54,
+                                ),
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                ),
+                                hint: Text(
+                                  Language.getSettingsStrings('form.create_form.company.sales.label'),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(left: 8, top: 2, right: 8),
+                          child: BlurEffectView(
+                            color: Color.fromRGBO(100, 100, 100, 0.05),
+                            radius: 0,
+                            child: Container(
+                              padding: EdgeInsets.only(left: 12, right: 12),
+                              child: DropdownButtonFormField(
+                                items: List.generate(state.businessProducts.length, (index) {
+                                  return DropdownMenuItem(
+                                    child: Text(
+                                      Language.getCommerceOSStrings('assets.product.${state.businessProducts[index].code}'),
+                                    ),
+                                    value: state.businessProducts[index].code,
+                                  );
+                                }).toList(),
+                                onChanged: (val) {
+                                  setState(() {
+                                    product = val;
+                                    industry = null;
+                                  });
+                                },
+                                value: product,
+                                icon: Icon(
+                                  Icons.keyboard_arrow_down,
+                                  color: Colors.black54,
+                                ),
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                ),
+                                hint: Text(
+                                  Language.getSettingsStrings('form.create_form.company.product.label'),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(left: 8, top: 2, right: 8),
+                          child: BlurEffectView(
+                            color: Color.fromRGBO(100, 100, 100, 0.05),
+                            radius: 0,
+                            child: Container(
+                              padding: EdgeInsets.only(left: 12, right: 12),
+                              child: DropdownButtonFormField(
+                                items: List.generate(industries.length, (index) {
+                                  return DropdownMenuItem(
+                                    child: AutoSizeText(
+                                      Language.getCommerceOSStrings('assets.industry.${industries[index].code}'),
+                                    ),
+                                    value: industries[index].code,
+                                  );
+                                }).toList(),
+                                value: industry,
+                                onChanged: (val) {
+                                  setState(() {
+                                    industry = val;
+                                  });
+                                },
+                                icon: Icon(
+                                  Icons.keyboard_arrow_down,
+                                  color: Colors.black54,
+                                ),
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                ),
+                                hint: Text(
+                                  Language.getSettingsStrings('form.create_form.company.industry.label'),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(left: 8, top: 2, right: 8, bottom: 8),
+                          height: 65,
+                          child: BlurEffectView(
+                            color: Color.fromRGBO(100, 100, 100, 0.05),
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(8),
+                              bottomRight: Radius.circular(8),
+                            ),
+                            child: Container(
+                              padding: EdgeInsets.only(left: 12, right: 12),
+                              child: TextField(
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                ),
+                                controller: urlController,
+                                textInputAction: TextInputAction.done,
+                                keyboardType: TextInputType.url,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  labelText: Language.getSettingsStrings('form.create_form.company.url_web.label'),
+                                  labelStyle: TextStyle(
+                                    color: Colors.white54,
+                                    fontSize: 12,
+                                  )
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SaveBtn(
+                          isUpdating: state.isUpdating,
+                          onUpdate: () {
+                            Map<String, dynamic> body = {};
+                            if (legalForm != null) {
+                              body['legalForm'] = legalForm;
+                            }
+                            if (employeesRange != null) {
+                              body['employeesRange'] = getEmployeeRange(employeesRange);
+                            }
+
+                            widget.setScreenBloc.add(BusinessUpdateEvent(
+                              {
+                                'companyDetails': body,
+                              }
+                            ));
+                          },
+                        )
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
+              )
             ),
           );
         },
       ),
     );
+  }
+}
+
+Map<String, dynamic> getEmployeeRange(String employee) {
+  switch(employee) {
+    case 'RANGE_1':
+      return {
+        'min': 1,
+        'max': 5
+      };
+    case 'RANGE_2':
+      return {
+        'min': 6,
+        'max': 18
+      };
+    case 'RANGE_3':
+      return {
+        'min': 19,
+        'max': 99
+      };
+    case 'RANGE_4':
+      return {
+        'min': 100,
+        'max': 349
+      };
+    case 'RANGE_5':
+      return {
+        'min': 350,
+        'max': 1499
+      };
+    case 'RANGE_6':
+      return {
+        'min': 1500,
+      };
+    default: return {};
   }
 }

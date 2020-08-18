@@ -8,12 +8,14 @@ class BlurEffectView extends StatelessWidget {
   final double radius;
   final double blur;
   final Color color;
+  final BorderRadius borderRadius;
   final EdgeInsetsGeometry padding;
 
   BlurEffectView({
     this.child,
     this.radius = 12,
     this.blur = 15,
+    this.borderRadius,
     this.color = const Color.fromRGBO(0, 0, 0, 0.4),
     this.padding = EdgeInsets.zero,
   });
@@ -21,7 +23,7 @@ class BlurEffectView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlurryContainer(
-      borderRadius: BorderRadius.circular(radius),
+      borderRadius: borderRadius != null ? borderRadius : BorderRadius.circular(radius),
       bgColor: color,
       blur: blur,
       padding: padding,

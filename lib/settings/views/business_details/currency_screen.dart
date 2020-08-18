@@ -147,7 +147,8 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
                             isUpdating: state.isUpdating,
                             onUpdate: () {
                               if (!state.isUpdating) {
-                                widget.setScreenBloc.add(BusinessUpdateEvent({
+                                widget.setScreenBloc.add(
+                                    BusinessUpdateEvent({
                                   'currency': currencyNames[_currency]
                                 }));
                               }

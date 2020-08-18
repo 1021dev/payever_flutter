@@ -78,3 +78,5 @@ class UploadBusinessImage extends SettingScreenEvent {
     this.file,
   ];
 }
+
+class GetBusinessProductsEvent extends SettingScreenEvent {}

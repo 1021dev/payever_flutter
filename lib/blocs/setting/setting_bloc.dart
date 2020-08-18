@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/blocs/bloc.dart';
@@ -46,6 +47,8 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
       yield* uploadBusiness(event.body);
     } else if (event is UploadBusinessImage) {
       yield* uploadBusinessImage(event.file);
+    } else if (event is GetBusinessProductsEvent) {
+      yield* getBusinessProducts();
     }
 
   }
@@ -156,5 +159,19 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
       yield SettingScreenStateFailure(error: 'Update Business name failed');
       yield state.copyWith(isUpdating: false);
     }
+  }
+
+  Stream<SettingScreenState> getBusinessProducts() async* {
+
+    List<BusinessProduct> businessProducts = [];
+    dynamic response = await api.getBusinessProducts(token);
+
+    if (response is List) {
+      response.forEach((element) {
+        businessProducts.add(BusinessProduct.fromMap(element));
+      });
+    }
+
+    yield state.copyWith(businessProducts: businessProducts);
   }
 }

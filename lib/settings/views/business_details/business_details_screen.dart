@@ -7,6 +7,7 @@ import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/settings/models/models.dart';
+import 'package:payever/settings/views/business_details/company_screen.dart';
 import 'package:payever/settings/widgets/app_bar.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'currency_screen.dart';
@@ -142,6 +143,11 @@ class _BusinessDetailsScreenState extends State<BusinessDetailsScreen> {
     switch (index) {
       case 0:
         _target = CurrencyScreen(
+            globalStateModel: widget.globalStateModel,
+            setScreenBloc: widget.setScreenBloc);
+        break;
+      case 1:
+        _target = CompanyScreen(
             globalStateModel: widget.globalStateModel,
             setScreenBloc: widget.setScreenBloc);
         break;
