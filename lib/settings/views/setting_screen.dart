@@ -341,7 +341,7 @@ class _SettingScreenState extends State<SettingScreen> {
                             shape: BoxShape.circle,
                             color: Color(0xffa0a7aa),
                             image: DecorationImage(
-                              image: NetworkImage('$imageBase${widget.globalStateModel.currentBusiness.name}'),
+                              image: NetworkImage('$imageBase${widget.globalStateModel.currentBusiness.logo}'),
                               fit: BoxFit.cover,
                             ),
                           ),

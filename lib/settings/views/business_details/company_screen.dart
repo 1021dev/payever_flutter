@@ -129,8 +129,9 @@ class _CompanyScreenState extends State<CompanyScreen> {
                                     value: legalForms[index],
                                   );
                                 }).toList(),
-                                value: legalForm,
+                                value: legalForm != '' ? legalForm : null,
                                 onChanged: (val) {
+                                  legalForm = val;
                                 },
                                 icon: Icon(
                                   Icons.keyboard_arrow_down,
@@ -162,7 +163,7 @@ class _CompanyScreenState extends State<CompanyScreen> {
                                     value: employeeRange[index],
                                   );
                                 }).toList(),
-                                value: employeesRangeString,
+                                value: employeesRangeString != '' ? employeesRangeString : null,
                                 onChanged: (val) {
                                   setState(() {
                                     employeesRangeString = val;
@@ -198,7 +199,7 @@ class _CompanyScreenState extends State<CompanyScreen> {
                                     value: salesRange[index],
                                   );
                                 }).toList(),
-                                value: saleRangeString,
+                                value: saleRangeString != '' ? saleRangeString : null,
                                 onChanged: (val) {
                                   setState(() {
                                     saleRangeString = val;
@@ -240,7 +241,7 @@ class _CompanyScreenState extends State<CompanyScreen> {
                                     industry = null;
                                   });
                                 },
-                                value: product,
+                                value: product != '' ? product : null,
                                 icon: Icon(
                                   Icons.keyboard_arrow_down,
                                   color: Colors.black54,
@@ -271,7 +272,7 @@ class _CompanyScreenState extends State<CompanyScreen> {
                                     value: industries[index].code,
                                   );
                                 }).toList(),
-                                value: industry,
+                                value: industry != '' ? industry : null,
                                 onChanged: (val) {
                                   setState(() {
                                     industry = val;
