@@ -28,7 +28,7 @@ class _WallpaperCategoriesScreenState extends State<WallpaperCategoriesScreen> {
 
   @override
   void initState() {
-    selectedCategory = widget.screenBloc.state.selectedCategory;
+//    selectedCategory = widget.screenBloc.state.selectedCategory;
     super.initState();
   }
 

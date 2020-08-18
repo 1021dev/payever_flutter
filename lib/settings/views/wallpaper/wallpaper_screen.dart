@@ -110,6 +110,7 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
   }
 
   Widget _getBody(SettingScreenState state) {
+    List<Wallpaper> wallpapers = _getWallpapers(state);
     return Column(
       children: [
         _secondAppBar(state),
@@ -135,20 +136,20 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
           ),
         ),
         Expanded(
-          child: Center(
+          child: Container(
             child: isGridMode
                 ? GridView.builder(
                     scrollDirection: Axis.vertical,
                     shrinkWrap: true,
                     itemBuilder: (context, index) =>
-                        _gridItemBuilder(state, index),
+                        _gridItemBuilder(state, wallpapers[index]),
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         childAspectRatio: 1 / 1, crossAxisCount: _isTablet || !_isPortrait ? 4: 2),
-                    itemCount: state.wallpapers.length)
+                    itemCount: wallpapers.length)
                 : ListView.builder(
-                    itemCount: state.wallpapers.length,
+                    itemCount: wallpapers.length,
                     itemBuilder: (context, index) =>
-                        _listItemBuilder(state, index)),
+                        _listItemBuilder(state, wallpapers[index])),
           ),
         ),
       ],
@@ -264,7 +265,7 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
     );
   }
 
-  Widget _gridItemBuilder(SettingScreenState state, int index) {
+  Widget _gridItemBuilder(SettingScreenState state, Wallpaper wallpaper) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -273,7 +274,7 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
           Expanded(
             child: CachedNetworkImage(
               imageUrl:
-                  '${Env.storage}/wallpapers/${state.wallpapers[index].wallpaper}',
+                  '${Env.storage}/wallpapers/${wallpaper.wallpaper}',
               imageBuilder: (context, imageProvider) => Container(
                 decoration: BoxDecoration(
                   color: Colors.black,
@@ -292,7 +293,7 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
           ),
           GestureDetector(
             onTap: () {
-              updateWallpaper(state.wallpapers[index]);
+              updateWallpaper(wallpaper);
             },
             child: Container(
               alignment: Alignment.center,
@@ -310,7 +311,7 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
     );
   }
 
-  Widget _listItemBuilder(SettingScreenState state, int index) {
+  Widget _listItemBuilder(SettingScreenState state, Wallpaper wallpaper) {
     return Column(
       children: <Widget>[
         Container(
@@ -325,7 +326,7 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
                 width: 50,
                 child: CachedNetworkImage(
                   imageUrl:
-                      '${Env.storage}/wallpapers/${state.wallpapers[index].wallpaper}',
+                      '${Env.storage}/wallpapers/${wallpaper.wallpaper}',
                   imageBuilder: (context, imageProvider) => Container(
                     decoration: BoxDecoration(
                       color: Colors.black,
@@ -343,11 +344,11 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
                 ),
               ),
               Spacer(),
-              Text(state.wallpapers[index].industry.toString().toUpperCase()),
+              Text(wallpaper.industry.toString().toUpperCase()),
               Spacer(),
               InkWell(
                 onTap: () {
-                  updateWallpaper(state.wallpapers[index]);
+                  updateWallpaper(wallpaper);
                 },
                 child: Container(
                   height: 20,
@@ -375,6 +376,29 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
         Divider(height: 1, color: Colors.white.withOpacity(0.5)),
       ],
     );
+  }
+
+  List<Wallpaper> _getWallpapers(SettingScreenState state) {
+    String selectedCategory = state.selectedCategory;
+    List<String>subCategories = state.subCategories;
+    if (selectedCategory.isEmpty || selectedCategory == 'All')
+      return state.wallpapers;
+    else if (selectedCategory == 'My Wallpapers')
+      return state.myWallpapers;
+    else {
+      if (subCategories.isEmpty)
+        return state.wallpapers;
+      else {
+        List<Wallpaper> wallpapers = [];
+        WallpaperCategory wallpaperCategory = state.wallpaperCategories.where((element) => element.code == selectedCategory).toList().first;
+        subCategories.forEach((subCategory) {
+          wallpaperCategory.industries.where((industry) => industry.code == subCategory).toList().first.wallpapers.forEach((wallpaper) {
+            wallpapers.add(wallpaper);
+          });
+        });
+        return wallpapers;
+      }
+    }
   }
 
   void updateWallpaper(Wallpaper wallpaper) {

@@ -18,7 +18,7 @@ class SettingScreenState {
     this.wallpaperCategories,
     this.wallpapers,
     this.myWallpapers,
-    this.selectedCategory,
+    this.selectedCategory = 'All',
     this.subCategories,
   });
 
