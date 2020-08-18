@@ -14,16 +14,22 @@ class SaveBtn extends StatelessWidget {
     return Container(
       height: 55,
       decoration: BoxDecoration(
-          color: Colors.black,
-          shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(8.0),
-              bottomRight: Radius.circular(8.0))),
-      child: Center(
-          child: isUpdating
-              ? CircularProgressIndicator()
-              : MaterialButton(onPressed: onUpdate,
-              child: Text('Save'))),
+        color: Colors.black,
+        shape: BoxShape.rectangle,
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(8.0),
+          bottomRight: Radius.circular(8.0),
+        ),
+      ),
+      child: SizedBox.expand(
+        child: isUpdating
+            ? Center(
+          child:  CircularProgressIndicator(),
+        ) : MaterialButton(
+          onPressed: onUpdate,
+          child: Text('Save'),
+        ),
+      ),
     );
   }
 }

@@ -28,6 +28,7 @@ class _BusinessInfoScreenState extends State<BusinessInfoScreen> {
   bool isGridMode = true;
   bool _isPortrait;
   bool _isTablet;
+  final _formKey = GlobalKey<FormState>();
 
   final TextEditingController myController = TextEditingController();
 
@@ -64,7 +65,7 @@ class _BusinessInfoScreenState extends State<BusinessInfoScreen> {
         builder: (BuildContext context, SettingScreenState state) {
           return Scaffold(
             backgroundColor: Colors.black,
-            resizeToAvoidBottomPadding: false,
+            resizeToAvoidBottomPadding: true,
             appBar: Appbar('Business Info'),
             body: SafeArea(
               child: BackgroundBase(
@@ -84,7 +85,6 @@ class _BusinessInfoScreenState extends State<BusinessInfoScreen> {
   }
 
   Widget _getBody(SettingScreenState state) {
-    final _formKey = GlobalKey<FormState>();
     String blobName = state.blobName;
     return Center(
       child: Padding(
@@ -114,7 +114,15 @@ class _BusinessInfoScreenState extends State<BusinessInfoScreen> {
                               children: <Widget>[
                                 state.isUpdatingBusinessImg ?
                                     Center(
-                                      child: CircularProgressIndicator(),
+                                      child: Container(
+                                        width: 16,
+                                        height: 16,
+                                        child: Center(
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                          ),
+                                        ),
+                                      ),
                                     ) :
                                 blobName != null && blobName != ''
                                     ? Center(
@@ -192,22 +200,22 @@ class _BusinessInfoScreenState extends State<BusinessInfoScreen> {
                     ],
                   ),
                   Padding(
-                    padding: EdgeInsets.fromLTRB(0, 15, 10, 20),
-                    child: GestureDetector(
-                      onTap: null,
-                      child: Container(
-                        padding: EdgeInsets.fromLTRB(10, 3, 10, 3),
-                        decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.3),
-                          shape: BoxShape.rectangle,
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
-                        ),
-                        child: Text(
-                          'Delete Business',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 13,
-                          ),
+                    padding: EdgeInsets.fromLTRB(0, 8, 10, 8),
+                    child: MaterialButton(
+                      onPressed: () {
+
+                      },
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      height: 24,
+                      color: Colors.black54,
+                      elevation: 0,
+                      child: Text(
+                        'Delete Business',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 13,
                         ),
                       ),
                     ),
@@ -215,6 +223,7 @@ class _BusinessInfoScreenState extends State<BusinessInfoScreen> {
                   SaveBtn(
                     isUpdating: state.isUpdating,
                     onUpdate: () {
+                      FocusScope.of(context).unfocus();
                       if (_formKey.currentState.validate() && !state.isUpdating) {
                         Map<String, dynamic> body = {
                           'logo': blobName,

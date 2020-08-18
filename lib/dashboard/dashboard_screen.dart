@@ -998,18 +998,38 @@ class _DashboardScreenState extends State<DashboardScreen> {
               screenBloc.add(DeleteNotification(notificationId: model.id));
             },
             onTapOpen: () {
-              Provider.of<GlobalStateModel>(context, listen: false)
-                  .setCurrentBusiness(state.activeBusiness);
-              Provider.of<GlobalStateModel>(context, listen: false)
-                  .setCurrentWallpaper(state.curWall);
-              Navigator.push(
-                context,
-                PageTransition(
-                  child: SettingInitScreen(dashboardScreenBloc: screenBloc,),
-                  type: PageTransitionType.fade,
-                  duration: Duration(milliseconds: 50),
-                ),
-              );
+              print(businessApp.setupStatus);
+              if (businessApp.setupStatus == 'notStarted') {
+                Provider.of<GlobalStateModel>(context, listen: false)
+                    .setCurrentBusiness(state.activeBusiness);
+                Provider.of<GlobalStateModel>(context, listen: false)
+                    .setCurrentWallpaper(state.curWall);
+                Navigator.push(
+                  context,
+                  PageTransition(
+                    child: WelcomeScreen(
+                      dashboardScreenBloc: screenBloc,
+                      business: state.activeBusiness,
+                      businessApps: businessApp,
+                    ),
+                    type: PageTransitionType.fade,
+                    duration: Duration(milliseconds: 50),
+                  ),
+                );
+              } else {
+                Provider.of<GlobalStateModel>(context, listen: false)
+                    .setCurrentBusiness(state.activeBusiness);
+                Provider.of<GlobalStateModel>(context, listen: false)
+                    .setCurrentWallpaper(state.curWall);
+                Navigator.push(
+                  context,
+                  PageTransition(
+                    child: SettingInitScreen(dashboardScreenBloc: screenBloc,),
+                    type: PageTransitionType.fade,
+                    duration: Duration(milliseconds: 50),
+                  ),
+                );
+              }
             },
             onTapOpenWallpaper: () async {
               SettingScreenBloc settingscreenBloc = SettingScreenBloc(dashboardScreenBloc: screenBloc, globalStateModel: globalStateModel);

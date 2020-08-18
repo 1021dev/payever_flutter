@@ -300,6 +300,19 @@ class _SettingScreenState extends State<SettingScreen> {
   }
 
   Widget _body(SettingScreenState state) {
+    String avatarName = '';
+    if (widget.globalStateModel.currentBusiness != null) {
+      String name = widget.globalStateModel.currentBusiness.name;
+      if (name.contains(' ')) {
+        avatarName = name.substring(0, 1);
+        avatarName = avatarName + name.split(' ')[1].substring(0, 1);
+      } else {
+        avatarName = name.substring(0, 1) + name.substring(name.length - 1);
+        avatarName = avatarName.toUpperCase();
+      }
+    } else {
+      return Container();
+    }
     return DefaultTabController(
       length: 6,
       initialIndex: 0,
@@ -316,28 +329,53 @@ class _SettingScreenState extends State<SettingScreen> {
                 margin: EdgeInsets.symmetric(horizontal: 50),
                 child: ListView(
                   children: <Widget>[
-                    Column(children: <Widget>[
-                      Container(
-                        child: Padding(
-                          padding: EdgeInsets.fromLTRB(0, 30, 0, 16),
-                          child: CustomCircleAvatar(
-                              widget.globalStateModel.currentBusiness.logo != null
-                                  ? widget.globalStateModel.currentBusiness.logo
-                                  : "business",
-                              widget.globalStateModel.currentBusiness.name),
+                    Column(
+                      children: <Widget>[
+                        SizedBox(
+                          height: 50,
                         ),
-                      ),
-                      Text(
-                        widget.globalStateModel.currentBusiness.name,
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 24,
-                            fontWeight: FontWeight.w400),
-                      ),
-                      SizedBox(
-                        height: 50,
-                      ),
-                    ]),
+                        widget.globalStateModel.currentBusiness.logo != null ? Container(
+                          width: 100,
+                          height: 100,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Color(0xffa0a7aa),
+                            image: DecorationImage(
+                              image: NetworkImage('$imageBase${widget.globalStateModel.currentBusiness.name}'),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ):
+                        Container(
+                          width: 100,
+                          height: 100,
+                          child: CircleAvatar(
+                            backgroundColor: Color(0xffa0a7aa),
+                            child: Text(
+                              avatarName,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 36,
+                                fontWeight: FontWeight.w300,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 16,
+                        ),
+                        Text(
+                          widget.globalStateModel.currentBusiness.name,
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 24,
+                              fontWeight: FontWeight.w400),
+                        ),
+                        SizedBox(
+                          height: 50,
+                        ),
+                      ],
+                    ),
                     GridView.builder(
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
@@ -347,7 +385,8 @@ class _SettingScreenState extends State<SettingScreen> {
                         gridDelegate:
                         SliverGridDelegateWithFixedCrossAxisCount(
                             childAspectRatio: 4 / 4, crossAxisCount: (_isTablet || !_isPortrait) ? 3 : 2),
-                        itemCount: 7)
+                        itemCount: 7,
+                    )
                   ],
                 ),
               ),
