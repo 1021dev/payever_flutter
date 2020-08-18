@@ -402,12 +402,7 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
   }
 
   void updateWallpaper(Wallpaper wallpaper) {
-    Map<String, String> body = {
-      GlobalUtils.DB_BUSINESS_WALLPAPER_INDUSTRY: wallpaper.industry,
-      GlobalUtils.DB_BUSINESS_CURRENT_WALLPAPER_THEME: wallpaper.theme,
-      GlobalUtils.DB_BUSINESS_CURRENT_WALLPAPER_WALLPAPER: wallpaper.wallpaper,
-    };
-    widget.setScreenBloc.add(UpdateWallpaperEvent(body: body));
+    widget.setScreenBloc.add(UpdateWallpaperEvent(body: wallpaper.toDictionary()));
   }
 }
 

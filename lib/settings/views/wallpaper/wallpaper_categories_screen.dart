@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
@@ -48,84 +52,210 @@ class _WallpaperCategoriesScreenState extends State<WallpaperCategoriesScreen> {
         : MediaQuery.of(context).size.height);
     _isTablet = Measurements.width < 600 ? false : true;
 
-    return new OrientationBuilder(builder: (context, orientation) {
-      return Scaffold(
-        backgroundColor: Color(0x80111111),
-        resizeToAvoidBottomPadding: false,
-        body: BlurEffectView(
-          radius: 0,
-          color: Colors.transparent,
-          child: SafeArea(
-            child: Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  Container(
-                    height: 44,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        InkWell(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 16),
-                            child: Icon(Icons.close),
-                          ),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.only(right: 16),
-                            child: Text(
-                              'Reset',
-                            ),
-                          ),
-                        ),
-                      ],
+    return BlocListener(
+      bloc: widget.screenBloc,
+      listener: (BuildContext context, SettingScreenState state) async {
+        if (state is SettingScreenStateFailure) {
+          Fluttertoast.showToast(msg: state.error);
+        }
+      },
+      child: BlocBuilder<SettingScreenBloc, SettingScreenState>(
+        bloc: widget.screenBloc,
+        builder: (BuildContext context, SettingScreenState state) {
+          return new OrientationBuilder(builder: (context, orientation) {
+            return Scaffold(
+              backgroundColor: Color(0x80111111),
+              resizeToAvoidBottomPadding: false,
+              body: BlurEffectView(
+                radius: 0,
+                color: Colors.transparent,
+                child: SafeArea(
+                  child: state.isUpdating
+                      ? Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : _getBody(state),
+                ),
+              ),
+            );
+          });
+        },
+      ),
+    );
+  }
+
+  Widget _getBody(SettingScreenState state) {
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          Container(
+            height: 44,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 16),
+                    child: Icon(Icons.close),
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.only(right: 16),
+                    child: Text(
+                      'Reset',
                     ),
                   ),
-                  Container(
-                    margin: EdgeInsets.all(24),
-                    height: 44,
-                    constraints: BoxConstraints.expand(height: 44),
-                    child: SizedBox(
-                      child: MaterialButton(
-                        onPressed: () {
-                          widget.screenBloc.add(WallpaperCategorySelected(
-                              category: selectedCategory, subCategories: subCategories));
-                          Navigator.pop(context);
-                        },
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        color: Color(0xFF525151),
-                        child: Text(
-                          'Done',
-                        ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.all(24),
+            height: 44,
+            constraints: BoxConstraints.expand(height: 44),
+            child: SizedBox(
+              child: MaterialButton(
+                onPressed: () {
+                  widget.screenBloc.add(WallpaperCategorySelected(
+                      category: selectedCategory,
+                      subCategories: subCategories));
+                  Navigator.pop(context);
+                },
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                color: Color(0xFF525151),
+                child: Text(
+                  'Done',
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        selectedCategory = 'My Wallpapers';
+                        subCategories = [];
+                      });
+                    },
+                    child: Container(
+                      padding: EdgeInsets.only(left: 24),
+                      height: 44,
+                      child: Row(
+                        children: <Widget>[
+                          Text(
+                            'My Wallpapers',
+                            style: TextStyle(
+                              color: Colors.white70,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Spacer(),
+                          MaterialButton(
+                            onPressed: () {
+                              getImage();
+                            },
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            height: 24,
+                            minWidth: 60,
+                            color: Colors.grey,
+                            child: Text(
+                              'Add',
+                            ),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          )
+                        ],
+                      ),
+                      decoration: BoxDecoration(
+                        color: isSelected('My Wallpapers')
+                            ? Color(0x26FFFFFF)
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(8),
                       ),
                     ),
                   ),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: _divider(),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        selectedCategory = 'All';
+                        subCategories = [];
+                      });
+                    },
+                    child: Container(
+                      alignment: Alignment.centerLeft,
+                      padding: EdgeInsets.only(left: 24),
+                      height: 44,
+                      child: Text(
+                        'All Wallpapers',
+                        style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      decoration: BoxDecoration(
+                        color: isSelected('All')
+                            ? Color(0x26FFFFFF)
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: _divider(),
+                  ),
+                  ListView.separated(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    padding: EdgeInsets.symmetric(horizontal: 8),
+                    itemBuilder: (context, index) {
+                      String category = widget
+                          .screenBloc.state.wallpaperCategories[index].code;
+                      return Column(
                         children: <Widget>[
                           GestureDetector(
-                            onTap: () async {
-                              selectedCategory = 'My Wallpapers';
-                              subCategories = [];
+                            onTap: () {
+                              setState(() {
+                                selectedCategory =
+                                    isSelected(category) ? '' : category;
+                                if (selectedCategory.isEmpty) {
+                                  subCategories = [];
+                                }
+                              });
                             },
                             child: Container(
-                              padding: EdgeInsets.only(left: 24),
                               height: 44,
+                              padding: EdgeInsets.all(8),
                               child: Row(
                                 children: <Widget>[
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 8),
+                                  ),
                                   Text(
-                                    'My Wallpapers',
+                                    getMainCategory(category),
                                     style: TextStyle(
                                       color: Colors.white70,
                                       fontSize: 16,
@@ -133,113 +263,32 @@ class _WallpaperCategoriesScreenState extends State<WallpaperCategoriesScreen> {
                                     ),
                                   ),
                                   Spacer(),
-                                  MaterialButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    height: 24,
-                                    minWidth: 60,
+                                  Icon(
+                                    isSelected(category)
+                                        ? Icons.clear
+                                        : Icons.add,
                                     color: Colors.grey,
-                                    child: Text(
-                                      'Add',
-                                    ),
                                   ),
-                                  SizedBox(
-                                    width: 10,
-                                  )
                                 ],
                               ),
                             ),
                           ),
-                          GestureDetector(
-                            onTap: () {
-                              selectedCategory = 'All';
-                              subCategories = [];
-                            },
-                            child: Container(
-                              alignment: Alignment.centerLeft,
-                              padding: EdgeInsets.only(left: 24),
-                              height: 44,
-                              child: Text(
-                                'All Wallpapers',
-                                style: TextStyle(
-                                  color: Colors.white70,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                          ListView.separated(
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            padding: EdgeInsets.symmetric(horizontal: 8),
-                            itemBuilder: (context, index) {
-                              String category = widget.screenBloc.state
-                                  .wallpaperCategories[index].code;
-                              return Column(
-                                children: <Widget>[
-                                  GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        selectedCategory = isSelected(category)
-                                            ? ''
-                                            : category;
-                                        if (selectedCategory.isEmpty) {
-                                          subCategories = [];
-                                        }
-                                      });
-                                    },
-                                    child: Container(
-                                      height: 44,
-                                      padding: EdgeInsets.all(8),
-                                      child: Row(
-                                        children: <Widget>[
-                                          Padding(
-                                            padding: EdgeInsets.only(left: 8),
-                                          ),
-                                          Text(
-                                            getMainCategory(category),
-                                            style: TextStyle(
-                                              color: Colors.white70,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          Spacer(),
-                                          Icon(
-                                            isSelected(category)
-                                                ? Icons.clear
-                                                : Icons.add,
-                                            color: Colors.grey,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  _subCategories(widget.screenBloc.state
-                                      .wallpaperCategories[index]),
-                                ],
-                              );
-                            },
-                            separatorBuilder: (context, index) => _divider(),
-                            itemCount: widget
-                                .screenBloc.state.wallpaperCategories.length,
-                          ),
+                          _subCategories(widget
+                              .screenBloc.state.wallpaperCategories[index]),
                         ],
-                      ),
-                    ),
+                      );
+                    },
+                    separatorBuilder: (context, index) => _divider(),
+                    itemCount:
+                        widget.screenBloc.state.wallpaperCategories.length,
                   ),
                 ],
               ),
             ),
           ),
-        ),
-      );
-    });
+        ],
+      ),
+    );
   }
 
   Widget _subCategories(WallpaperCategory wallpaperCategory) {
@@ -322,5 +371,13 @@ class _WallpaperCategoriesScreenState extends State<WallpaperCategoriesScreen> {
     code = code.replaceAll('${title}_', '');
     code = code.replaceAll('_', ' ');
     return code[0].toUpperCase() + code.substring(1).toLowerCase();
+  }
+
+  Future getImage() async {
+    PickedFile img = await ImagePicker().getImage(source: ImageSource.gallery);
+    if (img.path != null) {
+      print("_image: $img");
+      widget.screenBloc.add(UploadWallpaperImage(file: File(img.path)));
+    }
   }
 }

@@ -41,6 +41,8 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
       yield* updateWallpaper(event.body);
     } else if (event is WallpaperCategorySelected) {
       yield state.copyWith(selectedCategory: event.category, subCategories: event.subCategories);
+    } else if (event is UploadWallpaperImage) {
+      yield* uploadWallpaperImage(event.file);
     }
   }
 
@@ -93,7 +95,7 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
   Stream<SettingScreenState> updateWallpaper(Map body) async* {
     String token = GlobalUtils.activeToken.accessToken;
     yield state.copyWith(isUpdating: true);
-    dynamic object = await api.updateProductWallpaper(token, state.business, body);
+    dynamic object = await api.updateWallpaper(token, state.business, body);
     String curWall = Env.storage + '/wallpapers/' + body[GlobalUtils.DB_BUSINESS_CURRENT_WALLPAPER_WALLPAPER];
     if (object != null && !(object is DioError)) {
       dashboardScreenBloc.add(UpdateWallpaper(curWall));
@@ -103,5 +105,29 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
       print('Update Wallpaper failed!');
     }
     yield state.copyWith(isUpdating: false);
+  }
+
+  Stream<SettingScreenState> uploadWallpaperImage(File file) async* {
+    yield state.copyWith(isUpdating: true);
+    dynamic response = await api.postImageToBusiness(file, state.business, GlobalUtils.activeToken.accessToken);
+    if (response is DioError) {
+      yield SettingScreenStateFailure(error: response.error);
+    } else {
+      String blobName = response['blobName'];
+      await api.addNewWallpaper(token, state.business, 'default', blobName);
+
+      List<Wallpaper>myWallpapers = state.myWallpapers;
+      if (myWallpapers == null) myWallpapers = [];
+      Wallpaper wallpaper = Wallpaper();
+
+      wallpaper.theme = 'default';
+      wallpaper.wallpaper = blobName;
+      wallpaper.industry = 'Own';
+
+      myWallpapers.add(wallpaper);
+
+      yield state.copyWith(myWallpapers: myWallpapers, isUpdating: false);
+    }
+
   }
 }

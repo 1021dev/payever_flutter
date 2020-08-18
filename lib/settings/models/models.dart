@@ -57,6 +57,8 @@ class WallpaperIndustry {
 }
 
 class Wallpaper {
+  Wallpaper();
+
   String theme;
   String wallpaper;
   String industry;
@@ -65,6 +67,14 @@ class Wallpaper {
     theme = obj['theme'];
     wallpaper = obj['wallpaper'];
     industry = _industry;
+  }
+
+  Map<String, dynamic> toDictionary() {
+    Map<String, dynamic> map = {};
+    if (theme != null)        map['theme'] = theme;
+    if (wallpaper != null)    map['wallpaper'] = wallpaper;
+    if (industry != null)     map['industry'] = industry;
+    return map;
   }
 }
 

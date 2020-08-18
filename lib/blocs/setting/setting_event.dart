@@ -1,3 +1,6 @@
+
+import 'dart:io';
+
 import 'package:equatable/equatable.dart';
 
 abstract class SettingScreenEvent extends Equatable {
@@ -43,5 +46,16 @@ class WallpaperCategorySelected extends SettingScreenEvent {
   List<Object> get props => [
     this.category,
     this.subCategories,
+  ];
+}
+
+class UploadWallpaperImage extends SettingScreenEvent{
+
+  final File file;
+  UploadWallpaperImage({this.file,});
+
+  @override
+  List<Object> get props => [
+    this.file,
   ];
 }
