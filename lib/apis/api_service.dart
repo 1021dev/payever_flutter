@@ -2581,7 +2581,7 @@ class ApiService {
     }
   }
 
-  Future<dynamic> updateWallpaper(String token, String businessId, Map<String, String> body) async {
+  Future<dynamic> updateWallpaper(String token, String businessId, Map<String, dynamic> body) async {
     try {
       print('$TAG - updateProductWallpaper()');
       print('$TAG - $wallpaperUrl$businessId/wallpapers/active');

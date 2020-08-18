@@ -4,6 +4,7 @@ import 'package:payever/settings/models/models.dart';
 class SettingScreenState {
   final bool isLoading;
   final bool isUpdating;
+  final String updatingWallpaper;
   final bool isUpdatingBusinessImg;
   final String business;
   final List<WallpaperCategory> wallpaperCategories;
@@ -17,6 +18,7 @@ class SettingScreenState {
   SettingScreenState({
     this.isLoading = false,
     this.isUpdating = false,
+    this.updatingWallpaper,
     this.isUpdatingBusinessImg = false,
     this.business,
     this.wallpaperCategories,
@@ -31,6 +33,7 @@ class SettingScreenState {
   List<Object> get props => [
     this.isLoading,
     this.isUpdating,
+    this.updatingWallpaper,
     this.isUpdatingBusinessImg,
     this.business,
     this.wallpaperCategories,
@@ -44,6 +47,7 @@ class SettingScreenState {
   SettingScreenState copyWith({
     bool isLoading,
     bool isUpdating,
+    String updatingWallpaper,
     bool isUpdatingBusinessImg,
     String business,
     String selectedCategory,
@@ -57,6 +61,7 @@ class SettingScreenState {
     return SettingScreenState(
       isLoading: isLoading ?? this.isLoading,
       isUpdating: isUpdating ?? this.isUpdating,
+      updatingWallpaper: updatingWallpaper ?? this.updatingWallpaper,
       isUpdatingBusinessImg: isUpdatingBusinessImg ?? this.isUpdatingBusinessImg,
       business: business ?? this.business,
       wallpaperCategories: wallpaperCategories ?? this.wallpaperCategories,

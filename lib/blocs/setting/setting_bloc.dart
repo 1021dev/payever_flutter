@@ -108,7 +108,7 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
 
   Stream<SettingScreenState> updateWallpaper(Map body) async* {
     String token = GlobalUtils.activeToken.accessToken;
-    yield state.copyWith(isUpdating: true);
+    yield state.copyWith(updatingWallpaper: body[GlobalUtils.DB_BUSINESS_CURRENT_WALLPAPER_WALLPAPER]);
     dynamic object = await api.updateWallpaper(token, state.business, body);
     String curWall = Env.storage + '/wallpapers/' + body[GlobalUtils.DB_BUSINESS_CURRENT_WALLPAPER_WALLPAPER];
     if (object != null && !(object is DioError)) {
@@ -118,7 +118,7 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
     } else {
       print('Update Wallpaper failed!');
     }
-    yield state.copyWith(isUpdating: false);
+    yield state.copyWith(updatingWallpaper: '');
   }
 
   Stream<SettingScreenState> uploadWallpaperImage(File file) async* {

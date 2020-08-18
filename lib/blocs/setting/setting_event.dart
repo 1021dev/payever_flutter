@@ -27,7 +27,7 @@ class SettingScreenInitEvent extends SettingScreenEvent {
 class FetchWallpaperEvent extends SettingScreenEvent {}
 
 class UpdateWallpaperEvent extends SettingScreenEvent {
-  final Map<String, String> body;
+  final Map<String, dynamic> body;
   UpdateWallpaperEvent({this.body});
   @override
   List<Object> get props => [body];

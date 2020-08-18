@@ -71,8 +71,7 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
                 true,
                 backgroudColor: Color.fromRGBO(20, 20, 0, 0.4),
                 body: state.isLoading ||
-                        state.wallpapers == null ||
-                        state.isUpdating
+                        state.wallpapers == null
                     ? Center(
                         child: CircularProgressIndicator(),
                       )
@@ -299,7 +298,15 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
             child: Container(
               alignment: Alignment.center,
               height: 40,
-              child: Text('Set'),
+              child: state.updatingWallpaper == wallpaper.wallpaper ? Center(
+                child: Container(
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                  ),
+                ),
+              ): Text('Set'),
               decoration: BoxDecoration(
                   color: Colors.black54,
                   borderRadius: BorderRadius.only(
