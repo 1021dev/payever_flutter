@@ -42,7 +42,6 @@ class _TaxesScreenState extends State<TaxesScreen> {
 
   @override
   Future<void> initState() {
-    widget.setScreenBloc.add(GetBusinessProductsEvent());
     activeBusiness =
         widget.globalStateModel.currentBusiness;
     taxes = activeBusiness.taxes;

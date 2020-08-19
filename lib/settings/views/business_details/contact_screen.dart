@@ -48,7 +48,6 @@ class _ContactScreenState extends State<ContactScreen> {
 
   @override
   void initState() {
-    widget.setScreenBloc.add(GetBusinessProductsEvent());
     activeBusiness =
         widget.globalStateModel.currentBusiness;
     contactDetails = activeBusiness.contactDetails;

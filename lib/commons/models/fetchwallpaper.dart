@@ -42,10 +42,12 @@ class CurrentWallpaper {
   String theme;
   String id;
   String wallpaper;
+  bool auto;
 
   CurrentWallpaper.map(dynamic obj) {
     this.theme = obj[GlobalUtils.DB_BUSINESS_CURRENT_WALLPAPER_THEME];
     this.id = obj[GlobalUtils.DB_BUSINESS_CURRENT_WALLPAPER_ID];
     this.wallpaper = obj[GlobalUtils.DB_BUSINESS_CURRENT_WALLPAPER_WALLPAPER];
+    this.auto = obj['auto'];
   }
 }
