@@ -40,10 +40,7 @@ class _AddressScreenState extends State<AddressScreen> {
   String googleAutocomplete;
 
   final _formKey = GlobalKey<FormState>();
-  TextEditingController autoCompleteController = TextEditingController();
-  TextEditingController cityController = TextEditingController();
-  TextEditingController streetController = TextEditingController();
-  TextEditingController zipController = TextEditingController();
+
 
   @override
   Future<void> initState() {
@@ -59,12 +56,9 @@ class _AddressScreenState extends State<AddressScreen> {
         getCountryForCodeWithIdentifier(countryCode, 'en-en');
       street = companyAddress.street;
       zipCode = companyAddress.zipCode;
-      googleAutocomplete = companyAddress.googleAutocomplete;
-
-      autoCompleteController.text = googleAutocomplete ?? '';
-      cityController.text = city ?? '';
-      streetController.text = street ?? '';
-      zipController.text = zipCode ?? '';
+      setState(() {
+        setGoogleAutoComplete();
+      });
     }
     super.initState();
   }
@@ -138,12 +132,12 @@ class _AddressScreenState extends State<AddressScreen> {
                                         width: 8,
                                       ),
                                       Expanded(
-                                        child: TextField(
+                                        child: TextFormField(
                                           style: TextStyle(
                                             color: Colors.white,
                                             fontSize: 16,
                                           ),
-                                          controller: autoCompleteController,
+                                          initialValue: googleAutocomplete ?? '',
                                           textInputAction: TextInputAction.done,
                                           keyboardType: TextInputType.url,
                                           onChanged: (val) {
@@ -216,11 +210,14 @@ class _AddressScreenState extends State<AddressScreen> {
                                       color: Colors.white,
                                       fontSize: 16,
                                     ),
-                                    controller: cityController,
+                                    initialValue: city ?? '',
                                     textInputAction: TextInputAction.done,
                                     keyboardType: TextInputType.url,
                                     onChanged: (val) {
                                       city = val;
+                                      setState(() {
+                                        setGoogleAutoComplete();
+                                      });
                                     },
                                     validator: (value) {
                                       if (value.isEmpty) {
@@ -256,11 +253,14 @@ class _AddressScreenState extends State<AddressScreen> {
                                       color: Colors.white,
                                       fontSize: 16,
                                     ),
-                                    controller: streetController,
+                                    initialValue: street ?? '',
                                     textInputAction: TextInputAction.done,
                                     keyboardType: TextInputType.url,
                                     onChanged: (val) {
                                       street = val;
+                                      setState(() {
+                                        setGoogleAutoComplete();
+                                      });
                                     },
                                     validator: (value) {
                                       if (value.isEmpty) {
@@ -296,11 +296,14 @@ class _AddressScreenState extends State<AddressScreen> {
                                       color: Colors.white,
                                       fontSize: 16,
                                     ),
-                                    controller: zipController,
+                                    initialValue: zipCode ?? '',
                                     textInputAction: TextInputAction.done,
                                     keyboardType: TextInputType.url,
                                     onChanged: (val) {
                                       zipCode = val;
+                                      setState(() {
+                                        setGoogleAutoComplete();
+                                      });
                                     },
                                     validator: (value) {
                                       if (value.isEmpty) {
@@ -334,10 +337,6 @@ class _AddressScreenState extends State<AddressScreen> {
                                   body['country'] = code.toUpperCase();
                                   body['street'] = street;
                                   body['zipCode'] = zipCode;
-                                  if (googleAutocomplete != null) {
-                                    body['googleAutocomplete'] =
-                                        googleAutocomplete;
-                                  }
                                   print(body);
                                   widget.setScreenBloc.add(BusinessUpdateEvent({
                                     'companyAddress': body,
@@ -388,5 +387,17 @@ class _AddressScreenState extends State<AddressScreen> {
   
   String getCountryCode(String countryName) {
     return countryList.where((element) => element.name == countryName).toList().first.countryCode;
-  }  
+  }
+
+  void setGoogleAutoComplete() {
+    if (street != null && street.isNotEmpty) {
+      googleAutocomplete = street;
+    }
+    if (zipCode != null && zipCode.isNotEmpty) {
+      googleAutocomplete = googleAutocomplete + ', ' + zipCode;
+    }
+    if (city != null && city.isNotEmpty) {
+      googleAutocomplete = googleAutocomplete + ', ' + city;
+    }
+  }
 }
