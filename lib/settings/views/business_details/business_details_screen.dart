@@ -7,6 +7,7 @@ import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/settings/models/models.dart';
+import 'package:payever/settings/views/business_details/address_screen.dart';
 import 'package:payever/settings/views/business_details/company_screen.dart';
 import 'package:payever/settings/widgets/app_bar.dart';
 import 'package:payever/blocs/bloc.dart';
@@ -151,12 +152,28 @@ class _BusinessDetailsScreenState extends State<BusinessDetailsScreen> {
             globalStateModel: widget.globalStateModel,
             setScreenBloc: widget.setScreenBloc);
         break;
+      case 2:
+
+        break;
+      case 3:
+        _target = AddressScreen(
+            globalStateModel: widget.globalStateModel,
+            setScreenBloc: widget.setScreenBloc);
+        break;
+      case 4:
+
+        break;
+      case 5:
+
+        break;
       default:
         _target = CurrencyScreen(
             globalStateModel: widget.globalStateModel,
             setScreenBloc: widget.setScreenBloc);
         break;
     }
+
+    if (_target == null) return;
 
     Navigator.push(
       context,
