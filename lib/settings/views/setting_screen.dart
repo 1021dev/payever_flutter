@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:iso_countries/iso_countries.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/dashboard/dashboard_bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
@@ -55,6 +56,7 @@ class _SettingScreenState extends State<SettingScreen> {
   bool _isTablet;
   double iconSize;
   double margin;
+  List<Country> countryList;
   final GlobalKey<InnerDrawerState> _innerDrawerKey = GlobalKey<InnerDrawerState>();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -67,6 +69,7 @@ class _SettingScreenState extends State<SettingScreen> {
     screenBloc.add(SettingScreenInitEvent(
       business: widget.globalStateModel.currentBusiness.id,
     ));
+    prepareDefaultCountries().then((value) =>countryList = value);
     super.initState();
   }
 
@@ -431,7 +434,7 @@ class _SettingScreenState extends State<SettingScreen> {
         _target = BusinessInfoScreen(globalStateModel: widget.globalStateModel, setScreenBloc: screenBloc,);
         break;
       case 1:
-        _target = BusinessDetailsScreen(globalStateModel: widget.globalStateModel, setScreenBloc: screenBloc,);
+        _target = BusinessDetailsScreen(globalStateModel: widget.globalStateModel, setScreenBloc: screenBloc, countryList: countryList,);
         break;
       case 2:
         _target = WallpaperScreen(globalStateModel: widget.globalStateModel, setScreenBloc: screenBloc,);

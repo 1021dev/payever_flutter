@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:iso_countries/iso_countries.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/models.dart';
@@ -905,3 +907,30 @@ class GlobalUtils {
 
 String imageBase = Env.storage + '/images/';
 String wallpaperBase = Env.storage + '/wallpapers/';
+
+
+Future<List<Country>> prepareDefaultCountries() async {
+  List<Country> countries;
+  try {
+    countries = await IsoCountries.iso_countries;
+  } on PlatformException {
+    countries = null;
+  }
+  return countries;
+}
+
+Future<Country> getCountryForCodeWithIdentifier(
+    String code, String localeIdentifier) async {
+  Country _country;
+  try {
+    _country = await IsoCountries.iso_country_for_code_for_locale(code,
+        locale_identifier: localeIdentifier);
+  } on PlatformException {
+    _country = null;
+  }
+  return _country;
+}
+
+String getCountryCode(String countryName, List<Country> countryList) {
+  return countryList.where((element) => element.name == countryName).toList().first.countryCode;
+}

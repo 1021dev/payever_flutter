@@ -2,12 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:iso_countries/iso_countries.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/settings/models/models.dart';
 import 'package:payever/settings/views/business_details/address_screen.dart';
+import 'package:payever/settings/views/business_details/bank_screen.dart';
 import 'package:payever/settings/views/business_details/company_screen.dart';
 import 'package:payever/settings/widgets/app_bar.dart';
 import 'package:payever/blocs/bloc.dart';
@@ -16,9 +18,9 @@ import 'currency_screen.dart';
 class BusinessDetailsScreen extends StatefulWidget {
   final GlobalStateModel globalStateModel;
   final SettingScreenBloc setScreenBloc;
-
+  final List<Country> countryList;
   BusinessDetailsScreen(
-      {this.globalStateModel, this.setScreenBloc,});
+      {this.globalStateModel, this.setScreenBloc, this.countryList,});
 
   @override
   _BusinessDetailsScreenState createState() => _BusinessDetailsScreenState();
@@ -158,10 +160,16 @@ class _BusinessDetailsScreenState extends State<BusinessDetailsScreen> {
       case 3:
         _target = AddressScreen(
             globalStateModel: widget.globalStateModel,
-            setScreenBloc: widget.setScreenBloc,);
+            setScreenBloc: widget.setScreenBloc,
+            countryList: widget.countryList,
+          );
         break;
       case 4:
-
+        _target = BankScreen(
+          globalStateModel: widget.globalStateModel,
+          setScreenBloc: widget.setScreenBloc,
+          countryList: widget.countryList,
+        );
         break;
       case 5:
 

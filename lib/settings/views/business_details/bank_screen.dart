@@ -15,43 +15,50 @@ import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/settings/widgets/app_bar.dart';
 import 'package:payever/settings/widgets/save_button.dart';
 
-class AddressScreen extends StatefulWidget {
+class BankScreen extends StatefulWidget {
   final GlobalStateModel globalStateModel;
   final SettingScreenBloc setScreenBloc;
   final List<Country> countryList;
-  AddressScreen({
+  BankScreen({
     this.globalStateModel,
-    this.setScreenBloc,
+    this.setScreenBloc, 
     this.countryList,
   });
 
   @override
-  _AddressScreenState createState() => _AddressScreenState();
+  _BankScreenState createState() => _BankScreenState();
 }
 
-class _AddressScreenState extends State<AddressScreen> {
+class _BankScreenState extends State<BankScreen> {
   Business activeBusiness;
-  CompanyAddress companyAddress;
+  BankAccount bankAccount;
 
-  String city;
+  String owner;
+  String bankName;
+
   String countryName;
   String countryCode;
-  String street;
-  String zipCode;
-  String googleAutocomplete;
+  String city;
+
+  String bic;
+  String iban;
 
   final _formKey = GlobalKey<FormState>();
+
 
   @override
   Future<void> initState() {
     widget.setScreenBloc.add(GetBusinessProductsEvent());
     activeBusiness =
         widget.setScreenBloc.dashboardScreenBloc.state.activeBusiness;
-    companyAddress = activeBusiness.companyAddress;
+    bankAccount = activeBusiness.bankAccount;
     prepareDefaultCountries();
-    if (companyAddress != null) {
-      city = companyAddress.city;
-      countryCode = companyAddress.country;
+    if (bankAccount != null) {
+      owner = bankAccount.owner;
+      bankName = bankAccount.bankName;
+
+      city = bankAccount.city;
+      countryCode = bankAccount.country;
       if (countryCode != null) {
         getCountryForCodeWithIdentifier(countryCode, 'en-en').then((value) {
           setState(() {
@@ -59,11 +66,9 @@ class _AddressScreenState extends State<AddressScreen> {
           });
         });
       }
-      street = companyAddress.street;
-      zipCode = companyAddress.zipCode;
-      setState(() {
-        setGoogleAutoComplete();
-      });
+
+      bic = bankAccount.bic;
+      iban = bankAccount.iban;
     }
     super.initState();
   }
@@ -142,15 +147,15 @@ class _AddressScreenState extends State<AddressScreen> {
                                             color: Colors.white,
                                             fontSize: 16,
                                           ),
-                                          initialValue: googleAutocomplete ?? '',
+                                          initialValue: owner ?? '',
                                           textInputAction: TextInputAction.done,
                                           keyboardType: TextInputType.url,
                                           onChanged: (val) {
-                                            googleAutocomplete = val;
+                                            owner = val;
                                           },
                                           decoration: InputDecoration(
                                               border: InputBorder.none,
-                                              labelText: 'Google Autocomplete',
+                                              labelText: 'Account holder',
                                               labelStyle: TextStyle(
                                                 color: Colors.white54,
                                                 fontSize: 12,
@@ -158,6 +163,40 @@ class _AddressScreenState extends State<AddressScreen> {
                                         ),
                                       ),
                                     ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              padding: EdgeInsets.only(
+                                left: 8,
+                                top: 2,
+                                right: 8,
+                              ),
+                              height: 65,
+                              child: BlurEffectView(
+                                color: Color.fromRGBO(100, 100, 100, 0.05),
+                                radius: 0,
+                                child: Container(
+                                  padding: EdgeInsets.only(left: 12, right: 12),
+                                  child: TextFormField(
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                    ),
+                                    initialValue: bankName ?? '',
+                                    textInputAction: TextInputAction.done,
+                                    keyboardType: TextInputType.url,
+                                    onChanged: (val) {
+                                      bankName = val;
+                                    },
+                                    decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                        labelText: 'Bank name (optional)',
+                                        labelStyle: TextStyle(
+                                          color: Colors.white54,
+                                          fontSize: 12,
+                                        )),
                                   ),
                                 ),
                               ),
@@ -220,19 +259,10 @@ class _AddressScreenState extends State<AddressScreen> {
                                     keyboardType: TextInputType.url,
                                     onChanged: (val) {
                                       city = val;
-                                      setState(() {
-                                        setGoogleAutoComplete();
-                                      });
-                                    },
-                                    validator: (value) {
-                                      if (value.isEmpty) {
-                                        return 'City is required.';
-                                      }
-                                      return null;
                                     },
                                     decoration: InputDecoration(
                                         border: InputBorder.none,
-                                        labelText: 'City',
+                                        labelText: 'City(optional)',
                                         labelStyle: TextStyle(
                                           color: Colors.white54,
                                           fontSize: 12,
@@ -258,24 +288,15 @@ class _AddressScreenState extends State<AddressScreen> {
                                       color: Colors.white,
                                       fontSize: 16,
                                     ),
-                                    initialValue: street ?? '',
+                                    initialValue: bic ?? '',
                                     textInputAction: TextInputAction.done,
                                     keyboardType: TextInputType.url,
                                     onChanged: (val) {
-                                      street = val;
-                                      setState(() {
-                                        setGoogleAutoComplete();
-                                      });
-                                    },
-                                    validator: (value) {
-                                      if (value.isEmpty) {
-                                        return 'Street is required.';
-                                      }
-                                      return null;
+                                      bic = val;
                                     },
                                     decoration: InputDecoration(
                                         border: InputBorder.none,
-                                        labelText: 'Street',
+                                        labelText: 'BIC(optional)',
                                         labelStyle: TextStyle(
                                           color: Colors.white54,
                                           fontSize: 12,
@@ -301,24 +322,15 @@ class _AddressScreenState extends State<AddressScreen> {
                                       color: Colors.white,
                                       fontSize: 16,
                                     ),
-                                    initialValue: zipCode ?? '',
+                                    initialValue: iban ?? '',
                                     textInputAction: TextInputAction.done,
                                     keyboardType: TextInputType.url,
                                     onChanged: (val) {
-                                      zipCode = val;
-                                      setState(() {
-                                        setGoogleAutoComplete();
-                                      });
-                                    },
-                                    validator: (value) {
-                                      if (value.isEmpty) {
-                                        return 'ZIP Code is required.';
-                                      }
-                                      return null;
+                                      iban = val;
                                     },
                                     decoration: InputDecoration(
                                         border: InputBorder.none,
-                                        labelText: 'ZIP Code',
+                                        labelText: 'IBAN(optional)',
                                         labelStyle: TextStyle(
                                           color: Colors.white54,
                                           fontSize: 12,
@@ -333,19 +345,30 @@ class _AddressScreenState extends State<AddressScreen> {
                                 if (_formKey.currentState.validate() &&
                                     !state.isUpdating) {
                                   Map<String, dynamic> body = {};
-                                  body['city'] = city;
                                   String code = getCountryCode(countryName, widget.countryList);
                                   if (code == null) {
                                     Fluttertoast.showToast(msg: 'Can not find country Code');
                                     return;
                                   }
                                   body['country'] = code.toUpperCase();
-                                  body['street'] = street;
-                                  body['zipCode'] = zipCode;
+
+                                  body['owner'] = owner;
+                                  if (bankName != null && bankName.isNotEmpty) {
+                                    body['bankName'] = bankName;
+                                  }
+                                  if (bic != null && bic.isNotEmpty) {
+                                    body['bic'] = bic;
+                                  }
+                                  if (iban != null && iban.isNotEmpty) {
+                                    body['iban'] = iban;
+                                  }
+                                  if (city != null && city.isNotEmpty) {
+                                    body['city'] = city;
+                                  }
                                   print(body);
-                                  widget.setScreenBloc.add(BusinessUpdateEvent({
-                                    'companyAddress': body,
-                                  }));
+//                                  widget.setScreenBloc.add(BusinessUpdateEvent({
+//                                    'bankAccount': body,
+//                                  }));
                                 }
                               },
                             )
@@ -361,15 +384,4 @@ class _AddressScreenState extends State<AddressScreen> {
     );
   }
 
-  void setGoogleAutoComplete() {
-    if (street != null && street.isNotEmpty) {
-      googleAutocomplete = street;
-    }
-    if (zipCode != null && zipCode.isNotEmpty) {
-      googleAutocomplete = googleAutocomplete + ', ' + zipCode;
-    }
-    if (city != null && city.isNotEmpty) {
-      googleAutocomplete = googleAutocomplete + ', ' + city;
-    }
-  }
 }

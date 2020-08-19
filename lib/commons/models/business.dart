@@ -19,7 +19,7 @@ class Business {
   CompanyAddress companyAddress;
   CompanyDetails companyDetails;
   ContactDetails contactDetails;
-  BackAccount bankAccount;
+  BankAccount bankAccount;
   List<dynamic> contactEmails;
   List<dynamic> cspAllowedHosts;
   CurrentWallpaper currentWallpaper;
@@ -56,7 +56,7 @@ class Business {
     }
     if (obj['bankAccount'] != null) {
       this.bankAccount =
-          BackAccount.fromMap(obj['bankAccount']);
+          BankAccount.fromMap(obj['bankAccount']);
     }
     if (obj['contactEmails'] != null) {
       List list = obj['contactEmails'];
@@ -246,7 +246,7 @@ class ContactDetails {
   }
 }
 
-class BackAccount {
+class BankAccount {
   String bankName;
   String bic;
   String city;
@@ -257,7 +257,7 @@ class BackAccount {
   String updatedAt;
   String id;
 
-  BackAccount.fromMap(dynamic obj) {
+  BankAccount.fromMap(dynamic obj) {
     bankName = obj['bankName'];
     bic = obj['bic'];
     city = obj['city'];
