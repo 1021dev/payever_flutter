@@ -158,7 +158,7 @@ class _BusinessDetailsScreenState extends State<BusinessDetailsScreen> {
       case 3:
         _target = AddressScreen(
             globalStateModel: widget.globalStateModel,
-            setScreenBloc: widget.setScreenBloc);
+            setScreenBloc: widget.setScreenBloc,);
         break;
       case 4:
 
@@ -185,4 +185,5 @@ class _BusinessDetailsScreenState extends State<BusinessDetailsScreen> {
     );
     debugPrint("You tapped on item $index");
   }
+
 }
