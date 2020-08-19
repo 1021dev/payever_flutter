@@ -11,6 +11,7 @@ import 'package:payever/settings/models/models.dart';
 import 'package:payever/settings/views/business_details/address_screen.dart';
 import 'package:payever/settings/views/business_details/bank_screen.dart';
 import 'package:payever/settings/views/business_details/company_screen.dart';
+import 'package:payever/settings/views/business_details/contact_screen.dart';
 import 'package:payever/settings/widgets/app_bar.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'currency_screen.dart';
@@ -155,7 +156,11 @@ class _BusinessDetailsScreenState extends State<BusinessDetailsScreen> {
             setScreenBloc: widget.setScreenBloc);
         break;
       case 2:
-
+        _target = ContactScreen(
+          globalStateModel: widget.globalStateModel,
+          setScreenBloc: widget.setScreenBloc,
+          countryList: widget.countryList,
+        );
         break;
       case 3:
         _target = AddressScreen(

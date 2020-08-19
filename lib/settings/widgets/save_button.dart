@@ -3,7 +3,14 @@ import 'package:flutter/material.dart';
 class SaveBtn extends StatelessWidget {
   final bool isUpdating;
   final Function onUpdate;
-  SaveBtn({this.isUpdating = false, this.onUpdate});
+  final Color color;
+  final bool isBottom;
+  SaveBtn({
+    this.isUpdating = false,
+    this.onUpdate,
+    this.color = Colors.black87,
+    this.isBottom = true,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -14,12 +21,12 @@ class SaveBtn extends StatelessWidget {
     return Container(
       height: 55,
       decoration: BoxDecoration(
-        color: Colors.black,
+        color: color,
         shape: BoxShape.rectangle,
-        borderRadius: BorderRadius.only(
+        borderRadius: isBottom ? BorderRadius.only(
           bottomLeft: Radius.circular(8.0),
           bottomRight: Radius.circular(8.0),
-        ),
+        ): BorderRadius.circular(0),
       ),
       child: SizedBox.expand(
         child: isUpdating

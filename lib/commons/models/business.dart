@@ -20,8 +20,8 @@ class Business {
   CompanyDetails companyDetails;
   ContactDetails contactDetails;
   BankAccount bankAccount;
-  List<dynamic> contactEmails;
-  List<dynamic> cspAllowedHosts;
+  List<String> contactEmails = [];
+  List<String> cspAllowedHosts = [];
   CurrentWallpaper currentWallpaper;
   Documents documents;
   ThemeSetting themeSettings;
@@ -62,7 +62,7 @@ class Business {
       List list = obj['contactEmails'];
       if (list != null) {
         list.forEach((element) {
-          this.contactEmails.add(element);
+          this.contactEmails.add(element.toString());
         });
       }
     }
@@ -70,7 +70,7 @@ class Business {
       List list = obj['cspAllowedHosts'];
       if (list != null) {
         list.forEach((element) {
-          this.cspAllowedHosts.add(element);
+          cspAllowedHosts.add(element.toString());
         });
       }
     }
