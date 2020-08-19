@@ -45,12 +45,11 @@ class _BankScreenState extends State<BankScreen> {
 
   final _formKey = GlobalKey<FormState>();
 
-
   @override
   Future<void> initState() {
     widget.setScreenBloc.add(GetBusinessProductsEvent());
     activeBusiness =
-        widget.setScreenBloc.dashboardScreenBloc.state.activeBusiness;
+        widget.globalStateModel.currentBusiness;
     bankAccount = activeBusiness.bankAccount;
     prepareDefaultCountries();
     if (bankAccount != null) {
@@ -133,36 +132,30 @@ class _BankScreenState extends State<BankScreen> {
                                 ),
                                 child: Container(
                                   padding: EdgeInsets.only(left: 12, right: 12),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: <Widget>[
-                                      SvgPicture.asset(
-                                          'assets/images/google-auto-complete.svg'),
-                                      SizedBox(
-                                        width: 8,
-                                      ),
-                                      Expanded(
-                                        child: TextFormField(
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 16,
-                                          ),
-                                          initialValue: owner ?? '',
-                                          textInputAction: TextInputAction.done,
-                                          keyboardType: TextInputType.url,
-                                          onChanged: (val) {
-                                            owner = val;
-                                          },
-                                          decoration: InputDecoration(
-                                              border: InputBorder.none,
-                                              labelText: 'Account holder',
-                                              labelStyle: TextStyle(
-                                                color: Colors.white54,
-                                                fontSize: 12,
-                                              )),
-                                        ),
-                                      ),
-                                    ],
+                                  child: TextFormField(
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                    ),
+                                    initialValue: owner ?? '',
+                                    textInputAction: TextInputAction.done,
+                                    keyboardType: TextInputType.url,
+                                    onChanged: (val) {
+                                      owner = val;
+                                    },
+                                    validator: (value) {
+                                      if (value.isEmpty) {
+                                        return 'Account holder is required.';
+                                      }
+                                      return null;
+                                    },
+                                    decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                        labelText: 'Account holder',
+                                        labelStyle: TextStyle(
+                                          color: Colors.white54,
+                                          fontSize: 12,
+                                        )),
                                   ),
                                 ),
                               ),
@@ -262,7 +255,7 @@ class _BankScreenState extends State<BankScreen> {
                                     },
                                     decoration: InputDecoration(
                                         border: InputBorder.none,
-                                        labelText: 'City(optional)',
+                                        labelText: 'City (optional)',
                                         labelStyle: TextStyle(
                                           color: Colors.white54,
                                           fontSize: 12,
@@ -296,7 +289,7 @@ class _BankScreenState extends State<BankScreen> {
                                     },
                                     decoration: InputDecoration(
                                         border: InputBorder.none,
-                                        labelText: 'BIC(optional)',
+                                        labelText: 'BIC (optional)',
                                         labelStyle: TextStyle(
                                           color: Colors.white54,
                                           fontSize: 12,
@@ -330,7 +323,7 @@ class _BankScreenState extends State<BankScreen> {
                                     },
                                     decoration: InputDecoration(
                                         border: InputBorder.none,
-                                        labelText: 'IBAN(optional)',
+                                        labelText: 'IBAN (optional)',
                                         labelStyle: TextStyle(
                                           color: Colors.white54,
                                           fontSize: 12,
@@ -345,6 +338,10 @@ class _BankScreenState extends State<BankScreen> {
                                 if (_formKey.currentState.validate() &&
                                     !state.isUpdating) {
                                   Map<String, dynamic> body = {};
+                                  if (countryName == null || countryName.isEmpty) {
+                                    Fluttertoast.showToast(msg: 'Can not find country Code');
+                                    return;
+                                  }
                                   String code = getCountryCode(countryName, widget.countryList);
                                   if (code == null) {
                                     Fluttertoast.showToast(msg: 'Can not find country Code');
@@ -366,9 +363,9 @@ class _BankScreenState extends State<BankScreen> {
                                     body['city'] = city;
                                   }
                                   print(body);
-//                                  widget.setScreenBloc.add(BusinessUpdateEvent({
-//                                    'bankAccount': body,
-//                                  }));
+                                  widget.setScreenBloc.add(BusinessUpdateEvent({
+                                    'bankAccount': body,
+                                  }));
                                 }
                               },
                             )

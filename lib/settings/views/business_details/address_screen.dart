@@ -46,7 +46,7 @@ class _AddressScreenState extends State<AddressScreen> {
   Future<void> initState() {
     widget.setScreenBloc.add(GetBusinessProductsEvent());
     activeBusiness =
-        widget.setScreenBloc.dashboardScreenBloc.state.activeBusiness;
+        widget.globalStateModel.currentBusiness;
     companyAddress = activeBusiness.companyAddress;
     prepareDefaultCountries();
     if (companyAddress != null) {
