@@ -168,29 +168,34 @@ class _ContactScreenState extends State<ContactScreen> {
                                       height: 64,
                                       color: Colors.black12,
                                       alignment: Alignment.center,
-                                      child: TextFormField(
-                                        style: TextStyle(fontSize: 16),
-                                        onTap: () {
-
-                                        },
+                                      padding: EdgeInsets.only(left: 16, right: 8),
+                                      child: DropdownButtonFormField(
+                                        items: List.generate(2, (index) {
+                                          return DropdownMenuItem(
+                                            child: Text(
+                                              Language.getConnectStrings(index == 0 ?
+                                              'user_business_form.form.contactDetails.salutation.options.SALUTATION_MR':
+                                              'user_business_form.form.contactDetails.salutation.options.SALUTATION_MRS'),
+                                            ),
+                                            value: index == 0 ? 'SALUTATION_MR': 'SALUTATION_MRS',
+                                          );
+                                        }).toList(),
                                         onChanged: (val) {
                                           setState(() {
                                             salutation = val;
                                           });
                                         },
-                                        initialValue: salutation ?? '',
-                                        decoration: InputDecoration(
-                                          contentPadding: EdgeInsets.only(left: 16, right: 16),
-                                          labelText: Language.getPosTpmStrings('Salutation'),
-                                          labelStyle: TextStyle(
-                                            color: Colors.grey,
-                                          ),
-                                          enabledBorder: InputBorder.none,
-                                          focusedBorder: UnderlineInputBorder(
-                                            borderSide: BorderSide(color: Colors.blue, width: 0.5),
-                                          ),
+                                        value: salutation != '' ? salutation : null,
+                                        icon: Icon(
+                                          Icons.keyboard_arrow_down,
+                                          color: Colors.black54,
                                         ),
-                                        keyboardType: TextInputType.text,
+                                        decoration: InputDecoration(
+                                          border: InputBorder.none,
+                                        ),
+                                        hint: Text(
+                                          Language.getSettingsStrings('form.create_form.company.product.label'),
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -204,9 +209,6 @@ class _ContactScreenState extends State<ContactScreen> {
                                       alignment: Alignment.center,
                                       child: TextFormField(
                                         style: TextStyle(fontSize: 16),
-                                        onTap: () {
-
-                                        },
                                         onChanged: (val) {
                                           setState(() {
                                             firstName = val;
@@ -238,9 +240,6 @@ class _ContactScreenState extends State<ContactScreen> {
                                       alignment: Alignment.center,
                                       child: TextFormField(
                                         style: TextStyle(fontSize: 16),
-                                        onTap: () {
-
-                                        },
                                         onChanged: (val) {
                                           setState(() {
                                             lastName = val;
@@ -277,9 +276,6 @@ class _ContactScreenState extends State<ContactScreen> {
                                       alignment: Alignment.center,
                                       child: TextFormField(
                                         style: TextStyle(fontSize: 16),
-                                        onTap: () {
-
-                                        },
                                         onChanged: (val) {
                                           setState(() {
                                             phone = val;
@@ -288,7 +284,7 @@ class _ContactScreenState extends State<ContactScreen> {
                                         initialValue: phone ?? '',
                                         decoration: InputDecoration(
                                           contentPadding: EdgeInsets.only(left: 16, right: 16),
-                                          labelText: Language.getPosTpmStrings('Phone'),
+                                          labelText: Language.getPosTpmStrings('Phone (optional)'),
                                           labelStyle: TextStyle(
                                             color: Colors.grey,
                                           ),
@@ -311,9 +307,6 @@ class _ContactScreenState extends State<ContactScreen> {
                                       alignment: Alignment.center,
                                       child: TextFormField(
                                         style: TextStyle(fontSize: 16),
-                                        onTap: () {
-
-                                        },
                                         onChanged: (val) {
                                           setState(() {
                                             fax = val;
@@ -346,9 +339,6 @@ class _ContactScreenState extends State<ContactScreen> {
                               child: Center(
                                 child: TextFormField(
                                   style: TextStyle(fontSize: 16),
-                                  onTap: () {
-
-                                  },
                                   onChanged: (val) {
                                     setState(() {
                                       additionalPhone= val;
