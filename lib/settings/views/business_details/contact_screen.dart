@@ -104,15 +104,21 @@ class _ContactScreenState extends State<ContactScreen> {
             child: Form(
               key: _formKey,
               child: Container(
-                  padding: EdgeInsets.all(16),
-                  width: Measurements.width,
-                  child: BlurEffectView(
-                    color: Color.fromRGBO(20, 20, 20, 0.4),
-                    child: SingleChildScrollView(
-                      child: Container(
-                        child: Column(
-                          children: <Widget>[
-                            Container(
+                padding: EdgeInsets.all(16),
+                width: Measurements.width,
+                child: BlurEffectView(
+                  color: Color.fromRGBO(20, 20, 20, 0.4),
+                  child: SingleChildScrollView(
+                    child: Container(
+                      child: Column(
+                        children: <Widget>[
+                          BlurEffectView(
+                            color: Color.fromRGBO(100, 100, 100, 0.05),
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(8),
+                              topRight: Radius.circular(8),
+                            ),
+                            child: Container(
                               height: 56,
                               color: Colors.black38,
                               child: SizedBox.expand(
@@ -158,15 +164,18 @@ class _ContactScreenState extends State<ContactScreen> {
                                 ),
                               ),
                             ),
-                            selectedSection == 0 ? SizedBox(height: 2,): Container(),
-                            selectedSection == 0 ? Container(
-                              height: 64,
-                              child: Row(
-                                children: <Widget>[
-                                  Flexible(
+                          ),
+                          selectedSection == 0 ? SizedBox(height: 2,): Container(),
+                          selectedSection == 0 ? Container(
+                            height: 64,
+                            child: Row(
+                              children: <Widget>[
+                                Flexible(
+                                  child: BlurEffectView(
+                                    color: Color.fromRGBO(100, 100, 100, 0.05),
+                                    radius: 0,
                                     child: Container(
                                       height: 64,
-                                      color: Colors.black12,
                                       alignment: Alignment.center,
                                       padding: EdgeInsets.only(left: 16, right: 8),
                                       child: DropdownButtonFormField(
@@ -199,13 +208,16 @@ class _ContactScreenState extends State<ContactScreen> {
                                       ),
                                     ),
                                   ),
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 2),
-                                  ),
-                                  Flexible(
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 2),
+                                ),
+                                Flexible(
+                                  child: BlurEffectView(
+                                    color: Color.fromRGBO(100, 100, 100, 0.05),
+                                    radius: 0,
                                     child: Container(
                                       height: 64,
-                                      color: Colors.black12,
                                       alignment: Alignment.center,
                                       child: TextFormField(
                                         style: TextStyle(fontSize: 16),
@@ -230,13 +242,16 @@ class _ContactScreenState extends State<ContactScreen> {
                                       ),
                                     ),
                                   ),
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 2),
-                                  ),
-                                  Flexible(
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 2),
+                                ),
+                                Flexible(
+                                  child: BlurEffectView(
+                                    color: Color.fromRGBO(100, 100, 100, 0.05),
+                                    radius: 0,
                                     child: Container(
                                       height: 64,
-                                      color: Colors.black12,
                                       alignment: Alignment.center,
                                       child: TextFormField(
                                         style: TextStyle(fontSize: 16),
@@ -261,18 +276,21 @@ class _ContactScreenState extends State<ContactScreen> {
                                       ),
                                     ),
                                   ),
-                                ],
-                              ),
-                            ): Container(),
-                            selectedSection == 0 ? SizedBox(height: 2,): Container(),
-                            selectedSection == 0 ? Container(
-                              height: 64,
-                              child: Row(
-                                children: <Widget>[
-                                  Flexible(
+                                ),
+                              ],
+                            ),
+                          ): Container(),
+                          selectedSection == 0 ? SizedBox(height: 2,): Container(),
+                          selectedSection == 0 ? Container(
+                            height: 64,
+                            child: Row(
+                              children: <Widget>[
+                                Flexible(
+                                  child: BlurEffectView(
+                                    color: Color.fromRGBO(100, 100, 100, 0.05),
+                                    radius: 0,
                                     child: Container(
                                       height: 64,
-                                      color: Colors.black12,
                                       alignment: Alignment.center,
                                       child: TextFormField(
                                         style: TextStyle(fontSize: 16),
@@ -297,13 +315,16 @@ class _ContactScreenState extends State<ContactScreen> {
                                       ),
                                     ),
                                   ),
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 2),
-                                  ),
-                                  Flexible(
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 2),
+                                ),
+                                Flexible(
+                                  child: BlurEffectView(
+                                    color: Color.fromRGBO(100, 100, 100, 0.05),
+                                    radius: 0,
                                     child: Container(
                                       height: 64,
-                                      color: Colors.black12,
                                       alignment: Alignment.center,
                                       child: TextFormField(
                                         style: TextStyle(fontSize: 16),
@@ -328,13 +349,16 @@ class _ContactScreenState extends State<ContactScreen> {
                                       ),
                                     ),
                                   ),
-                                ],
-                              ),
-                            ): Container(),
-                            selectedSection == 0 ? SizedBox(height: 2,): Container(),
-                            selectedSection == 0 ? Container(
+                                ),
+                              ],
+                            ),
+                          ): Container(),
+                          selectedSection == 0 ? SizedBox(height: 2,): Container(),
+                          selectedSection == 0 ? BlurEffectView(
+                            color: Color.fromRGBO(100, 100, 100, 0.05),
+                            radius: 0,
+                            child: Container(
                               height: 64,
-                              color: Colors.black12,
                               alignment: Alignment.center,
                               child: Center(
                                 child: TextFormField(
@@ -359,31 +383,35 @@ class _ContactScreenState extends State<ContactScreen> {
                                   keyboardType: TextInputType.text,
                                 ),
                               ),
-                            ): Container(),
-                            selectedSection == 0 ? SizedBox(height: 2,): Container(),
-                            selectedSection == 0 ? SaveBtn(
-                              isUpdating: state.isUpdating,
-                              color: Colors.black45,
-                              isBottom: false,
-                              onUpdate: () {
-                                if (_formKey.currentState.validate() &&
-                                    !state.isUpdating) {
-                                  Map<String, dynamic> body = {};
-                                  body['salutation'] = salutation;
-                                  body['firstName'] = firstName;
-                                  body['lastName'] = lastName;
-                                  body['phone'] = phone;
-                                  body['fax'] = fax;
-                                  body['additionalPhone'] = additionalPhone;
-                                  print(body);
-                                  widget.setScreenBloc.add(BusinessUpdateEvent({
-                                    'contactDetails': body,
-                                  }));
-                                }
-                              },
-                            ): Container(),
-                            Divider(height: 0, thickness: 0.5, color: Colors.grey,),
-                            Container(
+                            ),
+                          ): Container(),
+                          selectedSection == 0 ? SizedBox(height: 2,): Container(),
+                          selectedSection == 0 ? SaveBtn(
+                            isUpdating: state.isUpdating,
+                            color: Colors.black45,
+                            isBottom: false,
+                            onUpdate: () {
+                              if (_formKey.currentState.validate() &&
+                                  !state.isUpdating) {
+                                Map<String, dynamic> body = {};
+                                body['salutation'] = salutation;
+                                body['firstName'] = firstName;
+                                body['lastName'] = lastName;
+                                body['phone'] = phone;
+                                body['fax'] = fax;
+                                body['additionalPhone'] = additionalPhone;
+                                print(body);
+                                widget.setScreenBloc.add(BusinessUpdateEvent({
+                                  'contactDetails': body,
+                                }));
+                              }
+                            },
+                          ): Container(),
+                          Divider(height: 0, thickness: 0.5, color: Colors.grey,),
+                          BlurEffectView(
+                            color: Color.fromRGBO(100, 100, 100, 0.05),
+                            radius: 0,
+                            child: Container(
                               height: 56,
                               color: Colors.black38,
                               child: SizedBox.expand(
@@ -429,13 +457,17 @@ class _ContactScreenState extends State<ContactScreen> {
                                 ),
                               ),
                             ),
-                            selectedSection == 1 ? (
-                                contactEmails.length > 0 ?
-                                ListView.separated(
-                                    shrinkWrap: true,
-                                    physics: NeverScrollableScrollPhysics(),
-                                    itemBuilder: (context, index) {
-                                      return Container(
+                          ),
+                          selectedSection == 1 ? (
+                              contactEmails.length > 0 ?
+                              ListView.separated(
+                                  shrinkWrap: true,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  itemBuilder: (context, index) {
+                                    return BlurEffectView(
+                                      color: Color.fromRGBO(100, 100, 100, 0.05),
+                                      radius: 0,
+                                      child: Container(
                                         height: 50,
                                         padding: EdgeInsets.only(left: 16, right: 8),
                                         child: Row(
@@ -586,18 +618,22 @@ class _ContactScreenState extends State<ContactScreen> {
                                             ),
                                           ],
                                         ),
-                                      );
-                                    },
-                                    separatorBuilder: (context, index) {
-                                      return Divider(
-                                        height: 0,
-                                        thickness: 0.5,
-                                        color: Colors.grey,
-                                      );
-                                    },
-                                    itemCount: contactEmails.length
-                                ):
-                                Container(
+                                      ),
+                                    );
+                                  },
+                                  separatorBuilder: (context, index) {
+                                    return Divider(
+                                      height: 0,
+                                      thickness: 0.5,
+                                      color: Colors.grey,
+                                    );
+                                  },
+                                  itemCount: contactEmails.length
+                              ):
+                              BlurEffectView(
+                                color: Color.fromRGBO(100, 100, 100, 0.05),
+                                radius: 0,
+                                child: Container(
                                   height: 50,
                                   padding: EdgeInsets.only(left: 16, right: 16),
                                   child: Align(
@@ -610,47 +646,48 @@ class _ContactScreenState extends State<ContactScreen> {
                                       ),
                                     ),
                                   ),
-                                )
-                            ):
-                            Container(),
-                            selectedSection == 1 ? Container(
-                              height: 55,
-                              decoration: BoxDecoration(
-                                color: Colors.black45,
-                                shape: BoxShape.rectangle,
-                                borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(8.0),
-                                  bottomRight: Radius.circular(8.0),
                                 ),
+                              )
+                          ):
+                          Container(),
+                          selectedSection == 1 ? Container(
+                            height: 55,
+                            decoration: BoxDecoration(
+                              color: Colors.black45,
+                              shape: BoxShape.rectangle,
+                              borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(8.0),
+                                bottomRight: Radius.circular(8.0),
                               ),
-                              child: SizedBox.expand(
-                                child: MaterialButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      PageTransition(
-                                        child: AddEmailScreen(
-                                          globalStateModel: widget.globalStateModel,
-                                          setScreenBloc: widget.setScreenBloc,
-                                          contactEmails: contactEmails,
-                                        ),
-                                        type: PageTransitionType.fade,
-                                        duration: Duration(milliseconds: 50),
+                            ),
+                            child: SizedBox.expand(
+                              child: MaterialButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    PageTransition(
+                                      child: AddEmailScreen(
+                                        globalStateModel: widget.globalStateModel,
+                                        setScreenBloc: widget.setScreenBloc,
+                                        contactEmails: contactEmails,
                                       ),
-                                    );
-                                  },
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text('Add +',),
-                                  ),
+                                      type: PageTransitionType.fade,
+                                      duration: Duration(milliseconds: 50),
+                                    ),
+                                  );
+                                },
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text('Add +',),
                                 ),
                               ),
-                            ): Container(),
-                          ],
-                        ),
+                            ),
+                          ): Container(),
+                        ],
                       ),
                     ),
                   ),
+                ),
               ),
             ),
           );

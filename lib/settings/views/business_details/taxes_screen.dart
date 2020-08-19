@@ -31,14 +31,12 @@ class TaxesScreen extends StatefulWidget {
 
 class _TaxesScreenState extends State<TaxesScreen> {
   Business activeBusiness;
-  CompanyAddress companyAddress;
+  Taxes taxes;
 
-  String city;
-  String countryName;
-  String countryCode;
-  String street;
-  String zipCode;
-  String googleAutocomplete;
+  String companyRegisterNumber;
+  String taxId;
+  String taxNumber;
+  bool turnoverTaxAct = false;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -47,23 +45,12 @@ class _TaxesScreenState extends State<TaxesScreen> {
     widget.setScreenBloc.add(GetBusinessProductsEvent());
     activeBusiness =
         widget.globalStateModel.currentBusiness;
-    companyAddress = activeBusiness.companyAddress;
-    prepareDefaultCountries();
-    if (companyAddress != null) {
-      city = companyAddress.city;
-      countryCode = companyAddress.country;
-      if (countryCode != null) {
-        getCountryForCodeWithIdentifier(countryCode, 'en-en').then((value) {
-          setState(() {
-            countryName = value.name;
-          });
-        });
-      }
-      street = companyAddress.street;
-      zipCode = companyAddress.zipCode;
-      setState(() {
-        setGoogleAutoComplete();
-      });
+    taxes = activeBusiness.taxes;
+    if (taxes != null) {
+      companyRegisterNumber = taxes.companyRegisterNumber;
+      taxId = taxes.taxId;
+      taxNumber = taxes.taxNumber;
+      turnoverTaxAct = taxes.turnoverTaxAct ?? false;
     }
     super.initState();
   }
@@ -82,7 +69,7 @@ class _TaxesScreenState extends State<TaxesScreen> {
   get _body {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: Appbar('Address'),
+      appBar: Appbar(Language.getSettingsStrings('filters.vatIds.name')),
       body: SafeArea(
         child: BackgroundBase(
           true,
@@ -108,268 +95,174 @@ class _TaxesScreenState extends State<TaxesScreen> {
             child: Form(
               key: _formKey,
               child: Container(
-                  padding: EdgeInsets.all(16),
-                  width: Measurements.width,
-                  child: BlurEffectView(
-                    color: Color.fromRGBO(20, 20, 20, 0.4),
-                    child: SingleChildScrollView(
-                      child: Container(
-                        child: Column(
-                          children: <Widget>[
-                            Container(
-                              padding:
-                                  EdgeInsets.only(left: 8, top: 8, right: 8),
-                              height: 65,
-                              child: BlurEffectView(
-                                color: Color.fromRGBO(100, 100, 100, 0.05),
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(8),
-                                  topRight: Radius.circular(8),
-                                ),
-                                child: Container(
-                                  padding: EdgeInsets.only(left: 12, right: 12),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: <Widget>[
-                                      SvgPicture.asset(
-                                          'assets/images/google-auto-complete.svg'),
-                                      SizedBox(
-                                        width: 8,
+                padding: EdgeInsets.all(16),
+                width: Measurements.width,
+                child: BlurEffectView(
+                  color: Color.fromRGBO(20, 20, 20, 0.4),
+                  child: SingleChildScrollView(
+                    child: Container(
+                      child: Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(top: 8, left: 8, right: 8),
+                            child: BlurEffectView(
+                              color: Color.fromRGBO(100, 100, 100, 0.05),
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(8),
+                                topRight: Radius.circular(8),
+                              ),
+                              child: Container(
+                                height: 64,
+                                alignment: Alignment.center,
+                                child: Center(
+                                  child: TextFormField(
+                                    style: TextStyle(fontSize: 16),
+                                    onChanged: (val) {
+                                      setState(() {
+                                        companyRegisterNumber = val;
+                                      });
+                                    },
+                                    initialValue: companyRegisterNumber ?? '',
+                                    decoration: InputDecoration(
+                                      contentPadding: EdgeInsets.only(left: 16, right: 16),
+                                      labelText: Language.getPosTpmStrings('form.create_form.taxes.taxes.companyRegisterNumber.label'),
+                                      labelStyle: TextStyle(
+                                        color: Colors.grey,
                                       ),
-                                      Expanded(
-                                        child: TextFormField(
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 16,
-                                          ),
-                                          initialValue: googleAutocomplete ?? '',
-                                          textInputAction: TextInputAction.done,
-                                          keyboardType: TextInputType.url,
-                                          onChanged: (val) {
-                                            googleAutocomplete = val;
-                                          },
-                                          decoration: InputDecoration(
-                                              border: InputBorder.none,
-                                              labelText: 'Google Autocomplete',
-                                              labelStyle: TextStyle(
-                                                color: Colors.white54,
-                                                fontSize: 12,
-                                              )),
-                                        ),
+                                      enabledBorder: InputBorder.none,
+                                      focusedBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                                      ),
+                                    ),
+                                    keyboardType: TextInputType.text,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 2, left: 8, right: 8),
+                            child: BlurEffectView(
+                              color: Color.fromRGBO(100, 100, 100, 0.05),
+                              radius: 0,
+                              child: Container(
+                                height: 64,
+                                alignment: Alignment.center,
+                                child: Center(
+                                  child: TextFormField(
+                                    style: TextStyle(fontSize: 16),
+                                    onChanged: (val) {
+                                      setState(() {
+                                        taxId = val;
+                                      });
+                                    },
+                                    initialValue: taxId ?? '',
+                                    decoration: InputDecoration(
+                                      contentPadding: EdgeInsets.only(left: 16, right: 16),
+                                      labelText: Language.getPosTpmStrings('form.create_form.taxes.taxes.taxId.label'),
+                                      labelStyle: TextStyle(
+                                        color: Colors.grey,
+                                      ),
+                                      enabledBorder: InputBorder.none,
+                                      focusedBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                                      ),
+                                    ),
+                                    keyboardType: TextInputType.text,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 2, left: 8, right: 8),
+                            child: BlurEffectView(
+                              color: Color.fromRGBO(100, 100, 100, 0.05),
+                              radius: 0,
+                              child: Container(
+                                height: 64,
+                                alignment: Alignment.center,
+                                child: Center(
+                                  child: TextFormField(
+                                    style: TextStyle(fontSize: 16),
+                                    onChanged: (val) {
+                                      setState(() {
+                                        taxNumber = val;
+                                      });
+                                    },
+                                    initialValue: taxNumber ?? '',
+                                    decoration: InputDecoration(
+                                      contentPadding: EdgeInsets.only(left: 16, right: 16),
+                                      labelText: Language.getPosTpmStrings('form.create_form.taxes.taxes.taxNumber.label'),
+                                      labelStyle: TextStyle(
+                                        color: Colors.grey,
+                                      ),
+                                      enabledBorder: InputBorder.none,
+                                      focusedBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                                      ),
+                                    ),
+                                    keyboardType: TextInputType.text,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 2, left: 8, right: 8, bottom: 8),
+                            child: BlurEffectView(
+                              color: Color.fromRGBO(100, 100, 100, 0.05),
+                              radius: 0,
+                              child: Container(
+                                height: 64,
+                                child: MaterialButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      turnoverTaxAct = !turnoverTaxAct;
+                                    });
+                                  },
+                                  child: Row(
+                                    children: <Widget>[
+                                      Icon(turnoverTaxAct ? Icons.check_box: Icons.check_box_outline_blank),
+                                      SizedBox(width: 8,),
+                                      Text(
+                                        Language.getSettingsStrings('form.create_form.taxes.taxes.turnoverTaxAct.label'),
                                       ),
                                     ],
                                   ),
                                 ),
                               ),
                             ),
-                            Container(
-                              padding:
-                                  EdgeInsets.only(left: 8, top: 2, right: 8),
-                              child: BlurEffectView(
-                                color: Color.fromRGBO(100, 100, 100, 0.05),
-                                radius: 0,
-                                child: Container(
-                                  padding: EdgeInsets.only(left: 12, right: 12),
-                                  child: DropdownButtonFormField(
-                                    items: List.generate(widget.countryList.length,
-                                        (index) {
-                                      return DropdownMenuItem(
-                                        child: Text(
-                                          widget.countryList[index].name,
-                                        ),
-                                        value: widget.countryList[index].name,
-                                      );
-                                    }).toList(),
-                                    value: countryName ?? null,
-                                    onChanged: (val) {
-                                      countryName = val;
-                                    },
-                                    icon: Icon(
-                                      Icons.keyboard_arrow_down,
-                                      color: Colors.black54,
-                                    ),
-                                    decoration: InputDecoration(
-                                      border: InputBorder.none,
-                                    ),
-                                    hint: Text(
-                                      'Country',
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              padding: EdgeInsets.only(
-                                left: 8,
-                                top: 2,
-                                right: 8,
-                              ),
-                              height: 65,
-                              child: BlurEffectView(
-                                color: Color.fromRGBO(100, 100, 100, 0.05),
-                                radius: 0,
-                                child: Container(
-                                  padding: EdgeInsets.only(left: 12, right: 12),
-                                  child: TextFormField(
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                    ),
-                                    initialValue: city ?? '',
-                                    textInputAction: TextInputAction.done,
-                                    keyboardType: TextInputType.url,
-                                    onChanged: (val) {
-                                      city = val;
-                                      setState(() {
-                                        setGoogleAutoComplete();
-                                      });
-                                    },
-                                    validator: (value) {
-                                      if (value.isEmpty) {
-                                        return 'City is required.';
-                                      }
-                                      return null;
-                                    },
-                                    decoration: InputDecoration(
-                                        border: InputBorder.none,
-                                        labelText: 'City',
-                                        labelStyle: TextStyle(
-                                          color: Colors.white54,
-                                          fontSize: 12,
-                                        )),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              padding: EdgeInsets.only(
-                                left: 8,
-                                top: 2,
-                                right: 8,
-                              ),
-                              height: 65,
-                              child: BlurEffectView(
-                                color: Color.fromRGBO(100, 100, 100, 0.05),
-                                radius: 0,
-                                child: Container(
-                                  padding: EdgeInsets.only(left: 12, right: 12),
-                                  child: TextFormField(
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                    ),
-                                    initialValue: street ?? '',
-                                    textInputAction: TextInputAction.done,
-                                    keyboardType: TextInputType.url,
-                                    onChanged: (val) {
-                                      street = val;
-                                      setState(() {
-                                        setGoogleAutoComplete();
-                                      });
-                                    },
-                                    validator: (value) {
-                                      if (value.isEmpty) {
-                                        return 'Street is required.';
-                                      }
-                                      return null;
-                                    },
-                                    decoration: InputDecoration(
-                                        border: InputBorder.none,
-                                        labelText: 'Street',
-                                        labelStyle: TextStyle(
-                                          color: Colors.white54,
-                                          fontSize: 12,
-                                        )),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              padding: EdgeInsets.only(
-                                  left: 8, top: 2, right: 8, bottom: 8),
-                              height: 65,
-                              child: BlurEffectView(
-                                color: Color.fromRGBO(100, 100, 100, 0.05),
-                                borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(8),
-                                  bottomRight: Radius.circular(8),
-                                ),
-                                child: Container(
-                                  padding: EdgeInsets.only(left: 12, right: 12),
-                                  child: TextFormField(
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                    ),
-                                    initialValue: zipCode ?? '',
-                                    textInputAction: TextInputAction.done,
-                                    keyboardType: TextInputType.url,
-                                    onChanged: (val) {
-                                      zipCode = val;
-                                      setState(() {
-                                        setGoogleAutoComplete();
-                                      });
-                                    },
-                                    validator: (value) {
-                                      if (value.isEmpty) {
-                                        return 'ZIP Code is required.';
-                                      }
-                                      return null;
-                                    },
-                                    decoration: InputDecoration(
-                                        border: InputBorder.none,
-                                        labelText: 'ZIP Code',
-                                        labelStyle: TextStyle(
-                                          color: Colors.white54,
-                                          fontSize: 12,
-                                        )),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SaveBtn(
-                              isUpdating: state.isUpdating,
-                              onUpdate: () {
-                                if (_formKey.currentState.validate() &&
-                                    !state.isUpdating) {
-                                  Map<String, dynamic> body = {};
-                                  body['city'] = city;
-                                  String code = getCountryCode(countryName, widget.countryList);
-                                  if (code == null) {
-                                    Fluttertoast.showToast(msg: 'Can not find country Code');
-                                    return;
-                                  }
-                                  body['country'] = code.toUpperCase();
-                                  body['street'] = street;
-                                  body['zipCode'] = zipCode;
-                                  print(body);
-                                  widget.setScreenBloc.add(BusinessUpdateEvent({
-                                    'companyAddress': body,
-                                  }));
-                                }
-                              },
-                            )
-                          ],
-                        ),
+                          ),
+                          SaveBtn(
+                            isUpdating: state.isUpdating,
+                            color: Colors.black45,
+                            isBottom: false,
+                            onUpdate: () {
+                              if (_formKey.currentState.validate() &&
+                                  !state.isUpdating) {
+                                Map<String, dynamic> body = {};
+                                body['companyRegisterNumber'] = companyRegisterNumber;
+                                body['taxNumber'] = taxNumber;
+                                body['taxId'] = taxId;
+                                body['turnoverTaxAct'] = turnoverTaxAct;
+                                print(body);
+                                widget.setScreenBloc.add(BusinessUpdateEvent({
+                                  'taxes': body,
+                                }));
+                              }
+                            },
+                          ),
+                        ],
                       ),
                     ),
-                  )),
+                  ),
+                ),
+              ),
             ),
           );
         },
       ),
     );
-  }
-
-  void setGoogleAutoComplete() {
-    if (street != null && street.isNotEmpty) {
-      googleAutocomplete = street;
-    }
-    if (zipCode != null && zipCode.isNotEmpty) {
-      googleAutocomplete = googleAutocomplete + ', ' + zipCode;
-    }
-    if (city != null && city.isNotEmpty) {
-      googleAutocomplete = googleAutocomplete + ', ' + city;
-    }
   }
 }
