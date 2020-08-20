@@ -27,7 +27,6 @@ class EmployeeScreen extends StatefulWidget {
 class _EmployeeScreenState extends State<EmployeeScreen> {
   bool _isPortrait;
   bool _isTablet;
-  bool isSelect = false;
 
   @override
   void initState() {
@@ -211,22 +210,23 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
   }
 
   Widget _thirdAppbar(SettingScreenState state) {
+    int selectedCount = state.employeeListModels.where((element) => element.isChecked).toList().length;
     return Stack(
       children: <Widget>[
         Container(
           padding: EdgeInsets.symmetric(horizontal: 12),
           height: 50,
-          color: Colors.black45,
+          color: Colors.black54,
           child: Row(
             children: <Widget>[
               IconButton(
                   onPressed: () {
-                    setState(() {
-                      isSelect = true;
-                    });
+                    widget.setScreenBloc
+                        .add(SelectAllEmployeesEvent(isSelect: true));
                   },
-                  icon:
-                  Icon(true ? Icons.check_box : Icons.check_box_outline_blank)),
+                  icon: Icon(selectedCount > 0
+                      ? Icons.check_box
+                      : Icons.check_box_outline_blank)),
               SizedBox(
                 width: 18,
               ),
@@ -267,7 +267,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
           ),
         ),
         Visibility(
-          visible: isSelect,
+          visible: selectedCount > 0,
           child: Container(
             height: 50,
             padding: EdgeInsets.only(
@@ -292,14 +292,15 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                       InkWell(
                         child: SvgPicture.asset('assets/images/xsinacircle.svg'),
                         onTap: () {
-
+                          widget.setScreenBloc
+                              .add(SelectAllEmployeesEvent(isSelect: false));
                         },
                       ),
                       Padding(
                         padding: EdgeInsets.only(left: 8),
                       ),
                       Text(
-                        '${state.employees.length} ITEM${state.employees.length > 1 ? 'S': ''} SELECTED',
+                        '$selectedCount ITEM${state.employees.length > 1 ? 'S': ''} SELECTED',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
@@ -355,7 +356,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                     shrinkWrap: true,
                     itemCount: state.employees.length,
                     itemBuilder: (context, index) =>
-                        _itemBuilder(context, state.employees[index]),
+                        _itemBuilder(context, state.employeeListModels[index]),
                     separatorBuilder: (context, index) {
                       return Divider(
                         height: 1,
@@ -368,7 +369,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
     );
   }
 
-  Widget _itemBuilder(BuildContext context, Employee employee) {
+  Widget _itemBuilder(BuildContext context, EmployeeListModel employeeListModel) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 12),
       height: 80,
@@ -376,23 +377,25 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
         scrollDirection: Axis.horizontal,
         child: Row(
           children: <Widget>[
-            Icon(true ? Icons.check_box : Icons.check_box_outline_blank),
+            IconButton(onPressed: () {
+              widget.setScreenBloc.add(CheckEmployeeItemEvent(model: employeeListModel));
+            }, icon: Icon(employeeListModel.isChecked ? Icons.check_box : Icons.check_box_outline_blank)),
             SizedBox(
               width: 18,
             ),
-            Text(employee.fullName ?? '-'),
+            Text(employeeListModel.employee.fullName ?? '-'),
             SizedBox(
               width: 18,
             ),
-            Text(employee.positionType ?? '-'),
+            Text(employeeListModel.employee.positionType ?? '-'),
             SizedBox(
               width: 18,
             ),
-            Text(employee.email ?? '-'),
+            Text(employeeListModel.employee.email ?? '-'),
             SizedBox(
               width: 18,
             ),
-            Text(employee.status == 1 ? 'Invited' : 'Active'),
+            Text(employeeListModel.employee.status == 1 ? 'Invited' : 'Active'),
             SizedBox(
               width: 18,
             ),
@@ -477,9 +480,8 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
       MenuItem(
         title: 'Unselect',
         onTap: () {
-          setState(() {
-            isSelect = false;
-          });
+          widget.setScreenBloc
+              .add(SelectAllEmployeesEvent(isSelect: false));
         },
       ),
       MenuItem(

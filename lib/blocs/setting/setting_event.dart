@@ -2,6 +2,8 @@
 import 'dart:io';
 
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
+import 'package:payever/settings/models/models.dart';
 
 abstract class SettingScreenEvent extends Equatable {
   SettingScreenEvent();
@@ -82,3 +84,25 @@ class UploadBusinessImage extends SettingScreenEvent {
 class GetBusinessProductsEvent extends SettingScreenEvent {}
 
 class GetEmployeesEvent extends SettingScreenEvent {}
+
+class CheckEmployeeItemEvent extends SettingScreenEvent {
+  final EmployeeListModel model;
+
+  CheckEmployeeItemEvent({this.model});
+
+  @override
+  List<Object> get props => [
+    this.model,
+  ];
+}
+
+class SelectAllEmployeesEvent extends SettingScreenEvent {
+  final bool isSelect;
+
+  SelectAllEmployeesEvent({this.isSelect});
+  @override
+  List<Object> get props => [
+    this.isSelect,
+  ];
+}
+

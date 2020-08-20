@@ -50,6 +50,10 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
       yield* getBusinessProducts();
     } else if (event is GetEmployeesEvent) {
       yield* getEmployee();
+    } else if (event is CheckEmployeeItemEvent) {
+      yield* selectEmployee(event.model);
+    } else if(event is SelectAllEmployeesEvent) {
+      yield* selectAllEmployees(event.isSelect);
     }
   }
 
@@ -194,11 +198,28 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
             employeeListModels.add(EmployeeListModel(employee: Employee.fromMap(element), isChecked: false));
           });
         }
-        yield state.copyWith(isLoading: false, employees: employees);
+        yield state.copyWith(isLoading: false, employees: employees, employeeListModels: employeeListModels);
       } else {
         yield SettingScreenStateFailure(error: 'Update Business name failed');
         yield state.copyWith(isLoading: false);
       }
     }
   }
+
+  Stream<SettingScreenState> selectEmployee(EmployeeListModel model) async* {
+    List<EmployeeListModel> employeeListModels = state.employeeListModels;
+    int index = employeeListModels.indexOf(model);
+    employeeListModels[index].isChecked = !model.isChecked;
+    yield state.copyWith(employeeListModels: employeeListModels);
+  }
+
+  Stream<SettingScreenState> selectAllEmployees(bool isSelect) async* {
+    List<EmployeeListModel> employeeListModels = [];
+    employeeListModels.addAll(state.employeeListModels);
+    employeeListModels.forEach((element) {
+      element.isChecked = isSelect;
+    });
+    yield state.copyWith(employeeListModels: employeeListModels);
+  }
+
 }
