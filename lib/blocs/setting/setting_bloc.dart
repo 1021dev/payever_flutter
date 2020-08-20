@@ -207,10 +207,11 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
         }
         yield state.copyWith(isLoading: false, employees: employees, employeeListModels: employeeListModels);
       } else {
-        yield SettingScreenStateFailure(error: 'Update Business name failed');
+        yield SettingScreenStateFailure(error: 'Get Employee failed');
         yield state.copyWith(isLoading: false);
       }
     }
+    add(GetGroupEvent());
   }
 
   Stream<SettingScreenState> selectEmployee(EmployeeListModel model) async* {
@@ -251,7 +252,7 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
         }
         yield state.copyWith(isLoading: false, employeeGroups: groups, groupList: groupList);
       } else {
-        yield SettingScreenStateFailure(error: 'Update Business name failed');
+        yield SettingScreenStateFailure(error: 'Get Group failed');
         yield state.copyWith(isLoading: false);
       }
     }

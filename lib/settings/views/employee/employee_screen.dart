@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,7 +8,6 @@ import 'package:page_transition/page_transition.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
-import 'package:payever/settings/models/models.dart';
 import 'package:payever/settings/views/employee/add_employee_screen.dart';
 import 'package:payever/settings/widgets/app_bar.dart';
 import 'package:payever/blocs/bloc.dart';
@@ -29,10 +29,16 @@ class EmployeeScreen extends StatefulWidget {
 class _EmployeeScreenState extends State<EmployeeScreen> {
   bool _isPortrait;
   bool _isTablet;
+  bool isEmployee = true;
+
+  List<String> employeeTableStatus = [];
+  List<String> groupTableStatus = [];
 
   @override
   void initState() {
     super.initState();
+    employeeTableStatus.addAll(['Position', 'Mail', 'Status']);
+    groupTableStatus.addAll(['Employees']);
     widget.setScreenBloc.add(GetEmployeesEvent());
   }
 
@@ -137,23 +143,28 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
             ),
             MaterialButton(
               onPressed: () {
-                Navigator.push(context, PageTransition(
-                  child: AddEmployeeScreen(
-                    globalStateModel: widget.globalStateModel,
-                    setScreenBloc: widget.setScreenBloc,
-                  ),
-                  type: PageTransitionType.fade,
-                  duration: Duration(microseconds: 300),
-                ));
+                if (isEmployee) {
+                  Navigator.push(context, PageTransition(
+                    child: AddEmployeeScreen(
+                      globalStateModel: widget.globalStateModel,
+                      setScreenBloc: widget.setScreenBloc,
+                    ),
+                    type: PageTransitionType.fade,
+                    duration: Duration(microseconds: 300),
+                  ));
+                } else {
+
+                }
               },
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
               height: 24,
+              minWidth: 110,
               color: Colors.grey[800],
               elevation: 0,
               child: Text(
-                'Add Employee',
+                isEmployee ? 'Add Employee' : 'Add Group',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 13,
@@ -163,18 +174,82 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
             SizedBox(
               width: 16,
             ),
-            Text(
-                '${state.employees.length} ${state.employees.length > 1 ? 'members' : 'member'}'),
+            SizedBox(
+              width: 70,
+              child: Center(
+                child: Text(
+                  isEmployee ? '${state.employees.length} ${state.employees.length > 1 ? 'members' : 'member'}'
+                      : '${state.groupList.length} ${state.groupList.length > 1 ? 'groups' : 'group'}',
+                ),
+              ),
+            ),
             SizedBox(
               width: 12,
             ),
-            MaterialButton(
-              onPressed: () {},
-              child: Text('Employees'),
-            ),
-            MaterialButton(
-              onPressed: () {},
-              child: Text('Groups'),
+            Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(left: 8),
+                    child: MaterialButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(12),
+                          bottomLeft: Radius.circular(12),
+                        ),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          isEmployee = true;
+                        });
+                      },
+                      color: isEmployee ? Color(0xFF2a2a2a): Color(0xFF1F1F1F),
+                      height: 24,
+                      elevation: 0,
+                      child: AutoSizeText(
+                        'Employees',
+                        minFontSize: 8,
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 2),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(right: 8),
+                    child: MaterialButton(
+                      onPressed: () {
+                        setState(() {
+                          isEmployee = false;
+                        });
+                      },
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(12),
+                          bottomRight: Radius.circular(12),
+                        ),
+                      ),
+                      color: !isEmployee ? Color(0xFF2a2a2a): Color(0xFF1F1F1F),
+                      elevation: 0,
+                      height: 24,
+                      child: AutoSizeText(
+                        'Groups',
+                        maxLines: 1,
+                        minFontSize: 8,
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
             PopupMenuButton<MenuItem>(
               icon: SvgPicture.asset(
@@ -189,7 +264,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
               ),
               color: Colors.black87,
               itemBuilder: (BuildContext context) {
-                return appBarPositionPopUpActions(context, state)
+                return (isEmployee ? appBarEmployeeTablePopUpActions(context, state) : appBarGroupTablePopUpActions(context, state))
                     .map((MenuItem item) {
                   return PopupMenuItem<MenuItem>(
                     value: item,
@@ -205,7 +280,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                             ),
                           ),
                         ),
-                        item.icon,
+                        item.icon != null ? item.icon : Container(),
                       ],
                     ),
                   );
@@ -221,7 +296,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
     );
   }
 
-  SingleChildScrollView tableBody(BuildContext ctx, SettingScreenState state) {
+  SingleChildScrollView employeeTableBody(BuildContext ctx, SettingScreenState state) {
     int selectedCount = state.employeeListModels.where((element) => element.isChecked).toList().length;
 
     return SingleChildScrollView(
@@ -232,8 +307,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
           dataRowHeight: 50,
           headingRowHeight: 50,
           dividerThickness: 0.5,
-          showCheckboxColumn: true,
-          columnSpacing: 8,
+          columnSpacing: 16,
           horizontalMargin: 16,
           columns: [
             DataColumn(
@@ -247,48 +321,48 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                     : Icons.check_box_outline_blank),
               ),
               numeric: false,
-              tooltip: "This is First Name",
+              tooltip: 'This is First Name',
             ),
             DataColumn(
               label: Text(
-                "Employee",
+                'Employee',
                 style: TextStyle(
                   color: Colors.white,
                 ),
               ),
               numeric: false,
-              tooltip: "Employee",
+              tooltip: 'Employee',
             ),
-            DataColumn(
+            employeeTableStatus.contains('Position') ? DataColumn(
               label: Text(
-                "Position",
+                'Position',
                 style: TextStyle(
                   color: Colors.white,
                 ),
               ),
               numeric: false,
-              tooltip: "Position",
-            ),
-            DataColumn(
+              tooltip: 'Position',
+            ): DataColumn(label: Container()),
+            employeeTableStatus.contains('Mail') ? DataColumn(
               label: Text(
-                "Mail",
+                'Mail',
                 style: TextStyle(
                   color: Colors.white,
                 ),
               ),
               numeric: false,
               tooltip: 'Mail',
-            ),
-            DataColumn(
+            ): DataColumn(label: Container()),
+            employeeTableStatus.contains('Status') ? DataColumn(
               label: Text(
-                "Status",
+                'Status',
                 style: TextStyle(
                   color: Colors.white,
                 ),
               ),
               numeric: false,
               tooltip: 'Status',
-            ),
+            ): DataColumn(label: Container()),
             DataColumn(
               label: Container(),
               numeric: false,
@@ -310,15 +384,15 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                   DataCell(
                     Text(emp.employee.fullName ?? '-'),
                   ),
-                  DataCell(
+                  employeeTableStatus.contains('Position') ? DataCell(
                     Text(emp.employee.positionType ?? '-'),
-                  ),
-                  DataCell(
+                  ): DataCell(Container()),
+                  employeeTableStatus.contains('Mail') ? DataCell(
                     Text(emp.employee.email ?? '-'),
-                  ),
-                  DataCell(
+                  ): DataCell(Container()),
+                  employeeTableStatus.contains('Status') ? DataCell(
                     Text(emp.employee.status == 1 ? 'Invited' : 'Active'),
-                  ),
+                  ): DataCell(Container()),
                   DataCell(
                     MaterialButton(
                       onPressed: () {},
@@ -344,8 +418,109 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
       ),
     );
   }
+
+  SingleChildScrollView groupTableBody(BuildContext ctx, SettingScreenState state) {
+    int selectedCount = state.groupList.where((element) => element.isChecked).toList().length;
+
+    return SingleChildScrollView(
+      scrollDirection: Axis.vertical,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: DataTable(
+          dataRowHeight: 50,
+          headingRowHeight: 50,
+          dividerThickness: 0.5,
+          columnSpacing: 16,
+          horizontalMargin: 16,
+          columns: [
+            DataColumn(
+              label: IconButton(
+                onPressed: () {
+                  widget.setScreenBloc
+                      .add(SelectAllGroupEvent(isSelect: true));
+                },
+                icon: Icon(selectedCount > 0
+                    ? Icons.check_box
+                    : Icons.check_box_outline_blank),
+              ),
+              numeric: false,
+            ),
+            DataColumn(
+              label: Text(
+                'Group name',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              numeric: false,
+              tooltip: 'Group name',
+            ),
+            groupTableStatus.contains('Employees') ? DataColumn(
+              label: Text(
+                'Employees',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              numeric: false,
+              tooltip: 'Employees',
+            ): DataColumn(label: Container()),
+            DataColumn(
+              label: Container(),
+              numeric: false,
+              tooltip: 'Edit',
+            ),
+          ],
+          rows: state.groupList
+              .map(
+                (grp) => DataRow(
+                cells: [
+                  DataCell(
+                    IconButton(
+                      onPressed: () {
+                        widget.setScreenBloc.add(CheckGroupItemEvent(model: grp));
+                      },
+                      icon: Icon(grp.isChecked ? Icons.check_box : Icons.check_box_outline_blank),
+                    ),
+                  ),
+                  DataCell(
+                    Text(grp.group.name ?? '-'),
+                  ),
+                  groupTableStatus.contains('Employees') ? DataCell(
+                    Text(
+                      '${grp.group.employees.length} ${grp.group.employees.length > 1 ? 'users' : 'user'}',
+                    ),
+                  ) : DataCell(Container()),
+                  DataCell(
+                    MaterialButton(
+                      onPressed: () {},
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      height: 24,
+                      minWidth: 30,
+                      color: Colors.grey[800],
+                      elevation: 0,
+                      child: Text(
+                        'Edit',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ),
+                  )
+                ]),
+          ) .toList(),
+        ),
+      ),
+    );
+  }
+
   Widget _thirdAppbar(SettingScreenState state) {
-    int selectedCount = state.employeeListModels.where((element) => element.isChecked).toList().length;
+
+    int selectedCount = isEmployee ? state.employeeListModels.where((element) => element.isChecked).toList().length
+        : state.groupList.where((element) => element.isChecked).toList().length;
     return Visibility(
       visible: selectedCount > 0,
       child: Container(
@@ -372,8 +547,9 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                   InkWell(
                     child: SvgPicture.asset('assets/images/xsinacircle.svg'),
                     onTap: () {
-                      widget.setScreenBloc
-                          .add(SelectAllEmployeesEvent(isSelect: false));
+                      isEmployee ? widget.setScreenBloc
+                          .add(SelectAllEmployeesEvent(isSelect: false)) : widget.setScreenBloc
+                          .add(SelectAllGroupEvent(isSelect: false));
                     },
                   ),
                   Padding(
@@ -398,7 +574,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                 ),
                 color: Colors.black87,
                 itemBuilder: (BuildContext context) {
-                  return selectPopUpActions(context, state).map((MenuItem item) {
+                  return (isEmployee ? selectEmployeePopUpActions(context, state) : selectGroupPopUpActions(context, state)).map((MenuItem item) {
                     return PopupMenuItem<MenuItem>(
                       value: item,
                       child: Text(
@@ -436,7 +612,14 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                         height: 50,
                         color: Colors.black45,
                       ),
-                      tableBody(context, state),
+                      Positioned(
+                        top: 0,
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        child: isEmployee ? employeeTableBody(context, state)
+                            : groupTableBody(context, state),
+                      ),
                       _thirdAppbar(state),
                     ],
                   ),
@@ -468,37 +651,55 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
     ];
   }
 
-  List<MenuItem> appBarPositionPopUpActions(
+  List<MenuItem> appBarEmployeeTablePopUpActions(
       BuildContext context, SettingScreenState state) {
     return [
       MenuItem(
         title: 'Position',
-        icon: Icon(
+        icon: employeeTableStatus.contains('Position') ? Icon(
           Icons.check,
           color: Colors.grey,
-        ),
-        onTap: () async {},
+        ): null,
+        onTap: () {
+          setState(() {
+            employeeTableStatus.contains('Position')
+                ? employeeTableStatus.remove('Position')
+                : employeeTableStatus.add('Position');
+          });
+        },
       ),
       MenuItem(
         title: 'Mail',
-        icon: Icon(
+        icon: employeeTableStatus.contains('Mail') ? Icon(
           Icons.check,
           color: Colors.grey,
-        ),
-        onTap: () {},
+        ): null,
+        onTap: () {
+          setState(() {
+            employeeTableStatus.contains('Mail')
+                ? employeeTableStatus.remove('Mail')
+                : employeeTableStatus.add('Mail');
+          });
+        },
       ),
       MenuItem(
         title: 'Status',
-        icon: Icon(
+        icon: employeeTableStatus.contains('Status') ? Icon(
           Icons.check,
           color: Colors.grey,
-        ),
-        onTap: () {},
+        ): null,
+        onTap: () {
+          setState(() {
+            employeeTableStatus.contains('Status')
+                ? employeeTableStatus.remove('Status')
+                : employeeTableStatus.add('Status');
+          });
+        },
       ),
     ];
   }
 
-  List<MenuItem> selectPopUpActions(
+  List<MenuItem> selectEmployeePopUpActions(
       BuildContext context, SettingScreenState state) {
     return [
       MenuItem(
@@ -510,6 +711,64 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
       ),
       MenuItem(
         title: 'Delete employees',
+        onTap: () {
+
+        },
+      ),
+    ];
+  }
+
+  List<MenuItem> appBarGroupTablePopUpActions(
+      BuildContext context, SettingScreenState state) {
+    return [
+      MenuItem(
+        title: 'Employees',
+        icon: groupTableStatus.contains('Employees') ? Icon(
+          Icons.check,
+          color: Colors.grey,
+        ): null,
+        onTap: () async {
+          setState(() {
+            groupTableStatus.contains('Employees')
+                ? groupTableStatus.remove('Employees')
+                : groupTableStatus.add('Employees');
+          });
+        },
+      ),
+    ];
+  }
+
+  List<MenuItem> selectGroupPopUpActions(
+      BuildContext context, SettingScreenState state) {
+    return [
+      MenuItem(
+        title: 'Unselect',
+        onTap: () {
+          widget.setScreenBloc
+              .add(SelectAllGroupEvent(isSelect: false));
+        },
+      ),
+      MenuItem(
+        title: 'Delete groups',
+        onTap: () {
+
+        },
+      ),
+    ];
+  }
+
+  List<MenuItem> addEployeeToGroupPopup(
+      BuildContext context, SettingScreenState state) {
+    return [
+      MenuItem(
+        title: 'Unselect',
+        onTap: () {
+          widget.setScreenBloc
+              .add(SelectAllEmployeesEvent(isSelect: false));
+        },
+      ),
+      MenuItem(
+        title: 'Add to group',
         onTap: () {
 
         },
