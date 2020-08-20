@@ -934,3 +934,17 @@ Future<Country> getCountryForCodeWithIdentifier(
 String getCountryCode(String countryName, List<Country> countryList) {
   return countryList.where((element) => element.name == countryName).toList().first.countryCode;
 }
+
+class MenuItem {
+  final String title;
+  final Color textColor;
+  final Widget icon;
+  final Function onTap;
+
+  MenuItem({
+    this.title,
+    this.icon,
+    this.textColor = Colors.black,
+    this.onTap,
+  });
+}

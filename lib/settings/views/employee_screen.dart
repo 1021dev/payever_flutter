@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -5,7 +6,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
-import 'package:payever/pos/widgets/pos_top_button.dart';
 import 'package:payever/settings/models/models.dart';
 import 'package:payever/settings/widgets/app_bar.dart';
 import 'package:payever/blocs/bloc.dart';
@@ -25,9 +25,9 @@ class EmployeeScreen extends StatefulWidget {
 }
 
 class _EmployeeScreenState extends State<EmployeeScreen> {
-  bool isGridMode = true;
   bool _isPortrait;
   bool _isTablet;
+  bool isSelect = false;
 
   @override
   void initState() {
@@ -85,116 +85,259 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
     return Container(
       height: 50,
       color: Colors.black87,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              SizedBox(
-                width: 12,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SizedBox(
+              width: 12,
+            ),
+            MaterialButton(
+              onPressed: () {
+                showSearchTextDialog(state);
+              },
+              minWidth: 20,
+              child: SvgPicture.asset(
+                'assets/images/searchicon.svg',
+                width: 20,
               ),
-              InkWell(
-                onTap: () {
-                  showSearchTextDialog(state);
-                },
-                child: SvgPicture.asset(
-                  'assets/images/searchicon.svg',
-                  width: 20,
-                ),
+            ),
+            PopupMenuButton<MenuItem>(
+              icon: SvgPicture.asset(
+                'assets/images/filter.svg',
+                width: 20,
               ),
-              SizedBox(
-                width: 16,
+              offset: Offset(0, 100),
+              onSelected: (MenuItem item) => item.onTap(),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
               ),
-              PopupMenuButton<OverflowMenuItem>(
-                icon: Icon(Icons.more_horiz),
-                offset: Offset(0, 100),
-                onSelected: (OverflowMenuItem item) => item.onTap(),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                color: Colors.black87,
-                itemBuilder: (BuildContext context) {
-                  return appBarPopUpActions(context, state)
-                      .map((OverflowMenuItem item) {
-                    return PopupMenuItem<OverflowMenuItem>(
-                      value: item,
-                      child: Text(
-                        item.title,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w300,
-                        ),
+              color: Colors.black87,
+              itemBuilder: (BuildContext context) {
+                return appBarPopUpActions(context, state).map((MenuItem item) {
+                  return PopupMenuItem<MenuItem>(
+                    value: item,
+                    child: Text(
+                      item.title,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w300,
                       ),
-                    );
-                  }).toList();
-                },
+                    ),
+                  );
+                }).toList();
+              },
+            ),
+            SizedBox(
+              width: 12,
+            ),
+            MaterialButton(
+              onPressed: () {},
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
               ),
-              InkWell(
-                onTap: () {},
-                child: Container(
-                  width: 30,
-                  height: 30,
-                  alignment: Alignment.center,
-                  child: SvgPicture.asset(
-                    'assets/images/filter.svg',
-                    width: 20,
-                  ),
+              height: 24,
+              color: Colors.grey[800],
+              elevation: 0,
+              child: Text(
+                'Add Employee',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 13,
                 ),
               ),
-              FlatButton(
+            ),
+            SizedBox(
+              width: 16,
+            ),
+            Text(
+                '${state.employees.length} ${state.employees.length > 1 ? 'members' : 'member'}'),
+            SizedBox(
+              width: 12,
+            ),
+            MaterialButton(
+              onPressed: () {},
+              child: Text('Employees'),
+            ),
+            MaterialButton(
+              onPressed: () {},
+              child: Text('Groups'),
+            ),
+            PopupMenuButton<MenuItem>(
+              icon: SvgPicture.asset(
+                'assets/images/employee-filter.svg',
+                width: 20,
+                height: 20,
+              ),
+              offset: Offset(0, 100),
+              onSelected: (MenuItem item) => item.onTap(),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              color: Colors.black87,
+              itemBuilder: (BuildContext context) {
+                return appBarPositionPopUpActions(context, state)
+                    .map((MenuItem item) {
+                  return PopupMenuItem<MenuItem>(
+                    value: item,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            item.title,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w300,
+                            ),
+                          ),
+                        ),
+                        item.icon,
+                      ],
+                    ),
+                  );
+                }).toList();
+              },
+            ),
+            SizedBox(
+              width: 12,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _thirdAppbar(SettingScreenState state) {
+    return Stack(
+      children: <Widget>[
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 12),
+          height: 50,
+          color: Colors.black45,
+          child: Row(
+            children: <Widget>[
+              IconButton(
+                  onPressed: () {
+                    setState(() {
+                      isSelect = true;
+                    });
+                  },
+                  icon:
+                  Icon(true ? Icons.check_box : Icons.check_box_outline_blank)),
+              SizedBox(
+                width: 18,
+              ),
+              Text('Employee'),
+              SizedBox(
+                width: 18,
+              ),
+              Text('Position'),
+              SizedBox(
+                width: 18,
+              ),
+              Text('Mail'),
+              SizedBox(
+                width: 18,
+              ),
+              Text('Status'),
+              SizedBox(
+                width: 18,
+              ),
+              MaterialButton(
                 onPressed: () {},
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                height: 24,
+                minWidth: 30,
+                color: Colors.grey[800],
+                elevation: 0,
                 child: Text(
-                  'Export',
+                  'Edit',
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 16,
+                    fontSize: 13,
                   ),
                 ),
               ),
             ],
           ),
-          PopupMenuButton<OverflowMenuItem>(
-            icon: SvgPicture.asset('assets/images/employee-filter.svg'),
-            offset: Offset(0, 100),
-            onSelected: (OverflowMenuItem item) => item.onTap(),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
+        ),
+        Visibility(
+          visible: isSelect,
+          child: Container(
+            height: 50,
+            padding: EdgeInsets.only(
+              left: 16,
+              right: 16,
+              top: 4,
+              bottom: 4,
             ),
-            color: Colors.black87,
-            itemBuilder: (BuildContext context) {
-              return appBarPopUpActions(context, state)
-                  .map((OverflowMenuItem item) {
-                return PopupMenuItem<OverflowMenuItem>(
-                  value: item,
-                  child: Text(
-                    item.title,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w300,
-                    ),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Color(0xFF888888),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(left: 12),
+                      ),
+                      InkWell(
+                        child: SvgPicture.asset('assets/images/xsinacircle.svg'),
+                        onTap: () {
+
+                        },
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 8),
+                      ),
+                      Text(
+                        '${state.employees.length} ITEM${state.employees.length > 1 ? 'S': ''} SELECTED',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
                   ),
-                );
-              }).toList();
-            },
-          ),
-          Row(
-            children: [
-              InkWell(
-                onTap: () {},
-                child: SvgPicture.asset(
-                  'assets/images/sort-by-button.svg',
-                  width: 20,
-                ),
+                  PopupMenuButton<MenuItem>(
+                    icon: Icon(Icons.more_horiz),
+                    offset: Offset(0, 100),
+                    onSelected: (MenuItem item) => item.onTap(),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    color: Colors.black87,
+                    itemBuilder: (BuildContext context) {
+                      return selectPopUpActions(context, state).map((MenuItem item) {
+                        return PopupMenuItem<MenuItem>(
+                          value: item,
+                          child: Text(
+                            item.title,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w300,
+                            ),
+                          ),
+                        );
+                      }).toList();
+                    },
+                  ),
+                ],
               ),
-              SizedBox(
-                width: 24,
-              ),
-            ],
+            ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -203,10 +346,11 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
       child: Column(
         children: <Widget>[
           _secondAppbar(state),
+          _thirdAppbar(state),
           state.employees == null
               ? Container()
               : Expanded(
-                child: ListView.separated(
+                  child: ListView.separated(
                     physics: BouncingScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: state.employees.length,
@@ -218,55 +362,131 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                       );
                     },
                   ),
-              ),
+                ),
         ],
       ),
     );
   }
 
   Widget _itemBuilder(BuildContext context, Employee employee) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Row(
-        children: <Widget>[
-          Icon(true ? Icons.check_box : Icons.check_box_outline_blank),
-          Expanded(child: Text(employee.email)),
-          GestureDetector(
-            onTap: () {},
-            child: Container(
-              padding: EdgeInsets.fromLTRB(12, 3, 12, 3),
-              decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.3),
-                shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.all(Radius.circular(20)),
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 12),
+      height: 80,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: <Widget>[
+            Icon(true ? Icons.check_box : Icons.check_box_outline_blank),
+            SizedBox(
+              width: 18,
+            ),
+            Text(employee.fullName ?? '-'),
+            SizedBox(
+              width: 18,
+            ),
+            Text(employee.positionType ?? '-'),
+            SizedBox(
+              width: 18,
+            ),
+            Text(employee.email ?? '-'),
+            SizedBox(
+              width: 18,
+            ),
+            Text(employee.status == 1 ? 'Invited' : 'Active'),
+            SizedBox(
+              width: 18,
+            ),
+            MaterialButton(
+              onPressed: () {},
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
               ),
+              height: 24,
+              minWidth: 30,
+              color: Colors.grey[800],
+              elevation: 0,
               child: Text(
                 'Edit',
                 style: TextStyle(
+                  color: Colors.white,
                   fontSize: 13,
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
-  List<OverflowMenuItem> appBarPopUpActions(
+  List<MenuItem> appBarPopUpActions(
       BuildContext context, SettingScreenState state) {
     return [
-      OverflowMenuItem(
-        title: 'Switch terminal',
+      MenuItem(
+        title: 'Name',
         onTap: () async {},
       ),
-      OverflowMenuItem(
-        title: 'Add new terminal',
+      MenuItem(
+        title: 'Position',
         onTap: () async {},
       ),
-      OverflowMenuItem(
-        title: 'Edit',
+      MenuItem(
+        title: 'E-mail',
         onTap: () {},
+      ),
+      MenuItem(
+        title: 'Status',
+        onTap: () {},
+      ),
+    ];
+  }
+
+  List<MenuItem> appBarPositionPopUpActions(
+      BuildContext context, SettingScreenState state) {
+    return [
+      MenuItem(
+        title: 'Position',
+        icon: Icon(
+          Icons.check,
+          color: Colors.grey,
+        ),
+        onTap: () async {},
+      ),
+      MenuItem(
+        title: 'Mail',
+        icon: Icon(
+          Icons.check,
+          color: Colors.grey,
+        ),
+        onTap: () {},
+      ),
+      MenuItem(
+        title: 'Status',
+        icon: Icon(
+          Icons.check,
+          color: Colors.grey,
+        ),
+        onTap: () {},
+      ),
+    ];
+  }
+
+  List<MenuItem> selectPopUpActions(
+      BuildContext context, SettingScreenState state) {
+    return [
+      MenuItem(
+        title: 'Unselect',
+        onTap: () {
+          setState(() {
+            isSelect = false;
+          });
+        },
+      ),
+      MenuItem(
+        title: 'Delete employees',
+        onTap: () {
+
+        },
       ),
     ];
   }
@@ -283,9 +503,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
               searchText: '',
               onSelected: (value) {
                 Navigator.pop(context);
-
-              }
-          ),
+              }),
         );
       },
     );

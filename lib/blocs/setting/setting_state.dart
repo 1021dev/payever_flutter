@@ -15,6 +15,7 @@ class SettingScreenState {
   final String blobName;
   final List<BusinessProduct> businessProducts;
   final List<Employee> employees;
+  final List<EmployeeListModel> employeeListModels;
 
   SettingScreenState({
     this.isLoading = false,
@@ -30,6 +31,7 @@ class SettingScreenState {
     this.blobName,
     this.businessProducts = const [],
     this.employees = const [],
+    this.employeeListModels = const [],
   });
 
   List<Object> get props => [
@@ -61,6 +63,7 @@ class SettingScreenState {
     String blobName,
     List<BusinessProduct> businessProducts,
     List<Employee> employees,
+    List<EmployeeListModel> employeeListModels,
   }) {
     return SettingScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -76,6 +79,7 @@ class SettingScreenState {
       blobName: blobName ?? this.blobName,
       businessProducts: businessProducts ?? this.businessProducts,
       employees: employees ?? this.employees,
+      employeeListModels: employeeListModels ?? this.employeeListModels,
     );
   }
 }

@@ -217,6 +217,13 @@ class Employee {
   }
 }
 
+class EmployeeListModel {
+  bool isChecked;
+  Employee employee;
+
+  EmployeeListModel({this.employee, this.isChecked});
+}
+
 class Group {
   String id;
   String name;

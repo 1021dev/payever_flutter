@@ -181,6 +181,7 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
 
     if (employees == null || employees.isEmpty) {
       employees = [];
+      List<EmployeeListModel> employeeListModels = [];
       yield state.copyWith(isLoading: true);
       dynamic response = await api.getEmployees(token, state.business, {'limit' : '20', 'page': "1"});
       if (response is DioError) {
@@ -190,6 +191,7 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
         if (data is List) {
           data.forEach((element) {
             employees.add(Employee.fromMap(element));
+            employeeListModels.add(EmployeeListModel(employee: Employee.fromMap(element), isChecked: false));
           });
         }
         yield state.copyWith(isLoading: false, employees: employees);
