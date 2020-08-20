@@ -207,12 +207,12 @@ class Employee {
 
     dynamic groupsObj = obj['groups'];
     if (groupsObj is List) {
-      groupsObj.forEach((element)=> groupsObj.add(Group.fromMap(element)));
+      groupsObj.forEach((element)=> groups.add(Group.fromMap(element)));
     }
 
     dynamic rolesObj = obj['roles'];
     if (rolesObj is List) {
-      rolesObj.forEach((element)=> rolesObj.add(Role.fromMap(element)));
+      rolesObj.forEach((element)=> roles.add(Role.fromMap(element)));
     }
   }
 }

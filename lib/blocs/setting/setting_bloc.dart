@@ -33,13 +33,13 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
       } else {
 
       }
-
     } else if (event is FetchWallpaperEvent) {
       yield* fetchWallpapers();
     } else if (event is UpdateWallpaperEvent) {
       yield* updateWallpaper(event.body);
     } else if (event is WallpaperCategorySelected) {
-      yield state.copyWith(selectedCategory: event.category, subCategories: event.subCategories);
+      yield state.copyWith(
+          selectedCategory: event.category, subCategories: event.subCategories);
     } else if (event is UploadWallpaperImage) {
       yield* uploadWallpaperImage(event.file);
     } else if (event is BusinessUpdateEvent) {
@@ -48,8 +48,9 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
       yield* uploadBusinessImage(event.file);
     } else if (event is GetBusinessProductsEvent) {
       yield* getBusinessProducts();
+    } else if (event is GetEmployeesEvent) {
+      yield* getEmployee();
     }
-
   }
 
   Stream<SettingScreenState> uploadBusinessImage(File file) async* {
@@ -175,10 +176,11 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
     yield state.copyWith(businessProducts: businessProducts);
   }
 
-  Stream<SettingScreenState> getEmployee(Map body) async* {
+  Stream<SettingScreenState> getEmployee() async* {
     List<Employee>employees = state.employees;
 
     if (employees == null || employees.isEmpty) {
+      employees = [];
       yield state.copyWith(isLoading: true);
       dynamic response = await api.getEmployees(token, state.business, {'limit' : '20', 'page': "1"});
       if (response is DioError) {
@@ -195,6 +197,6 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
         yield SettingScreenStateFailure(error: 'Update Business name failed');
         yield state.copyWith(isLoading: false);
       }
-    }       
+    }
   }
 }

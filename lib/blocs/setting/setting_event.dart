@@ -80,3 +80,5 @@ class UploadBusinessImage extends SettingScreenEvent {
 }
 
 class GetBusinessProductsEvent extends SettingScreenEvent {}
+
+class GetEmployeesEvent extends SettingScreenEvent {}
