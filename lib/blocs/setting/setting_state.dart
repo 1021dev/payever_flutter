@@ -14,6 +14,7 @@ class SettingScreenState {
   final List<String>subCategories;
   final String blobName;
   final List<BusinessProduct> businessProducts;
+  final List<Employee> employees;
 
   SettingScreenState({
     this.isLoading = false,
@@ -28,6 +29,7 @@ class SettingScreenState {
     this.subCategories,
     this.blobName,
     this.businessProducts = const [],
+    this.employees = const [],
   });
 
   List<Object> get props => [
@@ -42,6 +44,7 @@ class SettingScreenState {
     this.subCategories,
     this.blobName,
     this.businessProducts,
+    this.employees,
   ];
 
   SettingScreenState copyWith({
@@ -57,6 +60,7 @@ class SettingScreenState {
     List<String>subCategories,
     String blobName,
     List<BusinessProduct> businessProducts,
+    List<Employee> employees,
   }) {
     return SettingScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -71,6 +75,7 @@ class SettingScreenState {
       subCategories: subCategories ?? this.subCategories,
       blobName: blobName ?? this.blobName,
       businessProducts: businessProducts ?? this.businessProducts,
+      employees: employees ?? this.employees,
     );
   }
 }

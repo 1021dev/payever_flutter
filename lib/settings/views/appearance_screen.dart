@@ -41,7 +41,11 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
     if (themeSetting != null) {
       theme = themeSetting.theme;
     }
-    automatic = activeBusiness.currentWallpaper.auto ?? false;
+    if (activeBusiness.currentWallpaper == null) {
+      automatic = false;
+    } else {
+      automatic = activeBusiness.currentWallpaper.auto ?? false;
+    }
     super.initState();
   }
 

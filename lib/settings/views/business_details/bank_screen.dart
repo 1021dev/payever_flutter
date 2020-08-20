@@ -2,7 +2,6 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:iso_countries/iso_countries.dart';
 import 'package:payever/commons/commons.dart';
@@ -86,7 +85,7 @@ class _BankScreenState extends State<BankScreen> {
   get _body {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: Appbar('Address'),
+      appBar: Appbar('Bank'),
       body: SafeArea(
         child: BackgroundBase(
           true,
@@ -373,7 +372,8 @@ class _BankScreenState extends State<BankScreen> {
                         ),
                       ),
                     ),
-                  )),
+                  )
+              ),
             ),
           );
         },

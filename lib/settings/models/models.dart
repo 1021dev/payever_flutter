@@ -185,3 +185,87 @@ List<String> salesRange = [
   'RANGE_6'
 ];
 
+class Employee {
+  String businessId;
+  String email;
+  String first_name;
+  String fullName;
+  List<Group> groups = [];
+  String positionType;
+  List<Role> roles = [];
+  int status;
+  String id;
+
+  Employee.fromMap(dynamic obj) {
+    businessId = obj['businessId'];
+    email = obj['email'];
+    first_name = obj['first_name'];
+    fullName = obj['fullName'];
+    positionType = obj['positionType'];
+    status = obj['status'];
+    id = obj['_id'];
+
+    dynamic groupsObj = obj['groups'];
+    if (groupsObj is List) {
+      groupsObj.forEach((element)=> groupsObj.add(Group.fromMap(element)));
+    }
+
+    dynamic rolesObj = obj['roles'];
+    if (rolesObj is List) {
+      rolesObj.forEach((element)=> rolesObj.add(Role.fromMap(element)));
+    }
+  }
+}
+
+class Group {
+  String id;
+  String name;
+
+  Group.fromMap(dynamic obj) {
+    name = obj['name'];
+    id = obj['_id'];
+  }
+}
+
+class Role {
+  List<Permission> permissions = [];
+  String name;
+  String type;
+
+  Role.fromMap(dynamic obj) {
+    name = obj['name'];
+    type = obj['type'];
+    dynamic permissionsObj = obj['permissions'];
+    if (permissionsObj is List) {
+      permissionsObj.forEach((element)=> permissions.add(Permission.fromMap(element)));
+    }
+  }
+}
+
+class Permission {
+  List<Acl> acls = [];
+  String businessId;
+  Permission.fromMap(dynamic obj) {
+    businessId = obj['businessId'];
+    dynamic aclsObj = obj['acls'];
+    if (aclsObj is List) {
+      aclsObj.forEach((element)=> acls.add(Acl.fromMap(element)));
+    }
+  }
+}
+
+class Acl {
+  String microService;
+  bool create;
+  bool read;
+  bool update;
+  bool delete;
+
+  Acl.fromMap(dynamic obj) {
+    microService = obj['microService'];
+    create = obj['create'];
+    read = obj['read'];
+    update = obj['update'];
+    delete = obj['delete'];
+  }
+}

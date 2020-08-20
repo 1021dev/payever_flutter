@@ -164,7 +164,6 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
   }
 
   Stream<SettingScreenState> getBusinessProducts() async* {
-
     List<BusinessProduct> businessProducts = [];
     dynamic response = await api.getBusinessProducts(token);
 
@@ -173,7 +172,29 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
         businessProducts.add(BusinessProduct.fromMap(element));
       });
     }
-
     yield state.copyWith(businessProducts: businessProducts);
+  }
+
+  Stream<SettingScreenState> getEmployee(Map body) async* {
+    List<Employee>employees = state.employees;
+
+    if (employees == null || employees.isEmpty) {
+      yield state.copyWith(isLoading: true);
+      dynamic response = await api.getEmployees(token, state.business, {'limit' : '20', 'page': "1"});
+      if (response is DioError) {
+        yield SettingScreenStateFailure(error: response.error);
+      } else if (response is Map){
+        dynamic data = response['data'];
+        if (data is List) {
+          data.forEach((element) {
+            employees.add(Employee.fromMap(element));
+          });
+        }
+        yield state.copyWith(isLoading: false, employees: employees);
+      } else {
+        yield SettingScreenStateFailure(error: 'Update Business name failed');
+        yield state.copyWith(isLoading: false);
+      }
+    }       
   }
 }
