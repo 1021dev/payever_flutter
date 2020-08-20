@@ -129,3 +129,19 @@ class SelectAllGroupEvent extends SettingScreenEvent {
   ];
 }
 
+class CreateEmployeeEvent extends SettingScreenEvent {
+  final Map<String, dynamic> body;
+  final String email;
+
+  CreateEmployeeEvent({this.body, this.email});
+}
+
+class UpdateEmployeeEvent extends SettingScreenEvent {
+  final Map<String, dynamic> body;
+  final String employeeId;
+
+  UpdateEmployeeEvent({this.employeeId, this.body});
+}
+class ClearEmailInvalidEvent extends SettingScreenEvent {}
+
+class DeleteEmployeeEvent extends SettingScreenEvent {}

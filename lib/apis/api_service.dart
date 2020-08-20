@@ -2637,6 +2637,60 @@ class ApiService {
     }
   }
 
+  Future<dynamic> createEmployee(String token, String businessId, Map<String, dynamic> body) async {
+    try {
+      print('$TAG - createEmployee() => $body');
+      dynamic response = await _client.postTypeLess(
+        '${Env.auth}/api/employees/create/$businessId?invite=true',
+        body: body,
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> updateEmployee(String token, String businessId, String employeeId, Map<String, dynamic> body) async {
+    try {
+      print('$TAG - updateEmployee() => $body');
+      dynamic response = await _client.patchTypeless(
+        '${Env.auth}/api/employees/$businessId/$employeeId',
+        body: body,
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> deleteEmployee(String token, String businessId, String employeeId) async {
+    try {
+      print('$TAG - deleteEmployee() ');
+      dynamic response = await _client.deleteTypeless(
+        '${Env.auth}/api/employees/$businessId/$employeeId',
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getEmailCount(String token, String businessId, String email) async {
+    try {
+      print('$TAG - getEmailCount()');
+      dynamic response = await _client.getTypeless(
+        '${Env.auth}/api/employees/$businessId/count?email=$email',
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   ///***************************************************************************
   ///****                      UTILS                                       *****
   ///***************************************************************************

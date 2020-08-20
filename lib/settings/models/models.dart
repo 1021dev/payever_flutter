@@ -295,7 +295,7 @@ class Acl {
   bool delete;
 
   Acl.fromMap(dynamic obj) {
-    microService = obj['microService'];
+    microService = obj['microservice'];
     create = obj['create'];
     read = obj['read'];
     update = obj['update'];
@@ -315,6 +315,27 @@ class Acl {
     }
     if (delete != null) {
       map['delete'] = delete;
+    }
+
+    return map;
+  }
+
+  Map<String, dynamic> toDictionary() {
+    Map<String, dynamic> map = {};
+    if (create != null) {
+      map['create'] = create;
+    }
+    if (read != null) {
+      map['read'] = read;
+    }
+    if (update != null) {
+      map['update'] = update;
+    }
+    if (delete != null) {
+      map['delete'] = delete;
+    }
+    if (microService != null) {
+      map['microservice'] = microService;
     }
 
     return map;
@@ -350,14 +371,19 @@ class Acl {
     }
   }
 
-  bool isFullAccess() {
+  int isFullAccess() {
     if ((create == null || create)
         && (read == null || read)
         && (update == null || update)
         && (delete == null || delete)) {
-      return true;
+      return 2;
+    } else if ((create == null || create)
+        || (read == null || read)
+        || (update == null || update)
+        || (delete == null || delete)){
+      return 1;
     } else {
-      return false;
+      return 0;
     }
   }
 }

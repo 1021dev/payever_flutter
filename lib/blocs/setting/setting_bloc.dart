@@ -6,6 +6,7 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/dashboard/dashboard_bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
+import 'package:payever/login/login_screen.dart';
 import 'package:payever/settings/models/models.dart';
 import 'setting.dart';
 
@@ -60,6 +61,14 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
       yield* selectGroup(event.model);
     } else if(event is SelectAllGroupEvent) {
       yield* selectAllGroup(event.isSelect);
+    } else if (event is CreateEmployeeEvent) {
+      yield* createEmployee(event.body, event.email);
+    } else if (event is UpdateEmployeeEvent) {
+      yield* updateEmployee(event.employeeId, event.body);
+    } else if (event is ClearEmailInvalidEvent) {
+      yield state.copyWith(emailInvalid: false);
+    } else if (event is DeleteEmployeeEvent) {
+      yield* deleteEmployees();
     }
   }
 
@@ -188,13 +197,13 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
 
   Stream<SettingScreenState> getEmployee() async* {
     List<Employee>employees = [];
-    employees.addAll(state.employees);
+//    employees.addAll(state.employees);
 
-    if (employees == null || employees.isEmpty) {
+//    if (employees == null || employees.isEmpty) {
       employees = [];
       List<EmployeeListModel> employeeListModels = [];
       yield state.copyWith(isLoading: true);
-      dynamic response = await api.getEmployees(token, state.business, {'limit' : '20', 'page': "1"});
+      dynamic response = await api.getEmployees(token, state.business, {'limit' : '50', 'page': "1"});
       if (response is DioError) {
         yield SettingScreenStateFailure(error: response.error);
       } else if (response is Map){
@@ -210,7 +219,7 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
         yield SettingScreenStateFailure(error: 'Get Employee failed');
         yield state.copyWith(isLoading: false);
       }
-    }
+//    }
     add(GetGroupEvent());
   }
 
@@ -233,13 +242,13 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
 
   Stream<SettingScreenState> getGroup() async* {
     List<Group> groups = [];
-    groups.addAll(state.employeeGroups);
+//    groups.addAll(state.employeeGroups);
 
-    if (groups == null || groups.isEmpty) {
+//    if (groups == null || groups.isEmpty) {
       groups = [];
       List<GroupListModel> groupList = [];
       yield state.copyWith(isLoading: true);
-      dynamic response = await api.getGroups(token, state.business, {'limit' : '20', 'page': "1"});
+      dynamic response = await api.getGroups(token, state.business, {'limit' : '50', 'page': "1"});
       if (response is DioError) {
         yield SettingScreenStateFailure(error: response.error);
       } else if (response is Map){
@@ -255,7 +264,7 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
         yield SettingScreenStateFailure(error: 'Get Group failed');
         yield state.copyWith(isLoading: false);
       }
-    }
+//    }
   }
 
   Stream<SettingScreenState> selectGroup(GroupListModel model) async* {
@@ -273,5 +282,42 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
       element.isChecked = isSelect;
     });
     yield state.copyWith(groupList: groupListModels);
+  }
+
+  Stream<SettingScreenState> createEmployee( Map<String, dynamic> body, String email) async* {
+    yield state.copyWith(isUpdating: true, emailInvalid: false);
+    dynamic emailCheck = await api.getEmailCount(token, state.business, email);
+    if (emailCheck is num) {
+      if (emailCheck == 0) {
+        dynamic response = await api.createEmployee(token, state.business, body);
+        yield state.copyWith(isUpdating: false, emailInvalid: false);
+        yield SettingScreenUpdateSuccess(business: state.business);
+      } else {
+        yield state.copyWith(isUpdating: false, emailInvalid: true);
+      }
+    } else {
+      yield state.copyWith(isUpdating: false, emailInvalid: true);
+    }
+  }
+
+  Stream<SettingScreenState> updateEmployee(String employeeId, Map<String, dynamic> body) async* {
+    yield state.copyWith(isUpdating: true);
+    dynamic response = await api.updateEmployee(token, state.business, employeeId, body);
+    yield state.copyWith(isUpdating: false);
+    yield SettingScreenUpdateSuccess(business: state.business);
+  }
+
+  Stream<SettingScreenState> deleteEmployees() async* {
+    yield state.copyWith(isUpdating: true);
+    List<EmployeeListModel> employees = state.employeeListModels;
+    List<EmployeeListModel> selected = employees.where((element) => element.isChecked).toList();
+    if (selected.length > 0) {
+      for(int i = 0; i < selected.length; i++) {
+        await api.deleteEmployee(token, state.business, selected[i].employee.id);
+      }
+    }
+
+    yield state.copyWith(isUpdating: false);
+    yield SettingScreenUpdateSuccess(business: state.business);
   }
 }

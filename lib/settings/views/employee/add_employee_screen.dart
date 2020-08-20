@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_tagging/flutter_tagging.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
@@ -61,6 +62,7 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
         return element.installed;
       }).toList();
     }
+    print('businessApps => $businessApps');
     if (widget.employee != null) {
       employee = widget.employee;
       email = employee.email;
@@ -72,6 +74,7 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
         Role role = employee.roles.first;
         if (role.permissions.length > 0) {
           acls = role.permissions.first.acls;
+          print('acls => ${acls.first.toMap()}');
         }
       }
     }
@@ -111,10 +114,19 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
   get _updateForm {
     return BlocListener(
       bloc: widget.setScreenBloc,
-      listener: (BuildContext context, state) {
+      listener: (BuildContext context, SettingScreenState state) {
         if (state is SettingScreenUpdateSuccess) {
+          if(widget.employee != null) {
+            Fluttertoast.showToast(msg: 'Employee successfully updated');
+          } else {
+            Fluttertoast.showToast(msg: 'Activation link sent to the employee successfully!');
+          }
           Navigator.pop(context);
         } else if (state is SettingScreenStateFailure) {}
+        if (state.emailInvalid) {
+          Fluttertoast.showToast(msg: 'Email address already exist!');
+          widget.setScreenBloc.add(ClearEmailInvalidEvent());
+        }
       },
       child: BlocBuilder<SettingScreenBloc, SettingScreenState>(
         bloc: widget.setScreenBloc,
@@ -231,6 +243,7 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                                             borderSide: BorderSide(color: Colors.blue, width: 0.5),
                                           ),
                                         ),
+                                        readOnly: widget.employee != null,
                                         keyboardType: TextInputType.text,
                                       ),
                                     ),
@@ -266,6 +279,7 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                                           ),
                                         ),
                                         keyboardType: TextInputType.text,
+                                        readOnly: widget.employee != null,
                                       ),
                                     ),
                                   ),
@@ -304,7 +318,8 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                                             borderSide: BorderSide(color: Colors.blue, width: 0.5),
                                           ),
                                         ),
-                                        keyboardType: TextInputType.text,
+                                        keyboardType: TextInputType.emailAddress,
+                                        readOnly: widget.employee != null,
                                       ),
                                     ),
                                   ),
@@ -485,8 +500,20 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                                 if (icon == null) {
                                   return Container();
                                 }
-                                print('${businessApp.code} => $icon');
                                 icon = icon.replaceAll('32', '64');
+                                int aclIndex = acls.indexWhere((element) => element.microService == businessApp.code);
+                                if (aclIndex > -1 && aclIndex < 100) {
+
+                                } else {
+                                  return Container();
+                                }
+                                Acl acl = acls[aclIndex];
+                                String accessString = 'No Access';
+                                if (acl.isFullAccess() == 1) {
+                                  accessString = 'Custom Access';
+                                } else if (acl.isFullAccess() == 2) {
+                                  accessString = 'Full Access';
+                                }
                                 return BlurEffectView(
                                   color: Color.fromRGBO(20, 20, 20, 0.05),
                                   radius: 0,
@@ -535,7 +562,7 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                                               Row(
                                                 children: <Widget>[
                                                   Text(
-                                                      'No Access'
+                                                    accessString,
                                                   ),
                                                   SizedBox(width: 8,),
                                                   SvgPicture.asset(
@@ -564,9 +591,8 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                                               ? 'Full Access'
                                               : businessApp.allowedAcls.toMap().keys.toList()[idx - 1];
                                           bool isChecked = false;
-                                          Acl acl = acls.firstWhere((element) => element.microService == businessApp.code);
                                           if (idx == 0) {
-                                            isChecked = acl.isFullAccess();
+                                            isChecked = acl.isFullAccess() == 2;
                                           } else {
                                             isChecked = acl.toMap()[key];
                                           }
@@ -576,7 +602,20 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                                             radius: 0,
                                             child: MaterialButton(
                                               onPressed: () {
-
+                                                isChecked = !isChecked;
+                                                if (idx == 0) {
+                                                  setState(() {
+                                                    acl.setAll(isChecked);
+                                                    acls[aclIndex] = acl;
+                                                  });
+                                                } else {
+                                                  setState(() {
+                                                    Map<String, bool> map = acl.toMap();
+                                                    map[key] = isChecked;
+                                                    acl.updateDict(map);
+                                                    acls[aclIndex] = acl;
+                                                  });
+                                                }
                                               },
                                               child: Container(
                                                 height: 60,
@@ -590,10 +629,19 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                                                       scale: 0.7,
                                                       child: CupertinoSwitch(
                                                         onChanged: (val) {
-                                                          setState(() {
-                                                            acl.toMap()[key] = val;
-                                                          });
-
+                                                          if (idx == 0) {
+                                                            setState(() {
+                                                              acl.setAll(val);
+                                                              acls[aclIndex] = acl;
+                                                            });
+                                                          } else {
+                                                            setState(() {
+                                                              Map<String, bool> map = acl.toMap();
+                                                              map[key] = val;
+                                                              acl.updateDict(map);
+                                                              acls[aclIndex] = acl;
+                                                            });
+                                                          }
                                                         },
                                                         value: isChecked,
                                                       ),
@@ -634,11 +682,54 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                             onUpdate: () {
                               if (_formKey.currentState.validate() &&
                                   !state.isUpdating) {
-//                                Map<String, dynamic> body = {};
-//                                print(body);
-//                                widget.setScreenBloc.add(BusinessUpdateEvent({
-//                                  'contactDetails': body,
-//                                }));
+                                if (email.isEmpty) {
+                                  Fluttertoast.showToast(msg: 'Email required');
+                                  return;
+                                }
+                                if (!Validators.isValidEmail(email)) {
+                                  Fluttertoast.showToast(msg: 'Email is not valid');
+                                  return;
+                                }
+                                if (positionType == null || positionType == '') {
+                                  Fluttertoast.showToast(msg: 'Position required');
+                                  return;
+                                }
+                                if (widget.employee != null) {
+                                  Map<String, dynamic> body = {};
+                                  List<Map<String, dynamic>> aclsList = [];
+                                  acls.forEach((element) {
+                                    aclsList.add(element.toDictionary());
+                                  });
+                                  body['acls'] = aclsList;
+                                  body['position'] = positionType;
+                                  List<String> groupList = [];
+                                  if (group.length > 0) {
+//                                    group.forEach((element) {
+//                                      groupList.add(element.id);
+//                                    });
+//                                    body['group'] = groupList;
+                                  }
+                                  widget.setScreenBloc.add(UpdateEmployeeEvent(employeeId: widget.employee.id, body: body));
+                                } else {
+                                  Map<String, dynamic> body = {};
+                                  List<Map<String, dynamic>> aclsList = [];
+                                  acls.forEach((element) {
+                                    aclsList.add(element.toDictionary());
+                                  });
+                                  body['acls'] = aclsList;
+                                  body['position'] = positionType;
+                                  body['email'] = email;
+//                                  body['first_name'] = firstName;
+//                                  body['last_name'] = lastName;
+                                  List<String> groupList = [];
+                                  if (group.length > 0) {
+                                    group.forEach((element) {
+                                      groupList.add(element.id);
+                                    });
+                                    body['groups'] = groupList;
+                                  }
+                                  widget.setScreenBloc.add(CreateEmployeeEvent(body: body, email: email));
+                                }
                               }
                             },
                           ),
@@ -746,7 +837,6 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
       },
     );
   }
-
 }
 
 class GroupSuggestService {

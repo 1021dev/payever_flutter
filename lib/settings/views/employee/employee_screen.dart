@@ -62,6 +62,8 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
       listener: (BuildContext context, SettingScreenState state) async {
         if (state is SettingScreenStateFailure) {
           Fluttertoast.showToast(msg: state.error);
+        } else if (state is SettingScreenUpdateSuccess) {
+          widget.setScreenBloc.add(GetEmployeesEvent());
         }
       },
       child: BlocBuilder<SettingScreenBloc, SettingScreenState>(
