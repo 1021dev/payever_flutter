@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tagging/flutter_tagging.dart';
-import 'package:payever/commons/models/acl.dart';
 
 class SettingItem {
   final String name;
@@ -301,6 +300,65 @@ class Acl {
     read = obj['read'];
     update = obj['update'];
     delete = obj['delete'];
+  }
+
+  Map<String, bool> toMap() {
+    Map<String, bool> map = {};
+    if (create != null) {
+      map['create'] = create;
+    }
+    if (read != null) {
+      map['read'] = read;
+    }
+    if (update != null) {
+      map['update'] = update;
+    }
+    if (delete != null) {
+      map['delete'] = delete;
+    }
+
+    return map;
+  }
+
+  updateDict(Map<String, bool> map) {
+    if (map.containsKey('create')) {
+      create = map['create'];
+    }
+    if (map.containsKey('read')) {
+      read = map['read'];
+    }
+    if (map.containsKey('update')) {
+      update = map['update'];
+    }
+    if (map.containsKey('delete')) {
+      delete = map['delete'];
+    }
+  }
+
+  setAll(bool b) {
+    if (create != null) {
+      create = b;
+    }
+    if (read != null) {
+      read = b;
+    }
+    if (update != null) {
+      update = b;
+    }
+    if (delete != null) {
+      delete = b;
+    }
+  }
+
+  bool isFullAccess() {
+    if ((create == null || create)
+        && (read == null || read)
+        && (update == null || update)
+        && (delete == null || delete)) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
 

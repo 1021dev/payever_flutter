@@ -42,11 +42,25 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
   String lastName;
   String positionType;
   List<Group> group = [];
+  List<BusinessApps> businessApps = [];
+  int selectedIndex = -1;
+  List<Acl> acls = [];
 
   @override
   void initState() {
     activeBusiness =
         widget.globalStateModel.currentBusiness;
+    if (widget.setScreenBloc.dashboardScreenBloc.state.businessWidgets != null) {
+      businessApps = widget.setScreenBloc.dashboardScreenBloc.state.businessWidgets.where((element) {
+        if (element.installed) {
+          Acl acl = element.allowedAcls;
+          acl.setAll(false);
+          acl.microService = element.code;
+          acls.add(acl);
+        }
+        return element.installed;
+      }).toList();
+    }
     if (widget.employee != null) {
       employee = widget.employee;
       email = employee.email;
@@ -54,6 +68,12 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
       lastName = employee.lastName;
       group = employee.groups;
       positionType = employee.positionType;
+      if (employee.roles.length > 0) {
+        Role role = employee.roles.first;
+        if (role.permissions.length > 0) {
+          acls = role.permissions.first.acls;
+        }
+      }
     }
     super.initState();
   }
@@ -72,7 +92,12 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
   get _body {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: Appbar('Add Employee'),
+      appBar: Appbar(
+        'Add Employee',
+        onClose: () {
+          showConfirmDialog();
+        },
+      ),
       body: SafeArea(
         child: BackgroundBase(
           true,
@@ -147,7 +172,7 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                                             Padding(
                                               padding: EdgeInsets.only(left: 8),
                                             ),
-                                            SvgPicture.asset('assets/images/account.svg'),
+                                            SvgPicture.asset('assets/images/account.svg', width: 16, height: 16,),
                                             Padding(
                                               padding: EdgeInsets.only(left: 8),
                                             ),
@@ -343,7 +368,7 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                                       textFieldConfiguration: TextFieldConfiguration(
                                         decoration: InputDecoration(
                                           border: InputBorder.none,
-                                          hintText: 'Search Category',
+                                          hintText: 'Groups (optional)',
                                         ),
                                       ),
                                       findSuggestions: GroupSuggestService(
@@ -422,7 +447,7 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                                             Padding(
                                               padding: EdgeInsets.only(left: 8),
                                             ),
-                                            SvgPicture.asset('assets/images/key.svg'),
+                                            SvgPicture.asset('assets/images/icon-security.svg', width: 16, height: 16,),
                                             Padding(
                                               padding: EdgeInsets.only(left: 8),
                                             ),
@@ -450,93 +475,158 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                               ),
                             ),
                           ),
-                          selectedSection == 1 ? (
-                              group.length > 0 ?
-                              ListView.separated(
-                                  shrinkWrap: true,
-                                  physics: NeverScrollableScrollPhysics(),
-                                  itemBuilder: (context, index) {
-                                    return BlurEffectView(
-                                      color: Color.fromRGBO(100, 100, 100, 0.05),
-                                      radius: 0,
-                                      child: Container(
-                                        height: 50,
-                                        padding: EdgeInsets.only(left: 16, right: 8),
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: <Widget>[
-                                            Flexible(
-                                              child: Text(
-                                                ''
-                                              ),
-                                            ),
-                                            Row(
-                                              children: <Widget>[
-                                                MaterialButton(
-                                                  onPressed: () {
-                                                  },
-                                                  color: Colors.black45,
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(12),
-                                                  ),
-                                                  height: 24,
-                                                  minWidth: 0,
-                                                  padding: EdgeInsets.only(left: 8, right: 8),
-                                                  elevation: 0,
-                                                  child: Text(
-                                                    'Edit',
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 12,
+                          selectedSection == 1 ? Container(
+                            height: 300,
+                            child: ListView.separated(
+                              shrinkWrap: false,
+                              itemBuilder: (context, index) {
+                                BusinessApps businessApp = businessApps[index];
+                                String icon = businessApp.dashboardInfo != null ? businessApp.dashboardInfo.icon: null;
+                                if (icon == null) {
+                                  return Container();
+                                }
+                                print('${businessApp.code} => $icon');
+                                icon = icon.replaceAll('32', '64');
+                                return BlurEffectView(
+                                  color: Color.fromRGBO(20, 20, 20, 0.05),
+                                  radius: 0,
+                                  child: Column(
+                                    children: <Widget>[
+                                      MaterialButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            if (selectedIndex == index) {
+                                              selectedIndex = -1;
+                                            } else {
+                                              selectedIndex = index;
+                                            }
+                                          });
+                                        },
+                                        child: Container(
+                                          height: 65,
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: <Widget>[
+                                              Flexible(
+                                                child: Row(
+                                                  children: <Widget>[
+                                                    Container(
+                                                      width: 44,
+                                                      height: 44,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius: BorderRadius.circular(22),
+                                                        image: DecorationImage(
+                                                          image: NetworkImage(
+                                                            '${Env.cdnIcon}$icon',
+                                                          ),
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                      ),
                                                     ),
+                                                    SizedBox(width: 16,),
+                                                    Flexible(
+                                                      child: Text(
+                                                        businessApp.code[0].toUpperCase() + businessApp.code.substring(1),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Row(
+                                                children: <Widget>[
+                                                  Text(
+                                                      'No Access'
                                                   ),
-                                                ),
-                                                MaterialButton(
-                                                  onPressed: () {
-                                                  },
-                                                  color: Colors.black45,
-                                                  shape: CircleBorder(),
-                                                  height: 24,
-                                                  minWidth: 0,
-                                                  elevation: 0,
-                                                  child: SvgPicture.asset('assets/images/closeicon.svg', width: 8, height: 8),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
+                                                  SizedBox(width: 8,),
+                                                  SvgPicture.asset(
+                                                    selectedIndex == index
+                                                        ? 'assets/images/ic_minus.svg':
+                                                    'assets/images/ic_plus.svg',
+                                                    width: 16,
+                                                    height: 16,
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
-                                    );
-                                  },
-                                  separatorBuilder: (context, index) {
-                                    return Divider(
-                                      height: 0,
-                                      thickness: 0.5,
-                                      color: Colors.grey,
-                                    );
-                                  },
-                                  itemCount: 0
-                              ):
-                              BlurEffectView(
-                                color: Color.fromRGBO(100, 100, 100, 0.05),
-                                radius: 0,
-                                child: Container(
-                                  height: 50,
-                                  padding: EdgeInsets.only(left: 16, right: 16),
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      'You don\'t have additional emails',
-                                      style: TextStyle(
-                                        color: Colors.white70,
-                                        fontSize: 14,
+                                      Divider(
+                                        height: 0,
+                                        thickness: 0.5,
+                                        color: Colors.grey,
                                       ),
-                                    ),
+                                      selectedIndex == index ? ListView.separated(
+                                        shrinkWrap: true,
+                                        physics: NeverScrollableScrollPhysics(),
+                                        itemBuilder: (ctx, idx) {
+                                          String key = idx == 0
+                                              ? 'Full Access'
+                                              : businessApp.allowedAcls.toMap().keys.toList()[idx - 1];
+                                          bool isChecked = false;
+                                          Acl acl = acls.firstWhere((element) => element.microService == businessApp.code);
+                                          if (idx == 0) {
+                                            isChecked = acl.isFullAccess();
+                                          } else {
+                                            isChecked = acl.toMap()[key];
+                                          }
+                                          String permissionString = key[0].toUpperCase() + key.substring(1);
+                                          return BlurEffectView(
+                                            color: Color.fromRGBO(100, 100, 100, 0.05),
+                                            radius: 0,
+                                            child: MaterialButton(
+                                              onPressed: () {
+
+                                              },
+                                              child: Container(
+                                                height: 60,
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      permissionString,
+                                                    ),
+                                                    Transform.scale(
+                                                      scale: 0.7,
+                                                      child: CupertinoSwitch(
+                                                        onChanged: (val) {
+                                                          setState(() {
+                                                            acl.toMap()[key] = val;
+                                                          });
+
+                                                        },
+                                                        value: isChecked,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        separatorBuilder: (ctx, idx) {
+                                          return Divider(
+                                            height: 0,
+                                            thickness: 0.5,
+                                            color: Colors.grey,
+                                          );
+                                        },
+                                        itemCount: businessApp.allowedAcls.toMap().keys.length + 1,
+                                      ): Container(),
+                                    ],
                                   ),
-                                ),
-                              )
-                          ):
-                          Container(),
+                                );
+                              },
+                              separatorBuilder: (context, index) {
+                                return Divider(
+                                  height: 0,
+                                  thickness: 0.5,
+                                  color: Colors.grey,
+                                );
+                              },
+                              itemCount: businessApps.length,
+                            ),
+                          ): Container(),
                           SaveBtn(
                             isUpdating: state.isUpdating,
                             color: Colors.black45,
@@ -551,7 +641,8 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
 //                                }));
                               }
                             },
-                          )                        ],
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -563,7 +654,101 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
       ),
     );
   }
+
+  showConfirmDialog() {
+    showCupertinoDialog(
+      context: context,
+      builder: (builder) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: Center(
+            child: Wrap(
+                children: <Widget>[
+                  BlurEffectView(
+                    color: Color.fromRGBO(50, 50, 50, 0.4),
+                    padding: EdgeInsets.all(16),
+                    child: Column(
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(top: 16),
+                        ),
+                        SvgPicture.asset('assets/images/info.svg'),
+                        Padding(
+                          padding: EdgeInsets.only(top: 16),
+                        ),
+                        Text(
+                          Language.getPosStrings('Are you sure you want to close this page?'),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w300,
+                            color: Colors.white,
+                          ),
+                        ),
+                        widget.employee != null ? Padding(
+                          padding: EdgeInsets.only(top: 16),
+                        ): Container(),
+                        widget.employee != null ? Text(
+                          Language.getPosStrings('Changes will be lost'),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.white,
+                          ),
+                        ): Container(),
+                        Padding(
+                          padding: EdgeInsets.only(top: 16),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            MaterialButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              height: 24,
+                              elevation: 0,
+                              minWidth: 0,
+                              color: Colors.white10,
+                              child: Text(
+                                Language.getSettingsStrings('actions.no'),
+                              ),
+                            ),
+                            MaterialButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                              },
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              height: 24,
+                              elevation: 0,
+                              minWidth: 0,
+                              color: Colors.white10,
+                              child: Text(
+                                Language.getSettingsStrings('actions.yes'),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ]
+            ),
+          ),
+        );
+      },
+    );
+  }
+
 }
+
 class GroupSuggestService {
   final List<Group> categories;
   final List<Group> addedCategories;

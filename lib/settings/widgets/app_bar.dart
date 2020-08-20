@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 class Appbar extends StatelessWidget  with PreferredSizeWidget {
   final String title;
-  Appbar(this.title);
+  final Function onClose;
+  Appbar(this.title, {this.onClose});
 
   @override
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
@@ -35,7 +36,7 @@ class Appbar extends StatelessWidget  with PreferredSizeWidget {
             color: Colors.white,
             size: 24,
           ),
-          onPressed: () {
+          onPressed: onClose != null ? onClose : () {
             Navigator.pop(context);
           },
         ),

@@ -1,6 +1,8 @@
+import 'package:payever/settings/models/models.dart';
+
 class BusinessApps {
   final String id;
-  final AllowedAcls allowedAcls;
+  final Acl allowedAcls;
   final String bootstrapScriptUrl;
   final String code;
   final DashboardInfo dashboardInfo;
@@ -31,7 +33,7 @@ class BusinessApps {
   factory BusinessApps.fromMap(dynamic app) {
     return BusinessApps(
       id: app['_id'],
-      allowedAcls: AllowedAcls.fromMap(app['allowedAcls']),
+      allowedAcls: Acl.fromMap(app['allowedAcls']),
       bootstrapScriptUrl: app['bootstrapScriptUrl'],
       code: app['code'],
       dashboardInfo: app['dashboardInfo'] == {}
@@ -47,34 +49,6 @@ class BusinessApps {
       url: app['url'],
     );
   }
-}
-
-class AllowedAcls {
-  bool create;
-  bool read;
-  bool update;
-  bool delete;
-
-  AllowedAcls({this.create, this.read, this.update, this.delete});
-
-  factory AllowedAcls.fromMap(allowedAcls) {
-    return AllowedAcls(
-      create: allowedAcls['create'],
-      read: allowedAcls['read'],
-      update: allowedAcls['update'],
-      delete: allowedAcls['delete'],
-    );
-  }
-
-  factory AllowedAcls.fromInitialMap(allowedAcls) {
-    return AllowedAcls(
-      create: allowedAcls['create'],
-      read: allowedAcls['read'],
-      update: allowedAcls['update'],
-      delete: allowedAcls['delete'],
-    );
-  }
-
 }
 
 class DashboardInfo {

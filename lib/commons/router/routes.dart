@@ -8,7 +8,6 @@ class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case '/employeeDetails':
-        var employee = settings.arguments as Employees;
 
 //        MaterialPageRoute(builder: (BuildContext context) {
 //          return Provider.value(value: employee, child: EmployeeDetailsScreen(employee));

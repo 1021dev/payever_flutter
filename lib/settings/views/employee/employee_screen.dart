@@ -395,7 +395,19 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                   ): DataCell(Container()),
                   DataCell(
                     MaterialButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          PageTransition(
+                            child: AddEmployeeScreen(
+                              setScreenBloc: widget.setScreenBloc,
+                              globalStateModel: widget.globalStateModel,
+                              employee: emp.employee,
+                            ),
+                            type: PageTransitionType.fade,
+                          ),
+                        );
+                      },
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
