@@ -21,7 +21,8 @@ class _SearchTextContentViewState extends State<SearchTextContentView> {
   FocusNode searchFocus = FocusNode();
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SingleChildScrollView(
+      child: Container(
         height: 120,
         child: Container(
           padding: EdgeInsets.fromLTRB(0 , 6, 0, 0),
@@ -43,8 +44,8 @@ class _SearchTextContentViewState extends State<SearchTextContentView> {
                         autofocus: true,
                         textInputAction: TextInputAction.done,
                         decoration: InputDecoration(
-                            border: UnderlineInputBorder(),
-                            hintText: 'Search',
+                          border: UnderlineInputBorder(),
+                          hintText: 'Search',
                         ),
                         style: TextStyle(
                             fontSize: 18,
@@ -55,7 +56,7 @@ class _SearchTextContentViewState extends State<SearchTextContentView> {
                           widget.onSelected(searchTextController.text);
                         },
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -77,6 +78,8 @@ class _SearchTextContentViewState extends State<SearchTextContentView> {
               ),
             ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

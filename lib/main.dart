@@ -28,22 +28,6 @@ class PayeverApp extends StatelessWidget {
   }
 }
 
-final ThemeData _payeverTheme = _buildPayeverTheme();
-
-ThemeData _buildPayeverTheme() {
-  final ThemeData base = ThemeData.dark();
-  return base.copyWith(
-    splashColor: Colors.transparent,
-    primaryColor: const Color(0xFFFFFFFF),
-    accentColor: const Color(0xFFFFFFFF),
-    buttonColor: const Color(0xFFFFFFFF),
-    cursorColor: const Color(0xFFFFFFFF),
-    accentIconTheme: new IconThemeData(color: const Color(0xFFFFFFFF)),
-    textTheme: base.textTheme.copyWith().apply(
-        fontFamily: 'Helvetica Neue', bodyColor: const Color(0xFFFFFFFF)),
-  );
-}
-
 class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
@@ -80,7 +64,7 @@ class _MyAppState extends State<MyApp> {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'payever',
-        theme: _payeverTheme,
+        theme: _buildPayeverTheme(),
         routes: {
         },
         home: _loadCredentials.value
@@ -108,5 +92,67 @@ class _MyAppState extends State<MyApp> {
 
   void listener() {
     setState(() {});
+  }
+
+  ThemeData _buildPayeverTheme() {
+    print('update theme ${globalStateModel.theme}');
+    switch (globalStateModel.theme) {
+      case 'default':
+        final ThemeData base = ThemeData.dark();
+        return base.copyWith(
+          splashColor: Colors.transparent,
+          primaryColor: const Color(0xFFFFFFFF),
+          accentColor: const Color(0xFFFFFFFF),
+          buttonColor: const Color(0xFFFFFFFF),
+          cursorColor: const Color(0xFFFFFFFF),
+          accentIconTheme: new IconThemeData(color: const Color(0xFFFFFFFF)),
+          textTheme: base.textTheme.copyWith().apply(
+            fontFamily: 'Helvetica Neue',
+            bodyColor: const Color(0xFFFFFFFF),
+          ),
+        );
+      case 'dark':
+        final ThemeData base = ThemeData.dark();
+        return base.copyWith(
+          splashColor: Colors.transparent,
+          primaryColor: const Color(0xFFFFFFFF),
+          accentColor: const Color(0xFFFFFFFF),
+          buttonColor: const Color(0xFFFFFFFF),
+          cursorColor: const Color(0xFFFFFFFF),
+          accentIconTheme: new IconThemeData(color: const Color(0xFFFFFFFF)),
+          textTheme: base.textTheme.copyWith().apply(
+            fontFamily: 'Helvetica Neue',
+            bodyColor: const Color(0xFFFFFFFF),
+          ),
+        );
+      case 'light':
+        final ThemeData base = ThemeData.light();
+        return base.copyWith(
+          splashColor: Colors.transparent,
+          primaryColor: const Color(0xFF000000),
+          accentColor: const Color(0xFF000000),
+          buttonColor: const Color(0xFF000000),
+          cursorColor: const Color(0xFF000000),
+          accentIconTheme: new IconThemeData(color: const Color(0xFF000000)),
+          textTheme: base.textTheme.copyWith().apply(
+            fontFamily: 'Helvetica Neue',
+            bodyColor: const Color(0xFF000000),
+          ),
+        );
+      default:
+        final ThemeData base = ThemeData.dark();
+        return base.copyWith(
+          splashColor: Colors.transparent,
+          primaryColor: const Color(0xFFFFFFFF),
+          accentColor: const Color(0xFFFFFFFF),
+          buttonColor: const Color(0xFFFFFFFF),
+          cursorColor: const Color(0xFFFFFFFF),
+          accentIconTheme: new IconThemeData(color: const Color(0xFFFFFFFF)),
+          textTheme: base.textTheme.copyWith().apply(
+            fontFamily: 'Helvetica Neue',
+            bodyColor: const Color(0xFFFFFFFF),
+          ),
+        );
+    }
   }
 }

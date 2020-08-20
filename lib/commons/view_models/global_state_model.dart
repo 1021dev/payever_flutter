@@ -10,6 +10,7 @@ class GlobalStateModel extends ChangeNotifier {
       "https://payever.azureedge.net/images/commerseos-background.jpg";
   String _defaultCustomWallpaperBlur =
       "https://payever.azureedge.net/images/commerseos-background-blurred.jpg";
+  String _theme = 'default';
 
   bool _refresh = false;
   Business _currentBusiness;
@@ -27,6 +28,13 @@ class GlobalStateModel extends ChangeNotifier {
       _currentWallpaperBlur ?? _defaultCustomWallpaperBlur;
 
   bool get refresh => _refresh;
+
+  String get theme => _theme;
+
+  setTheme(String th) {
+    _theme = th;
+    notifyListeners();
+  }
 
   setCurrentWallpaper(String wallpaper, {bool notify}) {
     _currentWallpaper = wallpaper;

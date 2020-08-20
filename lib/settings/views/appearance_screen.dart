@@ -13,6 +13,7 @@ import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/settings/widgets/app_bar.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/settings/widgets/save_button.dart';
+import 'package:provider/provider.dart';
 
 class AppearanceScreen extends StatefulWidget {
   final GlobalStateModel globalStateModel;
@@ -46,6 +47,7 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
     } else {
       automatic = activeBusiness.currentWallpaper.auto ?? false;
     }
+
     super.initState();
   }
 
@@ -84,8 +86,8 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
                 backgroudColor: Color.fromRGBO(20, 20, 0, 0.4),
                 body: state.isLoading
                     ? Center(
-                        child: CircularProgressIndicator(),
-                      )
+                  child: CircularProgressIndicator(),
+                )
                     : _getBody(state),
               ),
             ),
@@ -130,9 +132,15 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
                                 color: Color(0xff252525),
                               ),
                             ),
+                            SizedBox(height: 8,),
                             Text(
-                                'Dark'
+                              'Dark',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontFamily: 'Helvetica Neue',
+                              ),
                             ),
+                            SizedBox(height: 8,),
                             InkWell(
                               onTap: () {
                                 setState(() {
@@ -163,9 +171,15 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
                                 color: Color(0xff454545),
                               ),
                             ),
+                            SizedBox(height: 8,),
                             Text(
                               'Default',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontFamily: 'Helvetica Neue',
+                              ),
                             ),
+                            SizedBox(height: 8,),
                             InkWell(
                               onTap: () {
                                 setState(() {
@@ -196,9 +210,15 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
                                 color: Color(0xffececec),
                               ),
                             ),
+                            SizedBox(height: 8,),
                             Text(
                               'Light',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontFamily: 'Helvetica Neue',
+                              ),
                             ),
+                            SizedBox(height: 8,),
                             InkWell(
                               onTap: () {
                                 setState(() {
@@ -239,6 +259,10 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
                         children: <Widget>[
                           Text(
                             'Automatic',
+                            style: TextStyle(
+                                fontSize: 15,
+                                fontFamily: 'Roboto-Medium'
+                            ),
                           ),
                           Transform.scale(
                             scale: 0.8,
@@ -277,5 +301,6 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
         'theme': theme,
       }
     }));
+    Provider.of<GlobalStateModel>(context,listen: false).setTheme(theme);
   }
 }

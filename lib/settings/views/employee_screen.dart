@@ -83,6 +83,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
   Widget _secondAppbar(SettingScreenState state) {
     return Container(
       height: 50,
+      width: double.infinity,
       color: Colors.black87,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
@@ -209,215 +210,227 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
     );
   }
 
+  SingleChildScrollView tableBody(BuildContext ctx, SettingScreenState state) {
+    int selectedCount = state.employeeListModels.where((element) => element.isChecked).toList().length;
+
+    return SingleChildScrollView(
+      scrollDirection: Axis.vertical,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: DataTable(
+          dataRowHeight: 50,
+          headingRowHeight: 50,
+          dividerThickness: 0.5,
+          showCheckboxColumn: true,
+          columnSpacing: 8,
+          horizontalMargin: 16,
+          columns: [
+            DataColumn(
+              label: IconButton(
+                onPressed: () {
+                  widget.setScreenBloc
+                      .add(SelectAllEmployeesEvent(isSelect: true));
+                },
+                icon: Icon(selectedCount > 0
+                    ? Icons.check_box
+                    : Icons.check_box_outline_blank),
+              ),
+              numeric: false,
+              tooltip: "This is First Name",
+            ),
+            DataColumn(
+              label: Text(
+                "Employee",
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              numeric: false,
+              tooltip: "Employee",
+            ),
+            DataColumn(
+              label: Text(
+                "Position",
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              numeric: false,
+              tooltip: "Position",
+            ),
+            DataColumn(
+              label: Text(
+                "Mail",
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              numeric: false,
+              tooltip: 'Mail',
+            ),
+            DataColumn(
+              label: Text(
+                "Status",
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              numeric: false,
+              tooltip: 'Status',
+            ),
+            DataColumn(
+              label: Container(),
+              numeric: false,
+              tooltip: 'Edit',
+            ),
+          ],
+          rows: state.employeeListModels
+              .map(
+                (emp) => DataRow(
+                cells: [
+                  DataCell(
+                    IconButton(
+                      onPressed: () {
+                        widget.setScreenBloc.add(CheckEmployeeItemEvent(model: emp));
+                      },
+                      icon: Icon(emp.isChecked ? Icons.check_box : Icons.check_box_outline_blank),
+                    ),
+                  ),
+                  DataCell(
+                    Text(emp.employee.fullName ?? '-'),
+                  ),
+                  DataCell(
+                    Text(emp.employee.positionType ?? '-'),
+                  ),
+                  DataCell(
+                    Text(emp.employee.email ?? '-'),
+                  ),
+                  DataCell(
+                    Text(emp.employee.status == 1 ? 'Invited' : 'Active'),
+                  ),
+                  DataCell(
+                    MaterialButton(
+                      onPressed: () {},
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      height: 24,
+                      minWidth: 30,
+                      color: Colors.grey[800],
+                      elevation: 0,
+                      child: Text(
+                        'Edit',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ),
+                  )
+                ]),
+          ) .toList(),
+        ),
+      ),
+    );
+  }
   Widget _thirdAppbar(SettingScreenState state) {
     int selectedCount = state.employeeListModels.where((element) => element.isChecked).toList().length;
-    return Stack(
-      children: <Widget>[
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 12),
-          height: 50,
-          color: Colors.black54,
+    return Visibility(
+      visible: selectedCount > 0,
+      child: Container(
+        height: 50,
+        padding: EdgeInsets.only(
+          left: 16,
+          right: 16,
+          top: 4,
+          bottom: 4,
+        ),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Color(0xFF888888),
+            borderRadius: BorderRadius.circular(8),
+          ),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              IconButton(
-                  onPressed: () {
-                    widget.setScreenBloc
-                        .add(SelectAllEmployeesEvent(isSelect: true));
-                  },
-                  icon: Icon(selectedCount > 0
-                      ? Icons.check_box
-                      : Icons.check_box_outline_blank)),
-              SizedBox(
-                width: 18,
-              ),
-              Text('Employee'),
-              SizedBox(
-                width: 18,
-              ),
-              Text('Position'),
-              SizedBox(
-                width: 18,
-              ),
-              Text('Mail'),
-              SizedBox(
-                width: 18,
-              ),
-              Text('Status'),
-              SizedBox(
-                width: 18,
-              ),
-              MaterialButton(
-                onPressed: () {},
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                height: 24,
-                minWidth: 30,
-                color: Colors.grey[800],
-                elevation: 0,
-                child: Text(
-                  'Edit',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 13,
+              Row(
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(left: 12),
                   ),
+                  InkWell(
+                    child: SvgPicture.asset('assets/images/xsinacircle.svg'),
+                    onTap: () {
+                      widget.setScreenBloc
+                          .add(SelectAllEmployeesEvent(isSelect: false));
+                    },
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 8),
+                  ),
+                  Text(
+                    '$selectedCount ITEM${state.employees.length > 1 ? 'S': ''} SELECTED',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+              PopupMenuButton<MenuItem>(
+                icon: Icon(Icons.more_horiz),
+                offset: Offset(0, 100),
+                onSelected: (MenuItem item) => item.onTap(),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
                 ),
+                color: Colors.black87,
+                itemBuilder: (BuildContext context) {
+                  return selectPopUpActions(context, state).map((MenuItem item) {
+                    return PopupMenuItem<MenuItem>(
+                      value: item,
+                      child: Text(
+                        item.title,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                    );
+                  }).toList();
+                },
               ),
             ],
           ),
         ),
-        Visibility(
-          visible: selectedCount > 0,
-          child: Container(
-            height: 50,
-            padding: EdgeInsets.only(
-              left: 16,
-              right: 16,
-              top: 4,
-              bottom: 4,
-            ),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Color(0xFF888888),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(left: 12),
-                      ),
-                      InkWell(
-                        child: SvgPicture.asset('assets/images/xsinacircle.svg'),
-                        onTap: () {
-                          widget.setScreenBloc
-                              .add(SelectAllEmployeesEvent(isSelect: false));
-                        },
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 8),
-                      ),
-                      Text(
-                        '$selectedCount ITEM${state.employees.length > 1 ? 'S': ''} SELECTED',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
-                  PopupMenuButton<MenuItem>(
-                    icon: Icon(Icons.more_horiz),
-                    offset: Offset(0, 100),
-                    onSelected: (MenuItem item) => item.onTap(),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    color: Colors.black87,
-                    itemBuilder: (BuildContext context) {
-                      return selectPopUpActions(context, state).map((MenuItem item) {
-                        return PopupMenuItem<MenuItem>(
-                          value: item,
-                          child: Text(
-                            item.title,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w300,
-                            ),
-                          ),
-                        );
-                      }).toList();
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ],
+      ),
     );
   }
 
   Widget _getBody(SettingScreenState state) {
     return Container(
       child: Column(
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           _secondAppbar(state),
-          _thirdAppbar(state),
           state.employees == null
               ? Container()
               : Expanded(
-                  child: ListView.separated(
-                    physics: BouncingScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: state.employees.length,
-                    itemBuilder: (context, index) =>
-                        _itemBuilder(context, state.employeeListModels[index]),
-                    separatorBuilder: (context, index) {
-                      return Divider(
-                        height: 1,
-                      );
-                    },
+                  child: Stack(
+                    children: <Widget>[
+                      Container(
+                        height: 50,
+                        color: Colors.black45,
+                      ),
+                      tableBody(context, state),
+                      _thirdAppbar(state),
+                    ],
                   ),
                 ),
         ],
-      ),
-    );
-  }
-
-  Widget _itemBuilder(BuildContext context, EmployeeListModel employeeListModel) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 12),
-      height: 80,
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: <Widget>[
-            IconButton(onPressed: () {
-              widget.setScreenBloc.add(CheckEmployeeItemEvent(model: employeeListModel));
-            }, icon: Icon(employeeListModel.isChecked ? Icons.check_box : Icons.check_box_outline_blank)),
-            SizedBox(
-              width: 18,
-            ),
-            Text(employeeListModel.employee.fullName ?? '-'),
-            SizedBox(
-              width: 18,
-            ),
-            Text(employeeListModel.employee.positionType ?? '-'),
-            SizedBox(
-              width: 18,
-            ),
-            Text(employeeListModel.employee.email ?? '-'),
-            SizedBox(
-              width: 18,
-            ),
-            Text(employeeListModel.employee.status == 1 ? 'Invited' : 'Active'),
-            SizedBox(
-              width: 18,
-            ),
-            MaterialButton(
-              onPressed: () {},
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              height: 24,
-              minWidth: 30,
-              color: Colors.grey[800],
-              elevation: 0,
-              child: Text(
-                'Edit',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 13,
-                ),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -502,10 +515,11 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
             borderRadius: BorderRadius.all(Radius.circular(10)),
           ),
           content: SearchTextContentView(
-              searchText: '',
-              onSelected: (value) {
-                Navigator.pop(context);
-              }),
+            searchText: '',
+            onSelected: (value) {
+              Navigator.pop(context);
+            },
+          ),
         );
       },
     );

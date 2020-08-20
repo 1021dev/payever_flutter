@@ -188,7 +188,7 @@ List<String> salesRange = [
 class Employee {
   String businessId;
   String email;
-  String first_name;
+  String firstName;
   String fullName;
   List<Group> groups = [];
   String positionType;
@@ -199,7 +199,7 @@ class Employee {
   Employee.fromMap(dynamic obj) {
     businessId = obj['businessId'];
     email = obj['email'];
-    first_name = obj['first_name'];
+    firstName = obj['first_name'];
     fullName = obj['fullName'];
     positionType = obj['positionType'];
     status = obj['status'];
@@ -276,3 +276,43 @@ class Acl {
     delete = obj['delete'];
   }
 }
+
+class MyTheme {
+  Brightness brightness;
+  MaterialColor primarySwatch;
+
+  MyTheme(
+      {this.brightness,
+        this.primarySwatch,
+      });
+}
+
+class AppTheme {
+  String name;
+  MyTheme theme;
+  AppTheme(this.name, this.theme);
+}
+
+List<AppTheme> myThemes = [
+  AppTheme(
+    'default',
+    MyTheme(
+      brightness: Brightness.dark,
+      primarySwatch: Colors.grey,
+    ),
+  ),
+  AppTheme(
+    'light',
+    MyTheme(
+      brightness: Brightness.light,
+      primarySwatch: Colors.white,
+    ),
+  ),
+  AppTheme(
+    'dark',
+    MyTheme(
+      brightness: Brightness.dark,
+      primarySwatch: Colors.black,
+    ),
+  ),
+];
