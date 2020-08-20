@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/settings/models/models.dart';
+import 'package:payever/settings/views/employee/add_employee_screen.dart';
 import 'package:payever/settings/widgets/app_bar.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/transactions/views/sub_view/search_text_content_view.dart';
@@ -134,7 +136,16 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
               width: 12,
             ),
             MaterialButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(context, PageTransition(
+                  child: AddEmployeeScreen(
+                    globalStateModel: widget.globalStateModel,
+                    setScreenBloc: widget.setScreenBloc,
+                  ),
+                  type: PageTransitionType.fade,
+                  duration: Duration(microseconds: 300),
+                ));
+              },
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),

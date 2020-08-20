@@ -54,6 +54,12 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
       yield* selectEmployee(event.model);
     } else if(event is SelectAllEmployeesEvent) {
       yield* selectAllEmployees(event.isSelect);
+    } else if (event is GetGroupEvent) {
+      yield* getGroup();
+    } else if (event is CheckGroupItemEvent) {
+      yield* selectGroup(event.model);
+    } else if(event is SelectAllGroupEvent) {
+      yield* selectAllGroup(event.isSelect);
     }
   }
 
@@ -181,7 +187,8 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
   }
 
   Stream<SettingScreenState> getEmployee() async* {
-    List<Employee>employees = state.employees;
+    List<Employee>employees = [];
+    employees.addAll(state.employees);
 
     if (employees == null || employees.isEmpty) {
       employees = [];
@@ -207,7 +214,8 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
   }
 
   Stream<SettingScreenState> selectEmployee(EmployeeListModel model) async* {
-    List<EmployeeListModel> employeeListModels = state.employeeListModels;
+    List<EmployeeListModel> employeeListModels = [];
+    employeeListModels.addAll(state.employeeListModels);
     int index = employeeListModels.indexOf(model);
     employeeListModels[index].isChecked = !model.isChecked;
     yield state.copyWith(employeeListModels: employeeListModels);
@@ -222,4 +230,47 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
     yield state.copyWith(employeeListModels: employeeListModels);
   }
 
+  Stream<SettingScreenState> getGroup() async* {
+    List<Group> groups = [];
+    groups.addAll(state.employeeGroups);
+
+    if (groups == null || groups.isEmpty) {
+      groups = [];
+      List<GroupListModel> groupList = [];
+      yield state.copyWith(isLoading: true);
+      dynamic response = await api.getGroups(token, state.business, {'limit' : '20', 'page': "1"});
+      if (response is DioError) {
+        yield SettingScreenStateFailure(error: response.error);
+      } else if (response is Map){
+        dynamic data = response['data'];
+        if (data is List) {
+          data.forEach((element) {
+            groups.add(Group.fromMap(element));
+            groupList.add(GroupListModel(group: Group.fromMap(element), isChecked: false));
+          });
+        }
+        yield state.copyWith(isLoading: false, employeeGroups: groups, groupList: groupList);
+      } else {
+        yield SettingScreenStateFailure(error: 'Update Business name failed');
+        yield state.copyWith(isLoading: false);
+      }
+    }
+  }
+
+  Stream<SettingScreenState> selectGroup(GroupListModel model) async* {
+    List<GroupListModel> groupListModels = [];
+    groupListModels.addAll(state.groupList);
+    int index = groupListModels.indexOf(model);
+    groupListModels[index].isChecked = !model.isChecked;
+    yield state.copyWith(groupList: groupListModels);
+  }
+
+  Stream<SettingScreenState> selectAllGroup(bool isSelect) async* {
+    List<GroupListModel> groupListModels = [];
+    groupListModels.addAll(state.groupList);
+    groupListModels.forEach((element) {
+      element.isChecked = isSelect;
+    });
+    yield state.copyWith(groupList: groupListModels);
+  }
 }

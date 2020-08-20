@@ -16,6 +16,8 @@ class SettingScreenState {
   final List<BusinessProduct> businessProducts;
   final List<Employee> employees;
   final List<EmployeeListModel> employeeListModels;
+  final List<Group> employeeGroups;
+  final List<GroupListModel> groupList;
 
   SettingScreenState({
     this.isLoading = false,
@@ -32,6 +34,8 @@ class SettingScreenState {
     this.businessProducts = const [],
     this.employees = const [],
     this.employeeListModels = const [],
+    this.employeeGroups = const [],
+    this.groupList = const [],
   });
 
   List<Object> get props => [
@@ -47,6 +51,9 @@ class SettingScreenState {
     this.blobName,
     this.businessProducts,
     this.employees,
+    this.employeeListModels,
+    this.employeeGroups,
+    this.groupList,
   ];
 
   SettingScreenState copyWith({
@@ -64,6 +71,8 @@ class SettingScreenState {
     List<BusinessProduct> businessProducts,
     List<Employee> employees,
     List<EmployeeListModel> employeeListModels,
+    List<GroupListModel> groupList,
+    List<Group> employeeGroups,
   }) {
     return SettingScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -80,6 +89,8 @@ class SettingScreenState {
       businessProducts: businessProducts ?? this.businessProducts,
       employees: employees ?? this.employees,
       employeeListModels: employeeListModels ?? this.employeeListModels,
+      employeeGroups: employeeGroups ?? this.employeeGroups,
+      groupList: groupList ?? this.groupList,
     );
   }
 }

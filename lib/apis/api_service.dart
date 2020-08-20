@@ -2613,9 +2613,23 @@ class ApiService {
     try {
       print('$TAG - getEmployees()');
       dynamic response = await _client.getTypeless(
-          '${Env.auth}/api/employees/$businessId',
-          queryParameters: query,
-          headers: _getHeaders(token),
+        '${Env.auth}/api/employees/$businessId',
+        queryParameters: query,
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getGroups(String token, String businessId, Map<String, String> query) async {
+    try {
+      print('$TAG - getEmployees()');
+      dynamic response = await _client.getTypeless(
+        '${Env.auth}/api/employee-groups/$businessId',
+        queryParameters: query,
+        headers: _getHeaders(token),
       );
       return response;
     } catch (e) {

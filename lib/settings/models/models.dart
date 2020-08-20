@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_tagging/flutter_tagging.dart';
+import 'package:payever/commons/models/acl.dart';
 
 class SettingItem {
   final String name;
@@ -189,6 +191,7 @@ class Employee {
   String businessId;
   String email;
   String firstName;
+  String lastName;
   String fullName;
   List<Group> groups = [];
   String positionType;
@@ -200,6 +203,7 @@ class Employee {
     businessId = obj['businessId'];
     email = obj['email'];
     firstName = obj['first_name'];
+    lastName = obj['last_name'];
     fullName = obj['fullName'];
     positionType = obj['positionType'];
     status = obj['status'];
@@ -224,13 +228,36 @@ class EmployeeListModel {
   EmployeeListModel({this.employee, this.isChecked});
 }
 
+class GroupListModel {
+  bool isChecked;
+  Group group;
+
+  GroupListModel({this.group, this.isChecked});
+}
+
 class Group {
   String id;
   String name;
+  String businessId;
+  List<String> employees = [];
+  List<Acl> acls = [];
 
   Group.fromMap(dynamic obj) {
     name = obj['name'];
     id = obj['_id'];
+    businessId = obj['businessId'];
+    dynamic employeesObj = obj['employees'];
+    if (employeesObj is List) {
+      employeesObj.forEach((element) {
+        employees.add(element);
+      });
+    }
+    dynamic aclsObj = obj['acls'];
+    if (aclsObj is List) {
+      aclsObj.forEach((element) {
+        acls.add(Acl.fromMap(element));
+      });
+    }
   }
 }
 
@@ -316,3 +343,24 @@ List<AppTheme> myThemes = [
     ),
   ),
 ];
+
+class GroupTag extends Taggable {
+  final String name;
+
+  final Group category;
+  final int position;
+
+  GroupTag({
+    this.name,
+    this.category,
+    this.position,
+  });
+
+  @override
+  List<Object> get props => [name];
+
+  String toJson() => '''  {
+    "name": $name,\n
+    "position": $position\n
+  }''';
+}

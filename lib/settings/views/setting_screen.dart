@@ -17,7 +17,7 @@ import 'package:payever/search/views/search_screen.dart';
 import 'package:payever/settings/models/models.dart';
 import 'package:payever/settings/views/appearance_screen.dart';
 import 'package:payever/settings/views/business_info_screen.dart';
-import 'package:payever/settings/views/employee_screen.dart';
+import 'package:payever/settings/views/employee/employee_screen.dart';
 import 'package:payever/settings/views/wallpaper/wallpaper_screen.dart';
 import 'package:payever/switcher/switcher_page.dart';
 import 'package:provider/provider.dart';

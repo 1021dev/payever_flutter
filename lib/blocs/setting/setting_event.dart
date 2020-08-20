@@ -106,3 +106,26 @@ class SelectAllEmployeesEvent extends SettingScreenEvent {
   ];
 }
 
+class GetGroupEvent extends SettingScreenEvent {}
+
+class CheckGroupItemEvent extends SettingScreenEvent {
+  final GroupListModel model;
+
+  CheckGroupItemEvent({this.model});
+
+  @override
+  List<Object> get props => [
+    this.model,
+  ];
+}
+
+class SelectAllGroupEvent extends SettingScreenEvent {
+  final bool isSelect;
+
+  SelectAllGroupEvent({this.isSelect});
+  @override
+  List<Object> get props => [
+    this.isSelect,
+  ];
+}
+
