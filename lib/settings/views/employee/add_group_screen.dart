@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_tagging/flutter_tagging.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
@@ -14,6 +15,7 @@ import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/custom_elements.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/settings/models/models.dart';
+import 'package:payever/settings/views/employee/add_employee_group_screen.dart';
 import 'package:payever/settings/widgets/app_bar.dart';
 import 'package:payever/settings/widgets/save_button.dart';
 
@@ -121,7 +123,7 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
       },
       child: BlocBuilder<SettingScreenBloc, SettingScreenState>(
         bloc: widget.setScreenBloc,
-        builder: (context, state) {
+        builder: (context, SettingScreenState state) {
           if (state.groupDetail != null) {
             employees = state.groupDetail.employees;
           }
@@ -174,7 +176,14 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
                                   ),
                                   MaterialButton(
                                     onPressed: () {
-
+                                      Navigator.push(context, PageTransition(
+                                        child: AddEmployeeGroupScreen(
+                                          globalStateModel: widget.globalStateModel,
+                                          setScreenBloc: widget.setScreenBloc,
+                                        ),
+                                        type: PageTransitionType.fade,
+                                        duration: Duration(microseconds: 300),
+                                      ));
                                     },
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12),
@@ -261,7 +270,7 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
                               ],
                             ),
                           ),
-                          isEmployee ? _employee() : _accesses(),
+                          isEmployee ? _employee(state) : _accesses(state),
                           SaveBtn(
                             isUpdating: state.isUpdating,
                             color: Colors.black45,
@@ -270,7 +279,7 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
                               if (_formKey.currentState.validate() &&
                                   !state.isUpdating) {
                                 if (name.isEmpty) {
-                                  Fluttertoast.showToast(msg: 'name required');
+                                  Fluttertoast.showToast(msg: 'Group name required');
                                   return;
                                 }
 
@@ -282,7 +291,15 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
                                   });
                                   body['acls'] = aclsList;
                                   List<String> groupList = [];
+                                  if (name != widget.group.name) {
+                                    body['name'] = name;
+                                  }
                                   if (employees.length > 0) {
+                                    List<String> empList = [];
+                                    state.groupDetail.employees.forEach((element) {
+                                      empList.add(element.id);
+                                    });
+                                    body['employees'] = empList;
 //                                    group.forEach((element) {
 //                                      groupList.add(element.id);
 //                                    });
@@ -296,6 +313,7 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
                                     aclsList.add(element.toDictionary());
                                   });
                                   body['acls'] = aclsList;
+                                  body['name'] = name;
 
                                   List<String> employeeList = [];
                                   if (employees.length > 0) {
@@ -319,23 +337,30 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
     );
   }
 
-  Widget _employee() {
-    double height = 56.0 * employees.length;
+  Widget _employee(SettingScreenState state) {
+    if (state.groupDetail == null) {
+      return Container();
+    }
+    double height = 56.0 * state.groupDetail.employees.length;
     return Container(
       height: height > 300 ? 300 : height,
       padding: EdgeInsets.symmetric(horizontal: 10),
       child: ListView.separated(
         shrinkWrap: false,
         itemBuilder: (context, index) {
-          Employee employee = employees[index];
+          Employee employee = state.groupDetail.employees[index];
+          String fullName = employee.fullName ?? ('${employee.firstName ?? ''} ${employee.lastName ?? ''}');
           return Row(
             children: <Widget>[
               Expanded(
-                child: Text(employee.fullName ?? (employee.firstName ?? '')),
+                child: Text(fullName),
               ),
               MaterialButton(
                 onPressed: () {
-
+                  Group group = state.groupDetail;
+                  List<Employee> employees = group.employees;
+                  employees.remove(employee);
+                  widget.setScreenBloc.add(AddEmployeeToGroupEvent(employees: employees));
                 },
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -362,12 +387,12 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
             color: Colors.grey,
           );
         },
-        itemCount: employees.length,
+        itemCount: state.groupDetail.employees.length,
       ),
     );
   }
 
-  Widget _accesses() {
+  Widget _accesses(SettingScreenState state) {
     return Container(
       height: 300,
       child: ListView.separated(

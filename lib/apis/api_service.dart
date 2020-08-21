@@ -2771,6 +2771,39 @@ class ApiService {
     }
   }
 
+
+  Future<dynamic> addEmployeeToGroup(String token, String businessId, String groupId, List<String> adds) async {
+    try {
+      print('$TAG - addEmployeeToGroup() => $adds');
+      dynamic response = await _client.postTypeLess(
+        '${Env.auth}/api/employee-groups/$businessId/$groupId/employees',
+        body: {
+          'employees': adds,
+        },
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> deleteEmployeeFromGroup(String token, String businessId, String groupId, List<String> deletes) async {
+    try {
+      print('$TAG - deleteEmployeeFromGroup() => $deletes');
+      dynamic response = await _client.deleteTypeless(
+        '${Env.auth}/api/employee-groups/$businessId/$groupId/employees',
+        body: {
+          'employees': deletes,
+        },
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   ///***************************************************************************
   ///****                      UTILS                                       *****
   ///***************************************************************************

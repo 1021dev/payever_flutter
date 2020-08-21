@@ -197,6 +197,7 @@ class Employee {
   List<Role> roles = [];
   int status;
   String id;
+  Employee({this.id});
 
   Employee.fromMap(dynamic obj) {
     businessId = obj['businessId'];
@@ -248,7 +249,11 @@ class Group {
     dynamic employeesObj = obj['employees'];
     if (employeesObj is List) {
       employeesObj.forEach((element) {
-        employees.add(Employee.fromMap(element));
+        if (element is String) {
+          employees.add(Employee(id: element));
+        } else if (element is Map){
+          employees.add(Employee.fromMap(element));
+        }
       });
     }
     dynamic aclsObj = obj['acls'];

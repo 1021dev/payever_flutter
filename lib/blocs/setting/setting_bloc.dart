@@ -77,6 +77,15 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
       yield* deleteGroups();
     } else if (event is GetGroupDetailEvent) {
       yield* getGroupDetail(event.group);
+    } else if (event is SelectEmployeeToGroupEvent) {
+      yield state.copyWith(isSelectingEmployee: true);
+    } else if (event is AddEmployeeToGroupEvent) {
+      Group groupDetail = state.groupDetail;
+      groupDetail.employees = event.employees;
+      yield state.copyWith(groupDetail: groupDetail);
+      yield* selectAllEmployees(false);
+    } else if (event is CancelSelectEmployeeEvent) {
+      yield state.copyWith(isSelectingEmployee: false);
     }
   }
 
@@ -381,10 +390,20 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
     dynamic response = await api.getGroupDetail(token, state.business, group.id);
     if (response is Map) {
       Group groupDetail = Group.fromMap(response);
-      yield state.copyWith(groupDetail: groupDetail);
+      yield state.copyWith(groupDetail: groupDetail, isLoading: false);
+    } else {
+      yield state.copyWith(isLoading: false);
     }
+  }
+
+  Stream<SettingScreenState> addEmployeeToGroup(List<String> employees) async* {
+    dynamic response = await api.addEmployeeToGroup(token, state.business, state.groupDetail.id, employees);
     yield state.copyWith(isLoading: false);
   }
 
+  Stream<SettingScreenState> deleteEmployeeFromGroup(List<String> employees) async* {
+    dynamic response = await api.deleteEmployeeFromGroup(token, state.business, state.groupDetail.id, employees);
+    yield state.copyWith(isLoading: false);
+  }
 
 }

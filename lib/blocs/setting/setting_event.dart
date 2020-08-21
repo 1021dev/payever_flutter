@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:payever/blocs/bloc.dart';
 import 'package:payever/settings/models/models.dart';
 
 abstract class SettingScreenEvent extends Equatable {
@@ -132,15 +133,18 @@ class SelectAllGroupEvent extends SettingScreenEvent {
 class CreateEmployeeEvent extends SettingScreenEvent {
   final Map<String, dynamic> body;
   final String email;
+  final List<String> groups;
 
-  CreateEmployeeEvent({this.body, this.email});
+  CreateEmployeeEvent({this.body, this.email, this.groups = const []});
 }
 
 class UpdateEmployeeEvent extends SettingScreenEvent {
   final Map<String, dynamic> body;
   final String employeeId;
+  final List<String> addGroups;
+  final List<String> deleteGroups;
 
-  UpdateEmployeeEvent({this.employeeId, this.body});
+  UpdateEmployeeEvent({this.employeeId, this.body, this.addGroups = const [], this.deleteGroups = const []});
 }
 class ClearEmailInvalidEvent extends SettingScreenEvent {}
 
@@ -149,16 +153,19 @@ class DeleteEmployeeEvent extends SettingScreenEvent {}
 class CreateGroupEvent extends SettingScreenEvent {
   final Map<String, dynamic> body;
   final String groupName;
+  final List<String> employees;
 
-  CreateGroupEvent({this.body, this.groupName,});
+  CreateGroupEvent({this.body, this.groupName, this.employees = const []});
 }
 
 class UpdateGroupEvent extends SettingScreenEvent {
   final Map<String, dynamic> body;
   final String groupId;
   final String groupName;
+  final List<String> deleteEmployees;
+  final List<String> addEmployees;
 
-  UpdateGroupEvent({this.groupId, this.body, this.groupName});
+  UpdateGroupEvent({this.groupId, this.body, this.groupName, this.addEmployees = const [], this.deleteEmployees = const []});
 }
 
 class DeleteGroupEvent extends SettingScreenEvent {}
@@ -167,3 +174,15 @@ class GetGroupDetailEvent extends SettingScreenEvent {
   final Group group;
   GetGroupDetailEvent({this.group});
 }
+
+class SelectEmployeeToGroupEvent extends SettingScreenEvent {
+  final Group group;
+  SelectEmployeeToGroupEvent({this.group});
+}
+
+class AddEmployeeToGroupEvent extends SettingScreenEvent {
+  final List<Employee> employees;
+  AddEmployeeToGroupEvent({this.employees = const []});
+}
+
+class CancelSelectEmployeeEvent extends SettingScreenEvent {}

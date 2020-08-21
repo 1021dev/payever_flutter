@@ -20,6 +20,7 @@ class SettingScreenState {
   final List<GroupListModel> groupList;
   final bool emailInvalid;
   final Group groupDetail;
+  final bool isSelectingEmployee;
 
   SettingScreenState({
     this.isLoading = false,
@@ -40,6 +41,7 @@ class SettingScreenState {
     this.groupList = const [],
     this.emailInvalid = false,
     this.groupDetail,
+    this.isSelectingEmployee = false,
   });
 
   List<Object> get props => [
@@ -60,6 +62,7 @@ class SettingScreenState {
     this.groupList,
     this.emailInvalid,
     this.groupDetail,
+    this.isSelectingEmployee,
   ];
 
   SettingScreenState copyWith({
@@ -81,6 +84,7 @@ class SettingScreenState {
     List<Group> employeeGroups,
     bool emailInvalid,
     Group groupDetail,
+    bool isSelectingEmployee,
   }) {
     return SettingScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -101,6 +105,7 @@ class SettingScreenState {
       groupList: groupList ?? this.groupList,
       emailInvalid: emailInvalid ?? this.emailInvalid,
       groupDetail: groupDetail ?? this.groupDetail,
+      isSelectingEmployee: isSelectingEmployee ?? this.isSelectingEmployee,
     );
   }
 }
