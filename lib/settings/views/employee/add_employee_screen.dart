@@ -96,7 +96,7 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: Appbar(
-        'Add Employee',
+        widget.employee == null ? 'Add Employee' : 'Edit Employee',
         onClose: () {
           showConfirmDialog();
         },
@@ -131,16 +131,15 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
       child: BlocBuilder<SettingScreenBloc, SettingScreenState>(
         bloc: widget.setScreenBloc,
         builder: (context, state) {
-
           List<GroupTag> tags = [];
           if (employee != null) {
             tags = employee.groups.map((element) {
-          return GroupTag(
-          name: element.name,
-          position: state.employeeGroups.length,
-          category: element,
-          );
-          }).toList();
+              return GroupTag(
+                name: element.name,
+                position: state.employeeGroups.length,
+                category: element,
+              );
+            }).toList();
           }
 
           return Center(

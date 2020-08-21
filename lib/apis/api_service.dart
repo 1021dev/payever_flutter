@@ -2691,6 +2691,19 @@ class ApiService {
     }
   }
 
+  Future<dynamic> getGroup(String token, String businessId, String groupId) async {
+    try {
+      print('$TAG - getEmployees()');
+      dynamic response = await _client.getTypeless(
+        '${Env.auth}/api/employee-groups/$businessId/$groupId',
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   ///***************************************************************************
   ///****                      UTILS                                       *****
   ///***************************************************************************
