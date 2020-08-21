@@ -2804,6 +2804,33 @@ class ApiService {
     }
   }
 
+  Future<dynamic> getLegalDocument(String token, String businessId) async {
+    try {
+      print('$TAG - getLegalDocument() ');
+      dynamic response = await _client.getTypeless(
+        '${Env.users}/api/business/$businessId/legal-document/legal',
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> updateLegalDocument(String token, String businessId, Map<String, dynamic> body) async {
+    try {
+      print('$TAG - updateLegalDocument() ');
+      dynamic response = await _client.putTypeless(
+        '${Env.users}/api/business/$businessId/legal-document/legal',
+        body: body,
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   ///***************************************************************************
   ///****                      UTILS                                       *****
   ///***************************************************************************

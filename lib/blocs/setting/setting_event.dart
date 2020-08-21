@@ -234,3 +234,9 @@ class UpdateGroupFilterTypeEvent extends SettingScreenEvent {
   ];
 }
 
+class GetLegalDocumentEvent extends SettingScreenEvent{}
+
+class UpdateLegalDocumentEvent extends SettingScreenEvent{
+  final Map<String, dynamic> content;
+  UpdateLegalDocumentEvent({this.content});
+}

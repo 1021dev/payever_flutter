@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tagging/flutter_tagging.dart';
+import 'package:payever/commons/models/business.dart';
 
 class SettingItem {
   final String name;
@@ -506,4 +507,36 @@ Map<String, String> getFilterWithLabel(String label) {
       };
   }
   return {};
+}
+
+List<String> policiesScreenTitles = [
+  'Legal',
+  'Disclaimer',
+  'Refund policy',
+  'Shipping policy',
+  'Privacy',
+];
+
+class LegalDocument {
+  Business business;
+  String content;
+  String createdAt;
+  String type;
+  String updatedAt;
+  num v;
+  String id;
+
+  LegalDocument.fromMap(dynamic obj) {
+    if (obj['business'] is String) {
+      business = Business(id: obj['business']);
+    } else if (obj['business'] is Map) {
+      business = Business.map(obj['business']);
+    }
+    content = obj['content'];
+    createdAt = obj['createdAt'];
+    type = obj['type'];
+    updatedAt = obj['updatedAt'];
+    v = obj['__v'];
+    id = obj['_id'];
+  }
 }

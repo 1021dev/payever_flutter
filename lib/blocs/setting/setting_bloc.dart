@@ -110,6 +110,10 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
     } else if (event is UpdateGroupFilterTypeEvent) {
       yield state.copyWith(filterGroupTypes: event.filterTypes, isSearching: true);
       yield* getGroupWithFilter(state.searchGroupText, state.filterGroupTypes);
+    } else if (event is GetLegalDocumentEvent) {
+      yield* getLegalDocument();
+    } else if (event is UpdateLegalDocumentEvent) {
+      yield* updateLegalDocument(event.content);
     }
   }
 
@@ -521,6 +525,37 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
   Stream<SettingScreenState> deleteEmployeeFromGroup(List<String> employees, String groupId) async* {
     dynamic response = await api.deleteEmployeeFromGroup(token, state.business, groupId, employees);
     yield state.copyWith(isLoading: false);
+  }
+
+  Stream<SettingScreenState> getLegalDocument() async* {
+    yield state.copyWith(isLoading: true);
+    dynamic response = await api.getLegalDocument(token, state.business);
+    if (response is Map) {
+      LegalDocument legalDocument = LegalDocument.fromMap(response);
+      yield state.copyWith(isLoading: false, legalDocument: legalDocument);
+    } else {
+      yield state.copyWith(isLoading: false);
+    }
+  }
+
+  Stream<SettingScreenState> updateLegalDocument(Map<String, dynamic> body) async* {
+    yield state.copyWith(isUpdating: true);
+    dynamic response = await api.updateLegalDocument(token, state.business, body);
+    if (response is DioError) {
+      yield SettingScreenStateFailure(error: response.error);
+    } else if (response is Map){
+      LegalDocument legalDocument = LegalDocument.fromMap(response);
+      dashboardScreenBloc.add(UpdateBusiness(legalDocument.business));
+      globalStateModel.setCurrentBusiness(legalDocument.business,
+          notify: true);
+      yield state.copyWith(isUpdating: false);
+      yield SettingScreenUpdateSuccess(
+        business: state.business,
+      );
+    } else {
+      yield SettingScreenStateFailure(error: 'Update Business name failed');
+      yield state.copyWith(isUpdating: false);
+    }
   }
 
   String _getFilterKeyString(String type) {

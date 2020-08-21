@@ -27,6 +27,7 @@ class SettingScreenState {
   final List<FilterItem> filterGroupTypes;
   final String searchGroupText;
   final bool isSearching;
+  final LegalDocument legalDocument;
 
   SettingScreenState({
     this.isLoading = false,
@@ -53,6 +54,7 @@ class SettingScreenState {
     this.filterGroupTypes = const [],
     this.searchGroupText = '',
     this.isSearching = false,
+    this.legalDocument,
   });
 
   List<Object> get props => [
@@ -79,6 +81,7 @@ class SettingScreenState {
     this.filterGroupTypes,
     this.searchGroupText,
     this.isSearching,
+    this.legalDocument,
   ];
 
   SettingScreenState copyWith({
@@ -106,6 +109,7 @@ class SettingScreenState {
     List<FilterItem> filterGroupTypes,
     String searchGroupText,
     bool isSearching,
+    LegalDocument legalDocument,
   }) {
     return SettingScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -132,6 +136,7 @@ class SettingScreenState {
       filterGroupTypes: filterGroupTypes ?? this.filterGroupTypes,
       searchGroupText: searchGroupText ?? this.searchGroupText,
       isSearching: isSearching ?? this.isSearching,
+      legalDocument: legalDocument ?? this.legalDocument,
     );
   }
 }

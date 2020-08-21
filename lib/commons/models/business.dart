@@ -27,6 +27,8 @@ class Business {
   ThemeSetting themeSettings;
   Taxes taxes;
 
+  Business({this.id});
+
   Business.map(dynamic obj) {
     this.id = obj[GlobalUtils.DB_BUSINESS_ID];
     this.updatedAt = obj[GlobalUtils.DB_BUSINESS_UPDATED_AT];

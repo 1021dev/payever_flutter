@@ -237,8 +237,14 @@ class _SwitcherState extends State<Switcher> {
   @override
   Widget build(BuildContext context) {
     Business active;
-    if (widget.screenBloc.state.businesses.length > 0) {
-      active = widget.screenBloc.state.businesses.firstWhere((element) => element.active);
+    print('business => ${widget.screenBloc.state.businesses}');
+    if (widget.screenBloc.state.businesses != null) {
+      if (widget.screenBloc.state.businesses.length > 0) {
+        List<Business> bList = widget.screenBloc.state.businesses.where((element) => element.active).toList();
+        if (bList.length > 0) {
+          active = bList.first;
+        }
+      }
     }
     return Column(
       children: <Widget>[
@@ -253,7 +259,7 @@ class _SwitcherState extends State<Switcher> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              widget.screenBloc.state.businesses.length > 0
+              active != null
                   ? Container(
                   child: Column(
                     children: <Widget>[
