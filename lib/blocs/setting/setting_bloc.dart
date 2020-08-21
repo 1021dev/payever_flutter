@@ -50,12 +50,24 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
     } else if (event is GetBusinessProductsEvent) {
       yield* getBusinessProducts();
     } else if (event is GetEmployeesEvent) {
+      yield state.copyWith(
+        searchEmployeeText: '',
+        filterEmployeeTypes: [],
+        searchGroupText: '',
+        filterGroupTypes: [],
+      );
       yield* getEmployee();
     } else if (event is CheckEmployeeItemEvent) {
       yield* selectEmployee(event.model);
     } else if(event is SelectAllEmployeesEvent) {
       yield* selectAllEmployees(event.isSelect);
     } else if (event is GetGroupEvent) {
+      yield state.copyWith(
+        searchEmployeeText: '',
+        filterEmployeeTypes: [],
+        searchGroupText: '',
+        filterGroupTypes: [],
+      );
       yield* getGroup();
     } else if (event is CheckGroupItemEvent) {
       yield* selectGroup(event.model);
@@ -86,6 +98,18 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
       yield* selectAllEmployees(false);
     } else if (event is CancelSelectEmployeeEvent) {
       yield state.copyWith(isSelectingEmployee: false);
+    } else if (event is UpdateEmployeeSearchText) {
+      yield state.copyWith(searchEmployeeText: event.searchText, isSearching: true);
+      yield* getEmployeeWithFilter(state.searchEmployeeText, state.filterEmployeeTypes);
+    } else if (event is UpdateEmployeeFilterTypeEvent) {
+      yield state.copyWith(filterEmployeeTypes: event.filterTypes, isSearching: true);
+      yield* getEmployeeWithFilter(state.searchEmployeeText, state.filterEmployeeTypes);
+    } else if (event is UpdateGroupSearchText) {
+      yield state.copyWith(searchGroupText: event.searchText, isSearching: true);
+      yield* getGroupWithFilter(state.searchGroupText, state.filterGroupTypes);
+    } else if (event is UpdateGroupFilterTypeEvent) {
+      yield state.copyWith(filterGroupTypes: event.filterTypes, isSearching: true);
+      yield* getGroupWithFilter(state.searchGroupText, state.filterGroupTypes);
     }
   }
 
@@ -219,7 +243,7 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
     if (state.employees == null || state.employees.isEmpty) {
       yield state.copyWith(isLoading: true);
     }
-    dynamic response = await api.getEmployees(token, state.business, {'limit' : '50', 'page': "1"});
+    dynamic response = await api.getEmployees(token, state.business, {'limit' : '50', 'page': '1'});
     if (response is DioError) {
       yield SettingScreenStateFailure(error: response.error);
     } else if (response is Map){
@@ -234,6 +258,39 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
     } else {
       yield SettingScreenStateFailure(error: 'Get Employee failed');
       yield state.copyWith(isLoading: false);
+    }
+  }
+
+  Stream<SettingScreenState> getEmployeeWithFilter(String searchText, List<FilterItem> filterItems) async* {
+    List<Employee>employees = [];
+    List<EmployeeListModel> employeeListModels = [];
+
+    Map<String, String> query = {};
+    query['limit'] = '50';
+    query['page'] = '1';
+    if (searchText != '') {
+      query['search'] = searchText;
+    }
+    if (filterItems.length > 0) {
+      filterItems.forEach((element) {
+        query[_getFilterKeyString(element.type)] = _getFilterValueString(element.condition, element.value);
+      });
+    }
+    dynamic response = await api.getEmployees(token, state.business, query);
+    if (response is DioError) {
+      yield SettingScreenStateFailure(error: response.error);
+    } else if (response is Map){
+      dynamic data = response['data'];
+      if (data is List) {
+        data.forEach((element) {
+          employees.add(Employee.fromMap(element));
+          employeeListModels.add(EmployeeListModel(employee: Employee.fromMap(element), isChecked: false));
+        });
+      }
+      yield state.copyWith(isSearching: false, employees: employees, employeeListModels: employeeListModels);
+    } else {
+      yield SettingScreenStateFailure(error: 'Get Employee failed');
+      yield state.copyWith(isSearching: false);
     }
   }
 
@@ -260,7 +317,7 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
     if (state.employeeGroups == null || state.employeeGroups.isEmpty) {
       yield state.copyWith(isLoading: true);
     }
-    dynamic response = await api.getGroups(token, state.business, {'limit' : '50', 'page': "1"});
+    dynamic response = await api.getGroups(token, state.business, {'limit' : '50', 'page': '1'});
     if (response is DioError) {
       yield SettingScreenStateFailure(error: response.error);
     } else if (response is Map){
@@ -275,6 +332,39 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
     } else {
       yield SettingScreenStateFailure(error: 'Get Group failed');
       yield state.copyWith(isLoading: false);
+    }
+  }
+
+  Stream<SettingScreenState> getGroupWithFilter(String searchText, List<FilterItem> filterItems) async* {
+    List<Group> groups = [];
+    List<GroupListModel> groupList = [];
+    Map<String, String> query = {};
+    query['limit'] = '50';
+    query['page'] = '1';
+    if (searchText != '') {
+      query['search'] = searchText;
+    }
+    if (filterItems.length > 0) {
+      filterItems.forEach((element) {
+        query['filter\[name\]'] = _getFilterValueString(element.condition, element.value);
+      });
+    }
+    print(query);
+    dynamic response = await api.getGroups(token, state.business, query);
+    if (response is DioError) {
+      yield SettingScreenStateFailure(error: response.error);
+    } else if (response is Map){
+      dynamic data = response['data'];
+      if (data is List) {
+        data.forEach((element) {
+          groups.add(Group.fromMap(element));
+          groupList.add(GroupListModel(group: Group.fromMap(element), isChecked: false));
+        });
+      }
+      yield state.copyWith(isSearching: false, employeeGroups: groups, groupList: groupList);
+    } else {
+      yield SettingScreenStateFailure(error: 'Get Group failed');
+      yield state.copyWith(isSearching: false);
     }
   }
 
@@ -433,4 +523,33 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
     yield state.copyWith(isLoading: false);
   }
 
+  String _getFilterKeyString(String type) {
+    switch (type) {
+      case 'name':
+        return 'filter\[nameAndEmail\]';
+      case 'position':
+        return 'filter\[positions.positionType\]';
+      case 'email':
+        return 'filter\[email\]';
+      case 'status':
+        return 'filter\[status\]';
+    }
+  }
+
+  String _getFilterValueString(String type, String value) {
+    switch (type) {
+      case 'is':
+        return '\^$value\$';
+      case 'isNot':
+        return '\^\(\?\!$value\$)';
+      case 'startsWith':
+        return '\^$value';
+      case 'endsWith':
+        return '$value\$';
+      case 'contains':
+        return '$value';
+      case 'doesNotContain':
+        return '\^\(\(\?\!$value\)\.\)\*\$';
+    }
+  }
 }

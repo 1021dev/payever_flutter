@@ -453,3 +453,57 @@ class GroupTag extends Taggable {
     "position": $position\n
   }''';
 }
+
+Map<String, String> filterEmployeeLabels = {
+  'name': 'Name',
+  'position': 'Position',
+  'email': 'E-mail',
+  'status': 'Status',
+};
+
+Map<String, String> filterGroupLabels = {
+  'name': 'Name',
+};
+
+Map<String, String> filterEmployeeConditions = {
+  'is': 'Is',
+  'isNot': 'Is not',
+  'startsWith': 'Starts with',
+  'endsWith': 'Ends with',
+  'contains': 'Contains',
+  'doesNotContain': 'Does not contain',
+};
+
+Map<String, String> getFilterWithLabel(String label) {
+  switch (label){
+    case 'name':
+      return {
+        'is': 'Is',
+        'isNot': 'Is not',
+        'startsWith': 'Starts with',
+        'endsWith': 'Ends with',
+        'contains': 'Contains',
+        'doesNotContain': 'Does not contain',
+      };
+    case 'position':
+      return {
+        'is': 'Is',
+        'isNot': 'Is not',
+      };
+    case 'email':
+      return {
+        'is': 'Is',
+        'isNot': 'Is not',
+        'startsWith': 'Starts with',
+        'endsWith': 'Ends with',
+        'contains': 'Contains',
+        'doesNotContain': 'Does not contain',
+      };
+    case 'status':
+      return {
+        'is': 'Is',
+        'isNot': 'Is not',
+      };
+  }
+  return {};
+}

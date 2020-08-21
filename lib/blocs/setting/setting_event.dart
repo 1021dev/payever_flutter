@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/blocs/bloc.dart';
+import 'package:payever/commons/models/app_widget.dart';
 import 'package:payever/settings/models/models.dart';
 
 abstract class SettingScreenEvent extends Equatable {
@@ -184,3 +185,52 @@ class AddEmployeeToGroupEvent extends SettingScreenEvent {
 }
 
 class CancelSelectEmployeeEvent extends SettingScreenEvent {}
+
+class UpdateEmployeeSearchText extends SettingScreenEvent {
+  final String searchText;
+
+  UpdateEmployeeSearchText({
+    this.searchText,
+  });
+
+  List<Object> get props => [
+    this.searchText,
+  ];
+}
+
+class UpdateEmployeeFilterTypeEvent extends SettingScreenEvent {
+  final List<FilterItem> filterTypes;
+
+  UpdateEmployeeFilterTypeEvent({
+    this.filterTypes,
+  });
+
+  List<Object> get props => [
+    this.filterTypes,
+  ];
+}
+
+class UpdateGroupSearchText extends SettingScreenEvent {
+  final String searchText;
+
+  UpdateGroupSearchText({
+    this.searchText,
+  });
+
+  List<Object> get props => [
+    this.searchText,
+  ];
+}
+
+class UpdateGroupFilterTypeEvent extends SettingScreenEvent {
+  final List<FilterItem> filterTypes;
+
+  UpdateGroupFilterTypeEvent({
+    this.filterTypes,
+  });
+
+  List<Object> get props => [
+    this.filterTypes,
+  ];
+}
+

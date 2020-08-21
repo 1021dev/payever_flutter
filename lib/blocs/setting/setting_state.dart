@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:payever/commons/models/app_widget.dart';
 import 'package:payever/settings/models/models.dart';
 
 class SettingScreenState {
@@ -21,6 +22,11 @@ class SettingScreenState {
   final bool emailInvalid;
   final Group groupDetail;
   final bool isSelectingEmployee;
+  final List<FilterItem> filterEmployeeTypes;
+  final String searchEmployeeText;
+  final List<FilterItem> filterGroupTypes;
+  final String searchGroupText;
+  final bool isSearching;
 
   SettingScreenState({
     this.isLoading = false,
@@ -42,6 +48,11 @@ class SettingScreenState {
     this.emailInvalid = false,
     this.groupDetail,
     this.isSelectingEmployee = false,
+    this.filterEmployeeTypes = const [],
+    this.searchEmployeeText = '',
+    this.filterGroupTypes = const [],
+    this.searchGroupText = '',
+    this.isSearching = false,
   });
 
   List<Object> get props => [
@@ -63,6 +74,11 @@ class SettingScreenState {
     this.emailInvalid,
     this.groupDetail,
     this.isSelectingEmployee,
+    this.filterEmployeeTypes,
+    this.searchEmployeeText,
+    this.filterGroupTypes,
+    this.searchGroupText,
+    this.isSearching,
   ];
 
   SettingScreenState copyWith({
@@ -85,6 +101,11 @@ class SettingScreenState {
     bool emailInvalid,
     Group groupDetail,
     bool isSelectingEmployee,
+    List<FilterItem> filterEmployeeTypes,
+    String searchEmployeeText,
+    List<FilterItem> filterGroupTypes,
+    String searchGroupText,
+    bool isSearching,
   }) {
     return SettingScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -106,6 +127,11 @@ class SettingScreenState {
       emailInvalid: emailInvalid ?? this.emailInvalid,
       groupDetail: groupDetail ?? this.groupDetail,
       isSelectingEmployee: isSelectingEmployee ?? this.isSelectingEmployee,
+      filterEmployeeTypes: filterEmployeeTypes ?? this.filterEmployeeTypes,
+      searchEmployeeText: searchEmployeeText ?? this.searchEmployeeText,
+      filterGroupTypes: filterGroupTypes ?? this.filterGroupTypes,
+      searchGroupText: searchGroupText ?? this.searchGroupText,
+      isSearching: isSearching ?? this.isSearching,
     );
   }
 }

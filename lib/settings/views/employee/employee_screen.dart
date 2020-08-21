@@ -3,18 +3,29 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutter_tags/flutter_tags.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
+import 'package:payever/settings/models/models.dart';
 import 'package:payever/settings/views/employee/add_employee_screen.dart';
 import 'package:payever/settings/views/employee/add_group_screen.dart';
+import 'package:payever/settings/views/wallpaper/employee_filter_view.dart';
 import 'package:payever/settings/widgets/app_bar.dart';
 import 'package:payever/blocs/bloc.dart';
+import 'package:payever/transactions/views/sub_view/filter_range_content_view.dart';
 import 'package:payever/transactions/views/sub_view/search_text_content_view.dart';
+
+class TagItemModel {
+  String title;
+  String type;
+  TagItemModel({this.title = '', this.type});
+}
 
 class EmployeeScreen extends StatefulWidget {
   final GlobalStateModel globalStateModel;
@@ -33,6 +44,9 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
   bool _isPortrait;
   bool _isTablet;
   bool isEmployee = true;
+  final GlobalKey<TagsState> _tagStateKey = GlobalKey<TagsState>();
+  List<TagItemModel> _filterItems = [];
+  int _searchTagIndex = -1;
 
   List<String> employeeTableStatus = [];
   List<String> groupTableStatus = [];
@@ -110,6 +124,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
             ),
             MaterialButton(
               onPressed: () {
+                if (state.isSearching) return;
                 showSearchTextDialog(state);
               },
               minWidth: 20,
@@ -635,13 +650,90 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
     );
   }
 
+  Widget _filterTagsView(SettingScreenState state) {
+    return Container(
+      width: Measurements.width,
+      padding: EdgeInsets.only(
+        left: 16, right: 16, top: 8, bottom: 8,
+      ),
+      child: Tags(
+        key: _tagStateKey,
+        itemCount: _filterItems.length,
+        alignment: WrapAlignment.start,
+        spacing: 4,
+        runSpacing: 8,
+        itemBuilder: (int index) {
+          return ItemTags(
+            key: Key('filterItem$index'),
+            index: index,
+            title: _filterItems[index].title,
+            color: Colors.white12,
+            activeColor: Colors.white12,
+            textActiveColor: Colors.white,
+            textColor: Colors.white,
+            elevation: 0,
+            padding: EdgeInsets.only(
+              left: 16, top: 8, bottom: 8, right: 16,
+            ),
+            removeButton: ItemTagsRemoveButton(
+                backgroundColor: Colors.transparent,
+                onRemoved: () {
+                  if (index == _searchTagIndex) {
+                    _searchTagIndex = -1;
+                    isEmployee ? widget.setScreenBloc.add(
+                        UpdateEmployeeSearchText(searchText: '')
+                    ): widget.setScreenBloc.add(UpdateGroupSearchText(searchText: ''));
+                  } else {
+                    List<FilterItem> filterTypes = [];
+                    filterTypes.addAll(isEmployee ? state.filterEmployeeTypes: state.filterGroupTypes);
+                    filterTypes.removeAt(index);
+                    isEmployee ? widget.setScreenBloc.add(
+                        UpdateEmployeeFilterTypeEvent(filterTypes: filterTypes)
+                    ): widget.setScreenBloc.add(UpdateGroupFilterTypeEvent(filterTypes: filterTypes));
+                  }
+                  return true;
+                }
+            ),
+          );
+        },
+      ),
+    );
+  }
+
   Widget _getBody(SettingScreenState state) {
+    _filterItems = [];
+    if (isEmployee) {
+      if (state.filterEmployeeTypes.length > 0) {
+        for (int i = 0; i < state.filterEmployeeTypes.length; i++) {
+          String filterString = '${filterEmployeeLabels[state.filterEmployeeTypes[i].type]} ${filterEmployeeConditions[state.filterEmployeeTypes[i].condition]}: ${state.filterEmployeeTypes[i].disPlayName}';
+          TagItemModel item = TagItemModel(title: filterString, type: state.filterEmployeeTypes[i].type);
+          _filterItems.add(item);
+        }
+      }
+      if (state.searchEmployeeText.length > 0) {
+        _filterItems.add(TagItemModel(title: 'Search is: ${state.searchEmployeeText}', type: null));
+        _searchTagIndex = _filterItems.length - 1;
+      }
+    } else {
+      if (state.filterGroupTypes.length > 0) {
+        for (int i = 0; i < state.filterGroupTypes.length; i++) {
+          String filterString = '${filterGroupLabels[state.filterGroupTypes[i].type]} ${filterEmployeeConditions[state.filterGroupTypes[i].condition]}: ${state.filterGroupTypes[i].disPlayName}';
+          TagItemModel item = TagItemModel(title: filterString, type: state.filterGroupTypes[i].type);
+          _filterItems.add(item);
+        }
+      }
+      if (state.searchGroupText.length > 0) {
+        _filterItems.add(TagItemModel(title: 'Search is: ${state.searchGroupText}', type: null));
+        _searchTagIndex = _filterItems.length - 1;
+      }
+    }
     return Container(
       child: Column(
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           _secondAppbar(state),
+          _filterTagsView(state),
           state.employees == null
               ? Container()
               : Expanded(
@@ -668,24 +760,79 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
     );
   }
 
+  void showMeDialog(BuildContext context, String filterType, SettingScreenState state) {
+    String filterName = filterEmployeeLabels[filterType];
+    debugPrint('FilterTypeName => $filterType');
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+              'Filter by: $filterName',
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+            ),
+            content: EmployeeFilterView(
+                type: filterType,
+                onSelected: (FilterItem val) {
+                  Navigator.pop(context);
+                  List<FilterItem> filterTypes = [];
+                  filterTypes.addAll(isEmployee ? state.filterEmployeeTypes: state.filterGroupTypes);
+                  if (val != null) {
+                    if (filterTypes.length > 0) {
+                      int isExist = filterTypes.indexWhere((element) => element.type == val.type);
+                      if (isExist > -1) {
+                        filterTypes[isExist] = val;
+                      } else {
+                        filterTypes.add(val);
+                      }
+                    } else {
+                      filterTypes.add(val);
+                    }
+                  } else {
+                    if (filterTypes.length > 0) {
+                      int isExist = filterTypes.indexWhere((element) => element.type == val.type);
+                      if (isExist != null) {
+                        filterTypes.removeAt(isExist);
+                      }
+                    }
+                  }
+                  isEmployee ? widget.setScreenBloc.add(
+                      UpdateEmployeeFilterTypeEvent(filterTypes: filterTypes)
+                  ): widget.setScreenBloc.add(UpdateGroupFilterTypeEvent(filterTypes: filterTypes));
+                }
+            ),
+          );
+        });
+  }
   List<MenuItem> appBarEmployeePopUpActions(
       BuildContext context, SettingScreenState state) {
     return [
       MenuItem(
         title: 'Name',
-        onTap: () async {},
+        onTap: () {
+          showMeDialog(context, 'name', state);
+        },
       ),
       MenuItem(
         title: 'Position',
-        onTap: () async {},
+        onTap: () {
+          showMeDialog(context, 'position', state);
+        },
       ),
       MenuItem(
         title: 'E-mail',
-        onTap: () {},
+        onTap: () {
+          showMeDialog(context, 'email', state);
+        },
       ),
       MenuItem(
         title: 'Status',
-        onTap: () {},
+        onTap: () {
+          showMeDialog(context, 'status', state);
+        },
       ),
     ];
   }
@@ -695,7 +842,9 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
     return [
       MenuItem(
         title: 'Name',
-        onTap: () async {},
+        onTap: () {
+          showMeDialog(context, 'name', state);
+        },
       ),
     ];
   }
@@ -834,9 +983,14 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
             borderRadius: BorderRadius.all(Radius.circular(10)),
           ),
           content: SearchTextContentView(
-            searchText: '',
+            searchText: isEmployee ? state.searchEmployeeText : state.searchGroupText,
             onSelected: (value) {
               Navigator.pop(context);
+              isEmployee ? widget.setScreenBloc.add(
+                  UpdateEmployeeSearchText(searchText: value)
+              ): widget.setScreenBloc.add(
+                  UpdateGroupSearchText(searchText: value)
+              );
             },
           ),
         );
