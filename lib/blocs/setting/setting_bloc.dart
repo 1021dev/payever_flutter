@@ -64,7 +64,7 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
     } else if (event is CreateEmployeeEvent) {
       yield* createEmployee(event.body, event.email);
     } else if (event is UpdateEmployeeEvent) {
-      yield* updateEmployee(event.employeeId, event.body);
+      yield* updateEmployee(event.employeeId, event.body, event.addGroups, event.deleteGroups);
     } else if (event is ClearEmailInvalidEvent) {
       yield state.copyWith(emailInvalid: false);
     } else if (event is DeleteEmployeeEvent) {
@@ -72,7 +72,7 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
     } else if (event is CreateGroupEvent) {
       yield* createGroup(event.body, event.groupName);
     } else if (event is UpdateGroupEvent) {
-      yield* updateGroup(event.groupId, event.body, event.groupName);
+      yield* updateGroup(event.groupId, event.body, event.groupName, event.addEmployees, event.deleteEmployees);
     } else if (event is DeleteGroupEvent) {
       yield* deleteGroups();
     } else if (event is GetGroupDetailEvent) {
@@ -295,7 +295,7 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
     yield state.copyWith(groupList: groupListModels);
   }
 
-  Stream<SettingScreenState> createEmployee( Map<String, dynamic> body, String email) async* {
+  Stream<SettingScreenState> createEmployee( Map<String, dynamic> body, String email,) async* {
     yield state.copyWith(isUpdating: true, emailInvalid: false);
     dynamic emailCheck = await api.getEmailCount(token, state.business, email);
     if (emailCheck is num) {
@@ -311,9 +311,20 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
     }
   }
 
-  Stream<SettingScreenState> updateEmployee(String employeeId, Map<String, dynamic> body) async* {
+  Stream<SettingScreenState> updateEmployee(String employeeId, Map<String, dynamic> body, List<String> added, List<String> deleted) async* {
     yield state.copyWith(isUpdating: true);
     dynamic response = await api.updateEmployee(token, state.business, employeeId, body);
+    if (added.length > 0) {
+      for(int i = 0; i < added.length; i++) {
+        yield* addEmployeeToGroup([employeeId], added[i]);
+      }
+    }
+    if (deleted.length > 0) {
+      for(int i = 0; i < deleted.length; i++) {
+        yield* deleteEmployeeFromGroup([employeeId], deleted[i]);
+      }
+    }
+
     yield state.copyWith(isUpdating: false);
     yield SettingScreenUpdateSuccess(business: state.business);
   }
@@ -348,7 +359,7 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
     }
   }
 
-  Stream<SettingScreenState> updateGroup(String groupId, Map<String, dynamic> body, String groupName) async* {
+  Stream<SettingScreenState> updateGroup(String groupId, Map<String, dynamic> body, String groupName, List<String> added, List<String> deleted) async* {
     yield state.copyWith(isUpdating: true);
     if (groupName != null) {
       dynamic nameCheck = await api.getGroupNameCount(
@@ -356,6 +367,14 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
       if (nameCheck is num) {
         if (nameCheck == 0) {
           dynamic response = await api.updateGroup(token, state.business, groupId, body);
+          print('added => $added');
+          print('deleted => $deleted');
+          if (added.length > 0) {
+            yield* addEmployeeToGroup(added, groupId);
+          }
+          if (deleted.length > 0) {
+            yield* deleteEmployeeFromGroup(deleted, groupId);
+          }
           yield state.copyWith(isUpdating: false);
           yield SettingScreenUpdateSuccess(business: state.business);
         } else {
@@ -366,6 +385,14 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
       }
     } else {
       dynamic response = await api.updateGroup(token, state.business, groupId, body);
+      print('added => $added');
+      print('deleted => $deleted');
+      if (added.length > 0) {
+        yield* addEmployeeToGroup(added, groupId);
+      }
+      if (deleted.length > 0) {
+        yield* deleteEmployeeFromGroup(deleted, groupId);
+      }
       yield state.copyWith(isUpdating: false);
       yield SettingScreenUpdateSuccess(business: state.business);
     }
@@ -396,13 +423,13 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
     }
   }
 
-  Stream<SettingScreenState> addEmployeeToGroup(List<String> employees) async* {
-    dynamic response = await api.addEmployeeToGroup(token, state.business, state.groupDetail.id, employees);
+  Stream<SettingScreenState> addEmployeeToGroup(List<String> employees, String groupId) async* {
+    dynamic response = await api.addEmployeeToGroup(token, state.business, groupId, employees);
     yield state.copyWith(isLoading: false);
   }
 
-  Stream<SettingScreenState> deleteEmployeeFromGroup(List<String> employees) async* {
-    dynamic response = await api.deleteEmployeeFromGroup(token, state.business, state.groupDetail.id, employees);
+  Stream<SettingScreenState> deleteEmployeeFromGroup(List<String> employees, String groupId) async* {
+    dynamic response = await api.deleteEmployeeFromGroup(token, state.business, groupId, employees);
     yield state.copyWith(isLoading: false);
   }
 

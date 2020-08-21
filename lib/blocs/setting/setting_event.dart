@@ -133,9 +133,8 @@ class SelectAllGroupEvent extends SettingScreenEvent {
 class CreateEmployeeEvent extends SettingScreenEvent {
   final Map<String, dynamic> body;
   final String email;
-  final List<String> groups;
 
-  CreateEmployeeEvent({this.body, this.email, this.groups = const []});
+  CreateEmployeeEvent({this.body, this.email});
 }
 
 class UpdateEmployeeEvent extends SettingScreenEvent {
@@ -153,9 +152,8 @@ class DeleteEmployeeEvent extends SettingScreenEvent {}
 class CreateGroupEvent extends SettingScreenEvent {
   final Map<String, dynamic> body;
   final String groupName;
-  final List<String> employees;
 
-  CreateGroupEvent({this.body, this.groupName, this.employees = const []});
+  CreateGroupEvent({this.body, this.groupName});
 }
 
 class UpdateGroupEvent extends SettingScreenEvent {

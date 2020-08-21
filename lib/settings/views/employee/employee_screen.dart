@@ -130,7 +130,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
               ),
               color: Colors.black87,
               itemBuilder: (BuildContext context) {
-                return appBarPopUpActions(context, state).map((MenuItem item) {
+                return (isEmployee ? appBarEmployeePopUpActions(context, state): appBarGroupPopUpActions(context, state)).map((MenuItem item) {
                   return PopupMenuItem<MenuItem>(
                     value: item,
                     child: Text(
@@ -668,7 +668,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
     );
   }
 
-  List<MenuItem> appBarPopUpActions(
+  List<MenuItem> appBarEmployeePopUpActions(
       BuildContext context, SettingScreenState state) {
     return [
       MenuItem(
@@ -686,6 +686,16 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
       MenuItem(
         title: 'Status',
         onTap: () {},
+      ),
+    ];
+  }
+
+  List<MenuItem> appBarGroupPopUpActions(
+      BuildContext context, SettingScreenState state) {
+    return [
+      MenuItem(
+        title: 'Name',
+        onTap: () async {},
       ),
     ];
   }

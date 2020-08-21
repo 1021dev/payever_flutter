@@ -695,14 +695,32 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                                   });
                                   body['acls'] = aclsList;
                                   body['position'] = positionType;
-                                  List<String> groupList = [];
-                                  if (group.length > 0) {
-//                                    group.forEach((element) {
-//                                      groupList.add(element.id);
-//                                    });
-//                                    body['group'] = groupList;
-                                  }
-                                  widget.setScreenBloc.add(UpdateEmployeeEvent(employeeId: widget.employee.id, body: body));
+                                  List<String> added = [];
+                                  List<String> deleted = [];
+                                  List<Group> original = widget.employee.groups;
+                                  original.forEach((org) {
+                                    bool has = false;
+                                    group.forEach((element) {
+                                      if (org.id == element.id) {
+                                        has = true;
+                                      }
+                                    });
+                                    if (!has) {
+                                      deleted.add(org.id);
+                                    }
+                                  });
+                                  group.forEach((element) {
+                                    bool has = false;
+                                    original.forEach((org) {
+                                      if (org.id == element.id) {
+                                        has = true;
+                                      }
+                                    });
+                                    if (!has) {
+                                      added.add(element.id);
+                                    }
+                                  });
+                                  widget.setScreenBloc.add(UpdateEmployeeEvent(employeeId: widget.employee.id, body: body, addGroups: added, deleteGroups: deleted));
                                 } else {
                                   Map<String, dynamic> body = {};
                                   List<Map<String, dynamic>> aclsList = [];
@@ -712,8 +730,6 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                                   body['acls'] = aclsList;
                                   body['position'] = positionType;
                                   body['email'] = email;
-//                                  body['first_name'] = firstName;
-//                                  body['last_name'] = lastName;
                                   List<String> groupList = [];
                                   if (group.length > 0) {
                                     group.forEach((element) {
@@ -721,7 +737,7 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                                     });
                                     body['groups'] = groupList;
                                   }
-                                  widget.setScreenBloc.add(CreateEmployeeEvent(body: body, email: email));
+                                  widget.setScreenBloc.add(CreateEmployeeEvent(body: body, email: email,));
                                 }
                               }
                             },

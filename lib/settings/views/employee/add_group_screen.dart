@@ -40,7 +40,6 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
 
   Group group;
   String name;
-  List<Employee> employees = [];
   List<BusinessApps> businessApps = [];
   int selectedIndex = -1;
   List<Acl> acls = [];
@@ -67,7 +66,6 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
       widget.setScreenBloc.add(GetGroupDetailEvent(group: widget.group));
       group = widget.group;
       name = group.name;
-      employees = group.employees;
       acls = group.acls;
     }
     super.initState();
@@ -124,9 +122,6 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
       child: BlocBuilder<SettingScreenBloc, SettingScreenState>(
         bloc: widget.setScreenBloc,
         builder: (context, SettingScreenState state) {
-          if (state.groupDetail != null) {
-            employees = state.groupDetail.employees;
-          }
           return Center(
             child: Form(
               key: _formKey,
@@ -283,6 +278,7 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
                                   return;
                                 }
 
+
                                 if (widget.group != null) {
                                   Map<String, dynamic> body = {};
                                   List<Map<String, dynamic>> aclsList = [];
@@ -290,22 +286,37 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
                                     aclsList.add(element.toDictionary());
                                   });
                                   body['acls'] = aclsList;
-                                  List<String> groupList = [];
+                                  String groupName;
                                   if (name != widget.group.name) {
+                                    groupName = name;
                                     body['name'] = name;
                                   }
-                                  if (employees.length > 0) {
-                                    List<String> empList = [];
+                                  List<String> added = [];
+                                  List<String> deleted = [];
+                                  List<Employee> original = widget.group.employees;
+                                  original.forEach((org) {
+                                    bool has = false;
                                     state.groupDetail.employees.forEach((element) {
-                                      empList.add(element.id);
+                                      if (org.id == element.id) {
+                                        has = true;
+                                      }
                                     });
-                                    body['employees'] = empList;
-//                                    group.forEach((element) {
-//                                      groupList.add(element.id);
-//                                    });
-//                                    body['group'] = groupList;
-                                  }
-//                                  widget.setScreenBloc.add(UpdateEmployeeEvent(employeeId: widget.employee.id, body: body));
+                                    if (!has) {
+                                      deleted.add(org.id);
+                                    }
+                                  });
+                                  state.groupDetail.employees.forEach((element) {
+                                    bool has = false;
+                                    original.forEach((org) {
+                                      if (org.id == element.id) {
+                                        has = true;
+                                      }
+                                    });
+                                    if (!has) {
+                                      added.add(element.id);
+                                    }
+                                  });
+                                  widget.setScreenBloc.add(UpdateGroupEvent(groupId: widget.group.id, body: body, addEmployees: added, deleteEmployees: deleted, groupName: groupName));
                                 } else {
                                   Map<String, dynamic> body = {};
                                   List<Map<String, dynamic>> aclsList = [];
@@ -315,11 +326,14 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
                                   body['acls'] = aclsList;
                                   body['name'] = name;
 
-                                  List<String> employeeList = [];
-                                  if (employees.length > 0) {
+                                  List<String> employees = [];
+                                  if (state.employees.length > 0) {
+                                    state.employees.forEach((element) {
+                                      employees.add(element.id);
+                                    });
                                     body['employees'] = employees;
                                   }
-                                  widget.setScreenBloc.add(CreateEmployeeEvent(body: body));
+                                  widget.setScreenBloc.add(CreateGroupEvent(body: body, groupName: name));
                                 }
                               }
                             },
@@ -664,7 +678,7 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
                       ],
                     ),
                   ),
-                ]
+                ],
             ),
           ),
         );
@@ -699,8 +713,5 @@ class GroupSuggestService {
     });
     print(categoryTags.length);
     return categoryTags;
-//    return categoryTags
-//        .where((e) => e.name.toLowerCase().contains(query.toLowerCase()))
-//        .toList();
   }
 }
