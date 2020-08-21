@@ -11,12 +11,14 @@ import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
+import 'package:payever/settings/models/models.dart';
 
 class LegalEditorScreen extends StatefulWidget {
   final GlobalStateModel globalStateModel;
   final SettingScreenBloc setScreenBloc;
+  final String type;
 
-  LegalEditorScreen({this.setScreenBloc, this.globalStateModel});
+  LegalEditorScreen({this.setScreenBloc, this.globalStateModel, this.type});
 
   @override
   _LegalEditorScreenState createState() => _LegalEditorScreenState();
@@ -29,7 +31,7 @@ class _LegalEditorScreenState extends State<LegalEditorScreen> {
 
   @override
   void initState() {
-    widget.setScreenBloc.add(GetLegalDocumentEvent());
+    widget.setScreenBloc.add(GetLegalDocumentEvent(type: widget.type));
     activeBusiness =
         widget.globalStateModel.currentBusiness;
     super.initState();
@@ -57,6 +59,18 @@ class _LegalEditorScreenState extends State<LegalEditorScreen> {
       child: BlocBuilder<SettingScreenBloc, SettingScreenState>(
         bloc: widget.setScreenBloc,
         builder: (context, state) {
+          bool isLoading = true;
+          if (state.isLoading) {
+            isLoading = true;
+          }
+          if (state.legalDocument == null) {
+            isLoading = true;
+          } else {
+            if (state.legalDocument.type == widget.type) {
+              isLoading = false;
+            }
+          }
+
           return Scaffold(
             backgroundColor: Colors.black,
             resizeToAvoidBottomPadding: false,
@@ -65,7 +79,7 @@ class _LegalEditorScreenState extends State<LegalEditorScreen> {
               child: BackgroundBase(
                 true,
                 backgroudColor: Colors.white,
-                body: state.isLoading ? Center(
+                body: isLoading ? Center(
                   child: CircularProgressIndicator(),
                 ): HtmlEditor(
                   value: state.legalDocument != null ? state.legalDocument.content ?? '': '',
@@ -89,7 +103,7 @@ class _LegalEditorScreenState extends State<LegalEditorScreen> {
       title: Row(
         children: <Widget>[
           Text(
-            Language.getWidgetStrings('Legal'),
+            policiesScreenTitles[widget.type],
             style: TextStyle(
               color: Colors.white,
               fontSize: 16,
@@ -143,9 +157,9 @@ class _LegalEditorScreenState extends State<LegalEditorScreen> {
         'id': state.business,
       },
       'content': txt,
-      'type': 'legal'
+      'type': widget.type,
     };
-    widget.setScreenBloc.add(UpdateLegalDocumentEvent(content: body));
+    widget.setScreenBloc.add(UpdateLegalDocumentEvent(content: body, type: widget.type));
 
   }
 

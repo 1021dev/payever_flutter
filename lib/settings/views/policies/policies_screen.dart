@@ -101,7 +101,7 @@ class _PoliciesScreenState extends State<PoliciesScreen> {
           child: ListView.separated(
             physics: BouncingScrollPhysics(),
             shrinkWrap: true,
-            itemCount: policiesScreenTitles.length,
+            itemCount: policiesScreenTitles.keys.toList().length,
             itemBuilder: _itemBuilder,
             separatorBuilder: (context, index) {
               return Divider(
@@ -115,14 +115,15 @@ class _PoliciesScreenState extends State<PoliciesScreen> {
   }
 
   Widget _itemBuilder(BuildContext context, int index) {
+    String key = policiesScreenTitles.keys.toList()[index];
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Row(
         children: <Widget>[
-          Expanded(child: Text(policiesScreenTitles[index])),
+          Expanded(child: Text(policiesScreenTitles[key])),
           GestureDetector(
             onTap: () {
-              _onTileClicked(index);
+              _onTileClicked(key);
             },
             child: Container(
               padding: EdgeInsets.fromLTRB(12, 3, 12, 3),
@@ -144,20 +145,12 @@ class _PoliciesScreenState extends State<PoliciesScreen> {
     );
   }
 
-  void _onTileClicked(int index) {
-    Widget _target;
-    switch (index) {
-      case 0:
-        _target = LegalEditorScreen(
-          globalStateModel: widget.globalStateModel,
-          setScreenBloc: widget.setScreenBloc,
-        );
-        break;
-      default:
-        break;
-    }
-
-    if (_target == null) return;
+  void _onTileClicked(String key) {
+    Widget _target = LegalEditorScreen(
+      globalStateModel: widget.globalStateModel,
+      setScreenBloc: widget.setScreenBloc,
+      type: key,
+    );
 
     Navigator.push(
       context,
@@ -167,7 +160,5 @@ class _PoliciesScreenState extends State<PoliciesScreen> {
         duration: Duration(milliseconds: 50),
       ),
     );
-    debugPrint("You tapped on item $index");
   }
-
 }

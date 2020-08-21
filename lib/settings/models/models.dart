@@ -509,13 +509,13 @@ Map<String, String> getFilterWithLabel(String label) {
   return {};
 }
 
-List<String> policiesScreenTitles = [
-  'Legal',
-  'Disclaimer',
-  'Refund policy',
-  'Shipping policy',
-  'Privacy',
-];
+Map<String, String> policiesScreenTitles = {
+  'legal': 'Legal',
+  'disclaimer': 'Disclaimer',
+  'refund_policy': 'Refund policy',
+  'shipping_policy': 'Shipping policy',
+  'privacy': 'Privacy',
+};
 
 class LegalDocument {
   Business business;

@@ -111,9 +111,9 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
       yield state.copyWith(filterGroupTypes: event.filterTypes, isSearching: true);
       yield* getGroupWithFilter(state.searchGroupText, state.filterGroupTypes);
     } else if (event is GetLegalDocumentEvent) {
-      yield* getLegalDocument();
+      yield* getLegalDocument(event.type);
     } else if (event is UpdateLegalDocumentEvent) {
-      yield* updateLegalDocument(event.content);
+      yield* updateLegalDocument(event.content, event.type);
     }
   }
 
@@ -527,9 +527,9 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
     yield state.copyWith(isLoading: false);
   }
 
-  Stream<SettingScreenState> getLegalDocument() async* {
+  Stream<SettingScreenState> getLegalDocument(String type) async* {
     yield state.copyWith(isLoading: true);
-    dynamic response = await api.getLegalDocument(token, state.business);
+    dynamic response = await api.getLegalDocument(token, state.business, type);
     if (response is Map) {
       LegalDocument legalDocument = LegalDocument.fromMap(response);
       yield state.copyWith(isLoading: false, legalDocument: legalDocument);
@@ -538,9 +538,9 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
     }
   }
 
-  Stream<SettingScreenState> updateLegalDocument(Map<String, dynamic> body) async* {
+  Stream<SettingScreenState> updateLegalDocument(Map<String, dynamic> body, String type) async* {
     yield state.copyWith(isUpdating: true);
-    dynamic response = await api.updateLegalDocument(token, state.business, body);
+    dynamic response = await api.updateLegalDocument(token, state.business, body, type);
     if (response is DioError) {
       yield SettingScreenStateFailure(error: response.error);
     } else if (response is Map){
