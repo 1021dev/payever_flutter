@@ -238,7 +238,7 @@ class Group {
   String id;
   String name;
   String businessId;
-  List<String> employees = [];
+  List<Employee> employees = [];
   List<Acl> acls = [];
 
   Group.fromMap(dynamic obj) {
@@ -248,7 +248,7 @@ class Group {
     dynamic employeesObj = obj['employees'];
     if (employeesObj is List) {
       employeesObj.forEach((element) {
-        employees.add(element);
+        employees.add(Employee.fromMap(element));
       });
     }
     dynamic aclsObj = obj['acls'];

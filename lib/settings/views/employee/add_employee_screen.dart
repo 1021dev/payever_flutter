@@ -212,7 +212,9 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                             ),
                           ),
                           selectedSection == 0 ? SizedBox(height: 2,): Container(),
-                          selectedSection == 0 ? Container(
+                          selectedSection == 0
+                              ? ( widget.employee != null ?
+                          Container(
                             height: 64,
                             child: Row(
                               children: <Widget>[
@@ -226,9 +228,6 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                                       child: TextFormField(
                                         style: TextStyle(fontSize: 16),
                                         onChanged: (val) {
-                                          setState(() {
-                                            firstName = val;
-                                          });
                                         },
                                         initialValue: firstName ?? '',
                                         decoration: InputDecoration(
@@ -242,8 +241,7 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                                             borderSide: BorderSide(color: Colors.blue, width: 0.5),
                                           ),
                                         ),
-                                        readOnly: widget.employee != null,
-                                        keyboardType: TextInputType.text,
+                                        readOnly: true,
                                       ),
                                     ),
                                   ),
@@ -261,9 +259,6 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                                       child: TextFormField(
                                         style: TextStyle(fontSize: 16),
                                         onChanged: (val) {
-                                          setState(() {
-                                            lastName = val;
-                                          });
                                         },
                                         initialValue: lastName ?? '',
                                         decoration: InputDecoration(
@@ -277,15 +272,14 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                                             borderSide: BorderSide(color: Colors.blue, width: 0.5),
                                           ),
                                         ),
-                                        keyboardType: TextInputType.text,
-                                        readOnly: widget.employee != null,
+                                        readOnly: true,
                                       ),
                                     ),
                                   ),
                                 ),
                               ],
                             ),
-                          ): Container(),
+                          ): Container()) : Container(),
                           selectedSection == 0 ? SizedBox(height: 2,): Container(),
                           selectedSection == 0 ? Container(
                             height: 64,

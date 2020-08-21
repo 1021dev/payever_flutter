@@ -38,7 +38,7 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
 
   Group group;
   String name;
-  List<String> employees = [];
+  List<Employee> employees = [];
   List<BusinessApps> businessApps = [];
   int selectedIndex = -1;
   List<Acl> acls = [];
@@ -62,6 +62,7 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
     }
     print('businessApps => $businessApps');
     if (widget.group != null) {
+      widget.setScreenBloc.add(GetGroupDetailEvent(group: widget.group));
       group = widget.group;
       name = group.name;
       employees = group.employees;
@@ -114,14 +115,16 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
           Navigator.pop(context);
         } else if (state is SettingScreenStateFailure) {}
         if (state.emailInvalid) {
-          Fluttertoast.showToast(msg: 'Email address already exist!');
+          Fluttertoast.showToast(msg: 'Group name already exist!');
           widget.setScreenBloc.add(ClearEmailInvalidEvent());
         }
       },
       child: BlocBuilder<SettingScreenBloc, SettingScreenState>(
         bloc: widget.setScreenBloc,
         builder: (context, state) {
-
+          if (state.groupDetail != null) {
+            employees = state.groupDetail.employees;
+          }
           return Center(
             child: Form(
               key: _formKey,
@@ -167,7 +170,6 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
                                         ),
                                       ),
                                       keyboardType: TextInputType.emailAddress,
-                                      readOnly: widget.group != null,
                                     ),
                                   ),
                                   MaterialButton(
@@ -325,10 +327,11 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
       child: ListView.separated(
         shrinkWrap: false,
         itemBuilder: (context, index) {
+          Employee employee = employees[index];
           return Row(
             children: <Widget>[
               Expanded(
-                child: Text(employees[index]),
+                child: Text(employee.fullName ?? (employee.firstName ?? '')),
               ),
               MaterialButton(
                 onPressed: () {

@@ -2691,9 +2691,76 @@ class ApiService {
     }
   }
 
+  Future<dynamic> getGroupNameCount(String token, String businessId, String groupName) async {
+    try {
+      print('$TAG - getGroupNameCount()');
+      dynamic response = await _client.getTypeless(
+        '${Env.auth}/api/employees/$businessId/count?groupName=$groupName',
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<dynamic> getGroup(String token, String businessId, String groupId) async {
     try {
       print('$TAG - getEmployees()');
+      dynamic response = await _client.getTypeless(
+        '${Env.auth}/api/employee-groups/$businessId/$groupId',
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> createGroup(String token, String businessId, Map<String, dynamic> body) async {
+    try {
+      print('$TAG - createGroup() => $body');
+      dynamic response = await _client.postTypeLess(
+        '${Env.auth}/api/employee-groups/$businessId',
+        body: body,
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> updateGroup(String token, String businessId, String groupId, Map<String, dynamic> body) async {
+    try {
+      print('$TAG - updateGroup() => $body');
+      dynamic response = await _client.patchTypeless(
+        '${Env.auth}/api/employee-groups/$businessId/$groupId',
+        body: body,
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> deleteGroup(String token, String businessId, String groupId) async {
+    try {
+      print('$TAG - deleteGroup() ');
+      dynamic response = await _client.deleteTypeless(
+        '${Env.auth}/api/employee-groups/$businessId/$groupId',
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getGroupDetail(String token, String businessId, String groupId) async {
+    try {
+      print('$TAG - getGroupDetail() ');
       dynamic response = await _client.getTypeless(
         '${Env.auth}/api/employee-groups/$businessId/$groupId',
         headers: _getHeaders(token),

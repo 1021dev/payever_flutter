@@ -69,6 +69,14 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
       yield state.copyWith(emailInvalid: false);
     } else if (event is DeleteEmployeeEvent) {
       yield* deleteEmployees();
+    } else if (event is CreateGroupEvent) {
+      yield* createGroup(event.body, event.groupName);
+    } else if (event is UpdateGroupEvent) {
+      yield* updateGroup(event.groupId, event.body, event.groupName);
+    } else if (event is DeleteGroupEvent) {
+      yield* deleteGroups();
+    } else if (event is GetGroupDetailEvent) {
+      yield* getGroupDetail(event.group);
     }
   }
 
@@ -197,30 +205,27 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
 
   Stream<SettingScreenState> getEmployee() async* {
     List<Employee>employees = [];
-//    employees.addAll(state.employees);
+    List<EmployeeListModel> employeeListModels = [];
 
-//    if (employees == null || employees.isEmpty) {
-      employees = [];
-      List<EmployeeListModel> employeeListModels = [];
+    if (state.employees == null || state.employees.isEmpty) {
       yield state.copyWith(isLoading: true);
-      dynamic response = await api.getEmployees(token, state.business, {'limit' : '50', 'page': "1"});
-      if (response is DioError) {
-        yield SettingScreenStateFailure(error: response.error);
-      } else if (response is Map){
-        dynamic data = response['data'];
-        if (data is List) {
-          data.forEach((element) {
-            employees.add(Employee.fromMap(element));
-            employeeListModels.add(EmployeeListModel(employee: Employee.fromMap(element), isChecked: false));
-          });
-        }
-        yield state.copyWith(isLoading: false, employees: employees, employeeListModels: employeeListModels);
-      } else {
-        yield SettingScreenStateFailure(error: 'Get Employee failed');
-        yield state.copyWith(isLoading: false);
+    }
+    dynamic response = await api.getEmployees(token, state.business, {'limit' : '50', 'page': "1"});
+    if (response is DioError) {
+      yield SettingScreenStateFailure(error: response.error);
+    } else if (response is Map){
+      dynamic data = response['data'];
+      if (data is List) {
+        data.forEach((element) {
+          employees.add(Employee.fromMap(element));
+          employeeListModels.add(EmployeeListModel(employee: Employee.fromMap(element), isChecked: false));
+        });
       }
-//    }
-    add(GetGroupEvent());
+      yield state.copyWith(isLoading: false, employees: employees, employeeListModels: employeeListModels);
+    } else {
+      yield SettingScreenStateFailure(error: 'Get Employee failed');
+      yield state.copyWith(isLoading: false);
+    }
   }
 
   Stream<SettingScreenState> selectEmployee(EmployeeListModel model) async* {
@@ -242,29 +247,26 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
 
   Stream<SettingScreenState> getGroup() async* {
     List<Group> groups = [];
-//    groups.addAll(state.employeeGroups);
-
-//    if (groups == null || groups.isEmpty) {
-      groups = [];
-      List<GroupListModel> groupList = [];
+    List<GroupListModel> groupList = [];
+    if (state.employeeGroups == null || state.employeeGroups.isEmpty) {
       yield state.copyWith(isLoading: true);
-      dynamic response = await api.getGroups(token, state.business, {'limit' : '50', 'page': "1"});
-      if (response is DioError) {
-        yield SettingScreenStateFailure(error: response.error);
-      } else if (response is Map){
-        dynamic data = response['data'];
-        if (data is List) {
-          data.forEach((element) {
-            groups.add(Group.fromMap(element));
-            groupList.add(GroupListModel(group: Group.fromMap(element), isChecked: false));
-          });
-        }
-        yield state.copyWith(isLoading: false, employeeGroups: groups, groupList: groupList);
-      } else {
-        yield SettingScreenStateFailure(error: 'Get Group failed');
-        yield state.copyWith(isLoading: false);
+    }
+    dynamic response = await api.getGroups(token, state.business, {'limit' : '50', 'page': "1"});
+    if (response is DioError) {
+      yield SettingScreenStateFailure(error: response.error);
+    } else if (response is Map){
+      dynamic data = response['data'];
+      if (data is List) {
+        data.forEach((element) {
+          groups.add(Group.fromMap(element));
+          groupList.add(GroupListModel(group: Group.fromMap(element), isChecked: false));
+        });
       }
-//    }
+      yield state.copyWith(isLoading: false, employeeGroups: groups, groupList: groupList);
+    } else {
+      yield SettingScreenStateFailure(error: 'Get Group failed');
+      yield state.copyWith(isLoading: false);
+    }
   }
 
   Stream<SettingScreenState> selectGroup(GroupListModel model) async* {
@@ -308,7 +310,7 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
   }
 
   Stream<SettingScreenState> deleteEmployees() async* {
-    yield state.copyWith(isUpdating: true);
+    yield state.copyWith(isLoading: true);
     List<EmployeeListModel> employees = state.employeeListModels;
     List<EmployeeListModel> selected = employees.where((element) => element.isChecked).toList();
     if (selected.length > 0) {
@@ -317,7 +319,72 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
       }
     }
 
-    yield state.copyWith(isUpdating: false);
-    yield SettingScreenUpdateSuccess(business: state.business);
+    yield state.copyWith(isLoading: false);
+    add(GetEmployeesEvent());
   }
+
+  Stream<SettingScreenState> createGroup( Map<String, dynamic> body, String groupName) async* {
+    yield state.copyWith(isUpdating: true, emailInvalid: false);
+    dynamic nameCheck = await api.getGroupNameCount(token, state.business, groupName);
+    if (nameCheck is num) {
+      if (nameCheck == 0) {
+        dynamic response = await api.createGroup(token, state.business, body);
+        yield state.copyWith(isUpdating: false, emailInvalid: false);
+        yield SettingScreenUpdateSuccess(business: state.business);
+      } else {
+        yield state.copyWith(isUpdating: false, emailInvalid: true);
+      }
+    } else {
+      yield state.copyWith(isUpdating: false, emailInvalid: true);
+    }
+  }
+
+  Stream<SettingScreenState> updateGroup(String groupId, Map<String, dynamic> body, String groupName) async* {
+    yield state.copyWith(isUpdating: true);
+    if (groupName != null) {
+      dynamic nameCheck = await api.getGroupNameCount(
+          token, state.business, groupName);
+      if (nameCheck is num) {
+        if (nameCheck == 0) {
+          dynamic response = await api.updateGroup(token, state.business, groupId, body);
+          yield state.copyWith(isUpdating: false);
+          yield SettingScreenUpdateSuccess(business: state.business);
+        } else {
+          yield state.copyWith(isUpdating: false, emailInvalid: true);
+        }
+      } else {
+        yield state.copyWith(isUpdating: false, emailInvalid: true);
+      }
+    } else {
+      dynamic response = await api.updateGroup(token, state.business, groupId, body);
+      yield state.copyWith(isUpdating: false);
+      yield SettingScreenUpdateSuccess(business: state.business);
+    }
+  }
+
+  Stream<SettingScreenState> deleteGroups() async* {
+    yield state.copyWith(isLoading: true);
+    List<GroupListModel> groups = state.groupList;
+    List<GroupListModel> selected = groups.where((element) => element.isChecked).toList();
+    if (selected.length > 0) {
+      for(int i = 0; i < selected.length; i++) {
+        await api.deleteGroup(token, state.business, selected[i].group.id);
+      }
+    }
+
+    yield state.copyWith(isLoading: false);
+    add(GetGroupEvent());
+  }
+
+  Stream<SettingScreenState> getGroupDetail(Group group) async* {
+    yield state.copyWith(isLoading: true);
+    dynamic response = await api.getGroupDetail(token, state.business, group.id);
+    if (response is Map) {
+      Group groupDetail = Group.fromMap(response);
+      yield state.copyWith(groupDetail: groupDetail);
+    }
+    yield state.copyWith(isLoading: false);
+  }
+
+
 }

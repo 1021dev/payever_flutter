@@ -99,6 +99,8 @@ class _DashboardBusinessAppsViewState extends State<DashboardBusinessAppsView> {
             if (businessApps != null) Expanded(
               child: GridView.count(
                 crossAxisCount: 4,
+                mainAxisSpacing: 16,
+                shrinkWrap: true,
                 children: businessApps.map((e) => BusinessAppCell(
                   onTap: (){
                     widget.onTapWidget(e);

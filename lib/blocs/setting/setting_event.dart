@@ -148,6 +148,22 @@ class DeleteEmployeeEvent extends SettingScreenEvent {}
 
 class CreateGroupEvent extends SettingScreenEvent {
   final Map<String, dynamic> body;
+  final String groupName;
 
-  CreateGroupEvent({this.body});
+  CreateGroupEvent({this.body, this.groupName,});
+}
+
+class UpdateGroupEvent extends SettingScreenEvent {
+  final Map<String, dynamic> body;
+  final String groupId;
+  final String groupName;
+
+  UpdateGroupEvent({this.groupId, this.body, this.groupName});
+}
+
+class DeleteGroupEvent extends SettingScreenEvent {}
+
+class GetGroupDetailEvent extends SettingScreenEvent {
+  final Group group;
+  GetGroupDetailEvent({this.group});
 }

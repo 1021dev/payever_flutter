@@ -6,7 +6,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/commons/utils/common_utils.dart';
+import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
+import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/settings/views/employee/add_employee_screen.dart';
 import 'package:payever/settings/views/employee/add_group_screen.dart';
@@ -41,6 +43,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
     employeeTableStatus.addAll(['Position', 'Mail', 'Status']);
     groupTableStatus.addAll(['Employees']);
     widget.setScreenBloc.add(GetEmployeesEvent());
+    widget.setScreenBloc.add(GetGroupEvent());
   }
 
   @override
@@ -65,6 +68,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
           Fluttertoast.showToast(msg: state.error);
         } else if (state is SettingScreenUpdateSuccess) {
           widget.setScreenBloc.add(GetEmployeesEvent());
+          widget.setScreenBloc.add(GetGroupEvent());
         }
       },
       child: BlocBuilder<SettingScreenBloc, SettingScreenState>(
@@ -186,6 +190,9 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                 child: Text(
                   isEmployee ? '${state.employees.length} ${state.employees.length > 1 ? 'members' : 'member'}'
                       : '${state.groupList.length} ${state.groupList.length > 1 ? 'groups' : 'group'}',
+                  style: TextStyle(
+                    fontSize: 12,
+                  ),
                 ),
               ),
             ),
@@ -208,6 +215,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                       onPressed: () {
                         setState(() {
                           isEmployee = true;
+                          widget.setScreenBloc.add(GetEmployeesEvent());
                         });
                       },
                       color: isEmployee ? Color(0xFF2a2a2a): Color(0xFF1F1F1F),
@@ -232,6 +240,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                       onPressed: () {
                         setState(() {
                           isEmployee = false;
+                          widget.setScreenBloc.add(GetGroupEvent());
                         });
                       },
                       shape: RoundedRectangleBorder(
@@ -742,7 +751,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
       MenuItem(
         title: 'Delete employees',
         onTap: () {
-
+          showDeleteConfirmDialog();
         },
       ),
     ];
@@ -824,4 +833,97 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
       },
     );
   }
+
+  showDeleteConfirmDialog() {
+    showCupertinoDialog(
+      context: context,
+      builder: (builder) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: Center(
+            child: Wrap(
+                children: <Widget>[
+                  BlurEffectView(
+                    color: Color.fromRGBO(50, 50, 50, 0.4),
+                    padding: EdgeInsets.all(16),
+                    child: Column(
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(top: 16),
+                        ),
+                        SvgPicture.asset('assets/images/info.svg'),
+                        Padding(
+                          padding: EdgeInsets.only(top: 16),
+                        ),
+                        Text(
+                          Language.getPosStrings('The selected employees will be deleted?'),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w300,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 16),
+                        ),
+                        Text(
+                          Language.getPosStrings('Do you want to proceed?'),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 16),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            MaterialButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              height: 24,
+                              elevation: 0,
+                              minWidth: 0,
+                              color: Colors.white10,
+                              child: Text(
+                                Language.getSettingsStrings('actions.no'),
+                              ),
+                            ),
+                            MaterialButton(
+                              onPressed: () {
+                                widget.setScreenBloc.add(DeleteEmployeeEvent());
+                                Navigator.pop(context);
+                              },
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              height: 24,
+                              elevation: 0,
+                              minWidth: 0,
+                              color: Colors.white10,
+                              child: Text(
+                                Language.getSettingsStrings('actions.yes'),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ]
+            ),
+          ),
+        );
+      },
+    );
+  }
+
 }
