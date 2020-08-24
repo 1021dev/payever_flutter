@@ -548,3 +548,71 @@ Map<String, String> generalScreenTitles = {
   'shipping_address': 'Shipping address',
   'password': 'Password',
 };
+
+class ShippingAddress {
+  String apartment;
+  String city;
+  String country;
+  String street;
+  String zipCode;
+  String id;
+
+  ShippingAddress();
+
+  ShippingAddress.fromMap(dynamic obj) {
+    apartment = obj['apartment'];
+    city = obj['city'];
+    country = obj['country'];
+    street = obj['street'];
+    zipCode = obj['zipCode'];
+    id = obj['_id'];
+  }
+
+  Map<String, dynamic> toDictionary() {
+    Map<String, dynamic> map = {};
+    map['apartment'] = apartment;
+    map['city'] = city;
+    map['country'] = country;
+    map['street'] = street;
+    map['zipCode'] = zipCode;
+    map['_id'] = id;
+    return map;
+  }
+
+  String getAddressLine() {
+    String addressLine = '';
+    if (street != null && street != '') {
+      addressLine = street;
+    }
+    if (apartment != null && apartment != '') {
+      if (addressLine != '') {
+        addressLine = apartment;
+      } else {
+        addressLine = '$addressLine, $apartment';
+      }
+    }
+    if (zipCode != null && zipCode != '') {
+      if (addressLine != '') {
+        addressLine = zipCode;
+      } else {
+        addressLine = '$addressLine, $zipCode';
+      }
+    }
+    if (city != null && city != '') {
+      if (addressLine != '') {
+        addressLine = city;
+      } else {
+        addressLine = '$addressLine, $city';
+      }
+    }
+    if (country != null && country != '') {
+      if (addressLine != '') {
+        addressLine = country;
+      } else {
+        addressLine = '$addressLine, $country';
+      }
+    }
+    return addressLine;
+  }
+
+}

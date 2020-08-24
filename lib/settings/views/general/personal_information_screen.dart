@@ -85,7 +85,7 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
   get _body {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: Appbar('Contact'),
+      appBar: Appbar('Personal Information'),
       body: SafeArea(
         child: BackgroundBase(
           true,

@@ -1,3 +1,5 @@
+import 'package:payever/settings/models/models.dart';
+
 import '../utils/utils.dart';
 
 class User {
@@ -14,7 +16,7 @@ class User {
   String salutation;
   String updatedAt;
   String id;
-  List shippingAddresses;
+  List<ShippingAddress> shippingAddresses = [];
 
   User(
       this.createdAt,
@@ -50,7 +52,7 @@ class User {
     dynamic shippingAddressesObj = obj['shippingAddresses'];
     if (shippingAddressesObj is List) {
       for (var value in shippingAddressesObj) {
-        shippingAddresses.add(value);
+        shippingAddresses.add(ShippingAddress.fromMap(value));
       }
     }
   }
