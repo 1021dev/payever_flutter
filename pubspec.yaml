@@ -45,6 +45,7 @@ dependencies:
   blurrycontainer: ^0.0.1
   flutter_inner_drawer: ^0.5.7+1
 
+  bloc: ^4.0.0
   flutter_bloc: ^4.0.0
   equatable: ^1.2.2
   flutter_tags: ^0.4.8+2

@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/payever_bloc_delegate.dart';
 import 'package:payever/commons/commons.dart';
+import 'package:payever/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 
@@ -60,16 +62,23 @@ class _MyAppState extends State<MyApp> {
             create: (BuildContext context) => PosCartStateModel()),
         ChangeNotifierProvider<ProductStateModel>(
             create: (BuildContext context) => ProductStateModel()),
+        BlocProvider<ChangeThemeBloc>(
+          create: (BuildContext context) => ChangeThemeBloc(),
+        ),
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'payever',
-        theme: _buildPayeverTheme(),
-        routes: {
+      child: BlocBuilder<ChangeThemeBloc, ChangeThemeState>(
+        builder: (context, state) {
+          print('Theme Settings ${state.themeData}');
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'payever',
+            darkTheme: darkTheme,
+            theme: state.themeData,
+            home: _loadCredentials.value
+                ? Center(child: CircularProgressIndicator())
+                : _haveCredentials ? DashboardScreenInit(refresh: false,) : LoginScreen(),
+          );
         },
-        home: _loadCredentials.value
-            ? Center(child: CircularProgressIndicator())
-            : _haveCredentials ? DashboardScreenInit(refresh: false,) : LoginScreen(),
       ),
     );
   }

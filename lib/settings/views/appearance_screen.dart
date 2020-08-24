@@ -1,18 +1,14 @@
-import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:payever/commons/models/business.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/settings/widgets/app_bar.dart';
 import 'package:payever/blocs/bloc.dart';
-import 'package:payever/settings/widgets/save_button.dart';
 import 'package:provider/provider.dart';
 
 class AppearanceScreen extends StatefulWidget {
@@ -27,6 +23,7 @@ class AppearanceScreen extends StatefulWidget {
 }
 
 class _AppearanceScreenState extends State<AppearanceScreen> {
+  GlobalStateModel globalStateModel;
   bool _isPortrait;
   bool _isTablet;
   Business activeBusiness;
@@ -58,6 +55,7 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
 
   @override
   Widget build(BuildContext context) {
+    globalStateModel = Provider.of<GlobalStateModel>(context);
     _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
     Measurements.height = (_isPortrait
         ? MediaQuery.of(context).size.height
@@ -71,6 +69,7 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
       listener: (BuildContext context, SettingScreenState state) async {
         if (state is SettingScreenStateFailure) {
           Fluttertoast.showToast(msg: state.error);
+        } else if (state is SettingScreenUpdateSuccess) {
         }
       },
       child: BlocBuilder<SettingScreenBloc, SettingScreenState>(
@@ -292,7 +291,7 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
     );
   }
 
-  _updateThemeSetting() {
+  _updateThemeSetting() async {
     widget.setScreenBloc.add(BusinessUpdateEvent({
       'currentWallpaper': {
         'auto': automatic,
@@ -302,5 +301,11 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
       }
     }));
     Provider.of<GlobalStateModel>(context,listen: false).setTheme(theme);
+
+    if (theme == 'dark') {
+      changeThemeBloc.onDarkThemeChange();
+    } else {
+      changeThemeBloc.onLightThemeChange();
+    }
   }
 }

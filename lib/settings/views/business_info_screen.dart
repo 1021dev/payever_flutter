@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
@@ -31,15 +32,19 @@ class _BusinessInfoScreenState extends State<BusinessInfoScreen> {
   final _formKey = GlobalKey<FormState>();
 
   final TextEditingController myController = TextEditingController();
+  String blobName = '';
 
   @override
   void initState() {
     super.initState();
     myController.text = widget.globalStateModel.currentBusiness.name;
+    blobName = widget.globalStateModel.currentBusiness.logo;
+
   }
 
   @override
   void dispose() {
+    myController.dispose();
     super.dispose();
   }
 
@@ -58,6 +63,8 @@ class _BusinessInfoScreenState extends State<BusinessInfoScreen> {
       listener: (BuildContext context, SettingScreenState state) async {
         if (state is SettingScreenStateFailure) {
           Fluttertoast.showToast(msg: state.error);
+        } else if (state is SettingScreenUpdateSuccess) {
+          Navigator.pop(context);
         }
       },
       child: BlocBuilder<SettingScreenBloc, SettingScreenState>(
@@ -85,7 +92,11 @@ class _BusinessInfoScreenState extends State<BusinessInfoScreen> {
   }
 
   Widget _getBody(SettingScreenState state) {
-    String blobName = state.blobName;
+    if (state.blobName != null && state.blobName != '') {
+      setState(() {
+        blobName = state.blobName;
+      });
+    }
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -163,7 +174,36 @@ class _BusinessInfoScreenState extends State<BusinessInfoScreen> {
                               ],
                             ),
                             onTap: () {
-                              getImage();
+                              showCupertinoModalPopup(
+                                context: context,
+                                builder: (BuildContext context) => CupertinoActionSheet(
+                                  title: const Text('Choose Photo'),
+                                  message: const Text('Your options are '),
+                                  actions: <Widget>[
+                                    CupertinoActionSheetAction(
+                                      child: const Text('Take a Picture'),
+                                      onPressed: () {
+                                        Navigator.pop(context, 'Take a Picture');
+                                        getImage(0);
+                                      },
+                                    ),
+                                    CupertinoActionSheetAction(
+                                      child: const Text('Camera Roll'),
+                                      onPressed: () {
+                                        Navigator.pop(context, 'Camera Roll');
+                                        getImage(1);
+                                      },
+                                    )
+                                  ],
+                                  cancelButton: CupertinoActionSheetAction(
+                                    child: const Text('Cancel'),
+                                    isDefaultAction: true,
+                                    onPressed: () {
+                                      Navigator.pop(context, 'Cancel');
+                                    },
+                                  ),
+                                ),
+                              );
                             },
                           ),
                         ),
@@ -171,10 +211,11 @@ class _BusinessInfoScreenState extends State<BusinessInfoScreen> {
                       Expanded(
                         child: Container(
                           decoration: BoxDecoration(
-                              color: Colors.grey.withOpacity(0.3),
-                              shape: BoxShape.rectangle,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8.0))),
+                            color: Colors.grey.withOpacity(0.3),
+                            shape: BoxShape.rectangle,
+                            borderRadius: BorderRadius.all(Radius.circular(8.0),
+                            ),
+                          ),
                           child: Padding(
                             padding: const EdgeInsets.all(10),
                             child: TextFormField(
@@ -240,11 +281,50 @@ class _BusinessInfoScreenState extends State<BusinessInfoScreen> {
     );
   }
 
-  Future getImage() async {
-    PickedFile img = await ImagePicker().getImage(source: ImageSource.gallery);
-    if (img.path != null) {
-      print("_image: $img");
-      widget.setScreenBloc.add(UploadBusinessImage(file: File(img.path),));
+  Future getImage(int type) async {
+    ImagePicker imagePicker = ImagePicker();
+    var image = await imagePicker.getImage(
+      source: type == 1 ? ImageSource.gallery : ImageSource.camera,
+    );
+    if (image != null) {
+      await _cropImage(File(image.path));
     }
+  }
+
+  Future<Null> _cropImage(File imageFile) async {
+    File croppedFile = await ImageCropper.cropImage(
+        sourcePath: imageFile.path,
+        aspectRatioPresets: Platform.isAndroid
+            ? [
+          CropAspectRatioPreset.square,
+          CropAspectRatioPreset.ratio3x2,
+          CropAspectRatioPreset.original,
+          CropAspectRatioPreset.ratio4x3,
+          CropAspectRatioPreset.ratio16x9
+        ]
+            : [
+          CropAspectRatioPreset.original,
+          CropAspectRatioPreset.square,
+          CropAspectRatioPreset.ratio3x2,
+          CropAspectRatioPreset.ratio4x3,
+          CropAspectRatioPreset.ratio5x3,
+          CropAspectRatioPreset.ratio5x4,
+          CropAspectRatioPreset.ratio7x5,
+          CropAspectRatioPreset.ratio16x9
+        ],
+        androidUiSettings: AndroidUiSettings(
+            toolbarTitle: 'Cropper',
+            toolbarColor: Colors.deepOrange,
+            toolbarWidgetColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: false),
+        iosUiSettings: IOSUiSettings(
+          title: 'Cropper',
+        ));
+
+    if (croppedFile != null) {
+      widget.setScreenBloc.add(UploadBusinessImage(file: croppedFile,));
+    }
+
   }
 }

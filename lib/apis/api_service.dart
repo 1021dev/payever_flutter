@@ -149,6 +149,23 @@ class ApiService {
     }
   }
 
+  Future<dynamic> getBusiness(String token, String id) async {
+    try {
+      print('$TAG - getBusiness($id)');
+      dynamic response = await _client.getTypeless(
+          '$businessUrl/$id',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<dynamic> getBusinessApps(String businessId, String accessToken) async {
     try {
       print('$TAG - getBusinessApps()');

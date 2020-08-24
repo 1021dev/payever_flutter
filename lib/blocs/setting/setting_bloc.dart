@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/blocs/bloc.dart';
@@ -31,9 +32,8 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
         yield state.copyWith(
           business: event.business,
         );
-      } else {
-
       }
+      yield* getBusiness(event.business);
     } else if (event is FetchWallpaperEvent) {
       yield* fetchWallpapers();
     } else if (event is UpdateWallpaperEvent) {
@@ -127,6 +127,18 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
     } else if (event is UpdatePasswordEvent) {
       yield* updatePassword(event.newPassword, event.oldPassword);
     }
+  }
+
+  Stream<SettingScreenState> getBusiness(String id) async* {
+    yield state.copyWith(isLoading: true);
+
+    dynamic response = await api.getBusiness(token, id);
+
+    Business business = Business.map(response);
+
+    dashboardScreenBloc.state.copyWith(activeBusiness: business);
+    globalStateModel.setCurrentBusiness(business, notify: true);
+    yield state.copyWith(isLoading: false);
   }
 
   Stream<SettingScreenState> uploadBusinessImage(File file) async* {

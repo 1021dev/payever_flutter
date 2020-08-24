@@ -101,8 +101,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       Language.language = p.getString(GlobalUtils.LANGUAGE);
       Language(context);
     });
-    Locale myLocale = Localizations.localeOf(context);
-    print('Language - ${myLocale.languageCode}');
     _isPortrait =
         Orientation.portrait == MediaQuery.of(context).orientation;
     Measurements.height = (_isPortrait

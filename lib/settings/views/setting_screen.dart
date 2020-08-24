@@ -331,7 +331,9 @@ class _SettingScreenState extends State<SettingScreen> {
           child: BackgroundBase(
             true,
             backgroudColor: Color.fromRGBO(20, 20, 0, 0.4),
-            body: Center(
+            body: state.isLoading ? Center(
+              child: CircularProgressIndicator(),
+            ) : Center(
               child: Container(
                 margin: EdgeInsets.symmetric(horizontal: 50),
                 child: ListView(
