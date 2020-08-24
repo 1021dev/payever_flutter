@@ -8,6 +8,7 @@ class SettingScreenState {
   final bool isUpdating;
   final String updatingWallpaper;
   final bool isUpdatingBusinessImg;
+  final bool uploadUserImage;
   final String business;
   final List<WallpaperCategory> wallpaperCategories;
   final List<Wallpaper> wallpapers;
@@ -36,6 +37,7 @@ class SettingScreenState {
     this.isUpdating = false,
     this.updatingWallpaper,
     this.isUpdatingBusinessImg = false,
+    this.uploadUserImage = false,
     this.business,
     this.wallpaperCategories,
     this.wallpapers,
@@ -65,6 +67,7 @@ class SettingScreenState {
     this.isUpdating,
     this.updatingWallpaper,
     this.isUpdatingBusinessImg,
+    this.uploadUserImage,
     this.business,
     this.wallpaperCategories,
     this.wallpapers,
@@ -91,6 +94,7 @@ class SettingScreenState {
   SettingScreenState copyWith({
     bool isLoading,
     bool isUpdating,
+    bool uploadUserImage,
     String updatingWallpaper,
     bool isUpdatingBusinessImg,
     String business,
@@ -121,6 +125,7 @@ class SettingScreenState {
       isUpdating: isUpdating ?? this.isUpdating,
       updatingWallpaper: updatingWallpaper ?? this.updatingWallpaper,
       isUpdatingBusinessImg: isUpdatingBusinessImg ?? this.isUpdatingBusinessImg,
+      uploadUserImage: uploadUserImage ?? this.uploadUserImage,
       business: business ?? this.business,
       wallpaperCategories: wallpaperCategories ?? this.wallpaperCategories,
       wallpapers: wallpapers ?? this.wallpapers,

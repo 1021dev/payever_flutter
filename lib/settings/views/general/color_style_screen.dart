@@ -10,9 +10,9 @@ import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 
 class ColorStyleScreen extends StatefulWidget {
-
+  final GlobalStateModel globalStateModel;
   final SettingScreenBloc settingBloc;
-  ColorStyleScreen({this.settingBloc,});
+  ColorStyleScreen({this.settingBloc, this.globalStateModel});
 
   _ColorStyleScreenState createState() => _ColorStyleScreenState();
 

@@ -386,7 +386,7 @@ class GlobalUtils {
   static const String DB_USER_CREATED_AT = 'createdAt';
   static const String DB_USER_UPDATED_AT = 'updatedAt';
   static const String DB_USER_BIRTHDAY = 'birthday';
-  static const String DB_USER_SALUTATION = 'salut ation';
+  static const String DB_USER_SALUTATION = 'salutation';
   static const String DB_USER_PHONE = 'phone';
   static const String DB_USER_LOGO = 'logo';
 

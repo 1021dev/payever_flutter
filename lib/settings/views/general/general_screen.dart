@@ -12,6 +12,7 @@ import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/settings/models/models.dart';
 import 'package:payever/settings/views/general/color_style_screen.dart';
 import 'package:payever/settings/views/general/language_screen.dart';
+import 'package:payever/settings/views/general/personal_information_screen.dart';
 import 'package:payever/settings/widgets/app_bar.dart';
 
 class GeneralScreen extends StatefulWidget {
@@ -158,6 +159,7 @@ class _GeneralScreenState extends State<GeneralScreen> {
           context,
           PageTransition(
             child: ColorStyleScreen(
+              globalStateModel: widget.globalStateModel,
               settingBloc: widget.setScreenBloc,
             ),
             type: PageTransitionType.fade,
@@ -165,6 +167,17 @@ class _GeneralScreenState extends State<GeneralScreen> {
         );
         break;
       case 'personal_information':
+        Navigator.push(
+          context,
+          PageTransition(
+            child: PersonalInformationScreen(
+              globalStateModel: widget.globalStateModel,
+              setScreenBloc: widget.setScreenBloc,
+            ),
+            type: PageTransitionType.fade,
+          ),
+        );
+        break;
       case 'shipping_address':
       case 'password':
     }

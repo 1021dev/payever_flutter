@@ -202,7 +202,7 @@ class _ContactScreenState extends State<ContactScreen> {
                                           border: InputBorder.none,
                                         ),
                                         hint: Text(
-                                          Language.getSettingsStrings('form.create_form.company.product.label'),
+                                          Language.getSettingsStrings('form.create_form.contact.salutation.label'),
                                         ),
                                       ),
                                     ),

@@ -58,8 +58,12 @@ class _BackgroundBaseState extends State<BackgroundBase> {
               ),
             ),
           ),
-          SafeArea(
-            bottom: false,
+          GestureDetector(
+            onTap: () {
+              if (FocusScope.of(context).hasFocus) {
+                FocusScope.of(context).unfocus();
+              }
+            },
             child: Container(
               height: Measurements.height,
               width: Measurements.width,

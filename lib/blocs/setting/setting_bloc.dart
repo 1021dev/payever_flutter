@@ -6,9 +6,7 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/dashboard/dashboard_bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
-import 'package:payever/login/login_screen.dart';
 import 'package:payever/settings/models/models.dart';
-import 'package:video_player/video_player.dart';
 import 'setting.dart';
 
 class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
@@ -119,6 +117,8 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
       yield* getUser();
     } else if (event is UpdateCurrentUserEvent) {
       yield* updateUser(event.body);
+    } else if (event is UploadUserPhotoEvent) {
+      yield* uploadUserPhoto(event.image);
     }
   }
 
@@ -216,6 +216,7 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
 
   Stream<SettingScreenState> uploadBusiness(Map body) async* {
     yield state.copyWith(isUpdating: true);
+    print(body);
     dynamic response = await api.patchUpdateBusiness(token, state.business, body);
     if (response is DioError) {
       yield SettingScreenStateFailure(error: response.error);
@@ -580,6 +581,17 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
     dashboardScreenBloc.state.copyWith(user: user);
 
     yield state.copyWith(isUpdating: false, user: user);
+  }
+
+  Stream<SettingScreenState> uploadUserPhoto(File file) async* {
+    yield state.copyWith(uploadUserImage: true);
+    yield state.copyWith(blobName: '', isUpdatingBusinessImg: true);
+    dynamic response = await api.postImageToBusiness(file, state.business, GlobalUtils.activeToken.accessToken);
+    String blobName = response['blobName'];
+    User user = state.user;
+    user.logo = blobName;
+
+    yield state.copyWith(uploadUserImage: false, user: user);
   }
 
   String _getFilterKeyString(String type) {

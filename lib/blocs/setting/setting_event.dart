@@ -252,3 +252,8 @@ class UpdateCurrentUserEvent extends SettingScreenEvent {
 
   UpdateCurrentUserEvent({this.body});
 }
+
+class UploadUserPhotoEvent extends SettingScreenEvent {
+  final File image;
+  UploadUserPhotoEvent({this.image});
+}
