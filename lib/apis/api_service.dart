@@ -185,6 +185,59 @@ class ApiService {
     }
   }
 
+  Future<dynamic> getAuthUser(String token) async {
+    try {
+      print('TAG - getAuthUser()');
+      dynamic response = await _client.getTypeless(
+          '${Env.auth}/api/user',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> updateAuthUser(String token, Map<String, dynamic> body) async {
+    try {
+      print('TAG - updateAuthUser()');
+      dynamic response = await _client.patchTypeless(
+          '${Env.auth}/api/user',
+          body: body,
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> updatePassword(String token, Map<String, dynamic> body) async {
+    try {
+      print('TAG - updatePassword()');
+      dynamic response = await _client.postTypeLess(
+          '${Env.auth}/api/user',
+          body: body,
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<dynamic> updateUser(String token, Map<String, dynamic> body) async {
     try {
       print('TAG - updateUser()');

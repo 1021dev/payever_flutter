@@ -119,6 +119,12 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
       yield* updateUser(event.body);
     } else if (event is UploadUserPhotoEvent) {
       yield* uploadUserPhoto(event.image);
+    } else if (event is GetAuthUserEvent) {
+      yield* getAuthUser();
+    } else if (event is UpdateAuthUserEvent) {
+      yield* updateAuthUser(event.body);
+    } else if (event is UpdatePasswordEvent) {
+      yield* updatePassword(event.newPassword, event.oldPassword);
     }
   }
 
@@ -594,6 +600,30 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
     yield state.copyWith(uploadUserImage: false, user: user);
   }
 
+  Stream<SettingScreenState> getAuthUser() async* {
+    yield state.copyWith(isLoading: true);
+    dynamic userResponse = await api.getAuthUser(token);
+    AuthUser user = AuthUser.fromMap(userResponse);
+
+    dashboardScreenBloc.state.copyWith(authUser: user);
+    yield state.copyWith(isLoading: false, authUser: user);
+  }
+
+  Stream<SettingScreenState> updateAuthUser(Map<String, dynamic> body) async* {
+    yield state.copyWith(updating2FA: true);
+    dynamic userResponse = await api.updateAuthUser(token, body);
+    AuthUser user = AuthUser.fromMap(userResponse);
+    dashboardScreenBloc.state.copyWith(authUser: user);
+    yield state.copyWith(updating2FA: false, authUser: user);
+  }
+
+  Stream<SettingScreenState> updatePassword(String newPassword, String oldPassword) async* {
+    yield state.copyWith(isUpdating: true);
+    dynamic userResponse = await api.updatePassword(token, {'newPassword': newPassword, 'oldPassword': oldPassword});
+    yield state.copyWith(isUpdating: false,);
+    yield SettingScreenUpdateSuccess(business: state.business);
+  }
+
   String _getFilterKeyString(String type) {
     switch (type) {
       case 'name':
@@ -605,6 +635,7 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
       case 'status':
         return 'filter\[status\]';
     }
+    return '';
   }
 
   String _getFilterValueString(String type, String value) {
@@ -622,5 +653,6 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
       case 'doesNotContain':
         return '\^\(\(\?\!$value\)\.\)\*\$';
     }
+    return '';
   }
 }

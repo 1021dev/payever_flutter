@@ -6,6 +6,7 @@ import 'package:payever/settings/models/models.dart';
 class SettingScreenState {
   final bool isLoading;
   final bool isUpdating;
+  final bool updating2FA;
   final String updatingWallpaper;
   final bool isUpdatingBusinessImg;
   final bool uploadUserImage;
@@ -31,10 +32,12 @@ class SettingScreenState {
   final bool isSearching;
   final LegalDocument legalDocument;
   final User user;
+  final AuthUser authUser;
 
   SettingScreenState({
     this.isLoading = false,
     this.isUpdating = false,
+    this.updating2FA = false,
     this.updatingWallpaper,
     this.isUpdatingBusinessImg = false,
     this.uploadUserImage = false,
@@ -60,11 +63,13 @@ class SettingScreenState {
     this.isSearching = false,
     this.legalDocument,
     this.user,
+    this.authUser,
   });
 
   List<Object> get props => [
     this.isLoading,
     this.isUpdating,
+    this.updating2FA,
     this.updatingWallpaper,
     this.isUpdatingBusinessImg,
     this.uploadUserImage,
@@ -89,11 +94,13 @@ class SettingScreenState {
     this.isSearching,
     this.legalDocument,
     this.user,
+    this.authUser,
   ];
 
   SettingScreenState copyWith({
     bool isLoading,
     bool isUpdating,
+    bool updating2FA,
     bool uploadUserImage,
     String updatingWallpaper,
     bool isUpdatingBusinessImg,
@@ -119,10 +126,12 @@ class SettingScreenState {
     bool isSearching,
     LegalDocument legalDocument,
     User user,
+    AuthUser authUser,
   }) {
     return SettingScreenState(
       isLoading: isLoading ?? this.isLoading,
       isUpdating: isUpdating ?? this.isUpdating,
+      updating2FA: updating2FA ?? this.updating2FA,
       updatingWallpaper: updatingWallpaper ?? this.updatingWallpaper,
       isUpdatingBusinessImg: isUpdatingBusinessImg ?? this.isUpdatingBusinessImg,
       uploadUserImage: uploadUserImage ?? this.uploadUserImage,
@@ -148,6 +157,7 @@ class SettingScreenState {
       isSearching: isSearching ?? this.isSearching,
       legalDocument: legalDocument ?? this.legalDocument,
       user: user ?? this.user,
+      authUser: authUser ?? this.authUser,
     );
   }
 }

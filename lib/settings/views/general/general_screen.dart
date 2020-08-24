@@ -11,6 +11,7 @@ import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/settings/models/models.dart';
 import 'package:payever/settings/views/general/color_style_screen.dart';
 import 'package:payever/settings/views/general/language_screen.dart';
+import 'package:payever/settings/views/general/password_screen.dart';
 import 'package:payever/settings/views/general/personal_information_screen.dart';
 import 'package:payever/settings/views/general/shipping_addresses_screen.dart';
 import 'package:payever/settings/widgets/app_bar.dart';
@@ -35,7 +36,6 @@ class _GeneralScreenState extends State<GeneralScreen> {
   @override
   void initState() {
     widget.setScreenBloc.add(GetCurrentUserEvent());
-    globalStateModel = Provider.of<GlobalStateModel>(context);
     super.initState();
   }
 
@@ -46,6 +46,7 @@ class _GeneralScreenState extends State<GeneralScreen> {
 
   @override
   Widget build(BuildContext context) {
+    globalStateModel = Provider.of<GlobalStateModel>(context);
     _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
     Measurements.height = (_isPortrait
         ? MediaQuery.of(context).size.height
@@ -194,6 +195,17 @@ class _GeneralScreenState extends State<GeneralScreen> {
         );
         break;
       case 'password':
+        Navigator.push(
+          context,
+          PageTransition(
+            child: PasswordScreen(
+              globalStateModel: globalStateModel,
+              setScreenBloc: widget.setScreenBloc,
+            ),
+            type: PageTransitionType.fade,
+          ),
+        );
+        break;
     }
   }
 }

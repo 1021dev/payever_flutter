@@ -14,6 +14,7 @@ class DashboardScreenState {
   final List<Business> businesses;
   final Business activeBusiness;
   final User user;
+  final AuthUser authUser;
   final FetchWallpaper wallpaper;
   final CurrentWallpaper currentWallpaper;
   final Terminal activeTerminal;
@@ -46,6 +47,7 @@ class DashboardScreenState {
     this.currentWidgets = const [],
     this.activeBusiness,
     this.user,
+    this.authUser,
     this.wallpaper,
     this.currentWallpaper,
     this.total = 0,
@@ -77,6 +79,7 @@ class DashboardScreenState {
     this.currentWidgets,
     this.activeBusiness,
     this.user,
+    this.authUser,
     this.wallpaper,
     this.currentWallpaper,
     this.total,
@@ -110,6 +113,7 @@ class DashboardScreenState {
     List<Business> businesses,
     Business activeBusiness,
     User user,
+    AuthUser authUser,
     FetchWallpaper wallpaper,
     CurrentWallpaper currentWallpaper,
     Terminal activeTerminal,
@@ -141,6 +145,7 @@ class DashboardScreenState {
       businesses: businesses ?? this.businesses,
       activeBusiness: activeBusiness ?? this.activeBusiness,
       user: user ?? this.user,
+      authUser: authUser ?? this.authUser,
       wallpaper: wallpaper ?? this.wallpaper,
       currentWallpaper: currentWallpaper ?? this.currentWallpaper,
       activeTerminal: activeTerminal ?? this.activeTerminal,

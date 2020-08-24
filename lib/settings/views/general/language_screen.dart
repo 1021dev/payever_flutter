@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:payever/blocs/bloc.dart';
+import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/translations.dart';
@@ -18,7 +19,6 @@ class LanguageScreen extends StatefulWidget {
 
 class _LanguageScreenScreenState extends State<LanguageScreen> {
 
-  User user;
   String defaultLanguage;
 
   Map<String, String> languages = {
@@ -31,8 +31,7 @@ class _LanguageScreenScreenState extends State<LanguageScreen> {
 
   @override
   void initState() {
-    user = widget.settingBloc.state.user;
-    defaultLanguage = user.language;
+    widget.settingBloc.add(GetCurrentUserEvent());
     super.initState();
   }
 
@@ -145,10 +144,11 @@ class _LanguageScreenScreenState extends State<LanguageScreen> {
                         defaultLanguage = val;
                       });
                     },
-                    value: defaultLanguage,
+                    value: state.user.language,
                     hint: Padding(
                       padding: EdgeInsets.only(left: 16),
-                      child: Text('Language',
+                      child: Text(
+                        Language.getSettingsStrings('form.create_form.language.label'),
                       ),
                     ),
                   ),

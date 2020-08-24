@@ -257,3 +257,18 @@ class UploadUserPhotoEvent extends SettingScreenEvent {
   final File image;
   UploadUserPhotoEvent({this.image});
 }
+
+class GetAuthUserEvent extends SettingScreenEvent {}
+
+class UpdateAuthUserEvent extends SettingScreenEvent {
+  final Map<String, dynamic> body;
+
+  UpdateAuthUserEvent({this.body});
+}
+
+class UpdatePasswordEvent extends SettingScreenEvent {
+  final String oldPassword;
+  final String newPassword;
+
+  UpdatePasswordEvent({this.oldPassword, this.newPassword});
+}

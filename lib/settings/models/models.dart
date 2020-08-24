@@ -272,13 +272,17 @@ class Role {
   List<Permission> permissions = [];
   String name;
   String type;
-
+  List<dynamic> tags = [];
   Role.fromMap(dynamic obj) {
     name = obj['name'];
     type = obj['type'];
     dynamic permissionsObj = obj['permissions'];
     if (permissionsObj is List) {
       permissionsObj.forEach((element)=> permissions.add(Permission.fromMap(element)));
+    }
+    dynamic tagsObj = obj['tags'];
+    if (tagsObj is List) {
+      tagsObj.forEach((element)=> tags.add(element));
     }
   }
 }
@@ -620,5 +624,4 @@ class ShippingAddress {
     }
     return addressLine;
   }
-
 }

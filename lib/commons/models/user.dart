@@ -76,3 +76,38 @@ class User {
     return map;
   }
 }
+
+class AuthUser {
+  String createdAt;
+  String email;
+  String firstName;
+  String id;
+  String lastName;
+  String resetPasswordExpires;
+  String resetPasswordToken;
+  List<Role> roles = [];
+  bool secondFactorRequired = false;
+  String updatedAt;
+  num v;
+  String uid;
+
+  AuthUser.fromMap(dynamic obj) {
+    createdAt = obj['createdAt'];
+    email = obj['email'];
+    firstName = obj['first_name'];
+    id = obj['id'];
+    lastName = obj['last_name'];
+    resetPasswordExpires = obj['resetPasswordExpires'];
+    resetPasswordToken = obj['resetPasswordToken'];
+    secondFactorRequired = obj['secondFactorRequired'] ?? false;
+    updatedAt = obj['updatedAt'];
+    v = obj['__v'];
+    uid = obj['_id'];
+    dynamic rolesObj = obj['roles'];
+    if (rolesObj is List) {
+      rolesObj.forEach((element) {
+        roles.add(Role.fromMap(element));
+      });
+    }
+  }
+}

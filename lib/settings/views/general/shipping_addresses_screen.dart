@@ -188,7 +188,7 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                                               mainAxisAlignment: MainAxisAlignment.start,
                                               children: <Widget>[
                                                 SvgPicture.asset(
-                                                    'assets/images/google-auto-complete.svg',
+                                                  'assets/images/google-auto-complete.svg',
                                                 ),
                                                 SizedBox(
                                                   width: 8,
@@ -274,11 +274,9 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                                                 style: TextStyle(fontSize: 16),
                                                 onChanged: (val) {
                                                   setState(() {
-                                                    setState(() {
-                                                      ShippingAddress shippingAddress = shippingAddresses[index];
-                                                      shippingAddress.city= val;
-                                                      shippingAddresses[index] = shippingAddress;
-                                                    });
+                                                    ShippingAddress shippingAddress = shippingAddresses[index];
+                                                    shippingAddress.city= val;
+                                                    shippingAddresses[index] = shippingAddress;
                                                   });
                                                 },
                                                 validator: (val) {
@@ -314,11 +312,9 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                                                 style: TextStyle(fontSize: 16),
                                                 onChanged: (val) {
                                                   setState(() {
-                                                    setState(() {
-                                                      ShippingAddress shippingAddress = shippingAddresses[index];
-                                                      shippingAddress.street = val;
-                                                      shippingAddresses[index] = shippingAddress;
-                                                    });
+                                                    ShippingAddress shippingAddress = shippingAddresses[index];
+                                                    shippingAddress.street = val;
+                                                    shippingAddresses[index] = shippingAddress;
                                                   });
                                                 },
                                                 initialValue: shippingAddress.street ?? '',
@@ -354,11 +350,9 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                                                 style: TextStyle(fontSize: 16),
                                                 onChanged: (val) {
                                                   setState(() {
-                                                    setState(() {
-                                                      ShippingAddress shippingAddress = shippingAddresses[index];
-                                                      shippingAddress.apartment = val;
-                                                      shippingAddresses[index] = shippingAddress;
-                                                    });
+                                                    ShippingAddress shippingAddress = shippingAddresses[index];
+                                                    shippingAddress.apartment = val;
+                                                    shippingAddresses[index] = shippingAddress;
                                                   });
                                                 },
                                                 initialValue: shippingAddress.apartment ?? '',
@@ -388,11 +382,9 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                                                 style: TextStyle(fontSize: 16),
                                                 onChanged: (val) {
                                                   setState(() {
-                                                    setState(() {
-                                                      ShippingAddress shippingAddress = shippingAddresses[index];
-                                                      shippingAddress.zipCode = val;
-                                                      shippingAddresses[index] = shippingAddress;
-                                                    });
+                                                    ShippingAddress shippingAddress = shippingAddresses[index];
+                                                    shippingAddress.zipCode = val;
+                                                    shippingAddresses[index] = shippingAddress;
                                                   });
                                                 },
                                                 initialValue: shippingAddress.zipCode ?? '',
