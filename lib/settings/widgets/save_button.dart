@@ -5,11 +5,13 @@ class SaveBtn extends StatelessWidget {
   final Function onUpdate;
   final Color color;
   final bool isBottom;
+  final String title;
   SaveBtn({
     this.isUpdating = false,
     this.onUpdate,
     this.color = Colors.black87,
     this.isBottom = true,
+    this.title = 'Save',
   });
 
   @override
@@ -40,7 +42,7 @@ class SaveBtn extends StatelessWidget {
           ),
         ) : MaterialButton(
           onPressed: onUpdate,
-          child: Text('Save'),
+          child: Text(title),
         ),
       ),
     );

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tagging/flutter_tagging.dart';
+import 'package:iso_countries/country.dart';
 import 'package:payever/commons/models/business.dart';
+import 'package:payever/commons/utils/common_utils.dart';
 
 class SettingItem {
   final String name;
@@ -570,46 +572,50 @@ class ShippingAddress {
 
   Map<String, dynamic> toDictionary() {
     Map<String, dynamic> map = {};
-    map['apartment'] = apartment;
-    map['city'] = city;
-    map['country'] = country;
-    map['street'] = street;
-    map['zipCode'] = zipCode;
-    map['_id'] = id;
+    map['apartment'] = apartment ?? '';
+    map['city'] = city ?? '';
+    map['country'] = country ?? '';
+    map['street'] = street ?? '';
+    map['zipCode'] = zipCode ?? '';
     return map;
   }
 
-  String getAddressLine() {
+  String getAddressLine(List<Country> countries) {
     String addressLine = '';
     if (street != null && street != '') {
       addressLine = street;
     }
     if (apartment != null && apartment != '') {
-      if (addressLine != '') {
+      if (addressLine == '') {
         addressLine = apartment;
       } else {
         addressLine = '$addressLine, $apartment';
       }
     }
     if (zipCode != null && zipCode != '') {
-      if (addressLine != '') {
+      if (addressLine == '') {
         addressLine = zipCode;
       } else {
         addressLine = '$addressLine, $zipCode';
       }
     }
     if (city != null && city != '') {
-      if (addressLine != '') {
+      if (addressLine == '') {
         addressLine = city;
       } else {
         addressLine = '$addressLine, $city';
       }
     }
     if (country != null && country != '') {
-      if (addressLine != '') {
-        addressLine = country;
+      String countryString = country;
+      List<Country> matchCountries = countries.where((element) => element.countryCode == country).toList();
+      if (matchCountries.length > 0) {
+        countryString = matchCountries.first.name;
+      }
+      if (addressLine == '') {
+        addressLine = countryString;
       } else {
-        addressLine = '$addressLine, $country';
+        addressLine = '$addressLine, $countryString';
       }
     }
     return addressLine;

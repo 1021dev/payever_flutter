@@ -12,7 +12,7 @@ import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/settings/models/models.dart';
 import 'package:payever/settings/widgets/app_bar.dart';
-import 'package:payever/settings/widgets/auto_complete_text_view.dart';
+import 'package:payever/settings/widgets/save_button.dart';
 
 class ShippingAddressesScreen extends StatefulWidget {
   final GlobalStateModel globalStateModel;
@@ -34,17 +34,17 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
 
   List<ShippingAddress> shippingAddresses = [];
 
-  final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>(debugLabel: 'address');
   int selectedSection = 0;
-  List<Country> countryList;
+  int updatedIndex = -1;
+  List<Country> countryList = [];
 
   @override
   void initState() {
     activeBusiness =
         widget.globalStateModel.currentBusiness;
     user = widget.setScreenBloc.state.user;
-    shippingAddresses = user.shippingAddresses;
-
+    shippingAddresses.addAll(user.shippingAddresses);
     if (shippingAddresses.length == 0) {
       shippingAddresses.add(ShippingAddress());
     }
@@ -84,14 +84,14 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
   get _updateForm {
     return BlocListener(
       bloc: widget.setScreenBloc,
-      listener: (BuildContext context, state) {
+      listener: (BuildContext context, SettingScreenState state) {
         if (state is SettingScreenUpdateSuccess) {
           Navigator.pop(context);
         } else if (state is SettingScreenStateFailure) {}
       },
       child: BlocBuilder<SettingScreenBloc, SettingScreenState>(
         bloc: widget.setScreenBloc,
-        builder: (context, state) {
+        builder: (context, SettingScreenState state) {
           return Center(
             child: Form(
               key: _formKey,
@@ -110,7 +110,17 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                             itemBuilder: (context, index) {
                               ShippingAddress shippingAddress = shippingAddresses[index];
                               TextEditingController locationTextController = TextEditingController();
-                              locationTextController.text = '';
+                              String addressLine = '';
+                              locationTextController.text = addressLine;
+                              String title = 'Save';
+                              if (index < state.user.shippingAddresses.length) {
+                                print(state.user.shippingAddresses.first.toDictionary());
+                                title = shippingAddress != state.user.shippingAddresses[index] ? 'Save': 'Delete';
+                                addressLine = shippingAddress.getAddressLine(countryList);
+                              } else {
+
+                              }
+                              print(title);
                               return Column(
                                 children: <Widget>[
                                   BlurEffectView(
@@ -120,7 +130,7 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                                       topRight: Radius.circular(8),
                                     ),
                                     child: Container(
-                                      height: 56,
+                                      height: 50,
                                       color: Colors.black38,
                                       child: SizedBox.expand(
                                         child: MaterialButton(
@@ -144,7 +154,7 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                                                     ),
                                                     Expanded(
                                                       child: Text(
-                                                        'Details',
+                                                        addressLine != '' ? addressLine: 'New Address',
                                                         maxLines: 1,
                                                         style: TextStyle(
                                                           color: Colors.white,
@@ -171,10 +181,7 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                                       children: <Widget>[
                                         BlurEffectView(
                                           color: Color.fromRGBO(100, 100, 100, 0.05),
-                                          borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(8),
-                                            topRight: Radius.circular(8),
-                                          ),
+                                          radius: 0,
                                           child: Container(
                                             padding: EdgeInsets.only(left: 12, right: 12),
                                             child: Row(
@@ -216,21 +223,24 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                                           color: Color.fromRGBO(100, 100, 100, 0.05),
                                           radius: 0,
                                           child: Container(
-                                            height: 65,
                                             padding: EdgeInsets.only(left: 12, right: 12),
-                                            child: DropdownButtonFormField(
+                                            child: countryList.length > 0 ? DropdownButtonFormField(
                                               items: List.generate(countryList.length,
                                                       (index) {
                                                     return DropdownMenuItem(
                                                       child: Text(
                                                         countryList[index].name,
                                                       ),
-                                                      value: countryList[index].name,
+                                                      value: countryList[index].countryCode.toUpperCase(),
                                                     );
                                                   }).toList(),
                                               value: shippingAddress.country ?? null,
                                               onChanged: (val) {
-                                                shippingAddress.country = val;
+                                                setState(() {
+                                                  ShippingAddress shippingAddress = shippingAddresses[index];
+                                                  shippingAddress.country = val;
+                                                  shippingAddresses[index] = shippingAddress;
+                                                });
                                               },
                                               icon: Icon(
                                                 Icons.keyboard_arrow_down,
@@ -242,22 +252,40 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                                               hint: Text(
                                                 'Country',
                                               ),
-                                            ),
+                                              validator: (val) {
+                                                if (val == null) {
+                                                  return 'Country required';
+                                                }
+                                                if (val.isEmpty) {
+                                                  return 'Country required';
+                                                }
+                                                return null;
+                                              },
+                                            ): CircularProgressIndicator(),
                                           ),
                                         ),
                                         BlurEffectView(
                                           color: Color.fromRGBO(100, 100, 100, 0.05),
                                           radius: 0,
                                           child: Container(
-                                            height: 64,
                                             alignment: Alignment.center,
                                             child: Center(
                                               child: TextFormField(
                                                 style: TextStyle(fontSize: 16),
                                                 onChanged: (val) {
                                                   setState(() {
-                                                    shippingAddress.city= val;
+                                                    setState(() {
+                                                      ShippingAddress shippingAddress = shippingAddresses[index];
+                                                      shippingAddress.city= val;
+                                                      shippingAddresses[index] = shippingAddress;
+                                                    });
                                                   });
+                                                },
+                                                validator: (val) {
+                                                  if (val.isEmpty) {
+                                                    return 'City required';
+                                                  }
+                                                  return null;
                                                 },
                                                 initialValue: shippingAddress.city ?? '',
                                                 decoration: InputDecoration(
@@ -280,14 +308,17 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                                           color: Color.fromRGBO(100, 100, 100, 0.05),
                                           radius: 0,
                                           child: Container(
-                                            height: 64,
                                             alignment: Alignment.center,
                                             child: Center(
                                               child: TextFormField(
                                                 style: TextStyle(fontSize: 16),
                                                 onChanged: (val) {
                                                   setState(() {
-                                                    shippingAddress.street = val;
+                                                    setState(() {
+                                                      ShippingAddress shippingAddress = shippingAddresses[index];
+                                                      shippingAddress.street = val;
+                                                      shippingAddresses[index] = shippingAddress;
+                                                    });
                                                   });
                                                 },
                                                 initialValue: shippingAddress.street ?? '',
@@ -302,6 +333,12 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                                                     borderSide: BorderSide(color: Colors.blue, width: 0.5),
                                                   ),
                                                 ),
+                                                validator: (val) {
+                                                  if (val.isEmpty) {
+                                                    return 'Street required';
+                                                  }
+                                                  return null;
+                                                },
                                                 keyboardType: TextInputType.text,
                                               ),
                                             ),
@@ -311,14 +348,17 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                                           color: Color.fromRGBO(100, 100, 100, 0.05),
                                           radius: 0,
                                           child: Container(
-                                            height: 64,
                                             alignment: Alignment.center,
                                             child: Center(
                                               child: TextFormField(
                                                 style: TextStyle(fontSize: 16),
                                                 onChanged: (val) {
                                                   setState(() {
-                                                    shippingAddress.apartment = val;
+                                                    setState(() {
+                                                      ShippingAddress shippingAddress = shippingAddresses[index];
+                                                      shippingAddress.apartment = val;
+                                                      shippingAddresses[index] = shippingAddress;
+                                                    });
                                                   });
                                                 },
                                                 initialValue: shippingAddress.apartment ?? '',
@@ -342,14 +382,17 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                                           color: Color.fromRGBO(100, 100, 100, 0.05),
                                           radius: 0,
                                           child: Container(
-                                            height: 64,
                                             alignment: Alignment.center,
                                             child: Center(
                                               child: TextFormField(
                                                 style: TextStyle(fontSize: 16),
                                                 onChanged: (val) {
                                                   setState(() {
-                                                    shippingAddress.zipCode = val;
+                                                    setState(() {
+                                                      ShippingAddress shippingAddress = shippingAddresses[index];
+                                                      shippingAddress.zipCode = val;
+                                                      shippingAddresses[index] = shippingAddress;
+                                                    });
                                                   });
                                                 },
                                                 initialValue: shippingAddress.zipCode ?? '',
@@ -364,10 +407,65 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                                                     borderSide: BorderSide(color: Colors.blue, width: 0.5),
                                                   ),
                                                 ),
+                                                validator: (val) {
+                                                  if (val.isEmpty) {
+                                                    return 'Zip code required';
+                                                  }
+                                                  return null;
+                                                },
                                                 keyboardType: TextInputType.text,
                                               ),
                                             ),
                                           ),
+                                        ),
+                                        Row(
+                                          children: <Widget>[
+                                            Flexible(
+                                              child: SaveBtn(
+                                                isUpdating: false,
+                                                color: Colors.black45,
+                                                isBottom: false,
+                                                title: 'Delete',
+                                                onUpdate: () {
+                                                  setState(() {
+                                                    shippingAddresses.removeAt(index);
+                                                  });
+                                                  if (_formKey.currentState.validate() &&
+                                                      !state.isUpdating) {
+                                                    List<Map<String, dynamic>> list = [];
+                                                    for(ShippingAddress sa in shippingAddresses) {
+                                                      list.add(sa.toDictionary());
+                                                    }
+                                                    print(list);
+                                                    widget.setScreenBloc.add(UpdateCurrentUserEvent(body: {
+                                                      'shippingAddresses': list,
+                                                    }));
+                                                  }
+                                                },
+                                              ),
+                                            ),
+                                            Flexible(
+                                              child: SaveBtn(
+                                                isUpdating: state.isUpdating,
+                                                color: Colors.black45,
+                                                isBottom: false,
+                                                title: 'Save',
+                                                onUpdate: () {
+                                                  if (_formKey.currentState.validate() &&
+                                                      !state.isUpdating) {
+                                                    List<Map<String, dynamic>> list = [];
+                                                    for(ShippingAddress sa in shippingAddresses) {
+                                                      list.add(sa.toDictionary());
+                                                    }
+                                                    print(list);
+                                                    widget.setScreenBloc.add(UpdateCurrentUserEvent(body: {
+                                                      'shippingAddresses': list,
+                                                    }));
+                                                  }
+                                                },
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     ),
@@ -384,6 +482,11 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                             },
                             itemCount: shippingAddresses.length,
                           ),
+                          Divider(
+                            height: 0,
+                            thickness: 0.5,
+                            color: Colors.grey,
+                          ),
                           Container(
                             height: 55,
                             decoration: BoxDecoration(
@@ -397,6 +500,9 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                             child: SizedBox.expand(
                               child: MaterialButton(
                                 onPressed: () {
+                                  setState(() {
+                                    shippingAddresses.add(ShippingAddress());
+                                  });
                                 },
                                 child: Align(
                                   alignment: Alignment.centerLeft,
@@ -404,7 +510,8 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                                 ),
                               ),
                             ),
-                          )                ],
+                          ),
+                        ],
                       ),
                     ),
                   ),
