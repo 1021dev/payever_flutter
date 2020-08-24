@@ -8,6 +8,7 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/login/login_screen.dart';
 import 'package:payever/settings/models/models.dart';
+import 'package:video_player/video_player.dart';
 import 'setting.dart';
 
 class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
@@ -114,6 +115,10 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
       yield* getLegalDocument(event.type);
     } else if (event is UpdateLegalDocumentEvent) {
       yield* updateLegalDocument(event.content, event.type);
+    } else if (event is GetCurrentUserEvent) {
+      yield* getUser();
+    } else if (event is UpdateCurrentUserEvent) {
+      yield* updateUser(event.body);
     }
   }
 
@@ -556,6 +561,25 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
       yield SettingScreenStateFailure(error: 'Update Business name failed');
       yield state.copyWith(isUpdating: false);
     }
+  }
+
+  Stream<SettingScreenState> getUser() async* {
+    yield state.copyWith(isLoading: true);
+    dynamic userResponse = await api.getUser(token);
+    User user = User.map(userResponse);
+
+    dashboardScreenBloc.state.copyWith(user: user);
+    yield state.copyWith(isLoading: false, user: user);
+  }
+
+  Stream<SettingScreenState> updateUser(Map<String, dynamic> body) async* {
+    yield state.copyWith(isUpdating: true);
+    dynamic response = await api.updateUser(token, body);
+    dynamic userResponse = await api.getUser(token);
+    User user = User.map(userResponse);
+    dashboardScreenBloc.state.copyWith(user: user);
+
+    yield state.copyWith(isUpdating: false, user: user);
   }
 
   String _getFilterKeyString(String type) {

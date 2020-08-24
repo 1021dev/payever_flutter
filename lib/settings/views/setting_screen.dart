@@ -18,6 +18,7 @@ import 'package:payever/settings/models/models.dart';
 import 'package:payever/settings/views/appearance_screen.dart';
 import 'package:payever/settings/views/business_info_screen.dart';
 import 'package:payever/settings/views/employee/employee_screen.dart';
+import 'package:payever/settings/views/general/general_screen.dart';
 import 'package:payever/settings/views/policies/policies_screen.dart';
 import 'package:payever/settings/views/wallpaper/wallpaper_screen.dart';
 import 'package:payever/switcher/switcher_page.dart';
@@ -447,6 +448,9 @@ class _SettingScreenState extends State<SettingScreen> {
         break;
       case 4:
         _target = PoliciesScreen(globalStateModel: widget.globalStateModel, setScreenBloc: screenBloc,);
+        break;
+      case 5:
+        _target = GeneralScreen(globalStateModel: widget.globalStateModel, setScreenBloc: screenBloc,);
         break;
       case 6:
         _target = AppearanceScreen(globalStateModel: widget.globalStateModel, setScreenBloc: screenBloc,);

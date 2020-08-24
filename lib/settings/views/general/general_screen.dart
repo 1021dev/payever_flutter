@@ -2,35 +2,35 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:iso_countries/iso_countries.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:payever/blocs/bloc.dart';
+import 'package:payever/blocs/setting/setting_bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/settings/models/models.dart';
+import 'package:payever/settings/views/general/language_screen.dart';
 import 'package:payever/settings/widgets/app_bar.dart';
-import 'package:payever/blocs/bloc.dart';
 
-import 'edit_legal_screen.dart';
-
-class PoliciesScreen extends StatefulWidget {
+class GeneralScreen extends StatefulWidget {
   final GlobalStateModel globalStateModel;
   final SettingScreenBloc setScreenBloc;
-  final List<Country> countryList;
-  PoliciesScreen(
-      {this.globalStateModel, this.setScreenBloc, this.countryList,});
 
+  GeneralScreen(
+      {this.globalStateModel, this.setScreenBloc, });
   @override
-  _PoliciesScreenState createState() => _PoliciesScreenState();
+  State<StatefulWidget> createState() {
+    return _GeneralScreenState();
+  }
 }
 
-class _PoliciesScreenState extends State<PoliciesScreen> {
-  bool isGridMode = true;
+class _GeneralScreenState extends State<GeneralScreen> {
   bool _isPortrait;
   bool _isTablet;
 
   @override
   void initState() {
+    widget.setScreenBloc.add(GetCurrentUserEvent());
     super.initState();
   }
 
@@ -62,7 +62,7 @@ class _PoliciesScreenState extends State<PoliciesScreen> {
           return Scaffold(
             backgroundColor: Colors.black,
             resizeToAvoidBottomPadding: false,
-            appBar: Appbar('Policies'),
+            appBar: Appbar('General'),
             body: SafeArea(
               child: BackgroundBase(
                 true,
@@ -93,7 +93,7 @@ class _PoliciesScreenState extends State<PoliciesScreen> {
           child: ListView.separated(
             physics: BouncingScrollPhysics(),
             shrinkWrap: true,
-            itemCount: policiesScreenTitles.keys.toList().length,
+            itemCount: generalScreenTitles.keys.toList().length,
             itemBuilder: _itemBuilder,
             separatorBuilder: (context, index) {
               return Divider(
@@ -107,12 +107,12 @@ class _PoliciesScreenState extends State<PoliciesScreen> {
   }
 
   Widget _itemBuilder(BuildContext context, int index) {
-    String key = policiesScreenTitles.keys.toList()[index];
+    String key = generalScreenTitles.keys.toList()[index];
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Row(
         children: <Widget>[
-          Expanded(child: Text(policiesScreenTitles[key])),
+          Expanded(child: Text(generalScreenTitles[key])),
           GestureDetector(
             onTap: () {
               _onTileClicked(key);
@@ -138,19 +138,25 @@ class _PoliciesScreenState extends State<PoliciesScreen> {
   }
 
   void _onTileClicked(String key) {
-    Widget _target = LegalEditorScreen(
-      globalStateModel: widget.globalStateModel,
-      setScreenBloc: widget.setScreenBloc,
-      type: key,
-    );
 
-    Navigator.push(
-      context,
-      PageTransition(
-        child: _target,
-        type: PageTransitionType.fade,
-        duration: Duration(milliseconds: 50),
-      ),
-    );
+    switch (key) {
+      case 'language':
+        Navigator.push(
+          context,
+          PageTransition(
+            child: LanguageScreen(
+              settingBloc: widget.setScreenBloc,
+            ),
+            type: PageTransitionType.fade,
+          ),
+        );
+        break;
+      case 'color_and_style':
+      case 'personal_information':
+      case 'shipping_address':
+      case 'password':
+    }
+
+
   }
 }

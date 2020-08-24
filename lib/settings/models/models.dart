@@ -540,3 +540,11 @@ class LegalDocument {
     id = obj['_id'];
   }
 }
+
+Map<String, String> generalScreenTitles = {
+  'language': 'Language',
+  'color_and_style': 'Color and style',
+  'personal_information': 'Personal information',
+  'shipping_address': 'Shipping address',
+  'password': 'Password',
+};

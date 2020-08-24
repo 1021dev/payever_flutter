@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/models/app_widget.dart';
 import 'package:payever/settings/models/models.dart';
 
@@ -28,6 +29,7 @@ class SettingScreenState {
   final String searchGroupText;
   final bool isSearching;
   final LegalDocument legalDocument;
+  final User user;
 
   SettingScreenState({
     this.isLoading = false,
@@ -55,6 +57,7 @@ class SettingScreenState {
     this.searchGroupText = '',
     this.isSearching = false,
     this.legalDocument,
+    this.user,
   });
 
   List<Object> get props => [
@@ -82,6 +85,7 @@ class SettingScreenState {
     this.searchGroupText,
     this.isSearching,
     this.legalDocument,
+    this.user,
   ];
 
   SettingScreenState copyWith({
@@ -110,6 +114,7 @@ class SettingScreenState {
     String searchGroupText,
     bool isSearching,
     LegalDocument legalDocument,
+    User user,
   }) {
     return SettingScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -137,6 +142,7 @@ class SettingScreenState {
       searchGroupText: searchGroupText ?? this.searchGroupText,
       isSearching: isSearching ?? this.isSearching,
       legalDocument: legalDocument ?? this.legalDocument,
+      user: user ?? this.user,
     );
   }
 }

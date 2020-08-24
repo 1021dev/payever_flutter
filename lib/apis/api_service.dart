@@ -185,6 +185,24 @@ class ApiService {
     }
   }
 
+  Future<dynamic> updateUser(String token, Map<String, dynamic> body) async {
+    try {
+      print('TAG - updateUser()');
+      dynamic response = await _client.patchTypeless(
+          userUrl,
+          body: body,
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<dynamic> refreshToken(String token, String finger) async {
     try {
       print('$TAG - refreshToken()');

@@ -244,3 +244,11 @@ class UpdateLegalDocumentEvent extends SettingScreenEvent{
   final Map<String, dynamic> content;
   UpdateLegalDocumentEvent({this.content, this.type});
 }
+
+class GetCurrentUserEvent extends SettingScreenEvent {}
+
+class UpdateCurrentUserEvent extends SettingScreenEvent {
+  final Map<String, dynamic> body;
+
+  UpdateCurrentUserEvent({this.body});
+}

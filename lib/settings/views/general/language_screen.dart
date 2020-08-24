@@ -1,30 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:payever/blocs/bloc.dart';
-import 'package:payever/checkout/models/models.dart';
+import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 
-class CheckoutPhoneNumberScreen extends StatefulWidget {
+class LanguageScreen extends StatefulWidget {
 
-  final CheckoutSettingScreenBloc settingBloc;
-  final Checkout checkout;
-  CheckoutPhoneNumberScreen({this.settingBloc, this.checkout});
+  final SettingScreenBloc settingBloc;
+  LanguageScreen({this.settingBloc,});
 
-  _CheckoutPhoneNumberScreenState createState() => _CheckoutPhoneNumberScreenState();
+  _LanguageScreenScreenState createState() => _LanguageScreenScreenState();
 
 }
 
-class _CheckoutPhoneNumberScreenState extends State<CheckoutPhoneNumberScreen> {
-  String phoneNum;
+class _LanguageScreenScreenState extends State<LanguageScreen> {
+
+  User user;
+  String defaultLanguage;
+
+  Map<String, String> languages = {
+    'en': 'English',
+    'de': 'Deutsch',
+    'no': 'Norsk',
+    'da': 'Dansk',
+    'sv': 'Svenska',
+  };
 
   @override
   void initState() {
-    phoneNum = widget.checkout.settings.phoneNumber;
-
-    widget.settingBloc.add(GetPhoneNumbers());
+    user = widget.settingBloc.state.user;
+    defaultLanguage = user.language;
     super.initState();
   }
 
@@ -36,17 +44,17 @@ class _CheckoutPhoneNumberScreenState extends State<CheckoutPhoneNumberScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocListener(
-        bloc: widget.settingBloc,
-        listener: (BuildContext context, CheckoutSettingScreenState state) async {
-          if (state is CheckoutSettingScreenStateSuccess) {
-            Navigator.pop(context);
-          } else if (state is CheckoutSettingScreenStateFailure) {
+      bloc: widget.settingBloc,
+      listener: (BuildContext context, SettingScreenState state) async {
+        if (state is SettingScreenStateSuccess) {
+          Navigator.pop(context);
+        } else if (state is SettingScreenStateFailure) {
 
-          }
-        },
-      child: BlocBuilder<CheckoutSettingScreenBloc, CheckoutSettingScreenState>(
+        }
+      },
+      child: BlocBuilder<SettingScreenBloc, SettingScreenState>(
         bloc: widget.settingBloc,
-        builder: (BuildContext context, CheckoutSettingScreenState state) {
+        builder: (BuildContext context, SettingScreenState state) {
           return Scaffold(
             backgroundColor: Colors.black,
             resizeToAvoidBottomPadding: false,
@@ -69,14 +77,14 @@ class _CheckoutPhoneNumberScreenState extends State<CheckoutPhoneNumberScreen> {
     );
   }
 
-  Widget _appBar(CheckoutSettingScreenState state) {
+  Widget _appBar(SettingScreenState state) {
     return AppBar(
       centerTitle: false,
       elevation: 0,
       automaticallyImplyLeading: false,
       backgroundColor: Colors.black87,
       title: Text(
-        Language.getConnectStrings('actions.edit'),
+        Language.getPosStrings('settings.language.title'),
         style: TextStyle(
           color: Colors.white,
           fontSize: 16,
@@ -107,7 +115,7 @@ class _CheckoutPhoneNumberScreenState extends State<CheckoutPhoneNumberScreen> {
     );
   }
 
-  Widget _getBody(CheckoutSettingScreenState state) {
+  Widget _getBody(SettingScreenState state) {
     return Container(
       width: Measurements.width,
       padding: EdgeInsets.all(16),
@@ -121,25 +129,26 @@ class _CheckoutPhoneNumberScreenState extends State<CheckoutPhoneNumberScreen> {
                 child: BlurEffectView(
                   radius: 8,
                   child: DropdownButtonFormField(
-                    items: List.generate(state.phoneNumbers.length, (index) {
+                    items: List.generate(languages.keys.toList().length, (index) {
                       return DropdownMenuItem(
                         child: Padding(
                           padding: EdgeInsets.only(left: 16),
                           child: Text(
-                            state.phoneNumbers[index],
+                            languages[languages.keys.toList()[index]],
                           ),
                         ),
-                        value: state.phoneNumbers[index],
+                        value: languages.keys.toList()[index],
                       );
                     }).toList(),
                     onChanged: (val) {
                       setState(() {
-                        phoneNum = val;
+                        defaultLanguage = val;
                       });
                     },
+                    value: defaultLanguage,
                     hint: Padding(
                       padding: EdgeInsets.only(left: 16),
-                      child: Text(phoneNum != null ? phoneNum : 'Phone number',
+                      child: Text('Language',
                       ),
                     ),
                   ),
@@ -150,8 +159,10 @@ class _CheckoutPhoneNumberScreenState extends State<CheckoutPhoneNumberScreen> {
                 child: SizedBox.expand(
                   child: MaterialButton(
                     onPressed: () {
-                      widget.checkout.settings.phoneNumber = phoneNum;
-                      widget.settingBloc.add(UpdateCheckoutSettingsEvent());
+                      Map<String, dynamic> body = {
+                        'language': defaultLanguage,
+                      };
+                      widget.settingBloc.add(UpdateCurrentUserEvent(body: body));
                     },
                     color: Colors.black,
                     child: state.isUpdating
