@@ -39,19 +39,19 @@ class LoginScreenBloc extends Bloc<LoginScreenEvent, LoginScreenState> {
       var obj = await api.getEnv();
       Env.map(obj);
 
-      dynamic versionObj = await api.getVersion();
+//      dynamic versionObj = await api.getVersion();
+//
+//      Version version = Version.map(versionObj);
+//      print('version:$versionString');
+//      print('_version:${version.minVersion}');
+//      print('compare:${versionString.compareTo(version.minVersion)}');
 
-      Version version = Version.map(versionObj);
-      print('version:$versionString');
-      print('_version:${version.minVersion}');
-      print('compare:${versionString.compareTo(version.minVersion)}');
-
-      if (versionString.compareTo(version.minVersion) < 0) {
-
-        yield state.copyWith(isLoading: false);
-        yield LoginScreenVersionFailed(version: version);
-
-      }else{
+//      if (versionString.compareTo(version.minVersion) < 0) {
+//
+//        yield state.copyWith(isLoading: false);
+//        yield LoginScreenVersionFailed(version: version);
+//
+//      }else{
 
         dynamic loginObj = await api.login(email, password);
         Token tokenData = Token.map(loginObj);
@@ -69,7 +69,7 @@ class LoginScreenBloc extends Bloc<LoginScreenEvent, LoginScreenState> {
 
         yield state.copyWith(isLoading: false);
         yield LoginScreenSuccess();
-      }
+//      }
     } catch (error){
       print(onError.toString());
       yield state.copyWith(isLoading: false,);

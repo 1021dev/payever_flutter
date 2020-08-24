@@ -64,21 +64,21 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
       } else {
         add(DashboardScreenInitEvent(wallpaper: wallpaper, isRefresh: true));
       }
-      var v = await api.getVersion();
-      Version vv = Version.map(v);
-      print("version:$version");
-      print("_version:${vv.minVersion}");
-      print("compare:${version.compareTo(vv.minVersion)}");
+//      var v = await api.getVersion();
+//      Version vv = Version.map(v);
+//      print("version:$version");
+//      print("_version:${vv.minVersion}");
+//      print("compare:${version.compareTo(vv.minVersion)}");
 
-      if (version.compareTo(vv.minVersion) < 0) {
-        print('Not Supported Version');
-      }else{
+//      if (version.compareTo(vv.minVersion) < 0) {
+//        print('Not Supported Version');
+//      }else{
         if (refresh) {
           yield* loadData();
         } else {
           yield* _fetchInitialData();
         }
-      }
+//      }
     } catch (error) {
       print(error.toString());
       if (error.toString().contains('SocketException')) {
