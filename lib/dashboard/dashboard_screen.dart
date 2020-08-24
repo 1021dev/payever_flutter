@@ -31,18 +31,15 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'sub_view/dashboard_advertising_view.dart';
 import 'sub_view/dashboard_app_pos.dart';
 import 'sub_view/dashboard_business_apps_view.dart';
 import 'sub_view/dashboard_checkout_view.dart';
 import 'sub_view/dashboard_connect_view.dart';
 import 'sub_view/dashboard_contact_view.dart';
-import 'sub_view/dashboard_mail_view.dart';
 import 'sub_view/dashboard_menu_view.dart';
 import 'sub_view/dashboard_products_view.dart';
 import 'sub_view/dashboard_settings_view.dart';
 import 'sub_view/dashboard_shop_view.dart';
-import 'sub_view/dashboard_studio_view.dart';
 import 'sub_view/dashboard_transactions_view.dart';
 import 'sub_view/dashboard_tutorial_view.dart';
 
@@ -103,10 +100,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     SharedPreferences.getInstance().then((p) {
       Language.language = p.getString(GlobalUtils.LANGUAGE);
       Language(context);
-      SharedPreferences.getInstance().then((p) {
-        Language.language = p.getString(GlobalUtils.LANGUAGE);
-        Language(context);
-      });
     });
     Locale myLocale = Localizations.localeOf(context);
     print('Language - ${myLocale.languageCode}');
@@ -134,7 +127,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               PageTransition(
                   child: LoginScreen(),
                   type: PageTransitionType.fade,
-              )
+              ),
           );
         } else if (state is DashboardScreenSwitch) {
           Navigator.pushReplacement(

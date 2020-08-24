@@ -7,6 +7,7 @@ import 'package:payever/blocs/dashboard/dashboard_bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/settings/models/models.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'setting.dart';
 
 class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
@@ -581,9 +582,12 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
 
   Stream<SettingScreenState> updateUser(Map<String, dynamic> body) async* {
     yield state.copyWith(isUpdating: true);
+    SharedPreferences preferences = await SharedPreferences.getInstance();
     dynamic response = await api.updateUser(token, body);
     dynamic userResponse = await api.getUser(token);
     User user = User.map(userResponse);
+    preferences.setString(GlobalUtils.LANGUAGE, user.language);
+
     dashboardScreenBloc.state.copyWith(user: user);
 
     yield state.copyWith(isUpdating: false, user: user);

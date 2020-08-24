@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:payever/blocs/bloc.dart';
-import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
+import 'package:provider/provider.dart';
 
 class LanguageScreen extends StatefulWidget {
   final GlobalStateModel globalStateModel;
@@ -18,7 +18,9 @@ class LanguageScreen extends StatefulWidget {
 }
 
 class _LanguageScreenScreenState extends State<LanguageScreen> {
+  GlobalStateModel globalStateModel;
 
+  User user;
   String defaultLanguage;
 
   Map<String, String> languages = {
@@ -31,7 +33,8 @@ class _LanguageScreenScreenState extends State<LanguageScreen> {
 
   @override
   void initState() {
-    widget.settingBloc.add(GetCurrentUserEvent());
+    user = widget.settingBloc.state.user;
+    defaultLanguage = user.language;
     super.initState();
   }
 
@@ -42,10 +45,12 @@ class _LanguageScreenScreenState extends State<LanguageScreen> {
 
   @override
   Widget build(BuildContext context) {
+    globalStateModel = Provider.of<GlobalStateModel>(context);
     return BlocListener(
       bloc: widget.settingBloc,
       listener: (BuildContext context, SettingScreenState state) async {
         if (state is SettingScreenUpdateSuccess) {
+          globalStateModel.setLanguage(defaultLanguage);
           Navigator.pop(context);
         } else if (state is SettingScreenStateFailure) {
 
@@ -144,11 +149,10 @@ class _LanguageScreenScreenState extends State<LanguageScreen> {
                         defaultLanguage = val;
                       });
                     },
-                    value: state.user.language,
+                    value: defaultLanguage,
                     hint: Padding(
                       padding: EdgeInsets.only(left: 16),
-                      child: Text(
-                        Language.getSettingsStrings('form.create_form.language.label'),
+                      child: Text('Language',
                       ),
                     ),
                   ),

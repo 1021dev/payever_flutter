@@ -109,13 +109,15 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                   ),
                                   Transform.scale(
                                     scale: 0.6,
-                                    child: state.updating2FA ? CircularProgressIndicator() : CupertinoSwitch(
-                                      onChanged: (val) {
-                                        widget.setScreenBloc.add(UpdateAuthUserEvent(
-                                          body: {'secondFactorRequired': val}
-                                        ));
-                                      },
-                                      value: state.authUser != null ? state.authUser.secondFactorRequired ?? false: false,
+                                    child: Center(
+                                      child: state.updating2FA ? CircularProgressIndicator() : CupertinoSwitch(
+                                        onChanged: (val) {
+                                          widget.setScreenBloc.add(UpdateAuthUserEvent(
+                                              body: {'secondFactorRequired': val}
+                                          ));
+                                        },
+                                        value: state.authUser != null ? state.authUser.secondFactorRequired ?? false: false,
+                                      ),
                                     ),
                                   ),
                                 ],

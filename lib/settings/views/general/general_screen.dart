@@ -60,7 +60,8 @@ class _GeneralScreenState extends State<GeneralScreen> {
       listener: (BuildContext context, SettingScreenState state) async {
         if (state is SettingScreenStateFailure) {
           Fluttertoast.showToast(msg: state.error);
-        }
+        } else if (state is SettingScreenUpdateSuccess) {
+          widget.setScreenBloc.add(GetCurrentUserEvent());}
       },
       child: BlocBuilder<SettingScreenBloc, SettingScreenState>(
         bloc: widget.setScreenBloc,

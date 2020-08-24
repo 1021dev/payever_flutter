@@ -12,6 +12,7 @@ class GlobalStateModel extends ChangeNotifier {
       "https://payever.azureedge.net/images/commerseos-background-blurred.jpg";
   String _theme = 'default';
 
+  String _language = 'en';
   bool _refresh = false;
   Business _currentBusiness;
   List<AppWidget> _appWidgets;
@@ -19,6 +20,8 @@ class GlobalStateModel extends ChangeNotifier {
   String get currentWallpaper => _currentWallpaper ?? _defaultCustomWallpaper;
 
   String get defaultCustomWallpaper => _defaultCustomWallpaper;
+
+  String get language => _language;
 
   Business get currentBusiness => _currentBusiness;
 
@@ -63,6 +66,11 @@ class GlobalStateModel extends ChangeNotifier {
     print("_currentBusiness: $_currentBusiness");
     print("_appWidgets: $_appWidgets");
 
+    notifyListeners();
+  }
+
+  setLanguage(String lang) {
+    _language = lang;
     notifyListeners();
   }
 
