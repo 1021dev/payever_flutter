@@ -159,10 +159,12 @@ class _LanguageScreenScreenState extends State<LanguageScreen> {
                 child: SizedBox.expand(
                   child: MaterialButton(
                     onPressed: () {
-                      Map<String, dynamic> body = {
-                        'language': defaultLanguage,
-                      };
-                      widget.settingBloc.add(UpdateCurrentUserEvent(body: body));
+                      if (!state.isUpdating) {
+                        Map<String, dynamic> body = {
+                          'language': defaultLanguage,
+                        };
+                        widget.settingBloc.add(UpdateCurrentUserEvent(body: body));
+                      }
                     },
                     color: Colors.black,
                     child: state.isUpdating

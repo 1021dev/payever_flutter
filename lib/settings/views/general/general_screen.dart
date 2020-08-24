@@ -5,10 +5,12 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/setting/setting_bloc.dart';
+import 'package:payever/checkout/widgets/color_style_item.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/settings/models/models.dart';
+import 'package:payever/settings/views/general/color_style_screen.dart';
 import 'package:payever/settings/views/general/language_screen.dart';
 import 'package:payever/settings/widgets/app_bar.dart';
 
@@ -152,6 +154,16 @@ class _GeneralScreenState extends State<GeneralScreen> {
         );
         break;
       case 'color_and_style':
+        Navigator.push(
+          context,
+          PageTransition(
+            child: ColorStyleScreen(
+              settingBloc: widget.setScreenBloc,
+            ),
+            type: PageTransitionType.fade,
+          ),
+        );
+        break;
       case 'personal_information':
       case 'shipping_address':
       case 'password':

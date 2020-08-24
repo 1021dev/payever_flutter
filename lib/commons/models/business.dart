@@ -302,14 +302,26 @@ class ThemeSetting {
   String theme;
   String updatedAt;
   String id;
+  String primaryColor;
+  String secondaryColor;
 
   ThemeSetting.fromMap(dynamic obj) {
     theme = obj['theme'];
     createdAt = obj['createdAt'];
     updatedAt = obj['updatedAt'];
+    secondaryColor = obj['secondaryColor'];
+    primaryColor = obj['primaryColor'];
     id = obj['_id'];
   }
 
+  Map<String, dynamic> toDictionary() {
+    Map<String, dynamic> map;
+    map['_id'] = id;
+    map['primaryColor'] = primaryColor;
+    map['secondaryColor'] = secondaryColor;
+
+    return map;
+  }
 }
 
 class Taxes {
