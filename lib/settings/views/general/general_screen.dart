@@ -14,6 +14,7 @@ import 'package:payever/settings/views/general/language_screen.dart';
 import 'package:payever/settings/views/general/personal_information_screen.dart';
 import 'package:payever/settings/views/general/shipping_addresses_screen.dart';
 import 'package:payever/settings/widgets/app_bar.dart';
+import 'package:provider/provider.dart';
 
 class GeneralScreen extends StatefulWidget {
   final GlobalStateModel globalStateModel;
@@ -30,10 +31,11 @@ class GeneralScreen extends StatefulWidget {
 class _GeneralScreenState extends State<GeneralScreen> {
   bool _isPortrait;
   bool _isTablet;
-
+  GlobalStateModel globalStateModel;
   @override
   void initState() {
     widget.setScreenBloc.add(GetCurrentUserEvent());
+    globalStateModel = Provider.of<GlobalStateModel>(context);
     super.initState();
   }
 
@@ -148,6 +150,7 @@ class _GeneralScreenState extends State<GeneralScreen> {
           context,
           PageTransition(
             child: LanguageScreen(
+              globalStateModel: globalStateModel,
               settingBloc: widget.setScreenBloc,
             ),
             type: PageTransitionType.fade,
@@ -159,7 +162,7 @@ class _GeneralScreenState extends State<GeneralScreen> {
           context,
           PageTransition(
             child: ColorStyleScreen(
-              globalStateModel: widget.globalStateModel,
+              globalStateModel: globalStateModel,
               settingBloc: widget.setScreenBloc,
             ),
             type: PageTransitionType.fade,
@@ -171,7 +174,7 @@ class _GeneralScreenState extends State<GeneralScreen> {
           context,
           PageTransition(
             child: PersonalInformationScreen(
-              globalStateModel: widget.globalStateModel,
+              globalStateModel: globalStateModel,
               setScreenBloc: widget.setScreenBloc,
             ),
             type: PageTransitionType.fade,
@@ -183,7 +186,7 @@ class _GeneralScreenState extends State<GeneralScreen> {
           context,
           PageTransition(
             child: ShippingAddressesScreen(
-              globalStateModel: widget.globalStateModel,
+              globalStateModel: globalStateModel,
               setScreenBloc: widget.setScreenBloc,
             ),
             type: PageTransitionType.fade,

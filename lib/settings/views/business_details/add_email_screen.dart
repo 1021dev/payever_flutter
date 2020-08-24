@@ -71,6 +71,7 @@ class _AddEmailScreenState extends State<AddEmailScreen> {
       bloc: widget.setScreenBloc,
       listener: (BuildContext context, state) {
         if (state is SettingScreenUpdateSuccess) {
+          Navigator.pop(context);
         } else if (state is SettingScreenStateFailure) {}
       },
       child: BlocBuilder<SettingScreenBloc, SettingScreenState>(

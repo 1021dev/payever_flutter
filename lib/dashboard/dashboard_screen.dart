@@ -1026,7 +1026,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   PageTransition(
                     child: SettingInitScreen(dashboardScreenBloc: screenBloc,),
                     type: PageTransitionType.fade,
-                    duration: Duration(milliseconds: 50),
+                    duration: Duration(milliseconds: 300),
                   ),
                 );
               }
@@ -1041,7 +1041,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 PageTransition(
                   child: WallpaperScreen(globalStateModel: globalStateModel,setScreenBloc: settingscreenBloc, fromDashboard: true,),
                   type: PageTransitionType.fade,
-                  duration: Duration(milliseconds: 50),
+                  duration: Duration(milliseconds: 300),
                 ),
               );
             },

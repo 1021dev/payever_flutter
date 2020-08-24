@@ -8,9 +8,9 @@ import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 
 class LanguageScreen extends StatefulWidget {
-
+  final GlobalStateModel globalStateModel;
   final SettingScreenBloc settingBloc;
-  LanguageScreen({this.settingBloc,});
+  LanguageScreen({this.settingBloc, this.globalStateModel,});
 
   _LanguageScreenScreenState createState() => _LanguageScreenScreenState();
 
@@ -46,7 +46,7 @@ class _LanguageScreenScreenState extends State<LanguageScreen> {
     return BlocListener(
       bloc: widget.settingBloc,
       listener: (BuildContext context, SettingScreenState state) async {
-        if (state is SettingScreenStateSuccess) {
+        if (state is SettingScreenUpdateSuccess) {
           Navigator.pop(context);
         } else if (state is SettingScreenStateFailure) {
 

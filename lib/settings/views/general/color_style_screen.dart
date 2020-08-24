@@ -29,8 +29,10 @@ class _ColorStyleScreenState extends State<ColorStyleScreen> {
   bool selected = true;
   @override
   void initState() {
-    business = widget.settingBloc.dashboardScreenBloc.state.activeBusiness;
+    business = widget.globalStateModel.currentBusiness;
     setting = business.themeSettings;
+    primaryColor = setting.primaryColor;
+    secondaryColor = setting.secondaryColor;
 
     super.initState();
   }
@@ -45,7 +47,7 @@ class _ColorStyleScreenState extends State<ColorStyleScreen> {
     return BlocListener(
       bloc: widget.settingBloc,
       listener: (BuildContext context, SettingScreenState state) async {
-        if (state is SettingScreenStateSuccess) {
+        if (state is SettingScreenUpdateSuccess) {
           Navigator.pop(context);
         } else if (state is SettingScreenStateFailure) {
 
