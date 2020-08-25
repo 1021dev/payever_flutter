@@ -63,7 +63,7 @@ class ProductsScreenState {
     this.addList = const [],
     this.searchText = '',
     this.filterTypes = const [],
-    this.sortType = 'default',
+    this.sortType = 'createdAt',
     this.updateSuccess = false,
     this.addToCollection = false,
   });

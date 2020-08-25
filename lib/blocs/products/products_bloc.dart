@@ -227,7 +227,7 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
       orderDirection = 'asc';
     } else if (state.sortType == 'name') {
       orderBy = 'title';
-      orderDirection = 'desc';
+      orderDirection = 'asc';
     } else if (state.sortType == 'price_low') {
       orderBy = 'price';
       orderDirection = 'asc';
@@ -235,6 +235,9 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
       orderBy = 'price';
       orderDirection = 'desc';
     } else if (state.sortType == 'name') {
+      orderBy = 'createdAt';
+      orderDirection = 'desc';
+    } else {
       orderBy = 'createdAt';
       orderDirection = 'desc';
     }

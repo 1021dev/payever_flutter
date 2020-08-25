@@ -985,25 +985,27 @@ class _ProductsScreenState extends State<ProductsScreen> {
   }
 
   Widget _bottomBar(ProductsScreenState state) {
-    return Container(
-      height: 50,
-      color: Colors.black87,
-      child: Row(
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(left: 16),
-          ),
-          Text(
-            'Total: ${_selectedIndexValue == 0 ? state.productsInfo.itemCount: state.collectionInfo.itemCount}',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
+    return state.productsInfo == null
+        ? Container()
+        : Container(
+            height: 50,
+            color: Colors.black87,
+            child: Row(
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(left: 16),
+                ),
+                Text(
+                  'Total: ${_selectedIndexValue == 0 ? state.productsInfo.itemCount : state.collectionInfo.itemCount}',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
-    );
+          );
   }
 
   Widget _getBody(ProductsScreenState state) {
