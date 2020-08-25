@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/dashboard_option_cell.dart';
+import 'package:payever/theme.dart';
 
 class DashboardAppPosView extends StatefulWidget {
   final BusinessApps businessApps;
@@ -35,8 +36,8 @@ class DashboardAppPosView extends StatefulWidget {
 }
 
 class _DashboardAppPosViewState extends State<DashboardAppPosView> {
-  String uiKit = '${Env.cdnIcon}icons-apps-white/icon-apps-white-';
   String imageBase = Env.storage + '/images/';
+  String uiKit = '${Env.cdnIcon}icons-apps-white/icon-apps-white-';
 
   bool isExpanded = false;
   @override
@@ -82,7 +83,6 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                           Text(
                             'POINT OF SALE',
                             style: TextStyle(
-                              color: Colors.white,
                               fontSize: 12,
                             ),
                           )
@@ -96,14 +96,13 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                               height: 20,
                               width: 40,
                               decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Colors.black.withOpacity(0.4)
+                                borderRadius: BorderRadius.circular(10),
+                                color: overlayBackground(),
                               ),
                               child: Center(
                                 child: Text('Open',
                                   style: TextStyle(
-                                      fontSize: 10,
-                                      color: Colors.white
+                                    fontSize: 10,
                                   ),
                                 ),
                               ),
@@ -126,8 +125,7 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                                     child: Text(
                                       '${widget.notifications.length}',
                                       style: TextStyle(
-                                          fontSize: 10,
-                                          color: Colors.white
+                                        fontSize: 10,
                                       ),
                                     ),
                                   ),
@@ -144,13 +142,14 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                                       width: 21,
                                       height: 21,
                                       decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(10.5),
-                                          color: Colors.black45
+                                        borderRadius: BorderRadius.circular(10.5),
+                                        color: overlayBackground(),
                                       ),
                                       child: Center(
                                         child: SvgPicture.asset(
                                           isExpanded ? 'assets/images/closeicon.svg' : 'assets/images/icon_plus.svg',
                                           width: 8,
+                                          color: iconColor(),
                                         ),
                                       ),
                                     ),
@@ -204,8 +203,8 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                                 child: Text(
                                   avatarName,
                                   style: TextStyle(
-                                    color: Colors.white,
                                     fontSize: 24,
+                                    color: iconColor(),
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
@@ -221,7 +220,6 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                                 minFontSize: 16,
                                 maxFontSize: 24,
                                 style: TextStyle(
-                                  color: Colors.white,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -237,7 +235,7 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                         flex: 1,
                         child: MaterialButton(
                           onPressed: widget.onTapEditTerminal,
-                          color: Colors.black26,
+                          color: overlayBackground(),
                           height: 60,
                           elevation: 0,
                           shape: RoundedRectangleBorder(
@@ -248,13 +246,12 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                SvgPicture.asset('assets/images/edit_pen.svg', width: 24,),
+                                SvgPicture.asset('assets/images/edit_pen.svg', width: 24, color: iconColor(),),
                                 SizedBox(width: 8),
                                 Text(
                                   'Edit',
                                   softWrap: true,
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 16),
+                                  style: TextStyle(fontSize: 16),
                                 )
                               ],
                             ),
@@ -271,7 +268,7 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                 height: 50.0 * widget.notifications.length,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(bottomLeft: Radius.circular(6), bottomRight: Radius.circular(6)),
-                    color: Colors.black38
+                    color: overlayColor(),
                 ),
                 child: ListView.builder(
                   itemBuilder: _itemBuilderDDetails,
@@ -303,7 +300,6 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                   Text(
                     Language.getCommerceOSStrings(widget.businessApps.dashboardInfo.title),
                     style: TextStyle(
-                        color: Colors.white,
                         fontSize: 16,
                         fontWeight: FontWeight.bold
                     ),
@@ -312,7 +308,6 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                   Text(
                     Language.getWidgetStrings('widgets.${widget.businessApps.code}.install-app'),
                     style: TextStyle(
-                      color: Colors.white,
                       fontSize: 10,
                     ),
                   ),
@@ -323,8 +318,8 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
             Container(
               height: 40,
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(6), bottomRight: Radius.circular(6)),
-                  color: Colors.black38
+                borderRadius: BorderRadius.only(bottomLeft: Radius.circular(6), bottomRight: Radius.circular(6)),
+                color: overlayBackground(),
               ),
               child: Row(
                 children: [
@@ -338,8 +333,7 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                         child: Text(
                           widget.businessApps.installed ? 'Get started' : 'Continue setup process',
                           softWrap: true,
-                          style: TextStyle(
-                              color: Colors.white, fontSize: 12),
+                          style: TextStyle(fontSize: 12),
                         ),
                       ),
                     ),
@@ -359,7 +353,8 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                           'Learn more',
                           softWrap: true,
                           style: TextStyle(
-                              color: Colors.white, fontSize: 12),
+                            fontSize: 12,
+                          ),
                         ),
                       ),
                     ),

@@ -7,6 +7,7 @@ import 'package:payever/commons/utils/env.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/dashboard_option_cell.dart';
+import 'package:payever/theme.dart';
 
 class DashboardTransactionsView extends StatefulWidget {
   final VoidCallback onOpen;
@@ -79,7 +80,6 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                           Text(
                             Language.getWidgetStrings(widget.appWidget.title).toUpperCase(),
                             style: TextStyle(
-                              color: Colors.white,
                               fontSize: 12,
                             ),
                           )
@@ -94,14 +94,13 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                               width: 40,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
-                                  color: Colors.black.withAlpha(100)
+                                  color: overlayBackground(),
                               ),
                               child: Center(
                                 child: Text(
                                   'Open',
                                   style: TextStyle(
                                     fontSize: 10,
-                                    color: Colors.white,
                                   ),
                                 ),
                               ),
@@ -124,7 +123,6 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                                       '${widget.notifications.length}',
                                       style: TextStyle(
                                           fontSize: 10,
-                                          color: Colors.white
                                       ),
                                     ),
                                   ),
@@ -142,12 +140,13 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                                       height: 21,
                                       decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(10.5),
-                                          color: Colors.black45
+                                          color: overlayBackground(),
                                       ),
                                       child: Center(
                                         child: SvgPicture.asset(
                                           isExpanded ? 'assets/images/closeicon.svg' : 'assets/images/icon_plus.svg',
                                           width: 8,
+                                          color: iconColor(),
                                         ),
                                       ),
                                     ),
@@ -177,7 +176,6 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                     children: [
                       Icon(
                         Icons.arrow_upward,
-                        color: Colors.white,
                         size: 10,
                       ),
                       SizedBox(width: 4),
@@ -185,7 +183,6 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                         Language.getWidgetStrings('widgets.transactions.this-month'),
                         style: TextStyle(
                           fontSize: 10,
-                          color: Colors.white,
                         ),
                       ),
                     ],
@@ -198,7 +195,6 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                         textAlign: TextAlign.start,
                         style: TextStyle(
                           fontSize: 16,
-                          color: Colors.white,
                           fontWeight: FontWeight.w400,
                         ),
                       )
@@ -213,7 +209,7 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                 height: 50.0 * widget.notifications.length,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(bottomLeft: Radius.circular(6), bottomRight: Radius.circular(6)),
-                    color: Colors.black38
+                    color: overlayBackground(),
                 ),
                 child: ListView.builder(
                   itemBuilder: _itemBuilderDDetails,
@@ -246,7 +242,6 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                   Text(
                     Language.getWidgetStrings(widget.appWidget.title),
                     style: TextStyle(
-                        color: Colors.white,
                         fontSize: 16,
                         fontWeight: FontWeight.bold
                     ),
@@ -260,7 +255,7 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
               height: 40,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(bottomLeft: Radius.circular(6), bottomRight: Radius.circular(6)),
-                  color: Colors.black38
+                  color: overlayBackground(),
               ),
               child: Row(
                 children: [
@@ -277,7 +272,7 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                           !widget.businessApps.installed ? 'Get started' : 'Continue setup process',
                           softWrap: true,
                           style: TextStyle(
-                              color: Colors.white, fontSize: 12),
+                              fontSize: 12),
                         ),
                       ),
                     ),
@@ -297,7 +292,7 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                           'Learn more',
                           softWrap: true,
                           style: TextStyle(
-                              color: Colors.white, fontSize: 12),
+                              fontSize: 12),
                         ),
                       ),
                     ),

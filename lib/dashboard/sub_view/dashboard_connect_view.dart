@@ -7,6 +7,7 @@ import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/connect/models/connect.dart';
 import 'package:payever/commons/utils/env.dart';
 import 'package:payever/commons/views/custom_elements/dashboard_option_cell.dart';
+import 'package:payever/theme.dart';
 
 class DashboardConnectView extends StatefulWidget {
   final AppWidget appWidget;
@@ -64,7 +65,6 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                           Text(
                             'CONNECT',
                             style: TextStyle(
-                              color: Colors.white,
                               fontSize: 12,
                             ),
                           )
@@ -79,14 +79,13 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                               width: 40,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
-                                color: Colors.black.withAlpha(100),
+                                color: overlayBackground(),
                               ),
                               child: Center(
                                 child: Text(
                                   Language.getCommerceOSStrings('actions.open'),
                                   style: TextStyle(
                                     fontSize: 10,
-                                    color: Colors.white,
                                   ),
                                 ),
                               ),
@@ -109,7 +108,6 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                                       '${widget.notifications.length}',
                                       style: TextStyle(
                                         fontSize: 10,
-                                        color: Colors.white,
                                       ),
                                     ),
                                   ),
@@ -127,12 +125,12 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                                       height: 21,
                                       decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(10.5),
-                                          color: Colors.black45
                                       ),
                                       child: Center(
                                         child: SvgPicture.asset(
                                           isExpanded ? 'assets/images/closeicon.svg' : 'assets/images/icon_plus.svg',
                                           width: 8,
+                                          color: iconColor(),
                                         ),
                                       ),
                                     ),
@@ -168,7 +166,6 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                               'Top rated',
                               style: TextStyle(
                                 fontSize: 12,
-                                color: Colors.white70,
                               ),
                             ),
                             SizedBox(height: 4),
@@ -186,7 +183,7 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                                     width: 35,
                                     height: 35,
                                     padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-                                    child: SvgPicture.asset(Measurements.channelIcon(iconType), width: 16, height: 16, color: Colors.white70,)
+                                    child: SvgPicture.asset(Measurements.channelIcon(iconType), width: 16, height: 16, color: iconColor(),)
                                   );
                                 },
                                 separatorBuilder: (context, index) {
@@ -207,14 +204,13 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                               height: 50,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(6),
-                                color: Colors.black26,
+                                color: overlayBackground(),
                               ),
                               child: Center(
                                 child: Text(
                                   'Connect',
                                   softWrap: true,
                                   style: TextStyle(
-                                    color: Colors.white,
                                     fontSize: 16,
                                   ),
                                 ),
@@ -237,7 +233,7 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                     bottomLeft: Radius.circular(6),
                     bottomRight: Radius.circular(6),
                   ),
-                  color: Colors.black38,
+                  color: overlayBackground(),
                 ),
                 child: ListView.builder(
                   itemBuilder: _itemBuilderDDetails,
@@ -271,7 +267,6 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                   Text(
                     Language.getWidgetStrings(widget.appWidget.title),
                     style: TextStyle(
-                      color: Colors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
@@ -288,7 +283,7 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                     bottomLeft: Radius.circular(6),
                     bottomRight: Radius.circular(6),
                   ),
-                  color: Colors.black38
+                  color: overlayBackground(),
               ),
               child: Row(
                 children: [
@@ -303,7 +298,6 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                           !widget.businessApps.installed ? 'Get started' : 'Continue setup process',
                           softWrap: true,
                           style: TextStyle(
-                            color: Colors.white,
                             fontSize: 12,
                           ),
                         ),
@@ -312,7 +306,7 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                   ),
                   if (!widget.businessApps.installed) Container(
                     width: 1,
-                    color: Colors.white12,
+                    color: overlayBackground(),
                   ),
                   if (!widget.businessApps.installed) Expanded(
                     flex: 1,
@@ -325,7 +319,6 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                           'Learn more',
                           softWrap: true,
                           style: TextStyle(
-                            color: Colors.white,
                             fontSize: 12,
                           ),
                         ),

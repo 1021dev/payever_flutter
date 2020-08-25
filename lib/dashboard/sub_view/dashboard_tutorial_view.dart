@@ -5,6 +5,7 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/env.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/tutorial_cell.dart';
+import 'package:payever/theme.dart';
 
 class DashboardTutorialView extends StatefulWidget {
   final List<Tutorial> tutorials;
@@ -47,7 +48,6 @@ class _DashboardTutorialViewState extends State<DashboardTutorialView> {
                         Text(
                           'TUTORIALS',
                           style: TextStyle(
-                            color: Colors.white,
                             fontSize: 12,
                           ),
                         )
@@ -64,12 +64,13 @@ class _DashboardTutorialViewState extends State<DashboardTutorialView> {
                         height: 21,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10.5),
-                            color: Colors.black45
+                            color: overlayBackground(),
                         ),
                         child: Center(
                           child: SvgPicture.asset(
                             isExpanded ? 'assets/images/closeicon.svg' : 'assets/images/icon_plus.svg',
                             width: 8,
+                            color: iconColor(),
                           ),
                         ),
                       ),
@@ -100,7 +101,7 @@ class _DashboardTutorialViewState extends State<DashboardTutorialView> {
               height: 40.0 * (widget.tutorials.length - 2),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(bottomLeft: Radius.circular(6), bottomRight: Radius.circular(6)),
-                  color: Colors.black38
+                  color: overlayBackground(),
               ),
               child: ListView.builder(
                 itemBuilder: _itemBuilder,

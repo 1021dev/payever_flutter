@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/commons/commons.dart';
+import 'package:payever/theme.dart';
 
 class TutorialCell extends StatelessWidget {
   final Tutorial tutorial;
@@ -20,13 +21,13 @@ class TutorialCell extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  SvgPicture.asset('assets/images/video.svg',),
+                  SvgPicture.asset('assets/images/video.svg', color: iconColor(),),
                   SizedBox(width: 12),
                   Text(
                     tutorial.title ?? '',
                     softWrap: true,
                     style: TextStyle(
-                      color: Colors.white, fontSize: 12,
+                      fontSize: 12,
                     ),
                   ),
                   SizedBox(width: 12),
@@ -36,7 +37,7 @@ class TutorialCell extends StatelessWidget {
                 children: [
                   tutorial.watched ? Padding(
                     padding: EdgeInsets.only(right: 8),
-                    child: SvgPicture.asset('assets/images/icon_eye.svg', color: Colors.grey,),
+                    child: SvgPicture.asset('assets/images/icon_eye.svg', color: iconColor().withOpacity(0.5),),
                   ): Container(),
                   InkWell(
                     onTap: () {
@@ -46,7 +47,7 @@ class TutorialCell extends StatelessWidget {
                       height: 20,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          color: Colors.black.withAlpha(100)
+                          color: overlayBackground(),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -58,7 +59,6 @@ class TutorialCell extends StatelessWidget {
                             Language.getWidgetStrings('widgets.tutorial.watch'),
                             style: TextStyle(
                                 fontSize: 10,
-                                color: Colors.white
                             ),
                           ),
                           SizedBox(width: 6),

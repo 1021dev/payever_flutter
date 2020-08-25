@@ -4,6 +4,7 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/env.dart';
 import 'package:payever/commons/views/custom_elements/BusinessAppCell.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
+import 'package:payever/theme.dart';
 
 class DashboardBusinessAppsView extends StatefulWidget {
   final List<BusinessApps> businessApps;
@@ -75,7 +76,6 @@ class _DashboardBusinessAppsViewState extends State<DashboardBusinessAppsView> {
                     Text(
                       'BUSINESS APPS',
                       style: TextStyle(
-                        color: Colors.white,
                         fontSize: 12,
                       ),
                     ),
@@ -88,14 +88,13 @@ class _DashboardBusinessAppsViewState extends State<DashboardBusinessAppsView> {
                     width: 40,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: Colors.black.withAlpha(100),
+                      color: overlayColor(),
                     ),
                     child: Center(
                       child: Text(
                         Language.getCommerceOSStrings('Edit'),
                         style: TextStyle(
                           fontSize: 10,
-                          color: Colors.white,
                         ),
                       ),
                     ),

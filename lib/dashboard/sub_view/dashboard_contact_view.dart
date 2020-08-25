@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/dashboard_option_cell.dart';
+import 'package:payever/theme.dart';
 
 class DashboardContactView extends StatefulWidget {
   final VoidCallback onOpen;
@@ -50,13 +51,13 @@ class _DashboardContactViewState extends State<DashboardContactView> {
                             decoration: BoxDecoration(
                                 image: DecorationImage(
                                     image: NetworkImage('${Env.cdnIcon}icons-apps-white/icon-apps-white-mail.png'),
-                                    fit: BoxFit.fitWidth)),
+                                    fit: BoxFit.fitWidth,
+                                )),
                           ),
                           SizedBox(width: 8,),
                           Text(
                             Language.getWidgetStrings(widget.appWidget.title).toUpperCase(),
                             style: TextStyle(
-                              color: Colors.white,
                               fontSize: 12,
                             ),
                           )
@@ -71,14 +72,13 @@ class _DashboardContactViewState extends State<DashboardContactView> {
                               width: 40,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
-                                  color: Colors.black.withAlpha(100)
+                                  color: overlayBackground(),
                               ),
                               child: Center(
                                 child: Text(
                                   Language.getCommerceOSStrings('actions.open'),
                                   style: TextStyle(
                                       fontSize: 10,
-                                      color: Colors.white
                                   ),
                                 ),
                               ),
@@ -100,7 +100,6 @@ class _DashboardContactViewState extends State<DashboardContactView> {
                                     child: Text('1',
                                       style: TextStyle(
                                           fontSize: 10,
-                                          color: Colors.white
                                       ),
                                     ),
                                   ),
@@ -118,12 +117,13 @@ class _DashboardContactViewState extends State<DashboardContactView> {
                                       height: 21,
                                       decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(10.5),
-                                          color: Colors.black45
+                                          color: overlayBackground(),
                                       ),
                                       child: Center(
                                         child: SvgPicture.asset(
                                           isExpanded ? 'assets/images/closeicon.svg' : 'assets/images/icon_plus.svg',
                                           width: 8,
+                                          color: iconColor(),
                                         ),
                                       ),
                                     ),
@@ -166,7 +166,7 @@ class _DashboardContactViewState extends State<DashboardContactView> {
                               ),
                             ),
                             Container(
-                              color: Colors.white24,
+                              color: iconColor().withOpacity(0.2),
                               width: 1,
                               height: 50,
                             ),
@@ -198,7 +198,7 @@ class _DashboardContactViewState extends State<DashboardContactView> {
                           onPressed: () {
 
                           },
-                          color: Colors.black26,
+                          color: overlayBackground(),
                           height: 60,
                           elevation: 0,
                           shape: RoundedRectangleBorder(
@@ -208,7 +208,7 @@ class _DashboardContactViewState extends State<DashboardContactView> {
                             'Add Contact',
                             softWrap: true,
                             style: TextStyle(
-                                color: Colors.white, fontSize: 16),
+                            fontSize: 16),
                           ),
                         ),
                       ),
@@ -228,7 +228,7 @@ class _DashboardContactViewState extends State<DashboardContactView> {
                     bottomLeft: Radius.circular(6),
                     bottomRight: Radius.circular(6),
                   ),
-                  color: Colors.black38,
+                  color: overlayBackground(),
                 ),
                 child: ListView.builder(
                   itemBuilder: _itemBuilderDDetails,
@@ -261,7 +261,6 @@ class _DashboardContactViewState extends State<DashboardContactView> {
                   Text(
                     Language.getWidgetStrings(widget.appWidget.title),
                     style: TextStyle(
-                        color: Colors.white,
                         fontSize: 16,
                         fontWeight: FontWeight.bold
                     ),
@@ -270,7 +269,6 @@ class _DashboardContactViewState extends State<DashboardContactView> {
                   Text(
                     Language.getWidgetStrings('widgets.${widget.appWidget.type}.install-app'),
                     style: TextStyle(
-                      color: Colors.white,
                       fontSize: 10,
                     ),
                   ),
@@ -283,7 +281,7 @@ class _DashboardContactViewState extends State<DashboardContactView> {
               height: 40,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(bottomLeft: Radius.circular(6), bottomRight: Radius.circular(6)),
-                  color: Colors.black38
+                  color: overlayBackground()
               ),
               child: Row(
                 children: [
@@ -298,7 +296,7 @@ class _DashboardContactViewState extends State<DashboardContactView> {
                           !widget.businessApps.installed ? 'Get started' : 'Continue setup process',
                           softWrap: true,
                           style: TextStyle(
-                              color: Colors.white, fontSize: 12),
+                              fontSize: 12),
                         ),
                       ),
                     ),
@@ -318,7 +316,7 @@ class _DashboardContactViewState extends State<DashboardContactView> {
                           'Learn more',
                           softWrap: true,
                           style: TextStyle(
-                              color: Colors.white, fontSize: 12),
+                              fontSize: 12),
                         ),
                       ),
                     ),

@@ -9,6 +9,7 @@ import 'package:payever/commons/utils/env.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/dashboard_option_cell.dart';
+import 'package:payever/theme.dart';
 
 class DashboardCheckoutView extends StatefulWidget {
   final VoidCallback onOpen;
@@ -67,7 +68,6 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                           Text(
                             Language.getWidgetStrings(widget.appWidget.title).toUpperCase(),
                             style: TextStyle(
-                              color: Colors.white,
                               fontSize: 12,
                             ),
                           )
@@ -81,15 +81,14 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                               height: 20,
                               width: 40,
                               decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Colors.black.withAlpha(100)
+                                borderRadius: BorderRadius.circular(10),
+                                color: overlayBackground(),
                               ),
                               child: Center(
                                 child: Text(
                                   Language.getCommerceOSStrings('actions.open'),
                                   style: TextStyle(
-                                      fontSize: 10,
-                                      color: Colors.white
+                                    fontSize: 10,
                                   ),
                                 ),
                               ),
@@ -101,7 +100,7 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                             width: 40,
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
-                                color: Colors.white10
+                                color: overlayBackground(),
                             ),
                             child:  Row(
                               children: [
@@ -111,8 +110,7 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                                     child: Text(
                                       '${widget.notifications.length}',
                                       style: TextStyle(
-                                          fontSize: 10,
-                                          color: Colors.white
+                                        fontSize: 10,
                                       ),
                                     ),
                                   ),
@@ -129,13 +127,13 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                                       width: 21,
                                       height: 21,
                                       decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(10.5),
-                                          color: Colors.black45
+                                        borderRadius: BorderRadius.circular(10.5),
                                       ),
                                       child: Center(
                                         child: SvgPicture.asset(
                                           isExpanded ? 'assets/images/closeicon.svg' : 'assets/images/icon_plus.svg',
                                           width: 8,
+                                          color: iconColor(),
                                         ),
                                       ),
                                     ),
@@ -164,19 +162,22 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                             child: Container(
                               height: 60,
                               decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(6),
-                                  color: Colors.black26
+                                borderRadius: BorderRadius.circular(6),
+                                color: overlayBackground(),
                               ),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  SvgPicture.asset('assets/images/link.svg', width: 24,),
+                                  SvgPicture.asset(
+                                    'assets/images/link.svg',
+                                    width: 24,
+                                    color: iconColor(),
+                                  ),
                                   SizedBox(width: 8),
                                   Text(
                                     'Link',
                                     softWrap: true,
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 16),
+                                    style: TextStyle(fontSize: 16),
                                   )
                                 ],
                               ),
@@ -198,18 +199,21 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                               height: 60,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(6),
-                                  color: Colors.black26
+                                  color: overlayBackground(),
                               ),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  SvgPicture.asset('assets/images/edit_pen.svg', width: 24,),
+                                  SvgPicture.asset(
+                                    'assets/images/edit_pen.svg',
+                                    width: 24,
+                                    color: iconColor(),
+                                  ),
                                   SizedBox(width: 8),
                                   Text(
                                     'Manage',
                                     softWrap: true,
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 16),
+                                    style: TextStyle(fontSize: 16),
                                   )
                                 ],
                               ),
@@ -241,8 +245,8 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
               Container(
                 height: 50.0 * widget.notifications.length,
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(6), bottomRight: Radius.circular(6)),
-                    color: Colors.black38
+                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(6), bottomRight: Radius.circular(6)),
+                  color: overlayBackground(),
                 ),
                 child: ListView.builder(
                   itemBuilder: _itemBuilderDDetails,
@@ -266,16 +270,16 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: NetworkImage('${Env.cdnIcon}icon-comerceos-${widget.appWidget.type}-not-installed.png'),
-                            fit: BoxFit.fitWidth),
+                      image: DecorationImage(
+                        image: NetworkImage('${Env.cdnIcon}icon-comerceos-${widget.appWidget.type}-not-installed.png'),
+                        fit: BoxFit.fitWidth,
+                      ),
                     ),
                   ),
                   SizedBox(height: 8),
                   Text(
                     Language.getWidgetStrings(widget.appWidget.title),
                     style: TextStyle(
-                        color: Colors.white,
                         fontSize: 16,
                         fontWeight: FontWeight.bold
                     ),
@@ -284,7 +288,6 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                   Text(
                     Language.getWidgetStrings('widgets.checkout.actions.add-new'),
                     style: TextStyle(
-                      color: Colors.white,
                       fontSize: 10,
                     ),
                   ),
@@ -296,8 +299,8 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
             Container(
               height: 40,
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(6), bottomRight: Radius.circular(6)),
-                  color: Colors.black38
+                borderRadius: BorderRadius.only(bottomLeft: Radius.circular(6), bottomRight: Radius.circular(6)),
+                color: overlayBackground(),
               ),
               child: Row(
                 children: [
@@ -311,15 +314,14 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                         child: Text(
                           !widget.businessApps.installed ? 'Get started' : 'Continue setup process',
                           softWrap: true,
-                          style: TextStyle(
-                              color: Colors.white, fontSize: 12),
+                          style: TextStyle(fontSize: 12),
                         ),
                       ),
                     ),
                   ),
                   if (!widget.businessApps.installed) Container(
                     width: 1,
-                    color: Colors.white12,
+                    color: overlayBackground(),
                   ),
                   if (!widget.businessApps.installed) Expanded(
                     flex: 1,
@@ -331,8 +333,7 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                         child: Text(
                           'Learn more',
                           softWrap: true,
-                          style: TextStyle(
-                              color: Colors.white, fontSize: 12),
+                          style: TextStyle(fontSize: 12),
                         ),
                       ),
                     ),

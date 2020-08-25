@@ -4,6 +4,7 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/models/app_widget.dart';
 import 'package:payever/commons/utils/env.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
+import 'package:payever/theme.dart';
 
 class DashboardSettingsView extends StatefulWidget {
   final AppWidget appWidget;
@@ -53,7 +54,6 @@ class _DashboardSettingsViewState extends State<DashboardSettingsView> {
                     Text(
                       'SETTINGS',
                       style: TextStyle(
-                        color: Colors.white,
                         fontSize: 12,
                       ),
                     )
@@ -66,14 +66,13 @@ class _DashboardSettingsViewState extends State<DashboardSettingsView> {
                     width: 40,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        color: Colors.black.withAlpha(100)
+                        color: overlayBackground(),
                     ),
                     child: Center(
                       child: Text(
                         Language.getCommerceOSStrings('actions.open'),
                         style: TextStyle(
                             fontSize: 10,
-                            color: Colors.white
                         ),
                       ),
                     ),
@@ -93,7 +92,7 @@ class _DashboardSettingsViewState extends State<DashboardSettingsView> {
                         height: 50,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(6),
-                            color: Colors.black26
+                            color: overlayBackground(),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -104,7 +103,7 @@ class _DashboardSettingsViewState extends State<DashboardSettingsView> {
                               "Edit Wallpaper",
                               softWrap: true,
                               style: TextStyle(
-                                  color: Colors.white, fontSize: 16),
+                                  fontSize: 16),
                             )
                           ],
                         ),
@@ -124,7 +123,7 @@ class _DashboardSettingsViewState extends State<DashboardSettingsView> {
                         height: 50,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(6),
-                            color: Colors.black26
+                            color: overlayBackground(),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -134,8 +133,7 @@ class _DashboardSettingsViewState extends State<DashboardSettingsView> {
                             Text(
                               "Edit Language",
                               softWrap: true,
-                              style: TextStyle(
-                                  color: Colors.white, fontSize: 16),
+                              style: TextStyle( fontSize: 16),
                             )
                           ],
                         ),

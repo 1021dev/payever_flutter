@@ -25,6 +25,7 @@ import 'package:payever/settings/views/setting_screen.dart';
 import 'package:payever/settings/views/wallpaper/wallpaper_screen.dart';
 import 'package:payever/shop/views/shop_screen.dart';
 import 'package:payever/switcher/switcher_page.dart';
+import 'package:payever/theme.dart';
 import 'package:payever/transactions/transactions.dart';
 import 'package:payever/welcome/welcome_screen.dart';
 import 'package:provider/provider.dart';
@@ -198,7 +199,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       centerTitle: false,
       elevation: 0,
       automaticallyImplyLeading: false,
-      backgroundColor: Colors.black87,
       title: Row(
         children: <Widget>[
           Container(
@@ -206,7 +206,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
               child: Container(
                   child: SvgPicture.asset(
                     'assets/images/payeverlogo.svg',
-                    color: Colors.white,
                     height: 16,
                     width: 24,
                   )
@@ -219,7 +218,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
           Text(
             'Business',
             style: TextStyle(
-              color: Colors.white,
               fontSize: 16,
               fontWeight: FontWeight.w500,
             ),
@@ -241,7 +239,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   child: Text(
                     state.activeBusiness.name,
                     style: TextStyle(
-                      color: Colors.white,
                       fontSize: 14,
                     ),
                   ),
@@ -278,7 +275,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         Padding(
           padding: EdgeInsets.all(6),
           child: InkWell(
-            child: SvgPicture.asset('assets/images/notificationicon.svg', width: 20,),
+            child: SvgPicture.asset('assets/images/notificationicon.svg', width: 20),
             onTap: () async {
               Provider.of<GlobalStateModel>(context,listen: false)
                   .setCurrentBusiness(state.activeBusiness);
@@ -1083,7 +1080,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           shape: CircleBorder(),
           elevation: 4,
           fillColor: Color(0xFF222222),
-          child: SvgPicture.asset('assets/images/help.svg', width: 24,),
+          child: SvgPicture.asset('assets/images/help.svg', width: 24, color: iconColor(),),
           onPressed: () {
           },
         ),
@@ -1137,14 +1134,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
         Text(
           'Welcome ${state.user.firstName},',
           style: TextStyle(
-              color: Colors.white,
               fontSize: 26,
               fontWeight: FontWeight.bold,
               shadows: [
                 Shadow(
                     offset: Offset(1.0, 1.0),
                     blurRadius: 3,
-                    color: Colors.black.withAlpha(50)
+                    color: overlayBackground(),
                 )
               ]
           ),
@@ -1153,13 +1149,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
         Text(
           'grow your business',
           style: TextStyle(
-              color: Colors.white,
               fontSize: 18,
               shadows: [
                 Shadow(
                     offset: Offset(1.0, 1.0),
                     blurRadius: 3,
-                    color: Colors.black.withAlpha(50)
+                    color: overlayBackground(),
                 )
               ]
           ),
@@ -1179,7 +1174,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         height: 40,
         child: Row(
           children: [
-            SvgPicture.asset('assets/images/search_place_holder.svg',),
+            SvgPicture.asset('assets/images/search_place_holder.svg', color: iconColor(),),
             SizedBox(width: 8),
             Expanded(
               child: Row(
@@ -1193,13 +1188,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         isDense: true,
                         border: InputBorder.none,
                         hintText: 'Search',
-                        hintStyle: TextStyle(
-                          color: Colors.white
-                        ),
                       ),
                       style: TextStyle(
                           fontSize: 14,
-                          color: Colors.white
                       ),
                       onChanged: (val) {
                         if (val.length > 0) {
@@ -1268,11 +1259,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     shape: CircleBorder(
                       side: BorderSide.none,
                     ),
-                    color: Colors.white54.withOpacity(0.2),
+                    color: overlayBackground(),
                     elevation: 0,
                     height: 20,
                     minWidth: 20,
-                    child: SvgPicture.asset('assets/images/closeicon.svg', width: 8,),
+                    child: SvgPicture.asset('assets/images/closeicon.svg', width: 8, color: iconColor(),),
                   ),
                   searchController.text.isEmpty ? Container() : MaterialButton(
                     onPressed: () async {
@@ -1310,14 +1301,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)
                     ),
-                    color: Colors.white54.withOpacity(0.2),
+                    color: overlayBackground(),
                     elevation: 0,
                     minWidth: 0,
                     height: 20,
                     child: Text(
                       'Search',
                       style: TextStyle(
-                        color: Colors.white,
                         fontSize: 12,
                         fontWeight: FontWeight.w300,
                       ),

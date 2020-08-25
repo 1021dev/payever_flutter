@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/commons/models/models.dart';
 import 'package:payever/commons/utils/translations.dart';
+import 'package:payever/theme.dart';
 
 class DashboardOptionCell extends StatelessWidget {
   final NotificationModel notificationModel;
@@ -20,10 +21,7 @@ class DashboardOptionCell extends StatelessWidget {
     String message = 'info_boxes.notifications.messages.$actionKey';
     return Column(
       children: [
-        Container(
-          height: 1,
-          color: Colors.white12,
-        ),
+        Divider(height: 0,),
         Container(
           height: 49,
           padding: EdgeInsets.fromLTRB(12, 0, 12, 0),
@@ -36,8 +34,7 @@ class DashboardOptionCell extends StatelessWidget {
                     width: 4,
                     height: 4,
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(2),
-                        color: Colors.white
+                      borderRadius: BorderRadius.circular(2),
                     ),
                   ),
                   SizedBox(width: 12),
@@ -45,7 +42,8 @@ class DashboardOptionCell extends StatelessWidget {
                     Language.getCommerceOSStrings(message),
                     softWrap: true,
                     style: TextStyle(
-                        color: Colors.white, fontSize: 12),
+                      fontSize: 12,
+                    ),
                   ),
                   SizedBox(width: 12),
                 ],
@@ -60,15 +58,14 @@ class DashboardOptionCell extends StatelessWidget {
                       height: 20,
                       width: 40,
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.white12
+                        borderRadius: BorderRadius.circular(10),
+                        color: overlayBackground(),
                       ),
                       child: Center(
                         child: Text(
                           Language.getCommerceOSStrings('actions.open'),
                           style: TextStyle(
-                              fontSize: 10,
-                              color: Colors.white
+                            fontSize: 10,
                           ),
                         ),
                       ),
@@ -83,11 +80,11 @@ class DashboardOptionCell extends StatelessWidget {
                       width: 21,
                       height: 21,
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.5),
-                          color: Colors.white12
+                        borderRadius: BorderRadius.circular(10.5),
+                        color: overlayBackground(),
                       ),
                       child: Center(
-                        child: SvgPicture.asset('assets/images/closeicon.svg', width: 8,),
+                        child: SvgPicture.asset('assets/images/closeicon.svg', width: 8, color: iconColor(),),
                       ),
                     ),
                   )

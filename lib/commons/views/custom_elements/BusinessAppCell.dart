@@ -55,7 +55,6 @@ class BusinessAppCell extends StatelessWidget {
                   Language.getCommerceOSStrings(currentApp.dashboardInfo.title),
                   style: TextStyle(
                     fontSize: 10,
-                    color: Colors.white,
                   ),
                 ),
               ],
