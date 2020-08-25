@@ -44,10 +44,10 @@ class _ProductFilterRangeContentViewState extends State<ProductFilterRangeConten
       dropdown = 1;
     }
     return Container(
-        height: 173,
         child: Container(
           padding: EdgeInsets.fromLTRB(0 , 6, 0, 6),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
@@ -148,44 +148,97 @@ class _ProductFilterRangeContentViewState extends State<ProductFilterRangeConten
                           },
                         ),
                       ) : Container(),
-                    dropdown == 2 ? Container(
-                      height: 60,
-                      padding: EdgeInsets.fromLTRB(20, 0, 10, 0),
-                      child: Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: TextField(
-                              controller: filterValueController,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: hintTextByFilter(widget.type),
+                    dropdown == 2
+                        ? Column(
+                          children: <Widget>[
+                            Container(
+                                height: 60,
+                                padding: EdgeInsets.fromLTRB(20, 0, 10, 0),
+                                child: Row(
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: TextField(
+                                        controller: filterValueController,
+                                        decoration: InputDecoration(
+                                          border: InputBorder.none,
+                                          hintText: (filterConditionName == 'between') ? 'From' : hintTextByFilter(widget.type),
+                                        ),
+                                        style: TextStyle(
+                                            fontSize: 14, color: Colors.white),
+                                      ),
+                                    ),
+                                    widget.type == 'created_at'
+                                        ? IconButton(
+                                            icon: Icon(Icons.calendar_today),
+                                            onPressed: () async {
+                                              final DateTime picked =
+                                                  await showDatePicker(
+                                                context: context,
+                                                initialDate: selectedDate != null
+                                                    ? selectedDate
+                                                    : DateTime.now(),
+                                                firstDate: DateTime(2000, 1),
+                                                lastDate: DateTime(2030, 12),
+                                              );
+                                              if (picked != null &&
+                                                  picked != selectedDate) {
+                                                setState(() {
+                                                  selectedDate = picked;
+                                                });
+                                              }
+                                            },
+                                          )
+                                        : Container(),
+                                  ],
+                                ),
                               ),
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.white
+                            Visibility(
+                              visible: filterConditionName == 'between' ,
+                              child: Container(
+                              height: 60,
+                              padding: EdgeInsets.fromLTRB(20, 0, 10, 0),
+                              child: Row(
+                                children: <Widget>[
+                                  Expanded(
+                                    child: TextField(
+                                      controller: filterValueController,
+                                      decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                        hintText: 'To',
+                                      ),
+                                      style: TextStyle(
+                                          fontSize: 14, color: Colors.white),
+                                    ),
+                                  ),
+                                  widget.type == 'created_at'
+                                      ? IconButton(
+                                    icon: Icon(Icons.calendar_today),
+                                    onPressed: () async {
+                                      final DateTime picked =
+                                      await showDatePicker(
+                                        context: context,
+                                        initialDate: selectedDate != null
+                                            ? selectedDate
+                                            : DateTime.now(),
+                                        firstDate: DateTime(2000, 1),
+                                        lastDate: DateTime(2030, 12),
+                                      );
+                                      if (picked != null &&
+                                          picked != selectedDate) {
+                                        setState(() {
+                                          selectedDate = picked;
+                                        });
+                                      }
+                                    },
+                                  )
+                                      : Container(),
+                                ],
                               ),
-                            ),
-                          ),
-                          widget.type == 'created_at' ? IconButton(
-                            icon: Icon(Icons.calendar_today),
-                            onPressed: () async {
-                              final DateTime picked = await showDatePicker(
-                                context: context,
-                                initialDate: selectedDate != null ? selectedDate: DateTime.now(),
-                                firstDate: DateTime(2000, 1),
-                                lastDate: DateTime(2030, 12),
-                              );
-                              if (picked != null && picked != selectedDate) {
-                                setState(() {
-                                  selectedDate = picked;
-                                });
-                              }
-                            },
-                          ): Container(),
-                        ],
+                            ),)
+                          ],
+                        )
 
-                      ),
-                    ): Container(),
+                        : Container(),
                   ],
                 ),
               ),

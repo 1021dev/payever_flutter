@@ -757,7 +757,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
                           ),
-                          keyboardType: TextInputType.numberWithOptions(decimal: true),
+                          keyboardType: TextInputType.numberWithOptions(signed: true, decimal: true),
                           decoration: InputDecoration(
                             labelText: Language.getProductStrings('placeholders.price'),
                             labelStyle: TextStyle(
@@ -801,7 +801,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
                           ),
-                          keyboardType: TextInputType.numberWithOptions(decimal: true),
+                          keyboardType: TextInputType.numberWithOptions(signed: true, decimal: true),
                           decoration: InputDecoration(
                             labelText: Language.getProductStrings('placeholders.salePrice'),
                             labelStyle: TextStyle(
@@ -928,6 +928,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 fontWeight: FontWeight.w500,
               ),
               maxLines: 10,
+              keyboardType: TextInputType.text,
               decoration: InputDecoration(
                 border: InputBorder.none,
               ),
@@ -1083,18 +1084,17 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           onPressed: () {
                             ProductsModel product = state.productDetail;
                             InventoryModel inventory = state.inventory;
-                            if (inventory.stock > 0) {
-                              int increase = state.increaseStock - 1;
-                              inventory.stock = inventory.stock - 1;
-                              widget.screenBloc.add(UpdateProductDetail(productsModel: product, inventoryModel: inventory, increaseStock: increase));
-                            }
+//                            if (inventory.stock > 0) {
+                              inventory.stock -= 1;
+                              widget.screenBloc.add(UpdateProductDetail(productsModel: product, inventoryModel: inventory, increaseStock: -1));
+//                            }
                           },
                         ),
                         Padding(
                           padding: EdgeInsets.only(left: 4),
                         ),
                         AutoSizeText(
-                          '${(state.inventory.stock ?? 0) + state.increaseStock}',
+                          '${(state.inventory.stock ?? 0)}',
                           minFontSize: 12,
                           style: TextStyle(
                             color: Colors.white,
@@ -1110,9 +1110,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           onPressed: () {
                             ProductsModel product = state.productDetail;
                             InventoryModel inventory = state.inventory;
-                            int increase = state.increaseStock + 1;
-                            inventory.stock = inventory.stock + 1;
-                            widget.screenBloc.add(UpdateProductDetail(productsModel: product, inventoryModel: inventory, increaseStock: increase));
+                            inventory.stock += 1;
+                            widget.screenBloc.add(UpdateProductDetail(productsModel: product, inventoryModel: inventory, increaseStock: 1));
                           },
                         ),
                       ],
