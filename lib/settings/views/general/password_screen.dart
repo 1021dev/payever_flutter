@@ -61,7 +61,6 @@ class _PasswordScreenState extends State<PasswordScreen> {
       body: SafeArea(
         child: BackgroundBase(
           true,
-          backgroudColor: Color.fromRGBO(20, 20, 0, 0.4),
           body: _updateForm,
         ),
       ),

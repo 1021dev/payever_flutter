@@ -18,7 +18,6 @@ import 'package:payever/settings/views/employee/add_group_screen.dart';
 import 'package:payever/settings/views/wallpaper/employee_filter_view.dart';
 import 'package:payever/settings/widgets/app_bar.dart';
 import 'package:payever/blocs/bloc.dart';
-import 'package:payever/transactions/views/sub_view/filter_range_content_view.dart';
 import 'package:payever/transactions/views/sub_view/search_text_content_view.dart';
 
 class TagItemModel {
@@ -95,7 +94,6 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
             body: SafeArea(
               child: BackgroundBase(
                 true,
-                backgroudColor: Color.fromRGBO(20, 20, 0, 0.4),
                 body: state.isLoading
                     ? Center(
                         child: CircularProgressIndicator(),

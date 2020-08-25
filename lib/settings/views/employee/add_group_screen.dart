@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:flutter_tagging/flutter_tagging.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/commons/commons.dart';
@@ -95,7 +94,6 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
       body: SafeArea(
         child: BackgroundBase(
           true,
-          backgroudColor: Color.fromRGBO(20, 20, 0, 0.4),
           body: _updateForm,
         ),
       ),

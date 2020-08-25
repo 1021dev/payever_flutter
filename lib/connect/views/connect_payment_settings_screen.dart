@@ -98,7 +98,6 @@ class _ConnectPaymentSettingsScreenState extends State<ConnectPaymentSettingsScr
             body: SafeArea(
               child: BackgroundBase(
                 true,
-                backgroudColor: Color.fromRGBO(20, 20, 0, 0.4),
                 body: state.isLoading ?
                 Center(
                   child: CircularProgressIndicator(),

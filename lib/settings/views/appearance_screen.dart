@@ -9,6 +9,7 @@ import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/settings/widgets/app_bar.dart';
 import 'package:payever/blocs/bloc.dart';
+import 'package:payever/theme.dart';
 import 'package:provider/provider.dart';
 
 class AppearanceScreen extends StatefulWidget {
@@ -82,7 +83,6 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
             body: SafeArea(
               child: BackgroundBase(
                 true,
-                backgroudColor: Color.fromRGBO(20, 20, 0, 0.4),
                 body: state.isLoading
                     ? Center(
                   child: CircularProgressIndicator(),
@@ -103,7 +103,7 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
         child: Container(
           padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
           decoration: BoxDecoration(
-            color: Colors.grey.withOpacity(0.25),
+            color: overlayColor(),
             shape: BoxShape.rectangle,
             borderRadius: BorderRadius.circular(10),
           ),
@@ -301,11 +301,13 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
       }
     }));
     Provider.of<GlobalStateModel>(context, listen: false).setTheme(theme);
+    GlobalUtils.theme = theme;
     if (theme == 'dark') {
       BlocProvider.of<ChangeThemeBloc>(context).add(DarkTheme());
-    } else {
+    } else if (theme == 'light') {
       BlocProvider.of<ChangeThemeBloc>(context).add(LightTheme());
+    } else {
+      BlocProvider.of<ChangeThemeBloc>(context).add(DefaultTheme());
     }
-
   }
 }

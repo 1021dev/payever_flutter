@@ -65,8 +65,8 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
             resizeToAvoidBottomPadding: false,
             appBar: _appBar(state),
             body: SafeArea(
-              child: BackgroundBase(true,
-                  backgroudColor: Color.fromRGBO(20, 20, 0, 0.4),
+              child: BackgroundBase(
+                  true,
                   body: state.isLoading
                       ? Center(
                     child: CircularProgressIndicator(),

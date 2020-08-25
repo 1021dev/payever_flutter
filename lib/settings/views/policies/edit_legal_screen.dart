@@ -78,7 +78,6 @@ class _LegalEditorScreenState extends State<LegalEditorScreen> {
             body: SafeArea(
               child: BackgroundBase(
                 true,
-                backgroudColor: Colors.white,
                 body: isLoading ? Center(
                   child: CircularProgressIndicator(),
                 ): HtmlEditor(

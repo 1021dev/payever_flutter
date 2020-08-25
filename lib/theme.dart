@@ -119,10 +119,10 @@ Color overlayColor() {
 
 Color iconColor() {
   if (GlobalUtils.theme == 'dark') {
-    return Color.fromRGBO(0, 0, 0, 0.75);
+    return Color.fromRGBO(255, 255, 255, 1);
   } else if (GlobalUtils.theme == 'light') {
-    return Color.fromRGBO(245, 245, 245, 0.6);
+    return Color.fromRGBO(0, 0, 0, 1);
   } else {
-    return Color.fromRGBO(0, 0, 0, 0.2);
+    return Color.fromRGBO(255, 255, 255, 1);
   }
 }

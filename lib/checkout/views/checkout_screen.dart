@@ -385,7 +385,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         body: SafeArea(
           child: BackgroundBase(
             true,
-            backgroudColor: Color.fromRGBO(20, 20, 0, 0.4),
             body: TabBarView(
               physics: NeverScrollableScrollPhysics(),
               children: <Widget>[

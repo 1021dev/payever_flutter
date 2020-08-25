@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ChangeThemeBloc extends Bloc<ChangeThemeEvent, ChangeThemeState> {
   void onLightThemeChange() => LightTheme();
   void onDarkThemeChange() => DarkTheme();
+  void onDefaultThemeChange() => DefaultTheme();
   void onDecideThemeChange() => DecideTheme();
   @override
   ChangeThemeState get initialState => ChangeThemeState.lightTheme();
@@ -20,6 +21,8 @@ class ChangeThemeBloc extends Bloc<ChangeThemeEvent, ChangeThemeState> {
         yield ChangeThemeState.lightTheme();
       } else if (optionValue == 1) {
         yield ChangeThemeState.darkTheme();
+      } else {
+        yield ChangeThemeState.defaultTheme();
       }
     }
 
@@ -46,9 +49,9 @@ class ChangeThemeBloc extends Bloc<ChangeThemeEvent, ChangeThemeState> {
     if (event is DefaultTheme) {
       print('inside DefaultTheme body');
 
-      yield ChangeThemeState.lightTheme();
+      yield ChangeThemeState.defaultTheme();
       try {
-        _saveOptionValue(0);
+        _saveOptionValue(2);
       } catch (_) {
         throw Exception("Could not persist change");
       }

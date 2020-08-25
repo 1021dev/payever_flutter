@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:package_info/package_info.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/blocs/login/login.dart';
 import 'package:payever/commons/commons.dart';
@@ -33,43 +32,27 @@ class LoginScreenBloc extends Bloc<LoginScreenEvent, LoginScreenState> {
   Stream<LoginScreenState> login(String email, String password) async* {
     yield state.copyWith(isLoading: true);
     try {
-      PackageInfo packageInfo = await PackageInfo.fromPlatform();
-      String versionString = packageInfo.version;
-
       var obj = await api.getEnv();
       Env.map(obj);
 
-//      dynamic versionObj = await api.getVersion();
-//
-//      Version version = Version.map(versionObj);
-//      print('version:$versionString');
-//      print('_version:${version.minVersion}');
-//      print('compare:${versionString.compareTo(version.minVersion)}');
+      print('email => $email');
+      print('password => $password');
+      dynamic loginObj = await api.login(email, password);
+      Token tokenData = Token.map(loginObj);
 
-//      if (versionString.compareTo(version.minVersion) < 0) {
-//
-//        yield state.copyWith(isLoading: false);
-//        yield LoginScreenVersionFailed(version: version);
-//
-//      }else{
+      final preferences = await SharedPreferences.getInstance();
+      preferences.setString(GlobalUtils.LAST_OPEN, DateTime.now().toString());
+      print('REFRESH TOKEN = ${tokenData.refreshToken}');
 
-        dynamic loginObj = await api.login(email, password);
-        Token tokenData = Token.map(loginObj);
+      await _storage.write(key: GlobalUtils.EMAIL, value: email);
+      await _storage.write(key: GlobalUtils.PASSWORD, value: password);
+      await _storage.write(key: GlobalUtils.REFRESH_TOKEN, value: tokenData.refreshToken);
+      await _storage.write(key: GlobalUtils.TOKEN, value: tokenData.accessToken);
 
-        final preferences = await SharedPreferences.getInstance();
-        preferences.setString(GlobalUtils.LAST_OPEN, DateTime.now().toString());
-        print('REFRESH TOKEN = ${tokenData.refreshToken}');
+      GlobalUtils.activeToken = tokenData;
 
-        await _storage.write(key: GlobalUtils.EMAIL, value: email);
-        await _storage.write(key: GlobalUtils.PASSWORD, value: password);
-        await _storage.write(key: GlobalUtils.REFRESH_TOKEN, value: tokenData.refreshToken);
-        await _storage.write(key: GlobalUtils.TOKEN, value: tokenData.accessToken);
-
-        GlobalUtils.activeToken = tokenData;
-
-        yield state.copyWith(isLoading: false);
-        yield LoginScreenSuccess();
-//      }
+      yield state.copyWith(isLoading: false);
+      yield LoginScreenSuccess();
     } catch (error){
       print(onError.toString());
       yield state.copyWith(isLoading: false,);

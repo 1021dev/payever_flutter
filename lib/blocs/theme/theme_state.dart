@@ -11,7 +11,7 @@ class ChangeThemeState {
   }
 
   factory ChangeThemeState.defaultTheme() {
-    return ChangeThemeState(themeData: lightTheme);
+    return ChangeThemeState(themeData: defaultTheme);
   }
 
   factory ChangeThemeState.darkTheme() {

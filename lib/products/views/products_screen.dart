@@ -597,7 +597,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
       body: SafeArea(
         child: BackgroundBase(
           true,
-          backgroudColor: Color.fromRGBO(0, 0, 0, 0.75),
           body: state.isLoading ?
           Center(
             child: CircularProgressIndicator(),
