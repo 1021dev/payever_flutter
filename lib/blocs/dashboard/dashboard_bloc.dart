@@ -50,6 +50,8 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
       yield* watchTutorial(event.tutorial);
     } else if(event is UpdateWallpaper) {
       yield state.copyWith(curWall: event.curWall);
+    } else if (event is UpdateTheme) {
+
     }
   }
 

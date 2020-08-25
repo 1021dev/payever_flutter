@@ -6,7 +6,12 @@ class DecideTheme extends ChangeThemeEvent {}
 
 class LightTheme extends ChangeThemeEvent {
   @override
-  String toString() => 'LightTheme';
+  String toString() => 'Light Theme';
+}
+
+class DefaultTheme extends ChangeThemeEvent {
+  @override
+  String toString() => 'Default Theme';
 }
 
 class DarkTheme extends ChangeThemeEvent {

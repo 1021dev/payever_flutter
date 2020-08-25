@@ -322,6 +322,7 @@ class GlobalUtils {
   static bool isLoaded = false;
   static var isDashboardLoaded = false;
   static String fingerprint = '';
+  static String theme = 'default';
 
   //URLS
   //static String  pass= 'P@ssword123';//test 1

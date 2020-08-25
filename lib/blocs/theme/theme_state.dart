@@ -10,6 +10,10 @@ class ChangeThemeState {
     return ChangeThemeState(themeData: lightTheme);
   }
 
+  factory ChangeThemeState.defaultTheme() {
+    return ChangeThemeState(themeData: lightTheme);
+  }
+
   factory ChangeThemeState.darkTheme() {
     return ChangeThemeState(themeData: darkTheme);
   }

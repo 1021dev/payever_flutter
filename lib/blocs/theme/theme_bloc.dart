@@ -43,6 +43,16 @@ class ChangeThemeBloc extends Bloc<ChangeThemeEvent, ChangeThemeState> {
         throw Exception("Could not persist change");
       }
     }
+    if (event is DefaultTheme) {
+      print('inside DefaultTheme body');
+
+      yield ChangeThemeState.lightTheme();
+      try {
+        _saveOptionValue(0);
+      } catch (_) {
+        throw Exception("Could not persist change");
+      }
+    }
   }
 
   Future<Null> _saveOptionValue(int optionValue) async {

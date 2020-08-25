@@ -135,3 +135,9 @@ class UpdateBusiness extends DashboardScreenEvent {
   @override
   List<Object> get props => [this.business];
 }
+
+class UpdateTheme extends DashboardScreenEvent {
+  final ThemeSetting setting;
+
+  UpdateTheme({this.setting});
+}

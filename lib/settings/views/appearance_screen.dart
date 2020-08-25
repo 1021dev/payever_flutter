@@ -300,12 +300,12 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
         'theme': theme,
       }
     }));
-    Provider.of<GlobalStateModel>(context,listen: false).setTheme(theme);
-
+    Provider.of<GlobalStateModel>(context, listen: false).setTheme(theme);
     if (theme == 'dark') {
-      changeThemeBloc.onDarkThemeChange();
+      BlocProvider.of<ChangeThemeBloc>(context).add(DarkTheme());
     } else {
-      changeThemeBloc.onLightThemeChange();
+      BlocProvider.of<ChangeThemeBloc>(context).add(LightTheme());
     }
+
   }
 }
