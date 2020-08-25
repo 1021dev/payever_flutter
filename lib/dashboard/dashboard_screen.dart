@@ -330,6 +330,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
     return DashboardMenuView(
       innerDrawerKey: _innerDrawerKey,
+      activeBusiness: state.activeBusiness,
       onLogout: () async {
         FlutterSecureStorage storage = FlutterSecureStorage();
         await storage.delete(key: GlobalUtils.TOKEN);

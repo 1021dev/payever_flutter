@@ -236,16 +236,6 @@ class _SwitcherState extends State<Switcher> {
 
   @override
   Widget build(BuildContext context) {
-    Business active;
-    print('business => ${widget.screenBloc.state.businesses}');
-    if (widget.screenBloc.state.businesses != null) {
-      if (widget.screenBloc.state.businesses.length > 0) {
-        List<Business> bList = widget.screenBloc.state.businesses.where((element) => element.active).toList();
-        if (bList.length > 0) {
-          active = bList.first;
-        }
-      }
-    }
     return Column(
       children: <Widget>[
         AnimatedContainer(
@@ -259,13 +249,16 @@ class _SwitcherState extends State<Switcher> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              active != null
+              widget.screenBloc.state.active != null
                   ? Container(
                   child: Column(
                     children: <Widget>[
-                      Text('BUSINESS', style: TextStyle(
-                          color: Colors.white.withAlpha(200)
-                      ),),
+                      Text(
+                        'BUSINESS',
+                        style: TextStyle(
+                          color: Colors.white.withAlpha(200),
+                        ),
+                      ),
                       Padding(
                         padding: EdgeInsets.only(
                             top: (Measurements.height *
@@ -280,10 +273,10 @@ class _SwitcherState extends State<Switcher> {
                           alignment: Alignment.center,
                           children: <Widget>[
                             CustomCircleAvatar(
-                              active.logo != null
-                                  ? active.logo
+                              widget.screenBloc.state.active.logo != null
+                                  ? widget.screenBloc.state.active.logo
                                   : 'business',
-                              active.name,
+                              widget.screenBloc.state.active.name,
                             ),
                             selectActive
                                 ? Stack(
@@ -310,7 +303,7 @@ class _SwitcherState extends State<Switcher> {
                           setState(() {
                             selectActive = true;
                           });
-                          widget.screenBloc.add(SwitcherSetBusinessEvent(business: active));
+                          widget.screenBloc.add(SwitcherSetBusinessEvent(business: widget.screenBloc.state.active));
                         },
                       ),
                       Padding(
@@ -352,7 +345,7 @@ class _SwitcherState extends State<Switcher> {
                               : Container(
                             child: Row(
                               children: <Widget>[
-                                Text(active.name),
+                                Text(widget.screenBloc.state.active.name),
                                 Icon(!_moreSelected
                                     ? IconData(58131,
                                     fontFamily:

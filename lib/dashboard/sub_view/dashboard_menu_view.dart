@@ -13,6 +13,7 @@ class DashboardMenuView extends StatelessWidget {
   final VoidCallback onAddBusiness;
   final VoidCallback onLogout;
   final VoidCallback onClose;
+  final Business activeBusiness;
 
   DashboardMenuView({
     this.scaffold,
@@ -22,10 +23,15 @@ class DashboardMenuView extends StatelessWidget {
     this.onPersonalInfo,
     this.onLogout,
     this.onClose,
+    @required this.activeBusiness,
   });
 
   @override
   Widget build(BuildContext context) {
+    bool isActive = false;
+    if (activeBusiness != null) {
+      isActive = activeBusiness.active;
+    }
     return InnerDrawer(
       key: innerDrawerKey,
       rightAnimationType: InnerDrawerAnimation.quadratic,
@@ -54,7 +60,7 @@ class DashboardMenuView extends StatelessWidget {
                     onPressed: onClose,
                   ),
                 ),
-                InkWell(
+                isActive ? InkWell(
                   onTap: onSwitchBusiness,
                   child: Container(
                     height: 50,
@@ -81,7 +87,7 @@ class DashboardMenuView extends StatelessWidget {
                       ],
                     ),
                   ),
-                ),
+                ) : Container(),
                 Container(
                   color: Colors.white10,
                   height: 1,

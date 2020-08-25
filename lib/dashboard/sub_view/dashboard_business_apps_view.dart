@@ -25,13 +25,14 @@ class _DashboardBusinessAppsViewState extends State<DashboardBusinessAppsView> {
   Widget build(BuildContext context) {
     List<BusinessApps> businessApps = widget.businessApps.where((element) {
       String title = element.dashboardInfo.title ?? '';
-      if (element.installed && title != '') {
+      if (title != '') {
         if (title.contains('store') ||
             title.contains('transactions') ||
             title.contains('connect') ||
             title.contains('checkout') ||
             title.contains('contacts') ||
             title.contains('products') ||
+            title.contains('setting') ||
             title.contains('pos')) {
           return true;
         }
@@ -40,6 +41,15 @@ class _DashboardBusinessAppsViewState extends State<DashboardBusinessAppsView> {
         return false;
       }
     }).toList();
+    businessApps.sort((b1, b2) {
+      if(b2.installed) {
+        return 1;
+      }
+      return -1;
+    });
+    BusinessApps setting = businessApps.firstWhere((element) => element.dashboardInfo.title.contains('setting'));
+    businessApps.remove(setting);
+    businessApps.add(setting);
     return BlurEffectView(
       padding: EdgeInsets.fromLTRB(14, 12, 14, 0),
       child: Container(

@@ -173,6 +173,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
         builder: (BuildContext context, ConnectScreenState state) {
           return DashboardMenuView(
             innerDrawerKey: _innerDrawerKey,
+            activeBusiness: screenBloc.dashboardScreenBloc.state.activeBusiness,
             onLogout: () async {
               FlutterSecureStorage storage = FlutterSecureStorage();
               await storage.delete(key: GlobalUtils.TOKEN);

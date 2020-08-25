@@ -209,6 +209,7 @@ class _ShopScreenState extends State<ShopScreen> {
         builder: (BuildContext context, ShopScreenState state) {
           return DashboardMenuView(
             innerDrawerKey: _innerDrawerKey,
+            activeBusiness: screenBloc.dashboardScreenBloc.state.activeBusiness,
             onLogout: () async {
               FlutterSecureStorage storage = FlutterSecureStorage();
               await storage.delete(key: GlobalUtils.TOKEN);
