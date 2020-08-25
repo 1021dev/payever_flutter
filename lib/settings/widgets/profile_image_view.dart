@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:payever/theme.dart';
 
 class ProfileImageView extends StatelessWidget {
   final String imageUrl;
@@ -15,7 +16,7 @@ class ProfileImageView extends StatelessWidget {
       width: avatarSize,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(avatarSize / 2),
-        color: Colors.white,
+        color: iconColor().withOpacity(0.2),
       ),
       child: isUploading ? Container(
         child: Center(
@@ -29,7 +30,7 @@ class ProfileImageView extends StatelessWidget {
           height: avatarSize,
           width: avatarSize,
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: iconColor(),
             borderRadius: BorderRadius.circular(avatarSize / 2),
             image: DecorationImage(
               image: imageProvider,
@@ -51,9 +52,9 @@ class ProfileImageView extends StatelessWidget {
             width: avatarSize,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(avatarSize / 2),
-              color: Colors.white,
+              color: iconColor(),
             ),
-            child: SvgPicture.asset('assets/images/add_contacts.svg', color: Colors.black,),
+            child: SvgPicture.asset('assets/images/add_contacts.svg', color: overlayColor(),),
           );
         },
       ),

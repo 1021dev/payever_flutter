@@ -12,6 +12,7 @@ import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/settings/models/models.dart';
+import 'package:payever/theme.dart';
 
 class LegalEditorScreen extends StatefulWidget {
   final GlobalStateModel globalStateModel;
@@ -72,7 +73,6 @@ class _LegalEditorScreenState extends State<LegalEditorScreen> {
           }
 
           return Scaffold(
-            backgroundColor: Colors.black,
             resizeToAvoidBottomPadding: false,
             appBar: _appBar(state),
             body: SafeArea(
@@ -83,7 +83,9 @@ class _LegalEditorScreenState extends State<LegalEditorScreen> {
                 ): HtmlEditor(
                   value: state.legalDocument != null ? state.legalDocument.content ?? '': '',
                   key: keyEditor,
+                  useBottomSheet: true,
                   height: double.infinity,
+                  showBottomToolbar: false,
                 ),
               ),
             ),
@@ -98,13 +100,11 @@ class _LegalEditorScreenState extends State<LegalEditorScreen> {
       centerTitle: false,
       elevation: 0,
       automaticallyImplyLeading: false,
-      backgroundColor: Colors.black87,
       title: Row(
         children: <Widget>[
           Text(
             policiesScreenTitles[widget.type],
             style: TextStyle(
-              color: Colors.white,
               fontSize: 16,
               fontWeight: FontWeight.w500,
             ),
@@ -135,6 +135,7 @@ class _LegalEditorScreenState extends State<LegalEditorScreen> {
             child: SvgPicture.asset(
               'assets/images/closeicon.svg',
               width: 16,
+              color: iconColor(),
             ),
             onTap: () {
               showConfirmDialog();
@@ -172,14 +173,17 @@ class _LegalEditorScreenState extends State<LegalEditorScreen> {
             child: Wrap(
                 children: <Widget>[
                   BlurEffectView(
-                    color: Color.fromRGBO(50, 50, 50, 0.4),
+                    color: overlayBackground(),
                     padding: EdgeInsets.all(16),
                     child: Column(
                       children: <Widget>[
                         Padding(
                           padding: EdgeInsets.only(top: 16),
                         ),
-                        SvgPicture.asset('assets/images/info.svg'),
+                        SvgPicture.asset(
+                          'assets/images/info.svg',
+                          color: iconColor(),
+                        ),
                         Padding(
                           padding: EdgeInsets.only(top: 16),
                         ),
@@ -189,7 +193,6 @@ class _LegalEditorScreenState extends State<LegalEditorScreen> {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w300,
-                            color: Colors.white,
                           ),
                         ),
                         Padding(
@@ -201,7 +204,6 @@ class _LegalEditorScreenState extends State<LegalEditorScreen> {
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w400,
-                            color: Colors.white,
                           ),
                         ),
                         Padding(
@@ -220,7 +222,7 @@ class _LegalEditorScreenState extends State<LegalEditorScreen> {
                               height: 24,
                               elevation: 0,
                               minWidth: 0,
-                              color: Colors.white10,
+                              color: overlayBackground(),
                               child: Text(
                                 Language.getSettingsStrings('actions.no'),
                               ),
@@ -236,7 +238,7 @@ class _LegalEditorScreenState extends State<LegalEditorScreen> {
                               height: 24,
                               elevation: 0,
                               minWidth: 0,
-                              color: Colors.white10,
+                              color: overlayBackground(),
                               child: Text(
                                 Language.getSettingsStrings('actions.yes'),
                               ),

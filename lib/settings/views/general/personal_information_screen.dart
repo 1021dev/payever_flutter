@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'package:date_format/date_format.dart';
 import 'package:flutter/cupertino.dart';
@@ -19,6 +18,7 @@ import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/settings/widgets/app_bar.dart';
 import 'package:payever/settings/widgets/profile_image_view.dart';
 import 'package:payever/settings/widgets/save_button.dart';
+import 'package:payever/theme.dart';
 
 class PersonalInformationScreen extends StatefulWidget {
   final GlobalStateModel globalStateModel;
@@ -83,7 +83,6 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
 
   get _body {
     return Scaffold(
-      backgroundColor: Colors.black,
       appBar: Appbar('Personal Information'),
       body: SafeArea(
         child: BackgroundBase(
@@ -112,7 +111,7 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                 padding: EdgeInsets.all(16),
                 width: Measurements.width,
                 child: BlurEffectView(
-                  color: Color.fromRGBO(20, 20, 20, 0.4),
+                  color: overlayBackground(),
                   child: SingleChildScrollView(
                     child: Container(
                       child: Column(
@@ -172,7 +171,7 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                               children: <Widget>[
                                 Flexible(
                                   child: BlurEffectView(
-                                    color: Color.fromRGBO(100, 100, 100, 0.05),
+                                    color: overlayRow(),
                                     radius: 0,
                                     child: Container(
                                       height: 64,
@@ -195,9 +194,10 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                                           });
                                         },
                                         value: salutation != '' ? salutation : null,
-                                        icon: Icon(
-                                          Icons.keyboard_arrow_down,
-                                          color: Colors.black54,
+                                        icon: Flexible(
+                                          child: Icon(
+                                            Icons.keyboard_arrow_down,
+                                          ),
                                         ),
                                         decoration: InputDecoration(
                                           border: InputBorder.none,
@@ -214,7 +214,7 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                                 ),
                                 Flexible(
                                   child: BlurEffectView(
-                                    color: Color.fromRGBO(100, 100, 100, 0.05),
+                                    color: overlayRow(),
                                     radius: 0,
                                     child: Container(
                                       height: 64,
@@ -230,9 +230,6 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                                         decoration: InputDecoration(
                                           contentPadding: EdgeInsets.only(left: 16, right: 16),
                                           labelText: Language.getPosTpmStrings('First Name'),
-                                          labelStyle: TextStyle(
-                                            color: Colors.grey,
-                                          ),
                                           enabledBorder: InputBorder.none,
                                           focusedBorder: UnderlineInputBorder(
                                             borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -248,7 +245,7 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                                 ),
                                 Flexible(
                                   child: BlurEffectView(
-                                    color: Color.fromRGBO(100, 100, 100, 0.05),
+                                    color: overlayRow(),
                                     radius: 0,
                                     child: Container(
                                       height: 64,
@@ -264,9 +261,6 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                                         decoration: InputDecoration(
                                           contentPadding: EdgeInsets.only(left: 16, right: 16),
                                           labelText: Language.getPosTpmStrings('Last Name'),
-                                          labelStyle: TextStyle(
-                                            color: Colors.grey,
-                                          ),
                                           enabledBorder: InputBorder.none,
                                           focusedBorder: UnderlineInputBorder(
                                             borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -287,7 +281,7 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                               children: <Widget>[
                                 Flexible(
                                   child: BlurEffectView(
-                                    color: Color.fromRGBO(100, 100, 100, 0.05),
+                                    color: overlayRow(),
                                     radius: 0,
                                     child: Container(
                                       height: 64,
@@ -303,9 +297,6 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                                         decoration: InputDecoration(
                                           contentPadding: EdgeInsets.only(left: 16, right: 16),
                                           labelText: Language.getPosTpmStrings('Phone (optional)'),
-                                          labelStyle: TextStyle(
-                                            color: Colors.grey,
-                                          ),
                                           enabledBorder: InputBorder.none,
                                           focusedBorder: UnderlineInputBorder(
                                             borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -321,7 +312,7 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                                 ),
                                 Flexible(
                                   child: BlurEffectView(
-                                    color: Color.fromRGBO(100, 100, 100, 0.05),
+                                    color: overlayRow(),
                                     radius: 0,
                                     child: Container(
                                       height: 64,
@@ -337,9 +328,6 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                                         decoration: InputDecoration(
                                           contentPadding: EdgeInsets.only(left: 16, right: 16),
                                           labelText: Language.getPosTpmStrings('E-email'),
-                                          labelStyle: TextStyle(
-                                            color: Colors.grey,
-                                          ),
                                           enabledBorder: InputBorder.none,
                                           focusedBorder: UnderlineInputBorder(
                                             borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -355,7 +343,7 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                           ),
                           SizedBox(height: 2,),
                           BlurEffectView(
-                            color: Color.fromRGBO(100, 100, 100, 0.05),
+                            color: overlayRow(),
                             radius: 0,
                             child: Container(
                               height: 64,
@@ -377,9 +365,6 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                                       decoration: InputDecoration(
                                         contentPadding: EdgeInsets.only(left: 16, right: 16),
                                         labelText: Language.getSettingsStrings('form.create_form.personal_information.birthday.label'),
-                                        labelStyle: TextStyle(
-                                          color: Colors.grey,
-                                        ),
                                         enabledBorder: InputBorder.none,
                                         focusedBorder: UnderlineInputBorder(
                                           borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -410,6 +395,7 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                                         'assets/images/ic_calendar.svg',
                                         width: 20,
                                         height: 20,
+                                        color: iconColor(),
                                       ),
                                     ),
                                   ),
@@ -420,7 +406,7 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                           SizedBox(height: 2,),
                           SaveBtn(
                             isUpdating: state.isUpdating,
-                            color: Colors.black45,
+                            color: overlayBackground(),
                             isBottom: false,
                             onUpdate: () {
                               if (_formKey.currentState.validate() &&

@@ -11,6 +11,7 @@ import 'package:payever/commons/views/custom_elements/custom_elements.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/settings/widgets/app_bar.dart';
 import 'package:payever/settings/widgets/save_button.dart';
+import 'package:payever/theme.dart';
 
 class TaxesScreen extends StatefulWidget {
   final GlobalStateModel globalStateModel;
@@ -38,7 +39,7 @@ class _TaxesScreenState extends State<TaxesScreen> {
   final _formKey = GlobalKey<FormState>();
 
   @override
-  Future<void> initState() {
+  void initState() {
     activeBusiness =
         widget.globalStateModel.currentBusiness;
     taxes = activeBusiness.taxes;
@@ -64,7 +65,6 @@ class _TaxesScreenState extends State<TaxesScreen> {
 
   get _body {
     return Scaffold(
-      backgroundColor: Colors.black,
       appBar: Appbar(Language.getSettingsStrings('filters.vatIds.name')),
       body: SafeArea(
         child: BackgroundBase(
@@ -93,7 +93,7 @@ class _TaxesScreenState extends State<TaxesScreen> {
                 padding: EdgeInsets.all(16),
                 width: Measurements.width,
                 child: BlurEffectView(
-                  color: Color.fromRGBO(20, 20, 20, 0.4),
+                  color: overlayColor(),
                   child: SingleChildScrollView(
                     child: Container(
                       child: Column(
@@ -101,7 +101,7 @@ class _TaxesScreenState extends State<TaxesScreen> {
                           Padding(
                             padding: EdgeInsets.only(top: 8, left: 8, right: 8),
                             child: BlurEffectView(
-                              color: Color.fromRGBO(100, 100, 100, 0.05),
+                              color: overlayRow(),
                               borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(8),
                                 topRight: Radius.circular(8),
@@ -121,9 +121,6 @@ class _TaxesScreenState extends State<TaxesScreen> {
                                     decoration: InputDecoration(
                                       contentPadding: EdgeInsets.only(left: 16, right: 16),
                                       labelText: Language.getPosTpmStrings('form.create_form.taxes.taxes.companyRegisterNumber.label'),
-                                      labelStyle: TextStyle(
-                                        color: Colors.grey,
-                                      ),
                                       enabledBorder: InputBorder.none,
                                       focusedBorder: UnderlineInputBorder(
                                         borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -138,7 +135,7 @@ class _TaxesScreenState extends State<TaxesScreen> {
                           Padding(
                             padding: EdgeInsets.only(top: 2, left: 8, right: 8),
                             child: BlurEffectView(
-                              color: Color.fromRGBO(100, 100, 100, 0.05),
+                              color: overlayRow(),
                               radius: 0,
                               child: Container(
                                 height: 64,
@@ -155,9 +152,6 @@ class _TaxesScreenState extends State<TaxesScreen> {
                                     decoration: InputDecoration(
                                       contentPadding: EdgeInsets.only(left: 16, right: 16),
                                       labelText: Language.getPosTpmStrings('form.create_form.taxes.taxes.taxId.label'),
-                                      labelStyle: TextStyle(
-                                        color: Colors.grey,
-                                      ),
                                       enabledBorder: InputBorder.none,
                                       focusedBorder: UnderlineInputBorder(
                                         borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -172,7 +166,7 @@ class _TaxesScreenState extends State<TaxesScreen> {
                           Padding(
                             padding: EdgeInsets.only(top: 2, left: 8, right: 8),
                             child: BlurEffectView(
-                              color: Color.fromRGBO(100, 100, 100, 0.05),
+                              color: overlayRow(),
                               radius: 0,
                               child: Container(
                                 height: 64,
@@ -189,9 +183,6 @@ class _TaxesScreenState extends State<TaxesScreen> {
                                     decoration: InputDecoration(
                                       contentPadding: EdgeInsets.only(left: 16, right: 16),
                                       labelText: Language.getPosTpmStrings('form.create_form.taxes.taxes.taxNumber.label'),
-                                      labelStyle: TextStyle(
-                                        color: Colors.grey,
-                                      ),
                                       enabledBorder: InputBorder.none,
                                       focusedBorder: UnderlineInputBorder(
                                         borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -206,7 +197,7 @@ class _TaxesScreenState extends State<TaxesScreen> {
                           Padding(
                             padding: EdgeInsets.only(top: 2, left: 8, right: 8, bottom: 8),
                             child: BlurEffectView(
-                              color: Color.fromRGBO(100, 100, 100, 0.05),
+                              color: overlayRow(),
                               radius: 0,
                               child: Container(
                                 height: 64,
@@ -231,7 +222,7 @@ class _TaxesScreenState extends State<TaxesScreen> {
                           ),
                           SaveBtn(
                             isUpdating: state.isUpdating,
-                            color: Colors.black45,
+                            color: overlayBackground(),
                             isBottom: false,
                             onUpdate: () {
                               if (_formKey.currentState.validate() &&

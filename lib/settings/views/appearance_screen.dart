@@ -77,7 +77,6 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
         bloc: widget.setScreenBloc,
         builder: (BuildContext context, SettingScreenState state) {
           return Scaffold(
-            backgroundColor: Colors.black,
             resizeToAvoidBottomPadding: true,
             appBar: Appbar('Appearance'),
             body: SafeArea(

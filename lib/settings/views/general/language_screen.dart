@@ -6,6 +6,7 @@ import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
+import 'package:payever/theme.dart';
 import 'package:provider/provider.dart';
 
 class LanguageScreen extends StatefulWidget {
@@ -60,7 +61,6 @@ class _LanguageScreenScreenState extends State<LanguageScreen> {
         bloc: widget.settingBloc,
         builder: (BuildContext context, SettingScreenState state) {
           return Scaffold(
-            backgroundColor: Colors.black,
             resizeToAvoidBottomPadding: false,
             appBar: _appBar(state),
             body: SafeArea(
@@ -85,11 +85,9 @@ class _LanguageScreenScreenState extends State<LanguageScreen> {
       centerTitle: false,
       elevation: 0,
       automaticallyImplyLeading: false,
-      backgroundColor: Colors.black87,
       title: Text(
         Language.getPosStrings('settings.language.title'),
         style: TextStyle(
-          color: Colors.white,
           fontSize: 16,
           fontWeight: FontWeight.w500,
         ),
@@ -104,7 +102,6 @@ class _LanguageScreenScreenState extends State<LanguageScreen> {
           ),
           icon: Icon(
             Icons.close,
-            color: Colors.white,
             size: 24,
           ),
           onPressed: () {
@@ -169,7 +166,8 @@ class _LanguageScreenScreenState extends State<LanguageScreen> {
                         widget.settingBloc.add(UpdateCurrentUserEvent(body: body));
                       }
                     },
-                    color: Colors.black,
+                    color: overlayBackground(),
+                    elevation: 0,
                     child: state.isUpdating
                         ? CircularProgressIndicator(
                       strokeWidth: 2,

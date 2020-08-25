@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
+import 'package:payever/theme.dart';
 
 class SaveBtn extends StatelessWidget {
   final bool isUpdating;
@@ -20,29 +22,28 @@ class SaveBtn extends StatelessWidget {
   }
 
   Widget saveButton() {
-    return Container(
-      height: 55,
-      decoration: BoxDecoration(
-        color: color,
-        shape: BoxShape.rectangle,
-        borderRadius: isBottom ? BorderRadius.only(
-          bottomLeft: Radius.circular(8.0),
-          bottomRight: Radius.circular(8.0),
-        ): BorderRadius.circular(0),
-      ),
-      child: SizedBox.expand(
-        child: isUpdating
-            ? Center(
-          child: Container(
-            width: 24,
-            height: 24,
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
+    return BlurEffectView(
+      borderRadius: isBottom ? BorderRadius.only(
+        bottomLeft: Radius.circular(8.0),
+        bottomRight: Radius.circular(8.0),
+      ): BorderRadius.circular(0),
+      child: Container(
+        height: 55,
+        child: SizedBox.expand(
+          child: isUpdating
+              ? Center(
+            child: Container(
+              width: 24,
+              height: 24,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+              ),
             ),
+          ) : MaterialButton(
+            elevation: 0,
+            onPressed: onUpdate,
+            child: Text(title),
           ),
-        ) : MaterialButton(
-          onPressed: onUpdate,
-          child: Text(title),
         ),
       ),
     );

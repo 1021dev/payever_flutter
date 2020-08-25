@@ -14,13 +14,11 @@ class Appbar extends StatelessWidget  with PreferredSizeWidget {
       centerTitle: false,
       elevation: 0,
       automaticallyImplyLeading: false,
-      backgroundColor: Colors.black87,
       title: Container(
         child: Padding(
           padding: const EdgeInsets.only(left: 8.0),
           child: Text(title,
             style: TextStyle(
-              color: Colors.white,
               fontSize: 16,
               fontWeight: FontWeight.w500,
             ),
@@ -33,7 +31,6 @@ class Appbar extends StatelessWidget  with PreferredSizeWidget {
               maxHeight: 32, maxWidth: 32, minHeight: 32, minWidth: 32),
           icon: Icon(
             Icons.close,
-            color: Colors.white,
             size: 24,
           ),
           onPressed: onClose != null ? onClose : () {

@@ -10,6 +10,7 @@ import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/settings/models/models.dart';
 import 'package:payever/settings/widgets/app_bar.dart';
 import 'package:payever/blocs/bloc.dart';
+import 'package:payever/theme.dart';
 import 'package:payever/transactions/views/sub_view/search_text_content_view.dart';
 
 class AddEmployeeGroupScreen extends StatefulWidget {
@@ -66,7 +67,6 @@ class _AddEmployeeGroupScreenState extends State<AddEmployeeGroupScreen> {
         bloc: widget.setScreenBloc,
         builder: (BuildContext context, SettingScreenState state) {
           return Scaffold(
-            backgroundColor: Colors.black,
             resizeToAvoidBottomPadding: false,
             appBar: Appbar('Add Employee'),
             body: SafeArea(
@@ -89,7 +89,7 @@ class _AddEmployeeGroupScreenState extends State<AddEmployeeGroupScreen> {
     return Container(
       height: 50,
       width: double.infinity,
-      color: Colors.black87,
+      color: overlayBackground(),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -106,19 +106,21 @@ class _AddEmployeeGroupScreenState extends State<AddEmployeeGroupScreen> {
                 child: SvgPicture.asset(
                   'assets/images/searchicon.svg',
                   width: 20,
+                  color: iconColor(),
                 ),
               ),
               PopupMenuButton<MenuItem>(
                 icon: SvgPicture.asset(
                   'assets/images/filter.svg',
                   width: 20,
+                  color: iconColor(),
                 ),
                 offset: Offset(0, 100),
                 onSelected: (MenuItem item) => item.onTap(),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
-                color: Colors.black87,
+                color: overlayBackground(),
                 itemBuilder: (BuildContext context) {
                   return appBarPopUpActions(context, state).map((MenuItem item) {
                     return PopupMenuItem<MenuItem>(
@@ -126,7 +128,6 @@ class _AddEmployeeGroupScreenState extends State<AddEmployeeGroupScreen> {
                       child: Text(
                         item.title,
                         style: TextStyle(
-                          color: Colors.white,
                           fontSize: 14,
                           fontWeight: FontWeight.w300,
                         ),
@@ -145,13 +146,14 @@ class _AddEmployeeGroupScreenState extends State<AddEmployeeGroupScreen> {
                   'assets/images/employee-filter.svg',
                   width: 20,
                   height: 20,
+                  color: iconColor(),
                 ),
                 offset: Offset(0, 100),
                 onSelected: (MenuItem item) => item.onTap(),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
-                color: Colors.black87,
+                color: overlayBackground(),
                 itemBuilder: (BuildContext context) {
                   return appBarEmployeeTablePopUpActions(context, state)
                       .map((MenuItem item) {
@@ -163,7 +165,6 @@ class _AddEmployeeGroupScreenState extends State<AddEmployeeGroupScreen> {
                             child: Text(
                               item.title,
                               style: TextStyle(
-                                color: Colors.white,
                                 fontSize: 14,
                                 fontWeight: FontWeight.w300,
                               ),
@@ -213,9 +214,6 @@ class _AddEmployeeGroupScreenState extends State<AddEmployeeGroupScreen> {
             DataColumn(
               label: Text(
                 'Employee',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
               ),
               numeric: false,
               tooltip: 'Employee',
@@ -223,9 +221,6 @@ class _AddEmployeeGroupScreenState extends State<AddEmployeeGroupScreen> {
             employeeTableStatus.contains('Position') ? DataColumn(
               label: Text(
                 'Position',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
               ),
               numeric: false,
               tooltip: 'Position',
@@ -233,9 +228,6 @@ class _AddEmployeeGroupScreenState extends State<AddEmployeeGroupScreen> {
             employeeTableStatus.contains('Mail') ? DataColumn(
               label: Text(
                 'Mail',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
               ),
               numeric: false,
               tooltip: 'Mail',
@@ -285,7 +277,7 @@ class _AddEmployeeGroupScreenState extends State<AddEmployeeGroupScreen> {
         ),
         child: Container(
           decoration: BoxDecoration(
-            color: Color(0xFF888888),
+            color: overlayBackground(),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Row(
@@ -297,7 +289,10 @@ class _AddEmployeeGroupScreenState extends State<AddEmployeeGroupScreen> {
                     padding: EdgeInsets.only(left: 12),
                   ),
                   InkWell(
-                    child: SvgPicture.asset('assets/images/xsinacircle.svg'),
+                    child: SvgPicture.asset(
+                      'assets/images/xsinacircle.svg',
+                      color: iconColor(),
+                    ),
                     onTap: () {
                        widget.setScreenBloc
                           .add(SelectAllEmployeesEvent(isSelect: false));
@@ -309,7 +304,6 @@ class _AddEmployeeGroupScreenState extends State<AddEmployeeGroupScreen> {
                   Text(
                     '$selectedCount ITEM${state.employees.length > 1 ? 'S': ''} SELECTED',
                     style: TextStyle(
-                      color: Colors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                     ),
@@ -323,7 +317,7 @@ class _AddEmployeeGroupScreenState extends State<AddEmployeeGroupScreen> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
-                color: Colors.black87,
+                color: overlayBackground(),
                 itemBuilder: (BuildContext context) {
                   return addEployeeToGroupPopup(context, state).map((MenuItem item) {
                     return PopupMenuItem<MenuItem>(
@@ -331,7 +325,6 @@ class _AddEmployeeGroupScreenState extends State<AddEmployeeGroupScreen> {
                       child: Text(
                         item.title,
                         style: TextStyle(
-                          color: Colors.white,
                           fontSize: 14,
                           fontWeight: FontWeight.w300,
                         ),
@@ -357,23 +350,23 @@ class _AddEmployeeGroupScreenState extends State<AddEmployeeGroupScreen> {
           state.employees == null
               ? Container()
               : Expanded(
-                  child: Stack(
-                    children: <Widget>[
-                      Container(
-                        height: 50,
-                        color: Colors.black45,
-                      ),
-                      Positioned(
-                        top: 0,
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        child: employeeTableBody(context, state),
-                      ),
-                      _thirdAppbar(state),
-                    ],
-                  ),
+            child: Stack(
+              children: <Widget>[
+                Container(
+                  height: 50,
+                  color: overlayBackground(),
                 ),
+                Positioned(
+                  top: 0,
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: employeeTableBody(context, state),
+                ),
+                _thirdAppbar(state),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -408,7 +401,6 @@ class _AddEmployeeGroupScreenState extends State<AddEmployeeGroupScreen> {
         title: 'Position',
         icon: employeeTableStatus.contains('Position') ? Icon(
           Icons.check,
-          color: Colors.grey,
         ): null,
         onTap: () {
           setState(() {
@@ -422,7 +414,6 @@ class _AddEmployeeGroupScreenState extends State<AddEmployeeGroupScreen> {
         title: 'Mail',
         icon: employeeTableStatus.contains('Mail') ? Icon(
           Icons.check,
-          color: Colors.grey,
         ): null,
         onTap: () {
           setState(() {

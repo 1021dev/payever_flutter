@@ -12,6 +12,7 @@ import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/settings/models/models.dart';
 import 'package:payever/settings/widgets/app_bar.dart';
 import 'package:payever/settings/widgets/save_button.dart';
+import 'package:payever/theme.dart';
 
 class CompanyScreen extends StatefulWidget {
   final GlobalStateModel globalStateModel;
@@ -104,7 +105,7 @@ class _CompanyScreenState extends State<CompanyScreen> {
               padding: EdgeInsets.all(16),
               width: Measurements.width,
               child: BlurEffectView(
-                color: Color.fromRGBO(20, 20, 20, 0.4),
+                color: overlayColor(),
                 child: SingleChildScrollView(
                   child: Container(
                     child: Column(
@@ -112,7 +113,7 @@ class _CompanyScreenState extends State<CompanyScreen> {
                         Container(
                           padding: EdgeInsets.only(left: 8, top: 8, right: 8),
                           child: BlurEffectView(
-                            color: Color.fromRGBO(100, 100, 100, 0.05),
+                            color: overlayRow(),
                             borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(8),
                               topRight: Radius.circular(8),
@@ -134,7 +135,6 @@ class _CompanyScreenState extends State<CompanyScreen> {
                                 },
                                 icon: Icon(
                                   Icons.keyboard_arrow_down,
-                                  color: Colors.black54,
                                 ),
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
@@ -149,7 +149,7 @@ class _CompanyScreenState extends State<CompanyScreen> {
                         Container(
                           padding: EdgeInsets.only(left: 8, top: 2, right: 8),
                           child: BlurEffectView(
-                            color: Color.fromRGBO(100, 100, 100, 0.05),
+                            color: overlayRow(),
                             radius: 0,
                             child: Container(
                               padding: EdgeInsets.only(left: 12, right: 12),
@@ -170,7 +170,6 @@ class _CompanyScreenState extends State<CompanyScreen> {
                                 },
                                 icon: Icon(
                                   Icons.keyboard_arrow_down,
-                                  color: Colors.black54,
                                 ),
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
@@ -185,7 +184,7 @@ class _CompanyScreenState extends State<CompanyScreen> {
                         Container(
                           padding: EdgeInsets.only(left: 8, top: 2, right: 8),
                           child: BlurEffectView(
-                            color: Color.fromRGBO(100, 100, 100, 0.05),
+                            color: overlayRow(),
                             radius: 0,
                             child: Container(
                               padding: EdgeInsets.only(left: 12, right: 12),
@@ -206,7 +205,6 @@ class _CompanyScreenState extends State<CompanyScreen> {
                                 },
                                 icon: Icon(
                                   Icons.keyboard_arrow_down,
-                                  color: Colors.black54,
                                 ),
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
@@ -221,7 +219,7 @@ class _CompanyScreenState extends State<CompanyScreen> {
                         Container(
                           padding: EdgeInsets.only(left: 8, top: 2, right: 8),
                           child: BlurEffectView(
-                            color: Color.fromRGBO(100, 100, 100, 0.05),
+                            color: overlayRow(),
                             radius: 0,
                             child: Container(
                               padding: EdgeInsets.only(left: 12, right: 12),
@@ -243,7 +241,6 @@ class _CompanyScreenState extends State<CompanyScreen> {
                                 value: product != '' ? product : null,
                                 icon: Icon(
                                   Icons.keyboard_arrow_down,
-                                  color: Colors.black54,
                                 ),
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
@@ -258,7 +255,7 @@ class _CompanyScreenState extends State<CompanyScreen> {
                         Container(
                           padding: EdgeInsets.only(left: 8, top: 2, right: 8),
                           child: BlurEffectView(
-                            color: Color.fromRGBO(100, 100, 100, 0.05),
+                            color: overlayRow(),
                             radius: 0,
                             child: Container(
                               padding: EdgeInsets.only(left: 12, right: 12),
@@ -279,7 +276,6 @@ class _CompanyScreenState extends State<CompanyScreen> {
                                 },
                                 icon: Icon(
                                   Icons.keyboard_arrow_down,
-                                  color: Colors.black54,
                                 ),
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
@@ -295,7 +291,7 @@ class _CompanyScreenState extends State<CompanyScreen> {
                           padding: EdgeInsets.only(left: 8, top: 2, right: 8, bottom: 8),
                           height: 65,
                           child: BlurEffectView(
-                            color: Color.fromRGBO(100, 100, 100, 0.05),
+                            color: overlayRow(),
                             borderRadius: BorderRadius.only(
                               bottomLeft: Radius.circular(8),
                               bottomRight: Radius.circular(8),
@@ -304,7 +300,6 @@ class _CompanyScreenState extends State<CompanyScreen> {
                               padding: EdgeInsets.only(left: 12, right: 12),
                               child: TextField(
                                 style: TextStyle(
-                                  color: Colors.white,
                                   fontSize: 16,
                                 ),
                                 controller: urlController,
@@ -317,7 +312,6 @@ class _CompanyScreenState extends State<CompanyScreen> {
                                   border: InputBorder.none,
                                   labelText: Language.getSettingsStrings('form.create_form.company.url_web.label'),
                                   labelStyle: TextStyle(
-                                    color: Colors.white54,
                                     fontSize: 12,
                                   )
                                 ),

@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:payever/theme.dart';
 
 class BlurEffectView extends StatelessWidget {
   final Widget child;
@@ -16,7 +17,7 @@ class BlurEffectView extends StatelessWidget {
     this.radius = 12,
     this.blur = 15,
     this.borderRadius,
-    this.color = const Color.fromRGBO(0, 0, 0, 0.4),
+    this.color,
     this.padding = EdgeInsets.zero,
   });
 
@@ -24,7 +25,7 @@ class BlurEffectView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlurryContainer(
       borderRadius: borderRadius != null ? borderRadius : BorderRadius.circular(radius),
-      bgColor: color,
+      bgColor: color == null ? overlayColor(): color,
       blur: blur,
       padding: padding,
       child: child,

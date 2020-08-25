@@ -10,6 +10,7 @@ import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/settings/models/models.dart';
 import 'package:payever/settings/widgets/app_bar.dart';
 import 'package:payever/blocs/bloc.dart';
+import 'package:payever/theme.dart';
 
 import 'edit_legal_screen.dart';
 
@@ -60,7 +61,6 @@ class _PoliciesScreenState extends State<PoliciesScreen> {
         bloc: widget.setScreenBloc,
         builder: (BuildContext context, SettingScreenState state) {
           return Scaffold(
-            backgroundColor: Colors.black,
             resizeToAvoidBottomPadding: false,
             appBar: Appbar('Policies'),
             body: SafeArea(
@@ -86,9 +86,11 @@ class _PoliciesScreenState extends State<PoliciesScreen> {
         child: Container(
           width: Measurements.width,
           decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.2),
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.all(Radius.circular(8))),
+            color: overlayBackground(),
+            shape: BoxShape.rectangle,
+            borderRadius: BorderRadius.all(Radius.circular(8)
+            ),
+          ),
           child: ListView.separated(
             physics: BouncingScrollPhysics(),
             shrinkWrap: true,
@@ -119,7 +121,7 @@ class _PoliciesScreenState extends State<PoliciesScreen> {
             child: Container(
               padding: EdgeInsets.fromLTRB(12, 3, 12, 3),
               decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.3),
+                color: overlayBackground(),
                 shape: BoxShape.rectangle,
                 borderRadius: BorderRadius.all(Radius.circular(20)),
               ),

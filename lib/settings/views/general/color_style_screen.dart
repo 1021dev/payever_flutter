@@ -8,6 +8,7 @@ import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
+import 'package:payever/theme.dart';
 
 class ColorStyleScreen extends StatefulWidget {
   final GlobalStateModel globalStateModel;
@@ -82,11 +83,9 @@ class _ColorStyleScreenState extends State<ColorStyleScreen> {
       centerTitle: false,
       elevation: 0,
       automaticallyImplyLeading: false,
-      backgroundColor: Colors.black87,
       title: Text(
         'Color and style',
         style: TextStyle(
-          color: Colors.white,
           fontSize: 16,
           fontWeight: FontWeight.w500,
         ),
@@ -101,7 +100,7 @@ class _ColorStyleScreenState extends State<ColorStyleScreen> {
           ),
           icon: Icon(
             Icons.close,
-            color: Colors.white,
+            color: iconColor(),
             size: 24,
           ),
           onPressed: () {
@@ -125,14 +124,14 @@ class _ColorStyleScreenState extends State<ColorStyleScreen> {
           child: Wrap(
             children: <Widget>[
               BlurEffectView(
-                color: Color.fromRGBO(100, 100, 100, 0.05),
+                color: overlayBackground(),
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(8),
                   topRight: Radius.circular(8),
                 ),
                 child: Container(
                   height: 56,
-                  color: Colors.black38,
+                  color: overlayBackground(),
                   child: SizedBox.expand(
                     child: MaterialButton(
                       onPressed: () {
@@ -153,6 +152,7 @@ class _ColorStyleScreenState extends State<ColorStyleScreen> {
                                   'assets/images/grid.svg',
                                   width: 24,
                                   height: 24,
+                                  color: iconColor(),
                                 ),
                                 Padding(
                                   padding: EdgeInsets.only(left: 8),
@@ -162,7 +162,6 @@ class _ColorStyleScreenState extends State<ColorStyleScreen> {
                                     'Theme',
                                     maxLines: 1,
                                     style: TextStyle(
-                                      color: Colors.white,
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
                                     ),
@@ -206,7 +205,6 @@ class _ColorStyleScreenState extends State<ColorStyleScreen> {
                                 'Primary color',
                                 style: TextStyle(
                                   fontSize: 14,
-                                  color: Colors.white70,
                                 ),
                               ),
                               GestureDetector(
@@ -244,7 +242,7 @@ class _ColorStyleScreenState extends State<ColorStyleScreen> {
                                   height: 30,
                                   decoration: BoxDecoration(
                                     color: colorConvert(primaryColor),
-                                    border: Border.all(width: 1, color: Colors.white),
+                                    border: Border.all(width: 1, color: iconColor()),
                                     borderRadius: BorderRadius.circular(4),
                                   ),
                                 ),
@@ -261,7 +259,6 @@ class _ColorStyleScreenState extends State<ColorStyleScreen> {
                                 'Secondary color',
                                 style: TextStyle(
                                   fontSize: 14,
-                                  color: Colors.white70,
                                 ),
                               ),
                               GestureDetector(
@@ -299,7 +296,7 @@ class _ColorStyleScreenState extends State<ColorStyleScreen> {
                                   height: 30,
                                   decoration: BoxDecoration(
                                     color: colorConvert(secondaryColor),
-                                    border: Border.all(width: 1, color: Colors.white),
+                                    border: Border.all(width: 1, color: iconColor()),
                                     borderRadius: BorderRadius.circular(4),
                                   ),
                                 ),
@@ -329,10 +326,15 @@ class _ColorStyleScreenState extends State<ColorStyleScreen> {
                         );
                       }
                     },
-                    color: Colors.black,
+                    color: overlayBackground(),
+                    elevation: 0,
                     child: state.isUpdating
-                        ? CircularProgressIndicator(
-                      strokeWidth: 2,
+                        ? Container(
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                      ),
                     )
                         : Text(
                       Language.getCommerceOSStrings('actions.save'),

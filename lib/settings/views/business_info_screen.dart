@@ -13,6 +13,7 @@ import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/settings/widgets/app_bar.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/settings/widgets/save_button.dart';
+import 'package:payever/theme.dart';
 
 class BusinessInfoScreen extends StatefulWidget {
   final GlobalStateModel globalStateModel;
@@ -71,7 +72,6 @@ class _BusinessInfoScreenState extends State<BusinessInfoScreen> {
         bloc: widget.setScreenBloc,
         builder: (BuildContext context, SettingScreenState state) {
           return Scaffold(
-            backgroundColor: Colors.black,
             resizeToAvoidBottomPadding: true,
             appBar: Appbar('Business Info'),
             body: SafeArea(
@@ -102,9 +102,10 @@ class _BusinessInfoScreenState extends State<BusinessInfoScreen> {
         child: Container(
             padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
             decoration: BoxDecoration(
-                color: Colors.grey.withOpacity(0.25),
-                shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.circular(10)),
+              color: overlayBackground(),
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.circular(10),
+            ),
             child: Form(
               key: _formKey,
               child: Column(
@@ -153,6 +154,7 @@ class _BusinessInfoScreenState extends State<BusinessInfoScreen> {
                                       child: Center(
                                         child: SvgPicture.asset(
                                           "assets/images/newpicicon.svg",
+                                          color: iconColor(),
                                         ),
                                       ),
                                     ),
@@ -165,7 +167,7 @@ class _BusinessInfoScreenState extends State<BusinessInfoScreen> {
                                     height: 16,
                                     child: CircularProgressIndicator(
                                       strokeWidth: 2,
-                                      valueColor: new AlwaysStoppedAnimation<Color>(Colors.black87),
+//                                      valueColor: new AlwaysStoppedAnimation<Color>(Colors.black87),
                                     ),
                                   ),
                                 )
@@ -210,7 +212,7 @@ class _BusinessInfoScreenState extends State<BusinessInfoScreen> {
                       Expanded(
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Colors.grey.withOpacity(0.3),
+                            color: overlayBackground(),
                             shape: BoxShape.rectangle,
                             borderRadius: BorderRadius.all(Radius.circular(8.0),
                             ),
@@ -249,12 +251,11 @@ class _BusinessInfoScreenState extends State<BusinessInfoScreen> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       height: 24,
-                      color: Colors.black54,
+                      color: overlayBackground(),
                       elevation: 0,
                       child: Text(
                         'Delete Business',
                         style: TextStyle(
-                          color: Colors.white,
                           fontSize: 13,
                         ),
                       ),

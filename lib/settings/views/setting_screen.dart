@@ -22,6 +22,7 @@ import 'package:payever/settings/views/general/general_screen.dart';
 import 'package:payever/settings/views/policies/policies_screen.dart';
 import 'package:payever/settings/views/wallpaper/wallpaper_screen.dart';
 import 'package:payever/switcher/switcher_page.dart';
+import 'package:payever/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -162,7 +163,6 @@ class _SettingScreenState extends State<SettingScreen> {
       centerTitle: false,
       elevation: 0,
       automaticallyImplyLeading: false,
-      backgroundColor: Colors.black87,
       title: Row(
         children: <Widget>[
           Container(
@@ -182,7 +182,6 @@ class _SettingScreenState extends State<SettingScreen> {
           Text(
             Language.getCommerceOSStrings('dashboard.apps.settings'),
             style: TextStyle(
-              color: Colors.white,
               fontSize: 16,
               fontWeight: FontWeight.w500,
             ),
@@ -204,7 +203,6 @@ class _SettingScreenState extends State<SettingScreen> {
                   child: Text(
                     widget.dashboardScreenBloc.state.activeBusiness.name,
                     style: TextStyle(
-                      color: Colors.white,
                       fontSize: 14,
                     ),
                   ),
@@ -325,7 +323,6 @@ class _SettingScreenState extends State<SettingScreen> {
       length: 6,
       initialIndex: 0,
       child: Scaffold(
-        backgroundColor: Colors.black,
         resizeToAvoidBottomPadding: false,
         appBar: _appBar(state),
         body: SafeArea(
@@ -335,7 +332,7 @@ class _SettingScreenState extends State<SettingScreen> {
               child: CircularProgressIndicator(),
             ) : Center(
               child: Container(
-                margin: EdgeInsets.symmetric(horizontal: 50),
+                margin: EdgeInsets.symmetric(horizontal: 16),
                 child: ListView(
                   children: <Widget>[
                     Column(
@@ -363,9 +360,9 @@ class _SettingScreenState extends State<SettingScreen> {
                             child: Text(
                               avatarName,
                               style: TextStyle(
-                                color: Colors.white,
                                 fontSize: 36,
-                                fontWeight: FontWeight.w300,
+                                color: iconColor(),
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
                           ),
@@ -376,9 +373,10 @@ class _SettingScreenState extends State<SettingScreen> {
                         Text(
                           widget.globalStateModel.currentBusiness.name,
                           style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 24,
-                              fontWeight: FontWeight.w400),
+                            fontSize: 24,
+                            fontWeight: FontWeight.w400,
+                            color: iconColor(),
+                          ),
                         ),
                         SizedBox(
                           height: 50,
@@ -389,12 +387,14 @@ class _SettingScreenState extends State<SettingScreen> {
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
-                        itemBuilder: (context, index) =>
-                            _itemBuilder(state, index),
-                        gridDelegate:
-                        SliverGridDelegateWithFixedCrossAxisCount(
-                            childAspectRatio: 4 / 4, crossAxisCount: (_isTablet || !_isPortrait) ? 3 : 2),
-                        itemCount: 7,
+                        itemBuilder: (context, index) => _itemBuilder(state, index),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          childAspectRatio: 2.5 / 4,
+                          mainAxisSpacing: 16,
+                          crossAxisSpacing: 16,
+                          crossAxisCount: (_isTablet || !_isPortrait) ? 6 : 4,
+                        ),
+                      itemCount: 7,
                     )
                   ],
                 ),
@@ -408,26 +408,33 @@ class _SettingScreenState extends State<SettingScreen> {
 
   Widget _itemBuilder(SettingScreenState state, int index) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         GestureDetector(
           onTap: () => _onTileClicked(index),
           child: Container(
             padding: EdgeInsets.all(16),
-            width: 80,
-            height: 80,
             decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.2),
-                shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.circular(20)),
+              color: overlayBackground(),
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.circular(20),
+            ),
             child: SvgPicture.asset(
               settingItems[index].image,
+              color: iconColor(),
             ),
           ),
         ),
         SizedBox(
-          height: 10,
+          height: 8,
         ),
-        Text(settingItems[index].name)
+        Text(
+          settingItems[index].name,
+          style: TextStyle(
+            fontSize: 12,
+          ),
+          textAlign: TextAlign.center,
+        )
       ],
     );
   }

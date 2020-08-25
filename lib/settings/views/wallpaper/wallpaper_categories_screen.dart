@@ -10,6 +10,7 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/settings/models/models.dart';
+import 'package:payever/theme.dart';
 
 bool _isPortrait;
 bool _isTablet;
@@ -64,11 +65,10 @@ class _WallpaperCategoriesScreenState extends State<WallpaperCategoriesScreen> {
         builder: (BuildContext context, SettingScreenState state) {
           return new OrientationBuilder(builder: (context, orientation) {
             return Scaffold(
-              backgroundColor: Color(0x80111111),
+              backgroundColor: overlayBackground(),
               resizeToAvoidBottomPadding: false,
               body: BlurEffectView(
                 radius: 0,
-                color: Colors.transparent,
                 child: SafeArea(
                   child: state.isUpdating
                       ? Center(
@@ -132,7 +132,8 @@ class _WallpaperCategoriesScreenState extends State<WallpaperCategoriesScreen> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
-                color: Color(0xFF525151),
+                elevation: 0,
+                color: overlayColor(),
                 child: Text(
                   'Done',
                 ),
@@ -159,7 +160,6 @@ class _WallpaperCategoriesScreenState extends State<WallpaperCategoriesScreen> {
                           Text(
                             'My Wallpapers',
                             style: TextStyle(
-                              color: Colors.white70,
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
@@ -174,7 +174,8 @@ class _WallpaperCategoriesScreenState extends State<WallpaperCategoriesScreen> {
                             ),
                             height: 24,
                             minWidth: 60,
-                            color: Colors.grey,
+                            elevation: 0,
+                            color: overlayColor(),
                             child: Text(
                               'Add',
                             ),
@@ -186,7 +187,7 @@ class _WallpaperCategoriesScreenState extends State<WallpaperCategoriesScreen> {
                       ),
                       decoration: BoxDecoration(
                         color: isSelected('My Wallpapers')
-                            ? Color(0x26FFFFFF)
+                            ? overlayColor()
                             : Colors.transparent,
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -210,14 +211,13 @@ class _WallpaperCategoriesScreenState extends State<WallpaperCategoriesScreen> {
                       child: Text(
                         'All Wallpapers',
                         style: TextStyle(
-                          color: Colors.white70,
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       decoration: BoxDecoration(
                         color: isSelected('All')
-                            ? Color(0x26FFFFFF)
+                            ? overlayColor()
                             : Colors.transparent,
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -257,7 +257,6 @@ class _WallpaperCategoriesScreenState extends State<WallpaperCategoriesScreen> {
                                   Text(
                                     getMainCategory(category),
                                     style: TextStyle(
-                                      color: Colors.white70,
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -267,7 +266,6 @@ class _WallpaperCategoriesScreenState extends State<WallpaperCategoriesScreen> {
                                     isSelected(category)
                                         ? Icons.clear
                                         : Icons.add,
-                                    color: Colors.grey,
                                   ),
                                 ],
                               ),
@@ -313,7 +311,7 @@ class _WallpaperCategoriesScreenState extends State<WallpaperCategoriesScreen> {
                   padding: EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     color: (isContainSubCategory(subCategory))
-                        ? Color(0x26FFFFFF)
+                        ? overlayColor()
                         : Colors.transparent,
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -325,7 +323,6 @@ class _WallpaperCategoriesScreenState extends State<WallpaperCategoriesScreen> {
                       Text(
                         getSubCategory(subCategory),
                         style: TextStyle(
-                          color: Colors.white70,
                           fontSize: 13,
                           fontWeight: FontWeight.w300,
                         ),
@@ -356,7 +353,6 @@ class _WallpaperCategoriesScreenState extends State<WallpaperCategoriesScreen> {
     return Divider(
       height: 0,
       thickness: 0.5,
-      color: Colors.white70,
     );
   }
 

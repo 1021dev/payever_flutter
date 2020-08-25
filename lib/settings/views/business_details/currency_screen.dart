@@ -6,6 +6,7 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/settings/widgets/app_bar.dart';
 import 'package:payever/settings/widgets/save_button.dart';
+import 'package:payever/theme.dart';
 
 Map<String, String> currencyNames = {
   'Swiss Franc': 'CHF',
@@ -89,7 +90,7 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
                           Container(
                             clipBehavior: Clip.antiAlias,
                             decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(0.4),
+                              color: overlayBackground(),
                               shape: BoxShape.rectangle,
                               borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(8.0),
@@ -107,7 +108,7 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
                                     },
                                     child: Container(
                                       decoration: BoxDecoration(
-                                          color: Colors.grey.withOpacity(0.25),
+                                          color: overlayColor(),
                                           shape: BoxShape.rectangle,
                                           borderRadius: BorderRadius.circular(10)),
                                       child: Column(
@@ -120,7 +121,6 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
                                             child: Text(
                                               'Currency',
                                               style: TextStyle(
-                                                color: Colors.white54,
                                                 fontSize: 12,
                                               ),
                                             ),

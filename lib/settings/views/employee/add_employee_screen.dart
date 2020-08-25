@@ -16,6 +16,7 @@ import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/settings/models/models.dart';
 import 'package:payever/settings/widgets/app_bar.dart';
 import 'package:payever/settings/widgets/save_button.dart';
+import 'package:payever/theme.dart';
 
 
 class AddEmployeeScreen extends StatefulWidget {
@@ -94,7 +95,6 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
 
   get _body {
     return Scaffold(
-      backgroundColor: Colors.black,
       appBar: Appbar(
         widget.employee == null ? 'Add Employee' : 'Edit Employee',
         onClose: () {
@@ -148,20 +148,20 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                 padding: EdgeInsets.all(16),
                 width: Measurements.width,
                 child: BlurEffectView(
-                  color: Color.fromRGBO(20, 20, 20, 0.4),
+                  color: overlayBackground(),
                   child: SingleChildScrollView(
                     child: Container(
                       child: Column(
                         children: <Widget>[
                           BlurEffectView(
-                            color: Color.fromRGBO(100, 100, 100, 0.05),
+                            color: overlayBackground(),
                             borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(8),
                               topRight: Radius.circular(8),
                             ),
                             child: Container(
                               height: 56,
-                              color: Colors.black38,
+                              color: overlayBackground(),
                               child: SizedBox.expand(
                                 child: MaterialButton(
                                   onPressed: () {
@@ -182,7 +182,12 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                                             Padding(
                                               padding: EdgeInsets.only(left: 8),
                                             ),
-                                            SvgPicture.asset('assets/images/account.svg', width: 16, height: 16,),
+                                            SvgPicture.asset(
+                                              'assets/images/account.svg',
+                                              color: iconColor(),
+                                              width: 16,
+                                              height: 16,
+                                            ),
                                             Padding(
                                               padding: EdgeInsets.only(left: 8),
                                             ),
@@ -191,7 +196,6 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                                                 'Info',
                                                 maxLines: 1,
                                                 style: TextStyle(
-                                                  color: Colors.white,
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w500,
                                                 ),
@@ -219,7 +223,7 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                               children: <Widget>[
                                 Flexible(
                                   child: BlurEffectView(
-                                    color: Color.fromRGBO(100, 100, 100, 0.05),
+                                    color: overlayRow(),
                                     radius: 0,
                                     child: Container(
                                       height: 64,
@@ -232,9 +236,6 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                                         decoration: InputDecoration(
                                           contentPadding: EdgeInsets.only(left: 16, right: 16),
                                           labelText: Language.getPosTpmStrings('First Name'),
-                                          labelStyle: TextStyle(
-                                            color: Colors.grey,
-                                          ),
                                           enabledBorder: InputBorder.none,
                                           focusedBorder: UnderlineInputBorder(
                                             borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -250,7 +251,7 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                                 ),
                                 Flexible(
                                   child: BlurEffectView(
-                                    color: Color.fromRGBO(100, 100, 100, 0.05),
+                                    color: overlayRow(),
                                     radius: 0,
                                     child: Container(
                                       height: 64,
@@ -263,9 +264,6 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                                         decoration: InputDecoration(
                                           contentPadding: EdgeInsets.only(left: 16, right: 16),
                                           labelText: Language.getPosTpmStrings('Last Name'),
-                                          labelStyle: TextStyle(
-                                            color: Colors.grey,
-                                          ),
                                           enabledBorder: InputBorder.none,
                                           focusedBorder: UnderlineInputBorder(
                                             borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -286,7 +284,7 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                               children: <Widget>[
                                 Flexible(
                                   child: BlurEffectView(
-                                    color: Color.fromRGBO(100, 100, 100, 0.05),
+                                    color: overlayRow(),
                                     radius: 0,
                                     child: Container(
                                       height: 64,
@@ -302,9 +300,6 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                                         decoration: InputDecoration(
                                           contentPadding: EdgeInsets.only(left: 16, right: 16),
                                           labelText: Language.getPosTpmStrings('Mail'),
-                                          labelStyle: TextStyle(
-                                            color: Colors.grey,
-                                          ),
                                           enabledBorder: InputBorder.none,
                                           focusedBorder: UnderlineInputBorder(
                                             borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -321,7 +316,7 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                                 ),
                                 Flexible(
                                   child: BlurEffectView(
-                                    color: Color.fromRGBO(100, 100, 100, 0.05),
+                                    color: overlayRow(),
                                     radius: 0,
                                     child: Container(
                                       height: 64,
@@ -344,7 +339,6 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                                         value: positionType != '' ? positionType : null,
                                         icon: Icon(
                                           Icons.keyboard_arrow_down,
-                                          color: Colors.black54,
                                         ),
                                         decoration: InputDecoration(
                                           border: InputBorder.none,
@@ -361,10 +355,10 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                           ): Container(),
                           selectedSection == 0 ? SizedBox(height: 2,): Container(),
                           selectedSection == 0 ? BlurEffectView(
-                            color: Color.fromRGBO(100, 100, 100, 0.05),
+                            color: overlayRow(),
                             radius: 0,
                             child: Container(
-                              color: Color(0x80111111),
+                              color: overlayBackground(),
                               padding: EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
                               child: Padding(
                                   padding: const EdgeInsets.all(8.0),
@@ -395,8 +389,8 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                                       configureChip: (lang) {
                                         return ChipConfiguration(
                                           label: Text(lang.name),
-                                          labelStyle: TextStyle(color: Colors.white),
-                                          deleteIconColor: Colors.white,
+                                          labelStyle: TextStyle(color: iconColor()),
+                                          deleteIconColor: iconColor(),
                                         );
                                       },
                                       onChanged: () {
@@ -411,15 +405,14 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                                           additionWidget: Chip(
                                             avatar: Icon(
                                               Icons.add_circle,
-                                              color: Colors.white,
+                                              color: iconColor(),
                                             ),
                                             label: Text('Add New Group'),
                                             labelStyle: TextStyle(
-                                              color: Colors.white,
                                               fontSize: 14.0,
                                               fontWeight: FontWeight.w300,
                                             ),
-                                            backgroundColor: Colors.green,
+                                            backgroundColor: Colors.transparent,
                                           ),
                                         );
                                       },
@@ -429,11 +422,11 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                             ),
                           ): Container(),
                           BlurEffectView(
-                            color: Color.fromRGBO(100, 100, 100, 0.05),
+                            color: overlayBackground(),
                             radius: 0,
                             child: Container(
                               height: 56,
-                              color: Colors.black38,
+                              color: overlayBackground(),
                               child: SizedBox.expand(
                                 child: MaterialButton(
                                   onPressed: () {
@@ -454,7 +447,11 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                                             Padding(
                                               padding: EdgeInsets.only(left: 8),
                                             ),
-                                            SvgPicture.asset('assets/images/icon-security.svg', width: 16, height: 16,),
+                                            SvgPicture.asset(
+                                              'assets/images/icon-security.svg',
+                                              width: 16,
+                                              height: 16,
+                                              color: iconColor(),),
                                             Padding(
                                               padding: EdgeInsets.only(left: 8),
                                             ),
@@ -463,7 +460,6 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                                                 'Apps Access',
                                                 maxLines: 1,
                                                 style: TextStyle(
-                                                  color: Colors.white,
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w500,
                                                 ),
@@ -507,7 +503,7 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                                   accessString = 'Full Access';
                                 }
                                 return BlurEffectView(
-                                  color: Color.fromRGBO(20, 20, 20, 0.05),
+                                  color: Colors.transparent,
                                   radius: 0,
                                   child: Column(
                                     children: <Widget>[
@@ -563,6 +559,7 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                                                     'assets/images/ic_plus.svg',
                                                     width: 16,
                                                     height: 16,
+                                                    color: iconColor(),
                                                   ),
                                                 ],
                                               ),
@@ -573,7 +570,6 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                                       Divider(
                                         height: 0,
                                         thickness: 0.5,
-                                        color: Colors.grey,
                                       ),
                                       selectedIndex == index ? ListView.separated(
                                         shrinkWrap: true,
@@ -590,7 +586,7 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                                           }
                                           String permissionString = key[0].toUpperCase() + key.substring(1);
                                           return BlurEffectView(
-                                            color: Color.fromRGBO(100, 100, 100, 0.05),
+                                            color: overlayRow(),
                                             radius: 0,
                                             child: MaterialButton(
                                               onPressed: () {
@@ -648,7 +644,6 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                                           return Divider(
                                             height: 0,
                                             thickness: 0.5,
-                                            color: Colors.grey,
                                           );
                                         },
                                         itemCount: businessApp.allowedAcls.toMap().keys.length + 1,
@@ -661,7 +656,6 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                                 return Divider(
                                   height: 0,
                                   thickness: 0.5,
-                                  color: Colors.grey,
                                 );
                               },
                               itemCount: businessApps.length,
@@ -669,7 +663,7 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                           ): Container(),
                           SaveBtn(
                             isUpdating: state.isUpdating,
-                            color: Colors.black45,
+                            color: overlayBackground(),
                             isBottom: false,
                             onUpdate: () {
                               if (_formKey.currentState.validate() &&
@@ -771,7 +765,7 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                         Padding(
                           padding: EdgeInsets.only(top: 16),
                         ),
-                        SvgPicture.asset('assets/images/info.svg'),
+                        SvgPicture.asset('assets/images/info.svg', color: iconColor(),),
                         Padding(
                           padding: EdgeInsets.only(top: 16),
                         ),
@@ -781,7 +775,6 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w300,
-                            color: Colors.white,
                           ),
                         ),
                         widget.employee != null ? Padding(
@@ -793,7 +786,6 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w400,
-                            color: Colors.white,
                           ),
                         ): Container(),
                         Padding(
@@ -812,7 +804,7 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                               height: 24,
                               elevation: 0,
                               minWidth: 0,
-                              color: Colors.white10,
+                              color: overlayBackground(),
                               child: Text(
                                 Language.getSettingsStrings('actions.no'),
                               ),
@@ -828,7 +820,7 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                               height: 24,
                               elevation: 0,
                               minWidth: 0,
-                              color: Colors.white10,
+                              color: overlayBackground(),
                               child: Text(
                                 Language.getSettingsStrings('actions.yes'),
                               ),

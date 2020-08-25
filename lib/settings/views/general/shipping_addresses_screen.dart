@@ -13,6 +13,7 @@ import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/settings/models/models.dart';
 import 'package:payever/settings/widgets/app_bar.dart';
 import 'package:payever/settings/widgets/save_button.dart';
+import 'package:payever/theme.dart';
 
 class ShippingAddressesScreen extends StatefulWidget {
   final GlobalStateModel globalStateModel;
@@ -69,7 +70,6 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
 
   get _body {
     return Scaffold(
-      backgroundColor: Colors.black,
       appBar: Appbar('Shipping Address'),
       body: SafeArea(
         child: BackgroundBase(
@@ -98,7 +98,7 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                 padding: EdgeInsets.all(16),
                 width: Measurements.width,
                 child: BlurEffectView(
-                  color: Color.fromRGBO(20, 20, 20, 0.4),
+                  color: overlayBackground(),
                   child: SingleChildScrollView(
                     child: Container(
                       child: Column(
@@ -123,14 +123,14 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                               return Column(
                                 children: <Widget>[
                                   BlurEffectView(
-                                    color: Color.fromRGBO(100, 100, 100, 0.05),
+                                    color: overlayBackground(),
                                     borderRadius: BorderRadius.only(
                                       topLeft: Radius.circular(8),
                                       topRight: Radius.circular(8),
                                     ),
                                     child: Container(
                                       height: 50,
-                                      color: Colors.black38,
+                                      color: overlayBackground(),
                                       child: SizedBox.expand(
                                         child: MaterialButton(
                                           onPressed: () {
@@ -156,7 +156,6 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                                                         addressLine != '' ? addressLine: 'New Address',
                                                         maxLines: 1,
                                                         style: TextStyle(
-                                                          color: Colors.white,
                                                           fontSize: 16,
                                                           fontWeight: FontWeight.w500,
                                                         ),
@@ -179,7 +178,7 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                                     child: Column(
                                       children: <Widget>[
                                         BlurEffectView(
-                                          color: Color.fromRGBO(100, 100, 100, 0.05),
+                                          color: overlayRow(),
                                           radius: 0,
                                           child: Container(
                                             padding: EdgeInsets.only(left: 12, right: 12),
@@ -188,6 +187,7 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                                               children: <Widget>[
                                                 SvgPicture.asset(
                                                   'assets/images/google-auto-complete.svg',
+                                                  color: iconColor(),
                                                 ),
                                                 SizedBox(
                                                   width: 8,
@@ -195,7 +195,6 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                                                 Expanded(
                                                   child: TextFormField(
                                                     style: TextStyle(
-                                                      color: Colors.white,
                                                       fontSize: 16,
                                                     ),
                                                     controller: locationTextController,
@@ -208,7 +207,6 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                                                       border: InputBorder.none,
                                                       labelText: 'Google Autocomplete',
                                                       labelStyle: TextStyle(
-                                                        color: Colors.white54,
                                                         fontSize: 12,
                                                       ),
                                                     ),
@@ -218,8 +216,9 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                                             ),
                                           ),
                                         ),
+                                        SizedBox(height: 2,),
                                         BlurEffectView(
-                                          color: Color.fromRGBO(100, 100, 100, 0.05),
+                                          color: overlayRow(),
                                           radius: 0,
                                           child: Container(
                                             padding: EdgeInsets.only(left: 12, right: 12),
@@ -243,7 +242,6 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                                               },
                                               icon: Icon(
                                                 Icons.keyboard_arrow_down,
-                                                color: Colors.black54,
                                               ),
                                               decoration: InputDecoration(
                                                 border: InputBorder.none,
@@ -263,8 +261,9 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                                             ): CircularProgressIndicator(),
                                           ),
                                         ),
+                                        SizedBox(height: 2,),
                                         BlurEffectView(
-                                          color: Color.fromRGBO(100, 100, 100, 0.05),
+                                          color: overlayRow(),
                                           radius: 0,
                                           child: Container(
                                             alignment: Alignment.center,
@@ -288,9 +287,6 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                                                 decoration: InputDecoration(
                                                   contentPadding: EdgeInsets.only(left: 16, right: 16),
                                                   labelText: Language.getPosTpmStrings('City'),
-                                                  labelStyle: TextStyle(
-                                                    color: Colors.grey,
-                                                  ),
                                                   enabledBorder: InputBorder.none,
                                                   focusedBorder: UnderlineInputBorder(
                                                     borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -301,8 +297,9 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                                             ),
                                           ),
                                         ),
+                                        SizedBox(height: 2,),
                                         BlurEffectView(
-                                          color: Color.fromRGBO(100, 100, 100, 0.05),
+                                          color: overlayRow(),
                                           radius: 0,
                                           child: Container(
                                             alignment: Alignment.center,
@@ -320,9 +317,6 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                                                 decoration: InputDecoration(
                                                   contentPadding: EdgeInsets.only(left: 16, right: 16),
                                                   labelText: Language.getPosTpmStrings('Street'),
-                                                  labelStyle: TextStyle(
-                                                    color: Colors.grey,
-                                                  ),
                                                   enabledBorder: InputBorder.none,
                                                   focusedBorder: UnderlineInputBorder(
                                                     borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -339,8 +333,9 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                                             ),
                                           ),
                                         ),
+                                        SizedBox(height: 2,),
                                         BlurEffectView(
-                                          color: Color.fromRGBO(100, 100, 100, 0.05),
+                                          color: overlayRow(),
                                           radius: 0,
                                           child: Container(
                                             alignment: Alignment.center,
@@ -358,9 +353,6 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                                                 decoration: InputDecoration(
                                                   contentPadding: EdgeInsets.only(left: 16, right: 16),
                                                   labelText: Language.getPosTpmStrings('Apartment, suite, etc (optional)'),
-                                                  labelStyle: TextStyle(
-                                                    color: Colors.grey,
-                                                  ),
                                                   enabledBorder: InputBorder.none,
                                                   focusedBorder: UnderlineInputBorder(
                                                     borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -371,8 +363,9 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                                             ),
                                           ),
                                         ),
+                                        SizedBox(height: 2,),
                                         BlurEffectView(
-                                          color: Color.fromRGBO(100, 100, 100, 0.05),
+                                          color: overlayRow(),
                                           radius: 0,
                                           child: Container(
                                             alignment: Alignment.center,
@@ -390,9 +383,6 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                                                 decoration: InputDecoration(
                                                   contentPadding: EdgeInsets.only(left: 16, right: 16),
                                                   labelText: Language.getPosTpmStrings('ZIP Code'),
-                                                  labelStyle: TextStyle(
-                                                    color: Colors.grey,
-                                                  ),
                                                   enabledBorder: InputBorder.none,
                                                   focusedBorder: UnderlineInputBorder(
                                                     borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -409,12 +399,13 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                                             ),
                                           ),
                                         ),
+                                        SizedBox(height: 2,),
                                         Row(
                                           children: <Widget>[
                                             Flexible(
                                               child: SaveBtn(
                                                 isUpdating: false,
-                                                color: Colors.black45,
+                                                color: overlayBackground(),
                                                 isBottom: false,
                                                 title: 'Delete',
                                                 onUpdate: () {
@@ -435,10 +426,11 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                                                 },
                                               ),
                                             ),
+                                            SizedBox(width: 2,),
                                             Flexible(
                                               child: SaveBtn(
                                                 isUpdating: state.isUpdating,
-                                                color: Colors.black45,
+                                                color: overlayBackground(),
                                                 isBottom: false,
                                                 title: 'Save',
                                                 onUpdate: () {
@@ -467,7 +459,6 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                             separatorBuilder: (context, index) {
                               return Divider(
                                 height: 0,
-                                color: Colors.grey,
                                 thickness: 0.5,
                               );
                             },
@@ -476,12 +467,11 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
                           Divider(
                             height: 0,
                             thickness: 0.5,
-                            color: Colors.grey,
                           ),
                           Container(
                             height: 55,
                             decoration: BoxDecoration(
-                              color: Colors.black45,
+                              color: overlayBackground(),
                               shape: BoxShape.rectangle,
                               borderRadius: BorderRadius.only(
                                 bottomLeft: Radius.circular(8.0),

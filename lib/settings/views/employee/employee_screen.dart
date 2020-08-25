@@ -18,6 +18,7 @@ import 'package:payever/settings/views/employee/add_group_screen.dart';
 import 'package:payever/settings/views/wallpaper/employee_filter_view.dart';
 import 'package:payever/settings/widgets/app_bar.dart';
 import 'package:payever/blocs/bloc.dart';
+import 'package:payever/theme.dart';
 import 'package:payever/transactions/views/sub_view/search_text_content_view.dart';
 
 class TagItemModel {
@@ -88,7 +89,6 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
         bloc: widget.setScreenBloc,
         builder: (BuildContext context, SettingScreenState state) {
           return Scaffold(
-            backgroundColor: Colors.black,
             resizeToAvoidBottomPadding: false,
             appBar: Appbar('Employee'),
             body: SafeArea(
@@ -111,7 +111,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
     return Container(
       height: 50,
       width: double.infinity,
-      color: Colors.black87,
+      color: overlayBackground(),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
@@ -126,22 +126,26 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                 showSearchTextDialog(state);
               },
               minWidth: 20,
+              padding: EdgeInsets.zero,
               child: SvgPicture.asset(
                 'assets/images/searchicon.svg',
                 width: 20,
+                color: iconColor(),
               ),
             ),
             PopupMenuButton<MenuItem>(
               icon: SvgPicture.asset(
                 'assets/images/filter.svg',
                 width: 20,
+                color: iconColor(),
               ),
               offset: Offset(0, 100),
+              padding: EdgeInsets.zero,
               onSelected: (MenuItem item) => item.onTap(),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
-              color: Colors.black87,
+              color: overlayBackground(),
               itemBuilder: (BuildContext context) {
                 return (isEmployee ? appBarEmployeePopUpActions(context, state): appBarGroupPopUpActions(context, state)).map((MenuItem item) {
                   return PopupMenuItem<MenuItem>(
@@ -149,7 +153,6 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                     child: Text(
                       item.title,
                       style: TextStyle(
-                        color: Colors.white,
                         fontSize: 14,
                         fontWeight: FontWeight.w300,
                       ),
@@ -184,12 +187,11 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
               ),
               height: 24,
               minWidth: 110,
-              color: Colors.grey[800],
+              color: overlayBackground(),
               elevation: 0,
               child: Text(
                 isEmployee ? 'Add Employee' : 'Add Group',
                 style: TextStyle(
-                  color: Colors.white,
                   fontSize: 13,
                 ),
               ),
@@ -231,7 +233,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                           widget.setScreenBloc.add(GetEmployeesEvent());
                         });
                       },
-                      color: isEmployee ? Color(0xFF2a2a2a): Color(0xFF1F1F1F),
+                      color: overlayBackground().withOpacity(isEmployee ? 1.0: 0.8),
                       height: 24,
                       elevation: 0,
                       child: AutoSizeText(
@@ -262,7 +264,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                           bottomRight: Radius.circular(12),
                         ),
                       ),
-                      color: !isEmployee ? Color(0xFF2a2a2a): Color(0xFF1F1F1F),
+                      color: overlayBackground().withOpacity(!isEmployee ? 1.0: 0.8),
                       elevation: 0,
                       height: 24,
                       child: AutoSizeText(
@@ -284,13 +286,14 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                 'assets/images/employee-filter.svg',
                 width: 20,
                 height: 20,
+                color: iconColor(),
               ),
               offset: Offset(0, 100),
               onSelected: (MenuItem item) => item.onTap(),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
-              color: Colors.black87,
+              color: overlayBackground(),
               itemBuilder: (BuildContext context) {
                 return (isEmployee ? appBarEmployeeTablePopUpActions(context, state) : appBarGroupTablePopUpActions(context, state))
                     .map((MenuItem item) {
@@ -302,7 +305,6 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                           child: Text(
                             item.title,
                             style: TextStyle(
-                              color: Colors.white,
                               fontSize: 14,
                               fontWeight: FontWeight.w300,
                             ),
@@ -354,9 +356,6 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
             DataColumn(
               label: Text(
                 'Employee',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
               ),
               numeric: false,
               tooltip: 'Employee',
@@ -364,9 +363,6 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
             employeeTableStatus.contains('Position') ? DataColumn(
               label: Text(
                 'Position',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
               ),
               numeric: false,
               tooltip: 'Position',
@@ -374,9 +370,6 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
             employeeTableStatus.contains('Mail') ? DataColumn(
               label: Text(
                 'Mail',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
               ),
               numeric: false,
               tooltip: 'Mail',
@@ -384,9 +377,6 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
             employeeTableStatus.contains('Status') ? DataColumn(
               label: Text(
                 'Status',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
               ),
               numeric: false,
               tooltip: 'Status',
@@ -446,7 +436,6 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                       child: Text(
                         'Edit',
                         style: TextStyle(
-                          color: Colors.white,
                           fontSize: 13,
                         ),
                       ),
@@ -488,9 +477,6 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
             DataColumn(
               label: Text(
                 'Group name',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
               ),
               numeric: false,
               tooltip: 'Group name',
@@ -498,9 +484,6 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
             groupTableStatus.contains('Employees') ? DataColumn(
               label: Text(
                 'Employees',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
               ),
               numeric: false,
               tooltip: 'Employees',
@@ -551,12 +534,11 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                       ),
                       height: 24,
                       minWidth: 30,
-                      color: Colors.grey[800],
+                      color: overlayBackground(),
                       elevation: 0,
                       child: Text(
                         'Edit',
                         style: TextStyle(
-                          color: Colors.white,
                           fontSize: 13,
                         ),
                       ),
@@ -585,7 +567,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
         ),
         child: Container(
           decoration: BoxDecoration(
-            color: Color(0xFF888888),
+            color: overlayBackground(),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Row(
@@ -597,7 +579,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                     padding: EdgeInsets.only(left: 12),
                   ),
                   InkWell(
-                    child: SvgPicture.asset('assets/images/xsinacircle.svg'),
+                    child: SvgPicture.asset('assets/images/xsinacircle.svg', color: iconColor(),),
                     onTap: () {
                       isEmployee ? widget.setScreenBloc
                           .add(SelectAllEmployeesEvent(isSelect: false)) : widget.setScreenBloc
@@ -610,7 +592,6 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                   Text(
                     '$selectedCount ITEM${state.employees.length > 1 ? 'S': ''} SELECTED',
                     style: TextStyle(
-                      color: Colors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                     ),
@@ -624,7 +605,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
-                color: Colors.black87,
+                color: overlayBackground(),
                 itemBuilder: (BuildContext context) {
                   return (isEmployee ? selectEmployeePopUpActions(context, state) : selectGroupPopUpActions(context, state)).map((MenuItem item) {
                     return PopupMenuItem<MenuItem>(
@@ -632,7 +613,6 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                       child: Text(
                         item.title,
                         style: TextStyle(
-                          color: Colors.white,
                           fontSize: 14,
                           fontWeight: FontWeight.w300,
                         ),
@@ -665,32 +645,33 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
             key: Key('filterItem$index'),
             index: index,
             title: _filterItems[index].title,
-            color: Colors.white12,
-            activeColor: Colors.white12,
-            textActiveColor: Colors.white,
-            textColor: Colors.white,
+            color: overlayBackground(),
+            activeColor: overlayBackground(),
+            textActiveColor: iconColor(),
+            textColor: iconColor(),
             elevation: 0,
             padding: EdgeInsets.only(
               left: 16, top: 8, bottom: 8, right: 16,
             ),
             removeButton: ItemTagsRemoveButton(
-                backgroundColor: Colors.transparent,
-                onRemoved: () {
-                  if (index == _searchTagIndex) {
-                    _searchTagIndex = -1;
-                    isEmployee ? widget.setScreenBloc.add(
-                        UpdateEmployeeSearchText(searchText: '')
-                    ): widget.setScreenBloc.add(UpdateGroupSearchText(searchText: ''));
-                  } else {
-                    List<FilterItem> filterTypes = [];
-                    filterTypes.addAll(isEmployee ? state.filterEmployeeTypes: state.filterGroupTypes);
-                    filterTypes.removeAt(index);
-                    isEmployee ? widget.setScreenBloc.add(
-                        UpdateEmployeeFilterTypeEvent(filterTypes: filterTypes)
-                    ): widget.setScreenBloc.add(UpdateGroupFilterTypeEvent(filterTypes: filterTypes));
-                  }
-                  return true;
+              color: iconColor(),
+              backgroundColor: Colors.transparent,
+              onRemoved: () {
+                if (index == _searchTagIndex) {
+                  _searchTagIndex = -1;
+                  isEmployee ? widget.setScreenBloc.add(
+                      UpdateEmployeeSearchText(searchText: '')
+                  ): widget.setScreenBloc.add(UpdateGroupSearchText(searchText: ''));
+                } else {
+                  List<FilterItem> filterTypes = [];
+                  filterTypes.addAll(isEmployee ? state.filterEmployeeTypes: state.filterGroupTypes);
+                  filterTypes.removeAt(index);
+                  isEmployee ? widget.setScreenBloc.add(
+                      UpdateEmployeeFilterTypeEvent(filterTypes: filterTypes)
+                  ): widget.setScreenBloc.add(UpdateGroupFilterTypeEvent(filterTypes: filterTypes));
                 }
+                return true;
+              },
             ),
           );
         },
@@ -739,7 +720,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                     children: <Widget>[
                       Container(
                         height: 50,
-                        color: Colors.black45,
+                        color: overlayBackground(),
                       ),
                       Positioned(
                         top: 0,
@@ -854,7 +835,6 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
         title: 'Position',
         icon: employeeTableStatus.contains('Position') ? Icon(
           Icons.check,
-          color: Colors.grey,
         ): null,
         onTap: () {
           setState(() {
@@ -868,7 +848,6 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
         title: 'Mail',
         icon: employeeTableStatus.contains('Mail') ? Icon(
           Icons.check,
-          color: Colors.grey,
         ): null,
         onTap: () {
           setState(() {
@@ -882,7 +861,6 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
         title: 'Status',
         icon: employeeTableStatus.contains('Status') ? Icon(
           Icons.check,
-          color: Colors.grey,
         ): null,
         onTap: () {
           setState(() {
@@ -921,7 +899,6 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
         title: 'Employees',
         icon: groupTableStatus.contains('Employees') ? Icon(
           Icons.check,
-          color: Colors.grey,
         ): null,
         onTap: () async {
           setState(() {
@@ -1013,7 +990,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                         Padding(
                           padding: EdgeInsets.only(top: 16),
                         ),
-                        SvgPicture.asset('assets/images/info.svg'),
+                        SvgPicture.asset('assets/images/info.svg', color: iconColor(),),
                         Padding(
                           padding: EdgeInsets.only(top: 16),
                         ),
@@ -1023,7 +1000,6 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w300,
-                            color: Colors.white,
                           ),
                         ),
                         Padding(
@@ -1035,7 +1011,6 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w400,
-                            color: Colors.white,
                           ),
                         ),
                         Padding(
@@ -1054,7 +1029,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                               height: 24,
                               elevation: 0,
                               minWidth: 0,
-                              color: Colors.white10,
+                              color: overlayBackground(),
                               child: Text(
                                 Language.getSettingsStrings('actions.no'),
                               ),
@@ -1070,7 +1045,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                               height: 24,
                               elevation: 0,
                               minWidth: 0,
-                              color: Colors.white10,
+                              color: overlayBackground(),
                               child: Text(
                                 Language.getSettingsStrings('actions.yes'),
                               ),

@@ -126,3 +126,33 @@ Color iconColor() {
     return Color.fromRGBO(255, 255, 255, 1);
   }
 }
+
+Color overlayBackground() {
+  if (GlobalUtils.theme == 'dark') {
+    return Color.fromRGBO(0, 0, 0, 0.3);
+  } else if (GlobalUtils.theme == 'light') {
+    return Color.fromRGBO(245, 245, 245, 0.6);
+  } else {
+    return Color.fromRGBO(0, 0, 0, 0.2);
+  }
+}
+
+Color overlaySection() {
+  if (GlobalUtils.theme == 'dark') {
+    return Color.fromRGBO(0, 0, 0, 0.75);
+  } else if (GlobalUtils.theme == 'light') {
+    return Color.fromRGBO(245, 245, 245, 0.6);
+  } else {
+    return Color.fromRGBO(0, 0, 0, 0.2);
+  }
+}
+
+Color overlayRow() {
+  if (GlobalUtils.theme == 'dark') {
+    return overlayBackground().withOpacity(0.01);
+  } else if (GlobalUtils.theme == 'light') {
+    return overlayBackground().withOpacity(0.01);
+  } else {
+    return overlayBackground().withOpacity(0.01);
+  }
+}

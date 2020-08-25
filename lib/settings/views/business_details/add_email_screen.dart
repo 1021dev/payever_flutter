@@ -7,6 +7,7 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/settings/widgets/app_bar.dart';
 import 'package:payever/settings/widgets/save_button.dart';
+import 'package:payever/theme.dart';
 
 class AddEmailScreen extends StatefulWidget {
   final GlobalStateModel globalStateModel;
@@ -52,7 +53,6 @@ class _AddEmailScreenState extends State<AddEmailScreen> {
 
   get _body {
     return Scaffold(
-      backgroundColor: Colors.black,
       appBar: Appbar(Language.getSettingsStrings(widget.editEmail != null ?
       'form.create_form.contact_email.edit_contact_email':
       'form.create_form.contact_email.new_contact_email')),
@@ -92,7 +92,7 @@ class _AddEmailScreenState extends State<AddEmailScreen> {
                             Container(
                               clipBehavior: Clip.antiAlias,
                               decoration: BoxDecoration(
-                                color: Colors.black.withOpacity(0.4),
+                                color: overlayColor(),
                                 shape: BoxShape.rectangle,
                                 borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(8.0),
@@ -104,9 +104,10 @@ class _AddEmailScreenState extends State<AddEmailScreen> {
                                 child: Center(
                                   child: Container(
                                     decoration: BoxDecoration(
-                                        color: Colors.grey.withOpacity(0.25),
-                                        shape: BoxShape.rectangle,
-                                        borderRadius: BorderRadius.circular(10)),
+                                      color: overlayRow(),
+                                      shape: BoxShape.rectangle,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
                                     child: TextFormField(
                                       validator: (val) {
                                         if (val.isEmpty) {
@@ -126,10 +127,6 @@ class _AddEmailScreenState extends State<AddEmailScreen> {
                                       decoration: InputDecoration(
                                         border: InputBorder.none,
                                         labelText: Language.getSettingsStrings('form.create_form.contact_email.contact_email.label'),
-                                        labelStyle: TextStyle(
-                                          color: Colors.white60,
-                                          fontSize: 12,
-                                        ),
                                         contentPadding: EdgeInsets.all(16),
                                       ),
                                       onFieldSubmitted: (val) {

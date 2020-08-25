@@ -15,6 +15,7 @@ import 'package:payever/settings/views/general/password_screen.dart';
 import 'package:payever/settings/views/general/personal_information_screen.dart';
 import 'package:payever/settings/views/general/shipping_addresses_screen.dart';
 import 'package:payever/settings/widgets/app_bar.dart';
+import 'package:payever/theme.dart';
 import 'package:provider/provider.dart';
 
 class GeneralScreen extends StatefulWidget {
@@ -67,7 +68,6 @@ class _GeneralScreenState extends State<GeneralScreen> {
         bloc: widget.setScreenBloc,
         builder: (BuildContext context, SettingScreenState state) {
           return Scaffold(
-            backgroundColor: Colors.black,
             resizeToAvoidBottomPadding: false,
             appBar: Appbar('General'),
             body: SafeArea(
@@ -93,7 +93,7 @@ class _GeneralScreenState extends State<GeneralScreen> {
         child: Container(
           width: Measurements.width,
           decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.2),
+              color: overlayColor(),
               shape: BoxShape.rectangle,
               borderRadius: BorderRadius.all(Radius.circular(8))),
           child: ListView.separated(
@@ -126,7 +126,7 @@ class _GeneralScreenState extends State<GeneralScreen> {
             child: Container(
               padding: EdgeInsets.fromLTRB(12, 3, 12, 3),
               decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.3),
+                color: overlayBackground(),
                 shape: BoxShape.rectangle,
                 borderRadius: BorderRadius.all(Radius.circular(20)),
               ),

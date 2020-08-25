@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:payever/theme.dart';
 
 class SearchTextContentView extends StatefulWidget {
   final Function onSelected;
@@ -31,8 +32,9 @@ class _SearchTextContentViewState extends State<SearchTextContentView> {
             children: [
               Container(
                 decoration: BoxDecoration(
-                    color: Color(0xFF222222),
-                    borderRadius: BorderRadius.all(Radius.circular(6))),
+                  color: overlayColor().withOpacity(0.5),
+                  borderRadius: BorderRadius.all(Radius.circular(6)),
+                ),
                 child: Column(
                   children: [
                     Container(
@@ -49,7 +51,6 @@ class _SearchTextContentViewState extends State<SearchTextContentView> {
                         ),
                         style: TextStyle(
                             fontSize: 18,
-                            color: Colors.white
                         ),
                         onSubmitted: (_) {
                           FocusScope.of(context).unfocus();
@@ -72,7 +73,8 @@ class _SearchTextContentViewState extends State<SearchTextContentView> {
                     height: 36,
                     alignment: Alignment.bottomCenter,
                     child: Text(
-                        widget.searchText.length > 0 ? 'Update': 'Add'),
+                      widget.searchText.length > 0 ? 'Update': 'Add',
+                    ),
                   ),
                 ),
               ),

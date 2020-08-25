@@ -15,6 +15,7 @@ import 'package:payever/settings/views/business_details/contact_screen.dart';
 import 'package:payever/settings/views/business_details/taxes_screen.dart';
 import 'package:payever/settings/widgets/app_bar.dart';
 import 'package:payever/blocs/bloc.dart';
+import 'package:payever/theme.dart';
 import 'currency_screen.dart';
 
 class BusinessDetailsScreen extends StatefulWidget {
@@ -67,7 +68,6 @@ class _BusinessDetailsScreenState extends State<BusinessDetailsScreen> {
         bloc: widget.setScreenBloc,
         builder: (BuildContext context, SettingScreenState state) {
           return Scaffold(
-            backgroundColor: Colors.black,
             resizeToAvoidBottomPadding: false,
             appBar: Appbar('Business Info'),
             body: SafeArea(
@@ -93,9 +93,10 @@ class _BusinessDetailsScreenState extends State<BusinessDetailsScreen> {
         child: Container(
           width: Measurements.width,
           decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.2),
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.all(Radius.circular(8))),
+            color: overlayBackground(),
+            shape: BoxShape.rectangle,
+            borderRadius: BorderRadius.all(Radius.circular(8)),
+          ),
           child: ListView.separated(
             physics: BouncingScrollPhysics(),
             shrinkWrap: true,
@@ -125,7 +126,7 @@ class _BusinessDetailsScreenState extends State<BusinessDetailsScreen> {
             child: Container(
               padding: EdgeInsets.fromLTRB(12, 3, 12, 3),
               decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.3),
+                color: overlayColor(),
                 shape: BoxShape.rectangle,
                 borderRadius: BorderRadius.all(Radius.circular(20)),
               ),

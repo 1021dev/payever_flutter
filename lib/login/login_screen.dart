@@ -221,6 +221,9 @@ class _LoginState extends State<Login> {
                                                     },
                                                     decoration: new InputDecoration(
                                                       labelText: 'E-Mail Address',
+                                                      labelStyle: TextStyle(
+                                                        color: Colors.white70,
+                                                      ),
                                                       border: InputBorder.none,
                                                       contentPadding: _isTablet
                                                           ? EdgeInsets.all(
@@ -228,7 +231,10 @@ class _LoginState extends State<Login> {
                                                       )
                                                           : null,
                                                     ),
-                                                    style: TextStyle(fontSize: 16),
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                      color: Colors.white,
+                                                    ),
                                                     keyboardType:
                                                     TextInputType.emailAddress,
                                                   ),
@@ -272,6 +278,9 @@ class _LoginState extends State<Login> {
                                                           },
                                                           decoration: new InputDecoration(
                                                             labelText: 'Password',
+                                                            labelStyle: TextStyle(
+                                                              color: Colors.white70,
+                                                            ),
                                                             border: InputBorder.none,
                                                             contentPadding: _isTablet
                                                                 ? EdgeInsets.all(
@@ -281,7 +290,10 @@ class _LoginState extends State<Login> {
                                                                 : null,
                                                           ),
                                                           obscureText: true,
-                                                          style: TextStyle(fontSize: 16),
+                                                          style: TextStyle(
+                                                            fontSize: 16,
+                                                            color: Colors.white,
+                                                          ),
                                                         ),
                                                       ),
                                                     ],
@@ -315,7 +327,10 @@ class _LoginState extends State<Login> {
                                             child: Center(
                                               child: Text(
                                                 'Login',
-                                                style: TextStyle(fontSize: 16),
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: Colors.white,
+                                                ),
                                               ),
                                             ),
                                             onTap: () {
@@ -324,10 +339,18 @@ class _LoginState extends State<Login> {
                                             },
                                           )
                                               : Center(
-                                            child: CircularProgressIndicator(),
+                                            child: Container(
+                                              width: 24,
+                                              height: 24,
+                                              child: CircularProgressIndicator(
+                                                strokeWidth: 2,
+                                                valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),
+                                              ),
+                                            ),
                                           ),
                                         ),
-                                      )),
+                                      ),
+                                  ),
                                   Padding(
                                     padding: EdgeInsets.only(
                                         top: (Measurements.height *

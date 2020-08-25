@@ -14,6 +14,7 @@ import 'package:payever/commons/views/custom_elements/custom_elements.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/settings/widgets/app_bar.dart';
 import 'package:payever/settings/widgets/save_button.dart';
+import 'package:payever/theme.dart';
 
 import 'add_email_screen.dart';
 
@@ -76,7 +77,6 @@ class _ContactScreenState extends State<ContactScreen> {
 
   get _body {
     return Scaffold(
-      backgroundColor: Colors.black,
       appBar: Appbar('Contact'),
       body: SafeArea(
         child: BackgroundBase(
@@ -105,20 +105,20 @@ class _ContactScreenState extends State<ContactScreen> {
                 padding: EdgeInsets.all(16),
                 width: Measurements.width,
                 child: BlurEffectView(
-                  color: Color.fromRGBO(20, 20, 20, 0.4),
+                  color: overlayBackground(),
                   child: SingleChildScrollView(
                     child: Container(
                       child: Column(
                         children: <Widget>[
                           BlurEffectView(
-                            color: Color.fromRGBO(100, 100, 100, 0.05),
+                            color: overlayColor(),
                             borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(8),
                               topRight: Radius.circular(8),
                             ),
                             child: Container(
                               height: 56,
-                              color: Colors.black38,
+                              color: overlayColor(),
                               child: SizedBox.expand(
                                 child: MaterialButton(
                                   onPressed: () {
@@ -144,7 +144,6 @@ class _ContactScreenState extends State<ContactScreen> {
                                                 'Details',
                                                 maxLines: 1,
                                                 style: TextStyle(
-                                                  color: Colors.white,
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w500,
                                                 ),
@@ -170,7 +169,7 @@ class _ContactScreenState extends State<ContactScreen> {
                               children: <Widget>[
                                 Flexible(
                                   child: BlurEffectView(
-                                    color: Color.fromRGBO(100, 100, 100, 0.05),
+                                    color: overlayRow(),
                                     radius: 0,
                                     child: Container(
                                       height: 64,
@@ -193,9 +192,10 @@ class _ContactScreenState extends State<ContactScreen> {
                                           });
                                         },
                                         value: salutation != '' ? salutation : null,
-                                        icon: Icon(
-                                          Icons.keyboard_arrow_down,
-                                          color: Colors.black54,
+                                        icon: Flexible(
+                                          child: Icon(
+                                            Icons.keyboard_arrow_down,
+                                          ),
                                         ),
                                         decoration: InputDecoration(
                                           border: InputBorder.none,
@@ -212,7 +212,7 @@ class _ContactScreenState extends State<ContactScreen> {
                                 ),
                                 Flexible(
                                   child: BlurEffectView(
-                                    color: Color.fromRGBO(100, 100, 100, 0.05),
+                                    color: overlayRow(),
                                     radius: 0,
                                     child: Container(
                                       height: 64,
@@ -229,7 +229,7 @@ class _ContactScreenState extends State<ContactScreen> {
                                           contentPadding: EdgeInsets.only(left: 16, right: 16),
                                           labelText: Language.getPosTpmStrings('First Name'),
                                           labelStyle: TextStyle(
-                                            color: Colors.grey,
+                                            fontSize: 12,
                                           ),
                                           enabledBorder: InputBorder.none,
                                           focusedBorder: UnderlineInputBorder(
@@ -246,7 +246,7 @@ class _ContactScreenState extends State<ContactScreen> {
                                 ),
                                 Flexible(
                                   child: BlurEffectView(
-                                    color: Color.fromRGBO(100, 100, 100, 0.05),
+                                    color: overlayRow(),
                                     radius: 0,
                                     child: Container(
                                       height: 64,
@@ -263,7 +263,7 @@ class _ContactScreenState extends State<ContactScreen> {
                                           contentPadding: EdgeInsets.only(left: 16, right: 16),
                                           labelText: Language.getPosTpmStrings('Last Name'),
                                           labelStyle: TextStyle(
-                                            color: Colors.grey,
+                                            fontSize: 12,
                                           ),
                                           enabledBorder: InputBorder.none,
                                           focusedBorder: UnderlineInputBorder(
@@ -285,7 +285,7 @@ class _ContactScreenState extends State<ContactScreen> {
                               children: <Widget>[
                                 Flexible(
                                   child: BlurEffectView(
-                                    color: Color.fromRGBO(100, 100, 100, 0.05),
+                                    color: overlayRow(),
                                     radius: 0,
                                     child: Container(
                                       height: 64,
@@ -302,7 +302,7 @@ class _ContactScreenState extends State<ContactScreen> {
                                           contentPadding: EdgeInsets.only(left: 16, right: 16),
                                           labelText: Language.getPosTpmStrings('Phone (optional)'),
                                           labelStyle: TextStyle(
-                                            color: Colors.grey,
+                                            fontSize: 12,
                                           ),
                                           enabledBorder: InputBorder.none,
                                           focusedBorder: UnderlineInputBorder(
@@ -319,7 +319,7 @@ class _ContactScreenState extends State<ContactScreen> {
                                 ),
                                 Flexible(
                                   child: BlurEffectView(
-                                    color: Color.fromRGBO(100, 100, 100, 0.05),
+                                    color: overlayRow(),
                                     radius: 0,
                                     child: Container(
                                       height: 64,
@@ -336,7 +336,7 @@ class _ContactScreenState extends State<ContactScreen> {
                                           contentPadding: EdgeInsets.only(left: 16, right: 16),
                                           labelText: Language.getPosTpmStrings('Fax (optional)'),
                                           labelStyle: TextStyle(
-                                            color: Colors.grey,
+                                            fontSize: 12,
                                           ),
                                           enabledBorder: InputBorder.none,
                                           focusedBorder: UnderlineInputBorder(
@@ -353,7 +353,7 @@ class _ContactScreenState extends State<ContactScreen> {
                           ): Container(),
                           selectedSection == 0 ? SizedBox(height: 2,): Container(),
                           selectedSection == 0 ? BlurEffectView(
-                            color: Color.fromRGBO(100, 100, 100, 0.05),
+                            color: overlayRow(),
                             radius: 0,
                             child: Container(
                               height: 64,
@@ -371,7 +371,7 @@ class _ContactScreenState extends State<ContactScreen> {
                                     contentPadding: EdgeInsets.only(left: 16, right: 16),
                                     labelText: Language.getPosTpmStrings('Additional Phone number (optional)'),
                                     labelStyle: TextStyle(
-                                      color: Colors.grey,
+                                      fontSize: 12,
                                     ),
                                     enabledBorder: InputBorder.none,
                                     focusedBorder: UnderlineInputBorder(
@@ -386,7 +386,7 @@ class _ContactScreenState extends State<ContactScreen> {
                           selectedSection == 0 ? SizedBox(height: 2,): Container(),
                           selectedSection == 0 ? SaveBtn(
                             isUpdating: state.isUpdating,
-                            color: Colors.black45,
+                            color: overlayBackground(),
                             isBottom: false,
                             onUpdate: () {
                               if (_formKey.currentState.validate() &&
@@ -405,13 +405,12 @@ class _ContactScreenState extends State<ContactScreen> {
                               }
                             },
                           ): Container(),
-                          Divider(height: 0, thickness: 0.5, color: Colors.grey,),
                           BlurEffectView(
-                            color: Color.fromRGBO(100, 100, 100, 0.05),
+                            color: overlayBackground(),
                             radius: 0,
                             child: Container(
                               height: 56,
-                              color: Colors.black38,
+                              color: overlayBackground(),
                               child: SizedBox.expand(
                                 child: MaterialButton(
                                   onPressed: () {
@@ -437,7 +436,6 @@ class _ContactScreenState extends State<ContactScreen> {
                                                 'Emails',
                                                 maxLines: 1,
                                                 style: TextStyle(
-                                                  color: Colors.white,
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w500,
                                                 ),
@@ -463,7 +461,7 @@ class _ContactScreenState extends State<ContactScreen> {
                                   physics: NeverScrollableScrollPhysics(),
                                   itemBuilder: (context, index) {
                                     return BlurEffectView(
-                                      color: Color.fromRGBO(100, 100, 100, 0.05),
+                                      color: overlayRow(),
                                       radius: 0,
                                       child: Container(
                                         height: 50,
@@ -494,7 +492,7 @@ class _ContactScreenState extends State<ContactScreen> {
                                                       ),
                                                     );
                                                   },
-                                                  color: Colors.black45,
+                                                  color: overlayBackground(),
                                                   shape: RoundedRectangleBorder(
                                                     borderRadius: BorderRadius.circular(12),
                                                   ),
@@ -505,7 +503,6 @@ class _ContactScreenState extends State<ContactScreen> {
                                                   child: Text(
                                                     'Edit',
                                                     style: TextStyle(
-                                                      color: Colors.white,
                                                       fontSize: 12,
                                                     ),
                                                   ),
@@ -535,9 +532,8 @@ class _ContactScreenState extends State<ContactScreen> {
                                                                         Text(
                                                                           Language.getSettingsStrings('form.create_form.contact_email.delete_email_title'),
                                                                           style: TextStyle(
-                                                                              fontSize: 16,
-                                                                              fontWeight: FontWeight.w300,
-                                                                              color: Colors.white
+                                                                            fontSize: 16,
+                                                                            fontWeight: FontWeight.w300,
                                                                           ),
                                                                         ),
                                                                         Padding(
@@ -549,7 +545,6 @@ class _ContactScreenState extends State<ContactScreen> {
                                                                           style: TextStyle(
                                                                             fontSize: 14,
                                                                             fontWeight: FontWeight.w300,
-                                                                            color: Colors.white,
                                                                           ),
                                                                         ),
                                                                         Padding(
@@ -605,7 +600,7 @@ class _ContactScreenState extends State<ContactScreen> {
                                                       },
                                                     );
                                                   },
-                                                  color: Colors.black45,
+                                                  color: overlayBackground(),
                                                   shape: CircleBorder(),
                                                   height: 24,
                                                   minWidth: 0,
@@ -623,13 +618,12 @@ class _ContactScreenState extends State<ContactScreen> {
                                     return Divider(
                                       height: 0,
                                       thickness: 0.5,
-                                      color: Colors.grey,
                                     );
                                   },
                                   itemCount: contactEmails.length
                               ):
                               BlurEffectView(
-                                color: Color.fromRGBO(100, 100, 100, 0.05),
+                                color: overlayRow(),
                                 radius: 0,
                                 child: Container(
                                   height: 50,
@@ -639,7 +633,6 @@ class _ContactScreenState extends State<ContactScreen> {
                                     child: Text(
                                       'You don\'t have additional emails',
                                       style: TextStyle(
-                                        color: Colors.white70,
                                         fontSize: 14,
                                       ),
                                     ),
@@ -651,7 +644,7 @@ class _ContactScreenState extends State<ContactScreen> {
                           selectedSection == 1 ? Container(
                             height: 55,
                             decoration: BoxDecoration(
-                              color: Colors.black45,
+                              color: overlayBackground(),
                               shape: BoxShape.rectangle,
                               borderRadius: BorderRadius.only(
                                 bottomLeft: Radius.circular(8.0),

@@ -12,6 +12,7 @@ import 'package:payever/settings/models/models.dart';
 import 'package:payever/settings/views/wallpaper/wallpaper_categories_screen.dart';
 import 'package:payever/settings/widgets/app_bar.dart';
 import 'package:payever/blocs/bloc.dart';
+import 'package:payever/theme.dart';
 
 class WallpaperScreen extends StatefulWidget {
   final GlobalStateModel globalStateModel;
@@ -63,7 +64,6 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
         bloc: widget.setScreenBloc,
         builder: (BuildContext context, SettingScreenState state) {
           return Scaffold(
-            backgroundColor: Colors.black,
             resizeToAvoidBottomPadding: false,
             appBar: Appbar('Wallpapers'),
             body: SafeArea(
@@ -116,7 +116,7 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
           visible: isGridMode ? false : true,
           child: Container(
             height: 50,
-            color: Colors.black45,
+            color: overlayBackground(),
             child: Row(
               children: [
                 SizedBox(
@@ -157,7 +157,7 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
   Widget _secondAppBar(SettingScreenState state) {
     return Container(
       height: 50,
-      color: Colors.black38,
+      color: overlayBackground(),
       child: Row(
         children: [
           SizedBox(
@@ -192,7 +192,6 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
             child: Text(
               'Reset',
               style: TextStyle(
-                color: Colors.white,
                 fontSize: 14,
               ),
             ),
@@ -201,7 +200,7 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
             child: Container(
               height: 40,
               decoration: BoxDecoration(
-                color: Colors.black,
+                color: overlayBackground(),
                 borderRadius: BorderRadius.all(Radius.circular(8)),
               ),
               child: Row(
@@ -224,13 +223,13 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
           PopupMenuButton<OverflowMenuItem>(
             icon: SvgPicture.asset(isGridMode
                 ? 'assets/images/grid.svg'
-                : 'assets/images/list.svg'),
+                : 'assets/images/list.svg', color: iconColor(),),
             offset: Offset(0, 100),
             onSelected: (OverflowMenuItem item) => item.onTap(),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),
-            color: Colors.black87,
+            color: overlayBackground(),
             itemBuilder: (BuildContext context) {
               return appBarPopUpActions(context, state)
                   .map((OverflowMenuItem item) {
@@ -242,13 +241,12 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
                         child: Text(
                           item.title,
                           style: TextStyle(
-                            color: Colors.white,
                             fontSize: 14,
                             fontWeight: FontWeight.w300,
                           ),
                         ),
                       ),
-                      SvgPicture.asset(item.iconData),
+                      SvgPicture.asset(item.iconData, color: iconColor(),),
                     ],
                   ),
                 );
@@ -275,7 +273,7 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
                   '${Env.storage}/wallpapers/${wallpaper.wallpaper}',
               imageBuilder: (context, imageProvider) => Container(
                 decoration: BoxDecoration(
-                  color: Colors.black,
+                  color: overlayBackground(),
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(12.0),
                       topRight: Radius.circular(12.0)),
@@ -307,7 +305,7 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
                 ),
               ): Text('Set'),
               decoration: BoxDecoration(
-                  color: Colors.black54,
+                  color: overlayBackground(),
                   borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(10),
                       bottomRight: Radius.circular(10))),
@@ -336,7 +334,7 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
                       '${Env.storage}/wallpapers/${wallpaper.wallpaper}',
                   imageBuilder: (context, imageProvider) => Container(
                     decoration: BoxDecoration(
-                      color: Colors.black,
+                      color: overlayBackground(),
                       borderRadius: BorderRadius.all(
                         Radius.circular(6.0),
                       ),
@@ -362,14 +360,14 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
                   height: 20,
                   width: 40,
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.black.withAlpha(100)),
+                    borderRadius: BorderRadius.circular(10),
+                    color: overlayBackground(),
+                  ),
                   child: Center(
                     child: Text(
                       'Set',
                       style: TextStyle(
                         fontSize: 10,
-                        color: Colors.white,
                       ),
                     ),
                   ),
