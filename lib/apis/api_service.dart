@@ -637,6 +637,24 @@ class ApiService {
     }
   }
 
+  Future<dynamic> createCategory(String token, Map<String, dynamic> body) async {
+    try {
+      print('$TAG - createCategory()');
+      dynamic response = await _client.postTypeLess(
+          '${Env.products}/products',
+          body: body,
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<dynamic> getCollections(String token, String businessId, Map<String, String> query) async {
     try {
       print('$TAG - getCollections()');

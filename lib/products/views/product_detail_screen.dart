@@ -59,7 +59,7 @@ class ProductDetailScreen extends StatefulWidget {
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   String imageBase = Env.storage + '/images/';
-
+  TextEditingController categoryController;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final formatter = new NumberFormat('###,###,###.00', 'en_US');
 
@@ -85,6 +85,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     );
     if (widget.productsModel != null) {
     }
+    categoryController = TextEditingController(text:'');
     super.initState();
   }
 
@@ -93,6 +94,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     if (widget.fromDashBoard) {
       widget.screenBloc.close();
     }
+//      categoryController.dispose();
     super.dispose();
   }
 
@@ -1137,10 +1139,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     tags = state.productDetail.categories.map((element) {
       return CategoryTag(
         name: element.title,
-        position: state.categories.length,
+        position: suggestedCategories(state).length ,
         category: element,
       );
     }).toList();
+
     return Container(
       padding: EdgeInsets.only(top: 16, bottom: 16),
       child: Column(
@@ -1157,19 +1160,25 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 child: FlutterTagging<CategoryTag>(
                   initialItems: tags,
                   textFieldConfiguration: TextFieldConfiguration(
+                    controller: categoryController,
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       hintText: 'Search Category',
                     ),
+                    onChanged: (value) {
+                      setState(() {
+
+                      });
+                    }
                   ),
                   findSuggestions: CategorySuggestService(
-                    categories: state.categories,
+                    categories: suggestedCategories(state),
                     addedCategories: state.productDetail.categories,
                   ).getCategories,
                   additionCallback: (value) {
                     return CategoryTag(
                       name: value,
-                      position: state.categories.length,
+                      position: suggestedCategories(state).length,
                     );
                   },
                   onAdded: (language) {
@@ -1184,10 +1193,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     );
                   },
                   onChanged: () {
-                     List cates = tags.map((e) {
+                    print('Tags: $tags');
+                    List cates = tags.map((e) {
                       return e.category;
                     }).toList();
-                     ProductsModel model = state.productDetail;
+                    ProductsModel model = state.productDetail;
                      model.categories = cates;
                      widget.screenBloc.add(UpdateProductDetail(
                        productsModel: model,
@@ -1196,18 +1206,25 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   configureSuggestion: (CategoryTag tag ) {
                     return SuggestionConfiguration(
                       title: Text(tag.name),
-                      additionWidget: Chip(
-                        avatar: Icon(
-                          Icons.add_circle,
-                          color: Colors.white,
+                      additionWidget: GestureDetector(
+                        onTap: () {
+                          widget.screenBloc.add(CreateCategoryEvent(
+                            title: tag.name,
+                          ));
+                        },
+                        child: Chip(
+                          avatar: Icon(
+                            Icons.add_circle,
+                            color: Colors.white,
+                          ),
+                          label: Text('Add New Category'),
+                          labelStyle: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.w300,
+                          ),
+                          backgroundColor: Colors.green,
                         ),
-                        label: Text('Add New Category'),
-                        labelStyle: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14.0,
-                          fontWeight: FontWeight.w300,
-                        ),
-                        backgroundColor: Colors.green,
                       ),
                     );
                   },
@@ -1256,6 +1273,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     );
   }
 
+  List<Categories>suggestedCategories(ProductsScreenState state) {
+    if (categoryController.text.isEmpty)
+      return state.categories;
+    return state.categories.where((e) => e.title.toLowerCase().contains(categoryController.text.toLowerCase())).toList();
+  }
   ///---------------------------------------------------------------------------
   ///                   Product Details - Variants
   ///---------------------------------------------------------------------------

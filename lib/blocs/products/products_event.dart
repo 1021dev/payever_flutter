@@ -266,3 +266,13 @@ class CancelProductEdit extends ProductsScreenEvent {
   List<Object> get props => [
   ];
 }
+
+class CreateCategoryEvent extends ProductsScreenEvent {
+  final String title;
+
+  CreateCategoryEvent({this.title});
+  @override
+  List<Object> get props => [
+    this.title,
+  ];
+}

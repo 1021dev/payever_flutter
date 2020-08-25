@@ -123,7 +123,9 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
       );
     } else if (event is AddToCollectionEvent) {
       yield state.copyWith(addToCollection: true);
-  }
+    } else if (event is CreateCategoryEvent) {
+      yield* createCategory(event.title);
+    }
   }
 
   Stream<ProductsScreenState> fetchProducts(String activeBusinessId) async* {
@@ -969,5 +971,30 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
     Map<String, dynamic> body = {'ids': list};
     dynamic response = await api.deleteCollections(token, state.businessId, body);
     yield* reloadCollections();
+  }
+
+  Stream<ProductsScreenState> createCategory(String title) async* {
+    yield state.copyWith(isLoading: true);
+    String businessUuid = state.businessId;
+    Map<String, dynamic> body = {
+      'operationName': 'createCategory',
+      'variables': {
+        'businessUuid': businessUuid,
+        'title': title,
+      },
+      'query': 'mutation createCategory(\$businessUuid: String!, \$title: String!) {\n  createCategory(businessUuid: \$businessUuid, title: \$title) {\n    id\n    businessUuid\n    title\n  slug\n  }\n}\n'
+    };
+    dynamic response = await api.createCategory(token, body);
+    if (response is Map) {
+      dynamic data = response['data'];
+      if (data != null) {
+        dynamic updateProduct = data['updateProduct'];
+        if (updateProduct != null) {
+          var id = updateProduct['id'];
+          print('Updates success  => $id');
+        }
+      }
+    }
+
   }
 }
