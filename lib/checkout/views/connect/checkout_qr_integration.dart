@@ -7,6 +7,7 @@ import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
+import 'package:payever/theme.dart';
 
 // ignore: must_be_immutable
 class CheckoutQRIntegrationScreen extends StatefulWidget {
@@ -109,7 +110,7 @@ class _CheckoutQRIntegrationScreenState extends State<CheckoutQRIntegrationScree
     widgets.add(
       Container(
         height: 64,
-        color: Color(0xFF424141),
+        color: overlayBackground(),
         child: SizedBox.expand(
           child: MaterialButton(
             onPressed: () {
@@ -126,7 +127,7 @@ class _CheckoutQRIntegrationScreenState extends State<CheckoutQRIntegrationScree
                       'assets/images/qr-code.svg',
                       height: 20,
                       width: 20,
-                      color: Colors.white,
+                      color: iconColor(),
                     ),
                     Padding(
                       padding: EdgeInsets.only(left: 8),
@@ -134,7 +135,6 @@ class _CheckoutQRIntegrationScreenState extends State<CheckoutQRIntegrationScree
                     Text(
                       Language.getPosTpmStrings('tpm.communications.qr.title'),
                       style: TextStyle(
-                        color: Colors.white,
                         fontSize: 16,
                       ),
                     )
@@ -187,12 +187,11 @@ class _CheckoutQRIntegrationScreenState extends State<CheckoutQRIntegrationScree
                           borderRadius: BorderRadius.circular(10),
                         ),
                         elevation: 0,
-                        color: Colors.black26,
+                        color: overlayBackground(),
                         child: Text(
                           Language.getPosTpmStrings(w[1]['text']),
                           style: TextStyle(
                             fontSize: 10,
-                            color: Colors.white,
                             fontWeight: FontWeight.w500,
                           ),
                         ),

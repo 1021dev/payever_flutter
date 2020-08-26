@@ -9,6 +9,7 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/login/login_screen.dart';
+import 'package:payever/theme.dart';
 
 bool _isPortrait;
 bool _isTablet;
@@ -157,7 +158,7 @@ class _CheckoutDevicePaymentScreenState extends State<CheckoutDevicePaymentScree
         padding: EdgeInsets.only(left: 16, right: 16),
         height: isOpened ? 64 * 5.0: 64.0,
         child: BlurEffectView(
-          color: Color.fromRGBO(20, 20, 20, 0.2),
+
           blur: 15,
           radius: 12,
           padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -165,7 +166,7 @@ class _CheckoutDevicePaymentScreenState extends State<CheckoutDevicePaymentScree
             children: <Widget>[
               Container(
                 height: 64,
-                color: Color(0xFF424141),
+                color: overlayBackground(),
                 child: SizedBox.expand(
                   child: MaterialButton(
                     onPressed: () {
@@ -188,7 +189,6 @@ class _CheckoutDevicePaymentScreenState extends State<CheckoutDevicePaymentScree
                             Text(
                               'Settings',
                               style: TextStyle(
-                                color: Colors.white,
                                 fontSize: 16,
                               ),
                             ),
@@ -218,7 +218,6 @@ class _CheckoutDevicePaymentScreenState extends State<CheckoutDevicePaymentScree
                         Text(
                           'Two Factor Authentication',//displayOptions.title,
                           style: TextStyle(
-                            color: Colors.white,
                             fontSize: 16,
                             fontWeight: FontWeight.w200,
                           ),
@@ -253,7 +252,6 @@ class _CheckoutDevicePaymentScreenState extends State<CheckoutDevicePaymentScree
                         Text(
                           Language.getConnectStrings('categories.communications.form.autoresponderEnabled.label'),
                           style: TextStyle(
-                            color: Colors.white,
                             fontSize: 16,
                             fontWeight: FontWeight.w200,
                           ),
@@ -292,7 +290,6 @@ class _CheckoutDevicePaymentScreenState extends State<CheckoutDevicePaymentScree
                         Text(
                           'verify type:',
                           style: TextStyle(
-                            color: Colors.white70,
                             fontSize: 12,
                           ),
                         ),
@@ -311,7 +308,6 @@ class _CheckoutDevicePaymentScreenState extends State<CheckoutDevicePaymentScree
                               child: Text(
                                 label,
                                 style: TextStyle(
-                                  color: Colors.white,
                                   fontSize: 16,
                                   fontWeight: FontWeight.w300,
                                 ),
@@ -332,18 +328,18 @@ class _CheckoutDevicePaymentScreenState extends State<CheckoutDevicePaymentScree
               ): Container(),
               isOpened ? Container(
                 height: 64,
-                color: Color(0xFF424141),
+                color: Colors.black87,
                 child: SizedBox.expand(
                   child: MaterialButton(
                     onPressed: () {
                       widget.screenBloc.add(SaveCheckoutDevicePaymentSettings());
                     },
+                    color: overlayBackground(),
                     child: state.isUpdating ? Container(
                       child: CircularProgressIndicator(),
                     ) : Text(
                       'Save',
                       style: TextStyle(
-                        color: Colors.white,
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                       ),

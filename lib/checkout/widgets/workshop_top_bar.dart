@@ -26,7 +26,7 @@ class _WorkshopTopBarState extends State<WorkshopTopBar> {
   Widget build(BuildContext context) {
     return Container(
       height: 50,
-      color: overlayBackground(),
+      color: Colors.black87,
       child: Row(
         children: <Widget>[
           SizedBox(
@@ -35,6 +35,7 @@ class _WorkshopTopBarState extends State<WorkshopTopBar> {
           Text(
             widget.title,
             style: TextStyle(
+              color: Colors.white,
               fontSize: 16,
               fontWeight: FontWeight.w400,
             ),
@@ -69,7 +70,7 @@ class _WorkshopTopBarState extends State<WorkshopTopBar> {
             child: IconButton(
                 icon: Icon(
                   Icons.close,
-                  color: iconColor(),
+                  color: Colors.white,
                 ),
                 onPressed: () {
                   widget.onCloseTap();
@@ -88,7 +89,7 @@ class _WorkshopTopBarState extends State<WorkshopTopBar> {
             child: PopupMenuButton<CheckOutPopupButton>(
               child: Icon(
                 Icons.more_horiz,
-                color: iconColor(),
+                color: Colors.white,
               ),
               offset: Offset(0, 100),
               onSelected: (CheckOutPopupButton item) => item.onTap(),

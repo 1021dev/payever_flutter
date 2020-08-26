@@ -11,6 +11,7 @@ import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/connect/models/connect.dart';
 import 'package:payever/login/login_screen.dart';
+import 'package:payever/theme.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CheckoutChannelShopSystemScreen extends StatefulWidget {
@@ -276,7 +277,6 @@ class _CheckoutChannelShopSystemScreenState extends State<CheckoutChannelShopSys
           right: 16,
         ),
         height: 50,
-        color: Colors.black54,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
@@ -291,7 +291,6 @@ class _CheckoutChannelShopSystemScreenState extends State<CheckoutChannelShopSys
             Text(
               title,
               style: TextStyle(
-                color: Colors.white,
                 fontSize: 16,
               ),
             ),
@@ -331,7 +330,6 @@ class _CheckoutChannelShopSystemScreenState extends State<CheckoutChannelShopSys
                             child: Text(plugin != null ?
                             'Plugin(${plugin.version})' : 'Instructions',
                               style: TextStyle(
-                                color: Colors.white,
                                 fontSize: 16,
                                 fontFamily: 'Helvetica Neue',
                               ),
@@ -348,7 +346,7 @@ class _CheckoutChannelShopSystemScreenState extends State<CheckoutChannelShopSys
                           _launchURL('https://getpayever.com/shopsystem/shopware');
                         }
                       },
-                      color: Colors.black38,
+                      color: overlayBackground(),
                       elevation: 0,
                       shape: RoundedRectangleBorder(
                         borderRadius:
@@ -361,7 +359,6 @@ class _CheckoutChannelShopSystemScreenState extends State<CheckoutChannelShopSys
                       child: Text(
                         'Download',
                         style: TextStyle(
-                          color: Colors.white,
                           fontSize: 12,
                           fontFamily: 'HelveticaNeueMed',
                         ),
@@ -407,7 +404,6 @@ class _CheckoutChannelShopSystemScreenState extends State<CheckoutChannelShopSys
     return InkWell(
       child: Container(
         height: 50,
-        color: Colors.black54,
         padding: EdgeInsets.only(left: 16, right: 16),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -421,7 +417,6 @@ class _CheckoutChannelShopSystemScreenState extends State<CheckoutChannelShopSys
                   Flexible(
                     child: Text( apIkey.name,
                       style: TextStyle(
-                        color: Colors.white,
                         fontSize: 16,
                         fontFamily: 'Helvetica Neue',
                       ),
@@ -434,7 +429,7 @@ class _CheckoutChannelShopSystemScreenState extends State<CheckoutChannelShopSys
               onPressed: () async {
                 screenBloc.add(DeleteCheckoutAPIkeyEvent(client: apIkey.id));
               },
-              color: Colors.black38,
+              color: overlayBackground(),
               elevation: 0,
               shape: RoundedRectangleBorder(
                 borderRadius:
@@ -447,7 +442,6 @@ class _CheckoutChannelShopSystemScreenState extends State<CheckoutChannelShopSys
               child: Text(
                 'Delete',
                 style: TextStyle(
-                  color: Colors.white,
                   fontSize: 12,
                   fontFamily: 'HelveticaNeueMed',
                 ),
@@ -487,7 +481,6 @@ class _CheckoutChannelShopSystemScreenState extends State<CheckoutChannelShopSys
                       child: Text(
                         'Client Id',
                         style: TextStyle(
-                          color: Colors.white,
                           fontSize: 16,
                           fontFamily: 'HelveticaNeueMed',
                         ),
@@ -518,7 +511,7 @@ class _CheckoutChannelShopSystemScreenState extends State<CheckoutChannelShopSys
                           clipboardString = apIkey.id;
                         });
                       },
-                      color: Colors.black38,
+                      color: overlayBackground(),
                       elevation: 0,
                       shape: RoundedRectangleBorder(
                         borderRadius:
@@ -531,7 +524,6 @@ class _CheckoutChannelShopSystemScreenState extends State<CheckoutChannelShopSys
                       child: Text(
                         clipboardString == apIkey.id ? 'Copied': 'Copy',
                         style: TextStyle(
-                          color: Colors.white,
                           fontSize: 12,
                           fontFamily: 'HelveticaNeueMed',
                         ),
@@ -560,7 +552,6 @@ class _CheckoutChannelShopSystemScreenState extends State<CheckoutChannelShopSys
                       child: Text(
                         'Client secret',
                         style: TextStyle(
-                          color: Colors.white,
                           fontSize: 16,
                           fontFamily: 'HelveticaNeueMed',
                         ),
@@ -591,7 +582,7 @@ class _CheckoutChannelShopSystemScreenState extends State<CheckoutChannelShopSys
                           clipboardString = apIkey.secret;
                         });
                       },
-                      color: Colors.black38,
+                      color: overlayBackground(),
                       elevation: 0,
                       shape: RoundedRectangleBorder(
                         borderRadius:
@@ -604,7 +595,6 @@ class _CheckoutChannelShopSystemScreenState extends State<CheckoutChannelShopSys
                       child: Text(
                         clipboardString == apIkey.secret ? 'Copied': 'Copy',
                         style: TextStyle(
-                          color: Colors.white,
                           fontSize: 12,
                           fontFamily: 'HelveticaNeueMed',
                         ),
@@ -633,7 +623,6 @@ class _CheckoutChannelShopSystemScreenState extends State<CheckoutChannelShopSys
                       child: Text(
                         'Business UUID',
                         style: TextStyle(
-                          color: Colors.white,
                           fontSize: 16,
                           fontFamily: 'HelveticaNeueMed',
                         ),
@@ -664,7 +653,7 @@ class _CheckoutChannelShopSystemScreenState extends State<CheckoutChannelShopSys
                           clipboardString = apIkey.businessId;
                         });
                       },
-                      color: Colors.black38,
+                      color: overlayBackground(),
                       elevation: 0,
                       shape: RoundedRectangleBorder(
                         borderRadius:
@@ -677,7 +666,6 @@ class _CheckoutChannelShopSystemScreenState extends State<CheckoutChannelShopSys
                       child: Text(
                         clipboardString == apIkey.businessId ? 'Copied': 'Copy',
                         style: TextStyle(
-                          color: Colors.white,
                           fontSize: 12,
                           fontFamily: 'HelveticaNeueMed',
                         ),
@@ -706,7 +694,6 @@ class _CheckoutChannelShopSystemScreenState extends State<CheckoutChannelShopSys
                       child: Text(
                         'Created',
                         style: TextStyle(
-                          color: Colors.white,
                           fontSize: 16,
                           fontFamily: 'HelveticaNeueMed',
                         ),
@@ -735,7 +722,6 @@ class _CheckoutChannelShopSystemScreenState extends State<CheckoutChannelShopSys
     return isExpandedSection2 ?
     Container(
       height: 50,
-      color: Colors.black54,
       child: SizedBox.expand(
         child: MaterialButton(
           onPressed: (){
@@ -744,6 +730,7 @@ class _CheckoutChannelShopSystemScreenState extends State<CheckoutChannelShopSys
               isAdd = true;
             });
           },
+          color: overlayBackground(),
           child: Row(
             children: <Widget>[
               Text(

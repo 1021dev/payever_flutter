@@ -13,6 +13,7 @@ import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/connect/models/connect.dart';
 import 'package:payever/login/login_screen.dart';
+import 'package:payever/theme.dart';
 
 class CheckoutConnectScreen extends StatefulWidget {
 
@@ -178,7 +179,7 @@ class _CheckoutConnectScreenState extends State<CheckoutConnectScreen> {
                                 SvgPicture.asset(
                                   Measurements.channelIcon(iconType),
                                   width: 24,
-                                  color: Colors.white70,
+                                  color: iconColor(),
                                 ),
                                 Padding(
                                   padding: EdgeInsets.only(left: margin / 2),
@@ -187,7 +188,6 @@ class _CheckoutConnectScreenState extends State<CheckoutConnectScreen> {
                                   child: Text(
                                     Language.getPosConnectStrings(connectModel.integration.displayOptions.title ?? ''),
                                     style: TextStyle(
-                                      color: Colors.white,
                                       fontSize: 16,
                                       fontFamily: 'Helvetica Neue',
                                     ),
@@ -242,7 +242,7 @@ class _CheckoutConnectScreenState extends State<CheckoutConnectScreen> {
                                 screenBloc.add(InstallCheckoutConnect(connectModel: connectModel));
                               }
                             },
-                            color: Colors.black38,
+                            color: overlayBackground(),
                             elevation: 0,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
@@ -265,7 +265,6 @@ class _CheckoutConnectScreenState extends State<CheckoutConnectScreen> {
                                   ? Language.getConnectStrings('actions.open')
                                   : Language.getPosConnectStrings('integrations.actions.install'),
                               style: TextStyle(
-                                color: Colors.white,
                                 fontSize: 12,
                                 fontFamily: 'Helvetica Neue',
                               ),

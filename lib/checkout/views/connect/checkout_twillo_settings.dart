@@ -12,6 +12,7 @@ import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/pos/views/pos_twillo_add_phonenumber.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/login/login_screen.dart';
+import 'package:payever/theme.dart';
 
 bool _isPortrait;
 bool _isTablet;
@@ -176,7 +177,7 @@ class _CheckoutTwilioScreenState extends State<CheckoutTwilioScreen> {
               List<dynamic> list = data['data'];
               Widget section = Container(
                 height: 56,
-                color: Colors.black45,
+                color: overlayBackground(),
                 child: SizedBox.expand(
                   child: MaterialButton(
                     onPressed: () {
@@ -198,6 +199,7 @@ class _CheckoutTwilioScreenState extends State<CheckoutTwilioScreen> {
                                 'assets/images/twilio.svg',
                                 width: 16,
                                 height: 16,
+                                color: iconColor(),
                               ),
                               Padding(
                                 padding: EdgeInsets.only(left: 8),
@@ -207,7 +209,6 @@ class _CheckoutTwilioScreenState extends State<CheckoutTwilioScreen> {
                                   Language.getPosTpmStrings(data['title']),
                                   maxLines: 1,
                                   style: TextStyle(
-                                    color: Colors.white,
                                     fontSize: 16,
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -240,7 +241,6 @@ class _CheckoutTwilioScreenState extends State<CheckoutTwilioScreen> {
                               Text(
                                 w[0]['value'],
                                 style: TextStyle(
-                                  color: Colors.white,
                                   fontSize: 14,
                                   fontWeight: FontWeight.w400,
                                 ),
@@ -251,7 +251,7 @@ class _CheckoutTwilioScreenState extends State<CheckoutTwilioScreen> {
                               Text(
                                 w[1]['value'],
                                 style: TextStyle(
-                                  color: Colors.white.withOpacity(0.5),
+                                  color: Colors.grey[600],
                                   fontSize: 14,
                                   fontWeight: FontWeight.w300,
                                 ),
@@ -291,7 +291,6 @@ class _CheckoutTwilioScreenState extends State<CheckoutTwilioScreen> {
                                             child: new Text(
                                               Language.getPosTpmStrings('tpm.communications.twilio.no'),
                                               style: TextStyle(
-                                                color: Colors.white,
                                               ),
                                             ),
                                             onPressed: () {
@@ -302,9 +301,6 @@ class _CheckoutTwilioScreenState extends State<CheckoutTwilioScreen> {
                                             isDefaultAction: true,
                                             child: new Text(
                                               Language.getPosTpmStrings('tpm.communications.twilio.yes'),
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                              ),
                                             ),
                                             onPressed: () {
                                               Navigator.pop(context);
@@ -324,12 +320,11 @@ class _CheckoutTwilioScreenState extends State<CheckoutTwilioScreen> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            color: Colors.black26,
+                            color: overlayBackground(),
                             child: Text(
                               Language.getPosTpmStrings(w[2]['text']),
                               style: TextStyle(
                                 fontSize: 10,
-                                color: Colors.white,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -359,12 +354,11 @@ class _CheckoutTwilioScreenState extends State<CheckoutTwilioScreen> {
                             ),
                           );
                         },
-                        color: Colors.black87,
+                        color: overlayBackground(),
                         child: Text(
                           Language.getPosTpmStrings(data['operation']['text']),
                           style: TextStyle(
                             fontSize: 16,
-                            color: Colors.white,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -378,7 +372,7 @@ class _CheckoutTwilioScreenState extends State<CheckoutTwilioScreen> {
               List<dynamic> list = data['fieldset'];
               Widget section = Container(
                 height: 56,
-                color: Colors.black45,
+                color: overlayBackground(),
                 child: SizedBox.expand(
                   child: MaterialButton(
                     onPressed: () {
@@ -408,7 +402,6 @@ class _CheckoutTwilioScreenState extends State<CheckoutTwilioScreen> {
                                   Language.getPosTpmStrings(data['title']),
                                   maxLines: 1,
                                   style: TextStyle(
-                                    color: Colors.white,
                                     fontSize: 16,
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -480,12 +473,11 @@ class _CheckoutTwilioScreenState extends State<CheckoutTwilioScreen> {
                         minWidth: 0,
                         onPressed: () {
                         },
-                        color: Colors.black87,
+                        color: overlayBackground(),
                         child: Text(
                           Language.getPosTpmStrings(data['operation']['text']),
                           style: TextStyle(
                             fontSize: 16,
-                            color: Colors.white,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -507,7 +499,6 @@ class _CheckoutTwilioScreenState extends State<CheckoutTwilioScreen> {
             Container(
               padding: EdgeInsets.only(left: 16, right: 16),
               child: BlurEffectView(
-                color: Color.fromRGBO(20, 20, 20, 0.2),
                 blur: 15,
                 radius: 12,
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 0),

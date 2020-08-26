@@ -8,6 +8,7 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/checkout/models/models.dart';
 import 'package:payever/checkout/widgets/checkout_top_button.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
+import 'package:payever/theme.dart';
 
 class CheckoutLinkEditScreen extends StatefulWidget {
 
@@ -74,6 +75,7 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
                       : Column(
                     children: <Widget>[
                       _getBody(state),
+                      Divider(thickness: 1, height: 0, color: Colors.grey,),
                       Expanded(
                         child: Container(
                           child: state.isUpdating
@@ -153,7 +155,6 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
   Widget _getTextLinkWidget(CheckoutScreenState state) {
     return Container(
       height: 64,
-      color: Colors.black45,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
@@ -183,7 +184,6 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
   Widget _getButtonWidget(CheckoutScreenState state) {
     return Container(
       height: 64,
-      color: Colors.black45,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
@@ -217,7 +217,6 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
   Widget _getBubbleWidget(CheckoutScreenState state) {
     return Container(
       height: 64,
-      color: Colors.black45,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
@@ -237,7 +236,6 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
   Widget _getCalculatorWidget(CheckoutScreenState state) {
     return Container(
       height: 64,
-      color: Colors.black45,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
@@ -271,7 +269,7 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
       children: <Widget>[
         Text(
           'Height',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
         Container(
           alignment: Alignment.center,
@@ -279,7 +277,7 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
           width: 60,
           height: 30,
           decoration: BoxDecoration(
-            color: Color.fromRGBO(100, 100, 100, 1),
+            color: overlayBackground(),
             borderRadius: BorderRadius.circular(8),
           ),
           child: TextFormField(
@@ -313,7 +311,7 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
       children: <Widget>[
         Text(
           'Width',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
         SizedBox(width: 10,),
         Container(
@@ -322,7 +320,7 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
           width: 60,
           height: 30,
           decoration: BoxDecoration(
-            color: Color.fromRGBO(100, 100, 100, 1),
+            color: overlayBackground(),
             borderRadius: BorderRadius.circular(8),
           ),
           child: TextFormField(
@@ -356,13 +354,13 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
       children: <Widget>[
         Text(
           'Text Size',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
         SizedBox(width: 15,),
         Container(
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: Color.fromRGBO(100, 100, 100, 1),
+            color: overlayBackground(),
             borderRadius: BorderRadius.circular(8),
           ),
           height: 30,
@@ -371,7 +369,6 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
             child: Text(
               financeExpress.textSize != null ? financeExpress.textSize : '',
               style: TextStyle(
-                color: Colors.white,
                 fontSize: 16,
                 fontFamily: 'HelveticaNeueMed',
               ),
@@ -395,7 +392,6 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
                       Text(
                         item.title,
                         style: TextStyle(
-                          color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
                         ),
@@ -416,13 +412,13 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
       children: <Widget>[
         Text(
           'Sort rates by price',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
         SizedBox(width: 15,),
         Container(
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: Color.fromRGBO(100, 100, 100, 1),
+            color: overlayBackground(),
             borderRadius: BorderRadius.circular(8),
           ),
           height: 30,
@@ -431,7 +427,6 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
             child: Text(
               financeExpress.order == 'asc' ? 'Ascending' : 'Descending',
               style: TextStyle(
-                color: Colors.white,
                 fontSize: 16,
                 fontFamily: 'HelveticaNeueMed',
               ),
@@ -455,7 +450,6 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
                       Text(
                         item.title,
                         style: TextStyle(
-                          color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
                         ),
@@ -476,7 +470,7 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
       children: <Widget>[
         Text(
           'Alignment',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
         Container(
           alignment: Alignment.center,
@@ -484,7 +478,7 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
           width: 30,
           height: 30,
           decoration: BoxDecoration(
-            color: Color.fromRGBO(100, 100, 100, 1),
+            color: overlayBackground(),
             borderRadius: BorderRadius.circular(8),
           ),
           child: PopupMenuButton<CheckOutPopupButton>(
@@ -494,7 +488,7 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),
-            color: Colors.black87,
+            color: overlayBackground(),
             itemBuilder: (BuildContext context) {
               return _alignmentPopup(context, state).map((CheckOutPopupButton item) {
                 return PopupMenuItem<CheckOutPopupButton>(
@@ -508,7 +502,6 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
                       Text(
                         item.title,
                         style: TextStyle(
-                          color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
                         ),
@@ -529,7 +522,7 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
       children: <Widget>[
         Text(
           'Corners',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
         Container(
           alignment: Alignment.center,
@@ -537,7 +530,7 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
           width: 30,
           height: 30,
           decoration: BoxDecoration(
-            color: Color.fromRGBO(100, 100, 100, 1),
+            color: overlayBackground(),
             borderRadius: BorderRadius.circular(8),
           ),
           child: PopupMenuButton<CheckOutPopupButton>(
@@ -547,7 +540,7 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),
-            color: Colors.black87,
+            color: overlayBackground(),
             itemBuilder: (BuildContext context) {
               return _cornerPopup(context, state).map((CheckOutPopupButton item) {
                 return PopupMenuItem<CheckOutPopupButton>(
@@ -561,7 +554,6 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
                       Text(
                         item.title,
                         style: TextStyle(
-                          color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
                         ),
@@ -582,7 +574,7 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
       children: <Widget>[
         Text(
           title,
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w400),
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
         GestureDetector(
           onTap: (){
@@ -618,7 +610,7 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
             height: 30,
             decoration: BoxDecoration(
               color: colorConvert(color),
-              border: Border.all(width: 1, color: Colors.white),
+              border: Border.all(width: 1,),
               borderRadius: BorderRadius.circular(4),
             ),
           ),
@@ -632,7 +624,7 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
       children: <Widget>[
         Text(
           'Visibility',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
         SizedBox(width: 10,),
         Transform.scale(
@@ -651,7 +643,7 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
             SizedBox(width: 16,),
             Text(
               'Adaptive',
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              style: TextStyle(fontWeight: FontWeight.bold),
             ),
             SizedBox(width: 10,),
             Transform.scale(
@@ -684,7 +676,7 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
       children: <Widget>[
         Text(
           'Finance Express',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
         SizedBox(width: 10,),
         Transform.scale(
@@ -700,7 +692,7 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
         SizedBox(width: 16,),
         Text(
           'Overlay',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
         SizedBox(width: 10,),
         Transform.scale(
@@ -747,7 +739,7 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
         asset = 'assets/images/alignment-center.svg';
     }
     return SvgPicture.asset(asset, width: 16,
-      height: 16,);
+      height: 16, color: iconColor(),);
   }
 
   SvgPicture _cornerImg(String corners) {
@@ -766,7 +758,7 @@ class _CheckoutLinkEditScreenState extends State<CheckoutLinkEditScreen> {
         asset = 'assets/images/corner-square.svg';
     }
     return SvgPicture.asset(asset, width: 40,
-      height: 40,);
+      height: 40, color: iconColor(),);
   }
 
   void changeColor(Color color) {
