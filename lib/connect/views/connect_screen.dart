@@ -20,6 +20,7 @@ import 'package:payever/login/login_screen.dart';
 import 'package:payever/notifications/notifications_screen.dart';
 import 'package:payever/search/views/search_screen.dart';
 import 'package:payever/switcher/switcher_page.dart';
+import 'package:payever/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -91,7 +92,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
     return [
       ConnectPopupButton(
         title: Language.getProductListStrings('list_view'),
-        icon: SvgPicture.asset('assets/images/list.svg'),
+        icon: SvgPicture.asset('assets/images/list.svg', color: iconColor(),),
         onTap: () async {
           setState(() {
             selectedStyle = 0;
@@ -100,7 +101,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
       ),
       ConnectPopupButton(
         title: Language.getProductListStrings('grid_view'),
-        icon: SvgPicture.asset('assets/images/grid.svg'),
+        icon: SvgPicture.asset('assets/images/grid.svg', color: iconColor(),),
         onTap: () async {
           setState(() {
             selectedStyle = 1;
@@ -225,7 +226,6 @@ class _ConnectScreenState extends State<ConnectScreen> {
       centerTitle: false,
       elevation: 0,
       automaticallyImplyLeading: false,
-      backgroundColor: Colors.black87,
       title: Row(
         children: <Widget>[
           Container(
@@ -374,7 +374,6 @@ class _ConnectScreenState extends State<ConnectScreen> {
     iconSize = _isTablet ? 120: 80;
     margin = _isTablet ? 24: 16;
     return Scaffold(
-      backgroundColor: Colors.black,
       resizeToAvoidBottomPadding: false,
       appBar: _appBar(state),
       body: SafeArea(
@@ -406,7 +405,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
     }
     return Container(
       height: 64,
-      color: Color(0xFF212122),
+      color: overlayBackground(),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
@@ -444,7 +443,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
                   padding: EdgeInsets.all(8),
                   child: SvgPicture.asset(
                     'assets/images/filter.svg',
-                    color: Color(0xFF78787d),
+                    color: iconColor(),
                     width: 16,
                     height: 16,
                   ),
@@ -454,7 +453,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
                 padding: EdgeInsets.only(right: 12),
                 child: Container(
                   width: 1,
-                  color: Color(0xFF888888),
+                  color: iconColor().withOpacity(0.5),
                   height: 24,
                 ),
               ),
@@ -473,7 +472,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
                 constraints: BoxConstraints(minWidth: 100, maxWidth: Measurements.width / 2, maxHeight: 36, minHeight: 36),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
-                  color: Color(0xFF111111),
+                  color: overlayBackground(),
                 ),
                 child: Row(
                   children: <Widget>[
@@ -483,6 +482,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
                         'assets/images/search_place_holder.svg',
                         width: 16,
                         height: 16,
+                        color: iconColor(),
                       ),
                     ),
                     Expanded(
@@ -497,13 +497,11 @@ class _ConnectScreenState extends State<ConnectScreen> {
                           isDense: true,
                           hintStyle: TextStyle(
                             fontSize: 14,
-                            color: Colors.white70,
                             fontWeight: FontWeight.w300,
                           ),
                         ),
                         style: TextStyle(
                           fontSize: 14,
-                          color: Colors.white,
                           fontWeight: FontWeight.w400,
                         ),
                         onSubmitted: (_) {
@@ -525,7 +523,6 @@ class _ConnectScreenState extends State<ConnectScreen> {
                     child: Text(
                       !_isTablet && _isPortrait ? '' : itemsString,
                       style: TextStyle(
-                        color: Colors.white,
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
@@ -537,14 +534,14 @@ class _ConnectScreenState extends State<ConnectScreen> {
                   child: PopupMenuButton<ConnectPopupButton>(
                     child: Padding(
                       padding: EdgeInsets.all(8),
-                      child: selectedStyle == 0 ? SvgPicture.asset('assets/images/list.svg'): SvgPicture.asset('assets/images/grid.svg'),
+                      child: selectedStyle == 0 ? SvgPicture.asset('assets/images/list.svg', color: iconColor(),): SvgPicture.asset('assets/images/grid.svg', color: iconColor(),),
                     ),
                     offset: Offset(0, 100),
                     onSelected: (ConnectPopupButton item) => item.onTap(),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    color: Colors.black87,
+                    color: overlayBackground(),
                     itemBuilder: (BuildContext context) {
                       return appBarPopUpActions(context, state)
                           .map((ConnectPopupButton item) {
@@ -556,7 +553,6 @@ class _ConnectScreenState extends State<ConnectScreen> {
                               Text(
                                 item.title,
                                 style: TextStyle(
-                                  color: Colors.white,
                                   fontSize: 16,
                                   fontWeight: FontWeight.w400,
                                 ),
@@ -598,7 +594,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
                   height: 44,
                   padding: EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: screenBloc.state.selectedCategory == category ? Color(0x26FFFFFF): Colors.transparent,
+                    color: screenBloc.state.selectedCategory == category ? overlayBackground(): Colors.transparent,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Row(
@@ -607,6 +603,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
                         child: SvgPicture.asset(
                           Measurements.channelIcon(category),
                           height: 32,
+                          color: iconColor(),
                         ),
                       ),
                       Padding(
@@ -647,7 +644,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
           Container(
             height: 44,
             padding: EdgeInsets.only(left: 24, right: 24),
-            color: Color(0xff3f3f3f),
+            color: overlayBackground(),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -655,8 +652,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
                   child: Text(
                     'App Name',
                     style: TextStyle(
-                      color: Color.fromRGBO(255, 255, 255, 0.7),
-                      fontFamily: 'HelveticaNeue',
+                      fontFamily: 'Helvetica Neue',
                       fontSize: 14,
                     ),
                   ),
@@ -666,8 +662,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
                   child: Text(
                     'Category',
                     style: TextStyle(
-                      color: Color.fromRGBO(255, 255, 255, 0.7),
-                      fontFamily: 'HelveticaNeue',
+                      fontFamily: 'Helvetica Neue',
                       fontSize: 14,
                     ),
                   ),
@@ -677,8 +672,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
                   child: Text(
                     'Developer',
                     style: TextStyle(
-                      color: Color.fromRGBO(255, 255, 255, 0.7),
-                      fontFamily: 'HelveticaNeue',
+                      fontFamily: 'Helvetica Neue',
                       fontSize: 14,
                     ),
                   ),
@@ -688,8 +682,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
                   child: Text(
                     'Languages',
                     style: TextStyle(
-                      color: Color.fromRGBO(255, 255, 255, 0.7),
-                      fontFamily: 'HelveticaNeue',
+                      fontFamily: 'Helvetica Neue',
                       fontSize: 14,
                     ),
                   ),
@@ -700,8 +693,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
                   child: Text(
                     'Price',
                     style: TextStyle(
-                      color: Color.fromRGBO(255, 255, 255, 0.7),
-                      fontFamily: 'HelveticaNeue',
+                      fontFamily: 'Helvetica Neue',
                       fontSize: 14,
                     ),
                   ),
@@ -726,6 +718,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
                           child: ConnectPaymentSettingsScreen(
                             connectScreenBloc: screenBloc,
                             connectModel: model,
+                            business: widget.globalStateModel.currentBusiness.id,
                           ),
                           type: PageTransitionType.fade,
                           duration: Duration(milliseconds: 500),
@@ -770,7 +763,6 @@ class _ConnectScreenState extends State<ConnectScreen> {
                 return Divider(
                   height: 0,
                   thickness: 0.5,
-                  color: Color.fromRGBO(255, 255, 255, 0.2),
                 );
               },
               itemCount: state.connectInstallations.length,
@@ -870,7 +862,6 @@ class _ConnectScreenState extends State<ConnectScreen> {
                       style: TextStyle(
                           fontSize: 16,
                           fontFamily: 'HelveticaNeueMed',
-                          color: Colors.white
                       ),
                     ),
                     Padding(
@@ -882,7 +873,6 @@ class _ConnectScreenState extends State<ConnectScreen> {
                       style: TextStyle(
                         fontSize: 14,
                         fontFamily: 'Helvetica Neue',
-                        color: Colors.white,
                       ),
                     ),
                     Padding(
@@ -902,6 +892,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
                                     child: ConnectPaymentSettingsScreen(
                                       connectScreenBloc: screenBloc,
                                       connectModel: model,
+                                      business: widget.dashboardScreenBloc.state.activeBusiness.id,
                                     ),
                                     type: PageTransitionType.fade,
                                     duration: Duration(milliseconds: 500),

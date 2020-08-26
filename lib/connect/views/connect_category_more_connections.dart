@@ -15,6 +15,7 @@ import 'package:payever/connect/models/connect.dart';
 import 'package:payever/connect/widgets/connect_grid_item.dart';
 import 'package:payever/connect/widgets/connect_list_item.dart';
 import 'package:payever/connect/widgets/connect_top_button.dart';
+import 'package:payever/theme.dart';
 
 import 'connect_detail_screen.dart';
 import 'connect_payment_settings_screen.dart';
@@ -105,7 +106,6 @@ class _ConnectCategoryMoreScreenState extends State<ConnectCategoryMoreScreen> {
         bloc: widget.screenBloc,
         builder: (BuildContext context, ConnectDetailScreenState state) {
           return Scaffold(
-            backgroundColor: Colors.black,
             resizeToAvoidBottomPadding: false,
             appBar: _appBar(state),
             body: SafeArea(
@@ -131,7 +131,6 @@ class _ConnectCategoryMoreScreenState extends State<ConnectCategoryMoreScreen> {
       centerTitle: true,
       elevation: 0,
       automaticallyImplyLeading: true,
-      backgroundColor: Colors.black87,
       title: Row(
         children: <Widget>[
           Padding(
@@ -160,7 +159,7 @@ class _ConnectCategoryMoreScreenState extends State<ConnectCategoryMoreScreen> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),
-            color: Colors.black87,
+            color: overlayBackground(),
             itemBuilder: (BuildContext context) {
               return appBarPopUpActions(context, state)
                   .map((ConnectPopupButton item) {
@@ -172,7 +171,6 @@ class _ConnectCategoryMoreScreenState extends State<ConnectCategoryMoreScreen> {
                       Text(
                         item.title,
                         style: TextStyle(
-                          color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
                         ),
@@ -208,7 +206,7 @@ class _ConnectCategoryMoreScreenState extends State<ConnectCategoryMoreScreen> {
           Container(
             height: 44,
             padding: EdgeInsets.only(left: 24, right: 24),
-            color: Color(0xff3f3f3f),
+            color: overlayColor(),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -216,8 +214,7 @@ class _ConnectCategoryMoreScreenState extends State<ConnectCategoryMoreScreen> {
                   child: Text(
                     'App Name',
                     style: TextStyle(
-                      color: Color.fromRGBO(255, 255, 255, 0.7),
-                      fontFamily: 'HelveticaNeue',
+                      fontFamily: 'Helvetica Neue',
                       fontSize: 14,
                     ),
                   ),
@@ -227,8 +224,7 @@ class _ConnectCategoryMoreScreenState extends State<ConnectCategoryMoreScreen> {
                   child: Text(
                     'Category',
                     style: TextStyle(
-                      color: Color.fromRGBO(255, 255, 255, 0.7),
-                      fontFamily: 'HelveticaNeue',
+                      fontFamily: 'Helvetica Neue',
                       fontSize: 14,
                     ),
                   ),
@@ -238,8 +234,7 @@ class _ConnectCategoryMoreScreenState extends State<ConnectCategoryMoreScreen> {
                   child: Text(
                     'Developer',
                     style: TextStyle(
-                      color: Color.fromRGBO(255, 255, 255, 0.7),
-                      fontFamily: 'HelveticaNeue',
+                      fontFamily: 'Helvetica Neue',
                       fontSize: 14,
                     ),
                   ),
@@ -249,8 +244,7 @@ class _ConnectCategoryMoreScreenState extends State<ConnectCategoryMoreScreen> {
                   child: Text(
                     'Languages',
                     style: TextStyle(
-                      color: Color.fromRGBO(255, 255, 255, 0.7),
-                      fontFamily: 'HelveticaNeue',
+                      fontFamily: 'Helvetica Neue',
                       fontSize: 14,
                     ),
                   ),
@@ -261,8 +255,7 @@ class _ConnectCategoryMoreScreenState extends State<ConnectCategoryMoreScreen> {
                   child: Text(
                     'Price',
                     style: TextStyle(
-                      color: Color.fromRGBO(255, 255, 255, 0.7),
-                      fontFamily: 'HelveticaNeue',
+                      fontFamily: 'Helvetica Neue',
                       fontSize: 14,
                     ),
                   ),
@@ -331,7 +324,6 @@ class _ConnectCategoryMoreScreenState extends State<ConnectCategoryMoreScreen> {
                 return Divider(
                   height: 0,
                   thickness: 0.5,
-                  color: Color.fromRGBO(255, 255, 255, 0.2),
                 );
               },
               itemCount: widget.connections.length,

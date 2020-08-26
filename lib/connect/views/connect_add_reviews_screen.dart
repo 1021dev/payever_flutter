@@ -14,6 +14,7 @@ import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/login/login_screen.dart';
 import 'package:payever/connect/models/connect.dart';
+import 'package:payever/theme.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 class ConnectAddReviewsScreen extends StatefulWidget {
   final ConnectIntegration connectIntegration;
@@ -100,7 +101,6 @@ class _ConnectAddReviewsScreenState extends State<ConnectAddReviewsScreen> {
         bloc: widget.screenBloc,
         builder: (BuildContext context, ConnectDetailScreenState state) {
           return Scaffold(
-            backgroundColor: Colors.black,
             resizeToAvoidBottomPadding: false,
             appBar: _appBar(state),
             body: SafeArea(
@@ -125,7 +125,6 @@ class _ConnectAddReviewsScreenState extends State<ConnectAddReviewsScreen> {
       centerTitle: false,
       elevation: 0,
       automaticallyImplyLeading: false,
-      backgroundColor: Colors.black87,
       title: Row(
         children: <Widget>[
           Padding(
@@ -185,7 +184,7 @@ class _ConnectAddReviewsScreenState extends State<ConnectAddReviewsScreen> {
                     child: SvgPicture.asset(
                       Measurements.channelIcon(iconType),
                       width: iconSize,
-                      color: Color.fromRGBO(255, 255, 255, 0.75),
+                      color: iconColor(),
                     ),
                   ),
                   Expanded(
@@ -207,7 +206,6 @@ class _ConnectAddReviewsScreenState extends State<ConnectAddReviewsScreen> {
                                     child: Text(
                                       Language.getPosConnectStrings(state.editConnect.displayOptions.title),
                                       style: TextStyle(
-                                        color: Colors.white,
                                         fontFamily: 'HelveticaNeueMed',
                                         fontSize: 18,
                                       ),
@@ -218,7 +216,6 @@ class _ConnectAddReviewsScreenState extends State<ConnectAddReviewsScreen> {
                                     child: Text(
                                       Language.getPosConnectStrings(state.editConnect.installationOptions.price),
                                       style: TextStyle(
-                                        color: Color.fromRGBO(255, 255, 255, 0.6),
                                         fontFamily: 'HelveticaNeueLight',
                                         fontSize: 12,
                                       ),
@@ -229,8 +226,7 @@ class _ConnectAddReviewsScreenState extends State<ConnectAddReviewsScreen> {
                                     child: Text(
                                       Language.getPosConnectStrings(state.editConnect.installationOptions.developer),
                                       style: TextStyle(
-                                        color: Colors.white,
-                                        fontFamily: 'HelveticaNeue',
+                                        fontFamily: 'Helvetica Neue',
                                         fontSize: 12,
                                       ),
                                     ),
@@ -249,7 +245,6 @@ class _ConnectAddReviewsScreenState extends State<ConnectAddReviewsScreen> {
             Divider(
               height: margin,
               thickness: 0.5,
-              color: Color.fromRGBO(255, 255, 255, 0.1),
               endIndent: margin,
               indent: margin,
             ),
@@ -285,7 +280,6 @@ class _ConnectAddReviewsScreenState extends State<ConnectAddReviewsScreen> {
                     child: Text(
                       Language.getConnectStrings('actions.submit'),
                       style: TextStyle(
-                        color: Colors.white,
                         fontFamily: 'HelveticaNeueMed',
                         fontSize: 14,
                       ),
@@ -312,7 +306,6 @@ class _ConnectAddReviewsScreenState extends State<ConnectAddReviewsScreen> {
                     child: Text(
                       Language.getConnectStrings('Cancel'),
                       style: TextStyle(
-                        color: Colors.white,
                         fontFamily: 'HelveticaNeueMed',
                         fontSize: 14,
                       ),
@@ -346,8 +339,8 @@ class _ConnectAddReviewsScreenState extends State<ConnectAddReviewsScreen> {
           isReadOnly: false,
           filledIconData: Icons.star,
           halfFilledIconData: Icons.star_half,
-          color: Colors.white,
-          borderColor: Colors.white,
+          color: iconColor(),
+          borderColor: iconColor(),
           spacing:0.0
       ),
     );
@@ -364,7 +357,7 @@ class _ConnectAddReviewsScreenState extends State<ConnectAddReviewsScreen> {
                 topLeft: Radius.circular(margin / 2),
                 topRight: Radius.circular(margin / 2),
               ),
-              color: Color.fromRGBO(0, 0, 0, 0.2),
+              color: overlayBackground(),
             ),
             child: TextField(
               controller: titleController,
@@ -376,7 +369,6 @@ class _ConnectAddReviewsScreenState extends State<ConnectAddReviewsScreen> {
               ),
               style: TextStyle(
                 fontSize: 16,
-                color: Colors.white,
                 fontFamily: 'Helvetica Neue',
               ),
               keyboardType: TextInputType.text,
@@ -392,7 +384,7 @@ class _ConnectAddReviewsScreenState extends State<ConnectAddReviewsScreen> {
                 bottomRight: Radius.circular(margin / 2),
                 bottomLeft: Radius.circular(margin / 2),
               ),
-              color: Color.fromRGBO(0, 0, 0, 0.2),
+              color: overlayBackground(),
             ),
             child: TextField(
               controller: textController,
@@ -406,7 +398,6 @@ class _ConnectAddReviewsScreenState extends State<ConnectAddReviewsScreen> {
               ),
               style: TextStyle(
                 fontSize: 16,
-                color: Colors.white,
                 fontFamily: 'Helvetica Neue',
               ),
               keyboardType: TextInputType.text,
@@ -447,7 +438,6 @@ class _ConnectAddReviewsScreenState extends State<ConnectAddReviewsScreen> {
                     style: TextStyle(
                       fontSize: 14,
                       fontFamily: 'Helvetica Neue',
-                      color: Colors.white,
                     ),
                   ),
                   Padding(

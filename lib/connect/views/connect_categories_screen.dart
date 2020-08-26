@@ -5,6 +5,7 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
+import 'package:payever/theme.dart';
 
 bool _isPortrait;
 bool _isTablet;
@@ -45,7 +46,7 @@ class _ConnectCategoriesScreenState extends State<ConnectCategoriesScreen> {
 
     return new OrientationBuilder(builder: (context, orientation) {
       return Scaffold(
-        backgroundColor: Color(0x80111111),
+        backgroundColor: overlayColor(),
         resizeToAvoidBottomPadding: false,
         body: BlurEffectView(
           radius: 0,
@@ -96,7 +97,8 @@ class _ConnectCategoriesScreenState extends State<ConnectCategoriesScreen> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        color: Color(0xFF525151),
+                        color: overlayBackground(),
+                        elevation: 0,
                         child: Text(
                           'Done',
                         ),
@@ -108,7 +110,6 @@ class _ConnectCategoriesScreenState extends State<ConnectCategoriesScreen> {
                     child: Text(
                       'Category',
                       style: TextStyle(
-                        color: Colors.white70,
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
@@ -129,7 +130,7 @@ class _ConnectCategoriesScreenState extends State<ConnectCategoriesScreen> {
                             height: 44,
                             padding: EdgeInsets.all(8),
                             decoration: BoxDecoration(
-                              color: selectedCategory == category ? Color(0x26FFFFFF): Colors.transparent,
+                              color: selectedCategory == category ? overlayBackground(): Colors.transparent,
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Row(

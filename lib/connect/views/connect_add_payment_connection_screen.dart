@@ -7,6 +7,7 @@ import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
+import 'package:payever/theme.dart';
 
 class ConnectAddPaymentConnectionScreen extends StatefulWidget {
 
@@ -48,7 +49,6 @@ class _ConnectAddPaymentConnectionScreenState extends State<ConnectAddPaymentCon
         bloc: widget.screenBloc,
         builder: (BuildContext context, ConnectSettingsDetailScreenState state) {
           return Scaffold(
-            backgroundColor: Colors.black,
             resizeToAvoidBottomPadding: false,
             appBar: _appBar(state),
             body: SafeArea(
@@ -73,7 +73,6 @@ class _ConnectAddPaymentConnectionScreenState extends State<ConnectAddPaymentCon
       centerTitle: false,
       elevation: 0,
       automaticallyImplyLeading: false,
-      backgroundColor: Colors.black87,
       title: Text(
         Language.getConnectStrings('Add connection'),
         style: TextStyle(
@@ -156,7 +155,7 @@ class _ConnectAddPaymentConnectionScreenState extends State<ConnectAddPaymentCon
                       }
                       widget.screenBloc.add(ConnectAddPaymentOptionEvent(name: controller.text));
                     },
-                    color: Colors.black,
+                    color: overlayBackground(),
                     child: state.isAdding
                         ? CircularProgressIndicator(
                       strokeWidth: 2,

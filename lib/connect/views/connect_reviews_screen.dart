@@ -15,6 +15,7 @@ import 'package:payever/login/login_screen.dart';
 import 'package:payever/connect/models/connect.dart';
 import 'package:payever/connect/views/connect_add_reviews_screen.dart';
 import 'package:payever/connect/widgets/connect_top_button.dart';
+import 'package:payever/theme.dart';
 
 class ConnectReviewsScreen extends StatefulWidget {
   final ConnectIntegration connectModel;
@@ -89,7 +90,6 @@ class _ConnectReviewsScreenState extends State<ConnectReviewsScreen> {
         bloc: widget.screenBloc,
         builder: (BuildContext context, ConnectDetailScreenState state) {
           return Scaffold(
-            backgroundColor: Colors.black,
             resizeToAvoidBottomPadding: false,
             appBar: _appBar(state),
             body: SafeArea(
@@ -114,7 +114,6 @@ class _ConnectReviewsScreenState extends State<ConnectReviewsScreen> {
       centerTitle: false,
       elevation: 0,
       automaticallyImplyLeading: false,
-      backgroundColor: Colors.black87,
       title: Row(
         children: <Widget>[
           Padding(
@@ -186,7 +185,7 @@ class _ConnectReviewsScreenState extends State<ConnectReviewsScreen> {
                     child: SvgPicture.asset(
                       Measurements.channelIcon(iconType),
                       width: iconSize,
-                      color: Color.fromRGBO(255, 255, 255, 0.75),
+                      color: iconColor(),
                     ),
                   ),
                   Expanded(
@@ -208,7 +207,6 @@ class _ConnectReviewsScreenState extends State<ConnectReviewsScreen> {
                                     child: Text(
                                       Language.getPosConnectStrings(state.editConnect.displayOptions.title),
                                       style: TextStyle(
-                                        color: Colors.white,
                                         fontFamily: 'HelveticaNeueMed',
                                         fontSize: 18,
                                       ),
@@ -219,7 +217,6 @@ class _ConnectReviewsScreenState extends State<ConnectReviewsScreen> {
                                     child: Text(
                                       Language.getPosConnectStrings(state.editConnect.installationOptions.price),
                                       style: TextStyle(
-                                        color: Color.fromRGBO(255, 255, 255, 0.6),
                                         fontFamily: 'HelveticaNeueLight',
                                         fontSize: 12,
                                       ),
@@ -230,8 +227,7 @@ class _ConnectReviewsScreenState extends State<ConnectReviewsScreen> {
                                     child: Text(
                                       Language.getPosConnectStrings(state.editConnect.installationOptions.developer),
                                       style: TextStyle(
-                                        color: Colors.white,
-                                        fontFamily: 'HelveticaNeue',
+                                        fontFamily: 'Helvetica Neue',
                                         fontSize: 12,
                                       ),
                                     ),
@@ -250,7 +246,6 @@ class _ConnectReviewsScreenState extends State<ConnectReviewsScreen> {
             Divider(
               height: margin,
               thickness: 0.5,
-              color: Color.fromRGBO(255, 255, 255, 0.1),
               endIndent: margin,
               indent: margin,
             ),
@@ -306,7 +301,6 @@ class _ConnectReviewsScreenState extends State<ConnectReviewsScreen> {
               Text(
                 Language.getConnectStrings('Ratings & Reviews'),
                 style: TextStyle(
-                  color: Color.fromRGBO(255, 255, 255, 0.95),
                   fontFamily: 'HelveticaNeueMed',
                   fontSize: 18,
                 ),
@@ -328,7 +322,6 @@ class _ConnectReviewsScreenState extends State<ConnectReviewsScreen> {
                 child: Text(
                   Language.getConnectStrings('Write Review'),
                   style: TextStyle(
-                    color: Color.fromRGBO(255, 255, 255, 0.95),
                     fontFamily: 'Helvetica Neue',
                     fontSize: 14,
                   ),
@@ -349,7 +342,6 @@ class _ConnectReviewsScreenState extends State<ConnectReviewsScreen> {
                   Text(
                     '$rate',
                     style: TextStyle(
-                      color: Color.fromRGBO(255, 255, 255, 0.95),
                       fontFamily: 'HelveticaNeueMed',
                       fontSize: 60,
                     ),
@@ -359,7 +351,6 @@ class _ConnectReviewsScreenState extends State<ConnectReviewsScreen> {
                     child: Text(
                       'out of 5',
                       style: TextStyle(
-                        color: Color.fromRGBO(255, 255, 255, 0.95),
                         fontFamily: 'HelveticaNeueBold',
                         fontSize: 14,
                       ),
@@ -374,7 +365,6 @@ class _ConnectReviewsScreenState extends State<ConnectReviewsScreen> {
                   Text(
                     '${reviews.length} Ratings',
                     style: TextStyle(
-                      color: Color.fromRGBO(255, 255, 255, 0.95),
                       fontFamily: 'Helvetica Neue',
                       fontSize: 14,
                     ),
@@ -390,7 +380,6 @@ class _ConnectReviewsScreenState extends State<ConnectReviewsScreen> {
             child: Text(
               'No Ratings',
               style: TextStyle(
-                color: Color.fromRGBO(255, 255, 255, 0.95),
                 fontSize: 14,
                 fontFamily: 'HelveticaNeueMed',
               ),
@@ -412,7 +401,7 @@ class _ConnectReviewsScreenState extends State<ConnectReviewsScreen> {
                   padding: EdgeInsets.all(margin),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
-                    color: Color.fromRGBO(255, 255, 255, 0.2),
+                    color: overlayBackground(),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -427,7 +416,6 @@ class _ConnectReviewsScreenState extends State<ConnectReviewsScreen> {
                               Text(
                                 review.title ?? '',
                                 style: TextStyle(
-                                  color: Color.fromRGBO(255, 255, 255, 0.95),
                                   fontSize: 14,
                                   fontFamily: 'HelveticaNeueMed',
                                 ),
@@ -444,7 +432,6 @@ class _ConnectReviewsScreenState extends State<ConnectReviewsScreen> {
                               Text(
                                 review.reviewDate ?? '',
                                 style: TextStyle(
-                                  color: Color.fromRGBO(255, 255, 255, 0.95).withOpacity(0.6),
                                   fontSize: 14,
                                   fontFamily: 'Helvetica Neue',
                                 ),
@@ -455,7 +442,6 @@ class _ConnectReviewsScreenState extends State<ConnectReviewsScreen> {
                               Text(
                                 review.userFullName,
                                 style: TextStyle(
-                                  color: Color.fromRGBO(255, 255, 255, 0.95).withOpacity(0.6),
                                   fontSize: 14,
                                   fontFamily: 'Helvetica Neue',
                                 ),
@@ -470,7 +456,6 @@ class _ConnectReviewsScreenState extends State<ConnectReviewsScreen> {
                       Text(
                         review.text ?? '',
                         style: TextStyle(
-                          color: Color.fromRGBO(255, 255, 255, 0.95),
                           fontSize: 14,
                           fontFamily: 'Helvetica Neue',
                         ),
@@ -496,6 +481,7 @@ class _ConnectReviewsScreenState extends State<ConnectReviewsScreen> {
                     : 'assets/images/star_outline.svg',
                 width: 14,
                 height: 14,
+                color: iconColor(),
               ),
             );
           }).toList()
@@ -539,6 +525,7 @@ class _ConnectReviewsScreenState extends State<ConnectReviewsScreen> {
                       'assets/images/star_fill.svg',
                       width: margin / 2,
                       height: margin / 2,
+                      color: iconColor(),
                     );
                   }),
                 ),
@@ -551,6 +538,7 @@ class _ConnectReviewsScreenState extends State<ConnectReviewsScreen> {
                     height: margin / 5,
                     child: LinearProgressIndicator(
                       value: p.values.first,
+                      backgroundColor: Colors.grey,
                     ),
                   ),
                 ),

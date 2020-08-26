@@ -20,7 +20,10 @@ class ConnectSettingsDetailScreenBloc extends Bloc<ConnectSettingsDetailScreenEv
   Stream<ConnectSettingsDetailScreenState> mapEventToState(ConnectSettingsDetailScreenEvent event) async* {
     if (event is ConnectSettingsDetailScreenInitEvent) {
       if (event.business != null) {
-        yield state.copyWith(business: event.business, connectModel: event.connectModel);
+        yield state.copyWith(business: event.business);
+      }
+      if (event.connectModel != null) {
+        yield state.copyWith(connectModel: event.connectModel);
       }
       yield* fetchInitialData(state.business);
     } else if (event is ConnectAddPaymentOptionEvent) {

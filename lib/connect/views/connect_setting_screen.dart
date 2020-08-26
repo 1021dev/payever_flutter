@@ -10,6 +10,7 @@ import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/connect/models/connect.dart';
 import 'package:payever/login/login_screen.dart';
+import 'package:payever/theme.dart';
 
 bool _isPortrait;
 bool _isTablet;
@@ -52,6 +53,9 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
     paymentOptions = widget.screenBloc.state.paymentOptions;
 
     variant = variants[widget.connectIntegration.name];
+    if (variant == null) {
+      screenBloc.add(ConnectSettingsDetailScreenInitEvent(business: business.id));
+    }
     super.initState();
   }
 
@@ -99,7 +103,6 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
       centerTitle: false,
       elevation: 0,
       automaticallyImplyLeading: false,
-      backgroundColor: Colors.black87,
       title: Text(
         Language.getPosConnectStrings(widget.connectIntegration.displayOptions.title),
         style: TextStyle(
@@ -134,7 +137,6 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
 
   Widget _body(ConnectSettingsDetailScreenState state) {
     return Scaffold(
-      backgroundColor: Colors.black,
       resizeToAvoidBottomPadding: false,
       appBar: _appBar(state),
       body: SafeArea(
@@ -161,6 +163,9 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
   }
 
   Widget _getBody(ConnectSettingsDetailScreenState state) {
+    if (variant == null) {
+      return CircularProgressIndicator();
+    }
     MissingSteps missingSteps = variant.missingSteps;
 
     List<Widget> widgets = [];
@@ -169,7 +174,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
       if (missingStep.type == 'additional-info') {
         Widget header = Container(
           height: 56,
-          color: Colors.black54,
+          color: overlayBackground(),
           child: SizedBox.expand(
             child: MaterialButton(
               onPressed: () {
@@ -200,7 +205,6 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
                             'Account',
                             maxLines: 1,
                             style: TextStyle(
-                              color: Colors.white,
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
                             ),
@@ -221,11 +225,11 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         );
 
         widgets.add(header);
-        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
+        widgets.add(Divider(height: 0, thickness: 0.5,),);
         // CompanyDetail Section;
         Widget companySection = isOpened == i ? Container(
           height: 56,
-          color: Colors.black38,
+          color: overlayBackground(),
           child: SizedBox.expand(
             child: MaterialButton(
               onPressed: () {
@@ -251,7 +255,6 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
                             'Company',
                             maxLines: 1,
                             style: TextStyle(
-                              color: Colors.white,
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
                             ),
@@ -271,7 +274,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ) : Container();
 
         widgets.add(companySection);
-        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
+        widgets.add(Divider(height: 0, thickness: 0.5,),);
 
         Widget legalFormField = isOpened == i && accountSection == 0 ? Container(
           height: 64,
@@ -290,9 +293,6 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('Legal Form'),
-                labelStyle: TextStyle(
-                  color: Colors.grey,
-                ),
                 enabledBorder: InputBorder.none,
                 focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -305,7 +305,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ): Container();
 
         widgets.add(legalFormField);
-        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
+        widgets.add(Divider(height: 0, thickness: 0.5,),);
 
         Widget productField = isOpened == i && accountSection == 0 ? Container(
           height: 64,
@@ -324,9 +324,6 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('Product'),
-                labelStyle: TextStyle(
-                  color: Colors.grey,
-                ),
                 enabledBorder: InputBorder.none,
                 focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -339,7 +336,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ): Container();
 
         widgets.add(productField);
-        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
+        widgets.add(Divider(height: 0, thickness: 0.5,),);
 
         Widget industryField = isOpened == i && accountSection == 0 ? Container(
           height: 64,
@@ -358,9 +355,6 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('Industry'),
-                labelStyle: TextStyle(
-                  color: Colors.grey,
-                ),
                 enabledBorder: InputBorder.none,
                 focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -373,7 +367,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ): Container();
 
         widgets.add(industryField);
-        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
+        widgets.add(Divider(height: 0, thickness: 0.5,),);
 
         Widget websiteField = isOpened == i && accountSection == 0 ? Container(
           height: 64,
@@ -389,9 +383,6 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('URL to your website (Optional)'),
-                labelStyle: TextStyle(
-                  color: Colors.grey,
-                ),
                 enabledBorder: InputBorder.none,
                 focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -403,7 +394,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ): Container();
 
         widgets.add(websiteField);
-        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
+        widgets.add(Divider(height: 0, thickness: 0.5,),);
 
         Widget foundationField = isOpened == i && accountSection == 0 ? Container(
           height: 64,
@@ -419,9 +410,6 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('Foundation year (Optional)'),
-                labelStyle: TextStyle(
-                  color: Colors.grey,
-                ),
                 enabledBorder: InputBorder.none,
                 focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -433,12 +421,12 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ): Container();
 
         widgets.add(foundationField);
-        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
+        widgets.add(Divider(height: 0, thickness: 0.5,),);
 
         // Company Adress Section;
         Widget addressSection = isOpened == i ? Container(
           height: 56,
-          color: Colors.black38,
+          color: overlayRow(),
           child: SizedBox.expand(
             child: MaterialButton(
               onPressed: () {
@@ -484,7 +472,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ) : Container();
 
         widgets.add(addressSection);
-        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
+        widgets.add(Divider(height: 0, thickness: 0.5,),);
 
         Widget googleAutoCompleteField = isOpened == i && accountSection == 1 ? Container(
           height: 64,
@@ -551,7 +539,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ): Container();
 
         widgets.add(countryField);
-        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
+        widgets.add(Divider(height: 0, thickness: 0.5,),);
 
         Widget cityField = isOpened == i && accountSection == 1 ? Container(
           height: 64,
@@ -570,9 +558,6 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('City'),
-                labelStyle: TextStyle(
-                  color: Colors.grey,
-                ),
                 enabledBorder: InputBorder.none,
                 focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -600,9 +585,6 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('Street'),
-                labelStyle: TextStyle(
-                  color: Colors.grey,
-                ),
                 enabledBorder: InputBorder.none,
                 focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -614,7 +596,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ): Container();
 
         widgets.add(streetField);
-        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
+        widgets.add(Divider(height: 0, thickness: 0.5,),);
 
         Widget zipField = isOpened == i && accountSection == 1 ? Container(
           height: 64,
@@ -630,9 +612,6 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('ZIP code'),
-                labelStyle: TextStyle(
-                  color: Colors.grey,
-                ),
                 enabledBorder: InputBorder.none,
                 focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -644,11 +623,11 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ): Container();
 
         widgets.add(zipField);
-        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
+        widgets.add(Divider(height: 0, thickness: 0.5,),);
 
         // Back account Section;
         Widget bankAccountSection = isOpened == i ? Container(
-          color: Colors.black38,
+          color: overlayRow(),
           height: 56,
           child: SizedBox.expand(
             child: MaterialButton(
@@ -675,7 +654,6 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
                             'Bank account',
                             maxLines: 1,
                             style: TextStyle(
-                              color: Colors.white,
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
                             ),
@@ -714,9 +692,6 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('Account owner (optional)'),
-                labelStyle: TextStyle(
-                  color: Colors.grey,
-                ),
                 enabledBorder: InputBorder.none,
                 focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -728,7 +703,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ): Container();
 
         widgets.add(accountOwnerField);
-        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
+        widgets.add(Divider(height: 0, thickness: 0.5,),);
 
         Widget bankNameField = isOpened == i && accountSection == 2 ? Container(
           height: 64,
@@ -747,9 +722,6 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('Bank name (optional)'),
-                labelStyle: TextStyle(
-                  color: Colors.grey,
-                ),
                 enabledBorder: InputBorder.none,
                 focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -761,7 +733,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ): Container();
 
         widgets.add(bankNameField);
-        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
+        widgets.add(Divider(height: 0, thickness: 0.5,),);
 
         Widget bankCountryField = isOpened == i && accountSection == 2 ? Container(
           height: 64,
@@ -780,9 +752,6 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('Country'),
-                labelStyle: TextStyle(
-                  color: Colors.grey,
-                ),
                 enabledBorder: InputBorder.none,
                 focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -794,7 +763,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ): Container();
 
         widgets.add(bankCountryField);
-        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
+        widgets.add(Divider(height: 0, thickness: 0.5, ),);
 
         Widget bankCityField = isOpened == i && accountSection == 2 ? Container(
           height: 64,
@@ -810,9 +779,6 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('City (optional)'),
-                labelStyle: TextStyle(
-                  color: Colors.grey,
-                ),
                 enabledBorder: InputBorder.none,
                 focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -824,7 +790,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ): Container();
 
         widgets.add(bankCityField);
-        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
+        widgets.add(Divider(height: 0, thickness: 0.5,),);
 
         Widget bicField = isOpened == i && accountSection == 2 ? Container(
           height: 64,
@@ -840,9 +806,6 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('BIC'),
-                labelStyle: TextStyle(
-                  color: Colors.grey,
-                ),
                 enabledBorder: InputBorder.none,
                 focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -854,7 +817,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ): Container();
 
         widgets.add(bicField);
-        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
+        widgets.add(Divider(height: 0, thickness: 0.5,),);
 
         Widget ibanField = isOpened == i && accountSection == 2 ? Container(
           height: 64,
@@ -870,9 +833,6 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('IBAN'),
-                labelStyle: TextStyle(
-                  color: Colors.grey,
-                ),
                 enabledBorder: InputBorder.none,
                 focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -884,12 +844,12 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ): Container();
 
         widgets.add(ibanField);
-        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
+        widgets.add(Divider(height: 0, thickness: 0.5,),);
 
         // Taxes Section;
         Widget taxesSection = isOpened == i ? Container(
           height: 56,
-          color: Colors.black38,
+          color: overlayRow(),
           child: SizedBox.expand(
             child: MaterialButton(
               onPressed: () {
@@ -915,7 +875,6 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
                             'Taxes',
                             maxLines: 1,
                             style: TextStyle(
-                              color: Colors.white,
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
                             ),
@@ -935,7 +894,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ) : Container();
 
         widgets.add(taxesSection);
-        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
+        widgets.add(Divider(height: 0, thickness: 0.5,),);
 
         Widget registerNumberField = isOpened == i && accountSection == 3 ? Container(
           height: 64,
@@ -954,9 +913,6 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('Company Register Number (optinal)'),
-                labelStyle: TextStyle(
-                  color: Colors.grey,
-                ),
                 enabledBorder: InputBorder.none,
                 focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -968,7 +924,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ): Container();
 
         widgets.add(registerNumberField);
-        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
+        widgets.add(Divider(height: 0, thickness: 0.5),);
 
         Widget taxIdField = isOpened == i && accountSection == 3 ? Container(
           height: 64,
@@ -987,9 +943,6 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('Tax ID (optional)'),
-                labelStyle: TextStyle(
-                  color: Colors.grey,
-                ),
                 enabledBorder: InputBorder.none,
                 focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -1001,7 +954,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ): Container();
 
         widgets.add(taxIdField);
-        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
+        widgets.add(Divider(height: 0, thickness: 0.5,),);
 
         Widget taxNumberField = isOpened == i && accountSection == 3 ? Container(
           height: 64,
@@ -1020,9 +973,6 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('Tax Number (optional)'),
-                labelStyle: TextStyle(
-                  color: Colors.grey,
-                ),
                 enabledBorder: InputBorder.none,
                 focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -1034,7 +984,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ): Container();
 
         widgets.add(taxNumberField);
-        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
+        widgets.add(Divider(height: 0, thickness: 0.5, ),);
 
         Widget overTaxButton = isOpened == i && accountSection == 3 ? Container(
           height: 64,
@@ -1044,8 +994,6 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
                 business.taxes.turnoverTaxAct = val;
               });
             },
-            checkColor: Colors.black,
-            activeColor: Colors.white,
             value: business.taxes.turnoverTaxAct ?? false,
             title: Text(
               'Turnover tax at',
@@ -1054,12 +1002,12 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ): Container();
 
         widgets.add(overTaxButton);
-        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
+        widgets.add(Divider(height: 0, thickness: 0.5,),);
 
         // Taxes Section;
         Widget contactSection = isOpened == i ? Container(
           height: 56,
-          color: Colors.black38,
+          color: overlayRow(),
           child: SizedBox.expand(
             child: MaterialButton(
               onPressed: () {
@@ -1085,7 +1033,6 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
                             'Contact',
                             maxLines: 1,
                             style: TextStyle(
-                              color: Colors.white,
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
                             ),
@@ -1105,7 +1052,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ) : Container();
 
         widgets.add(contactSection);
-        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
+        widgets.add(Divider(height: 0, thickness: 0.5, ),);
 
         Widget nameSection = isOpened == i && accountSection == 4 ? Container(
           height: 64,
@@ -1126,9 +1073,6 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.only(left: 16, right: 16),
                     labelText: Language.getPosTpmStrings('Salutation'),
-                    labelStyle: TextStyle(
-                      color: Colors.grey,
-                    ),
                     enabledBorder: InputBorder.none,
                     focusedBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -1155,9 +1099,6 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.only(left: 16, right: 16),
                     labelText: Language.getPosTpmStrings('First Name'),
-                    labelStyle: TextStyle(
-                      color: Colors.grey,
-                    ),
                     enabledBorder: InputBorder.none,
                     focusedBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -1184,9 +1125,6 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.only(left: 16, right: 16),
                     labelText: Language.getPosTpmStrings('Last Name'),
-                    labelStyle: TextStyle(
-                      color: Colors.grey,
-                    ),
                     enabledBorder: InputBorder.none,
                     focusedBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -1200,7 +1138,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ): Container();
 
         widgets.add(nameSection);
-        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
+        widgets.add(Divider(height: 0, thickness: 0.5,),);
 
         Widget phoneSection = isOpened == i && accountSection == 4 ? Container(
           height: 64,
@@ -1221,9 +1159,6 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.only(left: 16, right: 16),
                     labelText: Language.getPosTpmStrings('Phone'),
-                    labelStyle: TextStyle(
-                      color: Colors.grey,
-                    ),
                     enabledBorder: InputBorder.none,
                     focusedBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -1250,9 +1185,6 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.only(left: 16, right: 16),
                     labelText: Language.getPosTpmStrings('FAX (optional)'),
-                    labelStyle: TextStyle(
-                      color: Colors.grey,
-                    ),
                     enabledBorder: InputBorder.none,
                     focusedBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -1266,7 +1198,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         ): Container();
 
         widgets.add(phoneSection);
-        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
+        widgets.add(Divider(height: 0, thickness: 0.5,),);
 
         Widget additionalPhoneField = isOpened == i && accountSection == 4 ? Container(
           height: 64,
@@ -1285,9 +1217,6 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('Additional Phone (optional)'),
-                labelStyle: TextStyle(
-                  color: Colors.grey,
-                ),
                 enabledBorder: InputBorder.none,
                 focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -1308,12 +1237,11 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
               onPressed: () {
 
               },
-              color: Colors.black87,
+              color: overlayRow(),
               child: Text(
                 Language.getConnectStrings('Send'),
                 style: TextStyle(
                   fontSize: 16,
-                  color: Colors.white,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -1321,12 +1249,12 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
           ),
         ) : Container();
         widgets.add(accountSendButton);
-        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
+        widgets.add(Divider(height: 0, thickness: 0.5,),);
 
       } else if (missingStep.type == 'missing-credentials') {
         Widget header = Container(
           height: 56,
-          color: Colors.black45,
+          color: overlayBackground(),
           child: SizedBox.expand(
             child: MaterialButton(
               onPressed: () {
@@ -1353,7 +1281,6 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
                             'Default',
                             maxLines: 1,
                             style: TextStyle(
-                              color: Colors.white,
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
                             ),
@@ -1369,7 +1296,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
 
                         },
                         minWidth: 0,
-                        color: Colors.black45,
+                        color: overlayBackground(),
                         elevation: 0,
                         padding: EdgeInsets.all(4),
                         height: 24,
@@ -1379,7 +1306,6 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
                         child: Text(
                           'Disconnect',
                           style: TextStyle(
-                            color: Colors.white,
                             fontSize: 12,
                           ),
                         ),
@@ -1398,7 +1324,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
         );
 
         widgets.add(header);
-        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
+        widgets.add(Divider(height: 0, thickness: 0.5,),);
         if (variant.variants.first.credentialsValid) {
           Widget redirectAllow = isOpened == i ? Container(
             height: 64,
@@ -1409,8 +1335,6 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
                 });
               },
               value: variant.variants.first.shopRedirectEnabled ?? false,
-              activeColor: Colors.white,
-              checkColor: Colors.black,
               title: Text(
                 'Do redirect to the shop after success or failure',
               ),
@@ -1428,12 +1352,11 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
                 onPressed: () {
 
                 },
-                color: Colors.black87,
+                color: overlayBackground(),
                 child: Text(
                   Language.getConnectStrings('Save'),
                   style: TextStyle(
                     fontSize: 16,
-                    color: Colors.white,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -1459,9 +1382,6 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.only(left: 16, right: 16),
                   labelText: Language.getPosTpmStrings('Vendor Number'),
-                  labelStyle: TextStyle(
-                    color: Colors.grey,
-                  ),
                   enabledBorder: InputBorder.none,
                   focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -1473,7 +1393,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
           ): Container();
 
           widgets.add(vendorNumberField);
-          widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
+          widgets.add(Divider(height: 0, thickness: 0.5,),);
 
           Widget passwordField = isOpened == i ? Container(
             height: 64,
@@ -1492,9 +1412,6 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.only(left: 16, right: 16),
                   labelText: Language.getPosTpmStrings('Password'),
-                  labelStyle: TextStyle(
-                    color: Colors.grey,
-                  ),
                   enabledBorder: InputBorder.none,
                   focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -1506,7 +1423,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
           ): Container();
 
           widgets.add(passwordField);
-          widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
+          widgets.add(Divider(height: 0, thickness: 0.5,),);
 
           Widget connectButton = isOpened == i ? Container(
             height: 56,
@@ -1516,12 +1433,11 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
                 onPressed: () {
 
                 },
-                color: Colors.black87,
+                color: overlayBackground(),
                 child: Text(
                   Language.getConnectStrings('Connect'),
                   style: TextStyle(
                     fontSize: 16,
-                    color: Colors.white,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -1544,20 +1460,19 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
           onPressed: () {
 
           },
-          color: Colors.black54,
+          color: overlayBackground(),
           child: Text(
             Language.getConnectStrings('+ Add'),
             textAlign: TextAlign.left,
             style: TextStyle(
               fontSize: 16,
-              color: Colors.white,
               fontWeight: FontWeight.w500,
             ),
           ),
         ),
       ),
     );
-    widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
+    widgets.add(Divider(height: 0, thickness: 0.5, ),);
     widgets.add(saveButton);
 
     return Center(
@@ -1567,7 +1482,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
           Container(
             padding: EdgeInsets.only(left: 16, right: 16),
             child: BlurEffectView(
-              color: Color.fromRGBO(20, 20, 20, 0.2),
+              color: overlayBackground(),
               blur: 15,
               radius: 12,
               padding: EdgeInsets.fromLTRB(0, 0, 0, 0),

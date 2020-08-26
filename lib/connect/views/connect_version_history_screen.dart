@@ -11,6 +11,7 @@ import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/login/login_screen.dart';
 import 'package:payever/connect/models/connect.dart';
+import 'package:payever/theme.dart';
 
 class ConnectVersionHistoryScreen extends StatefulWidget {
   final ConnectModel connectModel;
@@ -74,7 +75,6 @@ class _ConnectVersionHistoryScreenState extends State<ConnectVersionHistoryScree
         bloc: widget.screenBloc,
         builder: (BuildContext context, ConnectDetailScreenState state) {
           return Scaffold(
-            backgroundColor: Colors.black,
             resizeToAvoidBottomPadding: false,
             appBar: _appBar(state),
             body: SafeArea(
@@ -99,7 +99,6 @@ class _ConnectVersionHistoryScreenState extends State<ConnectVersionHistoryScree
       centerTitle: false,
       elevation: 0,
       automaticallyImplyLeading: false,
-      backgroundColor: Colors.black87,
       title: Row(
         children: <Widget>[
           Padding(
@@ -162,7 +161,7 @@ class _ConnectVersionHistoryScreenState extends State<ConnectVersionHistoryScree
                     child: SvgPicture.asset(
                       Measurements.channelIcon(iconType),
                       width: iconSize,
-                      color: Color.fromRGBO(255, 255, 255, 0.75),
+                      color: iconColor(),
                     ),
                   ),
                   Expanded(
@@ -176,7 +175,6 @@ class _ConnectVersionHistoryScreenState extends State<ConnectVersionHistoryScree
                           child: Text(
                             Language.getPosConnectStrings(widget.connectModel.integration.displayOptions.title),
                             style: TextStyle(
-                              color: Colors.white,
                               fontFamily: 'HelveticaNeueMed',
                               fontSize: 18,
                             ),
@@ -187,7 +185,6 @@ class _ConnectVersionHistoryScreenState extends State<ConnectVersionHistoryScree
                           child: Text(
                             Language.getPosConnectStrings(widget.connectModel.integration.installationOptions.price),
                             style: TextStyle(
-                              color: Color.fromRGBO(255, 255, 255, 0.6),
                               fontFamily: 'HelveticaNeueLight',
                               fontSize: 12,
                             ),
@@ -198,8 +195,7 @@ class _ConnectVersionHistoryScreenState extends State<ConnectVersionHistoryScree
                           child: Text(
                             Language.getPosConnectStrings(widget.connectModel.integration.installationOptions.developer),
                             style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'HelveticaNeue',
+                              fontFamily: 'Helvetica Neue',
                               fontSize: 12,
                             ),
                           ),
@@ -213,7 +209,6 @@ class _ConnectVersionHistoryScreenState extends State<ConnectVersionHistoryScree
             Divider(
               height: margin,
               thickness: 0.5,
-              color: Color.fromRGBO(255, 255, 255, 0.1),
               indent: margin,
               endIndent: margin,
             ),

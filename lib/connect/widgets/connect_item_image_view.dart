@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:payever/theme.dart';
 
 class ConnectItemImageView extends StatelessWidget {
   final String imageURL;
@@ -39,12 +40,12 @@ class ConnectItemImageView extends StatelessWidget {
             ),
           ),
           errorWidget: (context, url, error) =>  Container(
-            child: SvgPicture.asset('assets/images/no_image.svg', color: Colors.black54, width: 100, height: 100,),
+            child: SvgPicture.asset('assets/images/no_image.svg', color: overlayBackground(), width: 100, height: 100,),
           ),
         );
       } else {
         return Container(
-          child: SvgPicture.asset('assets/images/no_image.svg', color: Colors.black54, width: 100, height: 100,),
+          child: SvgPicture.asset('assets/images/no_image.svg', color: overlayBackground(), width: 100, height: 100,),
         );
       }
     }

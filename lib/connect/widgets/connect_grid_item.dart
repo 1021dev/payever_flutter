@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/connect/models/connect.dart';
 import 'package:payever/connect/widgets/connect_item_image_view.dart';
+import 'package:payever/theme.dart';
 
 class ConnectGridItem extends StatelessWidget {
   final ConnectModel connectModel;
@@ -32,7 +33,7 @@ class ConnectGridItem extends StatelessWidget {
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(12.0)),
-          color: Color.fromRGBO(0, 0, 0, 0.3),
+          color: overlayBackground(),
         ),
         child: Stack(
           alignment: Alignment.topRight,
@@ -66,9 +67,8 @@ class ConnectGridItem extends StatelessWidget {
                                   Language.getConnectStrings(connectModel.integration.displayOptions.title),
                                   maxLines: 1,
                                   style: TextStyle(
-                                      color: Colors.white,
                                       fontSize: 15,
-                                      fontFamily: 'Roboto-Medium'
+                                      fontFamily: 'Roboto-Medium',
                                   ),
                                 ),
                               ),
@@ -78,9 +78,8 @@ class ConnectGridItem extends StatelessWidget {
                                   Language.getConnectStrings(connectModel.integration.installationOptions.price),
                                   maxLines: 1,
                                   style: TextStyle(
-                                      color: Colors.white,
                                       fontSize: 11,
-                                      fontFamily: 'Roboto'
+                                      fontFamily: 'Roboto',
                                   ),
                                 ),
                               ),
@@ -90,7 +89,7 @@ class ConnectGridItem extends StatelessWidget {
                       ),
                       Container(
                         height: 44,
-                        color: Color.fromRGBO(0, 0, 0, 0.3),
+                        color: overlayBackground(),
                         alignment: Alignment.center,
                         child: SizedBox.expand(
                           child: MaterialButton(
@@ -127,12 +126,11 @@ class ConnectGridItem extends StatelessWidget {
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                color: Color.fromRGBO(0, 0, 0, 0.3),
+                color: overlayBackground(),
               ),
               child: Text(
                 Language.getConnectStrings('installation.installed.title').toUpperCase(),
                 style: TextStyle(
-                  color: Colors.white,
                   fontFamily: 'Roboto-Medium',
                   fontSize: 11,
                 ),
