@@ -166,6 +166,23 @@ class ApiService {
     }
   }
 
+  Future<dynamic> getBusinessRegistrationFormData(String token) async {
+    try {
+      print('$TAG - getBusinessRegistrationForm()');
+      dynamic response = await _client.getTypeless(
+          '${Env.commerceOsBack}/api/business-registration/form-data',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<dynamic> getBusinessApps(String businessId, String accessToken) async {
     try {
       print('$TAG - getBusinessApps()');

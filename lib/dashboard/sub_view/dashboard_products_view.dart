@@ -257,7 +257,8 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
                           !widget.businessApps.installed ? 'Get started' : 'Continue setup process',
                           softWrap: true,
                           style: TextStyle(
-                              fontSize: 12),
+                              fontSize: 12,
+                          ),
                         ),
                       ),
                     ),
@@ -277,7 +278,8 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
                           'Learn more',
                           softWrap: true,
                           style: TextStyle(
-                              fontSize: 12),
+                              fontSize: 12,
+                          ),
                         ),
                       ),
                     ),

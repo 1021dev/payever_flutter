@@ -2,6 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:payever/blocs/bloc.dart';
+import 'package:payever/business/views/business_register_screen.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -16,6 +19,7 @@ class DashboardMenuView extends StatelessWidget {
   final VoidCallback onLogout;
   final VoidCallback onClose;
   final Business activeBusiness;
+  final DashboardScreenBloc dashboardScreenBloc;
 
   DashboardMenuView({
     this.scaffold,
@@ -25,6 +29,7 @@ class DashboardMenuView extends StatelessWidget {
     this.onPersonalInfo,
     this.onLogout,
     this.onClose,
+    this.dashboardScreenBloc,
     @required this.activeBusiness,
   });
 
@@ -42,13 +47,12 @@ class DashboardMenuView extends StatelessWidget {
       rightOffset: 0.2,
       swipe: false,
       colorTransitionChild: Colors.transparent,
-      colorTransitionScaffold: Colors.black.withAlpha(50),
+      colorTransitionScaffold: Colors.transparent,
       rightChild: Scaffold(
-        backgroundColor: Colors.black,
+//        backgroundColor: overlayBackground(),
         body: SafeArea(
           top: true,
           child: Container(
-            color: Colors.black,
             child: Column(
               children: [
                 Container(
@@ -59,7 +63,7 @@ class DashboardMenuView extends StatelessWidget {
                     shape: CircleBorder(),
                     minWidth: 0,
                     padding: EdgeInsets.all(8),
-                    child: SvgPicture.asset('assets/images/closeicon.svg'),
+                    child: SvgPicture.asset('assets/images/closeicon.svg', color: iconColor(),),
                     onPressed: onClose,
                   ),
                 ),
@@ -76,6 +80,7 @@ class DashboardMenuView extends StatelessWidget {
                             child: SvgPicture.asset(
                               'assets/images/switch.svg',
                               width: 20,
+                              color: iconColor(),
                             ),
                           ),
                         ),
@@ -84,16 +89,15 @@ class DashboardMenuView extends StatelessWidget {
                           Language.getCommerceOSStrings('dashboard.profile_menu.switch_profile'),
                           style: TextStyle(
                               fontSize: 14,
-                              color: Colors.white,
                           ),
                         )
                       ],
                     ),
                   ),
                 ) : Container(),
-                Container(
-                  color: Colors.white10,
-                  height: 1,
+                Divider(
+                  height: 0,
+                  thickness: 0.5,
                 ),
                 InkWell(
                   onTap: onPersonalInfo,
@@ -108,6 +112,7 @@ class DashboardMenuView extends StatelessWidget {
                             child: SvgPicture.asset(
                               'assets/images/business_person.svg',
                               width: 20,
+                              color: iconColor(),
                             ),
                           ),
                         ),
@@ -116,19 +121,30 @@ class DashboardMenuView extends StatelessWidget {
                           Language.getSettingsStrings('info_boxes.panels.general.menu_list.personal_information.title'),
                           style: TextStyle(
                               fontSize: 14,
-                              color: Colors.white,
                           ),
                         )
                       ],
                     ),
                   ),
                 ),
-                Container(
-                  color: Colors.white10,
-                  height: 1,
+                Divider(
+                  height: 0,
+                  thickness: 0.5,
                 ),
                 InkWell(
-                  onTap: onAddBusiness,
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      PageTransition(
+                        child: BusinessRegisterScreen(
+                          dashboardScreenBloc: dashboardScreenBloc,
+                        ),
+                        type: PageTransitionType.fade,
+                        duration: Duration(microseconds: 300),
+                      ),
+                    );
+                  },
                   child: Container(
                     height: 50,
                     child: Row(
@@ -140,6 +156,7 @@ class DashboardMenuView extends StatelessWidget {
                             child: SvgPicture.asset(
                               'assets/images/add.svg',
                               width: 20,
+                              color: iconColor(),
                             ),
                           ),
                         ),
@@ -148,16 +165,15 @@ class DashboardMenuView extends StatelessWidget {
                           Language.getCommerceOSStrings('dashboard.profile_menu.add_business'),
                           style: TextStyle(
                             fontSize: 14,
-                            color: Colors.white,
                           ),
                         ),
                       ],
                     ),
                   ),
                 ),
-                Container(
-                  color: Colors.white10,
-                  height: 1,
+                Divider(
+                  height: 0,
+                  thickness: 0.5,
                 ),
                 InkWell(
                   onTap: onLogout,
@@ -172,6 +188,7 @@ class DashboardMenuView extends StatelessWidget {
                             child: SvgPicture.asset(
                               'assets/images/logout.svg',
                               width: 16,
+                              color: iconColor(),
                             ),
                           ),
                         ),
@@ -180,16 +197,15 @@ class DashboardMenuView extends StatelessWidget {
                           Language.getCommerceOSStrings('dashboard.profile_menu.log_out'),
                           style: TextStyle(
                               fontSize: 14,
-                              color: Colors.white
                           ),
                         )
                       ],
                     ),
                   ),
                 ),
-                Container(
-                  color: Colors.white10,
-                  height: 1,
+                Divider(
+                  height: 0,
+                  thickness: 0.5,
                 ),
                 InkWell(
                   onTap: () {
@@ -206,6 +222,7 @@ class DashboardMenuView extends StatelessWidget {
                             child: SvgPicture.asset(
                               'assets/images/contact.svg',
                               width: 16,
+                              color: iconColor(),
                             ),
                           ),
                         ),
@@ -214,16 +231,15 @@ class DashboardMenuView extends StatelessWidget {
                           Language.getCommerceOSStrings('dashboard.profile_menu.contact'),
                           style: TextStyle(
                               fontSize: 14,
-                              color: Colors.white
                           ),
                         )
                       ],
                     ),
                   ),
                 ),
-                Container(
-                  color: Colors.white10,
-                  height: 1,
+                Divider(
+                  height: 0,
+                  thickness: 0.5,
                 ),
                 InkWell(
                   onTap: () {
@@ -241,6 +257,7 @@ class DashboardMenuView extends StatelessWidget {
                             child: SvgPicture.asset(
                               'assets/images/feedback.svg',
                               width: 16,
+                              color: iconColor(),
                             ),
                           ),
                         ),
@@ -249,7 +266,6 @@ class DashboardMenuView extends StatelessWidget {
                           Language.getCommerceOSStrings('dashboard.profile_menu.feedback'),
                           style: TextStyle(
                               fontSize: 14,
-                              color: Colors.white
                           ),
                         )
                       ],

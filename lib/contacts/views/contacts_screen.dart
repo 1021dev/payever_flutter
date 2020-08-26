@@ -173,7 +173,8 @@ class _ContactScreenState extends State<ContactScreen> {
         builder: (BuildContext context, ContactScreenState state) {
           return DashboardMenuView(
             innerDrawerKey: _innerDrawerKey,
-            activeBusiness: screenBloc.dashboardScreenBloc.state.activeBusiness,
+            dashboardScreenBloc: widget.dashboardScreenBloc,
+            activeBusiness: widget.dashboardScreenBloc.state.activeBusiness,
             onLogout: () async {
               FlutterSecureStorage storage = FlutterSecureStorage();
               await storage.delete(key: GlobalUtils.TOKEN);

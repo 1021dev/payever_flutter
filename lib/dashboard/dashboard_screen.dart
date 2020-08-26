@@ -328,6 +328,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
     return DashboardMenuView(
       innerDrawerKey: _innerDrawerKey,
+      dashboardScreenBloc: screenBloc,
       activeBusiness: state.activeBusiness,
       onLogout: () async {
         FlutterSecureStorage storage = FlutterSecureStorage();

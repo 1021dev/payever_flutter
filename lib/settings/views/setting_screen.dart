@@ -114,7 +114,8 @@ class _SettingScreenState extends State<SettingScreen> {
         builder: (BuildContext context, SettingScreenState state) {
           return DashboardMenuView(
             innerDrawerKey: _innerDrawerKey,
-            activeBusiness: screenBloc.dashboardScreenBloc.state.activeBusiness,
+            dashboardScreenBloc: widget.dashboardScreenBloc,
+            activeBusiness: widget.dashboardScreenBloc.state.activeBusiness,
             onLogout: () async {
               FlutterSecureStorage storage = FlutterSecureStorage();
               await storage.delete(key: GlobalUtils.TOKEN);

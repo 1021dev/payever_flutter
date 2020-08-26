@@ -202,6 +202,8 @@ class _PosScreenState extends State<PosScreen> {
         builder: (BuildContext context, PosScreenState state) {
           return DashboardMenuView(
             innerDrawerKey: _innerDrawerKey,
+            dashboardScreenBloc: widget.dashboardScreenBloc,
+            activeBusiness: widget.dashboardScreenBloc.state.activeBusiness,
             onLogout: () async {
               FlutterSecureStorage storage = FlutterSecureStorage();
               await storage.delete(key: GlobalUtils.TOKEN);

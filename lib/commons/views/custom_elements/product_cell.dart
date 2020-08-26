@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/env.dart';
 import 'package:payever/products/models/models.dart';
+import 'package:payever/theme.dart';
 
 class ProductCell extends StatelessWidget {
   final Products product;
@@ -33,7 +34,7 @@ class ProductCell extends StatelessWidget {
               width: 50,
               height: 50,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: overlayBackground(),
                 borderRadius: BorderRadius.circular(4),
                 image:product.thumbnail != null ? DecorationImage(
                   image: NetworkImage('${Env.storage}/products/${product.thumbnail}'),
@@ -50,8 +51,7 @@ class ProductCell extends StatelessWidget {
             textAlign: TextAlign.center,
             style: TextStyle(
                 fontSize: 12,
-                color: Colors.white,
-              fontWeight: FontWeight.bold
+              fontWeight: FontWeight.bold,
             ),
           ),
           SizedBox(height: 2),
@@ -61,7 +61,6 @@ class ProductCell extends StatelessWidget {
             textAlign: TextAlign.start,
             style: TextStyle(
                 fontSize: 12,
-                color: Colors.white,
             ),
           )
         ],
