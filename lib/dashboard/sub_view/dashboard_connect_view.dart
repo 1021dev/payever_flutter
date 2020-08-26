@@ -51,16 +51,7 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                     children: [
                       Row(
                         children: [
-                          Container(
-                            width: 16,
-                            height: 16,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: NetworkImage('${Env.cdnIcon}icons-apps-white/icon-apps-white-connect.png'),
-                                fit: BoxFit.fitWidth,
-                              ),
-                            ),
-                          ),
+                          Icon(Icons.add, size: 20,),
                           SizedBox(width: 8,),
                           Text(
                             'CONNECT',

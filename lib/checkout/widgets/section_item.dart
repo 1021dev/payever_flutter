@@ -4,6 +4,8 @@ import 'package:flutter_reorderable_list/flutter_reorderable_list.dart';
 import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/commons.dart';
 
+import '../../theme.dart';
+
 class SectionItem extends StatelessWidget {
   final String title;
   final String detail;
@@ -40,14 +42,12 @@ class SectionItem extends StatelessWidget {
               right: 16,
             ),
             height: 65,
-            color: Colors.black54,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
                   title,
                   style: TextStyle(
-                    color: Colors.white,
                     fontSize: 16,
                   ),
                 ),
@@ -64,7 +64,6 @@ class SectionItem extends StatelessWidget {
                           maxLines: 1,
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            color: Colors.white,
                             fontSize: 14,
                           ),
                         ),
@@ -79,12 +78,12 @@ class SectionItem extends StatelessWidget {
                             ),
                             height: 24,
                             minWidth: 0,
+                            color: overlayBackground(),
                             padding: EdgeInsets.only(left: 12, right: 12),
                             child: Text(
                               Language.getCheckoutStrings('checkout_sdk.action.edit'),
                               style: TextStyle(
                                 fontSize: 12,
-                                color: Colors.white,
                               ),
                             ),
                           ),

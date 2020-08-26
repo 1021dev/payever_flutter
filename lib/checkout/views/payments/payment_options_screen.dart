@@ -4,6 +4,7 @@ import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/connect/models/connect.dart';
+import 'package:payever/theme.dart';
 
 class PaymentOptionsScreen extends StatefulWidget {
 
@@ -119,7 +120,6 @@ class _PaymentOptionsScreenState extends State<PaymentOptionsScreen> {
                                 child: Text(
                                   Language.getPosConnectStrings(connectModel.integration.displayOptions.title ?? ''),
                                   style: TextStyle(
-                                    color: Colors.white,
                                     fontSize: 14,
                                     fontFamily: 'Helvetica Neue',
                                   ),
@@ -141,7 +141,7 @@ class _PaymentOptionsScreenState extends State<PaymentOptionsScreen> {
                                     onPressed: () {
                                       widget.onTapOpen(connectModel);
                                     },
-                                    color: Colors.black38,
+                                    color: overlayBackground(),
                                     elevation: 0,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12),
@@ -152,7 +152,6 @@ class _PaymentOptionsScreenState extends State<PaymentOptionsScreen> {
                                     child: Text(
                                       Language.getConnectStrings('actions.open'),
                                       style: TextStyle(
-                                        color: Colors.white,
                                         fontSize: 12,
                                         fontFamily: 'HelveticaNeueMed',
                                       ),

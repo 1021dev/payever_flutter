@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/models/app_widget.dart';
 import 'package:payever/commons/utils/env.dart';
@@ -42,13 +43,11 @@ class _DashboardSettingsViewState extends State<DashboardSettingsView> {
               children: [
                 Row(
                   children: [
-                    Container(
+                    SvgPicture.asset(
+                      'assets/images/setting.svg',
                       width: 16,
                       height: 16,
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                              image: NetworkImage('${uiKit}settings.png'),
-                              fit: BoxFit.fitWidth)),
+                      color: iconColor(),
                     ),
                     SizedBox(width: 8,),
                     Text(
@@ -97,7 +96,7 @@ class _DashboardSettingsViewState extends State<DashboardSettingsView> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Image.asset("assets/images/wallpapericon.png", width: 14,),
+                            Image.asset("assets/images/wallpapericon.png", width: 14, color: iconColor(),),
                             SizedBox(width: 8),
                             Text(
                               "Edit Wallpaper",

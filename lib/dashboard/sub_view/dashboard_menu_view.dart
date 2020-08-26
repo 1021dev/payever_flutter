@@ -5,6 +5,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../theme.dart';
+
 class DashboardMenuView extends StatelessWidget {
   final Widget scaffold;
   final GlobalKey<InnerDrawerState> innerDrawerKey;
@@ -135,7 +137,7 @@ class DashboardMenuView extends StatelessWidget {
                           width: 25,
                           child: Center(
                             child: SvgPicture.asset(
-                              'assets/images/add.svg', width: 20,
+                              'assets/images/add.svg', width: 20,color: iconColor()
                             ),
                           ),
                         ),
@@ -144,7 +146,6 @@ class DashboardMenuView extends StatelessWidget {
                           Language.getCommerceOSStrings('dashboard.profile_menu.add_business'),
                           style: TextStyle(
                               fontSize: 14,
-                              color: Colors.white
                           ),
                         )
                       ],

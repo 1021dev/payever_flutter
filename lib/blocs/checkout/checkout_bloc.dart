@@ -12,6 +12,7 @@ import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/connect/models/connect.dart';
 import 'package:http/http.dart' as http;
 import 'package:payever/pos/models/models.dart';
+import 'package:payever/theme.dart';
 
 import 'checkout.dart';
 
@@ -304,7 +305,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
           title: 'Pay by Link',
           button: 'Open',
           checkValue: null,
-          image: SvgPicture.asset('assets/images/pay_link.svg', height: 24,),
+          image: SvgPicture.asset('assets/images/pay_link.svg', height: 24, color: iconColor(),),
         );
         items.insert(0, item);
       } else if (title == 'finance_express') {
@@ -312,28 +313,28 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
           title: 'Text Link',
           button: 'Edit',
           checkValue: null,
-          image: SvgPicture.asset('assets/images/pay_link.svg', height: 24,),
+          image: SvgPicture.asset('assets/images/pay_link.svg', height: 24, color: iconColor()),
         );
         items.add(item1);
         ChannelItem item2 = new ChannelItem(
           title: 'Button',
           button: 'Edit',
           checkValue: null,
-          image: SvgPicture.asset('assets/images/button.svg', height: 24,),
+          image: SvgPicture.asset('assets/images/button.svg', height: 24, color: iconColor()),
         );
         items.add(item2);
         ChannelItem item3 = new ChannelItem(
             title: 'Calculator',
             button: 'Edit',
             checkValue: null,
-            image: SvgPicture.asset('assets/images/calculator.svg', height: 24,)
+            image: SvgPicture.asset('assets/images/calculator.svg', height: 24, color: iconColor())
         );
         items.add(item3);
         ChannelItem item4 = new ChannelItem(
           title: 'Bubble',
           button: 'Edit',
           checkValue: null,
-          image: SvgPicture.asset('assets/images/bubble.svg', height: 24,),
+          image: SvgPicture.asset('assets/images/bubble.svg', height: 24, color: iconColor()),
         );
         items.add(item4);
       } else if (title == 'marketing') {
@@ -341,7 +342,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
           title: 'Mail',
           button: 'Open',
           checkValue: null,
-          image: SvgPicture.asset('assets/images/mailicon.svg', height: 24,),
+          image: SvgPicture.asset('assets/images/mailicon.svg', height: 24, color: iconColor()),
         );
         items.add(item);
       } else if (title == 'pos') {
@@ -349,7 +350,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
           title: 'Point of Sale',
           button: 'Open',
           checkValue: null,
-          image: SvgPicture.asset('assets/images/pos.svg', height: 24,),
+          image: SvgPicture.asset('assets/images/pos.svg', height: 24, color: iconColor()),
         );
         items.add(item);
       } else if (title == 'shop') {
@@ -357,7 +358,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
           title: 'Shop',
           button: 'Open',
           checkValue: null,
-          image: SvgPicture.asset('assets/images/shopicon.svg', height: 24,),
+          image: SvgPicture.asset('assets/images/shopicon.svg', height: 24, color: iconColor()),
         );
         items.add(item);
       } else {
@@ -374,7 +375,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
             button: 'Open',
             checkValue: connectModel.installed,
             image: SvgPicture.asset(
-              Measurements.channelIcon(iconType), height: 24,),
+              Measurements.channelIcon(iconType), height: 24, color: iconColor()),
             model: connectModel,
           );
           items.add(item);
@@ -425,7 +426,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
           button: 'Open',
           checkValue: connectModel.installed,
           image: SvgPicture.asset(
-            Measurements.channelIcon(iconType), height: 24,
+            Measurements.channelIcon(iconType), height: 24, color:iconColor()
           ),
         );
         items.add(item);

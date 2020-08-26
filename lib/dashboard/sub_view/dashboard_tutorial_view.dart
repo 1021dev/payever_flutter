@@ -19,7 +19,7 @@ class DashboardTutorialView extends StatefulWidget {
 }
 
 class _DashboardTutorialViewState extends State<DashboardTutorialView> {
-  String uiKit = '${Env.cdnIcon}icons-apps-white/icon-apps-white-';
+  String uiKit = '${Env.cdnIcon}icons-apps-${GlobalUtils.theme == 'light' ? 'black' : 'white'}/icon-apps-${GlobalUtils.theme == 'light' ? 'black' : 'white'}-';
   bool isExpanded = false;
   @override
   Widget build(BuildContext context) {

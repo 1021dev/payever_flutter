@@ -10,6 +10,7 @@ import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/connect/models/connect.dart';
 import 'package:payever/login/login_screen.dart';
+import 'package:payever/theme.dart';
 
 class CheckoutPaymentSettingsScreen extends StatefulWidget {
 
@@ -126,7 +127,6 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
       title: Text(
         Language.getPosConnectStrings(widget.connectModel.integration.displayOptions.title ?? ''),
         style: TextStyle(
-          color: Colors.white,
           fontSize: 16,
           fontWeight: FontWeight.w500,
         ),
@@ -172,7 +172,7 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
       if (missingStep.type == 'additional-info') {
         Widget header = Container(
           height: 56,
-          color: Colors.black54,
+          color: overlayBackground(),
           child: SizedBox.expand(
             child: MaterialButton(
               onPressed: () {
@@ -194,6 +194,7 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
                           'assets/images/account.svg',
                           width: 16,
                           height: 16,
+                          color: iconColor(),
                         ),
                         Padding(
                           padding: EdgeInsets.only(left: 8),
@@ -203,7 +204,6 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
                             'Account',
                             maxLines: 1,
                             style: TextStyle(
-                              color: Colors.white,
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
                             ),
@@ -228,7 +228,7 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
         // CompanyDetail Section;
         Widget companySection = isOpened == i ? Container(
           height: 56,
-          color: Colors.black38,
+          color: overlayBackground(),
           child: SizedBox.expand(
             child: MaterialButton(
               onPressed: () {
@@ -254,7 +254,6 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
                             'Company',
                             maxLines: 1,
                             style: TextStyle(
-                              color: Colors.white,
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
                             ),
@@ -441,7 +440,7 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
         // Company Adress Section;
         Widget addressSection = isOpened == i ? Container(
           height: 56,
-          color: Colors.black38,
+          color: overlayBackground(),
           child: SizedBox.expand(
             child: MaterialButton(
               onPressed: () {
@@ -467,7 +466,6 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
                             'Address',
                             maxLines: 1,
                             style: TextStyle(
-                              color: Colors.white,
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
                             ),
@@ -651,7 +649,7 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
 
         // Back account Section;
         Widget bankAccountSection = isOpened == i ? Container(
-          color: Colors.black38,
+          color: overlayBackground(),
           height: 56,
           child: SizedBox.expand(
             child: MaterialButton(
@@ -678,7 +676,6 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
                             'Bank account',
                             maxLines: 1,
                             style: TextStyle(
-                              color: Colors.white,
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
                             ),
@@ -892,7 +889,7 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
         // Taxes Section;
         Widget taxesSection = isOpened == i ? Container(
           height: 56,
-          color: Colors.black38,
+          color: overlayBackground(),
           child: SizedBox.expand(
             child: MaterialButton(
               onPressed: () {
@@ -918,7 +915,6 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
                             'Taxes',
                             maxLines: 1,
                             style: TextStyle(
-                              color: Colors.white,
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
                             ),
@@ -1062,7 +1058,7 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
         // Taxes Section;
         Widget contactSection = isOpened == i ? Container(
           height: 56,
-          color: Colors.black38,
+          color: overlayBackground(),
           child: SizedBox.expand(
             child: MaterialButton(
               onPressed: () {
@@ -1088,7 +1084,6 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
                             'Contact',
                             maxLines: 1,
                             style: TextStyle(
-                              color: Colors.white,
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
                             ),
@@ -1316,7 +1311,6 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
                 Language.getConnectStrings('Send'),
                 style: TextStyle(
                   fontSize: 16,
-                  color: Colors.white,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -1348,7 +1342,7 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
                     Expanded(
                       child: Row(
                         children: <Widget>[
-                          Icon(Icons.vpn_key),
+                          Icon(Icons.vpn_key,),
                           Padding(
                             padding: EdgeInsets.only(left: 8),
                           ),
@@ -1357,7 +1351,6 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
                               v.isDefault ? 'Default': v.name ?? '',
                               maxLines: 1,
                               style: TextStyle(
-                                color: Colors.white,
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -1392,7 +1385,6 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
                           ): Text(
                             v.isDefault ? 'Disconnect': 'Delete',
                             style: TextStyle(
-                              color: Colors.white,
                               fontSize: 12,
                             ),
                           ),
@@ -1455,7 +1447,6 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
                     Language.getConnectStrings('Save'),
                     style: TextStyle(
                       fontSize: 16,
-                      color: Colors.white,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -1543,7 +1534,6 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
                     Language.getConnectStrings('Connect'),
                     style: TextStyle(
                       fontSize: 16,
-                      color: Colors.white,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -1576,13 +1566,12 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
               ),
             );
           },
-          color: Colors.black54,
+          color: overlayBackground(),
           child: Text(
             Language.getConnectStrings('+ Add'),
             textAlign: TextAlign.left,
             style: TextStyle(
               fontSize: 16,
-              color: Colors.white,
               fontWeight: FontWeight.w500,
             ),
           ),

@@ -6,6 +6,7 @@ import 'package:payever/checkout/models/models.dart';
 import 'package:payever/checkout/widgets/section_item.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
+import 'package:payever/theme.dart';
 
 class SectionsScreen extends StatefulWidget {
   final CheckoutScreenBloc checkoutScreenBloc;
@@ -136,6 +137,7 @@ class _SectionsScreenState extends State<SectionsScreen> {
                       onPressed: () {
                         widget.checkoutScreenBloc.add(UpdateCheckoutSections());
                       },
+                      color: overlayBackground(),
                       child: Text(
                         'Save',
                         style: TextStyle(

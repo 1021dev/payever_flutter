@@ -4,6 +4,7 @@ import 'package:payever/blocs/checkout/checkout_bloc.dart';
 import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
+import 'package:payever/theme.dart';
 
 class ChannelsScreen extends StatefulWidget {
   final CheckoutScreenBloc checkoutScreenBloc;
@@ -91,7 +92,6 @@ class _ChannelsScreenState extends State<ChannelsScreen> {
                                       child: Text(
                                         model.title,
                                         style: TextStyle(
-                                          color: Colors.white,
                                           fontSize: 14,
                                           fontFamily: 'Helvetica Neue',
                                         ),
@@ -115,7 +115,7 @@ class _ChannelsScreenState extends State<ChannelsScreen> {
                                     onPressed: () {
                                       widget.onTapOpen(model);
                                     },
-                                    color: Colors.black38,
+                                    color: overlayBackground(),
                                     elevation: 0,
                                     shape: RoundedRectangleBorder(
                                       borderRadius:
@@ -128,7 +128,6 @@ class _ChannelsScreenState extends State<ChannelsScreen> {
                                     child: Text(
                                       model.button,
                                       style: TextStyle(
-                                        color: Colors.white,
                                         fontSize: 12,
                                         fontFamily: 'HelveticaNeueMed',
                                       ),

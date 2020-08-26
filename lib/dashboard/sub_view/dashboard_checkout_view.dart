@@ -5,6 +5,7 @@ import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/models/app_widget.dart';
 import 'package:payever/commons/models/business_apps.dart';
 import 'package:payever/commons/models/models.dart';
+import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/env.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
@@ -41,6 +42,7 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
   Widget build(BuildContext context) {
 
     if (widget.businessApps.setupStatus == 'completed') {
+      String themeColor = GlobalUtils.theme == 'light' ? 'black' : 'white';
       return BlurEffectView(
         padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
         child: Column(
@@ -59,7 +61,7 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                             height: 16,
                             decoration: BoxDecoration(
                               image: DecorationImage(
-                                image: NetworkImage('${Env.cdnIcon}icons-apps-white/icon-apps-white-${widget.appWidget.type}.png'),
+                                image: NetworkImage('${Env.cdnIcon}icons-apps-$themeColor/icon-apps-$themeColor-${widget.appWidget.type}.png'),
                                 fit: BoxFit.fitWidth,
                               ),
                             ),

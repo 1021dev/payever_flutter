@@ -13,6 +13,7 @@ import 'package:payever/checkout/views/settings/checkout_policy_screen.dart';
 import 'package:payever/checkout/views/settings/checkout_color_style_screen.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
+import 'package:payever/theme.dart';
 
 class CheckoutSettingsScreen extends StatefulWidget {
   final CheckoutScreenBloc checkoutScreenBloc;
@@ -100,7 +101,6 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                               Text(
                                 'Testing mode',
                                 style: TextStyle(
-                                  color: Colors.white,
                                   fontSize: 16,
                                 ),
                               ),
@@ -130,7 +130,6 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                               Text(
                                 'CSP allowed hosts',
                                 style: TextStyle(
-                                  color: Colors.white,
                                   fontSize: 16,
                                 ),
                               ),
@@ -150,7 +149,7 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
-                                color: Colors.black54,
+                                color: overlayBackground(),
                                 elevation: 0,
                                 height: 24,
                                 minWidth: 0,
@@ -158,7 +157,6 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                                   Language.getPosStrings('actions.edit'),
                                   style: TextStyle(
                                     fontSize: 12,
-                                    color: Colors.white,
                                   ),
                                 ),
                               ),
@@ -179,7 +177,6 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                                 child: Text(
                                   'Color and style',
                                   style: TextStyle(
-                                    color: Colors.white,
                                     fontSize: 16,
                                   ),
                                 ),
@@ -212,7 +209,7 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12),
                                     ),
-                                    color: Colors.black54,
+                                    color: overlayBackground(),
                                     elevation: 0,
                                     height: 24,
                                     minWidth: 0,
@@ -220,7 +217,6 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                                       Language.getPosStrings('actions.edit'),
                                       style: TextStyle(
                                         fontSize: 12,
-                                        color: Colors.white,
                                       ),
                                     ),
                                   ),
@@ -242,7 +238,6 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                               Text(
                                 'Language',
                                 style: TextStyle(
-                                  color: Colors.white,
                                   fontSize: 16,
                                 ),
                               ),
@@ -253,7 +248,6 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                                 child: Text(
                                   '$defaultLanguage (default)',
                                   style: TextStyle(
-                                    color: Colors.white,
                                     fontSize: 14,
                                   ),
                                 ),
@@ -277,7 +271,7 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
-                                color: Colors.black54,
+                                color: overlayBackground(),
                                 elevation: 0,
                                 height: 24,
                                 minWidth: 0,
@@ -285,7 +279,6 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                                   Language.getPosStrings('actions.edit'),
                                   style: TextStyle(
                                     fontSize: 12,
-                                    color: Colors.white,
                                   ),
                                 ),
                               ),
@@ -305,7 +298,6 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                               Text(
                                 'Phone number',
                                 style: TextStyle(
-                                  color: Colors.white,
                                   fontSize: 16,
                                 ),
                               ),
@@ -318,7 +310,6 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
-                                    color: Colors.white,
                                     fontSize: 14,
                                   ),
                                 ),
@@ -342,7 +333,7 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
-                                color: Colors.black54,
+                                color: overlayBackground(),
                                 elevation: 0,
                                 height: 24,
                                 minWidth: 0,
@@ -350,7 +341,6 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                                   Language.getPosStrings('actions.edit'),
                                   style: TextStyle(
                                     fontSize: 12,
-                                    color: Colors.white,
                                   ),
                                 ),
                               ),
@@ -370,7 +360,6 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                               Text(
                                 'Message',
                                 style: TextStyle(
-                                  color: Colors.white,
                                   fontSize: 16,
                                 ),
                               ),
@@ -383,7 +372,6 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
-                                    color: Colors.white,
                                     fontSize: 14,
                                   ),
                                 ),
@@ -407,7 +395,7 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
-                                color: Colors.black54,
+                                color: overlayBackground(),
                                 elevation: 0,
                                 height: 24,
                                 minWidth: 0,
@@ -415,7 +403,6 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                                   Language.getPosStrings('actions.edit'),
                                   style: TextStyle(
                                     fontSize: 12,
-                                    color: Colors.white,
                                   ),
                                 ),
                               ),
@@ -436,7 +423,6 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                                 child: Text(
                                   'Policies',
                                   style: TextStyle(
-                                    color: Colors.white,
                                     fontSize: 16,
                                   ),
                                 ),
@@ -458,7 +444,7 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
-                                color: Colors.black54,
+                                color: overlayBackground(),
                                 elevation: 0,
                                 height: 24,
                                 minWidth: 0,
@@ -466,7 +452,6 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                                   Language.getPosStrings('actions.edit'),
                                   style: TextStyle(
                                     fontSize: 12,
-                                    color: Colors.white,
                                   ),
                                 ),
                               ),
@@ -486,7 +471,6 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                               Text(
                                 'Channel Set ID',
                                 style: TextStyle(
-                                  color: Colors.white,
                                   fontSize: 16,
                                 ),
                               ),
@@ -499,7 +483,6 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
-                                    color: Colors.white,
                                     fontSize: 14,
                                   ),
                                 ),
@@ -520,7 +503,7 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
-                                color: Colors.black54,
+                                color: overlayBackground(),
                                 elevation: 0,
                                 height: 24,
                                 minWidth: 0,
@@ -531,7 +514,6 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
                                       : Language.getPosStrings('actions.copy'),
                                   style: TextStyle(
                                     fontSize: 12,
-                                    color: Colors.white,
                                   ),
                                 ),
                               ),

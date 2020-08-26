@@ -37,7 +37,6 @@ class DashboardAppPosView extends StatefulWidget {
 
 class _DashboardAppPosViewState extends State<DashboardAppPosView> {
   String imageBase = Env.storage + '/images/';
-  String uiKit = '${Env.cdnIcon}icons-apps-white/icon-apps-white-';
 
   bool isExpanded = false;
   @override
@@ -55,6 +54,7 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
       }
     }
     if (widget.businessApps.setupStatus == 'completed') {
+      String themeColor = GlobalUtils.theme == 'light' ? 'black' : 'white';
       return BlurEffectView(
         child: Column(
           children: [
@@ -74,7 +74,7 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                             height: 16,
                             decoration: BoxDecoration(
                                 image: DecorationImage(
-                                    image: NetworkImage('${uiKit}point-of-sale.png'),
+                                    image: NetworkImage('${'${Env.cdnIcon}icons-apps-$themeColor/icon-apps-$themeColor-'}point-of-sale.png'),
                                     fit: BoxFit.fitWidth)),
                           ),
                           Padding(

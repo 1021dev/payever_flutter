@@ -28,6 +28,7 @@ import 'package:payever/login/login_screen.dart';
 import 'package:payever/notifications/notifications_screen.dart';
 import 'package:payever/search/views/search_screen.dart';
 import 'package:payever/switcher/switcher_page.dart';
+import 'package:payever/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -269,7 +270,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   child: Text(
                     widget.dashboardScreenBloc.state.activeBusiness.name,
                     style: TextStyle(
-                      color: Colors.white,
                       fontSize: 14,
                     ),
                   ),
@@ -379,7 +379,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       length: 6,
       initialIndex: 0,
       child: Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: overlayBackground(),
         resizeToAvoidBottomPadding: false,
         appBar: _appBar(state),
         body: SafeArea(

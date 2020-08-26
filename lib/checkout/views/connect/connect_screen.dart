@@ -4,6 +4,7 @@ import 'package:payever/blocs/checkout/checkout_bloc.dart';
 import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
+import 'package:payever/theme.dart';
 
 class ConnectScreen extends StatefulWidget {
   final CheckoutScreenBloc checkoutScreenBloc;
@@ -89,7 +90,6 @@ class ConnectScreenState extends State<ConnectScreen> {
                                       child: Text(
                                         model.title,
                                         style: TextStyle(
-                                          color: Colors.white,
                                           fontSize: 14,
                                           fontFamily: 'Helvetica Neue',
                                         ),
@@ -113,7 +113,7 @@ class ConnectScreenState extends State<ConnectScreen> {
                                     onPressed:(){
                                       widget.onTapOpen(model.title);
                                     },
-                                    color: Colors.black38,
+                                    color: overlayBackground(),
                                     elevation: 0,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12),
@@ -124,7 +124,6 @@ class ConnectScreenState extends State<ConnectScreen> {
                                     child: Text(
                                       model.button,
                                       style: TextStyle(
-                                        color: Colors.white,
                                         fontSize: 12,
                                         fontFamily: 'HelveticaNeueMed',
                                       ),
