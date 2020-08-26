@@ -10,6 +10,7 @@ import 'package:payever/checkout/models/models.dart';
 import 'package:payever/checkout/views/workshop/create_edit_checkout_screen.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
+import 'package:payever/theme.dart';
 
 bool _isPortrait;
 bool _isTablet;
@@ -103,7 +104,6 @@ class _CheckoutSwitchScreenState extends State<CheckoutSwitchScreen> {
           Text(
             'Further Checkouts',
             style: TextStyle(
-              color: Colors.white,
               fontSize: 18,
               fontWeight: FontWeight.w500,
             ),
@@ -160,7 +160,6 @@ class _CheckoutSwitchScreenState extends State<CheckoutSwitchScreen> {
                   child: Text(
                     avatarName,
                     style: TextStyle(
-                      color: Colors.white,
                       fontSize: 36,
                       fontWeight: FontWeight.w600,
                     ),
@@ -191,12 +190,11 @@ class _CheckoutSwitchScreenState extends State<CheckoutSwitchScreen> {
                 borderRadius: BorderRadius.circular(16),
               ),
               elevation: 0,
-              color: Colors.black26,
+              color: overlayBackground(),
               child: Text(
                 '+ Add Checkout',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.white,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -230,7 +228,7 @@ class _CheckoutSwitchScreenState extends State<CheckoutSwitchScreen> {
                 height: 64.0 * (isDefault ? 1.0 : 3.0) + MediaQuery.of(context).padding.bottom,
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
-                  color: Colors.black,
+                  color: overlayBackground(),
                   borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12)),
                 ),
                 padding: EdgeInsets.only(top: 16),
@@ -321,7 +319,6 @@ class _CheckoutSwitchScreenState extends State<CheckoutSwitchScreen> {
                               style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w300,
-                                  color: Colors.white
                               ),
                             ),
                             Padding(
@@ -333,7 +330,6 @@ class _CheckoutSwitchScreenState extends State<CheckoutSwitchScreen> {
                               style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w300,
-                                  color: Colors.white
                               ),
                             ),
                             Padding(
@@ -411,7 +407,7 @@ class CheckoutCell extends StatelessWidget {
       focusElevation: 0,
       hoverElevation: 0,
       highlightElevation: 0,
-      color: selected.id == checkout.id ? Colors.white24 : Colors.transparent.withOpacity(0),
+      color: selected.id == checkout.id ? overlayBackground().withOpacity(0.5) : Colors.transparent.withOpacity(0),
       onPressed: () {
         onTap(checkout);
       },
@@ -441,7 +437,6 @@ class CheckoutCell extends StatelessWidget {
                   child: Text(
                     avatarName,
                     style: TextStyle(
-                      color: Colors.white,
                       fontSize: 36,
                       fontWeight: FontWeight.w600,
                     ),
@@ -457,7 +452,6 @@ class CheckoutCell extends StatelessWidget {
               maxLines: 2,
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Colors.white,
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),
@@ -476,12 +470,11 @@ class CheckoutCell extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    color: Colors.black26,
+                    color: overlayBackground(),
                     child: Text(
                       'Open',
                       style: TextStyle(
                         fontSize: 10,
-                        color: Colors.white,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -499,6 +492,7 @@ class CheckoutCell extends StatelessWidget {
                       child: Icon(
                         Icons.more_horiz,
                         size: 16,
+                        color: iconColor(),
                       ),
                     ),
                   ),

@@ -14,6 +14,7 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/login/login_screen.dart';
+import 'package:payever/theme.dart';
 
 bool _isPortrait;
 bool _isTablet;
@@ -146,7 +147,7 @@ class _CreateEditCheckoutScreenState extends State<CreateEditCheckoutScreen> {
 
   Widget _body(CheckoutSwitchScreenState state) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: overlayBackground(),
       resizeToAvoidBottomPadding: false,
       appBar: _appBar(state),
       body: SafeArea(
@@ -181,7 +182,7 @@ class _CreateEditCheckoutScreenState extends State<CreateEditCheckoutScreen> {
         padding: EdgeInsets.only(left: 16, right: 16),
         height: 90.0 + 64.0,
         child: BlurEffectView(
-          color: Color.fromRGBO(50, 50, 50, 0.2),
+          color: overlayBackground(),
           blur: 5,
           radius: 12,
           padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -231,7 +232,6 @@ class _CreateEditCheckoutScreenState extends State<CreateEditCheckoutScreen> {
                                     height: 16,
                                     child: CircularProgressIndicator(
                                       strokeWidth: 2,
-                                      valueColor: new AlwaysStoppedAnimation<Color>(Colors.black87),
                                     ),
                                   ),
                                 )
@@ -250,7 +250,7 @@ class _CreateEditCheckoutScreenState extends State<CreateEditCheckoutScreen> {
                           child: Container(
                             height: 60,
                             child: BlurEffectView(
-                              color: Color.fromRGBO(100, 100, 100, 0.2),
+                              color: overlayBackground(),
                               blur: 15,
                               radius: 12,
                               padding: EdgeInsets.only(left: 12, right: 12),
@@ -300,7 +300,7 @@ class _CreateEditCheckoutScreenState extends State<CreateEditCheckoutScreen> {
               ),
               Container(
                 height: 64,
-                color: Color(0xFF424141),
+                color: overlayBackground(),
                 child: SizedBox.expand(
                   child: MaterialButton(
                     onPressed: () {
@@ -313,7 +313,6 @@ class _CreateEditCheckoutScreenState extends State<CreateEditCheckoutScreen> {
                     ) : Text(
                       'Done',
                       style: TextStyle(
-                        color: Colors.white,
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                       ),

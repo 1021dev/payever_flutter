@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../theme.dart';
 import 'checkout_top_button.dart';
 
 class WorkshopTopBar extends StatefulWidget {
@@ -25,7 +26,7 @@ class _WorkshopTopBarState extends State<WorkshopTopBar> {
   Widget build(BuildContext context) {
     return Container(
       height: 50,
-      color: Colors.black87,
+      color: overlayBackground(),
       child: Row(
         children: <Widget>[
           SizedBox(
@@ -50,14 +51,13 @@ class _WorkshopTopBarState extends State<WorkshopTopBar> {
                 width: 80,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
-                  color: Colors.white,
+                  color: overlayBackground(),
                 ),
                 child: Center(
                   child: Text(
                     'Open',
                     style: TextStyle(
                       fontSize: 15,
-                      color: Colors.black,
                     ),
                   ),
                 ),
@@ -69,7 +69,7 @@ class _WorkshopTopBarState extends State<WorkshopTopBar> {
             child: IconButton(
                 icon: Icon(
                   Icons.close,
-                  color: Colors.white,
+                  color: iconColor(),
                 ),
                 onPressed: () {
                   widget.onCloseTap();
@@ -82,20 +82,20 @@ class _WorkshopTopBarState extends State<WorkshopTopBar> {
             height: 30,
             width: 30,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: overlayBackground(),
               shape: BoxShape.circle,
             ),
             child: PopupMenuButton<CheckOutPopupButton>(
               child: Icon(
                 Icons.more_horiz,
-                color: Colors.black,
+                color: iconColor(),
               ),
               offset: Offset(0, 100),
               onSelected: (CheckOutPopupButton item) => item.onTap(),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
-              color: Colors.black87,
+              color: overlayBackground().withOpacity(1),
               itemBuilder: (BuildContext context) {
                 return _morePopup(context).map((CheckOutPopupButton item) {
                   return PopupMenuItem<CheckOutPopupButton>(
@@ -109,7 +109,6 @@ class _WorkshopTopBarState extends State<WorkshopTopBar> {
                         Text(
                           item.title,
                           style: TextStyle(
-                            color: Colors.white,
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
                           ),
@@ -137,6 +136,7 @@ class _WorkshopTopBarState extends State<WorkshopTopBar> {
           'assets/images/pay_link.svg',
           width: 16,
           height: 16,
+          color: iconColor(),
         ),
         onTap: () async {
           Clipboard.setData(
@@ -150,6 +150,7 @@ class _WorkshopTopBarState extends State<WorkshopTopBar> {
           'assets/images/prefilled_link.svg',
           width: 16,
           height: 16,
+          color: iconColor(),
         ),
         onTap: () async {},
       ),
@@ -159,6 +160,7 @@ class _WorkshopTopBarState extends State<WorkshopTopBar> {
           'assets/images/email_link.svg',
           width: 16,
           height: 16,
+          color: iconColor(),
         ),
         onTap: () async {
           _sendMail(
@@ -176,6 +178,7 @@ class _WorkshopTopBarState extends State<WorkshopTopBar> {
           'assets/images/prefilled_qr.svg',
           width: 16,
           height: 16,
+          color: iconColor(),
         ),
         onTap: () async {
           setState(() {});
