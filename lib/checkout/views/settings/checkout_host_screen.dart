@@ -7,6 +7,7 @@ import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
+import 'package:payever/theme.dart';
 
 class CheckoutCSPAllowedHostScreen extends StatefulWidget {
   final CheckoutSettingScreenBloc settingBloc;
@@ -145,6 +146,7 @@ class _CheckoutCSPAllowedHostScreenState
               ),
               Container(
                 height: 50,
+                color: Colors.black87,
                 child: SizedBox.expand(
                   child: MaterialButton(
                     onPressed: () {
@@ -155,7 +157,7 @@ class _CheckoutCSPAllowedHostScreenState
                       widget.checkout.settings.cspAllowedHosts = hosts;
                       widget.settingBloc.add(UpdateCheckoutSettingsEvent());
                     },
-                    color: Colors.black,
+                    color: overlayBackground(),
                     child: state.isUpdating
                         ? CircularProgressIndicator(
                             strokeWidth: 2,
@@ -180,7 +182,7 @@ class _CheckoutCSPAllowedHostScreenState
           itemBuilder: (context, index) {
             return Container(
               height: 56,
-              color: Colors.black38,
+              color: overlayBackground(),
               child: Row(
                 children: <Widget>[
                   Flexible(
@@ -213,7 +215,7 @@ class _CheckoutCSPAllowedHostScreenState
                       });
                     },
                     minWidth: 0,
-                    child: SvgPicture.asset('assets/images/closeicon.svg'),
+                    child: SvgPicture.asset('assets/images/closeicon.svg', color: iconColor(),),
                   )
                 ],
               ),

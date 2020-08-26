@@ -6,6 +6,7 @@ import 'package:payever/blocs/checkout/checkout_setting/checkout_setting_bloc.da
 import 'package:payever/blocs/checkout/checkout_setting/checkout_setting_event.dart';
 import 'package:payever/blocs/checkout/checkout_setting/checkout_setting_state.dart';
 import 'package:payever/checkout/models/models.dart';
+import 'package:payever/theme.dart';
 
 import 'checkout_top_button.dart';
 
@@ -33,7 +34,7 @@ class ColorStyleItem extends StatelessWidget {
       bloc: settingBloc,
       builder: (BuildContext context, state) {
         return state.isLoading ?
-          Center(child: CircularProgressIndicator(),):
+          Center(child: CircularProgressIndicator(strokeWidth: 2,),):
           _getBody(context, state);
       },
     );
@@ -41,50 +42,51 @@ class ColorStyleItem extends StatelessWidget {
 
   Widget _getBody(BuildContext context, CheckoutSettingScreenState state) {
     style = state.checkout.settings.styles;
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        GestureDetector(
-          onTap: onTap,
-          child: Container(
-            padding: EdgeInsets.only(
-              left: 16,
-              right: 16,
-            ),
-            height: 65,
-            color: Colors.black54,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                SvgPicture.asset(
-                  icon,
-                  width: 16,
-                  height: 16,
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  title,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
+    return Container(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          GestureDetector(
+            onTap: onTap,
+            child: Container(
+              padding: EdgeInsets.only(
+                left: 16,
+                right: 16,
+              ),
+              height: 65,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  SvgPicture.asset(
+                    icon,
+                    width: 16,
+                    height: 16,
+                    color: iconColor(),
                   ),
-                ),
-                Spacer(),
-                Icon(
-                  isExpanded
-                      ? Icons.keyboard_arrow_up
-                      : Icons.keyboard_arrow_down,
-                ),
-              ],
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                  Spacer(),
+                  Icon(
+                    isExpanded
+                        ? Icons.keyboard_arrow_up
+                        : Icons.keyboard_arrow_down,
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-        isExpanded
-            ? _subItems(context)
-            : Container(),
-      ],
+          isExpanded
+              ? _subItems(context)
+              : Container(),
+        ],
+      ),
     );
   }
 
@@ -105,7 +107,8 @@ class ColorStyleItem extends StatelessWidget {
 
   Widget _headerItems(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(left: 20, right: 20),
+      color: Colors.grey[600],
+      padding: EdgeInsets.only(left: 20, right: 20),
       height: 50,
       child: Row(
         children: <Widget>[
@@ -130,7 +133,8 @@ class ColorStyleItem extends StatelessWidget {
 
   Widget _pageItems(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(left: 20, right: 20),
+      padding: EdgeInsets.only(left: 20, right: 20),
+      color: Colors.grey[600],
       child: Column(
         children: <Widget>[
           Container(
@@ -186,7 +190,8 @@ class ColorStyleItem extends StatelessWidget {
 
   Widget _buttonItems(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(left: 20, right: 20),
+      padding: EdgeInsets.only(left: 20, right: 20),
+      color: Colors.grey[600],
       child: Column(
         children: <Widget>[
           Container(
@@ -253,7 +258,6 @@ class ColorStyleItem extends StatelessWidget {
                               Text(
                                 item.title,
                                 style: TextStyle(
-                                  color: Colors.white,
                                   fontSize: 16,
                                   fontWeight: FontWeight.w400,
                                 ),
@@ -275,7 +279,8 @@ class ColorStyleItem extends StatelessWidget {
 
   Widget _inputItems(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(left: 20, right: 20),
+      padding: EdgeInsets.only(left: 20, right: 20),
+      color: Colors.grey[600],
       child: Column(
         children: <Widget>[
           Container(
@@ -357,7 +362,6 @@ class ColorStyleItem extends StatelessWidget {
                               Text(
                                 item.title,
                                 style: TextStyle(
-                                  color: Colors.white,
                                   fontSize: 16,
                                   fontWeight: FontWeight.w400,
                                 ),
@@ -382,7 +386,7 @@ class ColorStyleItem extends StatelessWidget {
       children: <Widget>[
         Text(
           title,
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w400),
+          style: TextStyle(fontWeight: FontWeight.w400),
         ),
         GestureDetector(
           onTap: (){

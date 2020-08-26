@@ -74,7 +74,7 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                             height: 16,
                             decoration: BoxDecoration(
                                 image: DecorationImage(
-                                    image: NetworkImage('${'${Env.cdnIcon}icons-apps-$themeColor/icon-apps-$themeColor-'}point-of-sale.png'),
+                                    image: NetworkImage('${iconString()}point-of-sale.png'),
                                     fit: BoxFit.fitWidth)),
                           ),
                           Padding(

@@ -32,7 +32,6 @@ class DashboardConnectView extends StatefulWidget {
 }
 
 class _DashboardConnectViewState extends State<DashboardConnectView> {
-  String uiKit = '${Env.cdnIcon}icons-apps-white/icon-apps-white-';
   bool isExpanded = false;
   @override
   Widget build(BuildContext context) {

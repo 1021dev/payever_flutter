@@ -229,7 +229,7 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),
-            color: overlayBackground(),
+            color: overlayBackground().withOpacity(1),
             itemBuilder: (BuildContext context) {
               return appBarPopUpActions(context, state)
                   .map((OverflowMenuItem item) {

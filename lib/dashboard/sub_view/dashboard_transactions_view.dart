@@ -73,7 +73,7 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                             height: 16,
                             decoration: BoxDecoration(
                                 image: DecorationImage(
-                                    image: NetworkImage('${Env.cdnIcon}icons-apps-white/icon-apps-white-${widget.appWidget.type}.png'),
+                                    image: NetworkImage('${iconString()}${widget.appWidget.type}.png'),
                                     fit: BoxFit.fitWidth)),
                           ),
                           SizedBox(width: 8,),

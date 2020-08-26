@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/commons/commons.dart';
-import 'package:payever/commons/utils/env.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/tutorial_cell.dart';
 import 'package:payever/theme.dart';
@@ -19,7 +18,6 @@ class DashboardTutorialView extends StatefulWidget {
 }
 
 class _DashboardTutorialViewState extends State<DashboardTutorialView> {
-  String uiKit = '${Env.cdnIcon}icons-apps-${GlobalUtils.theme == 'light' ? 'black' : 'white'}/icon-apps-${GlobalUtils.theme == 'light' ? 'black' : 'white'}-';
   bool isExpanded = false;
   @override
   Widget build(BuildContext context) {
@@ -41,7 +39,7 @@ class _DashboardTutorialViewState extends State<DashboardTutorialView> {
                           height: 16,
                           decoration: BoxDecoration(
                               image: DecorationImage(
-                                  image: NetworkImage('${uiKit}tutorial.png'),
+                                  image: NetworkImage('${iconString()}tutorial.png'),
                                   fit: BoxFit.fitWidth)),
                         ),
                         SizedBox(width: 8,),

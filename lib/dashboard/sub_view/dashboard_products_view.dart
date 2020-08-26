@@ -40,7 +40,6 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
   @override
   Widget build(BuildContext context) {
     if (widget.businessApps.setupStatus == 'completed') {
-      String themeColor = GlobalUtils.theme == 'light' ? 'black' : 'white';
       return BlurEffectView(
         padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
         child: Column(
@@ -59,7 +58,7 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
                             height: 16,
                             decoration: BoxDecoration(
                                 image: DecorationImage(
-                                    image: NetworkImage('${'${Env.cdnIcon}icons-apps-$themeColor/icon-apps-$themeColor-'}product.png'),
+                                    image: NetworkImage('${iconString()}product.png'),
                                     fit: BoxFit.fitWidth,
                                 )),
                           ),

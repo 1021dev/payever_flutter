@@ -7,6 +7,8 @@ import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 
+import '../../../theme.dart';
+
 class CheckoutColorStyleScreen extends StatefulWidget {
   final CheckoutSettingScreenBloc settingBloc;
   final Checkout checkout;
@@ -51,7 +53,7 @@ class _CheckoutColorStyleScreenState
               true,
               body: state.isLoading
                   ? Center(
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator(strokeWidth: 2,),
               )
                   : Center(
                 child: _getBody(state),
@@ -167,7 +169,7 @@ class _CheckoutColorStyleScreenState
                 Container(
                   height: 65,
                   decoration: BoxDecoration(
-                    color: Colors.grey[600],
+                    color: Colors.black87,
                     borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(10),
                       bottomRight: Radius.circular(10),
@@ -181,10 +183,10 @@ class _CheckoutColorStyleScreenState
                     onPressed: () {
                       resetStyles();
                     },
+                    color: overlayBackground(),
                     child: Text(
                       'Reset styles',
                       style: TextStyle(
-                        color: Colors.white,
                         fontSize: 16,
                       ),
                     ),

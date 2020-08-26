@@ -6,6 +6,7 @@ import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
+import 'package:payever/theme.dart';
 
 class CheckoutPhoneNumberScreen extends StatefulWidget {
 
@@ -152,7 +153,7 @@ class _CheckoutPhoneNumberScreenState extends State<CheckoutPhoneNumberScreen> {
                       widget.checkout.settings.phoneNumber = phoneNum;
                       widget.settingBloc.add(UpdateCheckoutSettingsEvent());
                     },
-                    color: Colors.black,
+                    color: overlayBackground().withOpacity(1),
                     child: state.isUpdating
                         ? CircularProgressIndicator(
                       strokeWidth: 2,

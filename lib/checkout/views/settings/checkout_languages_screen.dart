@@ -7,6 +7,7 @@ import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
+import 'package:payever/theme.dart';
 
 class CheckoutLanguagesScreen extends StatefulWidget {
 
@@ -73,7 +74,6 @@ class _CheckoutLanguagesScreenState extends State<CheckoutLanguagesScreen> {
       title: Text(
         Language.getConnectStrings('Add Language'),
         style: TextStyle(
-          color: Colors.white,
           fontSize: 16,
           fontWeight: FontWeight.w500,
         ),
@@ -88,7 +88,6 @@ class _CheckoutLanguagesScreenState extends State<CheckoutLanguagesScreen> {
           ),
           icon: Icon(
             Icons.close,
-            color: Colors.white,
             size: 24,
           ),
           onPressed: () {
@@ -127,7 +126,6 @@ class _CheckoutLanguagesScreenState extends State<CheckoutLanguagesScreen> {
                           child: Text(
                             lang.name,
                             style: TextStyle(
-                              color: Colors.white,
                               fontSize: 16,
                               fontFamily: 'Helvetica Neue',
                             ),
@@ -145,7 +143,7 @@ class _CheckoutLanguagesScreenState extends State<CheckoutLanguagesScreen> {
                                 });
                                 widget.settingBloc.add(UpdateCheckoutSettingsEvent());
                               },
-                              color: Colors.black54,
+                              color: overlayBackground(),
                               elevation: 0,
                               height: 24,
                               shape: RoundedRectangleBorder(

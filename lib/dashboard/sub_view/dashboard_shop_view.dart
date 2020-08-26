@@ -76,7 +76,7 @@ class _DashboardShopViewState extends State<DashboardShopView> {
                             height: 16,
                             decoration: BoxDecoration(
                               image: DecorationImage(
-                                image: NetworkImage('${Env.cdnIcon}icons-apps-white/icon-apps-white-shop.png'),
+                                image: NetworkImage('${iconString()}shop.png'),
                                 fit: BoxFit.contain,
                               ),
                             ),

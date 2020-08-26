@@ -30,7 +30,6 @@ class DashboardSettingsView extends StatefulWidget {
 }
 
 class _DashboardSettingsViewState extends State<DashboardSettingsView> {
-  String uiKit = '${Env.cdnIcon}icons-apps-white/icon-apps-white-';
   @override
   Widget build(BuildContext context) {
     return BlurEffectView(
@@ -127,7 +126,7 @@ class _DashboardSettingsViewState extends State<DashboardSettingsView> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Image.asset("assets/images/languageicon.png", width: 16,),
+                            Image.asset("assets/images/languageicon.png", width: 16, color: iconColor(),),
                             SizedBox(width: 8),
                             Text(
                               "Edit Language",

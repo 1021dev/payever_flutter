@@ -141,7 +141,6 @@ class _SectionsScreenState extends State<SectionsScreen> {
                       child: Text(
                         'Save',
                         style: TextStyle(
-                          color: Colors.white,
                           fontSize: 16,
                         ),
                       ),

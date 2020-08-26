@@ -156,3 +156,7 @@ Color overlayRow() {
     return overlayBackground().withOpacity(0.01);
   }
 }
+
+String iconString() {
+  return '${Env.cdnIcon}icons-apps-${GlobalUtils.theme == 'light' ? 'black' : 'white'}/icon-apps-${GlobalUtils.theme == 'light' ? 'black' : 'white'}-';
+}

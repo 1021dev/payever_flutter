@@ -67,7 +67,7 @@ class _DashboardBusinessAppsViewState extends State<DashboardBusinessAppsView> {
                       height: 20,
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                          image: NetworkImage('${Env.cdnIcon}icons-apps-white/icon-apps-white-dashboard.png'),
+                          image: NetworkImage('${iconString()}dashboard.png'),
                           fit: BoxFit.scaleDown,
                         ),
                       ),

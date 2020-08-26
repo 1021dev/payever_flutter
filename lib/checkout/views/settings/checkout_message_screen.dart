@@ -7,6 +7,7 @@ import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
+import 'package:payever/theme.dart';
 
 class CheckoutMessageScreen extends StatefulWidget {
 
@@ -147,13 +148,14 @@ class _CheckoutMessageScreenState extends State<CheckoutMessageScreen> {
               ),
               Container(
                 height: 50,
+                color: Colors.black87,
                 child: SizedBox.expand(
                   child: MaterialButton(
                     onPressed: () {
                       widget.checkout.settings.message = controller.text;
                       widget.settingBloc.add(UpdateCheckoutSettingsEvent());
                     },
-                    color: Colors.black,
+                    color: overlayBackground(),
                     child: state.isUpdating
                         ? CircularProgressIndicator(
                       strokeWidth: 2,

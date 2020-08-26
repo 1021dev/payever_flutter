@@ -128,7 +128,6 @@ class _CheckoutPoliciesScreenState extends State<CheckoutPoliciesScreen> {
                         channelSet.name == null ? 'channelSetDefaultNames.' + channelSet.type :  channelSet.name,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          color: Colors.white,
                           fontSize: 16,
                           fontFamily: 'Helvetica Neue',
                         ),
