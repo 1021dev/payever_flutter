@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:payever/blocs/theme/theme_event.dart';
 import 'package:payever/blocs/theme/theme_state.dart';
+import 'package:payever/commons/utils/common_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ChangeThemeBloc extends Bloc<ChangeThemeEvent, ChangeThemeState> {
@@ -14,6 +15,7 @@ class ChangeThemeBloc extends Bloc<ChangeThemeEvent, ChangeThemeState> {
 
   @override
   Stream<ChangeThemeState> mapEventToState(ChangeThemeEvent event) async* {
+    print('inside Theme data');
     if (event is DecideTheme) {
       print('inside Theme decision body');
       final int optionValue = await getOption();
@@ -24,37 +26,39 @@ class ChangeThemeBloc extends Bloc<ChangeThemeEvent, ChangeThemeState> {
       } else {
         yield ChangeThemeState.defaultTheme();
       }
-    }
-
-    if (event is DarkTheme) {
+    } else if (event is DarkTheme) {
       print('inside darktheme body');
 
+      GlobalUtils.theme = 'dark';
       yield ChangeThemeState.darkTheme();
       try {
         _saveOptionValue(1);
       } catch (_) {
         throw Exception("Could not persist change");
       }
-    }
-    if (event is LightTheme) {
+    } else if (event is LightTheme) {
       print('inside LightTheme body');
 
+      GlobalUtils.theme = 'light';
       yield ChangeThemeState.lightTheme();
       try {
         _saveOptionValue(0);
       } catch (_) {
         throw Exception("Could not persist change");
       }
-    }
-    if (event is DefaultTheme) {
+    } else if (event is DefaultTheme) {
       print('inside DefaultTheme body');
 
+      GlobalUtils.theme = 'default';
       yield ChangeThemeState.defaultTheme();
       try {
         _saveOptionValue(2);
       } catch (_) {
         throw Exception("Could not persist change");
       }
+    } else {
+      GlobalUtils.theme = 'default';
+      yield ChangeThemeState.defaultTheme();
     }
   }
 

@@ -6,6 +6,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:iso_countries/iso_countries.dart';
+import 'package:payever/blocs/bloc.dart';
 import 'package:payever/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -322,7 +323,7 @@ class GlobalUtils {
   static bool isLoaded = false;
   static var isDashboardLoaded = false;
   static String fingerprint = '';
-  static String theme = 'default';
+  static String theme = changeThemeBloc.state.theme;
 
   //URLS
   //static String  pass= 'P@ssword123';//test 1

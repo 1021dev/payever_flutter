@@ -186,9 +186,11 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
       });
       if (businesses != null) {
         businesses.forEach((b) {
-          if (b.id == sharedPreferences.getString(GlobalUtils.BUSINESS)) {
-            activeBusiness = b;
-          }
+//          if (b.id == sharedPreferences.getString(GlobalUtils.BUSINESS)) {
+        if (b.active) {
+          activeBusiness = b;
+        }
+//          }
         });
       }
       if (activeBusiness != null) {

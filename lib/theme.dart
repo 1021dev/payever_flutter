@@ -21,7 +21,7 @@ ThemeData _buildLightTheme() {
     primaryColor: primaryColor,
     buttonColor: primaryColor,
     splashColor: Colors.transparent,
-    accentColor: const Color(0xFF000000),
+    accentColor: const Color(0xFF444444),
     cursorColor: const Color(0xFF000000),
     accentIconTheme: new IconThemeData(color: const Color(0xFF000000)),
     errorColor: const Color(0xFFB00020),
@@ -89,7 +89,7 @@ ThemeData _buildDarkTheme() {
     buttonColor: primaryColor,
     indicatorColor: Colors.white,
     splashColor: Colors.transparent,
-    accentColor: const Color(0xFFFFFFFF),
+    accentColor: const Color(0xFFBBBBBB),
     cursorColor: const Color(0xFFFFFFFF),
     accentIconTheme: new IconThemeData(color: const Color(0xFFFFFFFF)),
     textTheme: base.textTheme.copyWith().apply(

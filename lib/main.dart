@@ -68,6 +68,10 @@ class _MyAppState extends State<MyApp> {
       ],
       child: BlocBuilder<ChangeThemeBloc, ChangeThemeState>(
         builder: (context, state) {
+          if (state.theme == null) {
+            BlocProvider.of<ChangeThemeBloc>(context)..add(DecideTheme());
+          }
+          print(state.theme);
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             title: 'payever',
