@@ -18,6 +18,7 @@ import 'package:payever/login/login_screen.dart';
 import 'package:payever/notifications/notifications_screen.dart';
 import 'package:payever/search/views/search_screen.dart';
 import 'package:payever/switcher/switcher_page.dart';
+import 'package:payever/theme.dart';
 import 'package:payever/transactions/models/enums.dart';
 import 'package:payever/transactions/views/filter_content_view.dart';
 import 'package:payever/transactions/views/sort_content_view.dart';
@@ -192,7 +193,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
 
   Widget _body(TransactionsScreenState state) {
     return Scaffold(
-      backgroundColor: Colors.black,
       resizeToAvoidBottomPadding: false,
       appBar: _appBar(state),
       body: SafeArea(
@@ -205,7 +205,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
             children: [
               Container(
                 height: 50,
-                color: Colors.black38,
+                color: overlayBackground(),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -219,7 +219,11 @@ class _TransactionScreenState extends State<TransactionScreen> {
                             if (state.isSearchLoading) return;
                             showSearchTextDialog(state);
                           },
-                          child: SvgPicture.asset('assets/images/searchicon.svg', width: 20,),
+                          child: SvgPicture.asset(
+                            'assets/images/searchicon.svg',
+                            width: 20,
+                            color: iconColor(),
+                          ),
                         ),
                         SizedBox(
                           width: 16,
@@ -265,7 +269,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                             width: 30,
                             height: 30,
                             alignment: Alignment.center,
-                            child: SvgPicture.asset('assets/images/filter.svg', width: 20,),
+                            child: SvgPicture.asset('assets/images/filter.svg', width: 20, color: iconColor(),),
                           ),
                         ),
                         FlatButton(
@@ -274,7 +278,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
                             showGeneralDialog(
                                 barrierLabel: 'Export',
                                 barrierDismissible: true,
-                                barrierColor: Colors.black.withOpacity(0.5),
                                 transitionDuration: Duration(milliseconds: 350),
                                 context: context,
                                 pageBuilder: (context, anim1, anim2) {
@@ -290,7 +293,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
                           child: Text(
                             'Export',
                             style: TextStyle(
-                              color: Colors.white,
                               fontSize: 16,
                             ),
                           ),
@@ -316,7 +318,11 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                   );
                                 });
                           },
-                          child: SvgPicture.asset('assets/images/sort-by-button.svg', width: 20,),
+                          child: SvgPicture.asset(
+                            'assets/images/sort-by-button.svg',
+                            width: 20,
+                            color: iconColor(),
+                          ),
                         ),
                         SizedBox(
                           width: 24,
@@ -343,32 +349,33 @@ class _TransactionScreenState extends State<TransactionScreen> {
                       key: Key('filterItem$index'),
                       index: index,
                       title: _filterItems[index].title,
-                      color: Colors.white12,
-                      activeColor: Colors.white12,
-                      textActiveColor: Colors.white,
-                      textColor: Colors.white,
+                      color: overlayBackground(),
+                      activeColor: overlayBackground(),
+                      textActiveColor: iconColor(),
+                      textColor: iconColor(),
                       elevation: 0,
                       padding: EdgeInsets.only(
                         left: 16, top: 8, bottom: 8, right: 16,
                       ),
                       removeButton: ItemTagsRemoveButton(
-                          backgroundColor: Colors.transparent,
-                          onRemoved: () {
-                            if (index == _searchTagIndex) {
-                              _searchTagIndex = -1;
-                              screenBloc.add(
-                                  UpdateSearchText(searchText: '')
-                              );
-                            } else {
-                              List<FilterItem> filterTypes = [];
-                              filterTypes.addAll(state.filterTypes);
-                              filterTypes.removeAt(index);
-                              screenBloc.add(
-                                  UpdateFilterTypes(filterTypes: filterTypes)
-                              );
-                            }
-                            return true;
+                        backgroundColor: Colors.transparent,
+                        onRemoved: () {
+                          if (index == _searchTagIndex) {
+                            _searchTagIndex = -1;
+                            screenBloc.add(
+                                UpdateSearchText(searchText: '')
+                            );
+                          } else {
+                            List<FilterItem> filterTypes = [];
+                            filterTypes.addAll(state.filterTypes);
+                            filterTypes.removeAt(index);
+                            screenBloc.add(
+                                UpdateFilterTypes(filterTypes: filterTypes)
+                            );
                           }
+                          return true;
+                        },
+                        color: iconColor(),
                       ),
                     );
                   },
@@ -376,7 +383,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
               ): Container(height: 0,),
               Container(
                 height: 35,
-                color: Colors.black45,
+                color: overlayBackground(),
                 child: Row(
                   children: [
                     SizedBox(
@@ -387,9 +394,8 @@ class _TransactionScreenState extends State<TransactionScreen> {
                       child: Text(
                         'Channel',
                         style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.white70,
-                            fontWeight: FontWeight.bold),
+                          fontSize: 12,
+                        ),
                       ),
                     ),
                     Expanded(
@@ -397,9 +403,8 @@ class _TransactionScreenState extends State<TransactionScreen> {
                       child: Text(
                         'Type',
                         style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.white70,
-                            fontWeight: FontWeight.bold),
+                          fontSize: 12,
+                        ),
                       ),
                     ),
                     Expanded(
@@ -407,9 +412,8 @@ class _TransactionScreenState extends State<TransactionScreen> {
                       child: Text(
                         'Customer name',
                         style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.white70,
-                            fontWeight: FontWeight.bold),
+                          fontSize: 12,
+                        ),
                       ),
                     ),
                     Expanded(
@@ -417,9 +421,8 @@ class _TransactionScreenState extends State<TransactionScreen> {
                       child: Text(
                         'Total',
                         style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.white70,
-                            fontWeight: FontWeight.bold),
+                          fontSize: 12,
+                        ),
                       ),
                     ),
                   ],
@@ -435,7 +438,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
                   child: Text(
                     'The list is empty',
                     style: TextStyle(
-                      color: Colors.white70,
                       fontSize: 24,
                       fontWeight: FontWeight.w200,
                     ),
@@ -444,7 +446,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
               ),
               Container(
                 height: 50,
-                color: Colors.black87,
+                color: overlayBackground(),
                 alignment: Alignment.center,
                 child: !noTransactions ? AutoSizeText(
                   Language.getTransactionStrings('total_orders.heading')
@@ -456,7 +458,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
                   maxLines: 1,
                   style: TextStyle(
                     fontSize: 16,
-                    color: Colors.white70,
                   ),
                 )
                     : Container(),
@@ -473,18 +474,16 @@ class _TransactionScreenState extends State<TransactionScreen> {
       centerTitle: false,
       elevation: 0,
       automaticallyImplyLeading: false,
-      backgroundColor: Colors.black87,
       title: Row(
         children: <Widget>[
           Container(
             child: Center(
               child: Container(
-                  child: SvgPicture.asset(
-                    'assets/images/transactions.svg',
-                    color: Colors.white,
-                    height: 16,
-                    width: 24,
-                  )
+                child: SvgPicture.asset(
+                  'assets/images/transactions.svg',
+                  height: 16,
+                  width: 24,
+                ),
               ),
             ),
           ),
@@ -494,7 +493,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
           Text(
             'Transactions',
             style: TextStyle(
-              color: Colors.white,
               fontSize: 16,
               fontWeight: FontWeight.w500,
             ),
@@ -516,7 +514,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
                   child: Text(
                     widget.dashboardScreenBloc.state.activeBusiness.name,
                     style: TextStyle(
-                      color: Colors.white,
                       fontSize: 14,
                     ),
                   ),
@@ -530,7 +527,10 @@ class _TransactionScreenState extends State<TransactionScreen> {
         Padding(
           padding: EdgeInsets.all(6),
           child: InkWell(
-            child: SvgPicture.asset('assets/images/searchicon.svg', width: 20,),
+            child: SvgPicture.asset(
+              'assets/images/searchicon.svg',
+              width: 20,
+            ),
             onTap: () {
               Navigator.push(
                 context,
@@ -801,7 +801,8 @@ class PhoneTableRow extends StatelessWidget {
                             Language.getTransactionStrings(
                                 'form.filter.labels.channel'),
                             style: TextStyle(
-                                fontSize: AppStyle.fontSizeListRow()),
+                                fontSize: AppStyle.fontSizeListRow(),
+                            ),
                           )),
                     ),
                   ),
@@ -811,14 +812,15 @@ class PhoneTableRow extends StatelessWidget {
                     child: Container(
                       alignment: Alignment.centerLeft,
                       child: !isHeader
-                          ? TransactionScreenParts.paymentType(
-                          currentTransaction.type)
+                          ? TransactionScreenParts.paymentType(currentTransaction.type)
                           : Container(
                         child: Text(
                             Language.getTransactionStrings(
                                 'form.filter.labels.type'),
                             style: TextStyle(
-                                fontSize: AppStyle.fontSizeListRow())),
+                                fontSize: AppStyle.fontSizeListRow(),
+                            )
+                        ),
                       ),
                     ),
                   ),
@@ -907,7 +909,7 @@ class PhoneTableRow extends StatelessWidget {
                 ],
               ),
             ),
-            Divider(height: 1, color: Colors.white.withOpacity(0.5)),
+            Divider(height: 0, thickness: 0.5,)
           ],
         ),
       ),
@@ -969,14 +971,15 @@ class TabletTableRow extends StatelessWidget {
                           ? Container(
 //                          alignment: _isPortrait ? Alignment.centerLeft : Alignment.center,
                           alignment: Alignment.center,
-                          child: TransactionScreenParts.channelIcon(
-                              currentTransaction.channel))
+                          child: TransactionScreenParts.channelIcon(currentTransaction.channel),
+                      )
                           : Container(
                           child: AutoSizeText(
                             Language.getTransactionStrings(
                                 'form.filter.labels.channel'),
                             style: TextStyle(
-                                fontSize: AppStyle.fontSizeListRow()),
+                                fontSize: AppStyle.fontSizeListRow(),
+                            ),
                           )),
                     ),
                   ),
@@ -986,15 +989,18 @@ class TabletTableRow extends StatelessWidget {
                       alignment: Alignment.center,
                       child: !isHeader
                           ? Container(
-                          alignment: Alignment.center,
-                          child: TransactionScreenParts.paymentType(
-                              currentTransaction.type))
+                        alignment: Alignment.center,
+                        child: TransactionScreenParts.paymentType(currentTransaction.type),
+                      )
                           : Container(
-                          child: AutoSizeText(
-                              Language.getTransactionStrings(
-                                  'form.filter.labels.type'),
-                              style: TextStyle(
-                                  fontSize: AppStyle.fontSizeListRow()))),
+                        child: AutoSizeText(
+                          Language.getTransactionStrings(
+                              'form.filter.labels.type'),
+                          style: TextStyle(
+                            fontSize: AppStyle.fontSizeListRow(),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                   Expanded(
@@ -1002,18 +1008,18 @@ class TabletTableRow extends StatelessWidget {
                     child: Container(
                       child: !isHeader
                           ? AutoSizeText('#${currentTransaction.originalId}',
-                          style: TextStyle(
-                              fontSize: AppStyle.fontSizeListRow(),
-                          ),
+                        style: TextStyle(
+                          fontSize: AppStyle.fontSizeListRow(),
+                        ),
                       )
                           : AutoSizeText(
-                          Language.getTransactionStrings(
-                              'form.filter.labels.original_id'),
-                          maxLines: 1,
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                              fontSize: AppStyle.fontSizeListRow(),
-                          ),
+                        Language.getTransactionStrings(
+                            'form.filter.labels.original_id'),
+                        maxLines: 1,
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          fontSize: AppStyle.fontSizeListRow(),
+                        ),
                       ),
                     ),
                   ),
@@ -1082,7 +1088,6 @@ class TabletTableRow extends StatelessWidget {
             ),
             Divider(
               height: 0,
-              color: Colors.white.withOpacity(0.5),
             ),
           ],
         ),
@@ -1108,16 +1113,15 @@ class TabletTableRow extends StatelessWidget {
 class TransactionScreenParts {
   static channelIcon(String channel) {
     double size = AppStyle.iconRowSize(_isTablet);
-    return SvgPicture.asset(Measurements.channelIcon(channel), height: size);
+    return SvgPicture.asset(Measurements.channelIcon(channel), height: size, color: iconColor(),);
   }
 
   static paymentType(String type) {
     double size = AppStyle.iconRowSize(_isTablet);
-    Color _color = Colors.white.withOpacity(0.7);
     return SvgPicture.asset(
       Measurements.paymentType(type),
       height: size,
-      color: _color,
+      color: iconColor(),
     );
   }
 }

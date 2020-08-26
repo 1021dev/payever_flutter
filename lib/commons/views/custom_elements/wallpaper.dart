@@ -78,6 +78,7 @@ class _BackgroundBaseState extends State<BackgroundBase> {
               ),
             ),
           )
-        ]);
+        ],
+    );
   }
 }

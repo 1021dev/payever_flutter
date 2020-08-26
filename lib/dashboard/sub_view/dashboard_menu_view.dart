@@ -31,6 +31,7 @@ class DashboardMenuView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isActive = false;
+    print(activeBusiness.active);
     if (activeBusiness != null) {
       isActive = activeBusiness.active;
     }
@@ -115,7 +116,7 @@ class DashboardMenuView extends StatelessWidget {
                           Language.getSettingsStrings('info_boxes.panels.general.menu_list.personal_information.title'),
                           style: TextStyle(
                               fontSize: 14,
-                              color: Colors.white
+                              color: Colors.white,
                           ),
                         )
                       ],
@@ -137,7 +138,8 @@ class DashboardMenuView extends StatelessWidget {
                           width: 25,
                           child: Center(
                             child: SvgPicture.asset(
-                              'assets/images/add.svg', width: 20,color: iconColor()
+                              'assets/images/add.svg',
+                              width: 20,
                             ),
                           ),
                         ),
@@ -145,9 +147,10 @@ class DashboardMenuView extends StatelessWidget {
                         Text(
                           Language.getCommerceOSStrings('dashboard.profile_menu.add_business'),
                           style: TextStyle(
-                              fontSize: 14,
+                            fontSize: 14,
+                            color: Colors.white,
                           ),
-                        )
+                        ),
                       ],
                     ),
                   ),

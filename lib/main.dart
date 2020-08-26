@@ -68,11 +68,10 @@ class _MyAppState extends State<MyApp> {
       ],
       child: BlocBuilder<ChangeThemeBloc, ChangeThemeState>(
         builder: (context, state) {
-          print('Theme Settings ${state.themeData}');
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             title: 'payever',
-            darkTheme: darkTheme,
+            darkTheme: state.themeData,
             theme: state.themeData,
             home: _loadCredentials.value
                 ? Center(child: CircularProgressIndicator())

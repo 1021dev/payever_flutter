@@ -63,6 +63,7 @@ class SwitcherScreenBloc extends Bloc<SwitcherScreenEvent, SwitcherScreenState> 
   }
 
   Stream<SwitcherScreenState> fetchWallPaper(Business business) async* {
+    dynamic enableResponse = await api.setEnableBusiness(business.id, GlobalUtils.activeToken.accessToken);
     dynamic wallpapersObj = await api.getWallpaper(business.id, GlobalUtils.activeToken.accessToken);
     FetchWallpaper fetchWallpaper = FetchWallpaper.map(wallpapersObj);
     SharedPreferences preferences = await SharedPreferences.getInstance();

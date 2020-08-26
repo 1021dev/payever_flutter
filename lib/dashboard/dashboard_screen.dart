@@ -1067,7 +1067,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
 
     return Scaffold(
-      backgroundColor: Colors.black87,
       resizeToAvoidBottomPadding: false,
       appBar: _appBar(state),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
@@ -1079,7 +1078,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         child: RawMaterialButton(
           shape: CircleBorder(),
           elevation: 4,
-          fillColor: Color(0xFF222222),
+          fillColor: overlayColor(),
           child: SvgPicture.asset('assets/images/help.svg', width: 24, color: iconColor(),),
           onPressed: () {
           },
@@ -1089,6 +1088,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         top: true,
         child: BackgroundBase(
           false,
+          backgroundColor: Colors.transparent,
           wallPaper: state.curWall,
           body: Container(
             alignment: Alignment.center,
@@ -1134,29 +1134,31 @@ class _DashboardScreenState extends State<DashboardScreen> {
         Text(
           'Welcome ${state.user.firstName},',
           style: TextStyle(
-              fontSize: 26,
-              fontWeight: FontWeight.bold,
-              shadows: [
-                Shadow(
-                    offset: Offset(1.0, 1.0),
-                    blurRadius: 3,
-                    color: overlayBackground(),
-                )
-              ]
+            fontSize: 26,
+            fontWeight: FontWeight.bold,
+            shadows: [
+              Shadow(
+                offset: Offset(1.0, 1.0),
+                blurRadius: 3,
+                color: Colors.black45,
+              ),
+            ],
+            color: Colors.white,
           ),
         ),
         SizedBox(height: 4),
         Text(
           'grow your business',
           style: TextStyle(
-              fontSize: 18,
-              shadows: [
-                Shadow(
-                    offset: Offset(1.0, 1.0),
-                    blurRadius: 3,
-                    color: overlayBackground(),
-                )
-              ]
+            fontSize: 18,
+            shadows: [
+              Shadow(
+                offset: Offset(1.0, 1.0),
+                blurRadius: 3,
+                color: Colors.black45,
+              ),
+            ],
+            color: Colors.white,
           ),
         ),
         Padding(

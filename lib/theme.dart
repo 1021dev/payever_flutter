@@ -111,7 +111,7 @@ Color overlayColor() {
   if (GlobalUtils.theme == 'dark') {
     return Color.fromRGBO(0, 0, 0, 0.75);
   } else if (GlobalUtils.theme == 'light') {
-    return Color.fromRGBO(245, 245, 245, 0.6);
+    return Color.fromRGBO(240, 240, 240, 0.6);
   } else {
     return Color.fromRGBO(0, 0, 0, 0.2);
   }

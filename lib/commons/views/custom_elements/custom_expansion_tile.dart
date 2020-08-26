@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:payever/theme.dart';
 
 import 'custom_expansion_panel.dart';
 
@@ -60,16 +61,12 @@ class _CustomExpansionTileState extends State<CustomExpansionTile> {
 //              margin: EdgeInsets.only(bottom: 60),
             decoration: i == 0 && addBorderRadius
                 ? BoxDecoration(
-                    color: widget.headerColor == null
-                        ? Colors.white.withOpacity(0.1)
-                        : widget.headerColor,
+                    color: overlayBackground(),
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(20),
                         topRight: Radius.circular(20)))
                 : BoxDecoration(
-                    color: widget.headerColor == null
-                        ? Colors.white.withOpacity(0.1)
-                        : widget.headerColor,
+                    color: overlayBackground(),
                   ),
             child: CustomExpansionPanelList(
               isWithCustomIcon: widget.isWithCustomIcon,

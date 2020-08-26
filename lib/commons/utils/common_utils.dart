@@ -6,6 +6,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:iso_countries/iso_countries.dart';
+import 'package:payever/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/models.dart';
@@ -259,11 +260,10 @@ class Measurements {
   static paymentTypeIcon(String type, bool isTablet) {
     double size = Measurements.width * (isTablet ? 0.03 : 0.055);
     print(size);
-    Color _color = Colors.white.withOpacity(0.7);
     return SvgPicture.asset(
       Measurements.paymentType(type),
       height: AppStyle.iconDashboardCardSize(isTablet),
-      color: _color,
+      color: iconColor(),
     );
   }
 

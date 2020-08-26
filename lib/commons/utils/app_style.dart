@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:payever/theme.dart';
 
 import 'utils.dart';
 
 class AppStyle {
   // ICONS
-  static Color iconActiveColor() => Colors.white;
+  static Color iconActiveColor() => iconColor();
 
   static double iconDashboardCardSize(bool _isTablet) {
     return _isTablet ? 15 : 16;

@@ -25,7 +25,9 @@ class _ExportContentViewState extends State<ExportContentView> {
                   color: Color(0xFF222222),
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(20.0),
-                      topRight: Radius.circular(20.0))),
+                      topRight: Radius.circular(20.0),
+                  ),
+              ),
               child: Column(
                 children: [
                   Row(

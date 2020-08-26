@@ -414,6 +414,24 @@ class ApiService {
     }
   }
 
+  Future<dynamic> setEnableBusiness(String id, String token,) async {
+    try {
+      print('$TAG - setEnableBusiness()');
+      dynamic response = await _client.patchTypeless(
+          '${Env.users}/api/business/$id/enable',
+          body: {},
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<dynamic> getWallpaperPersonal(String token,) async {
     try {
       print('$TAG - getWallpaperPersonal()');

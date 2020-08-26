@@ -42,7 +42,7 @@ class BusinessAppCell extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                !currentApp.dashboardInfo.title.contains('setting') ? Container(
+                !currentApp.dashboardInfo.title.contains('setting') &&  currentApp.setupStatus != 'completed' ? Container(
                   width: 8,
                   height: 8,
                   decoration: BoxDecoration(
