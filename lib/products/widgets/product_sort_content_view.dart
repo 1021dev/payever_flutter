@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:payever/theme.dart';
 import 'package:payever/transactions/models/enums.dart';
 
 class ProductSortContentView extends StatelessWidget {
@@ -14,7 +15,7 @@ class ProductSortContentView extends StatelessWidget {
       height: 380,
       padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
       decoration: BoxDecoration(
-          color: Color(0xFF222222),
+          color: overlayColor(),
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(20.0),
               topRight: Radius.circular(20.0))),
@@ -27,7 +28,6 @@ class ProductSortContentView extends StatelessWidget {
               'Sort by:',
               textAlign: TextAlign.start,
               style: TextStyle(
-                color: Colors.white,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -55,9 +55,6 @@ class ProductSortContentView extends StatelessWidget {
                       ),
                       Text(
                         sortProducts[sortProducts.keys.toList()[index]],
-                        style: TextStyle(
-                          color: Color(0xFFAAAAAA),
-                        ),
                       ),
                     ],
                   ),

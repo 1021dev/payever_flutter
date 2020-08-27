@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/products/models/models.dart';
 import 'package:payever/products/widgets/product_item_image_view.dart';
+import 'package:payever/theme.dart';
 
 class ProductGridItem extends StatelessWidget {
   final ProductListModel product;
@@ -46,7 +47,7 @@ class ProductGridItem extends StatelessWidget {
       margin: EdgeInsets.only(left: 16, right: 16),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(12.0)),
-          color: Color.fromRGBO(0, 0, 0, 0.3)
+          color: overlayBackground(),
       ),
       child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -64,8 +65,8 @@ class ProductGridItem extends StatelessWidget {
                       onCheck(product);
                     },
                     child: product.isChecked
-                        ? Icon(Icons.check_circle, color: Colors.white,)
-                        : Icon(Icons.radio_button_unchecked, color: Colors.white54,),
+                        ? Icon(Icons.check_circle, )
+                        : Icon(Icons.radio_button_unchecked, ),
                   ) ,
                 ),
                 Padding(
@@ -73,7 +74,6 @@ class ProductGridItem extends StatelessWidget {
                   child: Text(
                     category,
                     style: TextStyle(
-                      color: Colors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.w400,
                     ),
@@ -113,7 +113,6 @@ class ProductGridItem extends StatelessWidget {
                     '${formatter.format(product.productsModel.price)} ${Measurements.currency(product.productsModel.currency)}',
                     style: TextStyle(
                       fontSize: 16,
-                      color: Colors.white,
                       fontWeight: FontWeight.w300,
                     ),
                   ),
@@ -126,7 +125,6 @@ class ProductGridItem extends StatelessWidget {
                         : Language.getProductListStrings('filters.quantity.options.inStock'),
                     style: TextStyle(
                       fontSize: 16,
-                      color: Colors.white,
                       fontWeight: FontWeight.w300,
                     ),
                   ),
@@ -150,11 +148,11 @@ class ProductGridItem extends StatelessWidget {
                     children: <Widget>[
                       isPos ? Padding(
                         padding: EdgeInsets.only(left: 16),
-                        child: SvgPicture.asset('assets/images/pos.svg', width: 20, height: 20,),
+                        child: SvgPicture.asset('assets/images/pos.svg', width: 20, height: 20, color: iconColor(),),
                       ) : Container(),
                       isShop ? Padding(
                         padding: EdgeInsets.only(left: 16),
-                        child: SvgPicture.asset('assets/images/shopicon.svg', width: 20, height: 20,),
+                        child: SvgPicture.asset('assets/images/shopicon.svg', width: 20, height: 20, color: iconColor(),),
                       ) : Container(),
                     ],
                   ),

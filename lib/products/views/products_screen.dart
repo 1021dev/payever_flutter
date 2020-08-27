@@ -27,6 +27,7 @@ import 'package:payever/products/widgets/product_sort_content_view.dart';
 import 'package:payever/products/widgets/products_top_button.dart';
 import 'package:payever/search/views/search_screen.dart';
 import 'package:payever/switcher/switcher_page.dart';
+import 'package:payever/theme.dart';
 import 'package:payever/transactions/models/enums.dart';
 import 'package:payever/transactions/views/sub_view/search_text_content_view.dart';
 import 'package:payever/transactions/views/transactions_screen.dart';
@@ -131,7 +132,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
                 child: Container(
                   height: 216,
                   child: BlurEffectView(
-                    color: Color.fromRGBO(50, 50, 50, 0.4),
                     padding: EdgeInsets.all(16),
                     child: Column(
                       children: <Widget>[
@@ -244,7 +244,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
                 child: Container(
                   height: 216,
                   child: BlurEffectView(
-                    color: Color.fromRGBO(50, 50, 50, 0.4),
                     padding: EdgeInsets.all(16),
                     child: Column(
                       children: <Widget>[
@@ -671,7 +670,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
       children: <Widget>[
         Container(
           height: 50,
-          color: Color(0xFF555555),
+          color: overlayBackground().withOpacity(1),
           child: Row(
             children: <Widget>[
               Flexible(
@@ -687,7 +686,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                       },
                       child: Container(
                         padding: EdgeInsets.all(8),
-                        child: SvgPicture.asset('assets/images/searchicon.svg', width: 20,),
+                        child: SvgPicture.asset('assets/images/searchicon.svg', width: 20, color: iconColor(),),
                       ),
                     ),
                     InkWell(
@@ -729,7 +728,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                       },
                       child: Container(
                         padding: EdgeInsets.all(8),
-                        child: SvgPicture.asset('assets/images/filter.svg', width: 20,),
+                        child: SvgPicture.asset('assets/images/filter.svg', width: 20, color: iconColor(),),
                       ),
                     ),
                   ],
@@ -756,7 +755,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                   _selectedIndexValue = 0;
                                 });
                               },
-                              color: _selectedIndexValue == 0 ? Color(0xFF2a2a2a): Color(0xFF1F1F1F),
+                              color: _selectedIndexValue == 0 ? overlayBackground().withAlpha(100): overlayBackground().withOpacity(1),
                               height: 24,
                               elevation: 0,
                               child: AutoSizeText(
@@ -785,7 +784,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                   bottomRight: Radius.circular(12),
                                 ),
                               ),
-                              color: _selectedIndexValue == 1 ? Color(0xFF2a2a2a): Color(0xFF1F1F1F),
+                              color: _selectedIndexValue == 0 ? overlayBackground().withOpacity(0.8): overlayBackground().withOpacity(1),
                               elevation: 0,
                               height: 24,
                               child: AutoSizeText(
@@ -828,7 +827,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                     },
                     child: Container(
                       padding: EdgeInsets.all(8),
-                      child: SvgPicture.asset('assets/images/sort-by-button.svg', width: 20,),
+                      child: SvgPicture.asset('assets/images/sort-by-button.svg', width: 20, color: iconColor(),),
                     ),
                   ),
                 ) : Container(),
@@ -990,7 +989,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
         ? Container()
         : Container(
             height: 50,
-            color: Colors.black87,
+            color: overlayBackground().withOpacity(1),
             child: Row(
               children: <Widget>[
                 Padding(
@@ -998,8 +997,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                 ),
                 Text(
                   'Total: ${_selectedIndexValue == 0 ? state.productsInfo.itemCount : state.collectionInfo.itemCount}',
-                  style: TextStyle(
-                    color: Colors.white,
+                  style: TextStyle(               
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
                   ),
@@ -1130,7 +1128,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                         height: 64.0 * 2.0 + MediaQuery.of(context).padding.bottom,
                         width: MediaQuery.of(context).size.width,
                         decoration: BoxDecoration(
-                          color: Colors.black,
+                          color: overlayColor(),
                           borderRadius: BorderRadius.all(Radius.circular(15)),
                         ),
                         padding: EdgeInsets.only(top: 16),
@@ -1310,7 +1308,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
                     child: Container(
                       height: 216,
                       child: BlurEffectView(
-                        color: Color.fromRGBO(50, 50, 50, 0.4),
                         padding: EdgeInsets.all(16),
                         child: Column(
                           children: <Widget>[
@@ -1402,7 +1399,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
       margin: EdgeInsets.only(left: 16, right: 16,),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(12.0)),
-          color: Color.fromRGBO(0, 0, 0, 0.3)
+          color: overlayBackground(),
       ),
       child: Center(
         child: Column(
@@ -1413,6 +1410,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
               'assets/images/productsicon.svg',
               width: 80,
               height: 80,
+              color: iconColor().withOpacity(0.5),
             ),
             Padding(
               padding: EdgeInsets.only(top: 16),
@@ -1437,7 +1435,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
               height: 44,
               minWidth: 0,
               elevation: 0,
-              color: Colors.white,
+              color: overlayBackground(),
               child: Container(
                 width: 150,
                 child: Row(
@@ -1446,12 +1444,10 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   children: <Widget>[
                     Icon(
                       Icons.add,
-                      color: Colors.black,
                     ),
                     Text(
                       Language.getProductStrings('add_product'),
                       style: TextStyle(
-                        color: Colors.black,
                         fontSize: 18,
                         fontWeight: FontWeight.w400,
                       ),
@@ -1471,7 +1467,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
       margin: EdgeInsets.only(left: 16, right: 16, top: 8),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(12.0)),
-          color: Color.fromRGBO(0, 0, 0, 0.3)
+          color: overlayBackground(),
       ),
       child: Center(
         child: Column(
@@ -1482,6 +1478,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
               'assets/images/collection.svg',
               width: 80,
               height: 80,
+              color: iconColor().withOpacity(0.5),
             ),
             Padding(
               padding: EdgeInsets.only(top: 16),
@@ -1507,7 +1504,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
               height: 44,
               minWidth: 0,
               elevation: 0,
-              color: Colors.white,
+              color: overlayBackground(),
               child: Container(
                 width: 150,
                 child: Row(
@@ -1516,12 +1513,10 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   children: <Widget>[
                     Icon(
                       Icons.add,
-                      color: Colors.black,
                     ),
                     Text(
                       Language.getProductStrings('Add Collection'),
                       style: TextStyle(
-                        color: Colors.black,
                         fontSize: 18,
                         fontWeight: FontWeight.w400,
                       ),

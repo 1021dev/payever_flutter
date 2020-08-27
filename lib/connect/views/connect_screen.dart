@@ -542,7 +542,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    color: overlayBackground(),
+                    color: overlayBackground().withOpacity(1),
                     itemBuilder: (BuildContext context) {
                       return appBarPopUpActions(context, state)
                           .map((ConnectPopupButton item) {

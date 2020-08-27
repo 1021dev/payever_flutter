@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:payever/commons/commons.dart';
+import 'package:payever/theme.dart';
 
 class ProductDetailSubSectionHeaderView extends StatelessWidget {
   final String type;
@@ -23,15 +24,15 @@ class ProductDetailSubSectionHeaderView extends StatelessWidget {
       child: Container(
         height: 50,
         padding: EdgeInsets.only(left: 16, right: 16),
-        color: Color(0xf2111111),
+        color: overlayRow(),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Row(
               children: <Widget>[
                 type == 'pos'
-                    ? SvgPicture.asset('assets/images/pos.svg', width: 24, height: 24,)
-                    : SvgPicture.asset('assets/images/shopicon.svg', width: 24, height: 24,),
+                    ? SvgPicture.asset('assets/images/pos.svg', width: 24, height: 24, color: iconColor(),)
+                    : SvgPicture.asset('assets/images/shopicon.svg', width: 24, height: 24, color: iconColor(),),
                 Padding(
                   padding: EdgeInsets.only(left: 8),
                 ),
@@ -40,7 +41,6 @@ class ProductDetailSubSectionHeaderView extends StatelessWidget {
                       ? Language.getCommerceOSStrings('dashboard.apps.pos')
                       : Language.getCommerceOSStrings('dashboard.apps.store'),
                   style: TextStyle(
-                    color: Colors.white,
                     fontSize: 16,
                     fontWeight: FontWeight.w400,
                   ),

@@ -17,6 +17,7 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/products/models/models.dart';
 import 'package:payever/products/widgets/collection_detail_image_view.dart';
 import 'package:payever/products/widgets/product_detail_header.dart';
+import 'package:payever/theme.dart';
 import 'package:payever/transactions/models/enums.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/login/login_screen.dart';
@@ -218,7 +219,6 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
 
   Widget _body(ProductsScreenState state) {
     return Scaffold(
-      backgroundColor: Colors.black,
       resizeToAvoidBottomPadding: false,
       appBar: _appBar(state),
       body: SafeArea(
@@ -228,7 +228,7 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
             key: formKey,
             autovalidate: false,
             child: Container(
-              color: Color(0xff2c2c2c),
+              color: overlayColor(),
               alignment: Alignment.center,
               child: Container(
                 width: Measurements.width,
@@ -374,7 +374,7 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
           ),
           Container(
             height: 64,
-            color: Color(0x80111111),
+            color: overlayRow(),
             padding: EdgeInsets.only(left: 16, right: 16),
             child: TextFormField(
               initialValue: widget.collection != null ? widget
@@ -387,7 +387,6 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
                     UpdateCollectionDetail(collectionModel: model));
               },
               style: TextStyle(
-                color: Colors.white,
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
               ),
@@ -685,7 +684,7 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
     return Container(
       height: 150,
       margin: EdgeInsets.only(top: 16, bottom: 16),
-      color: Color(0x80111111),
+      color: overlayRow(),
       alignment: Alignment.topLeft,
       padding: EdgeInsets.only(left: 16, right: 16),
       child: Column(

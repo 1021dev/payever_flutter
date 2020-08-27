@@ -27,6 +27,7 @@ import 'package:payever/products/widgets/product_detail_subsection_header.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/login/login_screen.dart';
+import 'package:payever/theme.dart';
 
 bool _isPortrait;
 bool _isTablet;
@@ -228,7 +229,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   Widget _body(ProductsScreenState state) {
     return Scaffold(
-      backgroundColor: Colors.black,
       resizeToAvoidBottomPadding: false,
       appBar: _appBar(state),
       body: SafeArea(
@@ -238,7 +238,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             key: formKey,
             autovalidate: false,
             child: Container(
-              color: Color(0xff2c2c2c),
               alignment: Alignment.center,
               child: Container(
                 width: Measurements.width,
@@ -533,14 +532,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               ): Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  SvgPicture.asset('assets/images/insertimageicon.svg'),
+                  SvgPicture.asset('assets/images/insertimageicon.svg', color: iconColor(),),
                   Padding(
                     padding: EdgeInsets.only(top: 16),
                   ),
                   Text(
                     'Upload images',
                     style: TextStyle(
-                      color: Colors.white,
                       fontSize: 18,
                       fontWeight: FontWeight.w400,
                     ),
@@ -669,7 +667,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           ): Container(),
           Container(
             height: 64,
-            color: Color(0x80111111),
+            color: overlayRow(),
             padding: EdgeInsets.only(left: 16, right: 16),
             child: Row(
               children: <Widget>[
@@ -703,7 +701,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     Text(
                       Language.getProductStrings('info.placeholders.inventory'),
                       style: TextStyle(
-                        color: Colors.white,
                         fontSize: 14,
                         fontWeight: FontWeight.w300,
                       ),
@@ -739,7 +736,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           ),
           Container(
             height: 64,
-            color: Color(0x80111111),
+            color: overlayRow(),
             padding: EdgeInsets.only(left: 16, right: 16),
             child: Row(
               children: <Widget>[
@@ -755,7 +752,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             widget.screenBloc.add(UpdateProductDetail(productsModel: product, inventoryModel: state.inventory));
                           },
                           style: TextStyle(
-                            color: Colors.white,
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
                           ),
@@ -775,7 +771,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         child: Text(
                           state.productDetail.currency ?? '',
                           style: TextStyle(
-                            color: Colors.white,
                             fontWeight: FontWeight.w300,
                             fontSize: 14,
                           ),
@@ -799,7 +794,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             widget.screenBloc.add(UpdateProductDetail(productsModel: product, inventoryModel: state.inventory));
                           },
                           style: TextStyle(
-                            color: Colors.white,
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
                           ),
@@ -819,7 +813,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         child: Text(
                           state.productDetail.currency ?? '',
                           style: TextStyle(
-                            color: Colors.white,
                             fontWeight: FontWeight.w300,
                             fontSize: 14,
                           ),
@@ -838,7 +831,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           ),
           Container(
             height: 64,
-            color: Color(0x80111111),
+            color: overlayRow(),
             padding: EdgeInsets.only(left: 16, right: 16),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -850,7 +843,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 Text(
                   'Product Type',
                   style: TextStyle(
-                    color: Colors.white60,
+                    color: Colors.grey,
                     fontSize: 12,
                     fontWeight: FontWeight.w200,
                   ),
@@ -875,7 +868,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       child: Text(
                         label,
                         style: TextStyle(
-                          color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.w300,
                         ),
@@ -903,7 +895,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     return Container(
       height: 150,
       margin: EdgeInsets.only(top: 16, bottom: 16),
-      color: Color(0x80111111),
+      color: overlayRow(),
       alignment: Alignment.topLeft,
       padding: EdgeInsets.only(left: 16, right: 16),
       child: Column(
@@ -955,7 +947,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         children: <Widget>[
           Container(
             height: 64,
-            color: Color(0x80111111),
+            color: overlayRow(),
             padding: EdgeInsets.only(left: 16, right: 16),
             child: Row(
               children: <Widget>[
@@ -1025,7 +1017,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           ),
           Container(
             height: 64,
-            color: Color(0x80111111),
+            color: overlayRow(),
             padding: EdgeInsets.only(left: 16, right: 16),
             child: Row(
               children: <Widget>[
@@ -1051,7 +1043,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           Language.getProductStrings('info.placeholders.inventoryTrackingEnabled'),
                           minFontSize: 10,
                           style: TextStyle(
-                            color: Colors.white,
                             fontSize: 14,
                             fontWeight: FontWeight.w300,
                           ),
@@ -1073,7 +1064,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     Text(
                       Language.getProductStrings('info.placeholders.inventory'),
                       style: TextStyle(
-                        color: Colors.white60,
+                        color: Colors.grey,
                         fontSize: 10,
                         fontWeight: FontWeight.w200,
                       ),
@@ -1099,7 +1090,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           '${(state.inventory.stock ?? 0)}',
                           minFontSize: 12,
                           style: TextStyle(
-                            color: Colors.white,
                             fontWeight: FontWeight.w400,
                             fontSize: 18,
                           ),
@@ -1151,7 +1141,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Container(
-            color: Color(0x80111111),
+            color: overlayRow(),
             padding: EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -1465,7 +1455,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               child: Text(
                 Language.getProductStrings('variantEditor.add_variant'),
                 style: TextStyle(
-                  color: Colors.white,
                   fontSize: 16,
                   fontWeight: FontWeight.w400,
                 ),
@@ -1528,7 +1517,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     Text(
                       terminal.name,
                       style: TextStyle(
-                        color: Colors.white,
                         fontSize: 14,
                       ),
                     ),
@@ -1599,7 +1587,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     Text(
                       shop.name,
                       style: TextStyle(
-                        color: Colors.white,
                         fontSize: 14,
                       ),
                     ),
@@ -1662,7 +1649,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         children: <Widget>[
           Container(
             height: 64,
-            color: Color(0x80111111),
+            color: overlayRow(),
             padding: EdgeInsets.only(left: 16, right: 16),
             child: Row(
               children: <Widget>[
@@ -1677,7 +1664,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       widget.screenBloc.add(UpdateProductDetail(productsModel: product, increaseStock: state.increaseStock));
                     },
                     style: TextStyle(
-                      color: Colors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                     ),
@@ -1702,7 +1688,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   child: Text(
                     Language.getProductStrings('shippingSection.measure.kg'),
                     style: TextStyle(
-                      color: Colors.white,
                       fontWeight: FontWeight.w300,
                       fontSize: 14,
                     ),
@@ -1718,7 +1703,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           ),
           Container(
             height: 64,
-            color: Color(0x80111111),
+            color: overlayRow(),
             padding: EdgeInsets.only(left: 16, right: 16),
             child: Row(
               children: <Widget>[
@@ -1733,7 +1718,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       widget.screenBloc.add(UpdateProductDetail(productsModel: product, increaseStock: state.increaseStock));
                     },
                     style: TextStyle(
-                      color: Colors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                     ),
@@ -1758,7 +1742,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   child: Text(
                     Language.getProductStrings('shippingSection.measure.cm'),
                     style: TextStyle(
-                      color: Colors.white,
                       fontWeight: FontWeight.w300,
                       fontSize: 14,
                     ),
@@ -1774,7 +1757,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           ),
           Container(
             height: 64,
-            color: Color(0x80111111),
+            color: overlayRow(),
             padding: EdgeInsets.only(left: 16, right: 16),
             child: Row(
               children: <Widget>[
@@ -1789,7 +1772,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       widget.screenBloc.add(UpdateProductDetail(productsModel: product, increaseStock: state.increaseStock));
                     },
                     style: TextStyle(
-                      color: Colors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                     ),
@@ -1814,7 +1796,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   child: Text(
                     Language.getProductStrings('shippingSection.measure.cm'),
                     style: TextStyle(
-                      color: Colors.white,
                       fontWeight: FontWeight.w300,
                       fontSize: 14,
                     ),
@@ -1830,7 +1811,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           ),
           Container(
             height: 64,
-            color: Color(0x80111111),
+            color: overlayRow(),
             padding: EdgeInsets.only(left: 16, right: 16),
             child: Row(
               children: <Widget>[
@@ -1845,7 +1826,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       widget.screenBloc.add(UpdateProductDetail(productsModel: product, increaseStock: state.increaseStock));
                     },
                     style: TextStyle(
-                      color: Colors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                     ),
@@ -1870,7 +1850,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   child: Text(
                     Language.getProductStrings('shippingSection.measure.cm'),
                     style: TextStyle(
-                      color: Colors.white,
                       fontWeight: FontWeight.w300,
                       fontSize: 14,
                     ),
@@ -1907,7 +1886,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     return Container(
       padding: EdgeInsets.only(top: 16, bottom: 16),
       child: Container(
-        color: Color(0x80111111),
+        color: overlayRow(),
         padding: EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
         child: state.taxes.length == 0
             ? Container()
@@ -1949,7 +1928,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       padding: EdgeInsets.only(top: 16, bottom: 16),
       child: Container(
         height: 64,
-        color: Color(0x80111111),
+        color: overlayRow(),
         padding: EdgeInsets.only(left: 16, right: 16),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1957,7 +1936,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             Text(
               Language.getProductStrings('Show this product'),
               style: TextStyle(
-                color: Colors.white,
                 fontSize: 14,
                 fontWeight: FontWeight.w300,
               ),
