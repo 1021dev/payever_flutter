@@ -22,3 +22,10 @@ class CreateBusiness extends BusinessEvent {
 }
 
 class BusinessFormEvent extends BusinessEvent{}
+
+class ClearSuggestionEvent extends BusinessEvent{}
+
+class GetIndustrySuggestionEvent extends BusinessEvent{
+  final String search;
+  GetIndustrySuggestionEvent({this.search});
+}

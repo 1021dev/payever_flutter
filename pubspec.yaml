@@ -68,6 +68,7 @@ dependencies:
   zefyr: ^0.11.0
   quill_delta: ^1.0.2
   flutter_html_editor: ^1.0.0
+  textfield_state: ^0.2.0
 
 dev_dependencies:
   flutter_test:

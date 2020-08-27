@@ -1,3 +1,4 @@
+import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -5,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/business/models/model.dart';
+import 'package:payever/business/widgets/simple_autocomplete_textfield.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
@@ -32,8 +34,11 @@ class _BusinessRegisterScreenState extends State<BusinessRegisterScreen> {
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
+  final TextEditingController industryController = TextEditingController();
   TextEditingController companyNameController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
+  GlobalKey key = new GlobalKey<AutoCompleteTextFieldState<IndustryModel>>();
+  IndustryModel selected;
 
   BusinessBloc businessBloc;
   @override
@@ -45,6 +50,10 @@ class _BusinessRegisterScreenState extends State<BusinessRegisterScreen> {
 
   @override
   void dispose() {
+    businessBloc.close();
+    companyNameController.dispose();
+    phoneController.dispose();
+    industryController.dispose();
     super.dispose();
   }
 
@@ -76,6 +85,7 @@ class _BusinessRegisterScreenState extends State<BusinessRegisterScreen> {
         bloc: businessBloc,
         builder: (BuildContext context, BusinessState state) {
           return Scaffold(
+            resizeToAvoidBottomPadding: false,
             body: _body(state),
           );
         },
@@ -311,7 +321,48 @@ class _BusinessRegisterScreenState extends State<BusinessRegisterScreen> {
                         ),
                       ],
                     ),
-                  )
+                  ),
+                  Divider(height: 0, thickness: 0.5,),
+                  BlurEffectView(
+                    color: overlayRow(),
+                    radius: 0,
+                    child: Container(
+                      height: 60,
+                      alignment: Alignment.center,
+                      child: SimpleAutocompleteFormField<IndustryModel>(
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.only(left: 16, right: 16),
+                          enabledBorder: InputBorder.none,
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.blue, width: 0.5),
+                          ),
+                          labelText: Language.getSettingsStrings('form.create_form.company.industry.label'),
+                        ),
+                        suggestionsHeight: 80.0,
+                        itemBuilder: (context, industry) => Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(industry.code,
+                                    style: TextStyle(fontWeight: FontWeight.bold)),
+                              ]),
+                        ),
+                        onSearch: (search) async => state.suggestions
+                            .where((industry) =>
+                        Language.getCommerceOSStrings('assets.industry.${industry.code}')
+                            .toLowerCase()
+                            .contains(search.toLowerCase()))
+                            .toList(),
+                        itemFromString: (string) => state.suggestions.singleWhere(
+                                (industry) => Language.getCommerceOSStrings('assets.industry.${industry.code}').toLowerCase() == string.toLowerCase(),
+                            orElse: () => null),
+                        onChanged: (value) => setState(() => selected = value),
+                        onSaved: (value) => setState(() => selected = value),
+                        validator: (person) => person == null ? 'Invalid industry.' : null,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
