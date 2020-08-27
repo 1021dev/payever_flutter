@@ -327,7 +327,6 @@ class _BusinessRegisterScreenState extends State<BusinessRegisterScreen> {
                     color: overlayRow(),
                     radius: 0,
                     child: Container(
-                      height: 60,
                       alignment: Alignment.center,
                       child: SimpleAutocompleteFormField<IndustryModel>(
                         decoration: InputDecoration(
@@ -338,29 +337,117 @@ class _BusinessRegisterScreenState extends State<BusinessRegisterScreen> {
                           ),
                           labelText: Language.getSettingsStrings('form.create_form.company.industry.label'),
                         ),
-                        suggestionsHeight: 80.0,
+                        suggestionsHeight: 100.0,
                         itemBuilder: (context, industry) => Padding(
                           padding: EdgeInsets.all(8.0),
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(industry.code,
-                                    style: TextStyle(fontWeight: FontWeight.bold)),
-                              ]),
+                          child: Text(
+                            Language.getCommerceOSStrings('assets.industry.${industry.code}'),
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
                         ),
-                        onSearch: (search) async => state.suggestions
-                            .where((industry) =>
-                        Language.getCommerceOSStrings('assets.industry.${industry.code}')
-                            .toLowerCase()
-                            .contains(search.toLowerCase()))
-                            .toList(),
-                        itemFromString: (string) => state.suggestions.singleWhere(
-                                (industry) => Language.getCommerceOSStrings('assets.industry.${industry.code}').toLowerCase() == string.toLowerCase(),
-                            orElse: () => null),
+                        onSearch: (search) async {
+                          if (search.length == 0) {
+                            return [];
+                          }
+                          return state.industryList
+                              .where((industry) =>
+                              Language.getCommerceOSStrings('assets.industry.${industry.code}')
+                                  .toLowerCase()
+                                  .contains(search.toLowerCase()))
+                              .toList();
+                        },
+                        itemFromString: (string) {
+                          print('item From String => $string');
+                          return state.industryList.singleWhere(
+                                  (industry) => Language.getCommerceOSStrings('assets.industry.${industry.code}').toLowerCase() == string.toLowerCase(),
+                              orElse: () => null);
+                        },
                         onChanged: (value) => setState(() => selected = value),
+                        itemToString: (item) {
+                          if (item == null) {
+                            return '';
+                          }
+                          print('item To String => ${item.code}');
+                          return Language.getCommerceOSStrings('assets.industry.${item.code}');
+                        },
                         onSaved: (value) => setState(() => selected = value),
                         validator: (person) => person == null ? 'Invalid industry.' : null,
+                        resetIcon: Icons.close ,
                       ),
+                    ),
+                  ),
+                  Divider(height: 0, thickness: 0.5,),
+                  Container(
+                    child: Row(
+                      children: <Widget>[
+                        Flexible(
+                          flex: 1,
+                          child: BlurEffectView(
+                            color: overlayRow(),
+                            radius: 0,
+                            child: Container(
+                              height: 60,
+                              alignment: Alignment.center,
+                              padding: EdgeInsets.only(left: 16, right: 8),
+                              child: CountryPickerDropdown(
+                                initialValue: 'in',
+                                itemBuilder: _buildDropdownItem,
+                                onValuePicked: (Country country) {
+                                  print("${country.name}");
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                        Flexible(
+                          flex: 1,
+                          child: BlurEffectView(
+                            color: overlayRow(),
+                            radius: 0,
+                            child: Container(
+                              height: 60,
+                              alignment: Alignment.center,
+                              padding: EdgeInsets.only(left: 16, right: 8),
+                              child: DropdownButtonFormField(
+                                isExpanded: true,
+                                validator: (val) {
+                                  return 'required';
+                                },
+                                items: List.generate(salesRange.length, (index) {
+                                  String key = salesRange[index];
+                                  return DropdownMenuItem(
+                                    child: Text(
+                                      Language.getSettingsStrings('assets.sales.${salesRange[index]}'),
+                                    ),
+                                    value: key,
+                                  );
+                                }).toList(),
+                                onChanged: (val) {
+                                },
+                                value: null,
+                                selectedItemBuilder: (context) {
+                                  return salesRange.map<Widget>((String item){
+                                    return Text(
+                                      Language.getSettingsStrings('assets.sales.$item'),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    );
+                                  }).toList();
+                                },
+                                icon: Icon(
+                                  Icons.keyboard_arrow_down,
+                                ),
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                ),
+                                hint: Text(
+                                  'Sales',
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
