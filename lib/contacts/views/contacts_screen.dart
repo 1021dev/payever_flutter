@@ -19,6 +19,7 @@ import 'package:payever/login/login_screen.dart';
 import 'package:payever/notifications/notifications_screen.dart';
 import 'package:payever/search/views/search_screen.dart';
 import 'package:payever/switcher/switcher_page.dart';
+import 'package:payever/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -80,7 +81,7 @@ class _ContactScreenState extends State<ContactScreen> {
     return [
       ConnectPopupButton(
         title: Language.getProductListStrings('list_view'),
-        icon: SvgPicture.asset('assets/images/list.svg'),
+        icon: SvgPicture.asset('assets/images/list.svg', color: iconColor()),
         onTap: () async {
           setState(() {
             selectedStyle = 0;
@@ -89,7 +90,7 @@ class _ContactScreenState extends State<ContactScreen> {
       ),
       ConnectPopupButton(
         title: Language.getProductListStrings('grid_view'),
-        icon: SvgPicture.asset('assets/images/grid.svg'),
+        icon: SvgPicture.asset('assets/images/grid.svg', color: iconColor(),),
         onTap: () async {
           setState(() {
             selectedStyle = 1;
@@ -458,7 +459,8 @@ class _ContactScreenState extends State<ContactScreen> {
 
                     },
                     child: Text(
-                        'Reset'
+                        'Reset',
+                      style: TextStyle(color: Colors.white),
                     ),
                   ),
                   Padding(
@@ -543,7 +545,7 @@ class _ContactScreenState extends State<ContactScreen> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        color: Colors.black87,
+                        color: overlayBackground().withOpacity(1),
                         itemBuilder: (BuildContext context) {
                           return sortPopup(context, state)
                               .map((ConnectPopupButton item) {
@@ -552,7 +554,6 @@ class _ContactScreenState extends State<ContactScreen> {
                               child: Text(
                                 item.title,
                                 style: TextStyle(
-                                  color: Colors.white,
                                   fontSize: 16,
                                   fontWeight: FontWeight.w400,
                                 ),
@@ -574,7 +575,7 @@ class _ContactScreenState extends State<ContactScreen> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        color: Colors.black87,
+                        color: overlayBackground().withOpacity(1),
                         itemBuilder: (BuildContext context) {
                           return appBarPopUpActions(context, state)
                               .map((ConnectPopupButton item) {
@@ -586,7 +587,6 @@ class _ContactScreenState extends State<ContactScreen> {
                                   Text(
                                     item.title,
                                     style: TextStyle(
-                                      color: Colors.white,
                                       fontSize: 16,
                                       fontWeight: FontWeight.w400,
                                     ),
@@ -620,6 +620,7 @@ class _ContactScreenState extends State<ContactScreen> {
             },
             child: Text(
               'Select all',
+              style: TextStyle(color: Colors.white),
             ),
           ),
           Container(
@@ -633,6 +634,7 @@ class _ContactScreenState extends State<ContactScreen> {
             },
             child: Text(
               'Deselect all',
+              style: TextStyle(color: Colors.white),
             ),
           ),
           Container(
@@ -646,6 +648,7 @@ class _ContactScreenState extends State<ContactScreen> {
             },
             child: Text(
               'Delete',
+              style: TextStyle(color: Colors.white),
             ),
           ),
         ],

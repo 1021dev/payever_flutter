@@ -10,6 +10,8 @@ import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/contacts/models/model.dart';
 import 'package:payever/transactions/models/enums.dart';
 
+import '../../theme.dart';
+
 bool _isPortrait;
 bool _isTablet;
 
@@ -59,11 +61,10 @@ class _ContactsFilterScreenState extends State<ContactsFilterScreen> {
 
     Map<String, String> filterTypes = filterConditionsByFilterType('weight');
     return Scaffold(
-      backgroundColor: Color(0x80111111),
+      backgroundColor: overlayBackground(),
       resizeToAvoidBottomPadding: true,
       body: BlurEffectView(
         radius: 0,
-        color: Colors.transparent,
         child: SafeArea(
           child: Container(
             child: Column(
@@ -109,7 +110,7 @@ class _ContactsFilterScreenState extends State<ContactsFilterScreen> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      color: Color(0xFF525151),
+                      color: overlayColor(),
                       child: Text(
                         'Done',
                       ),
@@ -121,7 +122,6 @@ class _ContactsFilterScreenState extends State<ContactsFilterScreen> {
                   child: Text(
                     Language.getCommerceOSStrings('dashboard.apps.contacts'),
                     style: TextStyle(
-                      color: Colors.white70,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),

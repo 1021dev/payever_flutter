@@ -123,10 +123,11 @@ class ContactGridItem extends StatelessWidget {
                         alignment: Alignment.center,
                         child: SizedBox.expand(
                           child: MaterialButton(
-                            child: Text(
-                              'Open',
-                            ),
-                            onPressed: (){
+                              child: Text(
+                                'Open',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              onPressed: (){
                               onOpen(contact);
                             }
                           ),
@@ -144,7 +145,6 @@ class ContactGridItem extends StatelessWidget {
               alignment: Alignment.center,
               child: contact.isChecked ? Icon(
                 Icons.check_circle_outline,
-                color: Colors.white60,
                 size: 24,
               ) : Icon(
                 Icons.radio_button_unchecked,

@@ -212,7 +212,7 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
       height: 64,
       child: Center(
         child: TextFormField(
-          style: TextStyle(fontSize: 16),
+          style: TextStyle(fontSize: 16, color: Colors.white),
           controller: fieldLabelController,
           onChanged: (val) {
             setState(() {

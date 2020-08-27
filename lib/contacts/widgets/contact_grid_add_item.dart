@@ -39,6 +39,7 @@ class ContactGridAddItem extends StatelessWidget {
                 child: MaterialButton(
                   child: Text(
                     'Add Contact',
+                    style: TextStyle(color: Colors.white),
                   ),
                   onPressed: onAdd,
                 ),

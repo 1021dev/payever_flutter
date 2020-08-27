@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/contacts/models/model.dart';
+import 'package:payever/theme.dart';
 
 class ContactOptionContentView extends StatefulWidget {
   final Function onAddNewField;
@@ -76,16 +77,13 @@ class _ContactOptionContentViewState extends State<ContactOptionContentView> {
                   padding: EdgeInsets.only(right: 8),
                   width: 24,
                   alignment: Alignment.center,
-                  child: SvgPicture.asset('assets/images/add.svg'),
+                  child: SvgPicture.asset('assets/images/add.svg', color: iconColor(),),
                 ),
                 Padding(
                   padding: EdgeInsets.only(left: 8),
                 ),
                 Text(
                   'Add field',
-                  style: TextStyle(
-                    color: Color(0xFFAAAAAA),
-                  ),
                 ),
               ],
             ),
@@ -99,9 +97,6 @@ class _ContactOptionContentViewState extends State<ContactOptionContentView> {
             },
             title: Text(
               'Choose previous option',
-              style: TextStyle(
-                color: Color(0xFFAAAAAA),
-              ),
             ),
             dense: true,
           ),

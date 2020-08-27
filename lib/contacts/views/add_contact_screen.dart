@@ -230,6 +230,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
               Icon(
                 openGeneral ? Icons.add : Icons.remove,
                 size: 20,
+                color: Colors.white,
               ),
             ],
           ),
@@ -374,7 +375,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
       height: 64,
       child: Center(
         child: TextFormField(
-          style: TextStyle(fontSize: 16),
+          style: TextStyle(fontSize: 16, color: Colors.white),
           onChanged: (val) {
             ContactUserModel contactUserModel = state.contactUserModel;
             contactUserModel.type = val;
@@ -406,7 +407,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
         children: <Widget>[
           Flexible(
             child: TextFormField(
-              style: TextStyle(fontSize: 16),
+              style: TextStyle(fontSize: 16, color: Colors.white),
               onChanged: (val) {
                 ContactUserModel contactUserModel = state.contactUserModel;
                 contactUserModel.firstName = val;
@@ -433,7 +434,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
           ),
           Flexible(
             child: TextFormField(
-              style: TextStyle(fontSize: 16),
+              style: TextStyle(fontSize: 16, color: Colors.white),
               onChanged: (val) {
                 ContactUserModel contactUserModel = state.contactUserModel;
                 contactUserModel.lastName = val;
@@ -467,7 +468,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
         children: <Widget>[
           Flexible(
             child: TextFormField(
-              style: TextStyle(fontSize: 16),
+              style: TextStyle(fontSize: 16, color: Colors.white),
               onChanged: (val) {
                 ContactUserModel contactUserModel = state.contactUserModel;
                 contactUserModel.mobilePhone = val;
@@ -494,7 +495,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
           ),
           Flexible(
             child: TextFormField(
-              style: TextStyle(fontSize: 16),
+              style: TextStyle(fontSize: 16, color: Colors.white),
               onChanged: (val) {
                 ContactUserModel contactUserModel = state.contactUserModel;
                 contactUserModel.email = val;
@@ -526,7 +527,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
       height: 64,
       child: Center(
         child: TextFormField(
-          style: TextStyle(fontSize: 16),
+          style: TextStyle(fontSize: 16, color: Colors.white),
           onChanged: (val) {
             ContactUserModel contactUserModel = state.contactUserModel;
             contactUserModel.homePage = val;
@@ -556,7 +557,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
       height: 64,
       child: Center(
         child: TextFormField(
-          style: TextStyle(fontSize: 16),
+          style: TextStyle(fontSize: 16, color: Colors.white),
           onChanged: (val) {
             ContactUserModel contactUserModel = state.contactUserModel;
             contactUserModel.street = val;
@@ -588,7 +589,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
         children: <Widget>[
           Flexible(
             child: TextFormField(
-              style: TextStyle(fontSize: 16),
+              style: TextStyle(fontSize: 16, color: Colors.white),
               onChanged: (val) {
                 ContactUserModel contactUserModel = state.contactUserModel;
                 contactUserModel.city = val;
@@ -615,7 +616,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
           ),
           Flexible(
             child: TextFormField(
-              style: TextStyle(fontSize: 16),
+              style: TextStyle(fontSize: 16, color: Colors.white),
               onChanged: (val) {
                 ContactUserModel contactUserModel = state.contactUserModel;
                 contactUserModel.states = val;
@@ -649,7 +650,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
         children: <Widget>[
           Flexible(
             child: TextFormField(
-              style: TextStyle(fontSize: 16),
+              style: TextStyle(fontSize: 16, color: Colors.white),
               onChanged: (val) {
                 ContactUserModel contactUserModel = state.contactUserModel;
                 contactUserModel.zip = val;
@@ -676,7 +677,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
           ),
           Flexible(
             child: TextFormField(
-              style: TextStyle(fontSize: 16),
+              style: TextStyle(fontSize: 16, color: Colors.white),
               onChanged: (val) {
                 ContactUserModel contactUserModel = state.contactUserModel;
                 contactUserModel.country = val;
@@ -738,6 +739,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
               Icon(
                 openAdditional ? Icons.add : Icons.remove,
                 size: 20,
+                color: Colors.white,
               ),
             ],
           ),
@@ -1276,6 +1278,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
               Icon(
                 Icons.keyboard_arrow_down,
                 size: 20,
+                color: Colors.white,
               ),
             ],
           ),
