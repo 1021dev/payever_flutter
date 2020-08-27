@@ -47,7 +47,8 @@ import 'sub_view/dashboard_tutorial_view.dart';
 class DashboardScreenInit extends StatelessWidget {
 
   final bool refresh;
-  DashboardScreenInit({this.refresh = false, });
+  final bool registered;
+  DashboardScreenInit({this.refresh = false, this.registered = false});
   @override
   Widget build(BuildContext context) {
     GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context, listen: true);
@@ -55,6 +56,7 @@ class DashboardScreenInit extends StatelessWidget {
     return DashboardScreen(
       wallpaper: globalStateModel.currentWallpaper,
       refresh: globalStateModel.refresh,
+      registered: registered,
     );
   }
 }
@@ -62,9 +64,9 @@ class DashboardScreenInit extends StatelessWidget {
 class DashboardScreen extends StatefulWidget {
   final String wallpaper;
   final bool refresh;
-  final ChangeThemeBloc themeBloc;
+  final bool registered;
 
-  DashboardScreen({this.themeBloc, this.wallpaper, this.refresh});
+  DashboardScreen({this.wallpaper, this.refresh, this.registered = false});
 
   @override
   _DashboardScreenState createState() => _DashboardScreenState();

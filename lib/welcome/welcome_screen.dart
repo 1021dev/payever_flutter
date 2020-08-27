@@ -8,7 +8,10 @@ import 'package:payever/blocs/welcome/welcome_bloc.dart';
 import 'package:payever/blocs/welcome/welcome_event.dart';
 import 'package:payever/blocs/welcome/welcome_state.dart';
 import 'package:payever/commons/commons.dart';
+import 'package:payever/dashboard/dashboard_screen.dart';
 import 'package:payever/login/login_screen.dart';
+import 'package:payever/settings/views/setting_screen.dart';
+import 'package:payever/theme.dart';
 import 'package:payever/transactions/views/transactions_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -76,15 +79,38 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         } else if (state is WelcomeScreenStateSuccess) {
           GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context, listen: false);
           globalStateModel.setRefresh(true);
-          Navigator.pushReplacement(
-            context,
-            PageTransition(
-              child: TransactionScreenInit(
-                dashboardScreenBloc: widget.dashboardScreenBloc,
+          if (widget.businessApps.code.contains('transaction')) {
+            Navigator.pushReplacement(
+              context,
+              PageTransition(
+                child: TransactionScreenInit(
+                  dashboardScreenBloc: widget.dashboardScreenBloc,
+                ),
+                type: PageTransitionType.fade,
               ),
-              type: PageTransitionType.fade,
-            ),
-          );
+            );
+          } else if (widget.businessApps.code.contains('setting')) {
+            Navigator.pushReplacement(
+              context,
+              PageTransition(
+                child: SettingInitScreen(dashboardScreenBloc: widget.dashboardScreenBloc,),
+                type: PageTransitionType.fade,
+              ),
+            );
+          } else if (widget.businessApps.code.contains('commerce')) {
+            Navigator.pushReplacement(
+              context,
+              PageTransition(
+                child: DashboardScreenInit(
+                  refresh: true,
+                ),
+                type: PageTransitionType.fade,
+                duration: Duration(microseconds: 300),
+              ),
+            );
+          } else {
+            Navigator.pop(context);
+          }
         }
       },
       child: BlocBuilder<WelcomeScreenBloc, WelcomeScreenState>(
@@ -98,7 +124,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   Widget _body(WelcomeScreenState state) {
     return Scaffold(
-      backgroundColor: Colors.black,
       resizeToAvoidBottomPadding: false,
       body: BackgroundBase(
         true,
@@ -129,7 +154,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       Text(
                         Language.getWelcomeStrings('welcome.${widget.businessApps.code}.title'),
                         style: TextStyle(
-                          color: Colors.white,
                           fontSize: 28,
                           fontWeight: FontWeight.bold,
                         ),
@@ -140,7 +164,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       Text(
                         Language.getWelcomeStrings('welcome.${widget.businessApps.code}.message'),
                         style: TextStyle(
-                          color: Colors.white70,
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
@@ -154,13 +177,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           onPressed: () {
                             screenBloc.add(ToggleEvent(businessId: widget.business.id, type: widget.businessApps.code,));
                           },
-                          color: Colors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
+                          elevation: 0,
+                          color: overlayBackground(),
                           child: state.isLoading ? SizedBox(
                             child: CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+                              valueColor: AlwaysStoppedAnimation<Color>(iconColor()),
                               strokeWidth: 2,
                             ),
                             height: 24.0,
@@ -168,7 +192,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           ) : Text(
                             Language.getWelcomeStrings('welcome.get-started'),
                             style: TextStyle(
-                              color: Colors.black,
+                              color: iconColor(),
                             ),
                           ),
                         ),
@@ -184,33 +208,38 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             children: [
                               new TextSpan(
                                 text: 'Hereby I confirm the ',
-                                style: new TextStyle(color: Colors.white, fontSize: 12),
+                                style: new TextStyle(
+                                  fontSize: 12,
+                                  color: iconColor(),
+                                ),
                               ),
                               new TextSpan(
                                 text: 'terms',
-                                style: new TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
+                                style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: iconColor()),
                                 recognizer: new TapGestureRecognizer()
                                   ..onTap = () { launch(Language.getWelcomeStrings('welcome.${widget.businessApps.code}.terms_link'));
                                   },
                               ),
                               new TextSpan(
                                 text: ' and ',
-                                style: new TextStyle(color: Colors.white, fontSize: 12),
+                                style: new TextStyle(fontSize: 12, color: iconColor()),
                               ),
                               new TextSpan(
                                 text: 'pricing',
-                                style: new TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
+                                style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: iconColor()),
                                 recognizer: new TapGestureRecognizer()
                                   ..onTap = () { launch(Language.getWelcomeStrings('welcome.${widget.businessApps.code}.pricing_link'));
                                   },
                               ),
                               new TextSpan(
                                 text: ' of the payever ',
-                                style: new TextStyle(color: Colors.white, fontSize: 12),
+                                style: new TextStyle(fontSize: 12, color: iconColor()),
                               ),
                               new TextSpan(
                                 text: Language.getCommerceOSStrings(widget.businessApps.dashboardInfo.title),
-                                style: new TextStyle(color: Colors.white,),
+                                style: TextStyle(
+                                  color: iconColor(),
+                                )
                               ),
                             ],
                           ),

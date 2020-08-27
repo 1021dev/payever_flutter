@@ -6,18 +6,24 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/business/models/model.dart';
 import 'package:payever/business/widgets/simple_autocomplete_textfield.dart';
+import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/translations.dart';
+import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/custom_elements.dart';
+import 'package:payever/dashboard/dashboard_screen.dart';
 import 'package:payever/login/login_screen.dart';
 import 'package:payever/settings/models/models.dart';
 import 'package:payever/settings/widgets/save_button.dart';
 import 'package:payever/theme.dart';
+import 'package:payever/welcome/welcome_screen.dart';
+import 'package:provider/provider.dart';
 
 class BusinessRegisterScreen extends StatefulWidget {
 
@@ -83,12 +89,35 @@ class _BusinessRegisterScreenState extends State<BusinessRegisterScreen> {
       bloc: businessBloc,
       listener: (BuildContext context, BusinessState state) async {
         if (state is BusinessFailure) {
-          Navigator.pushReplacement(
+          Fluttertoast.showToast(msg: '${state.error}');
+          Navigator.pop(context);
+        } else if (state is BusinessSuccess) {
+          Provider.of<GlobalStateModel>(context,listen: false)
+              .setCurrentBusiness(state.business);
+          Provider.of<GlobalStateModel>(context,listen: false)
+              .setCurrentWallpaper('$wallpaperBase${state.wallpaper.currentWallpaper.wallpaper}');
+          BusinessApps commerceApp;
+          List<BusinessApps> businessApps = state.businessApps.where((element) => element.code.contains('commerce')).toList();
+          if (businessApps.length > 0) {
+            commerceApp = businessApps.first;
+          }
+          Navigator.push(
             context,
             PageTransition(
-              child: LoginScreen(),
+              child: WelcomeScreen(
+                business: state.business,
+                businessApps: commerceApp,
+              ),
               type: PageTransitionType.fade,
             ),
+          );
+          Navigator.pushReplacement(
+              context,
+              PageTransition(
+                child: DashboardScreenInit(refresh: true,),
+                type: PageTransitionType.fade,
+                duration: Duration(microseconds: 300),
+              )
           );
         }
       },
@@ -164,7 +193,10 @@ class _BusinessRegisterScreenState extends State<BusinessRegisterScreen> {
                         child: DropdownButtonFormField(
                           isExpanded: true,
                           validator: (val) {
-                            return 'Business status is required';
+                            if (val == null) {
+                              return 'Business status is required';
+                            }
+                            return null;
                           },
                           items: List.generate(businessStatusMap.keys.toList().length, (index) {
                             String key = businessStatusMap.keys.toList()[index];
@@ -246,7 +278,10 @@ class _BusinessRegisterScreenState extends State<BusinessRegisterScreen> {
                                 child: DropdownButtonFormField(
                                   isExpanded: true,
                                   validator: (val) {
-                                    return 'Status is required';
+                                    if (val == null) {
+                                      return 'Status is required';
+                                    }
+                                    return null;
                                   },
                                   items: List.generate(statusesMap.keys.toList().length, (index) {
                                     String key = statusesMap.keys.toList()[index];
@@ -297,7 +332,10 @@ class _BusinessRegisterScreenState extends State<BusinessRegisterScreen> {
                                 child: DropdownButtonFormField(
                                   isExpanded: true,
                                   validator: (val) {
-                                    return 'Sales is required';
+                                    if (val == null) {
+                                      return 'Sales is required';
+                                    }
+                                    return null;
                                   },
                                   items: List.generate(salesRange.length, (index) {
                                     String key = salesRange[index];
@@ -466,7 +504,7 @@ class _BusinessRegisterScreenState extends State<BusinessRegisterScreen> {
                       child: SaveBtn(
                         title: 'Register',
                         isBottom: true,
-                        isUpdating: false,
+                        isUpdating: state.isUpdating,
                         onUpdate: () {
                           if (formKey.currentState.validate()) {
                             BusinessFormData formData = state.formData;

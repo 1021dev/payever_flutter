@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:payever/business/models/model.dart';
 import 'package:payever/commons/commons.dart';
+import 'package:payever/commons/models/fetchwallpaper.dart';
 import 'package:payever/settings/models/models.dart';
 
 class BusinessState {
@@ -45,8 +46,10 @@ class BusinessState {
 
 class BusinessSuccess extends BusinessState {
   final Business business;
+  final List<BusinessApps> businessApps;
+  final FetchWallpaper wallpaper;
 
-  BusinessSuccess({this.business});
+  BusinessSuccess({this.business, this.businessApps, this.wallpaper});
 }
 
 class BusinessFailure extends BusinessState {

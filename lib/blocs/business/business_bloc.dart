@@ -1,9 +1,8 @@
-import 'dart:html';
-
 import 'package:bloc/bloc.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/business/models/model.dart';
 import 'package:payever/commons/commons.dart';
+import 'package:payever/commons/models/fetchwallpaper.dart';
 import 'package:payever/settings/models/models.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
@@ -71,7 +70,7 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
   
   Stream<BusinessState> registerBusiness(Map<String, dynamic> body,) async* {
     yield state.copyWith(isUpdating: true);
-    String id = Uuid().v4();
+    String id = Uuid().v1();
 
     dynamic authResponse = await api.putAuth(token, id);
     if (authResponse is Map) {
@@ -83,11 +82,24 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
       dynamic businessResponse = await api.postBusiness(accessToken, body);
       if (businessResponse is Map) {
         Business business = Business.map(businessResponse);
-        dashboardScreenBloc.add(UpdateBusiness(business));
-        globalStateModel.setCurrentBusiness(business,
-            notify: true);
+
+        dynamic wallpapersObj = await api.getWallpaper(business.id, accessToken);
+        FetchWallpaper fetchWallpaper = FetchWallpaper.map(wallpapersObj);
+        preferences.setString(
+            GlobalUtils.WALLPAPER, wallpaperBase + fetchWallpaper.currentWallpaper.wallpaper);
+        preferences.setString(GlobalUtils.BUSINESS, business.id);
+
+        dynamic businessAppsObj = await api.getBusinessApps(
+          business.id,
+          accessToken,
+        );
+        List<BusinessApps> businessWidgets = [];
+        businessAppsObj.forEach((item) {
+          businessWidgets.add(BusinessApps.fromMap(item));
+        });
+
         yield state.copyWith(isUpdating: false);
-        yield BusinessSuccess(business: business);
+        yield BusinessSuccess(business: business, businessApps: businessWidgets, wallpaper: fetchWallpaper);
       } else {
         yield state.copyWith(isUpdating: false);
         yield BusinessFailure(error: 'Business Registration Failed');
