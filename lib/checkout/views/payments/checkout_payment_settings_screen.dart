@@ -1306,7 +1306,7 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
               onPressed: () {
 
               },
-              color: Colors.black87,
+              color: overlayBackground(),
               child: Text(
                 Language.getConnectStrings('Send'),
                 style: TextStyle(
@@ -1324,7 +1324,6 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
         for (Variant v in variant.variants) {
           Widget header = Container(
             height: 56,
-            color: Colors.black45,
             child: SizedBox.expand(
               child: MaterialButton(
                 onPressed: () {
@@ -1369,7 +1368,7 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
                             }
                           },
                           minWidth: 0,
-                          color: Colors.black45,
+                          color: overlayBackground(),
                           elevation: 0,
                           padding: EdgeInsets.only(left: 8, right: 8),
                           height: 24,
@@ -1438,7 +1437,7 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
                     };
                     screenBloc.add(UpdatePaymentOptionEvent(id: '${v.id}', body: body));
                   },
-                  color: Colors.black87,
+                  color: overlayBackground(),
                   child: state.isSaving ? Center(
                     child: CircularProgressIndicator(
                       strokeWidth: 2,
@@ -1529,7 +1528,7 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
                   onPressed: () {
 
                   },
-                  color: Colors.black87,
+                  color: overlayBackground(),
                   child: Text(
                     Language.getConnectStrings('Connect'),
                     style: TextStyle(
@@ -1588,9 +1587,6 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
           Container(
             padding: EdgeInsets.only(left: 16, right: 16),
             child: BlurEffectView(
-              color: Color.fromRGBO(20, 20, 20, 0.2),
-              blur: 15,
-              radius: 12,
               padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,

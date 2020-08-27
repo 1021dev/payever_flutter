@@ -123,7 +123,6 @@ class _SectionsScreenState extends State<SectionsScreen> {
                   Container(
                     height: 65,
                     decoration: BoxDecoration(
-                      color: Colors.black87,
                       borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(10),
                         bottomRight: Radius.circular(10),

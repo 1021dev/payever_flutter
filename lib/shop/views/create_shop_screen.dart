@@ -14,6 +14,7 @@ import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/login/login_screen.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/login/login_screen.dart';
+import 'package:payever/theme.dart';
 
 bool _isPortrait;
 bool _isTablet;
@@ -248,8 +249,6 @@ class _CreateShopScreenState extends State<CreateShopScreen> {
               ),
             ),
             BlurEffectView(
-              color: Color.fromRGBO(50, 50, 50, 0.2),
-              blur: 5,
               radius: 12,
               padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
               child: Column(
@@ -261,7 +260,6 @@ class _CreateShopScreenState extends State<CreateShopScreen> {
                         child: Container(
                           height: 60,
                           child: BlurEffectView(
-                            color: Color.fromRGBO(100, 100, 100, 0.2),
                             blur: 15,
                             radius: 12,
                             child: TextFormField(
@@ -309,7 +307,6 @@ class _CreateShopScreenState extends State<CreateShopScreen> {
                   ),
                   Container(
                     height: 64,
-                    color: Color(0xFF222222),
                     child: SizedBox.expand(
                       child: MaterialButton(
                         onPressed: buttonEnabled ? () {
@@ -320,11 +317,11 @@ class _CreateShopScreenState extends State<CreateShopScreen> {
                         ) : Text(
                           'Create',
                           style: TextStyle(
-                            color: buttonEnabled ? Colors.white : Colors.white24,
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
+                        color: overlayBackground(),
                       ),
                     ),
                   ),

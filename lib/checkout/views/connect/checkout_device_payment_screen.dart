@@ -328,7 +328,6 @@ class _CheckoutDevicePaymentScreenState extends State<CheckoutDevicePaymentScree
               ): Container(),
               isOpened ? Container(
                 height: 64,
-                color: Colors.black87,
                 child: SizedBox.expand(
                   child: MaterialButton(
                     onPressed: () {

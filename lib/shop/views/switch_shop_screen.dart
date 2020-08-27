@@ -10,6 +10,7 @@ import 'package:payever/blocs/shop/shop.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/shop/views/create_shop_screen.dart';
+import 'package:payever/theme.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/login/login_screen.dart';
@@ -169,7 +170,6 @@ class _SwitchShopScreenState extends State<SwitchShopScreen> {
           Text(
             'Online Shops',
             style: TextStyle(
-              color: Colors.white,
               fontSize: 18,
               fontWeight: FontWeight.w500,
             ),
@@ -253,12 +253,11 @@ class _SwitchShopScreenState extends State<SwitchShopScreen> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
-              color: Colors.black26,
+              color: overlayBackground(),
               child: Text(
                 '+ Add Shop',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.white,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -385,7 +384,7 @@ class ShopCell extends StatelessWidget {
       focusElevation: 0,
       hoverElevation: 0,
       highlightElevation: 0,
-      color: selected.id == shopModel.id ? Colors.white24 : Colors.transparent.withOpacity(0),
+      color: selected.id == shopModel.id ? overlayBackground().withOpacity(0.8) : Colors.transparent.withOpacity(0),
       onPressed: () {
         onTap(shopModel);
       },
@@ -415,7 +414,6 @@ class ShopCell extends StatelessWidget {
                   child: Text(
                     avatarName,
                     style: TextStyle(
-                      color: Colors.white,
                       fontSize: 36,
                       fontWeight: FontWeight.w600,
                     ),
@@ -431,7 +429,6 @@ class ShopCell extends StatelessWidget {
               maxLines: 2,
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Colors.white,
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),
@@ -449,12 +446,11 @@ class ShopCell extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    color: Colors.black26,
+                    color: overlayBackground(),
                     child: Text(
                       'Open',
                       style: TextStyle(
                         fontSize: 10,
-                        color: Colors.white,
                         fontWeight: FontWeight.w500,
                       ),
                     ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:payever/theme.dart';
 
 class ThemeFilterContentView extends StatelessWidget {
   final int selectedIndex;
@@ -17,7 +18,7 @@ class ThemeFilterContentView extends StatelessWidget {
         body: Container(
           padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
           decoration: BoxDecoration(
-            color: Color(0xFF222222),
+            color: overlayBackground(),
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(20.0),
               topRight: Radius.circular(20.0),
@@ -32,7 +33,6 @@ class ThemeFilterContentView extends StatelessWidget {
                   Text(
                     'Filter:',
                     style: TextStyle(
-                      color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -60,10 +60,7 @@ class ThemeFilterContentView extends StatelessWidget {
                         height: 30,
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          'All themes',
-                          style: TextStyle(
-                            color: Color(0xFFAAAAAA),
-                          ),
+                          'All themes'
                         ),
                       ),
                     ],
@@ -91,10 +88,7 @@ class ThemeFilterContentView extends StatelessWidget {
                         height: 30,
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          'Own themes',
-                          style: TextStyle(
-                            color: Color(0xFFAAAAAA),
-                          ),
+                          'Own themes'
                         ),
                       ),
                     ],

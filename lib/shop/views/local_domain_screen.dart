@@ -12,6 +12,7 @@ import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/login/login_screen.dart';
+import 'package:payever/theme.dart';
 
 bool _isPortrait;
 bool _isTablet;
@@ -168,8 +169,6 @@ class _LocalDomainScreenState extends State<LocalDomainScreen> {
       child: Container(
         padding: EdgeInsets.only(left: 16, right: 16),
         child: BlurEffectView(
-          color: Color.fromRGBO(50, 50, 50, 0.2),
-          blur: 5,
           radius: 12,
           padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
           child: Wrap(
@@ -185,9 +184,6 @@ class _LocalDomainScreenState extends State<LocalDomainScreen> {
                           child: Container(
                             height: 50,
                             child: BlurEffectView(
-                              color: Color.fromRGBO(100, 100, 100, 0.2),
-                              blur: 15,
-                              radius: 12,
                               padding: EdgeInsets.only(left: 12, right: 12),
                               child: TextFormField(
                                 controller: domainTextController,
@@ -236,7 +232,6 @@ class _LocalDomainScreenState extends State<LocalDomainScreen> {
                           child: Text(
                             '.new.payever.shop',
                             style: TextStyle(
-                              color: Colors.white,
                               fontSize: 14,
                             ),
                           ),
@@ -247,7 +242,6 @@ class _LocalDomainScreenState extends State<LocalDomainScreen> {
               ),
               Container(
                 height: 50,
-                color: Color(0xFF222222),
                 child: SizedBox.expand(
                   child: MaterialButton(
                     onPressed: buttonEnabled ? () async {
@@ -264,12 +258,12 @@ class _LocalDomainScreenState extends State<LocalDomainScreen> {
                         Navigator.pop(context);
                       });
                     } : null,
+                    color: overlayBackground(),
                     child: state.isUpdating ? Center(
                       child: CircularProgressIndicator(),
                     ) : Text(
                       'Done',
                       style: TextStyle(
-                        color: buttonEnabled ? Colors.white : Colors.white24,
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                       ),

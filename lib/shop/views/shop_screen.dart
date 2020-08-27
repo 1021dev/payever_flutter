@@ -27,6 +27,7 @@ import 'package:payever/shop/widgets/template_cell.dart';
 import 'package:payever/shop/widgets/theme_filter_content_view.dart';
 import 'package:payever/shop/widgets/theme_own_cell.dart';
 import 'package:payever/switcher/switcher_page.dart';
+import 'package:payever/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -481,13 +482,13 @@ class _ShopScreenState extends State<ShopScreen> {
             },
           ),
           PopupMenuButton<OverflowMenuItem>(
-            icon: Icon(Icons.more_horiz),
+            icon: Icon(Icons.more_horiz, color: Colors.white,),
             offset: Offset(0, 100),
             onSelected: (OverflowMenuItem item) => item.onTap(),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),
-            color: Colors.black87,
+            color: overlayBackground().withOpacity(1),
             itemBuilder: (BuildContext context) {
               return appBarPopUpActions(context, state)
                   .map((OverflowMenuItem item) {
@@ -496,7 +497,6 @@ class _ShopScreenState extends State<ShopScreen> {
                   child: Text(
                     item.title,
                     style: TextStyle(
-                      color: Colors.white,
                       fontSize: 14,
                       fontWeight: FontWeight.w300,
                     ),
@@ -555,12 +555,13 @@ class _ShopScreenState extends State<ShopScreen> {
                     },
                     child: Row(
                       children: <Widget>[
-                        Icon(Icons.filter_list),
+                        Icon(Icons.filter_list, color: Colors.white,),
                         Padding(
                           padding: EdgeInsets.only(left: 8),
                         ),
                         Text(
                           'Filter',
+                          style: TextStyle(color: Colors.white),
                         )
                       ],
                     ),
@@ -660,8 +661,6 @@ class _ShopScreenState extends State<ShopScreen> {
       padding: EdgeInsets.only(left: 16, right: 16),
       child: Center(
         child: BlurEffectView(
-          blur: 15,
-          color: Color.fromRGBO(50, 50, 50, 0.2),
           child: Wrap(
             children: <Widget>[
               Container(
@@ -704,9 +703,6 @@ class _ShopScreenState extends State<ShopScreen> {
                       flex: 2,
                       child: Text(
                         Language.getWidgetStrings('Payever Domain'),
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
                       ),
                     ),
                     Flexible(
@@ -755,9 +751,6 @@ class _ShopScreenState extends State<ShopScreen> {
                       flex: 2,
                       child: Text(
                         Language.getWidgetStrings('Own Domain'),
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
                       ),
                     ),
                     Flexible(
@@ -806,9 +799,6 @@ class _ShopScreenState extends State<ShopScreen> {
                       flex: 2,
                       child: Text(
                         Language.getWidgetStrings('Password'),
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
                       ),
                     ),
                     Flexible(
@@ -887,14 +877,13 @@ class _ShopScreenState extends State<ShopScreen> {
                         }
                       },
                       height: 32,
-                      color: Colors.white,
+                      color: overlayBackground().withOpacity(1),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
                       child: Text(
                         'Open',
                         style: TextStyle(
-                          color: Colors.black,
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
                         ),
@@ -905,11 +894,10 @@ class _ShopScreenState extends State<ShopScreen> {
                     ),
                     PopupMenuButton<OverflowMenuItem>(
                       child: Material(
-                        color: Colors.white,
+                        color: overlayBackground().withOpacity(1),
                         shape: CircleBorder(),
                         child: Icon(
                           Icons.more_horiz,
-                          color: Colors.black,
                           size: 32,
                         ),
                       ),
@@ -918,7 +906,7 @@ class _ShopScreenState extends State<ShopScreen> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      color: Colors.black87,
+                      color: overlayBackground().withOpacity(1),
                       itemBuilder: (BuildContext context) {
                         return dashboardPopup(context, state)
                             .map((OverflowMenuItem item) {
@@ -927,7 +915,6 @@ class _ShopScreenState extends State<ShopScreen> {
                             child: Text(
                               item.title,
                               style: TextStyle(
-                                color: Colors.white,
                                 fontSize: 14,
                                 fontWeight: FontWeight.w300,
                               ),

@@ -52,7 +52,7 @@ class _WorkshopTopBarState extends State<WorkshopTopBar> {
                 width: 80,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
-                  color: overlayBackground(),
+                  color: overlayBackground().withOpacity(1),
                 ),
                 child: Center(
                   child: Text(
@@ -83,13 +83,12 @@ class _WorkshopTopBarState extends State<WorkshopTopBar> {
             height: 30,
             width: 30,
             decoration: BoxDecoration(
-              color: overlayBackground(),
+              color: overlayBackground().withOpacity(1),
               shape: BoxShape.circle,
             ),
             child: PopupMenuButton<CheckOutPopupButton>(
               child: Icon(
                 Icons.more_horiz,
-                color: Colors.white,
               ),
               offset: Offset(0, 100),
               onSelected: (CheckOutPopupButton item) => item.onTap(),

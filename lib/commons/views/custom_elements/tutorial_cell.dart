@@ -53,7 +53,7 @@ class TutorialCell extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           SizedBox(width: 6),
-                          SvgPicture.asset('assets/images/icon_arrow.svg',),
+                          SvgPicture.asset('assets/images/icon_arrow.svg', color: iconColor(),),
                           SizedBox(width: 4),
                           Text(
                             Language.getWidgetStrings('widgets.tutorial.watch'),

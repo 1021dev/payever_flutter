@@ -12,6 +12,7 @@ import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/login/login_screen.dart';
+import 'package:payever/theme.dart';
 
 bool _isPortrait;
 bool _isTablet;
@@ -169,8 +170,6 @@ class _EnablePasswordScreenState extends State<EnablePasswordScreen> {
       child: Container(
         padding: EdgeInsets.only(left: 16, right: 16),
         child: BlurEffectView(
-          color: Color.fromRGBO(50, 50, 50, 0.2),
-          blur: 5,
           radius: 12,
           padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
           child: Wrap(
@@ -182,7 +181,6 @@ class _EnablePasswordScreenState extends State<EnablePasswordScreen> {
                 ),
               ),
               Container(
-                color: Colors.black26,
                 child: Container(
                   padding: EdgeInsets.only(left: 16, right: 16),
                   child: TextFormField(
@@ -229,7 +227,6 @@ class _EnablePasswordScreenState extends State<EnablePasswordScreen> {
               ),
               Divider(height: 0, thickness: 0.5, color: Colors.white54,),
               Container(
-                color: Colors.black26,
                 child: Container(
                   padding: EdgeInsets.only(left: 16, right: 16),
                   child: TextField(
@@ -258,7 +255,6 @@ class _EnablePasswordScreenState extends State<EnablePasswordScreen> {
                   title: Text(
                     'Enable password',
                     style: TextStyle(
-                      color: Colors.white,
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
                     ),
@@ -267,7 +263,6 @@ class _EnablePasswordScreenState extends State<EnablePasswordScreen> {
               ),
               Container(
                 height: 50,
-                color: Color(0xFF222222),
                 child: SizedBox.expand(
                   child: MaterialButton(
                     onPressed: buttonEnabled ? () async {
@@ -286,12 +281,12 @@ class _EnablePasswordScreenState extends State<EnablePasswordScreen> {
                         Navigator.pop(context);
                       });
                     } : null,
+                    color: overlayBackground(),
                     child: state.isUpdating ? Center(
                       child: CircularProgressIndicator(),
                     ) : Text(
                       'Done',
                       style: TextStyle(
-                        color: buttonEnabled ? Colors.white : Colors.white24,
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                       ),

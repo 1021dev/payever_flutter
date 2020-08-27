@@ -7,6 +7,7 @@ import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
+import 'package:payever/theme.dart';
 
 class CheckoutAddConnectionScreen extends StatefulWidget {
 
@@ -156,7 +157,7 @@ class _CheckoutAddConnectionScreenState extends State<CheckoutAddConnectionScree
                       }
                       widget.screenBloc.add(AddPaymentOptionEvent(name: controller.text));
                     },
-                    color: Colors.black,
+                    color: overlayBackground(),
                     child: state.isAdding
                         ? CircularProgressIndicator(
                       strokeWidth: 2,

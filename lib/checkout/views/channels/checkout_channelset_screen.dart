@@ -173,7 +173,6 @@ class _CheckoutChannelSetScreenState extends State<CheckoutChannelSetScreen> {
                                   child: Text(
                                     channelSet.name ?? '',
                                     style: TextStyle(
-                                      color: Colors.white,
                                       fontSize: 16,
                                       fontFamily: 'Helvetica Neue',
                                     ),
