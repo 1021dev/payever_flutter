@@ -29,3 +29,8 @@ class GetIndustrySuggestionEvent extends BusinessEvent{
   final String search;
   GetIndustrySuggestionEvent({this.search});
 }
+
+class RegisterBusinessEvent extends BusinessEvent {
+  final Map<String, dynamic> body;
+  RegisterBusinessEvent({this.body});
+}

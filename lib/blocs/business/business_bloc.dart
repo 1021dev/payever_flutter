@@ -1,19 +1,24 @@
+import 'dart:html';
+
 import 'package:bloc/bloc.dart';
-import 'package:dio/dio.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/business/models/model.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/settings/models/models.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 
 import '../bloc.dart';
 
 class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
 
   final DashboardScreenBloc dashboardScreenBloc;
-  BusinessBloc({this.dashboardScreenBloc});
+  final GlobalStateModel globalStateModel;
+  BusinessBloc({this.dashboardScreenBloc, this.globalStateModel});
 
   ApiService api = ApiService();
 
+  String token = GlobalUtils.activeToken.accessToken;
   @override
   BusinessState get initialState => BusinessState();
 
@@ -25,13 +30,15 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
       yield* searchFilter(event.search);
     } else if (event is ClearSuggestionEvent) {
       yield state.copyWith(suggestions: []);
+    } else if (event is RegisterBusinessEvent) {
+      yield* registerBusiness(event.body);
     }
   }
 
   Stream<BusinessState> loadBusinessForm() async* {
     yield state.copyWith(isLoading: true);
     BusinessFormData formData;
-    dynamic formDataResponse = await api.getBusinessRegistrationFormData(GlobalUtils.activeToken.accessToken);
+    dynamic formDataResponse = await api.getBusinessRegistrationFormData(token);
     if (formDataResponse is Map) {
       formData = BusinessFormData.fromMap(formDataResponse);
     }
@@ -60,6 +67,35 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
       return Language.getCommerceOSStrings('assets.industry.${a.code}').compareTo(Language.getCommerceOSStrings('assets.industry.${b.code}'));
     });
     return matches;
+  }
+  
+  Stream<BusinessState> registerBusiness(Map<String, dynamic> body,) async* {
+    yield state.copyWith(isUpdating: true);
+    String id = Uuid().v4();
+
+    dynamic authResponse = await api.putAuth(token, id);
+    if (authResponse is Map) {
+      String accessToken = authResponse['accessToken'];
+      GlobalUtils.activeToken.accessToken = accessToken;
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      preferences.setString(GlobalUtils.TOKEN, accessToken);
+      body['id'] = id;
+      dynamic businessResponse = await api.postBusiness(accessToken, body);
+      if (businessResponse is Map) {
+        Business business = Business.map(businessResponse);
+        dashboardScreenBloc.add(UpdateBusiness(business));
+        globalStateModel.setCurrentBusiness(business,
+            notify: true);
+        yield state.copyWith(isUpdating: false);
+        yield BusinessSuccess(business: business);
+      } else {
+        yield state.copyWith(isUpdating: false);
+        yield BusinessFailure(error: 'Business Registration Failed');
+      }
+    } else {
+      yield state.copyWith(isUpdating: false);
+      yield BusinessFailure(error: 'Business Registration Failed');
+    }
   }
 
 }

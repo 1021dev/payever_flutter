@@ -166,6 +166,24 @@ class ApiService {
     }
   }
 
+  Future<dynamic> postBusiness(String token, Map<String, dynamic> body) async {
+    try {
+      print('$TAG - postBusiness($body)');
+      dynamic response = await _client.postTypeLess(
+          businessUrl,
+          body: body,
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<dynamic> getBusinessRegistrationFormData(String token) async {
     try {
       print('$TAG - getBusinessRegistrationForm()');
@@ -224,6 +242,24 @@ class ApiService {
       print('TAG - getAuthUser()');
       dynamic response = await _client.getTypeless(
           '${Env.auth}/api/user',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> putAuth(String token, String id) async {
+    try {
+      print('TAG - putAuth()');
+      dynamic response = await _client.putTypeless(
+          '${Env.auth}/api/$id',
+          body: {},
           headers: {
             HttpHeaders.authorizationHeader: 'Bearer $token',
             HttpHeaders.contentTypeHeader: 'application/json',
