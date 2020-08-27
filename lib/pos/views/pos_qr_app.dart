@@ -10,6 +10,7 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/login/login_screen.dart';
+import 'package:payever/theme.dart';
 
 bool _isPortrait;
 bool _isTablet;
@@ -165,7 +166,6 @@ class _PosQRAppScreenState extends State<PosQRAppScreen> {
     widgets.add(
       Container(
         height: 64,
-        color: Color(0xFF424141),
         child: SizedBox.expand(
           child: MaterialButton(
             onPressed: () {
@@ -182,7 +182,7 @@ class _PosQRAppScreenState extends State<PosQRAppScreen> {
                       'assets/images/qr-code.svg',
                       height: 20,
                       width: 20,
-                      color: Colors.white,
+                      color: iconColor(),
                     ),
                     Padding(
                       padding: EdgeInsets.only(left: 8),
@@ -190,7 +190,6 @@ class _PosQRAppScreenState extends State<PosQRAppScreen> {
                     Text(
                       Language.getPosTpmStrings('tpm.communications.qr.title'),
                       style: TextStyle(
-                        color: Colors.white,
                         fontSize: 16,
                       ),
                     )
@@ -242,12 +241,11 @@ class _PosQRAppScreenState extends State<PosQRAppScreen> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        color: Colors.black26,
+                        color: overlayBackground(),
                         child: Text(
                           Language.getPosTpmStrings(w[1]['text']),
                           style: TextStyle(
                             fontSize: 10,
-                            color: Colors.white,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -267,8 +265,6 @@ class _PosQRAppScreenState extends State<PosQRAppScreen> {
         padding: EdgeInsets.only(left: 16, right: 16),
         height: isOpened ? 300.0 + 64.0 * 3.0: 64.0,
         child: BlurEffectView(
-          color: Color.fromRGBO(20, 20, 20, 0.2),
-          blur: 15,
           radius: 12,
           padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
           child: Column(

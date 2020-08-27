@@ -13,6 +13,7 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/login/login_screen.dart';
+import 'package:payever/theme.dart';
 
 bool _isPortrait;
 bool _isTablet;
@@ -180,8 +181,6 @@ class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
         padding: EdgeInsets.only(left: 16, right: 16),
         height: 90.0 + 64.0,
         child: BlurEffectView(
-          color: Color.fromRGBO(50, 50, 50, 0.2),
-          blur: 5,
           radius: 12,
           padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
           child: Column(
@@ -249,8 +248,6 @@ class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
                           child: Container(
                             height: 60,
                             child: BlurEffectView(
-                              color: Color.fromRGBO(100, 100, 100, 0.2),
-                              blur: 15,
                               radius: 12,
                               padding: EdgeInsets.only(left: 12, right: 12),
                               child: TextFormField(
@@ -299,7 +296,6 @@ class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
               ),
               Container(
                 height: 64,
-                color: Color(0xFF424141),
                 child: SizedBox.expand(
                   child: MaterialButton(
                     onPressed: () {
@@ -312,11 +308,11 @@ class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
                     ) : Text(
                       'Done',
                       style: TextStyle(
-                        color: Colors.white,
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
+                    color: overlayBackground(),
                   ),
                 ),
               ),

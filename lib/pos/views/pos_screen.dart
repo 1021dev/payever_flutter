@@ -27,6 +27,7 @@ import 'package:payever/pos/views/pos_twillo_settings.dart';
 import 'package:payever/pos/widgets/pos_top_button.dart';
 import 'package:payever/search/views/search_screen.dart';
 import 'package:payever/switcher/switcher_page.dart';
+import 'package:payever/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -470,13 +471,13 @@ class _PosScreenState extends State<PosScreen> {
             },
           ),
           PopupMenuButton<OverflowMenuItem>(
-            icon: Icon(Icons.more_horiz),
+            icon: Icon(Icons.more_horiz, color: Colors.white,),
             offset: Offset(0, 100),
             onSelected: (OverflowMenuItem item) => item.onTap(),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),
-            color: Colors.black87,
+            color: overlayBackground().withOpacity(1),
             itemBuilder: (BuildContext context) {
               return appBarPopUpActions(context, state)
                   .map((OverflowMenuItem item) {
@@ -485,7 +486,6 @@ class _PosScreenState extends State<PosScreen> {
                   child: Text(
                     item.title,
                     style: TextStyle(
-                      color: Colors.white,
                       fontSize: 14,
                       fontWeight: FontWeight.w300,
                     ),
@@ -571,8 +571,6 @@ class _PosScreenState extends State<PosScreen> {
         padding: EdgeInsets.only(left: 16, right: 16),
         height: (state.integrations.length * 50).toDouble() + 50,
         child: BlurEffectView(
-          color: Color.fromRGBO(20, 20, 20, 0.2),
-          blur: 15,
           radius: 12,
           padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
           child: Column(
@@ -592,7 +590,6 @@ class _PosScreenState extends State<PosScreen> {
                               Text(
                                 Language.getPosConnectStrings(integrations[index].integration.displayOptions.title),
                                 style: TextStyle(
-                                  color: Colors.white,
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -666,14 +663,13 @@ class _PosScreenState extends State<PosScreen> {
                                       width: 40,
                                       decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(10),
-                                          color: Colors.black.withOpacity(0.4)
+                                          color: overlayBackground()
                                       ),
                                       child: Center(
                                         child: Text(
                                           Language.getCommerceOSStrings('actions.open'),
                                           style: TextStyle(
                                               fontSize: 10,
-                                              color: Colors.white
                                           ),
                                         ),
                                       ),
@@ -733,7 +729,6 @@ class _PosScreenState extends State<PosScreen> {
                         Text(
                           'Add',
                           style: TextStyle(
-                            color: Colors.white,
                             fontSize: 12,
                           ),
                         ),
@@ -760,7 +755,6 @@ class _PosScreenState extends State<PosScreen> {
               Text(
                 'Business UUID',
                 style: TextStyle(
-                  color: Colors.white,
                   fontSize: 16,
                 ),
               ),
@@ -773,7 +767,6 @@ class _PosScreenState extends State<PosScreen> {
                   minFontSize: 12,
                   maxLines: 2,
                   style: TextStyle(
-                    color: Colors.white,
                     fontSize: 16,
                   ),
                 ),
@@ -786,11 +779,10 @@ class _PosScreenState extends State<PosScreen> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
-                color: Colors.black26,
+                color: overlayBackground(),
                 child: Text(
                   state.businessCopied ? 'Copied': 'Copy',
                   style: TextStyle(
-                      color: Colors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.w500
                   ),
@@ -806,7 +798,6 @@ class _PosScreenState extends State<PosScreen> {
               Text(
                 'Terminal UUID',
                 style: TextStyle(
-                  color: Colors.white,
                   fontSize: 16,
                 ),
               ),
@@ -819,7 +810,6 @@ class _PosScreenState extends State<PosScreen> {
                   minFontSize: 12,
                   maxLines: 2,
                   style: TextStyle(
-                    color: Colors.white,
                     fontSize: 16,
                   ),
                 ),
@@ -832,11 +822,10 @@ class _PosScreenState extends State<PosScreen> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
-                color: Colors.black26,
+                color: overlayBackground(),
                 child: Text(
                   state.terminalCopied ? 'Copied': 'Copy',
                   style: TextStyle(
-                      color: Colors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.w500
                   ),

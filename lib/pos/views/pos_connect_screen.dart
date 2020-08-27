@@ -12,6 +12,7 @@ import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/login/login_screen.dart';
 import 'package:payever/pos/views/pos_qr_settings.dart';
 import 'package:payever/pos/views/pos_twillo_settings.dart';
+import 'package:payever/theme.dart';
 
 import 'pos_device_payment_settings.dart';
 
@@ -189,8 +190,6 @@ class _PosConnectScreenState extends State<PosConnectScreen> {
     return Container(
       margin: EdgeInsets.all(12),
       child: BlurEffectView(
-        color: Color.fromRGBO(20, 20, 20, 0.2),
-        blur: 15,
         radius: 12,
         padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
         child: Column(
@@ -199,8 +198,6 @@ class _PosConnectScreenState extends State<PosConnectScreen> {
               padding: EdgeInsets.only(left: 16, right: 16),
               height: (communications.length * 50).toDouble(),
               child: BlurEffectView(
-                color: Color.fromRGBO(20, 20, 20, 0.2),
-                blur: 15,
                 radius: 12,
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                 child: Column(
@@ -224,6 +221,7 @@ class _PosConnectScreenState extends State<PosConnectScreen> {
                                             icons[communications[index].integration.name],
                                             height: 16,
                                             width: 16,
+                                            color: iconColor(),
                                           ),
                                           Padding(
                                             padding: EdgeInsets.only(left: 8),
@@ -233,7 +231,6 @@ class _PosConnectScreenState extends State<PosConnectScreen> {
                                               Language.getPosConnectStrings(communications[index].integration.displayOptions.title),
                                               maxLines: 1,
                                               style: TextStyle(
-                                                color: Colors.white,
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.w500,
                                               ),
@@ -292,14 +289,13 @@ class _PosConnectScreenState extends State<PosConnectScreen> {
                                         width: 40,
                                         decoration: BoxDecoration(
                                             borderRadius: BorderRadius.circular(10),
-                                            color: Colors.black.withOpacity(0.4)
+                                            color: overlayBackground()
                                         ),
                                         child: Center(
                                           child: Text(
                                             communications[index].installed ? 'Open': 'Install',
                                             style: TextStyle(
                                                 fontSize: 10,
-                                                color: Colors.white
                                             ),
                                           ),
                                         ),
@@ -352,8 +348,6 @@ class _PosConnectScreenState extends State<PosConnectScreen> {
     return Container(
       padding: EdgeInsets.only(left: 16, right: 16),
       child: BlurEffectView(
-        color: Color.fromRGBO(20, 20, 20, 0.2),
-        blur: 15,
         radius: 12,
         padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
         child: Column(

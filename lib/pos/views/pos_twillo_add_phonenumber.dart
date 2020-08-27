@@ -11,6 +11,7 @@ import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/pos/models/models.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/login/login_screen.dart';
+import 'package:payever/theme.dart';
 
 bool _isPortrait;
 bool _isTablet;
@@ -171,8 +172,6 @@ class _PosTwilioAddPhoneNumberState extends State<PosTwilioAddPhoneNumber> {
               Container(
                 padding: EdgeInsets.only(left: 16, right: 16),
                 child: BlurEffectView(
-                  color: Color.fromRGBO(50, 50, 50, 0.2),
-                  blur: 15,
                   radius: 12,
                   padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                   child: Column(
@@ -180,7 +179,6 @@ class _PosTwilioAddPhoneNumberState extends State<PosTwilioAddPhoneNumber> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
                       Container(
-                        color: Colors.black26,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
@@ -195,7 +193,7 @@ class _PosTwilioAddPhoneNumberState extends State<PosTwilioAddPhoneNumber> {
                                       Text(
                                         Language.getPosTpmStrings('tpm.communications.twilio.country'),
                                         style: TextStyle(
-                                          color: Colors.white70,
+                                          color: Colors.grey,
                                           fontSize: 12,
                                         ),
                                       ),
@@ -217,7 +215,6 @@ class _PosTwilioAddPhoneNumberState extends State<PosTwilioAddPhoneNumber> {
                                             child: Text(
                                               item.label,
                                               style: TextStyle(
-                                                color: Colors.white,
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.w300,
                                               ),
@@ -285,7 +282,6 @@ class _PosTwilioAddPhoneNumberState extends State<PosTwilioAddPhoneNumber> {
                         title: Text(
                           Language.getPosTpmStrings('tpm.communications.twilio.exclude_any'),
                           style: TextStyle(
-                            color: Colors.white,
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
                           ),
@@ -304,7 +300,6 @@ class _PosTwilioAddPhoneNumberState extends State<PosTwilioAddPhoneNumber> {
                         title: Text(
                           Language.getPosTpmStrings('tpm.communications.twilio.exclude_local'),
                           style: TextStyle(
-                            color: Colors.white,
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
                           ),
@@ -324,7 +319,6 @@ class _PosTwilioAddPhoneNumberState extends State<PosTwilioAddPhoneNumber> {
                         title: Text(
                           Language.getPosTpmStrings('tpm.communications.twilio.exclude_foreign'),
                           style: TextStyle(
-                            color: Colors.white,
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
                           ),
@@ -348,7 +342,6 @@ class _PosTwilioAddPhoneNumberState extends State<PosTwilioAddPhoneNumber> {
                                         Text(
                                           e[0]['value'],
                                           style: TextStyle(
-                                            color: Colors.white,
                                             fontSize: 14,
                                             fontWeight: FontWeight.w400,
                                           ),
@@ -359,7 +352,7 @@ class _PosTwilioAddPhoneNumberState extends State<PosTwilioAddPhoneNumber> {
                                         Text(
                                           e[1]['value'],
                                           style: TextStyle(
-                                            color: Colors.white.withOpacity(0.5),
+                                            color: Colors.grey,
                                             fontSize: 14,
                                             fontWeight: FontWeight.w300,
                                           ),
@@ -392,10 +385,7 @@ class _PosTwilioAddPhoneNumberState extends State<PosTwilioAddPhoneNumber> {
                                                   CupertinoDialogAction(
                                                       isDefaultAction: true,
                                                       child: new Text(
-                                                        Language.getPosTpmStrings('tpm.communications.twilio.no'),
-                                                        style: TextStyle(
-                                                          color: Colors.white,
-                                                        ),
+                                                        Language.getPosTpmStrings('tpm.communications.twilio.no')
                                                       ),
                                                       onPressed: () {
                                                         Navigator.pop(context, 'Cancel');
@@ -405,9 +395,6 @@ class _PosTwilioAddPhoneNumberState extends State<PosTwilioAddPhoneNumber> {
                                                       isDefaultAction: true,
                                                       child: new Text(
                                                         Language.getPosTpmStrings('tpm.communications.twilio.yes'),
-                                                        style: TextStyle(
-                                                          color: Colors.white,
-                                                        ),
                                                       ),
                                                       onPressed: () {
                                                         Navigator.pop(context);
@@ -432,12 +419,11 @@ class _PosTwilioAddPhoneNumberState extends State<PosTwilioAddPhoneNumber> {
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(10),
                                       ),
-                                      color: Colors.black26,
+                                      color: overlayBackground(),
                                       child: Text(
                                         Language.getPosTpmStrings(e[2]['text']),
                                         style: TextStyle(
                                           fontSize: 10,
-                                          color: Colors.white,
                                           fontWeight: FontWeight.w500,
                                         ),
                                       ),
@@ -469,12 +455,11 @@ class _PosTwilioAddPhoneNumberState extends State<PosTwilioAddPhoneNumber> {
                                     phoneNumber: phoneNumberController.text,
                                   ));
                             },
-                            color: Colors.black87,
+                            color: overlayBackground(),
                             child: state.searching ? CircularProgressIndicator() :  Text(
                               Language.getPosTpmStrings('tpm.communications.twilio.search'),
                               style: TextStyle(
                                 fontSize: 16,
-                                color: Colors.white,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),

@@ -10,6 +10,7 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/login/login_screen.dart';
+import 'package:payever/theme.dart';
 
 import 'pos_create_terminal_screen.dart';
 
@@ -169,7 +170,6 @@ class _PosSwitchTerminalsScreenState extends State<PosSwitchTerminalsScreen> {
           Text(
             'Further Terminals',
             style: TextStyle(
-              color: Colors.white,
               fontSize: 18,
               fontWeight: FontWeight.w500,
             ),
@@ -254,12 +254,11 @@ class _PosSwitchTerminalsScreenState extends State<PosSwitchTerminalsScreen> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
-              color: Colors.black26,
+              color: overlayBackground(),
               child: Text(
                 '+ Add Terminal',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.white,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -516,7 +515,6 @@ class TerminalCell extends StatelessWidget {
               maxLines: 2,
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Colors.white,
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),
@@ -534,12 +532,11 @@ class TerminalCell extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    color: Colors.black26,
+                    color: overlayBackground(),
                     child: Text(
                       'Open',
                       style: TextStyle(
                         fontSize: 10,
-                        color: Colors.white,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
