@@ -98,7 +98,6 @@ class _SwitchShopScreenState extends State<SwitchShopScreen> {
       centerTitle: false,
       elevation: 0,
       automaticallyImplyLeading: false,
-      backgroundColor: Colors.black87,
       title: Row(
         children: <Widget>[
           Text(
@@ -138,7 +137,6 @@ class _SwitchShopScreenState extends State<SwitchShopScreen> {
   Widget _body(ShopScreenState state) {
     return Scaffold(
       key: scaffoldKey,
-      backgroundColor: Colors.black,
       resizeToAvoidBottomPadding: false,
       appBar: _appBar(state),
       body: SafeArea(

@@ -20,6 +20,7 @@ import 'package:payever/contacts/views/add_new_field_screen.dart';
 import 'package:payever/contacts/widgets/contact_options_contentview.dart';
 import 'package:payever/login/login_screen.dart';
 import 'package:payever/pos/widgets/pos_top_button.dart';
+import 'package:payever/theme.dart';
 
 bool _isPortrait;
 bool _isTablet;
@@ -131,9 +132,8 @@ class _AddContactScreenState extends State<AddContactScreen> {
       centerTitle: false,
       elevation: 0,
       automaticallyImplyLeading: false,
-      backgroundColor: Colors.black87,
       title: Text(
-        Language.getPosConnectStrings('Add Contact'),
+        Language.getPosConnectStrings(widget.editContact != null ? 'Edit Contact': 'Add Contact'),
         style: TextStyle(
           color: Colors.white,
           fontSize: 16,
@@ -166,7 +166,6 @@ class _AddContactScreenState extends State<AddContactScreen> {
 
   Widget _body(ContactDetailScreenState state) {
     return Scaffold(
-      backgroundColor: Colors.black,
       resizeToAvoidBottomPadding: false,
       appBar: _appBar(state),
       body: SafeArea(
@@ -199,7 +198,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
     List<Widget> widgets = [];
     Widget header = Container(
       height: 56,
-      color: Colors.black54,
+      color: overlayBackground(),
       child: SizedBox.expand(
         child: MaterialButton(
           onPressed: () {
@@ -218,7 +217,6 @@ class _AddContactScreenState extends State<AddContactScreen> {
                         'GENERAL',
                         maxLines: 1,
                         style: TextStyle(
-                          color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
                         ),
@@ -230,7 +228,6 @@ class _AddContactScreenState extends State<AddContactScreen> {
               Icon(
                 openGeneral ? Icons.add : Icons.remove,
                 size: 20,
-                color: Colors.white,
               ),
             ],
           ),
@@ -239,7 +236,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
     );
 
     widgets.add(header);
-    widgets.add(Divider(height: 0, thickness: 0.5, color: Colors.black),);
+    widgets.add(Divider(height: 0, thickness: 0.5));
 
     // Photo section;
     Widget photoSection = openGeneral ? Container(
@@ -258,7 +255,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: Colors.white,
+                        color: iconColor(),
                         width: 2,
                       ),
                     ),
@@ -337,7 +334,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                     minWidth: 0,
                     padding: EdgeInsets.all(4),
                     height: 24,
-                    color: Colors.black87,
+                    color: overlayColor(),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -353,7 +350,6 @@ class _AddContactScreenState extends State<AddContactScreen> {
                           Text(
                             'Add Media',
                             style: TextStyle(
-                              color: Colors.white,
                               fontSize: 14,
                               fontFamily: 'Helvetica Neue',
                             ),
@@ -369,13 +365,13 @@ class _AddContactScreenState extends State<AddContactScreen> {
     ) : Container();
 
     widgets.add(photoSection);
-    widgets.add(Divider(height: 0, thickness: 0.5, color: Colors.black),);
+    widgets.add(Divider(height: 0, thickness: 0.5));
 
     Widget typeField = openGeneral ? Container(
       height: 64,
       child: Center(
         child: TextFormField(
-          style: TextStyle(fontSize: 16, color: Colors.white),
+          style: TextStyle(fontSize: 16),
           onChanged: (val) {
             ContactUserModel contactUserModel = state.contactUserModel;
             contactUserModel.type = val;
@@ -385,9 +381,6 @@ class _AddContactScreenState extends State<AddContactScreen> {
           decoration: InputDecoration(
             contentPadding: EdgeInsets.only(left: 16, right: 16),
             labelText: Language.getPosTpmStrings('Type'),
-            labelStyle: TextStyle(
-              color: Colors.grey,
-            ),
             enabledBorder: InputBorder.none,
             focusedBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -399,7 +392,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
     ): Container();
 
     widgets.add(typeField);
-    widgets.add(Divider(height: 0, thickness: 0.5, color: Colors.black),);
+    widgets.add(Divider(height: 0, thickness: 0.5));
 
     Widget nameSection = openGeneral ? Container(
       height: 64,
@@ -407,7 +400,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
         children: <Widget>[
           Flexible(
             child: TextFormField(
-              style: TextStyle(fontSize: 16, color: Colors.white),
+              style: TextStyle(fontSize: 16),
               onChanged: (val) {
                 ContactUserModel contactUserModel = state.contactUserModel;
                 contactUserModel.firstName = val;
@@ -417,9 +410,6 @@ class _AddContactScreenState extends State<AddContactScreen> {
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('First Name'),
-                labelStyle: TextStyle(
-                  color: Colors.grey,
-                ),
                 enabledBorder: InputBorder.none,
                 focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -430,11 +420,11 @@ class _AddContactScreenState extends State<AddContactScreen> {
           ),
           Container(
             width: 0.5,
-            color: Colors.black,
+            color: overlayColor(),
           ),
           Flexible(
             child: TextFormField(
-              style: TextStyle(fontSize: 16, color: Colors.white),
+              style: TextStyle(fontSize: 16,),
               onChanged: (val) {
                 ContactUserModel contactUserModel = state.contactUserModel;
                 contactUserModel.lastName = val;
@@ -444,9 +434,6 @@ class _AddContactScreenState extends State<AddContactScreen> {
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('Last Name'),
-                labelStyle: TextStyle(
-                  color: Colors.grey,
-                ),
                 enabledBorder: InputBorder.none,
                 focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -460,7 +447,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
     ): Container();
 
     widgets.add(nameSection);
-    widgets.add(Divider(height: 0, thickness: 0.5, color: Colors.black),);
+    widgets.add(Divider(height: 0, thickness: 0.5));
 
     Widget phoneSection = openGeneral ? Container(
       height: 64,
@@ -468,7 +455,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
         children: <Widget>[
           Flexible(
             child: TextFormField(
-              style: TextStyle(fontSize: 16, color: Colors.white),
+              style: TextStyle(fontSize: 16,),
               onChanged: (val) {
                 ContactUserModel contactUserModel = state.contactUserModel;
                 contactUserModel.mobilePhone = val;
@@ -478,9 +465,6 @@ class _AddContactScreenState extends State<AddContactScreen> {
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('Mobile Phone'),
-                labelStyle: TextStyle(
-                  color: Colors.grey,
-                ),
                 enabledBorder: InputBorder.none,
                 focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -491,11 +475,11 @@ class _AddContactScreenState extends State<AddContactScreen> {
           ),
           Container(
             width: 0.5,
-            color: Colors.black,
+            color: overlayColor(),
           ),
           Flexible(
             child: TextFormField(
-              style: TextStyle(fontSize: 16, color: Colors.white),
+              style: TextStyle(fontSize: 16, ),
               onChanged: (val) {
                 ContactUserModel contactUserModel = state.contactUserModel;
                 contactUserModel.email = val;
@@ -505,9 +489,6 @@ class _AddContactScreenState extends State<AddContactScreen> {
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('Email'),
-                labelStyle: TextStyle(
-                  color: Colors.grey,
-                ),
                 enabledBorder: InputBorder.none,
                 focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -521,13 +502,13 @@ class _AddContactScreenState extends State<AddContactScreen> {
     ): Container();
 
     widgets.add(phoneSection);
-    widgets.add(Divider(height: 0, thickness: 0.5, color: Colors.black),);
+    widgets.add(Divider(height: 0, thickness: 0.5));
 
     Widget homepageField = openGeneral ? Container(
       height: 64,
       child: Center(
         child: TextFormField(
-          style: TextStyle(fontSize: 16, color: Colors.white),
+          style: TextStyle(fontSize: 16,),
           onChanged: (val) {
             ContactUserModel contactUserModel = state.contactUserModel;
             contactUserModel.homePage = val;
@@ -537,9 +518,6 @@ class _AddContactScreenState extends State<AddContactScreen> {
           decoration: InputDecoration(
             contentPadding: EdgeInsets.only(left: 16, right: 16),
             labelText: Language.getPosTpmStrings('Homepage'),
-            labelStyle: TextStyle(
-              color: Colors.grey,
-            ),
             enabledBorder: InputBorder.none,
             focusedBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -551,13 +529,13 @@ class _AddContactScreenState extends State<AddContactScreen> {
     ): Container();
 
     widgets.add(homepageField);
-    widgets.add(Divider(height: 0, thickness: 0.5, color: Colors.black),);
+    widgets.add(Divider(height: 0, thickness: 0.5));
 
     Widget streetField = openGeneral ? Container(
       height: 64,
       child: Center(
         child: TextFormField(
-          style: TextStyle(fontSize: 16, color: Colors.white),
+          style: TextStyle(fontSize: 16, ),
           onChanged: (val) {
             ContactUserModel contactUserModel = state.contactUserModel;
             contactUserModel.street = val;
@@ -567,9 +545,6 @@ class _AddContactScreenState extends State<AddContactScreen> {
           decoration: InputDecoration(
             contentPadding: EdgeInsets.only(left: 16, right: 16),
             labelText: Language.getPosTpmStrings('Street'),
-            labelStyle: TextStyle(
-              color: Colors.grey,
-            ),
             enabledBorder: InputBorder.none,
             focusedBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -581,7 +556,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
     ): Container();
 
     widgets.add(streetField);
-    widgets.add(Divider(height: 0, thickness: 0.5, color: Colors.black),);
+    widgets.add(Divider(height: 0, thickness: 0.5,),);
 
     Widget citySection = openGeneral ? Container(
       height: 64,
@@ -589,7 +564,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
         children: <Widget>[
           Flexible(
             child: TextFormField(
-              style: TextStyle(fontSize: 16, color: Colors.white),
+              style: TextStyle(fontSize: 16, ),
               onChanged: (val) {
                 ContactUserModel contactUserModel = state.contactUserModel;
                 contactUserModel.city = val;
@@ -599,9 +574,6 @@ class _AddContactScreenState extends State<AddContactScreen> {
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('City'),
-                labelStyle: TextStyle(
-                  color: Colors.grey,
-                ),
                 enabledBorder: InputBorder.none,
                 focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -612,11 +584,11 @@ class _AddContactScreenState extends State<AddContactScreen> {
           ),
           Container(
             width: 0.5,
-            color: Colors.black,
+            color: overlayBackground(),
           ),
           Flexible(
             child: TextFormField(
-              style: TextStyle(fontSize: 16, color: Colors.white),
+              style: TextStyle(fontSize: 16, ),
               onChanged: (val) {
                 ContactUserModel contactUserModel = state.contactUserModel;
                 contactUserModel.states = val;
@@ -626,9 +598,6 @@ class _AddContactScreenState extends State<AddContactScreen> {
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('State'),
-                labelStyle: TextStyle(
-                  color: Colors.grey,
-                ),
                 enabledBorder: InputBorder.none,
                 focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -642,7 +611,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
     ): Container();
 
     widgets.add(citySection);
-    widgets.add(Divider(height: 0, thickness: 0.5, color: Colors.black),);
+    widgets.add(Divider(height: 0, thickness: 0.5,),);
 
     Widget zipSection = openGeneral ? Container(
       height: 64,
@@ -650,7 +619,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
         children: <Widget>[
           Flexible(
             child: TextFormField(
-              style: TextStyle(fontSize: 16, color: Colors.white),
+              style: TextStyle(fontSize: 16,),
               onChanged: (val) {
                 ContactUserModel contactUserModel = state.contactUserModel;
                 contactUserModel.zip = val;
@@ -660,9 +629,6 @@ class _AddContactScreenState extends State<AddContactScreen> {
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('Zip'),
-                labelStyle: TextStyle(
-                  color: Colors.grey,
-                ),
                 enabledBorder: InputBorder.none,
                 focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -673,11 +639,11 @@ class _AddContactScreenState extends State<AddContactScreen> {
           ),
           Container(
             width: 0.5,
-            color: Colors.black,
+            color: overlayBackground(),
           ),
           Flexible(
             child: TextFormField(
-              style: TextStyle(fontSize: 16, color: Colors.white),
+              style: TextStyle(fontSize: 16, ),
               onChanged: (val) {
                 ContactUserModel contactUserModel = state.contactUserModel;
                 contactUserModel.country = val;
@@ -687,9 +653,6 @@ class _AddContactScreenState extends State<AddContactScreen> {
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('Country'),
-                labelStyle: TextStyle(
-                  color: Colors.grey,
-                ),
                 enabledBorder: InputBorder.none,
                 focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -703,12 +666,12 @@ class _AddContactScreenState extends State<AddContactScreen> {
     ): Container();
 
     widgets.add(zipSection);
-    widgets.add(Divider(height: 0, thickness: 0.5, color: Colors.black),);
+    widgets.add(Divider(height: 0, thickness: 0.5,),);
 
     // Additional Section
     Widget additionalSection = Container(
       height: 56,
-      color: Colors.black54,
+      color: overlayBackground(),
       child: SizedBox.expand(
         child: MaterialButton(
           onPressed: () {
@@ -727,7 +690,6 @@ class _AddContactScreenState extends State<AddContactScreen> {
                         'ADDITIONAL',
                         maxLines: 1,
                         style: TextStyle(
-                          color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
                         ),
@@ -739,7 +701,6 @@ class _AddContactScreenState extends State<AddContactScreen> {
               Icon(
                 openAdditional ? Icons.add : Icons.remove,
                 size: 20,
-                color: Colors.white,
               ),
             ],
           ),
@@ -748,14 +709,14 @@ class _AddContactScreenState extends State<AddContactScreen> {
     );
 
     widgets.add(additionalSection);
-    widgets.add(Divider(height: 0, thickness: 0.5, color: Colors.black),);
+    widgets.add(Divider(height: 0, thickness: 0.5, ),);
 
     if (openAdditional) {
       state.additionalFields.forEach((element) {
         if (element.type == 'input') {
           Widget w = Container(
             height: 56,
-            color: Colors.black38,
+            color: overlayRow(),
             child: SizedBox.expand(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -769,9 +730,6 @@ class _AddContactScreenState extends State<AddContactScreen> {
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.only(left: 16, right: 16),
                         labelText: Language.getPosTpmStrings(element.name),
-                        labelStyle: TextStyle(
-                          color: Colors.grey,
-                        ),
                         enabledBorder: InputBorder.none,
                         focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -797,7 +755,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                             ),
                           );
                         },
-                        color: Colors.white60,
+                        color: overlayBackground(),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -807,7 +765,6 @@ class _AddContactScreenState extends State<AddContactScreen> {
                         child: Text(
                           'Edit',
                           style: TextStyle(
-                            color: Colors.white,
                             fontSize: 12,
                           ),
                         ),
@@ -831,7 +788,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
         } else if (element.type == 'select') {
           Widget w = Container(
             height: 56,
-            color: Colors.black38,
+            color: overlayBackground(),
             child: SizedBox.expand(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -848,9 +805,6 @@ class _AddContactScreenState extends State<AddContactScreen> {
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.only(left: 16, right: 16),
                         labelText: Language.getPosTpmStrings(element.name),
-                        labelStyle: TextStyle(
-                          color: Colors.grey,
-                        ),
                         enabledBorder: InputBorder.none,
                         focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -876,7 +830,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                             ),
                           );
                         },
-                        color: Colors.white60,
+                        color: overlayBackground(),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -886,7 +840,6 @@ class _AddContactScreenState extends State<AddContactScreen> {
                         child: Text(
                           'Edit',
                           style: TextStyle(
-                            color: Colors.white,
                             fontSize: 12,
                           ),
                         ),
@@ -910,7 +863,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
         } else if (element.type == 'checkbox') {
           Widget w = Container(
             height: 56,
-            color: Colors.black38,
+            color: overlayBackground(),
             child: SizedBox.expand(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -946,7 +899,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                             ),
                           );
                         },
-                        color: Colors.white60,
+                        color: overlayBackground(),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -956,7 +909,6 @@ class _AddContactScreenState extends State<AddContactScreen> {
                         child: Text(
                           'Edit',
                           style: TextStyle(
-                            color: Colors.white,
                             fontSize: 12,
                           ),
                         ),
@@ -980,7 +932,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
         } else if (element.type == 'textarea') {
           Widget w = Container(
             height: 56,
-            color: Colors.black38,
+            color: overlayBackground(),
             child: SizedBox.expand(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -997,9 +949,6 @@ class _AddContactScreenState extends State<AddContactScreen> {
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.only(left: 16, right: 16),
                         labelText: Language.getPosTpmStrings(element.name),
-                        labelStyle: TextStyle(
-                          color: Colors.grey,
-                        ),
                         enabledBorder: InputBorder.none,
                         focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -1025,7 +974,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                             ),
                           );
                         },
-                        color: Colors.white60,
+                        color: overlayBackground(),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -1035,7 +984,6 @@ class _AddContactScreenState extends State<AddContactScreen> {
                         child: Text(
                           'Edit',
                           style: TextStyle(
-                            color: Colors.white,
                             fontSize: 12,
                           ),
                         ),
@@ -1059,7 +1007,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
         } else if (element.type == 'number') {
           Widget w = Container(
             height: 56,
-            color: Colors.black38,
+            color: overlayBackground(),
             child: SizedBox.expand(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1438,7 +1386,6 @@ class _AddContactScreenState extends State<AddContactScreen> {
                           style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w300,
-                              color: Colors.white
                           ),
                         ),
                         Padding(
@@ -1450,7 +1397,6 @@ class _AddContactScreenState extends State<AddContactScreen> {
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w300,
-                            color: Colors.white,
                           ),
                         ),
                         Padding(
@@ -1470,7 +1416,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                               height: 24,
                               elevation: 0,
                               minWidth: 0,
-                              color: Colors.white10,
+                              color: overlayBackground(),
                               child: Text(
                                 Language.getCommerceOSStrings('Load'),
                               ),
@@ -1485,7 +1431,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                               height: 24,
                               elevation: 0,
                               minWidth: 0,
-                              color: Colors.white10,
+                              color: overlayBackground(),
                               child: Text(
                                 Language.getCommerceOSStrings('actions.cancel'),
                               ),

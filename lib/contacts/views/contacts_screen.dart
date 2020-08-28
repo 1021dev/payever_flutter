@@ -14,6 +14,7 @@ import 'package:payever/contacts/views/contacts_filter_screen.dart';
 import 'package:payever/contacts/widgets/contact_grid_add_item.dart';
 import 'package:payever/contacts/widgets/contact_grid_item.dart';
 import 'package:payever/contacts/widgets/contact_list_item.dart';
+import 'package:payever/dashboard/sub_view/business_logo.dart';
 import 'package:payever/dashboard/sub_view/dashboard_menu_view.dart';
 import 'package:payever/login/login_screen.dart';
 import 'package:payever/notifications/notifications_screen.dart';
@@ -193,11 +194,14 @@ class _ContactScreenState extends State<ContactScreen> {
   }
 
   Widget _appBar(ContactScreenState state) {
+    String businessLogo = '';
+    if (widget.dashboardScreenBloc.state.activeBusiness != null) {
+      businessLogo = 'https://payeverproduction.blob.core.windows.net/images/${widget.dashboardScreenBloc.state.activeBusiness.logo}' ?? '';
+    }
     return AppBar(
       centerTitle: false,
       elevation: 0,
       automaticallyImplyLeading: false,
-      backgroundColor: Colors.black87,
       title: Row(
         children: <Widget>[
           Container(
@@ -230,10 +234,7 @@ class _ContactScreenState extends State<ContactScreen> {
           child: InkWell(
             child: Row(
               children: <Widget>[
-                SvgPicture.asset(
-                  'assets/images/business_person.svg',
-                  width: 20,
-                ),
+                BusinessLogo(url: businessLogo,),
                 _isTablet || !_isPortrait ? Padding(
                   padding: EdgeInsets.only(left: 4, right: 4),
                   child: Text(

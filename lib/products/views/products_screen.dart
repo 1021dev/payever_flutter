@@ -14,6 +14,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
+import 'package:payever/dashboard/sub_view/business_logo.dart';
 import 'package:payever/dashboard/sub_view/dashboard_menu_view.dart';
 import 'package:payever/notifications/notifications_screen.dart';
 import 'package:payever/pos/widgets/pos_top_button.dart';
@@ -405,6 +406,10 @@ class _ProductsScreenState extends State<ProductsScreen> {
   }
 
   Widget _appBar(ProductsScreenState state) {
+    String businessLogo = '';
+    if (widget.dashboardScreenBloc.state.activeBusiness != null) {
+      businessLogo = 'https://payeverproduction.blob.core.windows.net/images/${widget.dashboardScreenBloc.state.activeBusiness.logo}' ?? '';
+    }
     return AppBar(
       centerTitle: false,
       elevation: 0,
@@ -442,10 +447,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
           child: InkWell(
             child: Row(
               children: <Widget>[
-                SvgPicture.asset(
-                  'assets/images/business_person.svg',
-                  width: 20,
-                ),
+                BusinessLogo(url: businessLogo,),
                 _isTablet || !_isPortrait ? Padding(
                   padding: EdgeInsets.only(left: 4, right: 4),
                   child: Text(

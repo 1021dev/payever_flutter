@@ -11,6 +11,7 @@ import 'package:payever/checkout/views/checkout_screen.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
+import 'package:payever/dashboard/sub_view/business_logo.dart';
 import 'package:payever/login/login_screen.dart';
 import 'package:payever/connect/views/connect_screen.dart';
 import 'package:payever/contacts/views/contacts_screen.dart';
@@ -208,6 +209,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _appBar(DashboardScreenState state) {
+    String businessLogo = '';
+    if (state.activeBusiness != null) {
+      businessLogo = 'https://payeverproduction.blob.core.windows.net/images/${state.activeBusiness.logo}' ?? '';
+    }
     return AppBar(
       centerTitle: false,
       elevation: 0,
@@ -242,10 +247,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           child: InkWell(
             child: Row(
               children: <Widget>[
-                SvgPicture.asset(
-                  'assets/images/business_person.svg',
-                  width: 20,
-                ),
+                BusinessLogo(url: businessLogo,),
                 _isTablet || !_isPortrait
                     ? Padding(
                         padding: EdgeInsets.only(left: 4, right: 4),
@@ -300,26 +302,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   .setCurrentWallpaper(state.curWall);
 
               await showGeneralDialog(
-                  barrierColor: null,
-                  transitionBuilder: (context, a1, a2, widget) {
-                    final curvedValue = Curves.ease.transform(a1.value) - 1.0;
-                    return Transform(
-                      transform:
-                          Matrix4.translationValues(-curvedValue * 200, 0.0, 0),
-                      child: NotificationsScreen(
-                        business: state.activeBusiness,
-                        businessApps: state.businessWidgets,
-                        dashboardScreenBloc: screenBloc,
-                      ),
-                    );
-                  },
-                  transitionDuration: Duration(milliseconds: 200),
-                  barrierDismissible: true,
-                  barrierLabel: '',
-                  context: context,
-                  pageBuilder: (context, animation1, animation2) {
-                    return null;
-                  });
+                barrierColor: null,
+                transitionBuilder: (context, a1, a2, widget) {
+                  final curvedValue = Curves.ease.transform(a1.value) - 1.0;
+                  return Transform(
+                    transform:
+                    Matrix4.translationValues(-curvedValue * 200, 0.0, 0),
+                    child: NotificationsScreen(
+                      business: state.activeBusiness,
+                      businessApps: state.businessWidgets,
+                      dashboardScreenBloc: screenBloc,
+                    ),
+                  );
+                },
+                transitionDuration: Duration(milliseconds: 200),
+                barrierDismissible: true,
+                barrierLabel: '',
+                context: context,
+                pageBuilder: (context, animation1, animation2) {
+                  return null;
+                },
+              );
             },
           ),
         ),

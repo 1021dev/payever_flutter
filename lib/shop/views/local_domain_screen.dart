@@ -136,7 +136,6 @@ class _LocalDomainScreenState extends State<LocalDomainScreen> {
 
   Widget _body(ShopScreenState state) {
     return Scaffold(
-      backgroundColor: Colors.black,
       resizeToAvoidBottomPadding: false,
       appBar: _appBar(state),
       body: SafeArea(

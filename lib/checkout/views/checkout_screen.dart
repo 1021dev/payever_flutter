@@ -23,6 +23,7 @@ import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
+import 'package:payever/dashboard/sub_view/business_logo.dart';
 import 'package:payever/dashboard/sub_view/dashboard_menu_view.dart';
 import 'package:payever/login/login_screen.dart';
 import 'package:payever/notifications/notifications_screen.dart';
@@ -163,11 +164,15 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     if (state.defaultCheckout != null) {
       defaultCheckoutTitle = state.defaultCheckout.name;
     }
+    String businessLogo = '';
+    if (widget.dashboardScreenBloc.state.activeBusiness != null) {
+      businessLogo = 'https://payeverproduction.blob.core.windows.net/images/${widget.dashboardScreenBloc.state.activeBusiness.logo}' ?? '';
+    }
+
     return AppBar(
       centerTitle: false,
       elevation: 0,
       automaticallyImplyLeading: false,
-      backgroundColor: Colors.black87,
       bottom: TabBar(
         isScrollable: true,
         indicatorColor: Colors.white70,
@@ -235,10 +240,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           child: InkWell(
             child: Row(
               children: <Widget>[
-                SvgPicture.asset(
-                  'assets/images/business_person.svg',
-                  width: 20,
-                ),
+                BusinessLogo(url: businessLogo,),
                 _isTablet || !_isPortrait ? Padding(
                   padding: EdgeInsets.only(left: 4, right: 4),
                   child: Text(

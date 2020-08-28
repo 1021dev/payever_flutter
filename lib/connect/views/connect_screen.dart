@@ -15,6 +15,7 @@ import 'package:payever/connect/views/connect_setting_screen.dart';
 import 'package:payever/connect/widgets/connect_grid_item.dart';
 import 'package:payever/connect/widgets/connect_list_item.dart';
 import 'package:payever/connect/widgets/connect_top_button.dart';
+import 'package:payever/dashboard/sub_view/business_logo.dart';
 import 'package:payever/dashboard/sub_view/dashboard_menu_view.dart';
 import 'package:payever/login/login_screen.dart';
 import 'package:payever/notifications/notifications_screen.dart';
@@ -193,6 +194,10 @@ class _ConnectScreenState extends State<ConnectScreen> {
   }
 
   Widget _appBar(ConnectScreenState state) {
+    String businessLogo = '';
+    if (widget.dashboardScreenBloc.state.activeBusiness != null) {
+      businessLogo = 'https://payeverproduction.blob.core.windows.net/images/${widget.dashboardScreenBloc.state.activeBusiness.logo}' ?? '';
+    }
     return AppBar(
       centerTitle: false,
       elevation: 0,
@@ -229,10 +234,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
           child: InkWell(
             child: Row(
               children: <Widget>[
-                SvgPicture.asset(
-                  'assets/images/business_person.svg',
-                  width: 20,
-                ),
+                BusinessLogo(url: businessLogo,),
                 _isTablet || !_isPortrait ? Padding(
                   padding: EdgeInsets.only(left: 4, right: 4),
                   child: Text(

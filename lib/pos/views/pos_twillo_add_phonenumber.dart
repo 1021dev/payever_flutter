@@ -101,7 +101,6 @@ class _PosTwilioAddPhoneNumberState extends State<PosTwilioAddPhoneNumber> {
       centerTitle: false,
       elevation: 0,
       automaticallyImplyLeading: false,
-      backgroundColor: Colors.black87,
       title: Row(
         children: <Widget>[
           Text(
@@ -140,7 +139,6 @@ class _PosTwilioAddPhoneNumberState extends State<PosTwilioAddPhoneNumber> {
 
   Widget _body(PosScreenState state) {
     return Scaffold(
-      backgroundColor: Colors.black,
       resizeToAvoidBottomPadding: false,
       appBar: _appBar(state),
       body: SafeArea(

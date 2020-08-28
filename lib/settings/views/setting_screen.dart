@@ -10,6 +10,7 @@ import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
+import 'package:payever/dashboard/sub_view/business_logo.dart';
 import 'package:payever/dashboard/sub_view/dashboard_menu_view.dart';
 import 'package:payever/login/login_screen.dart';
 import 'package:payever/notifications/notifications_screen.dart';
@@ -134,6 +135,10 @@ class _SettingScreenState extends State<SettingScreen> {
   }
 
   Widget _appBar(SettingScreenState state) {
+    String businessLogo = '';
+    if (widget.dashboardScreenBloc.state.activeBusiness != null) {
+      businessLogo = 'https://payeverproduction.blob.core.windows.net/images/${widget.dashboardScreenBloc.state.activeBusiness.logo}' ?? '';
+    }
     return AppBar(
       centerTitle: false,
       elevation: 0,
@@ -169,10 +174,7 @@ class _SettingScreenState extends State<SettingScreen> {
           child: InkWell(
             child: Row(
               children: <Widget>[
-                SvgPicture.asset(
-                  'assets/images/business_person.svg',
-                  width: 20,
-                ),
+                BusinessLogo(url: businessLogo,),
                 _isTablet || !_isPortrait ? Padding(
                   padding: EdgeInsets.only(left: 4, right: 4),
                   child: Text(
