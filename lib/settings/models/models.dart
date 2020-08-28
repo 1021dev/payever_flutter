@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_tagging/flutter_tagging.dart';
 import 'package:iso_countries/country.dart';
 import 'package:payever/commons/models/business.dart';
-import 'package:payever/commons/utils/common_utils.dart';
+import 'package:payever/libraries/flutter_tagging.dart';
 
 class SettingItem {
   final String name;
