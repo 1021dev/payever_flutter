@@ -205,32 +205,6 @@ class _PosScreenState extends State<PosScreen> {
             innerDrawerKey: _innerDrawerKey,
             dashboardScreenBloc: widget.dashboardScreenBloc,
             activeBusiness: widget.dashboardScreenBloc.state.activeBusiness,
-            onLogout: () async {
-              FlutterSecureStorage storage = FlutterSecureStorage();
-              await storage.delete(key: GlobalUtils.TOKEN);
-              await storage.delete(key: GlobalUtils.BUSINESS);
-              await storage.delete(key: GlobalUtils.REFRESH_TOKEN);
-              SharedPreferences.getInstance().then((p) {
-                p.setString(GlobalUtils.BUSINESS, '');
-                p.setString(GlobalUtils.DEVICE_ID, '');
-              });
-              Navigator.pushReplacement(
-                  context,
-                  PageTransition(
-                      child: LoginScreen(),
-                    type: PageTransitionType.fade,
-                  )
-              );
-            },
-            onSwitchBusiness: () {
-              Navigator.pushReplacement(
-                  context,
-                  PageTransition(
-                      child: SwitcherScreen(),
-                      type: PageTransitionType.fade,
-                  )
-              );
-            },
             onPersonalInfo: () {
 
             },
@@ -263,7 +237,7 @@ class _PosScreenState extends State<PosScreen> {
                     color: Colors.white,
                     height: 16,
                     width: 24,
-                  )
+                  ),
               ),
             ),
           ),

@@ -1180,8 +1180,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   configureChip: (lang) {
                     return ChipConfiguration(
                       label: Text(lang.name),
-                      labelStyle: TextStyle(color: Colors.white),
-                      deleteIconColor: Colors.white,
                     );
                   },
                   onChanged: () {
@@ -1209,15 +1207,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               ? CircularProgressIndicator()
                               : Icon(
                                   Icons.add_circle,
-                                  color: Colors.white,
                                 ),
                           label: Text('Add New Category'),
                           labelStyle: TextStyle(
-                            color: Colors.white,
                             fontSize: 14.0,
                             fontWeight: FontWeight.w300,
                           ),
-                          backgroundColor: Colors.green,
                         ),
                       ),
                     );

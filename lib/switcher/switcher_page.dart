@@ -25,7 +25,8 @@ bool _isTablet = false;
 bool _isPortrait = true;
 
 class SwitcherScreen extends StatefulWidget {
-  SwitcherScreen();
+  final bool isLogin;
+  SwitcherScreen(this.isLogin);
 
   @override
   createState() => _SwitcherScreenState();
@@ -107,7 +108,7 @@ class _SwitcherScreenState extends State<SwitcherScreen> {
               duration: Duration(milliseconds: 500),
               opacity: 1.0,
             ),
-            SafeArea(
+            !widget.isLogin ? SafeArea(
               child: MaterialButton(
                 onPressed: () {
                   Navigator.pop(context);
@@ -116,7 +117,7 @@ class _SwitcherScreenState extends State<SwitcherScreen> {
                 shape: CircleBorder(),
                 child: SvgPicture.asset('assets/images/closeicon.svg', color: iconColor(),),
               ),
-            )
+            ): Container()
           ],
         ),
       ),

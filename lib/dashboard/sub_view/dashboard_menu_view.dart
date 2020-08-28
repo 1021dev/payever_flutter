@@ -78,7 +78,7 @@ class DashboardMenuView extends StatelessWidget {
                     final result = await Navigator.push(
                       context,
                       PageTransition(
-                        child: SwitcherScreen(),
+                        child: SwitcherScreen(false),
                         type: PageTransitionType.fade,
                       ),
                     );

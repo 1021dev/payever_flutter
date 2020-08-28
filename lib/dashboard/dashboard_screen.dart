@@ -139,7 +139,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             Navigator.pushReplacement(
                 context,
                 PageTransition(
-                  child: SwitcherScreen(),
+                  child: SwitcherScreen(false),
                   type: PageTransitionType.fade,
                 ));
           }
@@ -345,34 +345,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       innerDrawerKey: _innerDrawerKey,
       dashboardScreenBloc: screenBloc,
       activeBusiness: state.activeBusiness,
-      onLogout: () async {
-        FlutterSecureStorage storage = FlutterSecureStorage();
-        await storage.delete(key: GlobalUtils.TOKEN);
-        await storage.delete(key: GlobalUtils.BUSINESS);
-        await storage.delete(key: GlobalUtils.REFRESH_TOKEN);
-        SharedPreferences.getInstance().then((p) {
-          p.setString(GlobalUtils.BUSINESS, '');
-          p.setString(GlobalUtils.DEVICE_ID, '');
-          p.setString(GlobalUtils.DB_TOKEN_ACC, '');
-          p.setString(GlobalUtils.DB_TOKEN_RFS, '');
-        });
-        Navigator.pushReplacement(
-          context,
-          PageTransition(
-            child: LoginScreen(),
-            type: PageTransitionType.fade,
-          ),
-        );
-      },
-      onSwitchBusiness: () {
-        Navigator.pushReplacement(
-          context,
-          PageTransition(
-            child: SwitcherScreen(),
-            type: PageTransitionType.fade,
-          ),
-        );
-      },
       onPersonalInfo: () {},
       onAddBusiness: () {},
       onClose: () {

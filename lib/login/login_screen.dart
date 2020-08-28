@@ -85,7 +85,7 @@ class _LoginState extends State<Login> {
                 context,
                 PageTransition(
                   type: PageTransitionType.fade,
-                  child: SwitcherScreen(),
+                  child: SwitcherScreen(true),
                 )
             );
           } else if (state is LoadedCredentialsState) {
