@@ -36,38 +36,43 @@ class ProductDetailHeaderView extends StatelessWidget {
                 fontWeight: FontWeight.w400,
               ),
             ),
-            detail == 'channel'
-                ? Container(
-              alignment: Alignment.centerLeft,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  SvgPicture.asset(
-                    'assets/images/pos.svg',
-                    width: 20,
-                    height: 20,
-                    color: iconColor(),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 8),
-                  ),
-                  SvgPicture.asset(
-                    'assets/images/shopicon.svg',
-                    width: 20,
-                    height: 20,
-                    color: iconColor(),
-                  ),
-                ],
-              ),
-            )
-                : Text(
-              this.detail ?? '',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
+            SizedBox(width: 16,),
+            Expanded(
+              child: detail == 'channel'
+                  ? Container(
+                alignment: Alignment.centerLeft,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    SvgPicture.asset(
+                      'assets/images/pos.svg',
+                      width: 20,
+                      height: 20,
+                      color: iconColor(),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 8),
+                    ),
+                    SvgPicture.asset(
+                      'assets/images/shopicon.svg',
+                      width: 20,
+                      height: 20,
+                      color: iconColor(),
+                    ),
+                  ],
+                ),
+              )
+                  : Text(
+                this.detail ?? '',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
             ),
+            SizedBox(width: 8,),
             isExpanded ? Icon(
               Icons.remove,
             ): Icon(

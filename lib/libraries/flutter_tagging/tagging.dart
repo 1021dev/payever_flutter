@@ -281,7 +281,7 @@ class _FlutterTaggingState<T extends Taggable>
               ),
             );
           },
-          onSuggestionSelected: (suggestion) {
+          onSuggestionSelected: (suggestion) async {
             if (_additionItem != suggestion) {
               setState(() {
                 widget.initialItems.add(suggestion);

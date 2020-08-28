@@ -144,7 +144,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       centerTitle: false,
       elevation: 0,
       automaticallyImplyLeading: false,
-      backgroundColor: Colors.black87,
       title: Row(
         children: <Widget>[
           Text(
@@ -167,9 +166,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             height: 32,
             elevation: 0,
             minWidth: 0,
-            color: Colors.black,
             child: Text(
               Language.getProductStrings('cancel'),
+              style: TextStyle(
+                color: Colors.white,
+              ),
             ),
             onPressed: () {
               widget.screenBloc.add(CancelProductEdit());
@@ -188,7 +189,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             ),
             elevation: 0,
             minWidth: 0,
-            color: Colors.white24,
+            color: overlayBackground(),
             child: state.isLoading ? Center(
               child: Container(
                 width: 16,
@@ -275,6 +276,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         tax = vats.first;
       }
     }
+    String categoryHeaderDetail = '';
+//    state.productDetail.categories != null ? (state.productDetail.categories.length > 0 ? '${state.productDetail.categories.map((e) => e.title).toList().join(', ')}': ''): ''
     return Container(
       child: SingleChildScrollView(
         child: Column(
@@ -329,7 +332,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             state.productDetail.variants.length == 0 ? _getInventoryDetail(state): Container(),
             ProductDetailHeaderView(
               title: Language.getProductStrings('sections.category').toUpperCase(),
-              detail: state.productDetail.categories != null ? (state.productDetail.categories.length > 0 ? '${state.productDetail.categories.map((e) => e.title).toList().join(', ')}': ''): '',
+              detail: '',
               isExpanded: _selectedSectionIndex == 3,
               onTap: () {
                 setState(() {
@@ -1129,11 +1132,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
     List<CategoryTag> tags = [];
     tags = state.productDetail.categories.map((element) {
-      return CategoryTag(
-        name: element.title,
-        position: suggestedCategories(state).length ,
-        category: element,
-      );
+      if (element != null) {
+        return CategoryTag(
+          name: element.title ?? '',
+          position: suggestedCategories(state).length ,
+          category: element,
+        );
+      } else {
+        return null;
+      }
     }).toList();
 
     return Container(
@@ -1173,9 +1180,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       position: suggestedCategories(state).length,
                     );
                   },
-                  onAdded: (language) {
-                    // api calls here, triggered when add to tag button is pressed
-                    return CategoryTag();
+                  onAdded: (newCategory) {
+                    widget.screenBloc.add(CreateCategoryEvent(
+                      title: newCategory.name,
+                    ));
+                    categoryController.clear();
+                    FocusScope.of(context).unfocus();
+                    return newCategory;
                   },
                   configureChip: (lang) {
                     return ChipConfiguration(
@@ -1196,31 +1207,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   configureSuggestion: (CategoryTag tag ) {
                     return SuggestionConfiguration(
                       title: Text(tag.name),
-                      additionWidget: GestureDetector(
-                        onTap: () {
-                          widget.screenBloc.add(CreateCategoryEvent(
-                            title: tag.name,
-                          ));
-                        },
-                        child: Chip(
-                          avatar: state.isUpdating
-                              ? CircularProgressIndicator()
-                              : Icon(
-                                  Icons.add_circle,
-                                ),
-                          label: Text('Add New Category'),
-                          labelStyle: TextStyle(
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.w300,
-                          ),
-                        ),
-                      ),
+                      additionWidget: Container(width: 0,),
                     );
                   },
                 ),
               ),
-
-          ),
+            ),
           ),
         ],
       ),
