@@ -126,6 +126,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         } else if (state is ProductsNotExist) {
           Fluttertoast.showToast(msg: state.error);
           Navigator.pop(context);
+        } else if (state is CategoriesCreate) {
+
         }
       },
       child: BlocBuilder<ProductsScreenBloc, ProductsScreenState>(
@@ -1188,10 +1190,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       return e.category;
                     }).toList();
                     ProductsModel model = state.productDetail;
-                     model.categories = cates;
-                     widget.screenBloc.add(UpdateProductDetail(
-                       productsModel: model,
-                     ));
+                    model.categories = cates;
+                    widget.screenBloc.add(UpdateProductDetail(
+                      productsModel: model,
+                    ));
                   },
                   configureSuggestion: (CategoryTag tag ) {
                     return SuggestionConfiguration(
@@ -1203,10 +1205,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           ));
                         },
                         child: Chip(
-                          avatar: Icon(
-                            Icons.add_circle,
-                            color: Colors.white,
-                          ),
+                          avatar: state.isUpdating
+                              ? CircularProgressIndicator()
+                              : Icon(
+                                  Icons.add_circle,
+                                  color: Colors.white,
+                                ),
                           label: Text('Add New Category'),
                           labelStyle: TextStyle(
                             color: Colors.white,
@@ -1221,41 +1225,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 ),
               ),
 
-//            Tags(
-//              key: _tagStateKey,
-//              textField: TagsTextField(
-//                hintText: 'Please enter to add a category',
-//                suggestions: state.categories.map((e) {
-//                  return e.title;
-//                }).toList(),
-//
-//              ),
-//              itemCount: state.productDetail.categories.length,
-//              alignment: WrapAlignment.start,
-//              spacing: 4,
-//              runSpacing: 8,
-//              itemBuilder: (int index) {
-//                return ItemTags(
-//                  key: Key('filterItem$index'),
-//                  index: index,
-//                  title: state.productDetail.categories[index].title,
-//                  color: Colors.white12,
-//                  activeColor: Colors.white12,
-//                  textActiveColor: Colors.white,
-//                  textColor: Colors.white,
-//                  elevation: 0,
-//                  padding: EdgeInsets.only(
-//                    left: 16, top: 8, bottom: 8, right: 16,
-//                  ),
-//                  removeButton: ItemTagsRemoveButton(
-//                      backgroundColor: Colors.transparent,
-//                      onRemoved: () {
-//                        return true;
-//                      }
-//                  ),
-//                );
-//              },
-//            ),
           ),
           ),
         ],

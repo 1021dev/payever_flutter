@@ -974,7 +974,7 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
   }
 
   Stream<ProductsScreenState> createCategory(String title) async* {
-    yield state.copyWith(isLoading: true);
+    yield state.copyWith(isUpdating: true);
     String businessUuid = state.businessId;
     Map<String, dynamic> body = {
       'operationName': 'createCategory',
@@ -982,19 +982,23 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
         'businessUuid': businessUuid,
         'title': title,
       },
-      'query': 'mutation createCategory(\$businessUuid: String!, \$title: String!) {\n  createCategory(businessUuid: \$businessUuid, title: \$title) {\n    id\n    businessUuid\n    title\n  slug\n  }\n}\n'
+      'query': 'mutation createCategory(\$businessUuid: String!, \$title: String!) {\n  createCategory(category: {businessUuid: \$businessUuid, title: \$title}) {\n    id\n    businessUuid\n    title\n  slug\n  }\n}\n'
     };
     dynamic response = await api.createCategory(token, body);
     if (response is Map) {
       dynamic data = response['data'];
       if (data != null) {
-        dynamic updateProduct = data['updateProduct'];
-        if (updateProduct != null) {
-          var id = updateProduct['id'];
-          print('Updates success  => $id');
+        dynamic categoryObj = data['data'];
+        if (categoryObj != null) {
+          Categories categories = Categories.toMap(categoryObj);
+          List<Categories>categoriesList = state.categories;
+          categoriesList.add(categories);
+          yield state.copyWith(categories: categoriesList, isUpdating: false);
+          yield CategoriesCreate();
         }
       }
-    }
+    } else {
 
+    }
   }
 }

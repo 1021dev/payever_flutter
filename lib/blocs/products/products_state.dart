@@ -195,3 +195,5 @@ class ProductsNotExist extends ProductsScreenState {
     return 'ProductsNotExist { error $error }';
   }
 }
+
+class CategoriesCreate extends ProductsScreenState { }
