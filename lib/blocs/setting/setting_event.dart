@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/blocs/bloc.dart';
+import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/models/app_widget.dart';
 import 'package:payever/settings/models/models.dart';
 
@@ -16,15 +17,16 @@ abstract class SettingScreenEvent extends Equatable {
 
 class SettingScreenInitEvent extends SettingScreenEvent {
   final String business;
-
+  final User user;
   SettingScreenInitEvent({
     this.business,
-
+    this.user,
   });
 
   @override
   List<Object> get props => [
     this.business,
+    this.user,
   ];
 }
 

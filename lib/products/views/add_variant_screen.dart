@@ -371,7 +371,7 @@ class _AddVariantScreenState extends State<AddVariantScreen> {
                 constraints: BoxConstraints.expand(),
                 decoration: BoxDecoration(
                   color: Color(0x80222222),
-                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(8)),
+                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(8), topLeft: Radius.circular(8),),
                 ),
                 alignment: Alignment.center,
                 child: TextFormField(

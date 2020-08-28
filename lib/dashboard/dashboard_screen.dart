@@ -21,6 +21,7 @@ import 'package:payever/products/models/models.dart';
 import 'package:payever/products/views/product_detail_screen.dart';
 import 'package:payever/products/views/products_screen.dart';
 import 'package:payever/search/views/search_screen.dart';
+import 'package:payever/settings/views/general/language_screen.dart';
 import 'package:payever/settings/views/setting_screen.dart';
 import 'package:payever/settings/views/wallpaper/wallpaper_screen.dart';
 import 'package:payever/shop/views/shop_screen.dart';
@@ -45,13 +46,15 @@ import 'sub_view/dashboard_transactions_view.dart';
 import 'sub_view/dashboard_tutorial_view.dart';
 
 class DashboardScreenInit extends StatelessWidget {
-
   final bool refresh;
   final bool registered;
+
   DashboardScreenInit({this.refresh = false, this.registered = false});
+
   @override
   Widget build(BuildContext context) {
-    GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context, listen: true);
+    GlobalStateModel globalStateModel =
+        Provider.of<GlobalStateModel>(context, listen: true);
 
     return DashboardScreen(
       wallpaper: globalStateModel.currentWallpaper,
@@ -74,7 +77,8 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   String uiKit = '${Env.commerceOs}/assets/ui-kit/icons-png/';
-  final GlobalKey<InnerDrawerState> _innerDrawerKey = GlobalKey<InnerDrawerState>();
+  final GlobalKey<InnerDrawerState> _innerDrawerKey =
+      GlobalKey<InnerDrawerState>();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   DashboardScreenBloc screenBloc;
   bool isLoaded = false;
@@ -88,7 +92,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     screenBloc = DashboardScreenBloc();
-    screenBloc.add(DashboardScreenInitEvent(wallpaper: widget.wallpaper, isRefresh: widget.refresh));
+    screenBloc.add(DashboardScreenInitEvent(
+        wallpaper: widget.wallpaper, isRefresh: widget.refresh));
     super.initState();
   }
 
@@ -105,8 +110,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       Language.language = p.getString(GlobalUtils.LANGUAGE);
       Language(context);
     });
-    _isPortrait =
-        Orientation.portrait == MediaQuery.of(context).orientation;
+    _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
     Measurements.height = (_isPortrait
         ? MediaQuery.of(context).size.height
         : MediaQuery.of(context).size.width);
@@ -121,33 +125,33 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
 
     return BlocListener(
-      bloc: screenBloc,
-      listener: (BuildContext context, DashboardScreenState state) {
-        if (state is DashboardScreenLogout) {
-          Navigator.pushReplacement(
+        bloc: screenBloc,
+        listener: (BuildContext context, DashboardScreenState state) {
+          if (state is DashboardScreenLogout) {
+            Navigator.pushReplacement(
               context,
               PageTransition(
-                  child: LoginScreen(),
-                  type: PageTransitionType.fade,
+                child: LoginScreen(),
+                type: PageTransitionType.fade,
               ),
-          );
-        } else if (state is DashboardScreenSwitch) {
-          Navigator.pushReplacement(
-              context,
-              PageTransition(
+            );
+          } else if (state is DashboardScreenSwitch) {
+            Navigator.pushReplacement(
+                context,
+                PageTransition(
                   child: SwitcherScreen(),
                   type: PageTransitionType.fade,
-              )
-          );
-        }
-      },
-      child: BlocBuilder<DashboardScreenBloc, DashboardScreenState> (
-        bloc: screenBloc,
-        builder: (BuildContext context, DashboardScreenState state) {
-          return state.isInitialScreen ? _showLoading(state) : _showMain(state);
+                ));
+          }
         },
-      )
-    );
+        child: BlocBuilder<DashboardScreenBloc, DashboardScreenState>(
+          bloc: screenBloc,
+          builder: (BuildContext context, DashboardScreenState state) {
+            return state.isInitialScreen
+                ? _showLoading(state)
+                : _showMain(state);
+          },
+        ));
   }
 
   Widget _showLoading(DashboardScreenState state) {
@@ -162,7 +166,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
           top: 0.0,
           child: Container(
             child: CachedNetworkImage(
-              imageUrl: state.curWall != null ? state.curWall: widget.wallpaper,
+              imageUrl:
+                  state.curWall != null ? state.curWall : widget.wallpaper,
               placeholder: (context, url) => Center(
                 child: Container(
                   child: CircularProgressIndicator(
@@ -207,11 +212,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
             child: Center(
               child: Container(
                   child: SvgPicture.asset(
-                    'assets/images/payeverlogo.svg',
-                    height: 16,
-                    width: 24,
-                  )
-              ),
+                'assets/images/payeverlogo.svg',
+                height: 16,
+                width: 24,
+              )),
             ),
           ),
           Padding(
@@ -236,25 +240,29 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   'assets/images/business_person.svg',
                   width: 20,
                 ),
-                _isTablet || !_isPortrait ? Padding(
-                  padding: EdgeInsets.only(left: 4, right: 4),
-                  child: Text(
-                    state.activeBusiness.name,
-                    style: TextStyle(
-                      fontSize: 14,
-                    ),
-                  ),
-                ): Container(),
+                _isTablet || !_isPortrait
+                    ? Padding(
+                        padding: EdgeInsets.only(left: 4, right: 4),
+                        child: Text(
+                          state.activeBusiness.name,
+                          style: TextStyle(
+                            fontSize: 14,
+                          ),
+                        ),
+                      )
+                    : Container(),
               ],
             ),
-            onTap: () {
-            },
+            onTap: () {},
           ),
         ),
         Padding(
           padding: EdgeInsets.all(6),
           child: InkWell(
-            child: SvgPicture.asset('assets/images/searchicon.svg', width: 20,),
+            child: SvgPicture.asset(
+              'assets/images/searchicon.svg',
+              width: 20,
+            ),
             onTap: () {
               Navigator.push(
                 context,
@@ -277,19 +285,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
         Padding(
           padding: EdgeInsets.all(6),
           child: InkWell(
-            child: SvgPicture.asset('assets/images/notificationicon.svg', width: 20),
+            child: SvgPicture.asset('assets/images/notificationicon.svg',
+                width: 20),
             onTap: () async {
-              Provider.of<GlobalStateModel>(context,listen: false)
+              Provider.of<GlobalStateModel>(context, listen: false)
                   .setCurrentBusiness(state.activeBusiness);
-              Provider.of<GlobalStateModel>(context,listen: false)
+              Provider.of<GlobalStateModel>(context, listen: false)
                   .setCurrentWallpaper(state.curWall);
 
               await showGeneralDialog(
                   barrierColor: null,
                   transitionBuilder: (context, a1, a2, widget) {
-                    final curvedValue = Curves.ease.transform(a1.value) -   1.0;
+                    final curvedValue = Curves.ease.transform(a1.value) - 1.0;
                     return Transform(
-                      transform: Matrix4.translationValues(-curvedValue * 200, 0.0, 0),
+                      transform:
+                          Matrix4.translationValues(-curvedValue * 200, 0.0, 0),
                       child: NotificationsScreen(
                         business: state.activeBusiness,
                         businessApps: state.businessWidgets,
@@ -310,7 +320,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
         Padding(
           padding: EdgeInsets.all(6),
           child: InkWell(
-            child: SvgPicture.asset('assets/images/list.svg', width: 20,),
+            child: SvgPicture.asset(
+              'assets/images/list.svg',
+              width: 20,
+            ),
             onTap: () {
               _innerDrawerKey.currentState.toggle();
             },
@@ -360,12 +373,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         );
       },
-      onPersonalInfo: () {
-
-      },
-      onAddBusiness: () {
-
-      },
+      onPersonalInfo: () {},
+      onAddBusiness: () {},
       onClose: () {
         _innerDrawerKey.currentState.toggle();
       },
@@ -388,113 +397,233 @@ class _DashboardScreenState extends State<DashboardScreen> {
     dashboardWidgets.add(_searchBar(state));
 
     // TRANSACTIONS
-    List<AppWidget> appWidgets = widgets.where((element) => element.type == 'transactions').toList();
+    List<AppWidget> appWidgets =
+        widgets.where((element) => element.type == 'transactions').toList();
     AppWidget appWidget;
     if (appWidgets.length > 0) {
       appWidget = appWidgets[0];
     }
-    BusinessApps businessApp = businessApps.where((element) => element.code == 'transactions').toList().first;
+    BusinessApps businessApp = businessApps
+        .where((element) => element.code == 'transactions')
+        .toList()
+        .first;
     if (appWidget != null) {
       List<NotificationModel> notifications = [];
-      if (state.notifications.containsKey('transactions')){
+      if (state.notifications.containsKey('transactions')) {
         notifications = state.notifications['transactions'];
       }
-      dashboardWidgets.add(
-          DashboardTransactionsView(
-            appWidget: appWidget,
-            businessApps: businessApp,
-            isLoading: state.isInitialScreen,
-            total: state.total,
-            lastMonth: state.lastMonth,
-            lastYear: state.lastYear,
-            monthlySum: state.monthlySum,
-            onOpen: () {
-              Provider.of<GlobalStateModel>(context,listen: false)
-                  .setCurrentBusiness(state.activeBusiness);
-              Provider.of<GlobalStateModel>(context,listen: false)
-                  .setCurrentWallpaper(state.curWall);
-              Navigator.push(
-                context,
-                PageTransition(
-                  child: TransactionScreenInit(
-                    dashboardScreenBloc: screenBloc,
-                  ),
-                  type: PageTransitionType.fade,
-                ),
-              );
-            },
-            onTapContinueSetup: (app) {
-              Provider.of<GlobalStateModel>(context,listen: false)
-                  .setCurrentBusiness(state.activeBusiness);
-              Provider.of<GlobalStateModel>(context,listen: false)
-                  .setCurrentWallpaper(state.curWall);
-              Navigator.push(
-                context,
-                PageTransition(
-                  child: WelcomeScreen(
-                    dashboardScreenBloc: screenBloc,
-                    business: state.activeBusiness,
-                    businessApps: app,
-                  ),
-                  type: PageTransitionType.fade,
-                ),
-              );
-            },
-            onTapGetStarted: () {},
-            onTapLearnMore: () {},
-            notifications: notifications,
-            openNotification: (NotificationModel model) {
-            },
-            deleteNotification: (NotificationModel model) {
-              screenBloc.add(DeleteNotification(notificationId: model.id));
-            },
-          )
-      );
+      dashboardWidgets.add(DashboardTransactionsView(
+        appWidget: appWidget,
+        businessApps: businessApp,
+        isLoading: state.isInitialScreen,
+        total: state.total,
+        lastMonth: state.lastMonth,
+        lastYear: state.lastYear,
+        monthlySum: state.monthlySum,
+        onOpen: () {
+          Provider.of<GlobalStateModel>(context, listen: false)
+              .setCurrentBusiness(state.activeBusiness);
+          Provider.of<GlobalStateModel>(context, listen: false)
+              .setCurrentWallpaper(state.curWall);
+          Navigator.push(
+            context,
+            PageTransition(
+              child: TransactionScreenInit(
+                dashboardScreenBloc: screenBloc,
+              ),
+              type: PageTransitionType.fade,
+            ),
+          );
+        },
+        onTapContinueSetup: (app) {
+          Provider.of<GlobalStateModel>(context, listen: false)
+              .setCurrentBusiness(state.activeBusiness);
+          Provider.of<GlobalStateModel>(context, listen: false)
+              .setCurrentWallpaper(state.curWall);
+          Navigator.push(
+            context,
+            PageTransition(
+              child: WelcomeScreen(
+                dashboardScreenBloc: screenBloc,
+                business: state.activeBusiness,
+                businessApps: app,
+              ),
+              type: PageTransitionType.fade,
+            ),
+          );
+        },
+        onTapGetStarted: () {},
+        onTapLearnMore: () {},
+        notifications: notifications,
+        openNotification: (NotificationModel model) {},
+        deleteNotification: (NotificationModel model) {
+          screenBloc.add(DeleteNotification(notificationId: model.id));
+        },
+      ));
     }
     // Business Apps
-    dashboardWidgets.add(
-        DashboardBusinessAppsView(
-          businessApps: state.businessWidgets,
-          appWidgets: state.currentWidgets,
-          onTapEdit: () {},
-          onTapWidget: (BusinessApps aw) {
-            Provider.of<GlobalStateModel>(context,listen: false)
+    dashboardWidgets.add(DashboardBusinessAppsView(
+      businessApps: state.businessWidgets,
+      appWidgets: state.currentWidgets,
+      onTapEdit: () {},
+      onTapWidget: (BusinessApps aw) {
+        Provider.of<GlobalStateModel>(context, listen: false)
+            .setCurrentBusiness(state.activeBusiness);
+        Provider.of<GlobalStateModel>(context, listen: false)
+            .setCurrentWallpaper(state.curWall);
+        if (aw.code.contains('transactions')) {
+          Navigator.push(
+            context,
+            PageTransition(
+              child: TransactionScreenInit(
+                dashboardScreenBloc: screenBloc,
+              ),
+              type: PageTransitionType.fade,
+            ),
+          );
+        } else if (aw.code.contains('pos')) {
+          Navigator.push(
+            context,
+            PageTransition(
+              child: PosInitScreen(
+                dashboardScreenBloc: screenBloc,
+              ),
+              type: PageTransitionType.fade,
+              duration: Duration(milliseconds: 500),
+            ),
+          );
+        } else if (aw.code.contains('shop')) {
+          Navigator.push(
+            context,
+            PageTransition(
+              child: ShopInitScreen(
+                dashboardScreenBloc: screenBloc,
+              ),
+              type: PageTransitionType.fade,
+              duration: Duration(milliseconds: 500),
+            ),
+          );
+        } else if (aw.code.contains('products')) {
+          Navigator.push(
+            context,
+            PageTransition(
+              child: ProductsInitScreen(
+                dashboardScreenBloc: screenBloc,
+              ),
+              type: PageTransitionType.fade,
+              duration: Duration(milliseconds: 500),
+            ),
+          );
+        } else if (aw.code.contains('connect')) {
+          Navigator.push(
+            context,
+            PageTransition(
+              child: ConnectInitScreen(
+                dashboardScreenBloc: screenBloc,
+              ),
+              type: PageTransitionType.fade,
+              duration: Duration(milliseconds: 500),
+            ),
+          );
+        } else if (aw.code.contains('contact')) {
+          Navigator.push(
+            context,
+            PageTransition(
+              child: ContactsInitScreen(
+                dashboardScreenBloc: screenBloc,
+              ),
+              type: PageTransitionType.fade,
+              duration: Duration(milliseconds: 500),
+            ),
+          );
+        } else if (aw.code.contains('checkout')) {
+          Navigator.push(
+            context,
+            PageTransition(
+              child: CheckoutInitScreen(
+                dashboardScreenBloc: screenBloc,
+                checkouts: state.checkouts,
+                defaultCheckout: state.defaultCheckout,
+              ),
+              type: PageTransitionType.fade,
+              duration: Duration(milliseconds: 500),
+            ),
+          );
+        } else if (aw.code.contains('settings')) {
+          Navigator.push(
+            context,
+            PageTransition(
+              child: SettingInitScreen(
+                dashboardScreenBloc: screenBloc,
+              ),
+              type: PageTransitionType.fade,
+              duration: Duration(milliseconds: 300),
+            ),
+          );
+        }
+      },
+    ));
+
+    // Shop
+    if (widgets.where((element) => element.type == 'shop').toList().length >
+        0) {
+      appWidget =
+          widgets.where((element) => element.type == 'shop').toList().first;
+      businessApp = businessApps
+          .where((element) => element.code == 'shop')
+          .toList()
+          .first;
+      List<NotificationModel> notifications = [];
+      if (state.notifications.containsKey('shops')) {
+        notifications = state.notifications['shops'];
+      }
+      dashboardWidgets.add(
+        DashboardShopView(
+          businessApps: businessApp,
+          appWidget: appWidget,
+          shops: state.shops,
+          shopModel: state.activeShop,
+          isLoading: state.isLoading,
+          onOpen: () {
+            Provider.of<GlobalStateModel>(context, listen: false)
                 .setCurrentBusiness(state.activeBusiness);
-            Provider.of<GlobalStateModel>(context,listen: false)
+            Provider.of<GlobalStateModel>(context, listen: false)
                 .setCurrentWallpaper(state.curWall);
-            if (aw.code.contains('transactions')) {
-              Navigator.push(
-                context,
-                PageTransition(
-                  child: TransactionScreenInit(
-                    dashboardScreenBloc: screenBloc,
-                  ),
-                  type: PageTransitionType.fade,
+            Navigator.push(
+              context,
+              PageTransition(
+                child: ShopInitScreen(
+                  dashboardScreenBloc: screenBloc,
                 ),
-              );
-            } else if (aw.code.contains('pos')) {
-              Navigator.push(
-                context,
-                PageTransition(
-                  child: PosInitScreen(
-                    dashboardScreenBloc: screenBloc,
-                  ),
-                  type: PageTransitionType.fade,
-                  duration: Duration(milliseconds: 500),
+                type: PageTransitionType.fade,
+                duration: Duration(milliseconds: 500),
+              ),
+            );
+          },
+          onTapEditShop: () {
+            Provider.of<GlobalStateModel>(context, listen: false)
+                .setCurrentBusiness(state.activeBusiness);
+            Provider.of<GlobalStateModel>(context, listen: false)
+                .setCurrentWallpaper(state.curWall);
+            Navigator.push(
+              context,
+              PageTransition(
+                child: ShopInitScreen(
+                  dashboardScreenBloc: screenBloc,
                 ),
-              );
-            } else if (aw.code.contains('shop')) {
-              Navigator.push(
-                context,
-                PageTransition(
-                  child: ShopInitScreen(
-                    dashboardScreenBloc: screenBloc,
-                  ),
-                  type: PageTransitionType.fade,
-                  duration: Duration(milliseconds: 500),
-                ),
-              );
-            } else if (aw.code.contains('products')) {
+                type: PageTransitionType.fade,
+                duration: Duration(milliseconds: 500),
+              ),
+            );
+          },
+          notifications: notifications,
+          openNotification: (NotificationModel model) {
+            if (model.app == 'products-aware' &&
+                model.message.contains('newProduct')) {
+              Provider.of<GlobalStateModel>(context, listen: false)
+                  .setCurrentBusiness(state.activeBusiness);
+              Provider.of<GlobalStateModel>(context, listen: false)
+                  .setCurrentWallpaper(state.curWall);
               Navigator.push(
                 context,
                 PageTransition(
@@ -505,237 +634,136 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   duration: Duration(milliseconds: 500),
                 ),
               );
-            } else if (aw.code.contains('connect')) {
-              Navigator.push(
-                context,
-                PageTransition(
-                  child: ConnectInitScreen(
-                    dashboardScreenBloc: screenBloc,
-                  ),
-                  type: PageTransitionType.fade,
-                  duration: Duration(milliseconds: 500),
-                ),
-              );
-            } else if (aw.code.contains('contact')) {
-              Navigator.push(
-                context,
-                PageTransition(
-                  child: ContactsInitScreen(
-                    dashboardScreenBloc: screenBloc,
-                  ),
-                  type: PageTransitionType.fade,
-                  duration: Duration(milliseconds: 500),
-                ),
-              );
-            } else if (aw.code.contains('checkout')) {
-              Navigator.push(
-                context,
-                PageTransition(
-                  child: CheckoutInitScreen(
-                    dashboardScreenBloc: screenBloc,
-                    checkouts: state.checkouts,
-                    defaultCheckout: state.defaultCheckout,
-                  ),
-                  type: PageTransitionType.fade,
-                  duration: Duration(milliseconds: 500),
-                ),
-              );
             }
           },
-        )
-    );
-
-    // Shop
-    if (widgets.where((element) => element.type == 'shop' ).toList().length > 0) {
-      appWidget = widgets.where((element) => element.type == 'shop' ).toList().first;
-      businessApp = businessApps.where((element) => element.code == 'shop' ).toList().first;
-      List<NotificationModel> notifications = [];
-      if (state.notifications.containsKey('shops')){
-        notifications = state.notifications['shops'];
-      }
-      dashboardWidgets.add(
-          DashboardShopView(
-            businessApps: businessApp,
-            appWidget: appWidget,
-            shops: state.shops,
-            shopModel: state.activeShop,
-            isLoading: state.isLoading,
-            onOpen: () {
-              Provider.of<GlobalStateModel>(context,listen: false)
-                  .setCurrentBusiness(state.activeBusiness);
-              Provider.of<GlobalStateModel>(context,listen: false)
-                  .setCurrentWallpaper(state.curWall);
-              Navigator.push(
-                context,
-                PageTransition(
-                  child: ShopInitScreen(
-                    dashboardScreenBloc: screenBloc,
-                  ),
-                  type: PageTransitionType.fade,
-                  duration: Duration(milliseconds: 500),
-                ),
-              );
-            },
-            onTapEditShop: () {
-              Provider.of<GlobalStateModel>(context,listen: false)
-                  .setCurrentBusiness(state.activeBusiness);
-              Provider.of<GlobalStateModel>(context,listen: false)
-                  .setCurrentWallpaper(state.curWall);
-              Navigator.push(
-                context,
-                PageTransition(
-                  child: ShopInitScreen(
-                    dashboardScreenBloc: screenBloc,
-                  ),
-                  type: PageTransitionType.fade,
-                  duration: Duration(milliseconds: 500),
-                ),
-              );
-            },
-            notifications: notifications,
-            openNotification: (NotificationModel model) {
-              if (model.app =='products-aware' && model.message.contains('newProduct')) {
-                Provider.of<GlobalStateModel>(context,listen: false)
-                    .setCurrentBusiness(state.activeBusiness);
-                Provider.of<GlobalStateModel>(context,listen: false)
-                    .setCurrentWallpaper(state.curWall);
-                Navigator.push(
-                  context,
-                  PageTransition(
-                    child: ProductsInitScreen(
-                      dashboardScreenBloc: screenBloc,
-                    ),
-                    type: PageTransitionType.fade,
-                    duration: Duration(milliseconds: 500),
-                  ),
-                );
-              }
-            },
-            deleteNotification: (NotificationModel model) {
-              screenBloc.add(DeleteNotification(notificationId: model.id));
-            },
-          ),
+          deleteNotification: (NotificationModel model) {
+            screenBloc.add(DeleteNotification(notificationId: model.id));
+          },
+        ),
       );
     }
 
     // Point of Sale
-    if (widgets.where((element) => element.type == 'pos' ).toList().length > 0) {
-      appWidget = widgets.where((element) => element.type == 'pos' ).toList().first;
-      businessApp = businessApps.where((element) => element.code == 'pos' ).toList().first;
+    if (widgets.where((element) => element.type == 'pos').toList().length > 0) {
+      appWidget =
+          widgets.where((element) => element.type == 'pos').toList().first;
+      businessApp =
+          businessApps.where((element) => element.code == 'pos').toList().first;
       List<NotificationModel> notifications = [];
-      if (state.notifications.containsKey('pos')){
+      if (state.notifications.containsKey('pos')) {
         notifications = state.notifications['pos'];
       }
-      dashboardWidgets.add(
-          DashboardAppPosView(
-            isLoading: state.isPosLoading,
-            businessApps: businessApp,
-            appWidget: appWidget,
-            terminals: state.terminalList,
-            activeTerminal: state.activeTerminal,
-            onTapEditTerminal: () async {
-              final result = await Navigator.push(
-                context,
-                PageTransition(
-                  child: PosCreateTerminalScreen(
-                    fromDashBoard: true,
-                    businessId: globalStateModel.currentBusiness.id,
-                    screenBloc: PosScreenBloc(
-                      dashboardScreenBloc: screenBloc,
-                    ),
-                    editTerminal: state.activeTerminal,
-                  ),
-                  type: PageTransitionType.fade,
-                  duration: Duration(milliseconds: 500),
+      dashboardWidgets.add(DashboardAppPosView(
+        isLoading: state.isPosLoading,
+        businessApps: businessApp,
+        appWidget: appWidget,
+        terminals: state.terminalList,
+        activeTerminal: state.activeTerminal,
+        onTapEditTerminal: () async {
+          final result = await Navigator.push(
+            context,
+            PageTransition(
+              child: PosCreateTerminalScreen(
+                fromDashBoard: true,
+                businessId: globalStateModel.currentBusiness.id,
+                screenBloc: PosScreenBloc(
+                  dashboardScreenBloc: screenBloc,
                 ),
-              );
-              if ((result != null) && (result == 'Terminal Updated')) {
-                screenBloc.add(FetchPosEvent(business: state.activeBusiness));
-              }
-            },
-            onTapOpen: () {
-              Provider.of<GlobalStateModel>(context,listen: false)
-                  .setCurrentBusiness(state.activeBusiness);
-              Provider.of<GlobalStateModel>(context,listen: false)
-                  .setCurrentWallpaper(state.curWall);
-              Navigator.push(
-                context,
-                PageTransition(
-                  child: PosInitScreen(
-                    dashboardScreenBloc: screenBloc,
-                  ),
-                  type: PageTransitionType.fade,
-                  duration: Duration(milliseconds: 500),
+                editTerminal: state.activeTerminal,
+              ),
+              type: PageTransitionType.fade,
+              duration: Duration(milliseconds: 500),
+            ),
+          );
+          if ((result != null) && (result == 'Terminal Updated')) {
+            screenBloc.add(FetchPosEvent(business: state.activeBusiness));
+          }
+        },
+        onTapOpen: () {
+          Provider.of<GlobalStateModel>(context, listen: false)
+              .setCurrentBusiness(state.activeBusiness);
+          Provider.of<GlobalStateModel>(context, listen: false)
+              .setCurrentWallpaper(state.curWall);
+          Navigator.push(
+            context,
+            PageTransition(
+              child: PosInitScreen(
+                dashboardScreenBloc: screenBloc,
+              ),
+              type: PageTransitionType.fade,
+              duration: Duration(milliseconds: 500),
+            ),
+          );
+        },
+        notifications: notifications,
+        openNotification: (NotificationModel model) {
+          if (model.app == 'products-aware' &&
+              model.message.contains('newProduct')) {
+            Provider.of<GlobalStateModel>(context, listen: false)
+                .setCurrentBusiness(state.activeBusiness);
+            Provider.of<GlobalStateModel>(context, listen: false)
+                .setCurrentWallpaper(state.curWall);
+            Navigator.push(
+              context,
+              PageTransition(
+                child: ProductsInitScreen(
+                  dashboardScreenBloc: screenBloc,
                 ),
-              );
-            },
-            notifications: notifications,
-            openNotification: (NotificationModel model) {
-              if (model.app =='products-aware' && model.message.contains('newProduct')) {
-                Provider.of<GlobalStateModel>(context,listen: false)
-                    .setCurrentBusiness(state.activeBusiness);
-                Provider.of<GlobalStateModel>(context,listen: false)
-                    .setCurrentWallpaper(state.curWall);
-                Navigator.push(
-                  context,
-                  PageTransition(
-                    child: ProductsInitScreen(
-                      dashboardScreenBloc: screenBloc,
-                    ),
-                    type: PageTransitionType.fade,
-                    duration: Duration(milliseconds: 500),
-                  ),
-                );
-              }
-            },
-            deleteNotification: (NotificationModel model) {
-              screenBloc.add(DeleteNotification(notificationId: model.id));
-            },
-          )
-      );
+                type: PageTransitionType.fade,
+                duration: Duration(milliseconds: 500),
+              ),
+            );
+          }
+        },
+        deleteNotification: (NotificationModel model) {
+          screenBloc.add(DeleteNotification(notificationId: model.id));
+        },
+      ));
     }
 
     // Checkout
-    if (widgets.where((element) => element.type == 'checkout' ).toList().length > 0) {
-      appWidget = widgets.where((element) => element.type == 'checkout' ).toList().first;
-      businessApp = businessApps.where((element) => element.code == 'checkout' ).toList().first;
+    if (widgets.where((element) => element.type == 'checkout').toList().length >
+        0) {
+      appWidget =
+          widgets.where((element) => element.type == 'checkout').toList().first;
+      businessApp = businessApps
+          .where((element) => element.code == 'checkout')
+          .toList()
+          .first;
       if (appWidget != null) {
         List<NotificationModel> notifications = [];
-        if (state.notifications.containsKey('checkout')){
+        if (state.notifications.containsKey('checkout')) {
           notifications = state.notifications['checkout'];
         }
-        dashboardWidgets.add(
-            DashboardCheckoutView(
-              businessApps: businessApp,
-              appWidget: appWidget,
-              notifications: notifications,
-              checkouts: state.checkouts,
-              defaultCheckout: state.defaultCheckout,
-              openNotification: (NotificationModel model) {
-              },
-              deleteNotification: (NotificationModel model) {
-                screenBloc.add(DeleteNotification(notificationId: model.id));
-              },
-              onOpen: () {
-                Provider.of<GlobalStateModel>(context,listen: false)
-                    .setCurrentBusiness(state.activeBusiness);
-                Provider.of<GlobalStateModel>(context,listen: false)
-                    .setCurrentWallpaper(state.curWall);
-                Navigator.push(
-                  context,
-                  PageTransition(
-                    child: CheckoutInitScreen(
-                      dashboardScreenBloc: screenBloc,
-                      checkouts: state.checkouts,
-                      defaultCheckout: state.defaultCheckout,
-                    ),
-                    type: PageTransitionType.fade,
-                    duration: Duration(milliseconds: 500),
-                  ),
-                );
-              },
-            )
-        );
+        dashboardWidgets.add(DashboardCheckoutView(
+          businessApps: businessApp,
+          appWidget: appWidget,
+          notifications: notifications,
+          checkouts: state.checkouts,
+          defaultCheckout: state.defaultCheckout,
+          openNotification: (NotificationModel model) {},
+          deleteNotification: (NotificationModel model) {
+            screenBloc.add(DeleteNotification(notificationId: model.id));
+          },
+          onOpen: () {
+            Provider.of<GlobalStateModel>(context, listen: false)
+                .setCurrentBusiness(state.activeBusiness);
+            Provider.of<GlobalStateModel>(context, listen: false)
+                .setCurrentWallpaper(state.curWall);
+            Navigator.push(
+              context,
+              PageTransition(
+                child: CheckoutInitScreen(
+                  dashboardScreenBloc: screenBloc,
+                  checkouts: state.checkouts,
+                  defaultCheckout: state.defaultCheckout,
+                ),
+                type: PageTransitionType.fade,
+                duration: Duration(milliseconds: 500),
+              ),
+            );
+          },
+        ));
       }
     }
 
@@ -808,266 +836,318 @@ class _DashboardScreenState extends State<DashboardScreen> {
 //    }
 
     // Contacts
-    if (widgets.where((element) => element.type == 'contacts' ).toList().length > 0) {
-      appWidget = widgets.where((element) => element.type == 'contacts' ).toList().first;
-      businessApp = businessApps.where((element) => element.code == 'contacts' ).toList().length > 0
-          ? businessApps.where((element) => element.code == 'contacts' ).toList().first : null;
+    if (widgets.where((element) => element.type == 'contacts').toList().length >
+        0) {
+      appWidget =
+          widgets.where((element) => element.type == 'contacts').toList().first;
+      businessApp = businessApps
+                  .where((element) => element.code == 'contacts')
+                  .toList()
+                  .length >
+              0
+          ? businessApps
+              .where((element) => element.code == 'contacts')
+              .toList()
+              .first
+          : null;
       List<NotificationModel> notifications = [];
-      if (state.notifications.containsKey('contacts')){
+      if (state.notifications.containsKey('contacts')) {
         notifications = state.notifications['contacts'];
       }
-      dashboardWidgets.add(
-          DashboardContactView(
-            businessApps: businessApp,
-            appWidget: appWidget,
-            notifications: notifications,
-            openNotification: (NotificationModel model) {
-            },
-            deleteNotification: (NotificationModel model) {
-              screenBloc.add(DeleteNotification(notificationId: model.id));
-            },
-          )
-      );
+      dashboardWidgets.add(DashboardContactView(
+        businessApps: businessApp,
+        appWidget: appWidget,
+        notifications: notifications,
+        openNotification: (NotificationModel model) {},
+        deleteNotification: (NotificationModel model) {
+          screenBloc.add(DeleteNotification(notificationId: model.id));
+        },
+      ));
     }
 
     // Products
-    if (widgets.where((element) => element.type == 'products' ).toList().length > 0) {
-      appWidget = widgets.where((element) => element.type == 'products' ).toList().first;
-      businessApp = businessApps.where((element) => element.code == 'products' ).toList().length > 0
-          ? businessApps.where((element) => element.code == 'products' ).toList().first : null;
+    if (widgets.where((element) => element.type == 'products').toList().length >
+        0) {
+      appWidget =
+          widgets.where((element) => element.type == 'products').toList().first;
+      businessApp = businessApps
+                  .where((element) => element.code == 'products')
+                  .toList()
+                  .length >
+              0
+          ? businessApps
+              .where((element) => element.code == 'products')
+              .toList()
+              .first
+          : null;
       List<NotificationModel> notifications = [];
-      if (state.notifications.keys.toList().contains('products')){
+      if (state.notifications.keys.toList().contains('products')) {
         notifications = state.notifications['products'];
       }
       dashboardWidgets.add(
-          DashboardProductsView(
-            businessApps: businessApp,
-            appWidget: appWidget,
-            lastSales: state.lastSalesRandom,
-            business: state.activeBusiness,
-            onOpen: () async {
-              Provider.of<GlobalStateModel>(context,listen: false)
-                  .setCurrentBusiness(state.activeBusiness);
-              Provider.of<GlobalStateModel>(context,listen: false)
-                  .setCurrentWallpaper(state.curWall);
-              Navigator.push(
-                context,
-                PageTransition(
-                  child: ProductsInitScreen(
-                    dashboardScreenBloc: screenBloc,
-                  ),
-                  type: PageTransitionType.fade,
-                  duration: Duration(milliseconds: 500),
+        DashboardProductsView(
+          businessApps: businessApp,
+          appWidget: appWidget,
+          lastSales: state.lastSalesRandom,
+          business: state.activeBusiness,
+          onOpen: () async {
+            Provider.of<GlobalStateModel>(context, listen: false)
+                .setCurrentBusiness(state.activeBusiness);
+            Provider.of<GlobalStateModel>(context, listen: false)
+                .setCurrentWallpaper(state.curWall);
+            Navigator.push(
+              context,
+              PageTransition(
+                child: ProductsInitScreen(
+                  dashboardScreenBloc: screenBloc,
                 ),
-              );
-            },
-            onSelect: (Products product) async {
-              ProductsModel productsModel = new ProductsModel();
-              productsModel.id = product.id;
-              productsModel.title = product.name;
-              List<String> images = [];
-              if (product.thumbnail != null) {
-                images.add(product.thumbnail);
-              }
-              productsModel.images = images;
-              productsModel.businessUuid = product.business;
-              productsModel.price = product.price;
-              productsModel.salePrice = product.salePrice;
-              productsModel.uuid = product.uuid;
+                type: PageTransitionType.fade,
+                duration: Duration(milliseconds: 500),
+              ),
+            );
+          },
+          onSelect: (Products product) async {
+            ProductsModel productsModel = new ProductsModel();
+            productsModel.id = product.id;
+            productsModel.title = product.name;
+            List<String> images = [];
+            if (product.thumbnail != null) {
+              images.add(product.thumbnail);
+            }
+            productsModel.images = images;
+            productsModel.businessUuid = product.business;
+            productsModel.price = product.price;
+            productsModel.salePrice = product.salePrice;
+            productsModel.uuid = product.uuid;
 
-              Provider.of<GlobalStateModel>(context,listen: false)
-                  .setCurrentBusiness(state.activeBusiness);
-              Provider.of<GlobalStateModel>(context,listen: false)
-                  .setCurrentWallpaper(state.curWall);
-              final result = await Navigator.push(
-                context,
-                PageTransition(
-                  child: ProductDetailScreen(
-                    productsModel: productsModel,
-                    businessId: globalStateModel.currentBusiness.id,
-                    fromDashBoard: true,
-                    screenBloc: ProductsScreenBloc(dashboardScreenBloc: screenBloc),
-                  ),
-                  type: PageTransitionType.fade,
-                  duration: Duration(milliseconds: 500),
+            Provider.of<GlobalStateModel>(context, listen: false)
+                .setCurrentBusiness(state.activeBusiness);
+            Provider.of<GlobalStateModel>(context, listen: false)
+                .setCurrentWallpaper(state.curWall);
+            final result = await Navigator.push(
+              context,
+              PageTransition(
+                child: ProductDetailScreen(
+                  productsModel: productsModel,
+                  businessId: globalStateModel.currentBusiness.id,
+                  fromDashBoard: true,
+                  screenBloc:
+                      ProductsScreenBloc(dashboardScreenBloc: screenBloc),
                 ),
-              );
-              if ((result != null) && (result == 'Products Updated')) {
-              }
-            },
-            notifications: notifications,
-            openNotification: (NotificationModel model) {
-              if (model.message.contains('missing')) {
-                String productId = '';
-                if (model.data != null) {
-                  if (model.data['productId'] != null) {
-                    productId = model.data['productId'];
-                  }
+                type: PageTransitionType.fade,
+                duration: Duration(milliseconds: 500),
+              ),
+            );
+            if ((result != null) && (result == 'Products Updated')) {}
+          },
+          notifications: notifications,
+          openNotification: (NotificationModel model) {
+            if (model.message.contains('missing')) {
+              String productId = '';
+              if (model.data != null) {
+                if (model.data['productId'] != null) {
+                  productId = model.data['productId'];
                 }
-                if (productId != '') {
-                  Provider.of<GlobalStateModel>(context,listen: false)
-                      .setCurrentBusiness(state.activeBusiness);
-                  Provider.of<GlobalStateModel>(context,listen: false)
-                      .setCurrentWallpaper(state.curWall);
-                  Navigator.push(
-                    context,
-                    PageTransition(
-                      child: ProductDetailScreen(
-                        productsModel: ProductsModel(id: productId),
-                        businessId: globalStateModel.currentBusiness.id,
-                        fromDashBoard: true,
-                        screenBloc: ProductsScreenBloc(dashboardScreenBloc: screenBloc),
-                      ),
-                      type: PageTransitionType.fade,
-                      duration: Duration(milliseconds: 500),
+              }
+              if (productId != '') {
+                Provider.of<GlobalStateModel>(context, listen: false)
+                    .setCurrentBusiness(state.activeBusiness);
+                Provider.of<GlobalStateModel>(context, listen: false)
+                    .setCurrentWallpaper(state.curWall);
+                Navigator.push(
+                  context,
+                  PageTransition(
+                    child: ProductDetailScreen(
+                      productsModel: ProductsModel(id: productId),
+                      businessId: globalStateModel.currentBusiness.id,
+                      fromDashBoard: true,
+                      screenBloc:
+                          ProductsScreenBloc(dashboardScreenBloc: screenBloc),
                     ),
-                  );
-                }
+                    type: PageTransitionType.fade,
+                    duration: Duration(milliseconds: 500),
+                  ),
+                );
               }
-            },
-            deleteNotification: (NotificationModel model) {
-              screenBloc.add(DeleteNotification(notificationId: model.id));
-            },
-          ),
+            }
+          },
+          deleteNotification: (NotificationModel model) {
+            screenBloc.add(DeleteNotification(notificationId: model.id));
+          },
+        ),
       );
     }
 
     // Connects
-    if (widgets.where((element) => element.type == 'connect' ).toList().length > 0) {
-      appWidget = widgets.where((element) => element.type == 'connect' ).toList().first;
-      businessApp = businessApps.where((element) => element.code == 'connect' ).toList().length > 0
-          ? businessApps.where((element) => element.code == 'connect' ).toList().first : null;
+    if (widgets.where((element) => element.type == 'connect').toList().length >
+        0) {
+      appWidget =
+          widgets.where((element) => element.type == 'connect').toList().first;
+      businessApp = businessApps
+                  .where((element) => element.code == 'connect')
+                  .toList()
+                  .length >
+              0
+          ? businessApps
+              .where((element) => element.code == 'connect')
+              .toList()
+              .first
+          : null;
       List<NotificationModel> notifications = [];
-      if (state.notifications.containsKey('connect')){
+      if (state.notifications.containsKey('connect')) {
         notifications = state.notifications['connect'];
       }
-      dashboardWidgets.add(
-          DashboardConnectView(
-            businessApps: businessApp,
-            appWidget: appWidget,
-            notifications: notifications,
-            connects: state.connects,
-            openNotification: (NotificationModel model) {
-            },
-            deleteNotification: (NotificationModel model) {
-              screenBloc.add(DeleteNotification(notificationId: model.id));
-            },
-            tapOpen: () {
-              Provider.of<GlobalStateModel>(context,listen: false)
+      dashboardWidgets.add(DashboardConnectView(
+        businessApps: businessApp,
+        appWidget: appWidget,
+        notifications: notifications,
+        connects: state.connects,
+        openNotification: (NotificationModel model) {},
+        deleteNotification: (NotificationModel model) {
+          screenBloc.add(DeleteNotification(notificationId: model.id));
+        },
+        tapOpen: () {
+          Provider.of<GlobalStateModel>(context, listen: false)
+              .setCurrentBusiness(state.activeBusiness);
+          Provider.of<GlobalStateModel>(context, listen: false)
+              .setCurrentWallpaper(state.curWall);
+          Navigator.push(
+            context,
+            PageTransition(
+              child: ConnectInitScreen(
+                dashboardScreenBloc: screenBloc,
+              ),
+              type: PageTransitionType.fade,
+              duration: Duration(milliseconds: 500),
+            ),
+          );
+        },
+      ));
+    }
+
+    // Settings
+    if (widgets.where((element) => element.type == 'settings').toList().length >
+        0) {
+      appWidget =
+          widgets.where((element) => element.type == 'settings').toList().first;
+      businessApp = businessApps
+          .where((element) => element.code == 'settings')
+          .toList()
+          .first;
+      List<NotificationModel> notifications = [];
+      if (state.notifications.containsKey('settings')) {
+        notifications = state.notifications['settings'];
+      }
+      dashboardWidgets.add(DashboardSettingsView(
+          businessApps: businessApp,
+          appWidget: appWidget,
+          notifications: notifications,
+          openNotification: (NotificationModel model) {},
+          deleteNotification: (NotificationModel model) {
+            screenBloc.add(DeleteNotification(notificationId: model.id));
+          },
+          onTapOpen: () {
+            print(businessApp.setupStatus);
+            if (businessApp.setupStatus == 'notStarted') {
+              Provider.of<GlobalStateModel>(context, listen: false)
                   .setCurrentBusiness(state.activeBusiness);
-              Provider.of<GlobalStateModel>(context,listen: false)
+              Provider.of<GlobalStateModel>(context, listen: false)
                   .setCurrentWallpaper(state.curWall);
               Navigator.push(
                 context,
                 PageTransition(
-                  child: ConnectInitScreen(
+                  child: WelcomeScreen(
                     dashboardScreenBloc: screenBloc,
+                    business: state.activeBusiness,
+                    businessApps: businessApp,
                   ),
                   type: PageTransitionType.fade,
-                  duration: Duration(milliseconds: 500),
+                  duration: Duration(milliseconds: 50),
                 ),
               );
-            },
-          )
-      );
-    }
-
-    // Settings
-    if (widgets.where((element) => element.type == 'settings' ).toList().length > 0) {
-      appWidget = widgets.where((element) => element.type == 'settings' ).toList().first;
-      businessApp = businessApps.where((element) => element.code == 'settings' ).toList().first;
-      List<NotificationModel> notifications = [];
-      if (state.notifications.containsKey('settings')){
-        notifications = state.notifications['settings'];
-      }
-      dashboardWidgets.add(
-          DashboardSettingsView(
-            businessApps: businessApp,
-            appWidget: appWidget,
-            notifications: notifications,
-            openNotification: (NotificationModel model) {
-            },
-            deleteNotification: (NotificationModel model) {
-              screenBloc.add(DeleteNotification(notificationId: model.id));
-            },
-            onTapOpen: () {
-              print(businessApp.setupStatus);
-              if (businessApp.setupStatus == 'notStarted') {
-                Provider.of<GlobalStateModel>(context, listen: false)
-                    .setCurrentBusiness(state.activeBusiness);
-                Provider.of<GlobalStateModel>(context, listen: false)
-                    .setCurrentWallpaper(state.curWall);
-                Navigator.push(
-                  context,
-                  PageTransition(
-                    child: WelcomeScreen(
-                      dashboardScreenBloc: screenBloc,
-                      business: state.activeBusiness,
-                      businessApps: businessApp,
-                    ),
-                    type: PageTransitionType.fade,
-                    duration: Duration(milliseconds: 50),
-                  ),
-                );
-              } else {
-                Provider.of<GlobalStateModel>(context, listen: false)
-                    .setCurrentBusiness(state.activeBusiness);
-                Provider.of<GlobalStateModel>(context, listen: false)
-                    .setCurrentWallpaper(state.curWall);
-                Navigator.push(
-                  context,
-                  PageTransition(
-                    child: SettingInitScreen(dashboardScreenBloc: screenBloc,),
-                    type: PageTransitionType.fade,
-                    duration: Duration(milliseconds: 300),
-                  ),
-                );
-              }
-            },
-            onTapOpenWallpaper: () async {
-              SettingScreenBloc settingscreenBloc = SettingScreenBloc(dashboardScreenBloc: screenBloc, globalStateModel: globalStateModel);
-              settingscreenBloc.add(SettingScreenInitEvent(
-                business: globalStateModel.currentBusiness.id,
-              ));
+            } else {
+              Provider.of<GlobalStateModel>(context, listen: false)
+                  .setCurrentBusiness(state.activeBusiness);
+              Provider.of<GlobalStateModel>(context, listen: false)
+                  .setCurrentWallpaper(state.curWall);
               Navigator.push(
                 context,
                 PageTransition(
-                  child: WallpaperScreen(globalStateModel: globalStateModel,setScreenBloc: settingscreenBloc, fromDashboard: true,),
+                  child: SettingInitScreen(
+                    dashboardScreenBloc: screenBloc,
+                  ),
                   type: PageTransitionType.fade,
                   duration: Duration(milliseconds: 300),
                 ),
               );
-            },
-          )
-      );
+            }
+          },
+          onTapOpenWallpaper: () async {
+            SettingScreenBloc settingscreenBloc = SettingScreenBloc(
+                dashboardScreenBloc: screenBloc,
+                globalStateModel: globalStateModel);
+            settingscreenBloc.add(SettingScreenInitEvent(
+              business: state.activeBusiness.id,
+            ));
+            Navigator.push(
+              context,
+              PageTransition(
+                child: WallpaperScreen(
+                  globalStateModel: globalStateModel,
+                  setScreenBloc: settingscreenBloc,
+                  fromDashboard: true,
+                ),
+                type: PageTransitionType.fade,
+                duration: Duration(milliseconds: 300),
+              ),
+            );
+          },
+          onTapOpenLanguage: () {
+            SettingScreenBloc settingscreenBloc = SettingScreenBloc(
+                dashboardScreenBloc: screenBloc,
+                globalStateModel: globalStateModel);
+            settingscreenBloc.add(SettingScreenInitEvent(
+              business: state.activeBusiness.id,
+              user: state.user
+            ));
+            Navigator.push(
+              context,
+              PageTransition(
+                child: LanguageScreen(
+                  globalStateModel: globalStateModel,
+                  settingBloc: settingscreenBloc,
+                  fromDashboard: true,
+                ),
+                type: PageTransitionType.fade,
+              ),
+            );
+          }));
     }
 
     // Tutorials
-    dashboardWidgets.add(
-        DashboardTutorialView(
-          tutorials: state.tutorials,
-          onWatchTutorial: (Tutorial tutorial) {
-            if (tutorial.urls.length > 0) {
-              String lang = state.activeBusiness.defaultLanguage;
-              List<Urls> urls = tutorial.urls.where((element) => element.language == lang).toList();
-              if (urls.length > 0) {
-                _launchURL(urls.first.url);
-              } else {
-                _launchURL(tutorial.url);
-              }
-            } else {
-              _launchURL(tutorial.url);
-            }
-          },
-        )
-    );
+    dashboardWidgets.add(DashboardTutorialView(
+      tutorials: state.tutorials,
+      onWatchTutorial: (Tutorial tutorial) {
+        if (tutorial.urls.length > 0) {
+          String lang = state.activeBusiness.defaultLanguage;
+          List<Urls> urls = tutorial.urls
+              .where((element) => element.language == lang)
+              .toList();
+          if (urls.length > 0) {
+            _launchURL(urls.first.url);
+          } else {
+            _launchURL(tutorial.url);
+          }
+        } else {
+          _launchURL(tutorial.url);
+        }
+      },
+    ));
 
     // Paddings
-    dashboardWidgets.add(
-        Padding(
-          padding: EdgeInsets.only(top: 24),
-        )
-    );
+    dashboardWidgets.add(Padding(
+      padding: EdgeInsets.only(top: 24),
+    ));
 
     return Scaffold(
       resizeToAvoidBottomPadding: false,
@@ -1082,9 +1162,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
           shape: CircleBorder(),
           elevation: 4,
           fillColor: overlayColor(),
-          child: SvgPicture.asset('assets/images/help.svg', width: 24, color: iconColor(),),
-          onPressed: () {
-          },
+          child: SvgPicture.asset(
+            'assets/images/help.svg',
+            width: 24,
+            color: iconColor(),
+          ),
+          onPressed: () {},
         ),
       ),
       body: SafeArea(
@@ -1098,9 +1181,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
             child: Container(
               width: Measurements.width,
               child: RefreshIndicator(
-                onRefresh: ()  {
-                  screenBloc.add(DashboardScreenInitEvent(wallpaper: state.curWall));
-                  return  Future.delayed(Duration(seconds: 3));
+                onRefresh: () {
+                  screenBloc
+                      .add(DashboardScreenInitEvent(wallpaper: state.curWall));
+                  return Future.delayed(Duration(seconds: 3));
                 },
                 child: Column(
                   children: [
@@ -1179,7 +1263,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
         height: 40,
         child: Row(
           children: [
-            SvgPicture.asset('assets/images/search_place_holder.svg', color: iconColor(),),
+            SvgPicture.asset(
+              'assets/images/search_place_holder.svg',
+              color: iconColor(),
+            ),
             SizedBox(width: 8),
             Expanded(
               child: Row(
@@ -1195,7 +1282,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         hintText: 'Search',
                       ),
                       style: TextStyle(
-                          fontSize: 14,
+                        fontSize: 14,
                       ),
                       onChanged: (val) {
                         if (val.length > 0) {
@@ -1242,7 +1329,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             searchController.text = searchString;
                             FocusScope.of(context).unfocus();
                           });
-                          screenBloc.add(DashboardScreenInitEvent(wallpaper: globalStateModel.currentWallpaper));
+                          screenBloc.add(DashboardScreenInitEvent(
+                              wallpaper: globalStateModel.currentWallpaper));
                         } else {
                           setState(() {
                             searchString = '';
@@ -1253,71 +1341,80 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       },
                     ),
                   ),
-                  searchController.text.isEmpty ? Container() : MaterialButton(
-                    onPressed: () {
-                      setState(() {
-                        searchString = '';
-                        searchController.text = searchString;
-                        FocusScope.of(context).unfocus();
-                      });
-                    },
-                    shape: CircleBorder(
-                      side: BorderSide.none,
-                    ),
-                    color: overlayBackground(),
-                    elevation: 0,
-                    height: 20,
-                    minWidth: 20,
-                    child: SvgPicture.asset('assets/images/closeicon.svg', width: 8, color: iconColor(),),
-                  ),
-                  searchController.text.isEmpty ? Container() : MaterialButton(
-                    onPressed: () async {
-                      FocusScope.of(context).unfocus();
-                      final result = await Navigator.push(
-                        context,
-                        PageTransition(
-                          child: SearchScreen(
-                            dashboardScreenBloc: screenBloc,
-                            businessId: state.activeBusiness.id,
-                            searchQuery: searchController.text,
-                            appWidgets: state.currentWidgets,
-                            activeBusiness: state.activeBusiness,
-                            currentWall: state.curWall,
+                  searchController.text.isEmpty
+                      ? Container()
+                      : MaterialButton(
+                          onPressed: () {
+                            setState(() {
+                              searchString = '';
+                              searchController.text = searchString;
+                              FocusScope.of(context).unfocus();
+                            });
+                          },
+                          shape: CircleBorder(
+                            side: BorderSide.none,
                           ),
-                          type: PageTransitionType.fade,
-                          duration: Duration(milliseconds: 500),
+                          color: overlayBackground(),
+                          elevation: 0,
+                          height: 20,
+                          minWidth: 20,
+                          child: SvgPicture.asset(
+                            'assets/images/closeicon.svg',
+                            width: 8,
+                            color: iconColor(),
+                          ),
                         ),
-                      );
-                      if ((result != null) && (result == 'changed')) {
-                        setState(() {
-                          searchString = '';
-                          searchController.text = searchString;
-                          FocusScope.of(context).unfocus();
-                        });
-                        screenBloc.add(DashboardScreenInitEvent(wallpaper: globalStateModel.currentWallpaper));
-                      } else {
-                        setState(() {
-                          searchString = '';
-                          searchController.text = searchString;
-                          FocusScope.of(context).unfocus();
-                        });
-                      }
-                    },
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)
-                    ),
-                    color: overlayBackground(),
-                    elevation: 0,
-                    minWidth: 0,
-                    height: 20,
-                    child: Text(
-                      'Search',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w300,
-                      ),
-                    ),
-                  ),
+                  searchController.text.isEmpty
+                      ? Container()
+                      : MaterialButton(
+                          onPressed: () async {
+                            FocusScope.of(context).unfocus();
+                            final result = await Navigator.push(
+                              context,
+                              PageTransition(
+                                child: SearchScreen(
+                                  dashboardScreenBloc: screenBloc,
+                                  businessId: state.activeBusiness.id,
+                                  searchQuery: searchController.text,
+                                  appWidgets: state.currentWidgets,
+                                  activeBusiness: state.activeBusiness,
+                                  currentWall: state.curWall,
+                                ),
+                                type: PageTransitionType.fade,
+                                duration: Duration(milliseconds: 500),
+                              ),
+                            );
+                            if ((result != null) && (result == 'changed')) {
+                              setState(() {
+                                searchString = '';
+                                searchController.text = searchString;
+                                FocusScope.of(context).unfocus();
+                              });
+                              screenBloc.add(DashboardScreenInitEvent(
+                                  wallpaper:
+                                      globalStateModel.currentWallpaper));
+                            } else {
+                              setState(() {
+                                searchString = '';
+                                searchController.text = searchString;
+                                FocusScope.of(context).unfocus();
+                              });
+                            }
+                          },
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                          color: overlayBackground(),
+                          elevation: 0,
+                          minWidth: 0,
+                          height: 20,
+                          child: Text(
+                            'Search',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w300,
+                            ),
+                          ),
+                        ),
                 ],
               ),
             )

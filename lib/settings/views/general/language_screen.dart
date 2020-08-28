@@ -12,7 +12,9 @@ import 'package:provider/provider.dart';
 class LanguageScreen extends StatefulWidget {
   final GlobalStateModel globalStateModel;
   final SettingScreenBloc settingBloc;
-  LanguageScreen({this.settingBloc, this.globalStateModel,});
+  final bool fromDashboard;
+
+  LanguageScreen({this.settingBloc, this.globalStateModel, this.fromDashboard = false,});
 
   _LanguageScreenScreenState createState() => _LanguageScreenScreenState();
 
@@ -42,6 +44,7 @@ class _LanguageScreenScreenState extends State<LanguageScreen> {
   @override
   void dispose() {
     super.dispose();
+    if (widget.fromDashboard) widget.settingBloc.close();
   }
 
   @override

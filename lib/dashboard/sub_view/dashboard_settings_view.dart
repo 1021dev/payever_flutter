@@ -15,6 +15,7 @@ class DashboardSettingsView extends StatefulWidget {
   final Function deleteNotification;
   final Function onTapOpen;
   final Function onTapOpenWallpaper;
+  final Function onTapOpenLanguage;
 
   DashboardSettingsView({
     this.appWidget,
@@ -24,6 +25,7 @@ class DashboardSettingsView extends StatefulWidget {
     this.deleteNotification,
     this.onTapOpen,
     this.onTapOpenWallpaper,
+    this.onTapOpenLanguage,
   });
   @override
   _DashboardSettingsViewState createState() => _DashboardSettingsViewState();
@@ -114,9 +116,7 @@ class _DashboardSettingsViewState extends State<DashboardSettingsView> {
                   flex: 1,
                   child: Container(
                     child: InkWell(
-                      onTap: () {
-
-                      },
+                      onTap: widget.onTapOpenLanguage,
                       child: Container(
                         height: 50,
                         decoration: BoxDecoration(

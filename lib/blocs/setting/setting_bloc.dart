@@ -16,6 +16,7 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
   final DashboardScreenBloc dashboardScreenBloc;
   final GlobalStateModel globalStateModel;
 
+
   SettingScreenBloc({this.dashboardScreenBloc, this.globalStateModel});
 
   ApiService api = ApiService();
@@ -31,6 +32,7 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
       if (event.business != null) {
         yield state.copyWith(
           business: event.business,
+          user: event.user
         );
       }
       yield* getBusiness(event.business);
@@ -584,12 +586,14 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
   }
 
   Stream<SettingScreenState> getUser() async* {
-    yield state.copyWith(isLoading: true);
-    dynamic userResponse = await api.getUser(token);
-    User user = User.map(userResponse);
-
-    dashboardScreenBloc.state.copyWith(user: user);
-    yield state.copyWith(isLoading: false, user: user);
+    User _user = state.user;
+    if (_user == null) {
+      yield state.copyWith(isLoading: true);
+      dynamic userResponse = await api.getUser(token);
+      User user = User.map(userResponse);
+      dashboardScreenBloc.state.copyWith(user: user);
+      yield state.copyWith(isLoading: false, user: user);
+    }
   }
 
   Stream<SettingScreenState> updateUser(Map<String, dynamic> body) async* {

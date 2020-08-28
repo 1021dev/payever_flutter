@@ -300,7 +300,6 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
                   borderSide: BorderSide(color: Colors.blue, width: 0.5),
                 ),
               ),
-              readOnly: true,
               keyboardType: TextInputType.text,
             ),
           ),

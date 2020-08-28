@@ -49,7 +49,7 @@ class SettingScreen extends StatefulWidget {
   final GlobalStateModel globalStateModel;
   final DashboardScreenBloc dashboardScreenBloc;
 
-  const SettingScreen({this.globalStateModel, this.dashboardScreenBloc});
+  SettingScreen({this.globalStateModel, this.dashboardScreenBloc});
 
   @override
   _SettingScreenState createState() => _SettingScreenState();
@@ -73,6 +73,7 @@ class _SettingScreenState extends State<SettingScreen> {
     screenBloc = SettingScreenBloc(dashboardScreenBloc: widget.dashboardScreenBloc, globalStateModel: widget.globalStateModel);
     screenBloc.add(SettingScreenInitEvent(
       business: widget.globalStateModel.currentBusiness.id,
+      user: widget.dashboardScreenBloc.state.user,
     ));
     prepareDefaultCountries().then((value) =>countryList = value);
     super.initState();
