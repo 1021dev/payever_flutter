@@ -40,7 +40,6 @@ class DashboardMenuView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isActive = false;
-    print(activeBusiness.active);
     if (activeBusiness != null) {
       isActive = activeBusiness.active;
     }

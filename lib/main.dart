@@ -7,7 +7,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/payever_bloc_delegate.dart';
 import 'package:payever/commons/commons.dart';
-import 'package:payever/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 
@@ -71,6 +70,7 @@ class _MyAppState extends State<MyApp> {
           if (state.theme == null) {
             BlocProvider.of<ChangeThemeBloc>(context)..add(DecideTheme());
           }
+          GlobalUtils.currentContext = context;
           print(state.theme);
           return MaterialApp(
             debugShowCheckedModeBanner: false,
@@ -106,65 +106,4 @@ class _MyAppState extends State<MyApp> {
     setState(() {});
   }
 
-  ThemeData _buildPayeverTheme() {
-    print('update theme ${globalStateModel.theme}');
-    switch (globalStateModel.theme) {
-      case 'default':
-        final ThemeData base = ThemeData.dark();
-        return base.copyWith(
-          splashColor: Colors.transparent,
-          primaryColor: const Color(0xFFFFFFFF),
-          accentColor: const Color(0xFFFFFFFF),
-          buttonColor: const Color(0xFFFFFFFF),
-          cursorColor: const Color(0xFFFFFFFF),
-          accentIconTheme: new IconThemeData(color: const Color(0xFFFFFFFF)),
-          textTheme: base.textTheme.copyWith().apply(
-            fontFamily: 'Helvetica Neue',
-            bodyColor: const Color(0xFFFFFFFF),
-          ),
-        );
-      case 'dark':
-        final ThemeData base = ThemeData.dark();
-        return base.copyWith(
-          splashColor: Colors.transparent,
-          primaryColor: const Color(0xFFFFFFFF),
-          accentColor: const Color(0xFFFFFFFF),
-          buttonColor: const Color(0xFFFFFFFF),
-          cursorColor: const Color(0xFFFFFFFF),
-          accentIconTheme: new IconThemeData(color: const Color(0xFFFFFFFF)),
-          textTheme: base.textTheme.copyWith().apply(
-            fontFamily: 'Helvetica Neue',
-            bodyColor: const Color(0xFFFFFFFF),
-          ),
-        );
-      case 'light':
-        final ThemeData base = ThemeData.light();
-        return base.copyWith(
-          splashColor: Colors.transparent,
-          primaryColor: const Color(0xFF000000),
-          accentColor: const Color(0xFF000000),
-          buttonColor: const Color(0xFF000000),
-          cursorColor: const Color(0xFF000000),
-          accentIconTheme: new IconThemeData(color: const Color(0xFF000000)),
-          textTheme: base.textTheme.copyWith().apply(
-            fontFamily: 'Helvetica Neue',
-            bodyColor: const Color(0xFF000000),
-          ),
-        );
-      default:
-        final ThemeData base = ThemeData.dark();
-        return base.copyWith(
-          splashColor: Colors.transparent,
-          primaryColor: const Color(0xFFFFFFFF),
-          accentColor: const Color(0xFFFFFFFF),
-          buttonColor: const Color(0xFFFFFFFF),
-          cursorColor: const Color(0xFFFFFFFF),
-          accentIconTheme: new IconThemeData(color: const Color(0xFFFFFFFF)),
-          textTheme: base.textTheme.copyWith().apply(
-            fontFamily: 'Helvetica Neue',
-            bodyColor: const Color(0xFFFFFFFF),
-          ),
-        );
-    }
-  }
 }

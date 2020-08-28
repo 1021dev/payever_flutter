@@ -1,9 +1,11 @@
 import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:package_info/package_info.dart';
 import 'package:payever/apis/api_service.dart';
+import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/dashboard/dashboard.dart';
 import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/commons.dart';
@@ -187,13 +189,20 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
         businesses.add(Business.map(item));
       });
       if (businesses != null) {
-        businesses.forEach((b) {
-//          if (b.id == sharedPreferences.getString(GlobalUtils.BUSINESS)) {
-        if (b.active) {
-          activeBusiness = b;
+        for (Business b in businesses) {
+          if (b.active) {
+            activeBusiness = b;
+            if (activeBusiness.themeSettings.theme != changeThemeBloc.state.theme) {
+            if (activeBusiness.themeSettings.theme == 'dark') {
+              BlocProvider.of<ChangeThemeBloc>(GlobalUtils.currentContext)..add(DarkTheme());
+            } else if (activeBusiness.themeSettings.theme == 'light') {
+              BlocProvider.of<ChangeThemeBloc>(GlobalUtils.currentContext)..add(LightTheme());
+            } else {
+              BlocProvider.of<ChangeThemeBloc>(GlobalUtils.currentContext)..add(DefaultTheme());
+            }
+            }
+          }
         }
-//          }
-        });
       }
       if (activeBusiness != null) {
         dynamic wallpaperObj = await api.getWallpaper(
@@ -233,7 +242,9 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
         language: language,
       );
 
-      add(FetchMonthlyEvent(business: activeBusiness));
+      if (activeBusiness != null) {
+        add(FetchMonthlyEvent(business: activeBusiness));
+      }
     } catch (error) {
       yield DashboardScreenLogout();
     }

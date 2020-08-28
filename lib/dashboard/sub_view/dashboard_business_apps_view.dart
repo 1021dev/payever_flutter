@@ -88,7 +88,7 @@ class _DashboardBusinessAppsViewState extends State<DashboardBusinessAppsView> {
                     width: 40,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: overlayColor(),
+                      color: overlayBackground(),
                     ),
                     child: Center(
                       child: Text(

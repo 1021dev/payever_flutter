@@ -98,6 +98,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+  }
+
+  @override
   void dispose() {
     screenBloc.close();
     super.dispose();
@@ -361,6 +367,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       widgets.addAll(state.currentWidgets);
       businessApps.addAll(state.businessWidgets);
       widgets.reversed.toList();
+    } else {
+//      return Container();
     }
     List<Widget> dashboardWidgets = [];
     // HEADER
@@ -375,10 +383,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
     if (appWidgets.length > 0) {
       appWidget = appWidgets[0];
     }
-    BusinessApps businessApp = businessApps
+    List bapps = businessApps
         .where((element) => element.code == 'transactions')
-        .toList()
-        .first;
+        .toList();
+    BusinessApps businessApp;
+    if (bapps.length > 0) {
+      businessApp = bapps.first;
+    }
     if (appWidget != null) {
       List<NotificationModel> notifications = [];
       if (state.notifications.containsKey('transactions')) {
@@ -1055,18 +1066,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
             }
           },
           onTapOpenWallpaper: () async {
-            SettingScreenBloc settingscreenBloc = SettingScreenBloc(
-                dashboardScreenBloc: screenBloc,
-                globalStateModel: globalStateModel);
-            settingscreenBloc.add(SettingScreenInitEvent(
-              business: state.activeBusiness.id,
-            ));
             Navigator.push(
               context,
               PageTransition(
                 child: WallpaperScreen(
                   globalStateModel: globalStateModel,
-                  setScreenBloc: settingscreenBloc,
+                  setScreenBloc: SettingScreenBloc(
+                    dashboardScreenBloc: screenBloc,
+                    globalStateModel: globalStateModel,
+                  )..add(SettingScreenInitEvent(
+                    business: state.activeBusiness.id,
+                  )),
                   fromDashboard: true,
                 ),
                 type: PageTransitionType.fade,
@@ -1075,19 +1085,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
             );
           },
           onTapOpenLanguage: () {
-            SettingScreenBloc settingscreenBloc = SettingScreenBloc(
-                dashboardScreenBloc: screenBloc,
-                globalStateModel: globalStateModel);
-            settingscreenBloc.add(SettingScreenInitEvent(
-              business: state.activeBusiness.id,
-              user: state.user
-            ));
             Navigator.push(
               context,
               PageTransition(
                 child: LanguageScreen(
                   globalStateModel: globalStateModel,
-                  settingBloc: settingscreenBloc,
+                  settingBloc: SettingScreenBloc(
+                    dashboardScreenBloc: screenBloc,
+                    globalStateModel: globalStateModel,
+                  )..add(SettingScreenInitEvent(
+                    business: state.activeBusiness.id,
+                    user: state.user,
+                  )),
                   fromDashboard: true,
                 ),
                 type: PageTransitionType.fade,

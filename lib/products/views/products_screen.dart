@@ -932,6 +932,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                 ),
                 removeButton: ItemTagsRemoveButton(
                     backgroundColor: Colors.transparent,
+                    color: iconColor(),
                     onRemoved: () {
                       if (index == _searchTagIndex) {
                         _searchTagIndex = -1;

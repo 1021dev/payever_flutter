@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/commons/models/app_widget.dart';
+import 'package:payever/theme.dart';
 import 'package:payever/transactions/models/currency.dart';
 import 'package:payever/transactions/models/enums.dart';
 
@@ -52,7 +53,7 @@ class _ProductFilterRangeContentViewState extends State<ProductFilterRangeConten
             children: [
               Container(
                 decoration: BoxDecoration(
-                    color: Color(0xFF222222),
+                    color: overlayBackground(),
                     borderRadius: BorderRadius.all(Radius.circular(6))),
                 child: Column(
                   children: [
@@ -67,7 +68,6 @@ class _ProductFilterRangeContentViewState extends State<ProductFilterRangeConten
                             value: value,
                             child: Text(
                               conditions[value],
-                              style: TextStyle(color: Colors.white70),
                             ),
                           );
                         }).toList(),
@@ -97,7 +97,6 @@ class _ProductFilterRangeContentViewState extends State<ProductFilterRangeConten
                               itemHeight: 60,
                               hint: Text(
                                 'Option',
-                                style: TextStyle(color: Colors.white70),
                               ),
                               value: selectedCurrency != null ? selectedCurrency.name : null,
                               items: currencies.map((Currency value) {
@@ -105,7 +104,6 @@ class _ProductFilterRangeContentViewState extends State<ProductFilterRangeConten
                                   value: value.name,
                                   child: Text(
                                     value.name,
-                                    style: TextStyle(color: Colors.white70),
                                   ),
                                 );
                               }).toList(),
@@ -129,7 +127,6 @@ class _ProductFilterRangeContentViewState extends State<ProductFilterRangeConten
                           itemHeight: 60,
                           hint: Text(
                             'Option',
-                            style: TextStyle(color: Colors.white70),
                           ),
                           value: selectedOptions,
                           items: options.keys.map((String value) {
@@ -137,7 +134,6 @@ class _ProductFilterRangeContentViewState extends State<ProductFilterRangeConten
                               value: value,
                               child: Text(
                                 options[value],
-                                style: TextStyle(color: Colors.white70),
                               ),
                             );
                           }).toList(),
@@ -164,7 +160,8 @@ class _ProductFilterRangeContentViewState extends State<ProductFilterRangeConten
                                           hintText: (filterConditionName == 'between') ? 'From' : hintTextByFilter(widget.type),
                                         ),
                                         style: TextStyle(
-                                            fontSize: 14, color: Colors.white),
+                                            fontSize: 14,
+                                        ),
                                       ),
                                     ),
                                     widget.type == 'created_at'
@@ -207,7 +204,8 @@ class _ProductFilterRangeContentViewState extends State<ProductFilterRangeConten
                                         hintText: 'To',
                                       ),
                                       style: TextStyle(
-                                          fontSize: 14, color: Colors.white),
+                                          fontSize: 14,
+                                      ),
                                     ),
                                   ),
                                   widget.type == 'created_at'
@@ -237,7 +235,6 @@ class _ProductFilterRangeContentViewState extends State<ProductFilterRangeConten
                             ),)
                           ],
                         )
-
                         : Container(),
                   ],
                 ),
