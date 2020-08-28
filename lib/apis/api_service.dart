@@ -2658,6 +2658,25 @@ class ApiService {
     }
   }
 
+  Future<dynamic> installCheckoutConnectIntegration(String token, String business, String checkoutId, String integrationId, bool isInstall) async {
+    try {
+      print('$TAG - installCheckoutConnect()');
+      dynamic response = await _client.patchTypeless(
+          '${Env.checkout}/api/business/$business/checkout/$checkoutId/integration/$integrationId/${isInstall ? 'install' : 'uninstall'}',
+          body: {},
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+
   Future<dynamic> getPluginShopSystem(String token, String type) async {
     try {
       print('$TAG - getPluginShopSystem()');

@@ -603,9 +603,8 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
     dynamic userResponse = await api.getUser(token);
     User user = User.map(userResponse);
     preferences.setString(GlobalUtils.LANGUAGE, user.language);
-
-    dashboardScreenBloc.state.copyWith(user: user);
-
+    Language.setLanguage(user.language);
+    dashboardScreenBloc.add(UpdateUserEvent(user));
     yield state.copyWith(isUpdating: false, user: user);
   }
 

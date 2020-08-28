@@ -564,6 +564,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           checkoutScreenBloc: screenBloc,
           isLoading: state.loadingConnect,
           onChangeSwitch: (val) {
+            screenBloc.add(InstallCheckoutIntegrationEvent(integrationId: val));
           },
           onTapAdd: () {
             Navigator.push(

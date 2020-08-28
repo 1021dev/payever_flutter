@@ -106,6 +106,8 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       yield* installPayment(event.integrationModel);
     } else if (event is UninstallCheckoutPaymentEvent) {
       yield* uninstallPayment(event.integrationModel);
+    } else if (event is InstallCheckoutIntegrationEvent) {
+      yield* installIntegration(event.integrationId);
     }
   }
 
@@ -421,6 +423,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
         iconType = iconType.replaceAll('#', '');
 
         ChannelItem item = new ChannelItem(
+          name:connectModel.integration.name,
           title: Language.getPosConnectStrings(
               connectModel.integration.displayOptions.title),
           button: 'Open',
@@ -1034,6 +1037,18 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       });
     }
     yield state.copyWith(checkoutConnections: connections);
+  }
+
+  Stream<CheckoutScreenState> installIntegration(String integrationId) async* {
+    List<String> integrations = state.integrations;
+    bool install = !integrations.contains(integrationId);
+    dynamic response = await api.installCheckoutConnectIntegration(token, state.business, state.defaultCheckout.id, integrationId, install);
+    if (install) {
+      integrations.add(integrationId);
+    } else {
+      integrations.remove(integrationId);
+    }
+    yield state.copyWith(integrations: integrations);
   }
 
 }

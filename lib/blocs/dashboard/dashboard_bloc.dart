@@ -52,6 +52,8 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
       yield state.copyWith(curWall: event.curWall);
     } else if (event is UpdateTheme) {
 
+    } else if(event is UpdateUserEvent) {
+      yield state.copyWith(user: event.user);
     }
   }
 

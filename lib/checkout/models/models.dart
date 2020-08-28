@@ -787,12 +787,13 @@ class APIkey {
 
 
 class ChannelItem {
+  String name;
   String title;
   SvgPicture image;
   String button;
   bool checkValue;
   ConnectModel model;
-  ChannelItem({this.title, this.image, this.button, this.checkValue, this.model,});
+  ChannelItem({this.name, this.title, this.image, this.button, this.checkValue, this.model,});
 }
 
 String getTitleFromCode(String code) {

@@ -121,6 +121,14 @@ class WatchTutorials extends DashboardScreenEvent {
   WatchTutorials({this.tutorial});
 }
 
+class UpdateUserEvent extends DashboardScreenEvent {
+  final User user;
+  UpdateUserEvent(this.user);
+  @override
+  List<Object> get props => [this.user];
+}
+
+
 class UpdateWallpaper extends DashboardScreenEvent {
   final String curWall;
   UpdateWallpaper(this.curWall);

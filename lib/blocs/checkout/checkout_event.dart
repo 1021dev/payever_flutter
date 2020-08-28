@@ -274,3 +274,9 @@ class InstallCheckoutPaymentEvent extends CheckoutScreenEvent {
   final IntegrationModel integrationModel;
   InstallCheckoutPaymentEvent({this.integrationModel});
 }
+
+class InstallCheckoutIntegrationEvent extends CheckoutScreenEvent {
+  final String integrationId;
+
+  InstallCheckoutIntegrationEvent({this.integrationId});
+}

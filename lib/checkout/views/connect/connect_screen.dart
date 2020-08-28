@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/blocs/checkout/checkout_bloc.dart';
+import 'package:payever/blocs/checkout/checkout_state.dart';
 import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
@@ -103,9 +104,9 @@ class ConnectScreenState extends State<ConnectScreen> {
                                   model.checkValue != null ? Transform.scale(
                                     scale: 0.8,
                                     child: CupertinoSwitch(
-                                      value: model.checkValue,
+                                      value: isInstalled(model, widget.checkoutScreenBloc.state),
                                       onChanged: (val) {
-                                        widget.onChangeSwitch(val);
+                                        widget.onChangeSwitch(model.name);
                                       },
                                     ),
                                   ) : Container(),
@@ -149,5 +150,9 @@ class ConnectScreenState extends State<ConnectScreen> {
         ),
       ),
     );
+  }
+
+  bool isInstalled(ChannelItem item, CheckoutScreenState state) {
+    return state.integrations.contains(item.name);
   }
 }

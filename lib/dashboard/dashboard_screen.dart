@@ -149,7 +149,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           builder: (BuildContext context, DashboardScreenState state) {
             return state.isInitialScreen
                 ? _showLoading(state)
-                : _showMain(state);
+                : _showMain(context, state);
           },
         ));
   }
@@ -336,10 +336,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _showMain(DashboardScreenState state) {
+  Widget _showMain(BuildContext context, DashboardScreenState state) {
     if (state.language != null) {
       Language.language = state.language;
-      Language(formKey.currentContext);
+      Language(context);
     }
     return DashboardMenuView(
       innerDrawerKey: _innerDrawerKey,
