@@ -31,7 +31,6 @@ class ProductsTopButton extends StatelessWidget {
             maxLines: 2,
             maxFontSize: 14,
             style: TextStyle(
-              color: Colors.white,
               fontSize: 14,
               fontWeight: FontWeight.w500,
             ),
@@ -43,7 +42,6 @@ class ProductsTopButton extends StatelessWidget {
           child: Text(
             title,
             style: TextStyle(
-              color: Colors.white,
               fontSize: 14,
               fontWeight: FontWeight.w500,
             ),

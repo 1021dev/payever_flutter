@@ -1,11 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/business/views/business_register_screen.dart';
 import 'package:payever/commons/commons.dart';
+import 'package:payever/login/login_screen.dart';
+import 'package:payever/switcher/switcher.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../theme.dart';
@@ -68,7 +72,20 @@ class DashboardMenuView extends StatelessWidget {
                   ),
                 ),
                 isActive ? InkWell(
-                  onTap: onSwitchBusiness,
+                  onTap: () async {
+                    //onSwitchBusiness,
+                    Navigator.pop(context);
+                    final result = await Navigator.push(
+                      context,
+                      PageTransition(
+                        child: SwitcherScreen(),
+                        type: PageTransitionType.fade,
+                      ),
+                    );
+                    if (result == 'refresh') {
+                    }
+
+                  },
                   child: Container(
                     height: 50,
                     child: Row(
@@ -176,7 +193,24 @@ class DashboardMenuView extends StatelessWidget {
                   thickness: 0.5,
                 ),
                 InkWell(
-                  onTap: onLogout,
+                  onTap: () async {
+                    Navigator.pop(context);
+                    FlutterSecureStorage storage = FlutterSecureStorage();
+                    await storage.delete(key: GlobalUtils.TOKEN);
+                    await storage.delete(key: GlobalUtils.BUSINESS);
+                    await storage.delete(key: GlobalUtils.REFRESH_TOKEN);
+                    SharedPreferences.getInstance().then((p) {
+                      p.setString(GlobalUtils.BUSINESS, '');
+                      p.setString(GlobalUtils.DEVICE_ID, '');
+                    });
+                    Navigator.pushReplacement(
+                      context,
+                      PageTransition(
+                        child: LoginScreen(), type: PageTransitionType.fade,
+                      ),
+                    );
+
+                  },
                   child: Container(
                     height: 50,
                     child: Row(

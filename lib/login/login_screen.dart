@@ -124,6 +124,7 @@ class _LoginState extends State<Login> {
                           children: <Widget>[
                             BlurEffectView (
                               padding: EdgeInsets.fromLTRB(12, 55, 12, 55),
+                              color: Color.fromRGBO(67, 67, 67, 0.6),
                               child: Column(
                                 children: <Widget>[
                                   Center(

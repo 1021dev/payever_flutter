@@ -147,7 +147,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
                           style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w300,
-                              color: Colors.white
                           ),
                         ),
                         Padding(
@@ -159,7 +158,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w300,
-                            color: Colors.white,
                           ),
                         ),
                         Padding(
@@ -178,7 +176,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                               height: 24,
                               elevation: 0,
                               minWidth: 0,
-                              color: Colors.white10,
+                              color: overlayBackground(),
                               child: Text(
                                 Language.getPosStrings('actions.no'),
                               ),
@@ -200,7 +198,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                               height: 24,
                               elevation: 0,
                               minWidth: 0,
-                              color: Colors.white10,
+                              color: overlayBackground(),
                               child: Text(
                                 Language.getPosStrings('actions.yes'),
                               ),
@@ -259,7 +257,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
                           style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w300,
-                              color: Colors.white
                           ),
                         ),
                         Padding(
@@ -271,7 +268,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
                           style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w300,
-                              color: Colors.white
                           ),
                         ),
                         Padding(
@@ -290,7 +286,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                               height: 24,
                               elevation: 0,
                               minWidth: 0,
-                              color: Colors.white10,
+                              color: overlayBackground(),
                               child: Text(
                                 Language.getPosStrings('actions.no'),
                               ),
@@ -306,7 +302,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                               height: 24,
                               elevation: 0,
                               minWidth: 0,
-                              color: Colors.white10,
+                              color: overlayBackground(),
                               child: Text(
                                 Language.getPosStrings('actions.yes'),
                               ),
@@ -443,7 +439,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
       centerTitle: false,
       elevation: 0,
       automaticallyImplyLeading: false,
-      backgroundColor: Colors.black87,
       title: Row(
         children: <Widget>[
           Container(
@@ -591,7 +586,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
 
   Widget _body(ProductsScreenState state) {
     return Scaffold(
-      backgroundColor: Colors.black,
       resizeToAvoidBottomPadding: false,
       appBar: _appBar(state),
       body: SafeArea(
@@ -619,42 +613,45 @@ class _ProductsScreenState extends State<ProductsScreen> {
   }
 
   Widget _topBar(ProductsScreenState state) {
-    return Container(
-      height: 44,
-      color: Colors.black87,
-      child: Row(
-        children: <Widget>[
-          ProductsTopButton(
-            title: Language.getProductStrings('product_list.all'),
-            selectedIndex: selectedIndex,
-            index: 0,
-            onTap: () {
-              setState(() {
-                selectedIndex = 0;
-              });
-            },
-          ),
-          ProductsTopButton(
-            title: Language.getProductStrings('add_product'),
-            selectedIndex: selectedIndex,
-            index: 1,
-            onTap: () {
-              setState(() {
-                Navigator.push(
-                  context,
-                  PageTransition(
-                    child: ProductDetailScreen(
-                      businessId: widget.globalStateModel.currentBusiness.id,
-                      screenBloc: screenBloc,
+    return BlurEffectView(
+      radius: 0,
+      child: Container(
+        height: 44,
+        color: overlayBackground(),
+        child: Row(
+          children: <Widget>[
+            ProductsTopButton(
+              title: Language.getProductStrings('product_list.all'),
+              selectedIndex: selectedIndex,
+              index: 0,
+              onTap: () {
+                setState(() {
+                  selectedIndex = 0;
+                });
+              },
+            ),
+            ProductsTopButton(
+              title: Language.getProductStrings('add_product'),
+              selectedIndex: selectedIndex,
+              index: 1,
+              onTap: () {
+                setState(() {
+                  Navigator.push(
+                    context,
+                    PageTransition(
+                      child: ProductDetailScreen(
+                        businessId: widget.globalStateModel.currentBusiness.id,
+                        screenBloc: screenBloc,
+                      ),
+                      type: PageTransitionType.fade,
+                      duration: Duration(milliseconds: 500),
                     ),
-                    type: PageTransitionType.fade,
-                    duration: Duration(milliseconds: 500),
-                  ),
-                );
-              });
-            },
-          ),
-        ],
+                  );
+                });
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -670,7 +667,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
       children: <Widget>[
         Container(
           height: 50,
-          color: overlayBackground().withOpacity(1),
+          color: overlayBackground().withOpacity(0.5),
           child: Row(
             children: <Widget>[
               Flexible(
@@ -755,9 +752,11 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                   _selectedIndexValue = 0;
                                 });
                               },
-                              color: _selectedIndexValue == 0 ? overlayBackground().withAlpha(100): overlayBackground().withOpacity(1),
+                              color: _selectedIndexValue == 0 ? overlayBackground(): overlayBackground().withOpacity(0.1),
                               height: 24,
                               elevation: 0,
+                              minWidth: 0,
+                              padding: EdgeInsets.zero,
                               child: AutoSizeText(
                                 Language.getProductStrings('Products'),
                                 minFontSize: 8,
@@ -784,9 +783,11 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                   bottomRight: Radius.circular(12),
                                 ),
                               ),
-                              color: _selectedIndexValue == 0 ? overlayBackground().withOpacity(0.8): overlayBackground().withOpacity(1),
+                              color: _selectedIndexValue == 1 ? overlayBackground(): overlayBackground().withOpacity(0.1),
                               elevation: 0,
+                              minWidth: 0,
                               height: 24,
+                              padding: EdgeInsets.zero,
                               child: AutoSizeText(
                                 Language.getProductStrings('Collections'),
                                 maxLines: 1,
@@ -951,10 +952,10 @@ class _ProductsScreenState extends State<ProductsScreen> {
                 key: Key('filterItem$index'),
                 index: index,
                 title: _filterItems[index].title,
-                color: Colors.white12,
-                activeColor: Colors.white12,
-                textActiveColor: Colors.white,
-                textColor: Colors.white,
+                color: overlayColor(),
+                activeColor: overlayColor(),
+                textActiveColor: iconColor(),
+                textColor: iconColor(),
                 elevation: 0,
                 padding: EdgeInsets.only(
                   left: 16, top: 8, bottom: 8, right: 16,
@@ -989,7 +990,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
         ? Container()
         : Container(
             height: 50,
-            color: overlayBackground().withOpacity(1),
+            color: overlayBackground().withOpacity(0.5),
             child: Row(
               children: <Widget>[
                 Padding(
@@ -1051,7 +1052,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
         child: SmartRefresher(
           enablePullDown: true,
           enablePullUp: true,
-          header: MaterialClassicHeader(backgroundColor: Colors.black,semanticsLabel: '',),
+          header: MaterialClassicHeader(semanticsLabel: '',),
           footer: CustomFooter(
             loadStyle: LoadStyle.ShowWhenLoading,
             height: 1,
@@ -1145,7 +1146,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
           child: SmartRefresher(
             enablePullDown: true,
             enablePullUp: true,
-            header: MaterialClassicHeader(backgroundColor: Colors.black,semanticsLabel: '',),
+            header: MaterialClassicHeader(semanticsLabel: '',),
             footer: CustomFooter(
               loadStyle: LoadStyle.ShowWhenLoading,
               height: 1,
@@ -1219,7 +1220,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
           child: SmartRefresher(
             enablePullDown: true,
             enablePullUp: true,
-            header: MaterialClassicHeader(backgroundColor: Colors.black,semanticsLabel: '',),
+            header: MaterialClassicHeader(semanticsLabel: '',),
             footer: CustomFooter(
               loadStyle: LoadStyle.ShowWhenLoading,
               height: 1,
@@ -1323,7 +1324,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
                               style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w300,
-                                  color: Colors.white
                               ),
                             ),
                             Padding(
@@ -1335,7 +1335,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
                               style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w300,
-                                  color: Colors.white
                               ),
                             ),
                             Padding(
@@ -1354,7 +1353,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                   height: 24,
                                   elevation: 0,
                                   minWidth: 0,
-                                  color: Colors.white10,
+                                  color: overlayBackground(),
                                   child: Text(
                                     Language.getPosStrings('actions.no'),
                                   ),
@@ -1370,7 +1369,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                   height: 24,
                                   elevation: 0,
                                   minWidth: 0,
-                                  color: Colors.white10,
+                                  color: overlayBackground(),
                                   child: Text(
                                     Language.getPosStrings('actions.yes'),
                                   ),

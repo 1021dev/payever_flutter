@@ -159,7 +159,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               );
             },
             onSwitchBusiness: () async {
-              final result = await Navigator.pushReplacement(
+              final result = await Navigator.push(
                 context,
                 PageTransition(
                   child: SwitcherScreen(),
