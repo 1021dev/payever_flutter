@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:payever/blocs/checkout/checkout_bloc.dart';
 import 'package:payever/blocs/checkout/checkout_state.dart';
 import 'package:payever/checkout/models/models.dart';
@@ -28,10 +30,23 @@ class ConnectScreen extends StatefulWidget {
 class ConnectScreenState extends State<ConnectScreen> {
   @override
   Widget build(BuildContext context) {
-    return _body();
+    return BlocListener(
+      bloc: widget.checkoutScreenBloc,
+      listener: (BuildContext context, CheckoutScreenState state) async {
+        if (state is CheckoutScreenConnectInstallStateFailure) {
+          Fluttertoast.showToast(msg: state.error);
+        }
+      },
+      child: BlocBuilder<CheckoutScreenBloc, CheckoutScreenState>(
+        bloc: widget.checkoutScreenBloc,
+        builder: (BuildContext context, CheckoutScreenState state) {
+          return _body(state);
+        },
+      ),
+    );
   }
 
-  Widget _body() {
+  Widget _body(CheckoutScreenState state) {
     return Container(
       padding: EdgeInsets.all(16),
       child: Center(
@@ -104,7 +119,7 @@ class ConnectScreenState extends State<ConnectScreen> {
                                   model.checkValue != null ? Transform.scale(
                                     scale: 0.8,
                                     child: CupertinoSwitch(
-                                      value: isInstalled(model, widget.checkoutScreenBloc.state),
+                                      value: isInstalled(model, state),
                                       onChanged: (val) {
                                         widget.onChangeSwitch(model.name);
                                       },

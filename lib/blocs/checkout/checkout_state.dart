@@ -239,3 +239,14 @@ class CheckoutScreenStateFailure extends CheckoutScreenState {
     return 'CheckoutScreenStateFailure { error $error }';
   }
 }
+
+class CheckoutScreenConnectInstallStateFailure extends CheckoutScreenState {
+  final String error;
+
+  CheckoutScreenConnectInstallStateFailure({@required this.error}) : super();
+
+  @override
+  String toString() {
+    return 'CheckoutScreenConnectInstallStateFailure { error $error }';
+  }
+}

@@ -1043,12 +1043,17 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     List<String> integrations = state.integrations;
     bool install = !integrations.contains(integrationId);
     dynamic response = await api.installCheckoutConnectIntegration(token, state.business, state.defaultCheckout.id, integrationId, install);
-    if (install) {
-      integrations.add(integrationId);
+    if (response is DioError) {
+      yield CheckoutScreenConnectInstallStateFailure(error: response.message);
     } else {
-      integrations.remove(integrationId);
+      if (install) {
+        integrations.add(integrationId);
+      } else {
+        integrations.remove(integrationId);
+      }
+      yield state.copyWith(integrations: integrations);
     }
-    yield state.copyWith(integrations: integrations);
+
   }
 
 }
