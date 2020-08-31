@@ -84,7 +84,7 @@ class _BankScreenState extends State<BankScreen> {
 
   get _body {
     return Scaffold(
-      appBar: Appbar('Bank'),
+      appBar: Appbar(Language.getSettingsStrings('info_boxes.panels.business_details.menu_list.bank.title'),),
       body: SafeArea(
         child: BackgroundBase(
           true,
@@ -147,7 +147,7 @@ class _BankScreenState extends State<BankScreen> {
                                   },
                                   decoration: InputDecoration(
                                     border: InputBorder.none,
-                                    labelText: 'Account holder',
+                                    labelText: Language.getSettingsStrings('form.create_form.bank.bankAccount.owner.label'),
                                     labelStyle: TextStyle(
                                       fontSize: 12,
                                     ),
@@ -180,7 +180,7 @@ class _BankScreenState extends State<BankScreen> {
                                   },
                                   decoration: InputDecoration(
                                     border: InputBorder.none,
-                                    labelText: 'Bank name (optional)',
+                                    labelText: Language.getSettingsStrings('form.create_form.bank.bankAccount.bankName.label'),
                                     labelStyle: TextStyle(
                                       fontSize: 12,
                                     ),
@@ -218,7 +218,7 @@ class _BankScreenState extends State<BankScreen> {
                                     border: InputBorder.none,
                                   ),
                                   hint: Text(
-                                    'Country',
+                                    Language.getSettingsStrings('form.create_form.bank.bankAccount.country.label'),
                                   ),
                                 ),
                               ),
@@ -248,7 +248,7 @@ class _BankScreenState extends State<BankScreen> {
                                   },
                                   decoration: InputDecoration(
                                     border: InputBorder.none,
-                                    labelText: 'City (optional)',
+                                    labelText: Language.getSettingsStrings('form.create_form.address.city.label'),
                                     labelStyle: TextStyle(
                                       fontSize: 12,
                                     ),
@@ -281,7 +281,7 @@ class _BankScreenState extends State<BankScreen> {
                                   },
                                   decoration: InputDecoration(
                                     border: InputBorder.none,
-                                    labelText: 'BIC (optional)',
+                                    labelText: Language.getSettingsStrings('form.create_form.bank.bankAccount.bic.label'),
                                     labelStyle: TextStyle(
                                       fontSize: 12,
                                     ),
@@ -314,7 +314,7 @@ class _BankScreenState extends State<BankScreen> {
                                   },
                                   decoration: InputDecoration(
                                     border: InputBorder.none,
-                                    labelText: 'IBAN (optional)',
+                                    labelText: Language.getSettingsStrings('form.create_form.bank.bankAccount.iban.label'),
                                     labelStyle: TextStyle(
                                       fontSize: 12,
                                     ),
@@ -325,6 +325,7 @@ class _BankScreenState extends State<BankScreen> {
                           ),
                           SaveBtn(
                             isUpdating: state.isUpdating,
+                            title: Language.getSettingsStrings('actions.save'),
                             onUpdate: () {
                               if (_formKey.currentState.validate() &&
                                   !state.isUpdating) {

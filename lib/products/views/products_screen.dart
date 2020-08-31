@@ -1099,7 +1099,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                         height: 64.0 * 2.0 + MediaQuery.of(context).padding.bottom,
                         width: MediaQuery.of(context).size.width,
                         decoration: BoxDecoration(
-                          color: overlayColor(),
+                          color: overlayBackground().withOpacity(1),
                           borderRadius: BorderRadius.all(Radius.circular(15)),
                         ),
                         padding: EdgeInsets.only(top: 16),

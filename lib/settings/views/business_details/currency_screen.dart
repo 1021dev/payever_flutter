@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:payever/commons/utils/common_utils.dart';
+import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
@@ -55,7 +56,7 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
   get _body {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: Appbar('Currency'),
+      appBar: Appbar(Language.getSettingsStrings('form.create_form.currency.label')),
       body: SafeArea(
         child: BackgroundBase(
           true,
@@ -118,8 +119,7 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
                                           Padding(
                                             padding: const EdgeInsets.fromLTRB(
                                                 14, 8, 14, 5),
-                                            child: Text(
-                                              'Currency',
+                                            child: Text(Language.getSettingsStrings('form.create_form.currency.label'),
                                               style: TextStyle(
                                                 fontSize: 12,
                                               ),
@@ -144,6 +144,7 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
                           ),
                           SaveBtn(
                             isUpdating: state.isUpdating,
+                            title: Language.getSettingsStrings('actions.save'),
                             onUpdate: () {
                               if (!state.isUpdating) {
                                 widget.setScreenBloc.add(

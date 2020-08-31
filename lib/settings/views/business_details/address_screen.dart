@@ -81,7 +81,7 @@ class _AddressScreenState extends State<AddressScreen> {
 
   get _body {
     return Scaffold(
-      appBar: Appbar('Address'),
+      appBar: Appbar(Language.getSettingsStrings('info_boxes.panels.business_details.menu_list.address.title')),
       body: SafeArea(
         child: BackgroundBase(
           true,
@@ -149,7 +149,7 @@ class _AddressScreenState extends State<AddressScreen> {
                                         },
                                         decoration: InputDecoration(
                                           border: InputBorder.none,
-                                          labelText: 'Google Autocomplete',
+                                          labelText: Language.getSettingsStrings('form.create_form.address.google_autocomplete.label'),
                                           labelStyle: TextStyle(
                                             fontSize: 12,
                                           ),
@@ -190,7 +190,7 @@ class _AddressScreenState extends State<AddressScreen> {
                                     border: InputBorder.none,
                                   ),
                                   hint: Text(
-                                    'Country',
+                                    Language.getSettingsStrings('form.create_form.address.country.label'),
                                   ),
                                 ),
                               ),
@@ -229,7 +229,7 @@ class _AddressScreenState extends State<AddressScreen> {
                                   },
                                   decoration: InputDecoration(
                                     border: InputBorder.none,
-                                    labelText: 'City',
+                                    labelText: Language.getSettingsStrings('form.create_form.address.city.label'),
                                     labelStyle: TextStyle(
                                       fontSize: 12,
                                     ),
@@ -271,7 +271,7 @@ class _AddressScreenState extends State<AddressScreen> {
                                   },
                                   decoration: InputDecoration(
                                     border: InputBorder.none,
-                                    labelText: 'Street',
+                                    labelText: Language.getSettingsStrings('form.create_form.address.street.label'),
                                     labelStyle: TextStyle(
                                       fontSize: 12,
                                     ),
@@ -313,7 +313,7 @@ class _AddressScreenState extends State<AddressScreen> {
                                   },
                                   decoration: InputDecoration(
                                     border: InputBorder.none,
-                                    labelText: 'ZIP Code',
+                                    labelText: Language.getSettingsStrings('form.create_form.address.zip_code.label'),
                                     labelStyle: TextStyle(
                                       fontSize: 12,
                                     ),
@@ -324,6 +324,7 @@ class _AddressScreenState extends State<AddressScreen> {
                           ),
                           SaveBtn(
                             isUpdating: state.isUpdating,
+                            title: Language.getSettingsStrings('actions.save'),
                             onUpdate: () {
                               if (_formKey.currentState.validate() &&
                                   !state.isUpdating) {

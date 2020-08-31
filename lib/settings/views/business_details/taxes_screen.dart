@@ -65,7 +65,7 @@ class _TaxesScreenState extends State<TaxesScreen> {
 
   get _body {
     return Scaffold(
-      appBar: Appbar(Language.getSettingsStrings('filters.vatIds.name')),
+      appBar: Appbar(Language.getSettingsStrings('info_boxes.panels.business_details.menu_list.taxes.title')),
       body: SafeArea(
         child: BackgroundBase(
           true,
@@ -120,7 +120,7 @@ class _TaxesScreenState extends State<TaxesScreen> {
                                     initialValue: companyRegisterNumber ?? '',
                                     decoration: InputDecoration(
                                       contentPadding: EdgeInsets.only(left: 16, right: 16),
-                                      labelText: Language.getPosTpmStrings('form.create_form.taxes.taxes.companyRegisterNumber.label'),
+                                      labelText: Language.getSettingsStrings('form.create_form.taxes.taxes.companyRegisterNumber.label'),
                                       enabledBorder: InputBorder.none,
                                       focusedBorder: UnderlineInputBorder(
                                         borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -151,7 +151,7 @@ class _TaxesScreenState extends State<TaxesScreen> {
                                     initialValue: taxId ?? '',
                                     decoration: InputDecoration(
                                       contentPadding: EdgeInsets.only(left: 16, right: 16),
-                                      labelText: Language.getPosTpmStrings('form.create_form.taxes.taxes.taxId.label'),
+                                      labelText: Language.getSettingsStrings('form.create_form.taxes.taxes.taxId.label'),
                                       enabledBorder: InputBorder.none,
                                       focusedBorder: UnderlineInputBorder(
                                         borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -182,7 +182,7 @@ class _TaxesScreenState extends State<TaxesScreen> {
                                     initialValue: taxNumber ?? '',
                                     decoration: InputDecoration(
                                       contentPadding: EdgeInsets.only(left: 16, right: 16),
-                                      labelText: Language.getPosTpmStrings('form.create_form.taxes.taxes.taxNumber.label'),
+                                      labelText: Language.getSettingsStrings('form.create_form.taxes.taxes.taxNumber.label'),
                                       enabledBorder: InputBorder.none,
                                       focusedBorder: UnderlineInputBorder(
                                         borderSide: BorderSide(color: Colors.blue, width: 0.5),
@@ -224,6 +224,7 @@ class _TaxesScreenState extends State<TaxesScreen> {
                             isUpdating: state.isUpdating,
                             color: overlayBackground(),
                             isBottom: false,
+                            title: Language.getSettingsStrings('actions.save'),
                             onUpdate: () {
                               if (_formKey.currentState.validate() &&
                                   !state.isUpdating) {

@@ -71,7 +71,7 @@ class _CompanyScreenState extends State<CompanyScreen> {
   get _body {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: Appbar('Company'),
+      appBar: Appbar(Language.getSettingsStrings('info_boxes.panels.business_details.menu_list.company.title')),
       body: SafeArea(
         child: BackgroundBase(
           true,
@@ -321,6 +321,7 @@ class _CompanyScreenState extends State<CompanyScreen> {
                         ),
                         SaveBtn(
                           isUpdating: state.isUpdating,
+                          title: Language.getSettingsStrings('actions.save'),
                           onUpdate: () {
                             if (urlWebsite != null && urlWebsite != '') {
                               if (!Uri.parse(urlWebsite).isAbsolute) {

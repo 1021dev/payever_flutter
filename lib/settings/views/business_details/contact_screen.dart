@@ -387,6 +387,7 @@ class _ContactScreenState extends State<ContactScreen> {
                           selectedSection == 0 ? SaveBtn(
                             isUpdating: state.isUpdating,
                             color: overlayBackground(),
+                            title: Language.getSettingsStrings('actions.save'),
                             isBottom: false,
                             onUpdate: () {
                               if (_formKey.currentState.validate() &&
