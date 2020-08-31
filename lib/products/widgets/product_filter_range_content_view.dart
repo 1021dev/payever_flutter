@@ -21,6 +21,7 @@ class _ProductFilterRangeContentViewState extends State<ProductFilterRangeConten
   DateTime selectedDate;
   String filterConditionName = '';
   TextEditingController filterValueController = TextEditingController();
+  TextEditingController filterValueController1 = TextEditingController();
   Currency selectedCurrency;
   String selectedOptions;
 
@@ -198,7 +199,7 @@ class _ProductFilterRangeContentViewState extends State<ProductFilterRangeConten
                                 children: <Widget>[
                                   Expanded(
                                     child: TextField(
-                                      controller: filterValueController,
+                                      controller: filterValueController1,
                                       decoration: InputDecoration(
                                         border: InputBorder.none,
                                         hintText: 'To',
@@ -294,7 +295,12 @@ class _ProductFilterRangeContentViewState extends State<ProductFilterRangeConten
                             type: widget.type,
                             condition: filterConditionName,
                             value: filterValueController.text,
-                            disPlayName: filterValueController.text,
+                            value1: filterValueController1.text,
+                            disPlayName: filterConditionName != 'between'
+                                ? filterValueController.text
+                                : filterValueController.text +
+                                ' and ' +
+                                filterValueController1.text,
                           ),
                         );
                       }
