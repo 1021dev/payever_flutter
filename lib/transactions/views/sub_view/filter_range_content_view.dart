@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/commons/models/app_widget.dart';
-import 'package:payever/theme.dart';
 import 'package:payever/transactions/models/currency.dart';
 import 'package:payever/transactions/models/enums.dart';
 
@@ -21,6 +20,7 @@ class _FilterRangeContentViewState extends State<FilterRangeContentView> {
   DateTime selectedDate;
   String filterConditionName = '';
   TextEditingController filterValueController = TextEditingController();
+  TextEditingController filterValueController1 = TextEditingController();
   Currency selectedCurrency;
   String selectedOptions;
 
@@ -45,10 +45,10 @@ class _FilterRangeContentViewState extends State<FilterRangeContentView> {
       dropdown = 1;
     }
     return Container(
-      height: 173,
       child: Container(
         padding: EdgeInsets.fromLTRB(0 , 6, 0, 6),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
@@ -69,7 +69,6 @@ class _FilterRangeContentViewState extends State<FilterRangeContentView> {
                           value: value,
                           child: Text(
                             conditions[value],
-                            style: TextStyle(color: Colors.white70),
                           ),
                         );
                       }).toList(),
@@ -146,42 +145,92 @@ class _FilterRangeContentViewState extends State<FilterRangeContentView> {
                       },
                     ),
                   ) : Container(),
-                  dropdown == 2 ? Container(
-                    height: 60,
-                    padding: EdgeInsets.fromLTRB(20, 0, 10, 0),
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: TextField(
-                            controller: filterValueController,
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              hintText: hintTextByFilter(widget.type),
+                  dropdown == 2 ? Column(
+                    children: <Widget>[
+                      Container(
+                        height: 60,
+                        padding: EdgeInsets.fromLTRB(20, 0, 10, 0),
+                        child: Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: TextField(
+                                controller: filterValueController,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: (filterConditionName == 'between') ? 'From' : hintTextByFilter(widget.type),
+                                ),
+                                style: TextStyle(
+                                  fontSize: 14,
+                                ),
+                                keyboardType: TextInputType.numberWithOptions(signed: true, decimal: true),
+                              ),
                             ),
-                            style: TextStyle(
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                        widget.type == 'created_at' ? IconButton(
-                          icon: Icon(Icons.calendar_today),
-                          onPressed: () async {
-                            final DateTime picked = await showDatePicker(
-                              context: context,
-                              initialDate: selectedDate != null ? selectedDate: DateTime.now(),
-                              firstDate: DateTime(2000, 1),
-                              lastDate: DateTime(2030, 12),
-                            );
-                            if (picked != null && picked != selectedDate) {
-                              setState(() {
-                                selectedDate = picked;
-                              });
-                            }
-                          },
-                        ): Container(),
-                      ],
+                            widget.type == 'created_at' ? IconButton(
+                              icon: Icon(Icons.calendar_today),
+                              onPressed: () async {
+                                final DateTime picked = await showDatePicker(
+                                  context: context,
+                                  initialDate: selectedDate != null ? selectedDate: DateTime.now(),
+                                  firstDate: DateTime(2000, 1),
+                                  lastDate: DateTime(2030, 12),
+                                );
+                                if (picked != null && picked != selectedDate) {
+                                  setState(() {
+                                    selectedDate = picked;
+                                  });
+                                }
+                              },
+                            ): Container(),
+                          ],
 
-                    ),
+                        ),
+                      ),
+                      Visibility(
+                        visible: filterConditionName == 'between' ,
+                        child: Container(
+                          height: 60,
+                          padding: EdgeInsets.fromLTRB(20, 0, 10, 0),
+                          child: Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: TextField(
+                                  controller: filterValueController1,
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText: 'To',
+                                  ),
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                  ),
+                                  keyboardType: TextInputType.numberWithOptions(signed: true, decimal: true),
+                                ),
+                              ),
+                              widget.type == 'created_at'
+                                  ? IconButton(
+                                icon: Icon(Icons.calendar_today),
+                                onPressed: () async {
+                                  final DateTime picked =
+                                  await showDatePicker(
+                                    context: context,
+                                    initialDate: selectedDate != null
+                                        ? selectedDate
+                                        : DateTime.now(),
+                                    firstDate: DateTime(2000, 1),
+                                    lastDate: DateTime(2030, 12),
+                                  );
+                                  if (picked != null &&
+                                      picked != selectedDate) {
+                                    setState(() {
+                                      selectedDate = picked;
+                                    });
+                                  }
+                                },
+                              )
+                                  : Container(),
+                            ],
+                          ),
+                        ),)
+                    ],
                   ): Container(),
                 ],
               ),
@@ -241,7 +290,12 @@ class _FilterRangeContentViewState extends State<FilterRangeContentView> {
                           type: widget.type,
                           condition: filterConditionName,
                           value: filterValueController.text,
-                          disPlayName: filterValueController.text,
+                          value1: filterValueController1.text,
+                          disPlayName: filterConditionName != 'between'
+                              ? filterValueController.text
+                              : filterValueController.text +
+                                  ' and ' +
+                                  filterValueController1.text,
                         ),
                       );
                     }

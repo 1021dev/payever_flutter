@@ -49,11 +49,22 @@ class TransactionsScreenBloc extends Bloc<TransactionsScreenEvent, TransactionsS
         FilterItem item = filterTypes[i];
         String filterType = item.type;
         String filterCondition = item.condition;
-        String filterValue = item.value;
+
         String filterConditionString = 'filters[$filterType][$i][condition]';
-        String filterValueString = 'filters[$filterType][$i][value]';
-        String queryTemp = '&$filterConditionString=$filterCondition&$filterValueString=$filterValue';
-        queryString = '$queryString$queryTemp';
+
+        if (item.condition == 'between') {
+          String filterValueString = 'filters[$filterType][$i][value][0][from]';
+          String filterValueString1 = 'filters[$filterType][$i][value][0][to]';
+          String filterValue = item.value;
+          String filterValue1 = item.value1;
+          String queryTemp = '&$filterConditionString=$filterCondition&$filterValueString=$filterValue&$filterValueString1=$filterValue1';
+          queryString = '$queryString$queryTemp';
+        } else {
+          String filterValue = item.value;
+          String filterValueString = 'filters[$filterType][$i][value]';
+          String queryTemp = '&$filterConditionString=$filterCondition&$filterValueString=$filterValue';
+          queryString = '$queryString$queryTemp';
+        }
       }
     }
     try {
