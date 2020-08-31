@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:payever/connect/models/connect.dart';
+import 'package:payever/settings/models/models.dart';
 
 class CheckoutPaymentSettingScreenState {
   final bool isLoading;
@@ -12,6 +13,7 @@ class CheckoutPaymentSettingScreenState {
   final List<ConnectModel> connectInstallations;
   final ConnectModel connectModel;
   final ConnectIntegration integration;
+  final List<BusinessProduct> businessProducts;
 
   CheckoutPaymentSettingScreenState({
     this.isLoading = false,
@@ -24,6 +26,7 @@ class CheckoutPaymentSettingScreenState {
     this.connectInstallations = const [],
     this.connectModel,
     this.integration,
+    this.businessProducts,
   });
 
   List<Object> get props => [
@@ -37,6 +40,7 @@ class CheckoutPaymentSettingScreenState {
     this.connectInstallations,
     this.connectModel,
     this.integration,
+    this.businessProducts,
   ];
 
   CheckoutPaymentSettingScreenState copyWith({
@@ -49,7 +53,8 @@ class CheckoutPaymentSettingScreenState {
     Map<String, PaymentVariant> paymentVariants,
     List<ConnectModel> connectInstallations,
     ConnectModel connectModel,
-    ConnectIntegration integration
+    ConnectIntegration integration,
+    List<BusinessProduct> businessProducts,
   }) {
     return CheckoutPaymentSettingScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -62,6 +67,7 @@ class CheckoutPaymentSettingScreenState {
       connectInstallations: connectInstallations ?? this.connectInstallations,
       connectModel: connectModel ?? this.connectModel,
       integration: integration ?? this.integration,
+      businessProducts: businessProducts ?? this.businessProducts,
     );
   }
 }

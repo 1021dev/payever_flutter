@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,6 +11,7 @@ import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/connect/models/connect.dart';
 import 'package:payever/login/login_screen.dart';
+import 'package:payever/settings/models/models.dart';
 import 'package:payever/theme.dart';
 
 class CheckoutPaymentSettingsScreen extends StatefulWidget {
@@ -41,6 +43,19 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
   var imageData;
 
   Business business;
+  CompanyDetails companyDetails;
+
+  String legalForm;
+  String product;
+  SalesRange saleRange;
+  String saleRangeString;
+  EmployeesRange employeesRange;
+  String employeesRangeString;
+  String industry;
+  String urlWebsite;
+
+
+
   Map<String, PaymentVariant> variants;
   List<Payment> paymentOptions;
   PaymentVariant variant;
@@ -53,6 +68,15 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
   void initState() {
     screenBloc = CheckoutPaymentSettingScreenBloc(checkoutScreenBloc: widget.checkoutScreenBloc);
     screenBloc.add(CheckoutPaymentSettingScreenInitEvent(business: widget.business, connectModel: widget.connectModel,));
+    business = widget.checkoutScreenBloc.dashboardScreenBloc.state.activeBusiness;
+    companyDetails = business.companyDetails;
+    if (companyDetails != null) {
+      legalForm = companyDetails.legalForm;
+      product = companyDetails.product;
+      saleRange = companyDetails.salesRange;
+      industry = companyDetails.industry;
+      urlWebsite = companyDetails.urlWebsite;
+    }
     super.initState();
   }
 
@@ -159,7 +183,6 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
     if (state.paymentVariants.length == 0) {
       return Container();
     }
-    business = widget.checkoutScreenBloc.dashboardScreenBloc.state.activeBusiness;
     variants = state.paymentVariants;
     paymentOptions = state.paymentOptions;
 
@@ -276,66 +299,61 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
         widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
 
         Widget legalFormField = isOpened == i && accountSection == 0 ? Container(
-          height: 64,
-          child: Center(
-            child: TextFormField(
-              style: TextStyle(fontSize: 16),
-              onTap: () {
-
-              },
-              onChanged: (val) {
-                setState(() {
-                  business.companyDetails.legalForm = val;
-                });
-              },
-              initialValue: business.companyDetails.legalForm ?? '',
-              decoration: InputDecoration(
-                contentPadding: EdgeInsets.only(left: 16, right: 16),
-                labelText: Language.getPosTpmStrings('Legal Form'),
-                labelStyle: TextStyle(
-                  color: Colors.grey,
+          padding: EdgeInsets.only(left: 12, right: 12),
+          child: DropdownButtonFormField(
+            items: List.generate(legalForms.length, (index) {
+              return DropdownMenuItem(
+                child: Text(
+                  Language.getSettingsStrings('assets.legal_form.${legalForms[index]}'),
                 ),
-                enabledBorder: InputBorder.none,
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.blue, width: 0.5),
-                ),
-              ),
-              readOnly: true,
-              keyboardType: TextInputType.text,
+                value: legalForms[index],
+              );
+            }).toList(),
+            value: legalForm != '' ? legalForm : null,
+            onChanged: (val) {
+              legalForm = val;
+            },
+            icon: Icon(
+              Icons.keyboard_arrow_down,
+            ),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+            ),
+            hint: Text(
+              Language.getSettingsStrings('form.create_form.company.legal_form.label'),
             ),
           ),
-        ): Container();
+        ) : Container();
 
         widgets.add(legalFormField);
         widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
 
         Widget productField = isOpened == i && accountSection == 0 ? Container(
-          height: 64,
-          child: Center(
-            child: TextFormField(
-              style: TextStyle(fontSize: 16),
-              onTap: () {
-
-              },
-              onChanged: (val) {
-                setState(() {
-                  business.companyDetails.product = val;
-                });
-              },
-              initialValue: business.companyDetails.product ?? '',
-              decoration: InputDecoration(
-                contentPadding: EdgeInsets.only(left: 16, right: 16),
-                labelText: Language.getPosTpmStrings('Product'),
-                labelStyle: TextStyle(
-                  color: Colors.grey,
+          padding: EdgeInsets.only(left: 12, right: 12),
+          child: DropdownButtonFormField(
+            items: List.generate(state.businessProducts.length, (index) {
+              return DropdownMenuItem(
+                child: Text(
+                  Language.getCommerceOSStrings('assets.product.${state.businessProducts[index].code}'),
                 ),
-                enabledBorder: InputBorder.none,
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.blue, width: 0.5),
-                ),
-              ),
-              readOnly: true,
-              keyboardType: TextInputType.text,
+                value: state.businessProducts[index].code,
+              );
+            }).toList(),
+            onChanged: (val) {
+              setState(() {
+                product = val;
+                industry = null;
+              });
+            },
+            value: product != '' ? product : null,
+            icon: Icon(
+              Icons.keyboard_arrow_down,
+            ),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+            ),
+            hint: Text(
+              Language.getSettingsStrings('form.create_form.company.product.label'),
             ),
           ),
         ): Container();
@@ -343,33 +361,38 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
         widgets.add(productField);
         widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
 
+        List<IndustryModel> industries = [];
+        if (product != null && state.businessProducts.length > 0){
+          BusinessProduct businessProduct = state.businessProducts.singleWhere((element) => element.code == product);
+          if (businessProduct != null) {
+            industries.addAll(businessProduct.industries);
+          }
+        }
         Widget industryField = isOpened == i && accountSection == 0 ? Container(
-          height: 64,
-          child: Center(
-            child: TextFormField(
-              style: TextStyle(fontSize: 16),
-              onTap: () {
-
-              },
-              onChanged: (val) {
-                setState(() {
-                  business.companyDetails.industry = val;
-                });
-              },
-              initialValue: business.companyDetails.product ?? '',
-              decoration: InputDecoration(
-                contentPadding: EdgeInsets.only(left: 16, right: 16),
-                labelText: Language.getPosTpmStrings('Industry'),
-                labelStyle: TextStyle(
-                  color: Colors.grey,
+          padding: EdgeInsets.only(left: 12, right: 12),
+          child: DropdownButtonFormField(
+            items: List.generate(industries.length, (index) {
+              return DropdownMenuItem(
+                child: AutoSizeText(
+                  Language.getCommerceOSStrings('assets.industry.${industries[index].code}'),
                 ),
-                enabledBorder: InputBorder.none,
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.blue, width: 0.5),
-                ),
-              ),
-              readOnly: true,
-              keyboardType: TextInputType.text,
+                value: industries[index].code,
+              );
+            }).toList(),
+            value: industry != '' ? industry : null,
+            onChanged: (val) {
+              setState(() {
+                industry = val;
+              });
+            },
+            icon: Icon(
+              Icons.keyboard_arrow_down,
+            ),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+            ),
+            hint: Text(
+              Language.getSettingsStrings('form.create_form.company.industry.label'),
             ),
           ),
         ): Container();

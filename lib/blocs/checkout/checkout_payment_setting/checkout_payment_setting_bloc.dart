@@ -4,6 +4,7 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/checkout/checkout_payment_setting/checkout_payment_setting.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/connect/models/connect.dart';
+import 'package:payever/settings/models/models.dart';
 
 class CheckoutPaymentSettingScreenBloc extends Bloc<CheckoutPaymentSettingScreenEvent, CheckoutPaymentSettingScreenState> {
   final CheckoutScreenBloc checkoutScreenBloc;
@@ -66,12 +67,20 @@ class CheckoutPaymentSettingScreenBloc extends Bloc<CheckoutPaymentSettingScreen
     if (integrationResponse is Map) {
       integration = ConnectIntegration.toMap(integrationResponse);
     }
+    List<BusinessProduct> businessProducts = [];
+    dynamic response = await api.getBusinessProducts(token);
 
+    if (response is List) {
+      response.forEach((element) {
+        businessProducts.add(BusinessProduct.fromMap(element));
+      });
+    }
     yield state.copyWith(
       isLoading: false,
       paymentVariants: paymentVariants,
       paymentOptions: paymentOptions,
       integration: integration,
+      businessProducts: businessProducts,
     );
   }
 
@@ -102,4 +111,5 @@ class CheckoutPaymentSettingScreenBloc extends Bloc<CheckoutPaymentSettingScreen
     yield state.copyWith(isSaving: false);
     add(CheckoutPaymentSettingScreenInitEvent());
   }
+
 }

@@ -346,11 +346,12 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
           };
           dynamic res1 = await api.addStockToInventory(token, state.businessId, inventoryModel.sku, body1, increase > 0 ? 'add': 'subtract');
           print(res1);
+
         }
       }
     });
     yield ProductsScreenState(businessId: businessId);
-    yield state.copyWith(updateSuccess: true, businessId: businessId);
+    yield state.copyWith(updateSuccess: true, businessId: businessId, inventories: updated);
     yield* fetchProducts(businessId);
   }
 
