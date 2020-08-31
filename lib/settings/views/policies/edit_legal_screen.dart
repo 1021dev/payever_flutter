@@ -127,6 +127,7 @@ class _LegalEditorScreenState extends State<LegalEditorScreen> {
             ),
           ) : Text(
             'Save',
+            style: TextStyle(color: Colors.white),
           ),
         ),
         Padding(
@@ -135,7 +136,7 @@ class _LegalEditorScreenState extends State<LegalEditorScreen> {
             child: SvgPicture.asset(
               'assets/images/closeicon.svg',
               width: 16,
-              color: iconColor(),
+              color: Colors.white,
             ),
             onTap: () {
               showConfirmDialog();

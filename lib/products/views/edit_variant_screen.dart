@@ -18,6 +18,7 @@ import 'package:payever/products/models/models.dart';
 import 'package:payever/products/widgets/single_choice_dialog.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/login/login_screen.dart';
+import 'package:payever/theme.dart';
 
 import 'add_variant_option_screen.dart';
 
@@ -147,7 +148,7 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                     child: Container(
                       height: 250,
                       child: BlurEffectView(
-                        color: Color.fromRGBO(50, 50, 50, 0.4),
+                        color: overlayColor(),
                         padding: EdgeInsets.all(16),
                         child: Column(
                           children: <Widget>[
@@ -163,7 +164,6 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                               style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w300,
-                                  color: Colors.white
                               ),
                             ),
                             Padding(
@@ -175,7 +175,6 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w300,
-                                color: Colors.white,
                               ),
                             ),
                             Padding(
@@ -249,6 +248,7 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
               ),
             ) : Text(
               Language.getProductStrings('save'),
+              style: TextStyle(color: Colors.white),
             ),
             onPressed: () {
               bool valid = true;
@@ -359,7 +359,6 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                                 Text(
                                   'Upload images',
                                   style: TextStyle(
-                                    color: Colors.white,
                                     fontSize: 18,
                                     fontWeight: FontWeight.w400,
                                   ),
@@ -412,14 +411,13 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                           ): Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              SvgPicture.asset('assets/images/insertimageicon.svg'),
+                              SvgPicture.asset('assets/images/insertimageicon.svg', color: iconColor(),),
                               Padding(
                                 padding: EdgeInsets.only(top: 16),
                               ),
                               Text(
                                 'Upload images',
                                 style: TextStyle(
-                                  color: Colors.white,
                                   fontSize: 18,
                                   fontWeight: FontWeight.w400,
                                 ),
@@ -579,7 +577,6 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                           child: Text(
                             Language.getProductStrings('+ Add option'),
                             style: TextStyle(
-                              color: Colors.white,
                               fontSize: 14,
                               fontWeight: FontWeight.w400,
                             ),
@@ -615,7 +612,7 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                         padding: EdgeInsets.only(left: 8, right: 8),
                         margin: EdgeInsets.all(1),
                         decoration: BoxDecoration(
-                          color: Color(0x80222222),
+                          color: overlayBackground(),
                           borderRadius: BorderRadius.only(topRight: Radius.circular(8), topLeft: Radius.circular(8)),
                         ),
                         child: TextFormField(
@@ -630,7 +627,6 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                           },
                           initialValue: '${state.variants.price ?? 0}',
                           style: TextStyle(
-                            color: Colors.white,
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
                           ),
@@ -653,7 +649,7 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                               padding: EdgeInsets.only(left: 8, right: 8),
                               margin: EdgeInsets.all(1),
                               decoration: BoxDecoration(
-                                color: Color(0x80222222),
+                                color: overlayBackground(),
                               ),
                               child: TextFormField(
                                 onChanged: (val) {
@@ -667,7 +663,6 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                                 },
                                 initialValue: '${state.variants.salePrice ?? 0}',
                                 style: TextStyle(
-                                  color: Colors.white,
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -689,7 +684,7 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                               padding: EdgeInsets.only(left: 8, right: 8),
                               margin: EdgeInsets.all(1),
                               decoration: BoxDecoration(
-                                color: Color(0x80222222),
+                                color: overlayBackground(),
                               ),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -721,7 +716,7 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                               padding: EdgeInsets.only(left: 8, right: 8),
                               margin: EdgeInsets.all(1),
                               decoration: BoxDecoration(
-                                color: Color(0x80222222),
+                                color: overlayBackground(),
                               ),
                               child: TextFormField(
                                 onChanged: (val) {
@@ -735,7 +730,6 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                                 },
                                 initialValue: state.variants.sku ?? '',
                                 style: TextStyle(
-                                  color: Colors.white,
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -757,7 +751,7 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                               padding: EdgeInsets.only(left: 8, right: 8),
                               margin: EdgeInsets.all(1),
                               decoration: BoxDecoration(
-                                color: Color(0x80222222),
+                                color: overlayBackground(),
                               ),
                               child: TextFormField(
                                 onChanged: (val) {
@@ -771,7 +765,6 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                                 },
                                 initialValue: state.variants.barcode ?? '',
                                 style: TextStyle(
-                                  color: Colors.white,
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -797,7 +790,7 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                               padding: EdgeInsets.only(left: 8, right: 8),
                               margin: EdgeInsets.all(1),
                               decoration: BoxDecoration(
-                                color: Color(0x80222222),
+                                color: overlayBackground(),
                                 borderRadius: BorderRadius.only(bottomLeft: Radius.circular(8)),
                               ),
                               child: Row(
@@ -829,7 +822,7 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                               height: 56,
                               margin: EdgeInsets.all(1),
                               decoration: BoxDecoration(
-                                color: Color(0x80222222),
+                                color: overlayBackground(),
                                 borderRadius: BorderRadius.only(bottomRight: Radius.circular(8)),
                               ),
                               child: Column(
@@ -841,7 +834,7 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                                     child: Text(
                                       Language.getProductStrings('info.placeholders.inventory'),
                                       style: TextStyle(
-                                        color: Colors.white60,
+                                        color: Colors.grey,
                                         fontSize: 10,
                                         fontWeight: FontWeight.w200,
                                       ),
@@ -868,7 +861,6 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                                               '${state.inventory != null ? state.inventory.stock + state.increaseStock: state.increaseStock}',
                                               minFontSize: 10,
                                               style: TextStyle(
-                                                color: Colors.white,
                                                 fontWeight: FontWeight.w400,
                                                 fontSize: 18,
                                               ),
@@ -896,7 +888,7 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                         padding: EdgeInsets.only(left: 8, right: 8),
                         margin: EdgeInsets.all(1),
                         decoration: BoxDecoration(
-                          color: Color(0x80222222),
+                          color: overlayBackground(),
                           borderRadius: BorderRadius.only(topRight: Radius.circular(8), topLeft: Radius.circular(8)),
                         ),
                         alignment: Alignment.topLeft,
@@ -917,7 +909,6 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                           textAlignVertical: TextAlignVertical.top,
                           textAlign: TextAlign.start,
                           style: TextStyle(
-                            color: Colors.white,
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
                           ),
@@ -953,8 +944,8 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
               padding: EdgeInsets.only(left: 8, right: 8),
               margin: EdgeInsets.all(1),
               decoration: BoxDecoration(
-                color: Color(0x80222222),
-                borderRadius: BorderRadius.only(bottomLeft: Radius.circular(8)),
+                color: overlayBackground(),
+                borderRadius: BorderRadius.only(bottomLeft: Radius.circular(8), topLeft: Radius.circular(8)),
               ),
               child: TextFormField(
                 onChanged: (val) {
@@ -969,7 +960,6 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                 },
                 initialValue: option.name,
                 style: TextStyle(
-                  color: Colors.white,
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                 ),
@@ -989,7 +979,7 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
               padding: EdgeInsets.only(left: 8, right: 8),
               margin: EdgeInsets.all(1),
               decoration: BoxDecoration(
-                color: Color(0x80222222),
+                color: overlayBackground(),
                 borderRadius: BorderRadius.only(topRight: Radius.circular(8), bottomRight: Radius.circular(8)),
               ),
               child: TextFormField(
@@ -1034,7 +1024,6 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                   ));
                 },
                 style: TextStyle(
-                  color: Colors.white,
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                 ),

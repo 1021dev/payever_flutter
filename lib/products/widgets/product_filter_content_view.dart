@@ -39,7 +39,7 @@ class _ProductFilterContentViewState extends State<ProductFilterContentView> {
   Widget build(BuildContext context) {
 
     return Container(
-      height: 400,
+      height: 430,
       color: Colors.transparent,
       child: Scaffold(
         backgroundColor: Colors.transparent,

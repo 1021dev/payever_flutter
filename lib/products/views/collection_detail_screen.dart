@@ -195,6 +195,7 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
             color: Colors.white24,
             child: Text(
               Language.getProductStrings('save'),
+              style: TextStyle(color: Colors.white),
             ),
             onPressed: () {
               if (state.collectionDetail.id == '') {
@@ -708,7 +709,6 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
                     UpdateCollectionDetail(collectionModel: model));
               },
               style: TextStyle(
-                color: Colors.white,
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
               ),

@@ -685,7 +685,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       widget.screenBloc.add(UpdateProductDetail(productsModel: product, inventoryModel: state.inventory));
                     },
                     style: TextStyle(
-                      color: Colors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                     ),
@@ -922,7 +921,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 widget.screenBloc.add(UpdateProductDetail(productsModel: product, inventoryModel: state.inventory));
               },
               style: TextStyle(
-                color: Colors.white,
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
               ),
@@ -973,7 +971,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       return null;
                     },
                     style: TextStyle(
-                      color: Colors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                     ),
@@ -999,7 +996,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       widget.screenBloc.add(UpdateProductDetail(productsModel: product, inventoryModel: inventory));
                     },
                     style: TextStyle(
-                      color: Colors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                     ),
@@ -1305,7 +1301,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             color: Colors.white10,
                           ),
                           child: Center(
-                            child: SvgPicture.asset('assets/images/no_image.svg', width: 20, height: 20,),
+                            child: SvgPicture.asset('assets/images/no_image.svg', width: 20, height: 20, color: iconColor(),),
                           ),
                         ),
                         Padding(
@@ -1314,7 +1310,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         Text(
                           '${inventory != null ? inventory.stock: 0} item${(inventory != null ? inventory.stock: 0) > 1 ? 's': ''}',
                           style: TextStyle(
-                            color: Colors.white,
                             fontSize: 14,
                           ),
                         ),
@@ -1326,13 +1321,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         children: [
                           new TextSpan(
                             text: '${variant.price} ${numberFormat.simpleCurrencySymbol(state.productDetail.currency)} ',
-                            style: TextStyle(color: Colors.white, fontSize: 12),
+                            style: TextStyle(color: iconColor(), fontSize: 12),
                           ),
                           variant.salePrice != null ? new TextSpan(
                             text: '${variant.salePrice} ${numberFormat.simpleCurrencySymbol(state.productDetail.currency)}',
                             style: TextStyle(
-                              color: Colors.white70,
                               fontSize: 12,
+                              color: iconColor(),
                               fontWeight: FontWeight.w300,
                               decoration: TextDecoration.lineThrough,
                             ),
@@ -1358,7 +1353,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
                             print(result);
                           },
-                          color: Colors.black26,
+                          color: overlayBackground(),
                           height: 30,
                           elevation: 0,
                           minWidth: 0,
@@ -1368,7 +1363,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           child: Text(
                             Language.getProductStrings('edit'),
                             style: TextStyle(
-                              color: Colors.white,
                               fontSize: 14,
                               fontWeight: FontWeight.w300,
                             ),
@@ -1383,12 +1377,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             product.variants = variants;
                             widget.screenBloc.add(UpdateProductDetail(productsModel: product, inventoryModel: state.inventory,));
                           },
+                          color: overlayBackground(),
                           height: 30,
                           elevation: 0,
                           minWidth: 0,
                           shape: CircleBorder(),
                           visualDensity: VisualDensity.comfortable,
-                          child: SvgPicture.asset('assets/images/xsinacircle.svg', width: 30, height: 30,),
+                          child: Icon(Icons.close,),
                         ),
                       ],
                     ),

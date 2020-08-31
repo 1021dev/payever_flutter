@@ -133,10 +133,12 @@ class DashboardMenuView extends StatelessWidget {
                           ),
                         ),
                         SizedBox(width: 8,),
-                        Text(
-                          Language.getSettingsStrings('info_boxes.panels.general.menu_list.personal_information.title'),
-                          style: TextStyle(
-                              fontSize: 14,
+                        Flexible(
+                          child: Text(
+                            Language.getSettingsStrings('info_boxes.panels.general.menu_list.personal_information.title'),
+                            style: TextStyle(
+                                fontSize: 14,
+                            ),
                           ),
                         )
                       ],
