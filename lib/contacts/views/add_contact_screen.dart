@@ -343,7 +343,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          SvgPicture.asset('assets/images/add.svg'),
+                          SvgPicture.asset('assets/images/add.svg', color: iconColor(),),
                           Padding(
                             padding: EdgeInsets.only(left: 8),
                           ),
@@ -1170,7 +1170,6 @@ class _AddContactScreenState extends State<AddContactScreen> {
     }
     Widget optionsSection = openAdditional ? Container(
       height: 56,
-      color: Colors.black38,
       child: SizedBox.expand(
         child: MaterialButton(
           onPressed: () {
@@ -1200,6 +1199,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
               },
             );
           },
+          color: overlayBackground(),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
@@ -1214,7 +1214,6 @@ class _AddContactScreenState extends State<AddContactScreen> {
                         'Options',
                         maxLines: 1,
                         style: TextStyle(
-                          color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
                         ),
@@ -1226,7 +1225,6 @@ class _AddContactScreenState extends State<AddContactScreen> {
               Icon(
                 Icons.keyboard_arrow_down,
                 size: 20,
-                color: Colors.white,
               ),
             ],
           ),
@@ -1243,8 +1241,6 @@ class _AddContactScreenState extends State<AddContactScreen> {
           Container(
             padding: EdgeInsets.only(left: 16, right: 16, top: 16),
             child: BlurEffectView(
-              color: Color.fromRGBO(20, 20, 20, 0.2),
-              blur: 15,
               radius: 12,
               padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
               child: Column(
@@ -1291,7 +1287,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                     screenBloc.add(CreateNewContact());
                   }
                 },
-                color: Colors.black87,
+                color: overlayBackground(),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -1299,7 +1295,6 @@ class _AddContactScreenState extends State<AddContactScreen> {
                   'Save',
                   maxLines: 1,
                   style: TextStyle(
-                    color: Colors.white,
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
                   ),

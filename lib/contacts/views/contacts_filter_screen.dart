@@ -166,7 +166,7 @@ class _ContactsFilterScreenState extends State<ContactsFilterScreen> {
                                 child: Column(
                                   children: <Widget>[
                                     Container(
-                                      color: Colors.black45,
+                                      color: overlayBackground(),
                                       child: item.condition != null ? DropdownButtonFormField(
                                         items: filterTypes.keys.toList().map((key) {
                                           return DropdownMenuItem(
@@ -219,7 +219,7 @@ class _ContactsFilterScreenState extends State<ContactsFilterScreen> {
                                       ),
                                     ),
                                     Container(
-                                      color: Colors.black45,
+                                      color: overlayRow(),
                                       child: item.type == 'Date'
                                           ?
                                       Row(

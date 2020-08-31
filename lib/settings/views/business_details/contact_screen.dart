@@ -261,7 +261,7 @@ class _ContactScreenState extends State<ContactScreen> {
                                         initialValue: lastName ?? '',
                                         decoration: InputDecoration(
                                           contentPadding: EdgeInsets.only(left: 16, right: 16),
-                                          labelText: Language.getPosTpmStrings('Last Name'),
+                                          labelText: Language.getSettingsStrings('Last Name'),
                                           labelStyle: TextStyle(
                                             fontSize: 12,
                                           ),
@@ -300,7 +300,7 @@ class _ContactScreenState extends State<ContactScreen> {
                                         initialValue: phone ?? '',
                                         decoration: InputDecoration(
                                           contentPadding: EdgeInsets.only(left: 16, right: 16),
-                                          labelText: Language.getPosTpmStrings('Phone (optional)'),
+                                          labelText: Language.getSettingsStrings('Phone'),
                                           labelStyle: TextStyle(
                                             fontSize: 12,
                                           ),
