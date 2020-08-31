@@ -94,7 +94,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   @override
   void initState() {
-    screenBloc = CheckoutScreenBloc(dashboardScreenBloc: widget.dashboardScreenBloc);
+    screenBloc = CheckoutScreenBloc(dashboardScreenBloc: widget.dashboardScreenBloc, globalStateModel: widget.globalStateModel);
     screenBloc.add(CheckoutScreenInitEvent(
       business: widget.globalStateModel.currentBusiness.id,
       checkouts: widget.checkouts,

@@ -279,3 +279,11 @@ class InstallCheckoutIntegrationEvent extends CheckoutScreenEvent {
 
   InstallCheckoutIntegrationEvent({this.integrationId});
 }
+
+class BusinessUploadEvent extends CheckoutScreenEvent {
+  final Map<String, dynamic> body;
+  BusinessUploadEvent(this.body);
+
+  @override
+  List<Object> get props => [body];
+}

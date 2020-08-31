@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:iso_countries/iso_countries.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/checkout/views/payments/checkout_add_connection_screen.dart';
@@ -43,18 +45,17 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
   var imageData;
 
   Business business;
+
   CompanyDetails companyDetails;
+  CompanyAddress companyAddress;
+  BankAccount bankAccount;
+  Taxes taxes;
+  ContactDetails contactDetails;
 
-  String legalForm;
-  String product;
-  SalesRange saleRange;
-  String saleRangeString;
-  EmployeesRange employeesRange;
-  String employeesRangeString;
-  String industry;
-  String urlWebsite;
-
-
+  String countryName;
+  String bankCountryName;
+  String googleAutocomplete;
+  List<Country> countryList = [];
 
   Map<String, PaymentVariant> variants;
   List<Payment> paymentOptions;
@@ -69,14 +70,35 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
     screenBloc = CheckoutPaymentSettingScreenBloc(checkoutScreenBloc: widget.checkoutScreenBloc);
     screenBloc.add(CheckoutPaymentSettingScreenInitEvent(business: widget.business, connectModel: widget.connectModel,));
     business = widget.checkoutScreenBloc.dashboardScreenBloc.state.activeBusiness;
+
     companyDetails = business.companyDetails;
-    if (companyDetails != null) {
-      legalForm = companyDetails.legalForm;
-      product = companyDetails.product;
-      saleRange = companyDetails.salesRange;
-      industry = companyDetails.industry;
-      urlWebsite = companyDetails.urlWebsite;
+    companyAddress = business.companyAddress;
+    bankAccount = business.bankAccount;
+    taxes = business.taxes;
+    contactDetails = business.contactDetails;
+
+    prepareDefaultCountries();
+    if (companyAddress != null) {
+      if (companyAddress.country != null) {
+        getCountryForCodeWithIdentifier(companyAddress.country, 'en-en').then((value) {
+          setState(() {
+            countryName = value.name;
+          });
+        });
+      }
+      if (bankAccount.country != null) {
+        getCountryForCodeWithIdentifier(bankAccount.country, 'en-en').then((value) {
+          setState(() {
+            bankCountryName = value.name;
+          });
+        });
+      }
+      setState(() {
+        setGoogleAutoComplete();
+      });
     }
+    prepareDefaultCountries().then((value) =>countryList = value);
+
     super.initState();
   }
 
@@ -129,7 +151,7 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
                   child: Column(
                     children: <Widget>[
                       Expanded(
-                        child: _getBody(state),
+                        child: Form(key: formKey, child: _getBody(state)),
                       ),
                     ],
                   ),
@@ -309,9 +331,9 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
                 value: legalForms[index],
               );
             }).toList(),
-            value: legalForm != '' ? legalForm : null,
+            value: companyDetails.legalForm != '' ? companyDetails.legalForm : null,
             onChanged: (val) {
-              legalForm = val;
+              companyDetails.legalForm = val;
             },
             icon: Icon(
               Icons.keyboard_arrow_down,
@@ -341,11 +363,11 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
             }).toList(),
             onChanged: (val) {
               setState(() {
-                product = val;
-                industry = null;
+                companyDetails.product = val;
+                companyDetails.industry = null;
               });
             },
-            value: product != '' ? product : null,
+            value: companyDetails.product != '' ? companyDetails.product : null,
             icon: Icon(
               Icons.keyboard_arrow_down,
             ),
@@ -362,8 +384,8 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
         widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
 
         List<IndustryModel> industries = [];
-        if (product != null && state.businessProducts.length > 0){
-          BusinessProduct businessProduct = state.businessProducts.singleWhere((element) => element.code == product);
+        if (companyDetails.product != null && state.businessProducts.length > 0){
+          BusinessProduct businessProduct = state.businessProducts.singleWhere((element) => element.code == companyDetails.product);
           if (businessProduct != null) {
             industries.addAll(businessProduct.industries);
           }
@@ -379,10 +401,10 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
                 value: industries[index].code,
               );
             }).toList(),
-            value: industry != '' ? industry : null,
+            value: companyDetails.industry != '' ? companyDetails.industry : null,
             onChanged: (val) {
               setState(() {
-                industry = val;
+                companyDetails.industry = val;
               });
             },
             icon: Icon(
@@ -460,7 +482,7 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
         widgets.add(foundationField);
         widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
 
-        // Company Adress Section;
+        // Company Address Section;
         Widget addressSection = isOpened == i ? Container(
           height: 56,
           color: overlayBackground(),
@@ -511,70 +533,76 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
         widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
 
         Widget googleAutoCompleteField = isOpened == i && accountSection == 1 ? Container(
-          height: 64,
-          child: Center(
-            child: TextFormField(
-              style: TextStyle(fontSize: 16),
-              onTap: () {
-
-              },
-              onChanged: (val) {
-                setState(() {
-                  business.companyAddress.googleAutocomplete = val;
-                });
-              },
-              initialValue: business.companyAddress.googleAutocomplete ?? '',
-              decoration: InputDecoration(
-                contentPadding: EdgeInsets.only(left: 16, right: 16),
-                labelText: Language.getPosTpmStrings('Google Autocomplete'),
-                labelStyle: TextStyle(
-                  color: Colors.grey,
-                ),
-                enabledBorder: InputBorder.none,
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.blue, width: 0.5),
+          child: Column(
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.only(left: 12, right: 12),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    SvgPicture.asset(
+                      'assets/images/google-auto-complete.svg',
+                      color: iconColor(),
+                    ),
+                    SizedBox(
+                      width: 8,
+                    ),
+                    Expanded(
+                      child: TextFormField(
+                        style: TextStyle(
+                          fontSize: 16,
+                        ),
+                        initialValue: googleAutocomplete ?? '',
+                        textInputAction: TextInputAction.done,
+                        keyboardType: TextInputType.url,
+                        onChanged: (val) {
+                          googleAutocomplete = val;
+                        },
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          labelText: 'Google Autocomplete',
+                          labelStyle: TextStyle(
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              keyboardType: TextInputType.text,
-            ),
+              Container(
+                padding: EdgeInsets.only(left: 12, right: 12),
+                child: DropdownButtonFormField(
+                  items: List.generate(countryList.length,
+                          (index) {
+                        return DropdownMenuItem(
+                          child: Text(
+                            countryList[index].name,
+                          ),
+                          value: countryList[index].name,
+                        );
+                      }).toList(),
+                  value: countryName ?? null,
+                  onChanged: (val) {
+                    countryName = val;
+                  },
+                  icon: Icon(
+                    Icons.keyboard_arrow_down,
+                  ),
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                  ),
+                  hint: Text(
+                    'Country',
+                  ),
+                ),
+              ),
+              Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),
+            ],
           ),
         ): Container();
 
         widgets.add(googleAutoCompleteField);
-        widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
-
-        Widget countryField = isOpened == i && accountSection == 1 ? Container(
-          height: 64,
-          child: Center(
-            child: TextFormField(
-              style: TextStyle(fontSize: 16),
-              onTap: () {
-
-              },
-              onChanged: (val) {
-                setState(() {
-                  business.companyAddress.country = val;
-                });
-              },
-              initialValue: business.companyAddress.country ?? '',
-              decoration: InputDecoration(
-                contentPadding: EdgeInsets.only(left: 16, right: 16),
-                labelText: Language.getPosTpmStrings('Country'),
-                labelStyle: TextStyle(
-                  color: Colors.grey,
-                ),
-                enabledBorder: InputBorder.none,
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.blue, width: 0.5),
-                ),
-              ),
-              readOnly: true,
-              keyboardType: TextInputType.text,
-            ),
-          ),
-        ): Container();
-
-        widgets.add(countryField);
         widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
 
         Widget cityField = isOpened == i && accountSection == 1 ? Container(
@@ -588,7 +616,14 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
               onChanged: (val) {
                 setState(() {
                   business.companyAddress.city = val;
+                  setGoogleAutoComplete();
                 });
+              },
+              validator: (value) {
+                if (value.isEmpty) {
+                  return 'City is required.';
+                }
+                return null;
               },
               initialValue: business.companyAddress.city ?? '',
               decoration: InputDecoration(
@@ -618,7 +653,14 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
               onChanged: (val) {
                 setState(() {
                   business.companyAddress.street = val;
+                  setGoogleAutoComplete();
                 });
+              },
+              validator: (value) {
+                if (value.isEmpty) {
+                  return 'Street is required.';
+                }
+                return null;
               },
               initialValue: business.companyAddress.street ?? '',
               decoration: InputDecoration(
@@ -648,7 +690,14 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
               onChanged: (val) {
                 setState(() {
                   business.companyAddress.zipCode = val;
+                  setGoogleAutoComplete();
                 });
+              },
+              validator: (value) {
+                if (value.isEmpty) {
+                  return 'ZIP code is required.';
+                }
+                return null;
               },
               initialValue: business.companyAddress.zipCode ?? '',
               decoration: InputDecoration(
@@ -730,10 +779,10 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
               },
               onChanged: (val) {
                 setState(() {
-                  business.bankAccount.owner = val;
+                  bankAccount.owner = val;
                 });
               },
-              initialValue: business.bankAccount.owner ?? '',
+              initialValue: bankAccount.owner ?? '',
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('Account owner (optional)'),
@@ -763,10 +812,10 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
               },
               onChanged: (val) {
                 setState(() {
-                  business.bankAccount.bankName = val;
+                  bankAccount.bankName = val;
                 });
               },
-              initialValue: business.bankAccount.bankName ?? '',
+              initialValue: bankAccount.bankName ?? '',
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('Bank name (optional)'),
@@ -787,31 +836,29 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
         widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
 
         Widget bankCountryField = isOpened == i && accountSection == 2 ? Container(
-          height: 64,
-          child: Center(
-            child: TextFormField(
-              style: TextStyle(fontSize: 16),
-              onTap: () {
-
-              },
-              onChanged: (val) {
-                setState(() {
-                  business.bankAccount.country = val;
-                });
-              },
-              initialValue: business.bankAccount.country ?? '',
-              decoration: InputDecoration(
-                contentPadding: EdgeInsets.only(left: 16, right: 16),
-                labelText: Language.getPosTpmStrings('Country'),
-                labelStyle: TextStyle(
-                  color: Colors.grey,
-                ),
-                enabledBorder: InputBorder.none,
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.blue, width: 0.5),
-                ),
-              ),
-              keyboardType: TextInputType.text,
+          padding: EdgeInsets.only(left: 12, right: 12),
+          child: DropdownButtonFormField(
+            items: List.generate(countryList.length,
+                    (index) {
+                  return DropdownMenuItem(
+                    child: Text(
+                      countryList[index].name,
+                    ),
+                    value: countryList[index].name,
+                  );
+                }).toList(),
+            value: bankCountryName ?? null,
+            onChanged: (val) {
+              bankCountryName = val;
+            },
+            icon: Icon(
+              Icons.keyboard_arrow_down,
+            ),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+            ),
+            hint: Text(
+              'Country',
             ),
           ),
         ): Container();
@@ -826,10 +873,10 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
               style: TextStyle(fontSize: 16),
               onChanged: (val) {
                 setState(() {
-                  business.bankAccount.city = val;
+                  bankAccount.city = val;
                 });
               },
-              initialValue: business.bankAccount.city ?? '',
+              initialValue: bankAccount.city ?? '',
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('City (optional)'),
@@ -856,10 +903,10 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
               style: TextStyle(fontSize: 16),
               onChanged: (val) {
                 setState(() {
-                  business.bankAccount.bic = val;
+                  bankAccount.bic = val;
                 });
               },
-              initialValue: business.bankAccount.bic ?? '',
+              initialValue: bankAccount.bic ?? '',
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('BIC'),
@@ -886,10 +933,10 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
               style: TextStyle(fontSize: 16),
               onChanged: (val) {
                 setState(() {
-                  business.bankAccount.iban = val;
+                  bankAccount.iban = val;
                 });
               },
-              initialValue: business.bankAccount.iban ?? '',
+              initialValue: bankAccount.iban ?? '',
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('IBAN'),
@@ -969,10 +1016,10 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
               },
               onChanged: (val) {
                 setState(() {
-                  business.taxes.companyRegisterNumber = val;
+                  taxes.companyRegisterNumber = val;
                 });
               },
-              initialValue: business.taxes.companyRegisterNumber ?? '',
+              initialValue: taxes.companyRegisterNumber ?? '',
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('Company Register Number (optinal)'),
@@ -1002,10 +1049,10 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
               },
               onChanged: (val) {
                 setState(() {
-                  business.taxes.taxId = val;
+                  taxes.taxId = val;
                 });
               },
-              initialValue: business.taxes.taxId ?? '',
+              initialValue: taxes.taxId ?? '',
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('Tax ID (optional)'),
@@ -1035,10 +1082,10 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
               },
               onChanged: (val) {
                 setState(() {
-                  business.taxes.taxNumber = val;
+                  taxes.taxNumber = val;
                 });
               },
-              initialValue: business.taxes.taxNumber ?? '',
+              initialValue: taxes.taxNumber ?? '',
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('Tax Number (optional)'),
@@ -1063,12 +1110,12 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
           child: CheckboxListTile(
             onChanged: (val) {
               setState(() {
-                business.taxes.turnoverTaxAct = val;
+                taxes.turnoverTaxAct = val;
               });
             },
             checkColor: Colors.black,
             activeColor: Colors.white,
-            value: business.taxes.turnoverTaxAct ?? false,
+            value: taxes.turnoverTaxAct ?? false,
             title: Text(
               'Turnover tax at',
             ),
@@ -1140,10 +1187,10 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
                   },
                   onChanged: (val) {
                     setState(() {
-                      business.contactDetails.salutation = val;
+                      contactDetails.salutation = val;
                     });
                   },
-                  initialValue: business.contactDetails.salutation ?? '',
+                  initialValue: contactDetails.salutation ?? '',
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.only(left: 16, right: 16),
                     labelText: Language.getPosTpmStrings('Salutation'),
@@ -1169,10 +1216,10 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
                   },
                   onChanged: (val) {
                     setState(() {
-                      business.contactDetails.firstName = val;
+                      contactDetails.firstName = val;
                     });
                   },
-                  initialValue: business.contactDetails.firstName ?? '',
+                  initialValue: contactDetails.firstName ?? '',
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.only(left: 16, right: 16),
                     labelText: Language.getPosTpmStrings('First Name'),
@@ -1198,10 +1245,10 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
                   },
                   onChanged: (val) {
                     setState(() {
-                      business.contactDetails.lastName = val;
+                      contactDetails.lastName = val;
                     });
                   },
-                  initialValue: business.contactDetails.lastName ?? '',
+                  initialValue: contactDetails.lastName ?? '',
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.only(left: 16, right: 16),
                     labelText: Language.getPosTpmStrings('Last Name'),
@@ -1235,10 +1282,10 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
                   },
                   onChanged: (val) {
                     setState(() {
-                      business.contactDetails.phone = val;
+                      contactDetails.phone = val;
                     });
                   },
-                  initialValue: business.contactDetails.phone ?? '',
+                  initialValue: contactDetails.phone ?? '',
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.only(left: 16, right: 16),
                     labelText: Language.getPosTpmStrings('Phone'),
@@ -1264,10 +1311,10 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
                   },
                   onChanged: (val) {
                     setState(() {
-                      business.contactDetails.fax = val;
+                      contactDetails.fax = val;
                     });
                   },
-                  initialValue: business.contactDetails.fax ?? '',
+                  initialValue: contactDetails.fax ?? '',
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.only(left: 16, right: 16),
                     labelText: Language.getPosTpmStrings('FAX (optional)'),
@@ -1299,10 +1346,10 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
               },
               onChanged: (val) {
                 setState(() {
-                  business.contactDetails.additionalPhone= val;
+                  contactDetails.additionalPhone= val;
                 });
               },
-              initialValue: business.contactDetails.additionalPhone ?? '',
+              initialValue: contactDetails.additionalPhone ?? '',
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 16, right: 16),
                 labelText: Language.getPosTpmStrings('Additional Phone (optional)'),
@@ -1327,8 +1374,32 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
             child: MaterialButton(
               minWidth: 0,
               onPressed: () {
-
+                String code = getCountryCode(countryName, countryList);
+                if (code == null) {
+                  Fluttertoast.showToast(msg: 'Can not find country Code');
+                  return;
+                }
+                companyAddress.country = code.toUpperCase();
+                companyAddress.googleAutocomplete = googleAutocomplete;
+                if (bankCountryName == null || bankCountryName.isEmpty) {
+                  Fluttertoast.showToast(msg: 'Can not find country Code');
+                  return;
+                }
+                String code1 = getCountryCode(bankCountryName, countryList);
+                if (code1 == null) {
+                  Fluttertoast.showToast(msg: 'Can not find country Code');
+                  return;
+                }
+                bankAccount.country = code1.toUpperCase();
+                Map<String, dynamic> body = {};
+                body['bankAccount'] = bankAccount.toMap();
+                body['companyAddress'] = companyAddress.toMap();
+                body['companyDetails'] = companyDetails.toMap();
+                body['contactDetails'] = contactDetails.toMap();
+                body['taxes'] = taxes.toMap();
+                widget.checkoutScreenBloc.add(BusinessUploadEvent(body));
               },
+
               color: overlayBackground(),
               child: Text(
                 Language.getConnectStrings('Send'),
@@ -1343,7 +1414,8 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
         widgets.add(accountSendButton);
         widgets.add(Divider(height: 0, thickness: 0.5, color: Color.fromRGBO(120, 120, 120, 0.5),),);
 
-      } else if (missingStep.type == 'missing-credentials') {
+      }
+      else if (missingStep.type == 'missing-credentials') {
         for (Variant v in variant.variants) {
           Widget header = Container(
             height: 56,
@@ -1621,5 +1693,17 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
         ],
       ),
     );
+  }
+
+  void setGoogleAutoComplete() {
+    if (companyAddress.street != null && companyAddress.street.isNotEmpty) {
+      googleAutocomplete = companyAddress.street;
+    }
+    if (companyAddress.zipCode != null && companyAddress.zipCode.isNotEmpty) {
+      googleAutocomplete = googleAutocomplete + ', ' + companyAddress.zipCode;
+    }
+    if (companyAddress.city != null && companyAddress.city.isNotEmpty) {
+      googleAutocomplete = googleAutocomplete + ', ' + companyAddress.city;
+    }
   }
 }

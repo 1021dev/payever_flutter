@@ -18,8 +18,9 @@ import 'checkout.dart';
 
 class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> {
   final DashboardScreenBloc dashboardScreenBloc;
+  final GlobalStateModel globalStateModel;
 
-  CheckoutScreenBloc({this.dashboardScreenBloc});
+  CheckoutScreenBloc({this.dashboardScreenBloc, this.globalStateModel});
 
   ApiService api = ApiService();
   String token = GlobalUtils.activeToken.accessToken;
@@ -108,6 +109,8 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       yield* uninstallPayment(event.integrationModel);
     } else if (event is InstallCheckoutIntegrationEvent) {
       yield* installIntegration(event.integrationId);
+    } else if (event is BusinessUploadEvent) {
+      yield* uploadBusiness(event.body);
     }
   }
 
@@ -1054,6 +1057,26 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       yield state.copyWith(integrations: integrations);
     }
 
+  }
+
+  Stream<CheckoutScreenState> uploadBusiness(Map body) async* {
+    yield state.copyWith(isUpdating: true);
+    print(body);
+    dynamic response = await api.patchUpdateBusiness(token, state.business, body);
+    if (response is DioError) {
+      yield CheckoutScreenConnectInstallStateFailure(error: response.error);
+    } else if (response is Map){
+      dashboardScreenBloc.add(UpdateBusiness(Business.map(response)));
+      globalStateModel.setCurrentBusiness(Business.map(response),
+          notify: true);
+      yield state.copyWith(isUpdating: false);
+//      yield SettingScreenUpdateSuccess(
+//        business: state.business,
+//      );
+    } else {
+      yield CheckoutScreenConnectInstallStateFailure(error: 'Update Business name failed');
+      yield state.copyWith(isUpdating: false);
+    }
   }
 
 }
