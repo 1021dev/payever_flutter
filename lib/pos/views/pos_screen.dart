@@ -9,7 +9,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
@@ -27,10 +26,8 @@ import 'package:payever/pos/views/pos_switch_terminals_screen.dart';
 import 'package:payever/pos/views/pos_twillo_settings.dart';
 import 'package:payever/pos/widgets/pos_top_button.dart';
 import 'package:payever/search/views/search_screen.dart';
-import 'package:payever/switcher/switcher_page.dart';
 import 'package:payever/theme.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'pos_device_payment_settings.dart';
 

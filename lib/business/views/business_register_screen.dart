@@ -1,4 +1,3 @@
-import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:country_pickers/country.dart';
 import 'package:country_pickers/country_picker_dropdown.dart';
 import 'package:country_pickers/utils/utils.dart';
@@ -18,7 +17,6 @@ import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/custom_elements.dart';
 import 'package:payever/dashboard/dashboard_screen.dart';
-import 'package:payever/login/login_screen.dart';
 import 'package:payever/settings/models/models.dart';
 import 'package:payever/settings/widgets/save_button.dart';
 import 'package:payever/theme.dart';
