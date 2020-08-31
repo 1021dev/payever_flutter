@@ -696,7 +696,13 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                                     scale: 0.8,
                                     child: CupertinoSwitch(
                                       onChanged: (val) {
-
+                                        Variants variants = state.variants;
+                                        variants.onSales = val;
+                                        screenBloc.add(UpdateVariantDetail(
+                                          inventoryModel: state.inventory,
+                                          variants: variants,
+                                          increaseStock: state.increaseStock,
+                                        ));
                                       },
                                       value: state.variants.onSales ?? false,
                                     ),
@@ -807,7 +813,10 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
                                       onChanged: (val) {
                                         InventoryModel inventory = state.inventory ?? InventoryModel();
                                         inventory.isTrackable = !inventory.isTrackable;
-                                        screenBloc.add(UpdateVariantDetail(increaseStock: state.increaseStock, variants: state.variants, inventoryModel: inventory));
+                                        screenBloc.add(UpdateVariantDetail(
+                                            increaseStock: state.increaseStock,
+                                            variants: state.variants,
+                                            inventoryModel: inventory));
                                       },
                                       value: state.inventory != null ? state.inventory.isTrackable: false,
                                     ),

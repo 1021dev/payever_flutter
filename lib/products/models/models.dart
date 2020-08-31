@@ -248,6 +248,7 @@ class Variants {
     price = obj[GlobalUtils.DB_PROD_MODEL_VAR_PRICE];
     salePrice = obj[GlobalUtils.DB_PROD_MODEL_VAR_SALE_PRICE];
     sku = obj[GlobalUtils.DB_PROD_MODEL_VAR_SKU];
+    onSales = obj[GlobalUtils.DB_PROD_MODEL_SALES];
     barcode = obj[GlobalUtils.DB_PROD_MODEL_VAR_BARCODE];
     obj[GlobalUtils.DB_PROD_MODEL_VAR_IMAGES].forEach((img) {
       images.add(img);
@@ -268,6 +269,7 @@ class Variants {
     map['sku'] = sku;
     map['barcode'] = barcode;
     map['images'] = images;
+    map['onSales'] = onSales;
 
     if (options.length > 0) {
       List optionsArr = [];

@@ -324,7 +324,7 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
     }
     List<InventoryModel> inventories = state.inventories;
     List<InventoryModel> updated = state.updatedInventories;
-    updated.forEach((update) {
+    updated.forEach((update) async {
       InventoryModel inventoryModel = inventories.singleWhere((element) => element.sku == update.sku);
       if (inventoryModel != null) {
         Map<String, dynamic> body = {
@@ -332,15 +332,19 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
           'isTrackable': update.isTrackable ?? false,
           'sku': update.sku ?? ''
         };
-        dynamic res = api.updateInventory(token, state.businessId, inventoryModel.sku, body);
+        dynamic res = await api.updateInventory(token, state.businessId, inventoryModel.sku, body);
         print(res);
-        if (update.stock != inventoryModel.stock) {
-          int increase = update.stock - inventoryModel.stock;
+        dynamic inventoryResponse = await api.getInventory(
+            token, state.businessId, inventoryModel.sku);
+        InventoryModel inventory = InventoryModel.toMap(inventoryResponse);
+
+        if (update.stock != inventory.stock) {
+          int increase = update.stock - inventory.stock;
           print('increase stock => $increase');
           Map<String, dynamic> body1 = {
             'quantity': increase > 0 ? increase : -increase,
           };
-          dynamic res1 = api.addStockToInventory(token, state.businessId, inventoryModel.sku, body1, increase > 0 ? 'add': 'subtract');
+          dynamic res1 = await api.addStockToInventory(token, state.businessId, inventoryModel.sku, body1, increase > 0 ? 'add': 'subtract');
           print(res1);
         }
       }
