@@ -12,6 +12,7 @@ import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/products/widgets/multi_select_formfield.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/login/login_screen.dart';
+import 'package:payever/theme.dart';
 
 import 'add_variant_option_screen.dart';
 
@@ -118,7 +119,6 @@ class _AddVariantScreenState extends State<AddVariantScreen> {
                     child: Container(
                       height: 250,
                       child: BlurEffectView(
-                        color: Color.fromRGBO(50, 50, 50, 0.4),
                         padding: EdgeInsets.all(16),
                         child: Column(
                           children: <Widget>[
@@ -134,7 +134,6 @@ class _AddVariantScreenState extends State<AddVariantScreen> {
                               style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w300,
-                                  color: Colors.white
                               ),
                             ),
                             Padding(
@@ -146,7 +145,6 @@ class _AddVariantScreenState extends State<AddVariantScreen> {
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w300,
-                                color: Colors.white,
                               ),
                             ),
                             Padding(
@@ -165,7 +163,7 @@ class _AddVariantScreenState extends State<AddVariantScreen> {
                                   height: 24,
                                   elevation: 0,
                                   minWidth: 0,
-                                  color: Colors.white10,
+                                  color: overlayBackground(),
                                   child: Text(
                                     Language.getPosStrings('actions.no'),
                                   ),
@@ -181,7 +179,7 @@ class _AddVariantScreenState extends State<AddVariantScreen> {
                                   height: 24,
                                   elevation: 0,
                                   minWidth: 0,
-                                  color: Colors.white10,
+                                  color: overlayBackground(),
                                   child: Text(
                                     Language.getPosStrings('actions.yes'),
                                   ),
@@ -220,6 +218,7 @@ class _AddVariantScreenState extends State<AddVariantScreen> {
               ),
             ) : Text(
               Language.getProductStrings('save'),
+              style: TextStyle(color: Colors.white),
             ),
             onPressed: () {
               bool valid = true;
@@ -278,9 +277,7 @@ class _AddVariantScreenState extends State<AddVariantScreen> {
           Container(
             padding: EdgeInsets.all(16),
             child: BlurEffectView(
-              color: Color.fromRGBO(20, 20, 20, 0.4),
               padding: EdgeInsets.only(top: 12),
-              blur: 12,
               radius: 16,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -315,7 +312,6 @@ class _AddVariantScreenState extends State<AddVariantScreen> {
                       child: Text(
                         Language.getProductStrings('+ Add option'),
                         style: TextStyle(
-                          color: Colors.white,
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
                         ),
@@ -370,7 +366,7 @@ class _AddVariantScreenState extends State<AddVariantScreen> {
                 margin: EdgeInsets.all(1),
                 constraints: BoxConstraints.expand(),
                 decoration: BoxDecoration(
-                  color: Color(0x80222222),
+                  color: overlayBackground(),
                   borderRadius: BorderRadius.only(bottomLeft: Radius.circular(8), topLeft: Radius.circular(8),),
                 ),
                 alignment: Alignment.center,
@@ -390,7 +386,6 @@ class _AddVariantScreenState extends State<AddVariantScreen> {
                   },
                   initialValue: state.children[index].name,
                   style: TextStyle(
-                    color: Colors.white,
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
                   ),
@@ -409,7 +404,7 @@ class _AddVariantScreenState extends State<AddVariantScreen> {
                 padding: EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 8),
                 margin: EdgeInsets.all(1),
                 decoration: BoxDecoration(
-                  color: Color(0x80222222),
+                  color: overlayBackground(),
                   borderRadius: BorderRadius.only(topRight: Radius.circular(8), bottomRight: Radius.circular(8)),
                 ),
                 child: state.children[index].type == 'string'

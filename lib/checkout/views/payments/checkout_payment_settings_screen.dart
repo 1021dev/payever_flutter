@@ -1676,21 +1676,18 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
     widgets.add(saveButton);
 
     return Center(
-      child: Wrap(
-        runSpacing: 16,
-        children: <Widget>[
-          Container(
-            padding: EdgeInsets.only(left: 16, right: 16),
-            child: BlurEffectView(
-              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: widgets.map((e) => e).toList(),
-              ),
+      child: Container(
+        padding: EdgeInsets.only(left: 16, right: 16),
+        child: BlurEffectView(
+          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+//              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: widgets.map((e) => e).toList(),
             ),
           ),
-        ],
+        ),
       ),
     );
   }

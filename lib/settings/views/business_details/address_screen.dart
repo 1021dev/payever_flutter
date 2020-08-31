@@ -216,8 +216,8 @@ class _AddressScreenState extends State<AddressScreen> {
                                   textInputAction: TextInputAction.done,
                                   keyboardType: TextInputType.url,
                                   onChanged: (val) {
-                                    city = val;
                                     setState(() {
+                                      city = val;
                                       setGoogleAutoComplete();
                                     });
                                   },
@@ -258,8 +258,8 @@ class _AddressScreenState extends State<AddressScreen> {
                                   textInputAction: TextInputAction.done,
                                   keyboardType: TextInputType.url,
                                   onChanged: (val) {
-                                    street = val;
                                     setState(() {
+                                      street = val;
                                       setGoogleAutoComplete();
                                     });
                                   },
@@ -300,8 +300,8 @@ class _AddressScreenState extends State<AddressScreen> {
                                   textInputAction: TextInputAction.done,
                                   keyboardType: TextInputType.url,
                                   onChanged: (val) {
-                                    zipCode = val;
                                     setState(() {
+                                      zipCode = val;
                                       setGoogleAutoComplete();
                                     });
                                   },

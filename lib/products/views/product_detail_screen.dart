@@ -189,7 +189,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             ),
             elevation: 0,
             minWidth: 0,
-            color: overlayBackground(),
+            color: Colors.white24,
             child: state.isLoading ? Center(
               child: Container(
                 width: 16,
@@ -200,6 +200,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               ),
             ) : Text(
               Language.getProductStrings('save'),
+              style: TextStyle(color: Colors.white),
             ),
             onPressed: () {
               if (state.isLoading) {
