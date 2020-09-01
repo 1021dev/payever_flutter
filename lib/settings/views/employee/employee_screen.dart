@@ -145,7 +145,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
-              color: overlayBackground(),
+              color: overlayBackground().withOpacity(1),
               itemBuilder: (BuildContext context) {
                 return (isEmployee ? appBarEmployeePopUpActions(context, state): appBarGroupPopUpActions(context, state)).map((MenuItem item) {
                   return PopupMenuItem<MenuItem>(
@@ -293,7 +293,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
-              color: overlayBackground(),
+              color: overlayBackground().withOpacity(1),
               itemBuilder: (BuildContext context) {
                 return (isEmployee ? appBarEmployeeTablePopUpActions(context, state) : appBarGroupTablePopUpActions(context, state))
                     .map((MenuItem item) {
@@ -400,7 +400,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                     ),
                   ),
                   DataCell(
-                    Text(emp.employee.fullName ?? '-'),
+                    Text(emp.employee.fullName ?? (emp.employee.email ?? '-')),
                   ),
                   employeeTableStatus.contains('Position') ? DataCell(
                     Text(emp.employee.positionType ?? '-'),
@@ -567,7 +567,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
         ),
         child: Container(
           decoration: BoxDecoration(
-            color: overlayBackground(),
+            color: overlayBackground().withOpacity(1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Row(
@@ -605,7 +605,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
-                color: overlayBackground(),
+                color: overlayBackground().withOpacity(1),
                 itemBuilder: (BuildContext context) {
                   return (isEmployee ? selectEmployeePopUpActions(context, state) : selectGroupPopUpActions(context, state)).map((MenuItem item) {
                     return PopupMenuItem<MenuItem>(

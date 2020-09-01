@@ -309,7 +309,7 @@ class _ContactScreenState extends State<ContactScreen> {
                                             borderSide: BorderSide(color: Colors.blue, width: 0.5),
                                           ),
                                         ),
-                                        keyboardType: TextInputType.text,
+                                        keyboardType: TextInputType.numberWithOptions(signed: true, decimal: true),
                                       ),
                                     ),
                                   ),
@@ -519,14 +519,13 @@ class _ContactScreenState extends State<ContactScreen> {
                                                             child: Wrap(
                                                                 children: <Widget>[
                                                                   BlurEffectView(
-                                                                    color: Color.fromRGBO(50, 50, 50, 0.4),
                                                                     padding: EdgeInsets.all(16),
                                                                     child: Column(
                                                                       children: <Widget>[
                                                                         Padding(
                                                                           padding: EdgeInsets.only(top: 16),
                                                                         ),
-                                                                        SvgPicture.asset('assets/images/info.svg'),
+                                                                        SvgPicture.asset('assets/images/info.svg', color: iconColor(),),
                                                                         Padding(
                                                                           padding: EdgeInsets.only(top: 16),
                                                                         ),
@@ -606,7 +605,7 @@ class _ContactScreenState extends State<ContactScreen> {
                                                   height: 24,
                                                   minWidth: 0,
                                                   elevation: 0,
-                                                  child: SvgPicture.asset('assets/images/closeicon.svg', width: 8, height: 8),
+                                                  child: SvgPicture.asset('assets/images/closeicon.svg', width: 8, height: 8, color: iconColor(),),
                                                 ),
                                               ],
                                             ),

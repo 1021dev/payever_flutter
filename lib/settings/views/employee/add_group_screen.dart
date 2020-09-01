@@ -596,7 +596,6 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
             child: Wrap(
                 children: <Widget>[
                   BlurEffectView(
-                    color: Color.fromRGBO(50, 50, 50, 0.4),
                     padding: EdgeInsets.all(16),
                     child: Column(
                       children: <Widget>[

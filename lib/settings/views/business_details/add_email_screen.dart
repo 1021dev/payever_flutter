@@ -150,6 +150,7 @@ class _AddEmailScreenState extends State<AddEmailScreen> {
                             ),
                             SaveBtn(
                               isUpdating: state.isUpdating,
+                              title: Language.getSettingsStrings('actions.save'),
                               onUpdate: () {
                                 if (formKey.currentState.validate()) {
                                   List<String> contactEmails = [];
