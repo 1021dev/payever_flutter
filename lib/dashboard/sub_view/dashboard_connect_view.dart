@@ -9,6 +9,8 @@ import 'package:payever/commons/utils/env.dart';
 import 'package:payever/commons/views/custom_elements/dashboard_option_cell.dart';
 import 'package:payever/theme.dart';
 
+import 'dashboard_setup_buttons.dart';
+
 class DashboardConnectView extends StatefulWidget {
   final AppWidget appWidget;
   final BusinessApps businessApps;
@@ -17,6 +19,9 @@ class DashboardConnectView extends StatefulWidget {
   final Function deleteNotification;
   final Function tapOpen;
   final List<ConnectModel> connects;
+  final Function onTapGetStarted;
+  final Function onTapContinueSetup;
+  final Function onTapLearnMore;
 
   DashboardConnectView({
     this.appWidget,
@@ -26,6 +31,9 @@ class DashboardConnectView extends StatefulWidget {
     this.deleteNotification,
     this.tapOpen,
     this.connects,
+    this.onTapGetStarted,
+    this.onTapContinueSetup,
+    this.onTapLearnMore,
   });
   @override
   _DashboardConnectViewState createState() => _DashboardConnectViewState();
@@ -266,57 +274,11 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
               ),
             ),
             SizedBox(height: 12),
-            Container(
-              height: 40,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(6),
-                    bottomRight: Radius.circular(6),
-                  ),
-                  color: overlayBackground(),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: InkWell(
-                      onTap: () {
-
-                      },
-                      child: Center(
-                        child: Text(
-                          !widget.businessApps.installed ? 'Get started' : 'Continue setup process',
-                          softWrap: true,
-                          style: TextStyle(
-                            fontSize: 12,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  if (!widget.businessApps.installed) Container(
-                    width: 1,
-                    color: overlayBackground(),
-                  ),
-                  if (!widget.businessApps.installed) Expanded(
-                    flex: 1,
-                    child: InkWell(
-                      onTap: () {
-
-                      },
-                      child: Center(
-                        child: Text(
-                          'Learn more',
-                          softWrap: true,
-                          style: TextStyle(
-                            fontSize: 12,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+            DashboardSetupButtons(
+              businessApps: widget.businessApps,
+              onTapContinueSetup: widget.onTapContinueSetup,
+              onTapGetStarted: widget.onTapGetStarted,
+              onTapLearnMore: widget.onTapLearnMore,
             ),
           ],
         ),

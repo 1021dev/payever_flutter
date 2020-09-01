@@ -144,7 +144,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         height: 80,
                         decoration: BoxDecoration(
                           image: DecorationImage(
-                            image: NetworkImage('${Env.cdnIcon}icon-comerceos-${widget.businessApps.code}-not-installed.png'),
+                            image: NetworkImage(widget.businessApps.code != 'products' ? '${Env.cdnIcon}icon-comerceos-${widget.businessApps.code}-not-installed.png': '${Env.cdnIcon}icon-comerceos-product-not-installed.png'),
                             fit: BoxFit.contain,
                           ),
                         ),
@@ -176,8 +176,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         width: Measurements.width * 0.7,
                         child: MaterialButton(
                           onPressed: () {
-//                            screenBloc.add(ToggleEvent(businessId: widget.business.id, type: widget.businessApps.code,));
-                            Navigator.pop(context);
+                            screenBloc.add(ToggleEvent(businessId: widget.business.id, type: widget.businessApps.code,));
+//                            Navigator.pop(context);
                           },
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),

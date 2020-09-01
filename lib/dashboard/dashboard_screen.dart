@@ -683,43 +683,49 @@ class _DashboardScreenState extends State<DashboardScreen> {
           }
         },
         onTapOpen: () {
-          Provider.of<GlobalStateModel>(context, listen: false)
-              .setCurrentBusiness(state.activeBusiness);
-          Provider.of<GlobalStateModel>(context, listen: false)
-              .setCurrentWallpaper(state.curWall);
-          Navigator.push(
-            context,
-            PageTransition(
-              child: PosInitScreen(
+          _navigateAppsScreen(
+              state,
+              PosInitScreen(
                 dashboardScreenBloc: screenBloc,
               ),
-              type: PageTransitionType.fade,
-              duration: Duration(milliseconds: 500),
-            ),
+              isDuration: true
           );
         },
         notifications: notifications,
         openNotification: (NotificationModel model) {
           if (model.app == 'products-aware' &&
               model.message.contains('newProduct')) {
-            Provider.of<GlobalStateModel>(context, listen: false)
-                .setCurrentBusiness(state.activeBusiness);
-            Provider.of<GlobalStateModel>(context, listen: false)
-                .setCurrentWallpaper(state.curWall);
-            Navigator.push(
-              context,
-              PageTransition(
-                child: ProductsInitScreen(
+            _navigateAppsScreen(
+                state,
+                ProductsInitScreen(
                   dashboardScreenBloc: screenBloc,
                 ),
-                type: PageTransitionType.fade,
-                duration: Duration(milliseconds: 500),
-              ),
+                isDuration: true
             );
           }
         },
         deleteNotification: (NotificationModel model) {
           screenBloc.add(DeleteNotification(notificationId: model.id));
+        },
+        onTapGetStarted: (app) {
+          _navigateAppsScreen(
+              state,
+              WelcomeScreen(
+                dashboardScreenBloc: screenBloc,
+                business: state.activeBusiness,
+                businessApps: app,
+              )
+          );
+        },
+        onTapContinueSetup: (app) {
+          _navigateAppsScreen(
+              state,
+              WelcomeScreen(
+                dashboardScreenBloc: screenBloc,
+                business: state.activeBusiness,
+                businessApps: app,
+              )
+          );
         },
         onTapLearnMore: (url) {
           _launchURL(url);
@@ -752,21 +758,34 @@ class _DashboardScreenState extends State<DashboardScreen> {
             screenBloc.add(DeleteNotification(notificationId: model.id));
           },
           onOpen: () {
-            Provider.of<GlobalStateModel>(context, listen: false)
-                .setCurrentBusiness(state.activeBusiness);
-            Provider.of<GlobalStateModel>(context, listen: false)
-                .setCurrentWallpaper(state.curWall);
-            Navigator.push(
-              context,
-              PageTransition(
-                child: CheckoutInitScreen(
+            _navigateAppsScreen(
+                state,
+                CheckoutInitScreen(
                   dashboardScreenBloc: screenBloc,
                   checkouts: state.checkouts,
                   defaultCheckout: state.defaultCheckout,
                 ),
-                type: PageTransitionType.fade,
-                duration: Duration(milliseconds: 500),
-              ),
+              isDuration: true,
+            );
+          },
+          onTapGetStarted: (app) {
+            _navigateAppsScreen(
+                state,
+                WelcomeScreen(
+                  dashboardScreenBloc: screenBloc,
+                  business: state.activeBusiness,
+                  businessApps: app,
+                )
+            );
+          },
+          onTapContinueSetup: (app) {
+            _navigateAppsScreen(
+                state,
+                WelcomeScreen(
+                  dashboardScreenBloc: screenBloc,
+                  business: state.activeBusiness,
+                  businessApps: app,
+                )
             );
           },
         ));
@@ -956,29 +975,42 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 }
               }
               if (productId != '') {
-                Provider.of<GlobalStateModel>(context, listen: false)
-                    .setCurrentBusiness(state.activeBusiness);
-                Provider.of<GlobalStateModel>(context, listen: false)
-                    .setCurrentWallpaper(state.curWall);
-                Navigator.push(
-                  context,
-                  PageTransition(
-                    child: ProductDetailScreen(
+                _navigateAppsScreen(
+                    state,
+                    ProductDetailScreen(
                       productsModel: ProductsModel(id: productId),
                       businessId: globalStateModel.currentBusiness.id,
                       fromDashBoard: true,
                       screenBloc:
-                          ProductsScreenBloc(dashboardScreenBloc: screenBloc),
+                      ProductsScreenBloc(dashboardScreenBloc: screenBloc),
                     ),
-                    type: PageTransitionType.fade,
-                    duration: Duration(milliseconds: 500),
-                  ),
+                    isDuration: true,
                 );
               }
             }
           },
           deleteNotification: (NotificationModel model) {
             screenBloc.add(DeleteNotification(notificationId: model.id));
+          },
+          onTapGetStarted: (app) {
+            _navigateAppsScreen(
+                state,
+                WelcomeScreen(
+                  dashboardScreenBloc: screenBloc,
+                  business: state.activeBusiness,
+                  businessApps: app,
+                )
+            );
+          },
+          onTapContinueSetup: (app) {
+            _navigateAppsScreen(
+                state,
+                WelcomeScreen(
+                  dashboardScreenBloc: screenBloc,
+                  business: state.activeBusiness,
+                  businessApps: app,
+                )
+            );
           },
         ),
       );
@@ -1013,20 +1045,36 @@ class _DashboardScreenState extends State<DashboardScreen> {
           screenBloc.add(DeleteNotification(notificationId: model.id));
         },
         tapOpen: () {
-          Provider.of<GlobalStateModel>(context, listen: false)
-              .setCurrentBusiness(state.activeBusiness);
-          Provider.of<GlobalStateModel>(context, listen: false)
-              .setCurrentWallpaper(state.curWall);
-          Navigator.push(
-            context,
-            PageTransition(
-              child: ConnectInitScreen(
+          _navigateAppsScreen(
+              state,
+              ConnectInitScreen(
                 dashboardScreenBloc: screenBloc,
               ),
-              type: PageTransitionType.fade,
-              duration: Duration(milliseconds: 500),
-            ),
+            isDuration: true,
           );
+        },
+        onTapGetStarted: (app) {
+          _navigateAppsScreen(
+              state,
+              WelcomeScreen(
+                dashboardScreenBloc: screenBloc,
+                business: state.activeBusiness,
+                businessApps: app,
+              )
+          );
+        },
+        onTapContinueSetup: (app) {
+          _navigateAppsScreen(
+              state,
+              WelcomeScreen(
+                dashboardScreenBloc: screenBloc,
+                business: state.activeBusiness,
+                businessApps: app,
+              )
+          );
+        },
+        onTapLearnMore: (url) {
+          _launchURL(url);
         },
       ));
     }
@@ -1428,7 +1476,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  _navigateAppsScreen(DashboardScreenState state, Widget widget) {
+  _navigateAppsScreen(
+      DashboardScreenState state, Widget widget, {bool isDuration = false}) {
     Provider.of<GlobalStateModel>(context, listen: false)
         .setCurrentBusiness(state.activeBusiness);
     Provider.of<GlobalStateModel>(context, listen: false)
@@ -1438,6 +1487,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       PageTransition(
         child: widget,
         type: PageTransitionType.fade,
+        duration: Duration(milliseconds: isDuration ? 500 : 300),
       ),
     );
   }
