@@ -210,8 +210,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Widget _appBar(DashboardScreenState state) {
     String businessLogo = '';
-    if (state.activeBusiness != null) {
-      businessLogo = 'https://payeverproduction.blob.core.windows.net/images/${state.activeBusiness.logo}' ?? '';
+    if (state.activeBusiness != null && state.activeBusiness.logo != null) {
+      businessLogo = 'https://payeverproduction.blob.core.windows.net/images/${state.activeBusiness.logo}';
     }
     return AppBar(
       centerTitle: false,
@@ -1271,7 +1271,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       children: [
         SizedBox(height: 60),
         Text(
-          'Welcome ${state.user.firstName},',
+          'Welcome ${state.user.firstName ?? 'undefined'},',
           style: TextStyle(
             fontSize: 26,
             fontWeight: FontWeight.bold,

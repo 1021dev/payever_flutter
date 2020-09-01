@@ -70,7 +70,7 @@ class DashboardMenuView extends StatelessWidget {
                     onPressed: onClose,
                   ),
                 ),
-                isActive ? InkWell(
+                isActive && dashboardScreenBloc.state.businesses.length > 1 ? InkWell(
                   onTap: () async {
                     //onSwitchBusiness,
                     Navigator.pop(context);

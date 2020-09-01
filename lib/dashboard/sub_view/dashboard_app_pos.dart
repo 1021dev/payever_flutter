@@ -173,16 +173,17 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                   Padding(
                     padding: EdgeInsets.only(top: 8),
                   ),
-                  widget.activeTerminal == null ? Container(
-                    height: 72,
+                  widget.isLoading ? Container(
+                    height: 50,
                     child: Center(
-                      child: Container(
-                        width: 32,
-                        height: 32,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                        ),
-                      ),
+                      child: CircularProgressIndicator(),
+                    ),
+                  ):
+                  widget.activeTerminal == null ? Container(
+                    alignment: Alignment.centerLeft,
+                    height: 50,
+                    child: Text(
+                      'You have no terminals here',
                     ),
                   ):
                   Row(

@@ -70,7 +70,7 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
   
   Stream<BusinessState> registerBusiness(Map<String, dynamic> body,) async* {
     yield state.copyWith(isUpdating: true);
-    String id = Uuid().v1();
+    String id = Uuid().v4();
 
     dynamic authResponse = await api.putAuth(token, id);
     if (authResponse is Map) {
@@ -79,6 +79,7 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
       SharedPreferences preferences = await SharedPreferences.getInstance();
       preferences.setString(GlobalUtils.TOKEN, accessToken);
       body['id'] = id;
+      dynamic peAuthResponse = await api.peAuthToken(accessToken);
       dynamic businessResponse = await api.postBusiness(accessToken, body);
       if (businessResponse is Map) {
         Business business = Business.map(businessResponse);

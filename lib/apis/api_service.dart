@@ -184,6 +184,40 @@ class ApiService {
     }
   }
 
+  Future<dynamic> peAuthToken(String token) async {
+    try {
+      print('$TAG - postBusiness()');
+      dynamic response = await _client.postTypeLess(
+          'https://proxy.payever.org/api/set-cookie/pe_auth_token/$token',
+          headers: {
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint,
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> deleteBusiness(String token, String idBusiness, Map body) async {
+    try {
+      print('$TAG - deleteBusiness()');
+      dynamic response = await _client.deleteTypeless(
+          '$businessUrl/business/$idBusiness',
+          body: body,
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<dynamic> getBusinessRegistrationFormData(String token) async {
     try {
       print('$TAG - getBusinessRegistrationForm()');
