@@ -95,7 +95,7 @@ class _BusinessRegisterScreenState extends State<BusinessRegisterScreen> {
           Provider.of<GlobalStateModel>(context,listen: false)
               .setCurrentWallpaper('$wallpaperBase${state.wallpaper.currentWallpaper.wallpaper}');
           BusinessApps commerceApp;
-          List<BusinessApps> businessApps = state.businessApps.where((element) => element.code.contains('commerce')).toList();
+          List<BusinessApps> businessApps = state.businessApps.where((element) => element.code.contains('commerceos')).toList();
           if (businessApps.length > 0) {
             commerceApp = businessApps.first;
           }
@@ -109,14 +109,14 @@ class _BusinessRegisterScreenState extends State<BusinessRegisterScreen> {
               type: PageTransitionType.fade,
             ),
           );
-          Navigator.pushReplacement(
-              context,
-              PageTransition(
-                child: DashboardScreenInit(refresh: true,),
-                type: PageTransitionType.fade,
-                duration: Duration(microseconds: 300),
-              )
-          );
+//          Navigator.pushReplacement(
+//              context,
+//              PageTransition(
+//                child: DashboardScreenInit(refresh: true,),
+//                type: PageTransitionType.fade,
+//                duration: Duration(microseconds: 300),
+//              )
+//          );
         }
       },
       child: BlocBuilder<BusinessBloc, BusinessState>(

@@ -98,7 +98,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 type: PageTransitionType.fade,
               ),
             );
-          } else if (widget.businessApps.code.contains('commerce')) {
+          } else if (widget.businessApps.code.contains('commerceos')) {
             Navigator.pushReplacement(
               context,
               PageTransition(

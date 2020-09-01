@@ -198,10 +198,9 @@ class _ConnectScreenState extends State<ConnectScreen> {
 
   Widget _appBar(ConnectScreenState state) {
     String businessLogo = '';
-    if (widget.dashboardScreenBloc.state.activeBusiness != null) {
+    if (widget.dashboardScreenBloc.state.activeBusiness != null && widget.dashboardScreenBloc.state.activeBusiness.logo != null) {
       businessLogo =
-          'https://payeverproduction.blob.core.windows.net/images/${widget.dashboardScreenBloc.state.activeBusiness.logo}' ??
-              '';
+          'https://payeverproduction.blob.core.windows.net/images/${widget.dashboardScreenBloc.state.activeBusiness.logo}';
     }
     return AppBar(
       centerTitle: false,

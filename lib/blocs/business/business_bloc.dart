@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/business/models/model.dart';
 import 'package:payever/commons/commons.dart';
@@ -78,6 +79,7 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
       GlobalUtils.activeToken.accessToken = accessToken;
       SharedPreferences preferences = await SharedPreferences.getInstance();
       preferences.setString(GlobalUtils.TOKEN, accessToken);
+      await FlutterSecureStorage().write(key: GlobalUtils.TOKEN, value: accessToken);
       body['id'] = id;
       dynamic peAuthResponse = await api.peAuthToken(accessToken);
       dynamic businessResponse = await api.postBusiness(accessToken, body);

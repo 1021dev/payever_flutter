@@ -404,8 +404,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
 
   Widget _appBar(ProductsScreenState state) {
     String businessLogo = '';
-    if (widget.dashboardScreenBloc.state.activeBusiness != null) {
-      businessLogo = 'https://payeverproduction.blob.core.windows.net/images/${widget.dashboardScreenBloc.state.activeBusiness.logo}' ?? '';
+    if (widget.dashboardScreenBloc.state.activeBusiness != null && widget.dashboardScreenBloc.state.activeBusiness.logo != null) {
+      businessLogo = 'https://payeverproduction.blob.core.windows.net/images/${widget.dashboardScreenBloc.state.activeBusiness.logo}';
     }
     return AppBar(
       centerTitle: false,
