@@ -175,7 +175,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         width: Measurements.width * 0.7,
                         child: MaterialButton(
                           onPressed: () {
-                            screenBloc.add(ToggleEvent(businessId: widget.business.id, type: widget.businessApps.code,));
+//                            screenBloc.add(ToggleEvent(businessId: widget.business.id, type: widget.businessApps.code,));
+                            Navigator.pop(context);
                           },
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),

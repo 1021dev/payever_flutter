@@ -430,8 +430,8 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       height: 24,
-                      minWidth: 30,
-                      color: Colors.grey[800],
+                      minWidth: 0,
+                      color: overlayBackground(),
                       elevation: 0,
                       child: Text(
                         'Edit',

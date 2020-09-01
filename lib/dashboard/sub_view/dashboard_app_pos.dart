@@ -18,6 +18,7 @@ class DashboardAppPosView extends StatefulWidget {
   final List<NotificationModel> notifications;
   final Function openNotification;
   final Function deleteNotification;
+  final Function openLearnMore;
 
   DashboardAppPosView({
     this.appWidget,
@@ -30,6 +31,7 @@ class DashboardAppPosView extends StatefulWidget {
     this.notifications = const [],
     this.openNotification,
     this.deleteNotification,
+    this.openLearnMore,
   });
   @override
   _DashboardAppPosViewState createState() => _DashboardAppPosViewState();
@@ -331,22 +333,24 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                       },
                       child: Center(
                         child: Text(
-                          widget.businessApps.installed ? 'Get started' : 'Continue setup process',
+                          !widget.businessApps.installed ? 'Get started' : 'Continue setup process',
                           softWrap: true,
                           style: TextStyle(fontSize: 12),
                         ),
                       ),
                     ),
                   ),
-                  if (widget.businessApps.installed) Container(
+                  if (!widget.businessApps.installed) Container(
                     width: 1,
-                    color: Colors.white12,
+                    color: Colors.grey,
                   ),
-                  if (widget.businessApps.installed) Expanded(
+                  if (!widget.businessApps.installed) Expanded(
                     flex: 1,
                     child: InkWell(
                       onTap: () {
-
+                        return widget.openLearnMore(
+                            'https://getpayever.com/pos?_ga=2.81365975.1187566179.1598419016-238550036.1593180292'
+                        );
                       },
                       child: Center(
                         child: Text(

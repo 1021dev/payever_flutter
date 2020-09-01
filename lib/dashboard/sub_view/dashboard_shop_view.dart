@@ -23,6 +23,9 @@ class DashboardShopView extends StatefulWidget {
   final List<NotificationModel> notifications;
   final Function openNotification;
   final Function deleteNotification;
+  final Function onTapGetStarted;
+  final Function onTapContinueSetup;
+  final Function onTapLearnMore;
 
   DashboardShopView({
     this.onOpen,
@@ -35,6 +38,9 @@ class DashboardShopView extends StatefulWidget {
     this.notifications = const [],
     this.openNotification,
     this.deleteNotification,
+    this.onTapGetStarted,
+    this.onTapContinueSetup,
+    this.onTapLearnMore,
   });
   @override
   _DashboardShopViewState createState() => _DashboardShopViewState();
@@ -350,13 +356,15 @@ class _DashboardShopViewState extends State<DashboardShopView> {
                   ),
                   if (!widget.businessApps.installed) Container(
                     width: 1,
-                    color: Colors.white12,
+                    color: Colors.grey,
                   ),
                   if (!widget.businessApps.installed) Expanded(
                     flex: 1,
                     child: InkWell(
                       onTap: () {
-
+                        return widget.onTapLearnMore(
+                            'https://getpayever.com/shop?_ga=2.69838672.1187566179.1598419016-238550036.1593180292'
+                            );
                       },
                       child: Center(
                         child: Text(

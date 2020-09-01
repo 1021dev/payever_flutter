@@ -54,7 +54,7 @@ class _DashboardBusinessAppsViewState extends State<DashboardBusinessAppsView> {
     return BlurEffectView(
       padding: EdgeInsets.fromLTRB(14, 12, 14, 0),
       child: Container(
-        height: 56 + (businessApps.length / 4).ceilToDouble() * 86,
+        height: 60 + (businessApps.length / 4).ceilToDouble() * 86,
         child: Column(
           children: [
             Row(
