@@ -7,6 +7,8 @@ import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/dashboard_option_cell.dart';
 import 'package:payever/theme.dart';
 
+import 'dashboard_setup_buttons.dart';
+
 class DashboardAppPosView extends StatefulWidget {
   final BusinessApps businessApps;
   final AppWidget appWidget;
@@ -18,7 +20,9 @@ class DashboardAppPosView extends StatefulWidget {
   final List<NotificationModel> notifications;
   final Function openNotification;
   final Function deleteNotification;
-  final Function openLearnMore;
+  final Function onTapGetStarted;
+  final Function onTapContinueSetup;
+  final Function onTapLearnMore;
 
   DashboardAppPosView({
     this.appWidget,
@@ -31,7 +35,9 @@ class DashboardAppPosView extends StatefulWidget {
     this.notifications = const [],
     this.openNotification,
     this.deleteNotification,
-    this.openLearnMore,
+    this.onTapLearnMore,
+    this.onTapGetStarted,
+    this.onTapContinueSetup,
   });
   @override
   _DashboardAppPosViewState createState() => _DashboardAppPosViewState();
@@ -317,55 +323,12 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
               ),
             ),
             SizedBox(height: 12),
-            Container(
-              height: 40,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(bottomLeft: Radius.circular(6), bottomRight: Radius.circular(6)),
-                color: overlayBackground(),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: InkWell(
-                      onTap: () {
-
-                      },
-                      child: Center(
-                        child: Text(
-                          !widget.businessApps.installed ? 'Get started' : 'Continue setup process',
-                          softWrap: true,
-                          style: TextStyle(fontSize: 12),
-                        ),
-                      ),
-                    ),
-                  ),
-                  if (!widget.businessApps.installed) Container(
-                    width: 1,
-                    color: Colors.grey,
-                  ),
-                  if (!widget.businessApps.installed) Expanded(
-                    flex: 1,
-                    child: InkWell(
-                      onTap: () {
-                        return widget.openLearnMore(
-                            'https://getpayever.com/pos?_ga=2.81365975.1187566179.1598419016-238550036.1593180292'
-                        );
-                      },
-                      child: Center(
-                        child: Text(
-                          'Learn more',
-                          softWrap: true,
-                          style: TextStyle(
-                            fontSize: 12,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            )
+            DashboardSetupButtons(
+              businessApps: widget.businessApps,
+              onTapContinueSetup: widget.onTapContinueSetup,
+              onTapGetStarted: widget.onTapGetStarted,
+              onTapLearnMore: widget.onTapLearnMore,
+            ),
           ],
         ),
       );

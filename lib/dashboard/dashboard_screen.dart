@@ -421,9 +421,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 dashboardScreenBloc: screenBloc,
                 business: state.activeBusiness,
                 businessApps: app,
-              ));
+              )
+          );
         },
-        onTapGetStarted: () {},
+        onTapGetStarted: (app) {
+          _navigateAppsScreen(
+              state,
+              WelcomeScreen(
+                dashboardScreenBloc: screenBloc,
+                business: state.activeBusiness,
+                businessApps: app,
+              )
+          );
+        },
         onTapLearnMore: () {},
         notifications: notifications,
         openNotification: (NotificationModel model) {},
@@ -610,15 +620,32 @@ class _DashboardScreenState extends State<DashboardScreen> {
           deleteNotification: (NotificationModel model) {
             screenBloc.add(DeleteNotification(notificationId: model.id));
           },
-          onTapGetStarted: () {},
-          onTapContinueSetup: () {},
+          onTapGetStarted: (app) {
+            _navigateAppsScreen(
+                state,
+                WelcomeScreen(
+                  dashboardScreenBloc: screenBloc,
+                  business: state.activeBusiness,
+                  businessApps: app,
+                )
+            );
+          },
+          onTapContinueSetup: (app) {
+            _navigateAppsScreen(
+                state,
+                WelcomeScreen(
+                  dashboardScreenBloc: screenBloc,
+                  business: state.activeBusiness,
+                  businessApps: app,
+                )
+            );
+          },
           onTapLearnMore: (url) {
             _launchURL(url);
           },
         ),
       );
     }
-
     // Point of Sale
     if (widgets.where((element) => element.type == 'pos').toList().length > 0) {
       appWidget =
@@ -694,7 +721,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         deleteNotification: (NotificationModel model) {
           screenBloc.add(DeleteNotification(notificationId: model.id));
         },
-        openLearnMore: (url) {
+        onTapLearnMore: (url) {
           _launchURL(url);
         },
       ));

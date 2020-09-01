@@ -44,7 +44,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     screenBloc = WelcomeScreenBloc(
       dashboardScreenBloc: widget.dashboardScreenBloc
     );
-    screenBloc.add(WelcomeScreenInitEvent(businessId: widget.business.id, uuid: widget.businessApps.microUuid,));
+    if (!widget.businessApps.installed)
+      screenBloc.add(WelcomeScreenInitEvent(businessId: widget.business.id, uuid: widget.businessApps.microUuid,));
     super.initState();
   }
 

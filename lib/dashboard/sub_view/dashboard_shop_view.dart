@@ -9,6 +9,7 @@ import 'package:payever/commons/utils/env.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/dashboard_option_cell.dart';
+import 'package:payever/dashboard/sub_view/dashboard_setup_buttons.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/theme.dart';
 
@@ -330,54 +331,11 @@ class _DashboardShopViewState extends State<DashboardShopView> {
               ),
             ),
             SizedBox(height: 12),
-            Container(
-              height: 40,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(6), bottomRight: Radius.circular(6)),
-                  color: overlayBackground(),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: InkWell(
-                      onTap: () {
-
-                      },
-                      child: Center(
-                        child: Text(
-                          !widget.businessApps.installed ? 'Get started' : 'Continue setup process',
-                          softWrap: true,
-                          style: TextStyle(
-                              fontSize: 12),
-                        ),
-                      ),
-                    ),
-                  ),
-                  if (!widget.businessApps.installed) Container(
-                    width: 1,
-                    color: Colors.grey,
-                  ),
-                  if (!widget.businessApps.installed) Expanded(
-                    flex: 1,
-                    child: InkWell(
-                      onTap: () {
-                        return widget.onTapLearnMore(
-                            'https://getpayever.com/shop?_ga=2.69838672.1187566179.1598419016-238550036.1593180292'
-                            );
-                      },
-                      child: Center(
-                        child: Text(
-                          'Learn more',
-                          softWrap: true,
-                          style: TextStyle(
-                              fontSize: 12),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+            DashboardSetupButtons(
+              businessApps: widget.businessApps,
+              onTapContinueSetup: widget.onTapContinueSetup,
+              onTapGetStarted: widget.onTapGetStarted,
+              onTapLearnMore: widget.onTapLearnMore,
             )
           ],
         ),
