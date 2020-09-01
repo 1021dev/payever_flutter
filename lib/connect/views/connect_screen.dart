@@ -28,9 +28,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'connect_categories_screen.dart';
 import 'connect_payment_settings_screen.dart';
 
-
 class ConnectInitScreen extends StatelessWidget {
-
   final List<Connect> connectModels;
   final Connect activeConnect;
   final DashboardScreenBloc dashboardScreenBloc;
@@ -72,13 +70,13 @@ class ConnectScreen extends StatefulWidget {
 }
 
 class _ConnectScreenState extends State<ConnectScreen> {
-
   bool _isPortrait;
   bool _isTablet;
   bool openCategory = false;
 
   ConnectScreenBloc screenBloc;
-  final GlobalKey<InnerDrawerState> _innerDrawerKey = GlobalKey<InnerDrawerState>();
+  final GlobalKey<InnerDrawerState> _innerDrawerKey =
+      GlobalKey<InnerDrawerState>();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
   static int selectedIndex = 0;
@@ -89,11 +87,15 @@ class _ConnectScreenState extends State<ConnectScreen> {
   double iconSize;
   double margin;
 
-  List<ConnectPopupButton> appBarPopUpActions(BuildContext context, ConnectScreenState state) {
+  List<ConnectPopupButton> appBarPopUpActions(
+      BuildContext context, ConnectScreenState state) {
     return [
       ConnectPopupButton(
         title: Language.getProductListStrings('list_view'),
-        icon: SvgPicture.asset('assets/images/list.svg', color: iconColor(),),
+        icon: SvgPicture.asset(
+          'assets/images/list.svg',
+          color: iconColor(),
+        ),
         onTap: () async {
           setState(() {
             selectedStyle = 0;
@@ -102,7 +104,10 @@ class _ConnectScreenState extends State<ConnectScreen> {
       ),
       ConnectPopupButton(
         title: Language.getProductListStrings('grid_view'),
-        icon: SvgPicture.asset('assets/images/grid.svg', color: iconColor(),),
+        icon: SvgPicture.asset(
+          'assets/images/grid.svg',
+          color: iconColor(),
+        ),
         onTap: () async {
           setState(() {
             selectedStyle = 1;
@@ -117,12 +122,10 @@ class _ConnectScreenState extends State<ConnectScreen> {
     screenBloc = ConnectScreenBloc(
       dashboardScreenBloc: widget.dashboardScreenBloc,
     );
-    screenBloc.add(
-        ConnectScreenInitEvent(
-          business: widget.globalStateModel.currentBusiness.id,
-        )
-    );
-   super.initState();
+    screenBloc.add(ConnectScreenInitEvent(
+      business: widget.globalStateModel.currentBusiness.id,
+    ));
+    super.initState();
   }
 
   @override
@@ -156,15 +159,19 @@ class _ConnectScreenState extends State<ConnectScreen> {
         }
         if (state.installedConnect != '') {
           List<ConnectModel> models = state.connectInstallations;
-          List list = models.where((element) =>
-          element.integration.name == state.installedConnect).toList();
+          List list = models
+              .where((element) =>
+                  element.integration.name == state.installedConnect)
+              .toList();
           if (list.length > 0) {
             showInstalledDialog(true, list.first);
           }
         } else if (state.uninstalledConnect != '') {
           List<ConnectModel> models = state.connectInstallations;
-          List list = models.where((element) =>
-          element.integration.name == state.uninstalledConnect).toList();
+          List list = models
+              .where((element) =>
+                  element.integration.name == state.uninstalledConnect)
+              .toList();
           if (list.length > 0) {
             showInstalledDialog(false, list.first);
           }
@@ -177,12 +184,8 @@ class _ConnectScreenState extends State<ConnectScreen> {
             innerDrawerKey: _innerDrawerKey,
             dashboardScreenBloc: widget.dashboardScreenBloc,
             activeBusiness: widget.dashboardScreenBloc.state.activeBusiness,
-            onPersonalInfo: () {
-
-            },
-            onAddBusiness: () {
-
-            },
+            onPersonalInfo: () {},
+            onAddBusiness: () {},
             onClose: () {
               _innerDrawerKey.currentState.toggle();
             },
@@ -196,7 +199,9 @@ class _ConnectScreenState extends State<ConnectScreen> {
   Widget _appBar(ConnectScreenState state) {
     String businessLogo = '';
     if (widget.dashboardScreenBloc.state.activeBusiness != null) {
-      businessLogo = 'https://payeverproduction.blob.core.windows.net/images/${widget.dashboardScreenBloc.state.activeBusiness.logo}' ?? '';
+      businessLogo =
+          'https://payeverproduction.blob.core.windows.net/images/${widget.dashboardScreenBloc.state.activeBusiness.logo}' ??
+              '';
     }
     return AppBar(
       centerTitle: false,
@@ -234,37 +239,45 @@ class _ConnectScreenState extends State<ConnectScreen> {
           child: InkWell(
             child: Row(
               children: <Widget>[
-                BusinessLogo(url: businessLogo,),
-                _isTablet || !_isPortrait ? Padding(
-                  padding: EdgeInsets.only(left: 4, right: 4),
-                  child: Text(
-                    widget.dashboardScreenBloc.state.activeBusiness.name,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                    ),
-                  ),
-                ): Container(),
+                BusinessLogo(
+                  url: businessLogo,
+                ),
+                _isTablet || !_isPortrait
+                    ? Padding(
+                        padding: EdgeInsets.only(left: 4, right: 4),
+                        child: Text(
+                          widget.dashboardScreenBloc.state.activeBusiness.name,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                          ),
+                        ),
+                      )
+                    : Container(),
               ],
             ),
-            onTap: () {
-            },
+            onTap: () {},
           ),
         ),
         Padding(
           padding: EdgeInsets.all(6),
           child: InkWell(
-            child: SvgPicture.asset('assets/images/searchicon.svg', width: 20,),
+            child: SvgPicture.asset(
+              'assets/images/searchicon.svg',
+              width: 20,
+            ),
             onTap: () {
               Navigator.push(
                 context,
                 PageTransition(
                   child: SearchScreen(
                     dashboardScreenBloc: widget.dashboardScreenBloc,
-                    businessId: widget.dashboardScreenBloc.state.activeBusiness.id,
+                    businessId:
+                        widget.dashboardScreenBloc.state.activeBusiness.id,
                     searchQuery: '',
                     appWidgets: widget.dashboardScreenBloc.state.currentWidgets,
-                    activeBusiness: widget.dashboardScreenBloc.state.activeBusiness,
+                    activeBusiness:
+                        widget.dashboardScreenBloc.state.activeBusiness,
                     currentWall: widget.dashboardScreenBloc.state.curWall,
                   ),
                   type: PageTransitionType.fade,
@@ -282,20 +295,24 @@ class _ConnectScreenState extends State<ConnectScreen> {
               width: 20,
             ),
             onTap: () async {
-              Provider.of<GlobalStateModel>(context,listen: false)
-                  .setCurrentBusiness(widget.dashboardScreenBloc.state.activeBusiness);
-              Provider.of<GlobalStateModel>(context,listen: false)
-                  .setCurrentWallpaper(widget.dashboardScreenBloc.state.curWall);
+              Provider.of<GlobalStateModel>(context, listen: false)
+                  .setCurrentBusiness(
+                      widget.dashboardScreenBloc.state.activeBusiness);
+              Provider.of<GlobalStateModel>(context, listen: false)
+                  .setCurrentWallpaper(
+                      widget.dashboardScreenBloc.state.curWall);
 
               await showGeneralDialog(
                 barrierColor: null,
                 transitionBuilder: (context, a1, a2, wg) {
-                  final curvedValue = Curves.ease.transform(a1.value) -   1.0;
+                  final curvedValue = Curves.ease.transform(a1.value) - 1.0;
                   return Transform(
-                    transform: Matrix4.translationValues(-curvedValue * 200, 0.0, 0),
+                    transform:
+                        Matrix4.translationValues(-curvedValue * 200, 0.0, 0),
                     child: NotificationsScreen(
                       business: widget.dashboardScreenBloc.state.activeBusiness,
-                      businessApps: widget.dashboardScreenBloc.state.businessWidgets,
+                      businessApps:
+                          widget.dashboardScreenBloc.state.businessWidgets,
                       dashboardScreenBloc: widget.dashboardScreenBloc,
                       type: 'transactions',
                     ),
@@ -344,24 +361,26 @@ class _ConnectScreenState extends State<ConnectScreen> {
   }
 
   Widget _body(ConnectScreenState state) {
-    iconSize = _isTablet ? 120: 80;
-    margin = _isTablet ? 24: 16;
+    iconSize = _isTablet ? 120 : 80;
+    margin = _isTablet ? 24 : 16;
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       appBar: _appBar(state),
       body: SafeArea(
         child: BackgroundBase(
           true,
-          body: state.isLoading ? Center(
-            child: CircularProgressIndicator(),
-          ): Column(
-            children: <Widget>[
-              _topBar(state),
-              Expanded(
-                child: _getBody(state),
-              ),
-            ],
-          ),
+          body: state.isLoading
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : Column(
+                  children: <Widget>[
+                    _topBar(state),
+                    Expanded(
+                      child: _getBody(state),
+                    ),
+                  ],
+                ),
         ),
       ),
     );
@@ -370,10 +389,12 @@ class _ConnectScreenState extends State<ConnectScreen> {
   Widget _topBar(ConnectScreenState state) {
     String itemsString = '';
     if (state.selectedCategory == 'all') {
-      itemsString = '${state.connectInstallations.length} ${Language.getWidgetStrings('widgets.store.product.items')} in ${state.categories.length}'
+      itemsString =
+          '${state.connectInstallations.length} ${Language.getWidgetStrings('widgets.store.product.items')} in ${state.categories.length}'
           ' ${Language.getProductStrings('category.headings.categories').toLowerCase()}';
     } else {
-      itemsString = '${state.connectInstallations.length} ${Language.getWidgetStrings('widgets.store.product.items')} in'
+      itemsString =
+          '${state.connectInstallations.length} ${Language.getWidgetStrings('widgets.store.product.items')} in'
           ' ${Language.getConnectStrings('categories.${state.selectedCategory}.title')}';
     }
     return Container(
@@ -394,9 +415,11 @@ class _ConnectScreenState extends State<ConnectScreen> {
                     await showGeneralDialog(
                       barrierColor: null,
                       transitionBuilder: (context, a1, a2, wg) {
-                        final curvedValue = 1.0 - Curves.ease.transform(a1.value);
+                        final curvedValue =
+                            1.0 - Curves.ease.transform(a1.value);
                         return Transform(
-                          transform: Matrix4.translationValues(-curvedValue * 200, 0.0, 0),
+                          transform: Matrix4.translationValues(
+                              -curvedValue * 200, 0.0, 0),
                           child: ConnectCategoriesScreen(
                             screenBloc: screenBloc,
                           ),
@@ -422,69 +445,6 @@ class _ConnectScreenState extends State<ConnectScreen> {
                   ),
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.only(right: 12),
-                child: Container(
-                  width: 1,
-                  color: iconColor().withOpacity(0.5),
-                  height: 24,
-                ),
-              ),
-              InkWell(
-                onTap: () {
-
-                },
-                child: Text(
-                  'Reset'
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 12),
-              ),
-              Container(
-                constraints: BoxConstraints(minWidth: 100, maxWidth: Measurements.width / 2, maxHeight: 36, minHeight: 36),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: overlayBackground(),
-                ),
-                child: Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(left: 8, right: 8),
-                      child: SvgPicture.asset(
-                        'assets/images/search_place_holder.svg',
-                        width: 16,
-                        height: 16,
-                        color: iconColor(),
-                      ),
-                    ),
-                    Expanded(
-                      child: TextField(
-                        focusNode: searchFocus,
-                        controller: searchTextController,
-                        autofocus: false,
-                        textInputAction: TextInputAction.done,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: 'Search in Connect',
-                          isDense: true,
-                          hintStyle: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w300,
-                          ),
-                        ),
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                        ),
-                        onSubmitted: (_) {
-                          FocusScope.of(context).unfocus();
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
             ],
           ),
           Expanded(
@@ -494,7 +454,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
                   child: Container(
                     alignment: Alignment.center,
                     child: Text(
-                      !_isTablet && _isPortrait ? '' : itemsString,
+                      itemsString,
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -507,7 +467,15 @@ class _ConnectScreenState extends State<ConnectScreen> {
                   child: PopupMenuButton<ConnectPopupButton>(
                     child: Padding(
                       padding: EdgeInsets.all(8),
-                      child: selectedStyle == 0 ? SvgPicture.asset('assets/images/list.svg', color: iconColor(),): SvgPicture.asset('assets/images/grid.svg', color: iconColor(),),
+                      child: selectedStyle == 0
+                          ? SvgPicture.asset(
+                              'assets/images/list.svg',
+                              color: iconColor(),
+                            )
+                          : SvgPicture.asset(
+                              'assets/images/grid.svg',
+                              color: iconColor(),
+                            ),
                     ),
                     offset: Offset(0, 100),
                     onSelected: (ConnectPopupButton item) => item.onTap(),
@@ -553,58 +521,64 @@ class _ConnectScreenState extends State<ConnectScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        openCategory && (_isTablet || !_isPortrait)? Flexible(
-          flex: 1,
-          child: ListView.separated(
-            padding: EdgeInsets.all(8),
-            itemBuilder: (context, index) {
-              String category = screenBloc.state.categories[index];
-              return GestureDetector(
-                onTap: () {
-                  screenBloc.add(ConnectCategorySelected(category: category));
-                },
-                child: Container(
-                  height: 44,
+        openCategory && (_isTablet || !_isPortrait)
+            ? Flexible(
+                flex: 1,
+                child: ListView.separated(
                   padding: EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: screenBloc.state.selectedCategory == category ? overlayBackground(): Colors.transparent,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Row(
-                    children: <Widget>[
-                      Container(
-                        child: SvgPicture.asset(
-                          Measurements.channelIcon(category),
-                          height: 32,
-                          color: iconColor(),
+                  itemBuilder: (context, index) {
+                    String category = screenBloc.state.categories[index];
+                    return GestureDetector(
+                      onTap: () {
+                        screenBloc
+                            .add(ConnectCategorySelected(category: category));
+                      },
+                      child: Container(
+                        height: 44,
+                        padding: EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: screenBloc.state.selectedCategory == category
+                              ? overlayBackground()
+                              : Colors.transparent,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Row(
+                          children: <Widget>[
+                            Container(
+                              child: SvgPicture.asset(
+                                Measurements.channelIcon(category),
+                                height: 32,
+                                color: iconColor(),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(left: 8),
+                            ),
+                            Text(
+                              Language.getConnectStrings(
+                                  'categories.$category.title'),
+                            )
+                          ],
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 8),
-                      ),
-                      Text(
-                        Language.getConnectStrings('categories.$category.title'),
-                      )
-                    ],
-                  ),
+                    );
+                  },
+                  separatorBuilder: (context, index) {
+                    return Container();
+                  },
+                  itemCount: screenBloc.state.categories.length,
                 ),
-              );
-            },
-            separatorBuilder: (context, index) {
-              return Container();
-            },
-            itemCount: screenBloc.state.categories.length,
-          ),
-        ): Container(),
-        openCategory && (_isTablet || !_isPortrait)? Container(
-          width: 1,
-          color: Colors.grey,
-        ): Container(),
+              )
+            : Container(),
+        openCategory && (_isTablet || !_isPortrait)
+            ? Container(
+                width: 1,
+                color: Colors.grey,
+              )
+            : Container(),
         Flexible(
           flex: 2,
-          child: selectedStyle == 0
-              ? _getListBody(state)
-              : _getGridBody(state),
+          child: selectedStyle == 0 ? _getListBody(state) : _getGridBody(state),
         ),
       ],
     );
@@ -630,38 +604,49 @@ class _ConnectScreenState extends State<ConnectScreen> {
                     ),
                   ),
                 ),
-                _isTablet || !_isPortrait ? Container(
-                  width: Measurements.width * (_isPortrait ? 0.1 : 0.2),
-                  child: Text(
-                    'Category',
-                    style: TextStyle(
-                      fontFamily: 'Helvetica Neue',
-                      fontSize: 14,
-                    ),
-                  ),
-                ): Container(),
-                _isTablet || !_isPortrait ? Container(
-                  width: Measurements.width * (_isPortrait ? 0.1 : 0.2),
-                  child: Text(
-                    'Developer',
-                    style: TextStyle(
-                      fontFamily: 'Helvetica Neue',
-                      fontSize: 14,
-                    ),
-                  ),
-                ): Container(),
-                _isTablet || !_isPortrait ? Container(
-                  width: Measurements.width * (_isPortrait ? 0.1 : 0.2),
-                  child: Text(
-                    'Languages',
-                    style: TextStyle(
-                      fontFamily: 'Helvetica Neue',
-                      fontSize: 14,
-                    ),
-                  ),
-                ): Container(),
+                _isTablet || !_isPortrait
+                    ? Container(
+                        width: Measurements.width * (_isPortrait ? 0.1 : 0.2),
+                        child: Text(
+                          'Category',
+                          style: TextStyle(
+                            fontFamily: 'Helvetica Neue',
+                            fontSize: 14,
+                          ),
+                        ),
+                      )
+                    : Container(),
+                _isTablet || !_isPortrait
+                    ? Container(
+                        width: Measurements.width * (_isPortrait ? 0.1 : 0.2),
+                        child: Text(
+                          'Developer',
+                          style: TextStyle(
+                            fontFamily: 'Helvetica Neue',
+                            fontSize: 14,
+                          ),
+                        ),
+                      )
+                    : Container(),
+                _isTablet || !_isPortrait
+                    ? Container(
+                        width: Measurements.width * (_isPortrait ? 0.1 : 0.2),
+                        child: Text(
+                          'Languages',
+                          style: TextStyle(
+                            fontFamily: 'Helvetica Neue',
+                            fontSize: 14,
+                          ),
+                        ),
+                      )
+                    : Container(),
                 Container(
-                  width: !_isTablet && _isPortrait ? null : Measurements.width * (_isTablet ? (_isPortrait ? 0.15 : 0.2) : (_isPortrait ? null: 0.35)),
+                  width: !_isTablet && _isPortrait
+                      ? null
+                      : Measurements.width *
+                          (_isTablet
+                              ? (_isPortrait ? 0.15 : 0.2)
+                              : (_isPortrait ? null : 0.35)),
                   alignment: Alignment.centerRight,
                   child: Text(
                     'Price',
@@ -682,7 +667,9 @@ class _ConnectScreenState extends State<ConnectScreen> {
                   connectModel: state.connectInstallations[index],
                   isPortrait: _isPortrait,
                   isTablet: _isTablet,
-                  installingConnect: state.connectInstallations[index].integration.name == state.installingConnect,
+                  installingConnect:
+                      state.connectInstallations[index].integration.name ==
+                          state.installingConnect,
                   onOpen: (model) {
                     if (model.integration.category == 'payments') {
                       Navigator.push(
@@ -691,7 +678,8 @@ class _ConnectScreenState extends State<ConnectScreen> {
                           child: ConnectPaymentSettingsScreen(
                             connectScreenBloc: screenBloc,
                             connectModel: model,
-                            business: widget.globalStateModel.currentBusiness.id,
+                            business:
+                                widget.globalStateModel.currentBusiness.id,
                           ),
                           type: PageTransitionType.fade,
                           duration: Duration(milliseconds: 500),
@@ -747,13 +735,17 @@ class _ConnectScreenState extends State<ConnectScreen> {
   }
 
   Widget _getGridBody(ConnectScreenState state) {
-    int crossAxisCount = _isTablet ? (_isPortrait ? 2 : 3): (_isPortrait ? 1 : 2);
-    double imageRatio= 323.0 / 182.0;
+    int crossAxisCount =
+        _isTablet ? (_isPortrait ? 2 : 3) : (_isPortrait ? 1 : 2);
+    double imageRatio = 323.0 / 182.0;
     double contentHeight = 116;
-    double cellWidth = _isPortrait ? (Measurements.width - 44) / crossAxisCount : (Measurements.height - 56) / crossAxisCount;
+    double cellWidth = _isPortrait
+        ? (Measurements.width - 44) / crossAxisCount
+        : (Measurements.height - 56) / crossAxisCount;
     double imageHeight = cellWidth / imageRatio;
     double cellHeight = imageHeight + contentHeight;
-    print('$cellWidth,  $cellHeight, $imageHeight  => ${cellHeight / cellWidth}');
+    print(
+        '$cellWidth,  $cellHeight, $imageHeight  => ${cellHeight / cellWidth}');
     if (state.connectInstallations.length == 0) {
       return Container();
     }
@@ -768,7 +760,8 @@ class _ConnectScreenState extends State<ConnectScreen> {
         children: state.connectInstallations.map((installation) {
           return ConnectGridItem(
             connectModel: installation,
-            installingConnect: installation.integration.name == state.installingConnect,
+            installingConnect:
+                installation.integration.name == state.installingConnect,
             onTap: () {
               Navigator.push(
                 context,
@@ -794,97 +787,141 @@ class _ConnectScreenState extends State<ConnectScreen> {
     );
   }
 
-
-    void showInstalledDialog(bool install, ConnectModel model) {
+  void showInstalledDialog(bool install, ConnectModel model) {
 /*    "installation.installed.title": "Installed",
     "installation.installed.description": "You have successfully installed {{ title }}!<br>\nPlease connect you payment account to payever.",
     "installation.uninstalled.title": "Uninstalled",
     "installation.uninstalled.description": "You are successfully disconnected from \"{{ title }}\" now!",*/
-      screenBloc.add(ClearInstallEvent());
-      String detail = install ? Language.getConnectStrings('installation.installed.description')
-          : Language.getConnectStrings('installation.uninstalled.description');
-      if (install) {
-        detail = detail.replaceAll('{{ title }}!<br>', Language.getPosConnectStrings(model.integration.displayOptions.title));
-      } else {
-        detail = detail.replaceAll('\"{{ title }}\"', Language.getPosConnectStrings(model.integration.displayOptions.title));
-      }
-      showCupertinoDialog(
-        context: context,
-        builder: (builder) {
-          return Dialog(
-            backgroundColor: Colors.transparent,
-            child: Container(
-              height: 250,
-              width: Measurements.width * 0.8,
-              child: BlurEffectView(
-                color: Color.fromRGBO(50, 50, 50, 0.4),
-                padding: EdgeInsets.all(margin / 2),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.all(margin / 2),
+    screenBloc.add(ClearInstallEvent());
+    String detail = install
+        ? Language.getConnectStrings('installation.installed.description')
+        : Language.getConnectStrings('installation.uninstalled.description');
+    if (install) {
+      detail = detail.replaceAll(
+          '{{ title }}!<br>',
+          Language.getPosConnectStrings(
+              model.integration.displayOptions.title));
+    } else {
+      detail = detail.replaceAll(
+          '\"{{ title }}\"',
+          Language.getPosConnectStrings(
+              model.integration.displayOptions.title));
+    }
+    showCupertinoDialog(
+      context: context,
+      builder: (builder) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: Container(
+            height: 250,
+            width: Measurements.width * 0.8,
+            child: BlurEffectView(
+              color: overlayBackground(),
+              padding: EdgeInsets.all(margin / 2),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.all(margin / 2),
+                  ),
+                  Icon(Icons.check),
+                  Padding(
+                    padding: EdgeInsets.all(margin / 2),
+                  ),
+                  Text(
+                    Language.getConnectStrings(install
+                        ? 'installation.installed.title'
+                        : 'installation.uninstalled.title'),
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontFamily: 'HelveticaNeueMed',
                     ),
-                    Icon(Icons.check),
-                    Padding(
-                      padding: EdgeInsets.all(margin / 2),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(margin / 2),
+                  ),
+                  Text(
+                    detail,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontFamily: 'Helvetica Neue',
                     ),
-                    Text(
-                      Language.getConnectStrings(install ? 'installation.installed.title': 'installation.uninstalled.title'),
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontFamily: 'HelveticaNeueMed',
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(margin / 2),
-                    ),
-                    Text(
-                      detail,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontFamily: 'Helvetica Neue',
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(margin / 2),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        MaterialButton(
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(margin / 2),
+                  ),
+                  install
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            MaterialButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                                if (model.integration.category == 'payments') {
+                                  Navigator.push(
+                                    context,
+                                    PageTransition(
+                                      child: ConnectPaymentSettingsScreen(
+                                        connectScreenBloc: screenBloc,
+                                        connectModel: model,
+                                        business: widget.dashboardScreenBloc
+                                            .state.activeBusiness.id,
+                                      ),
+                                      type: PageTransitionType.fade,
+                                      duration: Duration(milliseconds: 500),
+                                    ),
+                                  );
+                                } else {
+                                  Navigator.push(
+                                    context,
+                                    PageTransition(
+                                      child: ConnectSettingScreen(
+                                        screenBloc: screenBloc,
+                                        connectIntegration: model.integration,
+                                      ),
+                                      type: PageTransitionType.fade,
+                                      duration: Duration(milliseconds: 500),
+                                    ),
+                                  );
+                                }
+                              },
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              height: 24,
+                              elevation: 0,
+                              minWidth: 0,
+                              color: overlayBackground(),
+                              child: Text(
+                                install
+                                    ? Language.getPosConnectStrings(
+                                        'integrations.actions.open')
+                                    : Language.getConnectStrings(
+                                        'actions.close'),
+                              ),
+                            ),
+                            MaterialButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              height: 24,
+                              elevation: 0,
+                              minWidth: 0,
+                              color: overlayBackground(),
+                              child: Text(
+                                Language.getPosStrings('actions.no'),
+                              ),
+                            ),
+                          ],
+                        )
+                      : MaterialButton(
                           onPressed: () {
                             Navigator.pop(context);
-                            if (install) {
-                              if (model.integration.category == 'payments') {
-                                Navigator.push(
-                                  context,
-                                  PageTransition(
-                                    child: ConnectPaymentSettingsScreen(
-                                      connectScreenBloc: screenBloc,
-                                      connectModel: model,
-                                      business: widget.dashboardScreenBloc.state.activeBusiness.id,
-                                    ),
-                                    type: PageTransitionType.fade,
-                                    duration: Duration(milliseconds: 500),
-                                  ),
-                                );
-                              } else {
-                                Navigator.push(
-                                  context,
-                                  PageTransition(
-                                    child: ConnectSettingScreen(
-                                      screenBloc: screenBloc,
-                                      connectIntegration: model.integration,
-                                    ),
-                                    type: PageTransitionType.fade,
-                                    duration: Duration(milliseconds: 500),
-                                  ),
-                                );
-                              }
-                            }
                           },
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -892,20 +929,17 @@ class _ConnectScreenState extends State<ConnectScreen> {
                           height: 24,
                           elevation: 0,
                           minWidth: 0,
-                          color: Colors.white10,
+                          color: overlayBackground(),
                           child: Text(
-                            install ? Language.getPosConnectStrings('integrations.actions.open') : Language.getConnectStrings('actions.close'),
+                            Language.getConnectStrings('actions.close'),
                           ),
                         ),
-                      ],
-                    ),
-                  ],
-                ),
+                ],
               ),
             ),
-          );
-        },
-      );
-    }
-
+          ),
+        );
+      },
+    );
+  }
 }
