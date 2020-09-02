@@ -152,9 +152,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
             innerDrawerKey: _innerDrawerKey,
             dashboardScreenBloc: widget.dashboardScreenBloc,
             activeBusiness: widget.dashboardScreenBloc.state.activeBusiness,
-            onPersonalInfo: () {
-
-            },
             onClose: () {
               _innerDrawerKey.currentState.toggle();
             },

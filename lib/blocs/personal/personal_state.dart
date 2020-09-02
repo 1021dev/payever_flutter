@@ -166,3 +166,14 @@ class PersonalScreenState {
     );
   }
 }
+
+class PersonalScreenStateFailure extends PersonalScreenState {
+  final String error;
+
+  PersonalScreenStateFailure({@required this.error}) : super();
+
+  @override
+  String toString() {
+    return 'SettingScreenUpdateFailure { error $error }';
+  }
+}

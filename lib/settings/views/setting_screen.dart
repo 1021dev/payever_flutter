@@ -118,12 +118,6 @@ class _SettingScreenState extends State<SettingScreen> {
             innerDrawerKey: _innerDrawerKey,
             dashboardScreenBloc: widget.dashboardScreenBloc,
             activeBusiness: widget.dashboardScreenBloc.state.activeBusiness,
-            onPersonalInfo: () {
-
-            },
-            onAddBusiness: () {
-
-            },
             onClose: () {
               _innerDrawerKey.currentState.toggle();
             },

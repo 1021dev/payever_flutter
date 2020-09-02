@@ -177,12 +177,6 @@ class _ContactScreenState extends State<ContactScreen> {
             innerDrawerKey: _innerDrawerKey,
             dashboardScreenBloc: widget.dashboardScreenBloc,
             activeBusiness: widget.dashboardScreenBloc.state.activeBusiness,
-            onPersonalInfo: () {
-
-            },
-            onAddBusiness: () {
-
-            },
             onClose: () {
               _innerDrawerKey.currentState.toggle();
             },

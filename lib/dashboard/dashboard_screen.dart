@@ -354,8 +354,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       innerDrawerKey: _innerDrawerKey,
       dashboardScreenBloc: screenBloc,
       activeBusiness: state.activeBusiness,
-      onPersonalInfo: () {},
-      onAddBusiness: () {},
       onClose: () {
         _innerDrawerKey.currentState.toggle();
       },

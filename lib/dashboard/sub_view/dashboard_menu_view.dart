@@ -8,6 +8,7 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/business/views/business_register_screen.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/login/login_screen.dart';
+import 'package:payever/personal/personal_screen.dart';
 import 'package:payever/switcher/switcher.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -17,10 +18,6 @@ import '../../theme.dart';
 class DashboardMenuView extends StatelessWidget {
   final Widget scaffold;
   final GlobalKey<InnerDrawerState> innerDrawerKey;
-  final VoidCallback onSwitchBusiness;
-  final VoidCallback onPersonalInfo;
-  final VoidCallback onAddBusiness;
-  final VoidCallback onLogout;
   final VoidCallback onClose;
   final Business activeBusiness;
   final DashboardScreenBloc dashboardScreenBloc;
@@ -28,10 +25,6 @@ class DashboardMenuView extends StatelessWidget {
   DashboardMenuView({
     this.scaffold,
     this.innerDrawerKey,
-    this.onSwitchBusiness,
-    this.onAddBusiness,
-    this.onPersonalInfo,
-    this.onLogout,
     this.onClose,
     this.dashboardScreenBloc,
     @required this.activeBusiness,
@@ -116,7 +109,19 @@ class DashboardMenuView extends StatelessWidget {
                   thickness: 0.5,
                 ),
                 InkWell(
-                  onTap: onPersonalInfo,
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      PageTransition(
+                        child: PersonalInitScreen(
+                          dashboardScreenBloc: dashboardScreenBloc,
+                        ),
+                        type: PageTransitionType.fade,
+                        duration: Duration(microseconds: 300),
+                      ),
+                    );
+                  },
                   child: Container(
                     height: 50,
                     child: Row(
