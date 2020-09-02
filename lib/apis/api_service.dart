@@ -200,17 +200,12 @@ class ApiService {
     }
   }
 
-  Future<dynamic> deleteBusiness(String token, String idBusiness, Map body) async {
+  Future<dynamic> deleteBusiness(String token, String idBusiness) async {
     try {
       print('$TAG - deleteBusiness()');
       dynamic response = await _client.deleteTypeless(
-          '$businessUrl/business/$idBusiness',
-          body: body,
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          '$businessUrl/$idBusiness',
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {

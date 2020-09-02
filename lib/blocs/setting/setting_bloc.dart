@@ -128,6 +128,8 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
       yield* updateAuthUser(event.body);
     } else if (event is UpdatePasswordEvent) {
       yield* updatePassword(event.newPassword, event.oldPassword);
+    } else if (event is DeleteBusinessEvent) {
+      yield* deleteBusiness();
     }
   }
 
@@ -641,6 +643,17 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
     dynamic userResponse = await api.updatePassword(token, {'newPassword': newPassword, 'oldPassword': oldPassword});
     yield state.copyWith(isUpdating: false,);
     yield SettingScreenUpdateSuccess(business: state.business);
+  }
+
+  Stream<SettingScreenState> deleteBusiness() async* {
+    yield state.copyWith(isDeleting: true);
+    dynamic response = await api.deleteBusiness(token, state.business);
+    yield state.copyWith(isDeleting: false,);
+    if (response is DioError) {
+      yield SettingScreenStateFailure(error: response.message);
+    } else {
+      yield BusinessDeleteSuccessState();
+    }
   }
 
   String _getFilterKeyString(String type) {

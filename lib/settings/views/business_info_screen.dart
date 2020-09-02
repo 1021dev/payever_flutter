@@ -7,12 +7,16 @@ import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:payever/commons/utils/common_utils.dart';
+import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
+import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/settings/widgets/app_bar.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/settings/widgets/save_button.dart';
+import 'package:payever/switcher/switcher_page.dart';
 import 'package:payever/theme.dart';
 
 class BusinessInfoScreen extends StatefulWidget {
@@ -64,6 +68,14 @@ class _BusinessInfoScreenState extends State<BusinessInfoScreen> {
       listener: (BuildContext context, SettingScreenState state) async {
         if (state is SettingScreenStateFailure) {
           Fluttertoast.showToast(msg: state.error);
+        } else if (state is BusinessDeleteSuccessState) {
+          Navigator.pushReplacement(
+            context,
+            PageTransition(
+              child: SwitcherScreen(false),
+              type: PageTransitionType.fade,
+            ),
+          );
         } else if (state is SettingScreenUpdateSuccess) {
           Navigator.pop(context);
         }
@@ -77,7 +89,7 @@ class _BusinessInfoScreenState extends State<BusinessInfoScreen> {
             body: SafeArea(
               child: BackgroundBase(
                 true,
-                body: state.isLoading
+                body: state.isLoading || state.isDeleting
                     ? Center(
                         child: CircularProgressIndicator(),
                       )
@@ -245,20 +257,16 @@ class _BusinessInfoScreenState extends State<BusinessInfoScreen> {
                     padding: EdgeInsets.fromLTRB(0, 8, 10, 8),
                     child: MaterialButton(
                       onPressed: () {
-
+                        showConfirmDialog();
                       },
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                       height: 24,
+                      minWidth: 40,
                       color: overlayBackground(),
                       elevation: 0,
-                      child: Text(
-                        'Delete Business',
-                        style: TextStyle(
-                          fontSize: 13,
-                        ),
-                      ),
+                      child: Text('Delete Business', style: TextStyle(fontSize: 13,)),
                     ),
                   ),
                   SaveBtn(
@@ -278,6 +286,93 @@ class _BusinessInfoScreenState extends State<BusinessInfoScreen> {
               ),
             )),
       ),
+    );
+  }
+
+  showConfirmDialog() {
+    showCupertinoDialog(
+      context: context,
+      builder: (builder) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: Center(
+            child: Wrap(
+                children: <Widget>[
+                  BlurEffectView(
+                    padding: EdgeInsets.all(16),
+                    child: Column(
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(top: 16),
+                        ),
+                        SvgPicture.asset('assets/images/info.svg', color: iconColor(),),
+                        Padding(
+                          padding: EdgeInsets.only(top: 16),
+                        ),
+                        Text(
+                          'Deleting Business',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w300,
+                          ),
+                        ),
+                        SizedBox(height: 20,),
+                        Text(
+                          'Do you really want to delete your business? Because all data will be lost and you will not be able to restore it.',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w300,
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 16),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            MaterialButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              height: 24,
+                              elevation: 0,
+                              minWidth: 0,
+                              color: overlayBackground(),
+                              child: Text(
+                                Language.getSettingsStrings('actions.no'),
+                              ),
+                            ),
+                            MaterialButton(
+                              onPressed: () {
+                                widget.setScreenBloc.add(DeleteBusinessEvent());
+                                Navigator.pop(context);
+                              },
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              height: 24,
+                              elevation: 0,
+                              minWidth: 0,
+                              color: overlayBackground(),
+                              child: Text(
+                                Language.getSettingsStrings('actions.yes'),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ]
+            ),
+          ),
+        );
+      },
     );
   }
 

@@ -6,6 +6,7 @@ import 'package:payever/settings/models/models.dart';
 class SettingScreenState {
   final bool isLoading;
   final bool isUpdating;
+  final bool isDeleting;
   final bool updating2FA;
   final String updatingWallpaper;
   final bool isUpdatingBusinessImg;
@@ -37,6 +38,7 @@ class SettingScreenState {
   SettingScreenState({
     this.isLoading = false,
     this.isUpdating = false,
+    this.isDeleting = false,
     this.updating2FA = false,
     this.updatingWallpaper,
     this.isUpdatingBusinessImg = false,
@@ -69,6 +71,7 @@ class SettingScreenState {
   List<Object> get props => [
     this.isLoading,
     this.isUpdating,
+    this.isDeleting,
     this.updating2FA,
     this.updatingWallpaper,
     this.isUpdatingBusinessImg,
@@ -100,6 +103,7 @@ class SettingScreenState {
   SettingScreenState copyWith({
     bool isLoading,
     bool isUpdating,
+    bool isDeleting,
     bool updating2FA,
     bool uploadUserImage,
     String updatingWallpaper,
@@ -131,6 +135,7 @@ class SettingScreenState {
     return SettingScreenState(
       isLoading: isLoading ?? this.isLoading,
       isUpdating: isUpdating ?? this.isUpdating,
+      isDeleting: isDeleting ?? this.isDeleting,
       updating2FA: updating2FA ?? this.updating2FA,
       updatingWallpaper: updatingWallpaper ?? this.updatingWallpaper,
       isUpdatingBusinessImg: isUpdatingBusinessImg ?? this.isUpdatingBusinessImg,
@@ -163,6 +168,9 @@ class SettingScreenState {
 }
 
 class SettingScreenStateSuccess extends SettingScreenState {}
+
+class BusinessDeleteSuccessState extends SettingScreenState {}
+
 class SettingScreenUpdateSuccess extends SettingScreenState {
   final String business;
   SettingScreenUpdateSuccess({this.business});

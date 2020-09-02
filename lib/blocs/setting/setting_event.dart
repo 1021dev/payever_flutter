@@ -274,3 +274,5 @@ class UpdatePasswordEvent extends SettingScreenEvent {
 
   UpdatePasswordEvent({this.oldPassword, this.newPassword});
 }
+
+class DeleteBusinessEvent extends SettingScreenEvent {}
