@@ -110,6 +110,7 @@ ThemeData _buildDarkTheme() {
 Color overlayColor() {
   if (GlobalUtils.theme == 'dark') {
     return Color.fromRGBO(0, 0, 0, 0.75);
+//    return colorConvert('#1f1f1f');
   } else if (GlobalUtils.theme == 'light') {
     return Color.fromRGBO(240, 240, 240, 0.6);
   } else {
@@ -137,6 +138,16 @@ Color overlayBackground() {
   }
 }
 
+Color overlayButtonBackground() {
+  if (GlobalUtils.theme == 'dark') {
+    return Color.fromRGBO(255, 255, 255, 0.1);
+  } else if (GlobalUtils.theme == 'light') {
+    return Color.fromRGBO(245, 245, 245, 0.6);
+  } else {
+    return Color.fromRGBO(0, 0, 0, 0.2);
+  }
+}
+
 Color overlaySection() {
   if (GlobalUtils.theme == 'dark') {
     return Color.fromRGBO(0, 0, 0, 0.75);
@@ -157,6 +168,21 @@ Color overlayRow() {
   }
 }
 
+
 String iconString() {
   return '${Env.cdnIcon}icons-apps-${GlobalUtils.theme == 'light' ? 'black' : 'white'}/icon-apps-${GlobalUtils.theme == 'light' ? 'black' : 'white'}-';
+}
+
+Color colorConvert(String color) {
+  if (color == null)
+    return Colors.white;
+
+  color = color.replaceAll("#", "");
+  if (color.length == 6) {
+    return Color(int.parse("0xFF"+color));
+  } else if (color.length == 8) {
+    return Color(int.parse("0x"+color));
+  } else {
+    return Colors.white;
+  }
 }

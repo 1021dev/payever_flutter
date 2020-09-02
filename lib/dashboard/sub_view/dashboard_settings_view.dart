@@ -36,6 +36,7 @@ class _DashboardSettingsViewState extends State<DashboardSettingsView> {
   Widget build(BuildContext context) {
     return BlurEffectView(
       padding: EdgeInsets.fromLTRB(14, 12, 14, 0),
+      isDashboard: true,
       child: Container(
         child: Column(
           children: [

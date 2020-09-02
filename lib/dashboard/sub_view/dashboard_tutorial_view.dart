@@ -23,6 +23,7 @@ class _DashboardTutorialViewState extends State<DashboardTutorialView> {
   Widget build(BuildContext context) {
     return BlurEffectView(
       padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
+      isDashboard: true,
       child: Column(
         children: [
           Container(

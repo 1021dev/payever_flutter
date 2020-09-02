@@ -1308,6 +1308,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget _searchBar(DashboardScreenState state) {
     return BlurEffectView(
       radius: 12,
+      isDashboard: true,
       padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
       child: Container(
         height: 40,

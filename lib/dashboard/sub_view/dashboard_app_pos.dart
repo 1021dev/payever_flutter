@@ -64,6 +64,7 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
     if (widget.businessApps.setupStatus == 'completed') {
       String themeColor = GlobalUtils.theme == 'light' ? 'black' : 'white';
       return BlurEffectView(
+        isDashboard: true,
         child: Column(
           children: [
             Container(
@@ -242,16 +243,14 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                       // Edit Button
                       Expanded(
                         flex: 1,
-                        child: MaterialButton(
-                          onPressed: widget.onTapEditTerminal,
-                          color: overlayBackground(),
-                          height: 60,
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
+                        child: InkWell(
+                          onTap: widget.onTapEditTerminal,
                           child: Container(
-                            height: 50,
+                            height: 60,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              color: overlayButtonBackground(),
+                            ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -291,6 +290,7 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
     } else {
       return BlurEffectView(
         padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
+        isDashboard: true,
         child: Column(
           children: [
             Container(
