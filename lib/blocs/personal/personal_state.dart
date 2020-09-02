@@ -5,6 +5,7 @@ import 'package:payever/settings/models/models.dart';
 
 class PersonalScreenState {
   final bool isLoading;
+  final List<BusinessApps> personalApps;
   final List<AppWidget> personalWidgets;
 
 
@@ -29,6 +30,7 @@ class PersonalScreenState {
 
   PersonalScreenState({
     this.isLoading = false,
+    this.personalApps = const[],
     this.personalWidgets = const[],
 
     this.isUpdating = false,
@@ -51,6 +53,7 @@ class PersonalScreenState {
 
   List<Object> get props => [
     this.isLoading,
+    this.personalApps,
     this.personalWidgets,
 
     this.isUpdating,
@@ -72,8 +75,8 @@ class PersonalScreenState {
 
   PersonalScreenState copyWith({
     bool isLoading,
+    List<BusinessApps> personalApps,
     List<AppWidget> personalWidgets,
-
 
     bool isUpdating,
     bool isDeleting,
@@ -92,8 +95,8 @@ class PersonalScreenState {
   }) {
     return PersonalScreenState(
       isLoading: isLoading ?? this.isLoading,
+      personalApps: personalApps ?? this.personalApps,
       personalWidgets: personalWidgets ?? this.personalWidgets,
-
 
       isUpdating: isUpdating ?? this.isUpdating,
       isDeleting: isDeleting ?? this.isDeleting,

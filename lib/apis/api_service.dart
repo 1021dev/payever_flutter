@@ -21,6 +21,7 @@ class ApiService {
   static String userUrl = '$baseUrl/api/user';
   static String businessUrl = '$baseUrl/api/business';
   static String businessApps = '${Env.commerceOsBack}/api/apps/business/';
+  static String personalApps = '${Env.commerceOsBack}/api/apps/user';
 
   static String wallpaperUrl = '$wallpaper/api/business/';
   static String wallpaperUrlPer = '$wallpaper/api/personal/wallpapers';
@@ -240,6 +241,23 @@ class ApiService {
           HttpHeaders.contentTypeHeader: 'application/json',
           HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
         }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getPersonalApps(String accessToken) async {
+    try {
+      print('$TAG - getPersonalApps()');
+      dynamic response = await _client.getTypeless(
+          'https://commerceos-backend.payever.org/api/apps/user',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $accessToken',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
       );
       return response;
     } catch (e) {

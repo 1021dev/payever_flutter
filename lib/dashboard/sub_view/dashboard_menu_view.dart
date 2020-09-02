@@ -10,6 +10,7 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/login/login_screen.dart';
 import 'package:payever/personal/views/personal_screen.dart';
 import 'package:payever/switcher/switcher.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -111,6 +112,10 @@ class DashboardMenuView extends StatelessWidget {
                 InkWell(
                   onTap: () {
                     Navigator.pop(context);
+                    Provider.of<GlobalStateModel>(context, listen: false)
+                        .setCurrentBusiness(dashboardScreenBloc.state.activeBusiness);
+                    Provider.of<GlobalStateModel>(context, listen: false)
+                        .setCurrentWallpaper(dashboardScreenBloc.state.curWall);
                     Navigator.push(
                       context,
                       PageTransition(
@@ -118,7 +123,6 @@ class DashboardMenuView extends StatelessWidget {
                           dashboardScreenBloc: dashboardScreenBloc,
                         ),
                         type: PageTransitionType.fade,
-                        duration: Duration(microseconds: 300),
                       ),
                     );
                   },

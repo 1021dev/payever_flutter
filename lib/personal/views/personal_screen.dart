@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:iso_countries/iso_countries.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/dashboard/dashboard_bloc.dart';
 import 'package:payever/commons/commons.dart';
@@ -23,6 +22,7 @@ import 'package:payever/settings/views/wallpaper/wallpaper_screen.dart';
 
 import 'package:payever/theme.dart';
 import 'package:payever/transactions/views/transactions_screen.dart';
+import 'package:payever/welcome/welcome_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:payever/blocs/bloc.dart';
 
@@ -68,6 +68,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
   String searchString = '';
   Business activeBusiness;
   String currentWallpaper;
+
   @override
   void initState() {
     screenBloc = PersonalScreenBloc(
@@ -299,23 +300,25 @@ class _PersonalScreenState extends State<PersonalScreen> {
       appBar: _appBar(state),
       body: SafeArea(
         child: BackgroundBase(
-          true,
+          false,
+          backgroundColor: Colors.transparent,
+          wallPaper: currentWallpaper,
           body: state.isLoading
               ? Center(
                   child: CircularProgressIndicator(),
                 )
-              : Center(
-                  child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 16),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: <Widget>[
-                          _headerView(state),
-                          _searchBar(state),
-                          _transactionView(state),
-                          _settingsView(state),
-                        ],
-                      ),
+              : Container(
+                  margin: EdgeInsets.symmetric(horizontal: 16),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: <Widget>[
+                        _headerView(state),
+                        _searchBar(state),
+                        SizedBox(height: 16),
+                        _transactionView(state),
+                        SizedBox(height: 16),
+                        _settingsView(state),
+                      ],
                     ),
                   ),
                 ),
@@ -369,6 +372,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
     return BlurEffectView(
       radius: 12,
       padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
+      isDashboard: true,
       child: Container(
         height: 40,
         child: Row(
@@ -538,9 +542,31 @@ class _PersonalScreenState extends State<PersonalScreen> {
     AppWidget appWidget = state.personalWidgets
         .where((element) => element.type.contains('transactions'))
         .first;
+    BusinessApps businessApps = state.personalApps
+        .where((element) => element.code.contains('transactions'))
+        .first;
     return appWidget != null
         ? DashboardTransactionsView(
             appWidget: appWidget,
+            businessApps: businessApps,
+            onTapContinueSetup: (app) {
+              _navigateAppsScreen(
+                  state,
+                  WelcomeScreen(
+                    dashboardScreenBloc: widget.dashboardScreenBloc,
+                    business: activeBusiness,
+                    businessApps: app,
+                  ));
+            },
+            onTapGetStarted: (app) {
+              _navigateAppsScreen(
+                  state,
+                  WelcomeScreen(
+                    dashboardScreenBloc: widget.dashboardScreenBloc,
+                    business: activeBusiness,
+                    businessApps: app,
+                  ));
+            },
             onOpen: () {
               _navigateAppsScreen(
                   state,
@@ -555,7 +581,11 @@ class _PersonalScreenState extends State<PersonalScreen> {
     AppWidget appWidget = state.personalWidgets
         .where((element) => element.type.contains('settings'))
         .first;
+    BusinessApps personalApps = state.personalApps
+        .where((element) => element.code.contains('settings'))
+        .first;
     return DashboardSettingsView(
+        businessApps: personalApps,
         appWidget: appWidget,
         openNotification: (NotificationModel model) {},
         onTapOpen: () {
@@ -601,7 +631,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                   dashboardScreenBloc: widget.dashboardScreenBloc,
                   globalStateModel: widget.globalStateModel,
                 )..add(SettingScreenInitEvent(
-                    business:state.business,
+                    business: state.business,
                     user: state.user,
                   )),
                 fromDashboard: true,

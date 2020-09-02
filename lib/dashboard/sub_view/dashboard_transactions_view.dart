@@ -26,7 +26,6 @@ class DashboardTransactionsView extends StatefulWidget {
   final List<NotificationModel> notifications;
   final Function openNotification;
   final Function deleteNotification;
-
   DashboardTransactionsView({
     this.onOpen,
     this.businessApps,
@@ -257,6 +256,7 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
             SizedBox(height: 12),
             DashboardSetupButtons(
               businessApps: widget.businessApps,
+              appWidget: widget.appWidget,
               onTapContinueSetup: widget.onTapContinueSetup,
               onTapGetStarted: widget.onTapGetStarted,
               onTapLearnMore: widget.onTapLearnMore,

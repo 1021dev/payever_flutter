@@ -167,6 +167,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       ),
                       Text(
                         Language.getWelcomeStrings('welcome.${widget.businessApps.code}.message'),
+                        textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,

@@ -39,6 +39,12 @@ class PersonalScreenBloc extends Bloc<PersonalScreenEvent, PersonalScreenState> 
 
   Stream<PersonalScreenState> getPersonalWidgets(String id) async* {
     yield state.copyWith(isLoading: true);
+    List<BusinessApps> personalApps = [];
+    dynamic businessAppsObj = await api.getPersonalApps(token);
+    personalApps.clear();
+    businessAppsObj.forEach((item) {
+      personalApps.add(BusinessApps.fromMap(item));
+    });
 
     dynamic response = await api.getWidgetsPersonal(token);
     List<AppWidget> widgetApps = [];
@@ -48,7 +54,7 @@ class PersonalScreenBloc extends Bloc<PersonalScreenEvent, PersonalScreenState> 
         widgetApps.add(AppWidget.map(item));
       });
     }
-    yield state.copyWith(isLoading: false, personalWidgets: widgetApps);
+    yield state.copyWith(isLoading: false, personalApps: personalApps, personalWidgets: widgetApps);
   }
 
   Stream<PersonalScreenState> uploadBusinessImage(File file) async* {
