@@ -7,10 +7,15 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/welcome/welcome_bloc.dart';
 import 'package:payever/blocs/welcome/welcome_event.dart';
 import 'package:payever/blocs/welcome/welcome_state.dart';
+import 'package:payever/checkout/views/checkout_screen.dart';
 import 'package:payever/commons/commons.dart';
+import 'package:payever/connect/views/connect_screen.dart';
 import 'package:payever/dashboard/dashboard_screen.dart';
 import 'package:payever/login/login_screen.dart';
+import 'package:payever/pos/views/pos_screen.dart';
+import 'package:payever/products/views/products_screen.dart';
 import 'package:payever/settings/views/setting_screen.dart';
+import 'package:payever/shop/views/shop_screen.dart';
 import 'package:payever/theme.dart';
 import 'package:payever/transactions/views/transactions_screen.dart';
 import 'package:provider/provider.dart';
@@ -80,33 +85,31 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         } else if (state is WelcomeScreenStateSuccess) {
           GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context, listen: false);
           globalStateModel.setRefresh(true);
+          Widget businessApp;
           if (widget.businessApps.code.contains('transaction')) {
-            Navigator.pushReplacement(
-              context,
-              PageTransition(
-                child: TransactionScreenInit(
-                  dashboardScreenBloc: widget.dashboardScreenBloc,
-                ),
-                type: PageTransitionType.fade,
-              ),
-            );
+            businessApp = TransactionScreenInit(dashboardScreenBloc: widget.dashboardScreenBloc);
+          } else if (widget.businessApps.code.contains('shop')) {
+            businessApp = ShopInitScreen(dashboardScreenBloc: widget.dashboardScreenBloc);
+          } else if (widget.businessApps.code.contains('pos')) {
+            businessApp = PosInitScreen(dashboardScreenBloc: widget.dashboardScreenBloc);
+          } else if (widget.businessApps.code.contains('connect')) {
+            businessApp = ConnectInitScreen(dashboardScreenBloc: widget.dashboardScreenBloc);
+          } else if (widget.businessApps.code.contains('checkout')) {
+            businessApp = CheckoutInitScreen(dashboardScreenBloc: widget.dashboardScreenBloc);
+          } else if (widget.businessApps.code.contains('products')) {
+            businessApp = ProductsInitScreen(dashboardScreenBloc: widget.dashboardScreenBloc);
           } else if (widget.businessApps.code.contains('setting')) {
-            Navigator.pushReplacement(
-              context,
-              PageTransition(
-                child: SettingInitScreen(dashboardScreenBloc: widget.dashboardScreenBloc,),
-                type: PageTransitionType.fade,
-              ),
-            );
+            businessApp = SettingInitScreen(dashboardScreenBloc: widget.dashboardScreenBloc);
           } else if (widget.businessApps.code.contains('commerceos')) {
+            businessApp = DashboardScreenInit(refresh: true);
+          }
+
+          if (businessApp != null) {
             Navigator.pushReplacement(
               context,
               PageTransition(
-                child: DashboardScreenInit(
-                  refresh: true,
-                ),
+                child: businessApp,
                 type: PageTransitionType.fade,
-                duration: Duration(microseconds: 300),
               ),
             );
           } else {
