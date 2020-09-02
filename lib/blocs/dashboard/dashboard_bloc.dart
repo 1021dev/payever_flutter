@@ -276,7 +276,8 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
     }
     dynamic channelsObj = await api.getChannelSet(activeBusiness.id, token);
     if (channelsObj != null){
-      channelsObj.forEach((channelSet) {
+      channelsObj.
+      forEach((channelSet) {
         channelSets.add(ChannelSet.toMap(channelSet));
       });
     }

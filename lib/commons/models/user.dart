@@ -11,6 +11,7 @@ class User {
   bool hasUnfinishedBusinessRegistration;
   String language;
   String lastName;
+  String fullName = '';
   String logo;
   String phone;
   String salutation;
@@ -48,7 +49,16 @@ class User {
     this.logo = obj[GlobalUtils.DB_USER_LOGO];
     this.birthday = obj[GlobalUtils.DB_USER_BIRTHDAY];
     this.hasUnfinishedBusinessRegistration = obj['hasUnfinishedBusinessRegistration'];
-
+    if (this.firstName != null && this.firstName.isNotEmpty) {
+      this.fullName = this.firstName;
+    }
+    if (this.lastName != null && this.lastName.isNotEmpty) {
+      if (this.fullName.isNotEmpty) {
+        this.fullName = this.fullName + ' ' + this.lastName;
+      } else {
+        this.fullName = this.lastName;
+      }
+    }
     dynamic shippingAddressesObj = obj['shippingAddresses'];
     if (shippingAddressesObj is List) {
       for (var value in shippingAddressesObj) {

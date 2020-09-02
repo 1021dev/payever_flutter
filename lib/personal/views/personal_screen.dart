@@ -134,10 +134,13 @@ class _PersonalScreenState extends State<PersonalScreen> {
 
   Widget _appBar(PersonalScreenState state) {
     String businessLogo = '';
-    if (widget.dashboardScreenBloc.state.user != null &&
-        widget.dashboardScreenBloc.state.user.logo != null) {
-      businessLogo =
-          'https://payeverproduction.blob.core.windows.net/images/${widget.dashboardScreenBloc.state.user.logo}';
+    String userName = '';
+    User user = widget.dashboardScreenBloc.state.user;
+    if (user != null) {
+      if (user.logo != null)
+        businessLogo =
+            'https://payeverproduction.blob.core.windows.net/images/${user.logo}';
+      userName = user.fullName ?? '';
     }
     return AppBar(
       centerTitle: false,
@@ -181,7 +184,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                     ? Padding(
                         padding: EdgeInsets.only(left: 4, right: 4),
                         child: Text(
-                          widget.dashboardScreenBloc.state.activeBusiness.name,
+                          userName,
                           style: TextStyle(
                             fontSize: 14,
                           ),
@@ -328,6 +331,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
   }
 
   Widget _headerView(PersonalScreenState state) {
+    if (state.user == null) return Container();
     return Column(
       children: [
         SizedBox(height: 60),
@@ -598,6 +602,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
             PageTransition(
               child: SettingInitScreen(
                 dashboardScreenBloc: widget.dashboardScreenBloc,
+                isPersonal: true,
               ),
               type: PageTransitionType.fade,
             ),
