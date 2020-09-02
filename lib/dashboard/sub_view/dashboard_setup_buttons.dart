@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/models/business_apps.dart';
 import 'package:payever/theme.dart';
 
 class DashboardSetupButtons extends StatelessWidget {
   final BusinessApps businessApps;
+  final AppWidget appWidget;
   final Function onTapGetStarted;
   final Function onTapContinueSetup;
   final Function onTapLearnMore;
+  final bool isDashboard;
 
   DashboardSetupButtons({
     this.businessApps,
+    this.appWidget,
     this.onTapGetStarted,
     this.onTapContinueSetup,
     this.onTapLearnMore,
+    this.isDashboard = true,
   });
 
   Map<String, String>learnMoreUrls = {
@@ -28,7 +33,50 @@ class DashboardSetupButtons extends StatelessWidget {
         borderRadius: BorderRadius.only(bottomLeft: Radius.circular(6), bottomRight: Radius.circular(6)),
         color: overlayBackground(),
       ),
-      child: Row(
+      child: isDashboard ? Row(
+        children: [
+          Expanded(
+            flex: 1,
+            child: InkWell(
+              onTap: () {
+                businessApps.installed
+                    ? onTapContinueSetup(businessApps)
+                    : onTapGetStarted(businessApps);
+              },
+              child: Center(
+                child: Text(
+                  !businessApps.installed ? 'Get started' : 'Continue setup process',
+                  softWrap: true,
+                  style: TextStyle(
+                      fontSize: 12),
+                ),
+              ),
+            ),
+          ),
+          if (!businessApps.installed) Container(
+            width: 1,
+            color: Colors.grey,
+          ),
+          if (!businessApps.installed) Expanded(
+            flex: 1,
+            child: InkWell(
+              onTap: () {
+                onTapLearnMore(
+                    learnMoreUrls[businessApps.code]);
+              },
+              child: Center(
+                child: Text(
+                  'Learn more',
+                  softWrap: true,
+                  style: TextStyle(
+                      fontSize: 12),
+                ),
+              ),
+            ),
+          ),
+        ],
+      )
+      : Row(
         children: [
           Expanded(
             flex: 1,

@@ -56,7 +56,7 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
       NumberFormat format = NumberFormat();
       currency = format.simpleCurrencySymbol(widget.lastYear.last.currency);
     }
-    if (widget.businessApps.setupStatus == 'completed') {
+    if (widget.businessApps != null && widget.businessApps.setupStatus == 'completed') {
       return BlurEffectView(
         padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
         child: Column(

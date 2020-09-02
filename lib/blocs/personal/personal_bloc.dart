@@ -7,7 +7,6 @@ import 'package:payever/blocs/dashboard/dashboard_bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/settings/models/models.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'personal.dart';
 
 class PersonalScreenBloc extends Bloc<PersonalScreenEvent, PersonalScreenState> {

@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:iso_countries/iso_countries.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/dashboard/dashboard_bloc.dart';
+import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
@@ -16,6 +17,8 @@ import 'package:payever/dashboard/sub_view/dashboard_transactions_view.dart';
 import 'package:payever/login/login_screen.dart';
 import 'package:payever/notifications/notifications_screen.dart';
 import 'package:payever/search/views/search_screen.dart';
+import 'package:payever/settings/views/general/language_screen.dart';
+import 'package:payever/settings/views/setting_screen.dart';
 import 'package:payever/settings/views/wallpaper/wallpaper_screen.dart';
 
 import 'package:payever/theme.dart';
@@ -53,7 +56,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
   bool _isTablet;
   double iconSize;
   double margin;
-  List<Country> countryList;
+
   final GlobalKey<InnerDrawerState> _innerDrawerKey =
       GlobalKey<InnerDrawerState>();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -63,7 +66,8 @@ class _PersonalScreenState extends State<PersonalScreen> {
   TextEditingController searchController = TextEditingController();
   FocusNode searchFocus = FocusNode();
   String searchString = '';
-
+  Business activeBusiness;
+  String currentWallpaper;
   @override
   void initState() {
     screenBloc = PersonalScreenBloc(
@@ -73,7 +77,10 @@ class _PersonalScreenState extends State<PersonalScreen> {
       business: widget.globalStateModel.currentBusiness.id,
       user: widget.dashboardScreenBloc.state.user,
     ));
-    prepareDefaultCountries().then((value) => countryList = value);
+
+    activeBusiness = widget.globalStateModel.currentBusiness;
+    currentWallpaper = widget.dashboardScreenBloc.state.curWall;
+
     super.initState();
   }
 
@@ -300,12 +307,15 @@ class _PersonalScreenState extends State<PersonalScreen> {
               : Center(
                   child: Container(
                     margin: EdgeInsets.symmetric(horizontal: 16),
-                    child: Column(
-                      children: <Widget>[
-                        _headerView(state),
-                        _searchBar(state),
-
-                      ],
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: <Widget>[
+                          _headerView(state),
+                          _searchBar(state),
+                          _transactionView(state),
+                          _settingsView(state),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -524,122 +534,97 @@ class _PersonalScreenState extends State<PersonalScreen> {
     );
   }
 
-//  Widget _transactionView(PersonalScreenState state) {
-//    return DashboardTransactionsView(
-//        appWidget: appWidget,
-//        businessApps: businessApp,
-//        isLoading: state.isInitialScreen,
-//        total: state.total,
-//        lastMonth: state.lastMonth,
-//        lastYear: state.lastYear,
-//        monthlySum: state.monthlySum,
-//        onOpen: () {
-//          _navigateAppsScreen(
-//              state,
-//              TransactionScreenInit(
-//                dashboardScreenBloc: widget.dashboardScreenBloc,
-//              ));
-//        });
-//  }
-//
-//  Widget _settingsView(PersonalScreenState state) {
-//    return DashboardSettingsView(
-//        businessApps: businessApp,
-//        appWidget: appWidget,
-//        notifications: notifications,
-//        openNotification: (NotificationModel model) {},
-//        deleteNotification: (NotificationModel model) {
-//          screenBloc.add(DeleteNotification(notificationId: model.id));
-//        },
-//        onTapOpen: () {
-//          print(businessApp.setupStatus);
-//          if (businessApp.setupStatus == 'notStarted') {
-//            Provider.of<GlobalStateModel>(context, listen: false)
-//                .setCurrentBusiness(state.activeBusiness);
-//            Provider.of<GlobalStateModel>(context, listen: false)
-//                .setCurrentWallpaper(state.curWall);
-//            Navigator.push(
-//              context,
-//              PageTransition(
-//                child: WelcomeScreen(
-//                  dashboardScreenBloc: screenBloc,
-//                  business: state.activeBusiness,
-//                  businessApps: businessApp,
-//                ),
-//                type: PageTransitionType.fade,
-//                duration: Duration(milliseconds: 50),
-//              ),
-//            );
-//          } else {
-//            Provider.of<GlobalStateModel>(context, listen: false)
-//                .setCurrentBusiness(state.activeBusiness);
-//            Provider.of<GlobalStateModel>(context, listen: false)
-//                .setCurrentWallpaper(state.curWall);
-//            Navigator.push(
-//              context,
-//              PageTransition(
-//                child: SettingInitScreen(
-//                  dashboardScreenBloc: screenBloc,
-//                ),
-//                type: PageTransitionType.fade,
-//                duration: Duration(milliseconds: 300),
-//              ),
-//            );
-//          }
-//        },
-//        onTapOpenWallpaper: () async {
-//          Navigator.push(
-//            context,
-//            PageTransition(
-//              child: WallpaperScreen(
-//                globalStateModel: globalStateModel,
-//                setScreenBloc: SettingScreenBloc(
-//                  dashboardScreenBloc: screenBloc,
-//                  globalStateModel: globalStateModel,
-//                )..add(SettingScreenInitEvent(
-//                    business: state.activeBusiness.id,
-//                  )),
-//                fromDashboard: true,
-//              ),
-//              type: PageTransitionType.fade,
-//              duration: Duration(milliseconds: 300),
-//            ),
-//          );
-//        },
-//        onTapOpenLanguage: () {
-//          Navigator.push(
-//            context,
-//            PageTransition(
-//              child: LanguageScreen(
-//                globalStateModel: globalStateModel,
-//                settingBloc: SettingScreenBloc(
-//                  dashboardScreenBloc: screenBloc,
-//                  globalStateModel: globalStateModel,
-//                )..add(SettingScreenInitEvent(
-//                    business: state.activeBusiness.id,
-//                    user: state.user,
-//                  )),
-//                fromDashboard: true,
-//              ),
-//              type: PageTransitionType.fade,
-//            ),
-//          );
-//        });
-//  }
-//
-//  _navigateAppsScreen(PersonalScreenState state, Widget widget,
-//      {bool isDuration = false}) {
-//    Provider.of<GlobalStateModel>(context, listen: false)
-//        .setCurrentBusiness(state.activeBusiness);
-//    Provider.of<GlobalStateModel>(context, listen: false)
-//        .setCurrentWallpaper(state.curWall);
-//    Navigator.push(
-//      context,
-//      PageTransition(
-//        child: widget,
-//        type: PageTransitionType.fade,
-//        duration: Duration(milliseconds: isDuration ? 500 : 300),
-//      ),
-//    );
-//  }
+  Widget _transactionView(PersonalScreenState state) {
+    AppWidget appWidget = state.personalWidgets
+        .where((element) => element.type.contains('transactions'))
+        .first;
+    return appWidget != null
+        ? DashboardTransactionsView(
+            appWidget: appWidget,
+            onOpen: () {
+              _navigateAppsScreen(
+                  state,
+                  TransactionScreenInit(
+                    dashboardScreenBloc: widget.dashboardScreenBloc,
+                  ));
+            })
+        : Container();
+  }
+
+  Widget _settingsView(PersonalScreenState state) {
+    AppWidget appWidget = state.personalWidgets
+        .where((element) => element.type.contains('settings'))
+        .first;
+    return DashboardSettingsView(
+        appWidget: appWidget,
+        openNotification: (NotificationModel model) {},
+        onTapOpen: () {
+          Provider.of<GlobalStateModel>(context, listen: false)
+              .setCurrentBusiness(activeBusiness);
+          Provider.of<GlobalStateModel>(context, listen: false)
+              .setCurrentWallpaper(currentWallpaper);
+          Navigator.push(
+            context,
+            PageTransition(
+              child: SettingInitScreen(
+                dashboardScreenBloc: widget.dashboardScreenBloc,
+              ),
+              type: PageTransitionType.fade,
+            ),
+          );
+        },
+        onTapOpenWallpaper: () async {
+          Navigator.push(
+            context,
+            PageTransition(
+              child: WallpaperScreen(
+                globalStateModel: widget.globalStateModel,
+                setScreenBloc: SettingScreenBloc(
+                  dashboardScreenBloc: widget.dashboardScreenBloc,
+                  globalStateModel: widget.globalStateModel,
+                )..add(SettingScreenInitEvent(
+                    business: state.business,
+                  )),
+                fromDashboard: true,
+              ),
+              type: PageTransitionType.fade,
+            ),
+          );
+        },
+        onTapOpenLanguage: () {
+          Navigator.push(
+            context,
+            PageTransition(
+              child: LanguageScreen(
+                globalStateModel: widget.globalStateModel,
+                settingBloc: SettingScreenBloc(
+                  dashboardScreenBloc: widget.dashboardScreenBloc,
+                  globalStateModel: widget.globalStateModel,
+                )..add(SettingScreenInitEvent(
+                    business:state.business,
+                    user: state.user,
+                  )),
+                fromDashboard: true,
+              ),
+              type: PageTransitionType.fade,
+            ),
+          );
+        });
+  }
+
+  _navigateAppsScreen(PersonalScreenState state, Widget target,
+      {bool isDuration = false}) {
+    Provider.of<GlobalStateModel>(context, listen: false)
+        .setCurrentBusiness(activeBusiness);
+    Provider.of<GlobalStateModel>(context, listen: false)
+        .setCurrentWallpaper(currentWallpaper);
+    Navigator.push(
+      context,
+      PageTransition(
+        child: target,
+        type: PageTransitionType.fade,
+        duration: Duration(milliseconds: isDuration ? 500 : 300),
+      ),
+    );
+  }
 }
