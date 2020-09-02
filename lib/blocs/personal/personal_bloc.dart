@@ -34,20 +34,22 @@ class PersonalScreenBloc extends Bloc<PersonalScreenEvent, PersonalScreenState> 
           user: event.user
         );
       }
-      yield* getBusiness(event.business);
+      yield* getPersonalWidgets(event.business);
     }
   }
 
-  Stream<PersonalScreenState> getBusiness(String id) async* {
+  Stream<PersonalScreenState> getPersonalWidgets(String id) async* {
     yield state.copyWith(isLoading: true);
 
-    dynamic response = await api.getBusiness(token, id);
-
-    Business business = Business.map(response);
-
-    dashboardScreenBloc.state.copyWith(activeBusiness: business);
-    globalStateModel.setCurrentBusiness(business, notify: true);
-    yield state.copyWith(isLoading: false);
+    dynamic response = await api.getWidgetsPersonal(token);
+    List<AppWidget> widgetApps = [];
+    if (response is List) {
+      widgetApps.clear();
+      response.forEach((item) {
+        widgetApps.add(AppWidget.map(item));
+      });
+    }
+    yield state.copyWith(isLoading: false, personalWidgets: widgetApps);
   }
 
   Stream<PersonalScreenState> uploadBusinessImage(File file) async* {

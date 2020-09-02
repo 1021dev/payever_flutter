@@ -5,9 +5,11 @@ import 'package:payever/settings/models/models.dart';
 
 class PersonalScreenState {
   final bool isLoading;
+  final List<AppWidget> personalWidgets;
+
+
   final bool isUpdating;
   final bool isDeleting;
-  final bool updating2FA;
   final String updatingWallpaper;
   final bool isUpdatingBusinessImg;
   final bool uploadUserImage;
@@ -18,28 +20,19 @@ class PersonalScreenState {
   final String selectedCategory;
   final List<String>subCategories;
   final String blobName;
-  final List<BusinessProduct> businessProducts;
-  final List<Employee> employees;
-  final List<EmployeeListModel> employeeListModels;
-  final List<Group> employeeGroups;
-  final List<GroupListModel> groupList;
+
   final bool emailInvalid;
-  final Group groupDetail;
-  final bool isSelectingEmployee;
-  final List<FilterItem> filterEmployeeTypes;
-  final String searchEmployeeText;
-  final List<FilterItem> filterGroupTypes;
-  final String searchGroupText;
+
   final bool isSearching;
-  final LegalDocument legalDocument;
   final User user;
   final AuthUser authUser;
 
   PersonalScreenState({
     this.isLoading = false,
+    this.personalWidgets = const[],
+
     this.isUpdating = false,
     this.isDeleting = false,
-    this.updating2FA = false,
     this.updatingWallpaper,
     this.isUpdatingBusinessImg = false,
     this.uploadUserImage = false,
@@ -50,29 +43,18 @@ class PersonalScreenState {
     this.selectedCategory = 'All',
     this.subCategories,
     this.blobName,
-    this.businessProducts = const [],
-    this.employees = const [],
-    this.employeeListModels = const [],
-    this.employeeGroups = const [],
-    this.groupList = const [],
     this.emailInvalid = false,
-    this.groupDetail,
-    this.isSelectingEmployee = false,
-    this.filterEmployeeTypes = const [],
-    this.searchEmployeeText = '',
-    this.filterGroupTypes = const [],
-    this.searchGroupText = '',
     this.isSearching = false,
-    this.legalDocument,
     this.user,
     this.authUser,
   });
 
   List<Object> get props => [
     this.isLoading,
+    this.personalWidgets,
+
     this.isUpdating,
     this.isDeleting,
-    this.updating2FA,
     this.updatingWallpaper,
     this.isUpdatingBusinessImg,
     this.uploadUserImage,
@@ -82,29 +64,19 @@ class PersonalScreenState {
     this.myWallpapers,
     this.subCategories,
     this.blobName,
-    this.businessProducts,
-    this.employees,
-    this.employeeListModels,
-    this.employeeGroups,
-    this.groupList,
     this.emailInvalid,
-    this.groupDetail,
-    this.isSelectingEmployee,
-    this.filterEmployeeTypes,
-    this.searchEmployeeText,
-    this.filterGroupTypes,
-    this.searchGroupText,
     this.isSearching,
-    this.legalDocument,
     this.user,
     this.authUser,
   ];
 
   PersonalScreenState copyWith({
     bool isLoading,
+    List<AppWidget> personalWidgets,
+
+
     bool isUpdating,
     bool isDeleting,
-    bool updating2FA,
     bool uploadUserImage,
     String updatingWallpaper,
     bool isUpdatingBusinessImg,
@@ -113,30 +85,18 @@ class PersonalScreenState {
     List<WallpaperCategory> wallpaperCategories,
     List<Wallpaper> wallpapers,
     List<Wallpaper> myWallpapers,
-    List<String>subCategories,
     String blobName,
-    List<BusinessProduct> businessProducts,
-    List<Employee> employees,
-    List<EmployeeListModel> employeeListModels,
-    List<GroupListModel> groupList,
-    List<Group> employeeGroups,
-    bool emailInvalid,
-    Group groupDetail,
-    bool isSelectingEmployee,
-    List<FilterItem> filterEmployeeTypes,
-    String searchEmployeeText,
-    List<FilterItem> filterGroupTypes,
-    String searchGroupText,
     bool isSearching,
-    LegalDocument legalDocument,
     User user,
     AuthUser authUser,
   }) {
     return PersonalScreenState(
       isLoading: isLoading ?? this.isLoading,
+      personalWidgets: personalWidgets ?? this.personalWidgets,
+
+
       isUpdating: isUpdating ?? this.isUpdating,
       isDeleting: isDeleting ?? this.isDeleting,
-      updating2FA: updating2FA ?? this.updating2FA,
       updatingWallpaper: updatingWallpaper ?? this.updatingWallpaper,
       isUpdatingBusinessImg: isUpdatingBusinessImg ?? this.isUpdatingBusinessImg,
       uploadUserImage: uploadUserImage ?? this.uploadUserImage,
@@ -147,20 +107,8 @@ class PersonalScreenState {
       myWallpapers: myWallpapers ?? this.myWallpapers,
       subCategories: subCategories ?? this.subCategories,
       blobName: blobName ?? this.blobName,
-      businessProducts: businessProducts ?? this.businessProducts,
-      employees: employees ?? this.employees,
-      employeeListModels: employeeListModels ?? this.employeeListModels,
-      employeeGroups: employeeGroups ?? this.employeeGroups,
-      groupList: groupList ?? this.groupList,
       emailInvalid: emailInvalid ?? this.emailInvalid,
-      groupDetail: groupDetail ?? this.groupDetail,
-      isSelectingEmployee: isSelectingEmployee ?? this.isSelectingEmployee,
-      filterEmployeeTypes: filterEmployeeTypes ?? this.filterEmployeeTypes,
-      searchEmployeeText: searchEmployeeText ?? this.searchEmployeeText,
-      filterGroupTypes: filterGroupTypes ?? this.filterGroupTypes,
-      searchGroupText: searchGroupText ?? this.searchGroupText,
       isSearching: isSearching ?? this.isSearching,
-      legalDocument: legalDocument ?? this.legalDocument,
       user: user ?? this.user,
       authUser: authUser ?? this.authUser,
     );
