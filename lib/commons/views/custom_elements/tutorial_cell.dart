@@ -47,7 +47,7 @@ class TutorialCell extends StatelessWidget {
                       height: 20,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          color: overlayBackground(),
+                          color: overlayButtonBackground(),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,

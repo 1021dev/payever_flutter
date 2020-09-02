@@ -34,6 +34,7 @@ class _DashboardContactViewState extends State<DashboardContactView> {
     if (widget.businessApps.setupStatus == 'completed') {
       return BlurEffectView(
         padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
+        isDashboard: true,
         child: Column(
           children: [
             Container(
@@ -242,6 +243,7 @@ class _DashboardContactViewState extends State<DashboardContactView> {
     } else {
       return BlurEffectView(
         padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
+        isDashboard: true,
         child: Column(
           children: [
             Container(

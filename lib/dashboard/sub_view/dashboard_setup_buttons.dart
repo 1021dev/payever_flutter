@@ -55,7 +55,7 @@ class DashboardSetupButtons extends StatelessWidget {
           ),
           if (!businessApps.installed) Container(
             width: 1,
-            color: Colors.grey,
+            color: overlayButtonBackground(),
           ),
           if (!businessApps.installed) Expanded(
             flex: 1,

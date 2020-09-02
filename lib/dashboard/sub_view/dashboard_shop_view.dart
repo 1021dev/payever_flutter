@@ -107,7 +107,7 @@ class _DashboardShopViewState extends State<DashboardShopView> {
                               width: 40,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
-                                  color: overlayBackground(),
+                                  color: overlayButtonBackground(),
                               ),
                               child: Center(
                                 child: Text(

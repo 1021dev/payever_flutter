@@ -30,6 +30,7 @@ class _DashboardStudioViewState extends State<DashboardStudioView> {
   Widget build(BuildContext context) {
     return BlurEffectView(
       padding: EdgeInsets.fromLTRB(14, 12, 14, 14),
+      isDashboard: true,
       child: Column(
         children: [
           Row(

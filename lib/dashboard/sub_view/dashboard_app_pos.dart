@@ -106,7 +106,7 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                               width: 40,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
-                                color: overlayBackground(),
+                                color: overlayButtonBackground(),
                               ),
                               child: Center(
                                 child: Text('Open',
@@ -152,7 +152,7 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                                       height: 21,
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(10.5),
-                                        color: overlayBackground(),
+                                        color: overlayButtonBackground(),
                                       ),
                                       child: Center(
                                         child: SvgPicture.asset(

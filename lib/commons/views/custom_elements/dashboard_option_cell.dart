@@ -59,7 +59,7 @@ class DashboardOptionCell extends StatelessWidget {
                       width: 40,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        color: overlayBackground(),
+                        color: overlayButtonBackground(),
                       ),
                       child: Center(
                         child: Text(
@@ -81,7 +81,7 @@ class DashboardOptionCell extends StatelessWidget {
                       height: 21,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10.5),
-                        color: overlayBackground(),
+                        color: overlayButtonBackground(),
                       ),
                       child: Center(
                         child: SvgPicture.asset('assets/images/closeicon.svg', width: 8, color: iconColor(),),

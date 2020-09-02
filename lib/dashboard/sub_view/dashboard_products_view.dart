@@ -89,7 +89,7 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
                               width: 40,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
-                                  color: overlayBackground(),
+                                  color: overlayButtonBackground(),
                               ),
                               child: Center(
                                 child: Text(
@@ -108,7 +108,7 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
                             width: 40,
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
-                                color: overlayBackground(),
+                                color: Colors.white10,
                             ),
                             child: Row(
                               children: [
@@ -136,7 +136,7 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
                                       height: 21,
                                       decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(10.5),
-                                          color: overlayBackground(),
+                                          color: overlayButtonBackground(),
                                       ),
                                       child: Center(
                                         child: SvgPicture.asset(
@@ -212,6 +212,7 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
     } else {
       return BlurEffectView(
         padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
+        isDashboard: true,
         child: Column(
           children: [
             Container(

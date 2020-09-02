@@ -67,7 +67,7 @@ class _DashboardSettingsViewState extends State<DashboardSettingsView> {
                     width: 40,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        color: overlayBackground(),
+                        color: overlayButtonBackground(),
                     ),
                     child: Center(
                       child: Text(
@@ -93,7 +93,7 @@ class _DashboardSettingsViewState extends State<DashboardSettingsView> {
                         height: 50,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(6),
-                            color: overlayBackground(),
+                            color: overlayButtonBackground(),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -122,7 +122,7 @@ class _DashboardSettingsViewState extends State<DashboardSettingsView> {
                         height: 50,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(6),
-                            color: overlayBackground(),
+                            color: overlayButtonBackground(),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,

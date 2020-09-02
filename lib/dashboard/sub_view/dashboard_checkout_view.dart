@@ -93,7 +93,7 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                               width: 40,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
-                                color: overlayBackground(),
+                                color: overlayButtonBackground(),
                               ),
                               child: Center(
                                 child: Text(
@@ -174,7 +174,7 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                               height: 60,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(6),
-                                color: overlayBackground(),
+                                color: overlayButtonBackground(),
                               ),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -210,7 +210,7 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                               height: 60,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(6),
-                                  color: overlayBackground(),
+                                  color: overlayButtonBackground(),
                               ),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,

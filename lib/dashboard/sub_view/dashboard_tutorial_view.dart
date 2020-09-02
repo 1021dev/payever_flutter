@@ -63,7 +63,7 @@ class _DashboardTutorialViewState extends State<DashboardTutorialView> {
                         height: 21,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10.5),
-                            color: overlayBackground(),
+                            color: overlayButtonBackground(),
                         ),
                         child: Center(
                           child: SvgPicture.asset(
