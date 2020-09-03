@@ -53,6 +53,7 @@ class _CheckoutPhoneNumberScreenState extends State<CheckoutPhoneNumberScreen> {
             resizeToAvoidBottomPadding: false,
             appBar: _appBar(state),
             body: SafeArea(
+              bottom: false,
               child: BackgroundBase(
                 true,
                 body: state.isLoading ?

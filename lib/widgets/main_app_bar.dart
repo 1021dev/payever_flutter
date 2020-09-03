@@ -49,8 +49,8 @@ class MainAppbar extends StatelessWidget with PreferredSizeWidget {
     bool _isPortrait;
     bool _isTablet;
 
-    _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
-    _isTablet = MediaQuery.of(context).size.width > 600;
+    _isPortrait = GlobalUtils.isPortrait(context);
+    _isTablet = GlobalUtils.isTablet(context);
 
     String logo = '';
     String name = '';

@@ -77,14 +77,8 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
-    Measurements.height = (_isPortrait
-        ? MediaQuery.of(context).size.height
-        : MediaQuery.of(context).size.width);
-    Measurements.width = (_isPortrait
-        ? MediaQuery.of(context).size.width
-        : MediaQuery.of(context).size.height);
-    _isTablet = Measurements.width < 600 ? false : true;
+    _isPortrait = GlobalUtils.isPortrait(context);
+    _isTablet = GlobalUtils.isTablet(context);
 
     return BlocListener(
       bloc: widget.screenBloc,
@@ -156,6 +150,7 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
       resizeToAvoidBottomPadding: false,
       appBar: _appBar(state),
       body: SafeArea(
+        bottom: false,
         child: BackgroundBase(
           true,
           body: state.isLoading ?

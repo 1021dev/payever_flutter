@@ -80,6 +80,7 @@ class _EditVariantScreenState extends State<EditVariantScreen> {
             resizeToAvoidBottomPadding: false,
             appBar: _appBar(state),
             body: SafeArea(
+              bottom: false,
               child: BackgroundBase(
                 true,
                 body: Form(

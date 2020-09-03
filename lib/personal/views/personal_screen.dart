@@ -9,13 +9,10 @@ import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
-import 'package:payever/dashboard/sub_view/business_logo.dart';
 import 'package:payever/dashboard/sub_view/dashboard_menu_view.dart';
 import 'package:payever/dashboard/sub_view/dashboard_settings_view.dart';
 import 'package:payever/dashboard/sub_view/dashboard_transactions_view.dart';
 import 'package:payever/login/login_screen.dart';
-import 'package:payever/notifications/notifications_screen.dart';
-import 'package:payever/search/views/search_screen.dart';
 import 'package:payever/settings/views/general/language_screen.dart';
 import 'package:payever/settings/views/setting_screen.dart';
 import 'package:payever/settings/views/wallpaper/wallpaper_screen.dart';
@@ -94,14 +91,8 @@ class _PersonalScreenState extends State<PersonalScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
-    Measurements.height = (_isPortrait
-        ? MediaQuery.of(context).size.height
-        : MediaQuery.of(context).size.width);
-    Measurements.width = (_isPortrait
-        ? MediaQuery.of(context).size.width
-        : MediaQuery.of(context).size.height);
-    _isTablet = Measurements.width < 600 ? false : true;
+    _isPortrait = GlobalUtils.isPortrait(context);
+    _isTablet = GlobalUtils.isTablet(context);
 
     return BlocListener(
       bloc: screenBloc,
@@ -149,6 +140,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
         isDashboard: false,
       ),
       body: SafeArea(
+        bottom: false,
         child: BackgroundBase(
           false,
           backgroundColor: Colors.transparent,

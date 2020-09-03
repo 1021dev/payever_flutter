@@ -38,14 +38,6 @@ class _PaymentOptionsScreenState extends State<PaymentOptionsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
-    Measurements.height = (_isPortrait
-        ? MediaQuery.of(context).size.height
-        : MediaQuery.of(context).size.width);
-    Measurements.width = (_isPortrait
-        ? MediaQuery.of(context).size.width
-        : MediaQuery.of(context).size.height);
-    bool _isTablet = Measurements.width < 600 ? false : true;
     List<ConnectModel> checkoutConnections = [];
     widget.checkoutIntegrations.forEach((checkoutIntegration) {
       bool isConnected = false;

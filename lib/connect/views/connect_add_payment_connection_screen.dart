@@ -52,6 +52,7 @@ class _ConnectAddPaymentConnectionScreenState extends State<ConnectAddPaymentCon
             resizeToAvoidBottomPadding: false,
             appBar: _appBar(state),
             body: SafeArea(
+              bottom: false,
               child: BackgroundBase(
                 true,
                 body: state.isLoading ?

@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
-import 'package:payever/login/login_screen.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 
 class AddVariantOptionScreen extends StatefulWidget {
@@ -32,6 +31,7 @@ class _AddVariantOptionScreenState extends State<AddVariantOptionScreen> {
       resizeToAvoidBottomPadding: false,
       appBar: _appBar(),
       body: SafeArea(
+        bottom: false,
         child: BackgroundBase(
           true,
           body: Container(

@@ -42,6 +42,7 @@ class _ChannelCheckoutFlowScreenState extends State<ChannelCheckoutFlowScreen> {
           widget.checkoutScreenBloc,
         ),
         body: SafeArea(
+          bottom: false,
           child: BackgroundBase(
             true,
             body: CheckoutFlowWebView(
