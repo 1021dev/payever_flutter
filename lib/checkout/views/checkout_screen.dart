@@ -350,6 +350,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         resizeToAvoidBottomPadding: false,
         appBar: _appBar(state),
         body: SafeArea(
+          bottom: false,
           child: BackgroundBase(
             true,
             body: TabBarView(

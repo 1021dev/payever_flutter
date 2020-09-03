@@ -79,6 +79,7 @@ class _ContactScreenState extends State<ContactScreen> {
     return Scaffold(
       appBar: Appbar('Contact'),
       body: SafeArea(
+        bottom: false,
         child: BackgroundBase(
           true,
           body: _updateForm,

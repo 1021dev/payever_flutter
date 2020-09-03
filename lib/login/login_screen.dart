@@ -186,7 +186,7 @@ class _LoginState extends State<Login> {
                                               padding: EdgeInsets.only(top: 1.0),
                                               width: Measurements.width /
                                                   (_isTablet
-                                                      ? _widthFactorTablet
+                                                      ? _widthFactorPhone
                                                       : _widthFactorPhone),
                                               height: 55,
                                               child: Container(
@@ -246,7 +246,7 @@ class _LoginState extends State<Login> {
                                               padding: EdgeInsets.only(top: 1),
                                               width: Measurements.width /
                                                   (_isTablet
-                                                      ? _widthFactorTablet
+                                                      ? _widthFactorPhone
                                                       : _widthFactorPhone),
                                               height: 55,
                                               child: Container(
@@ -310,7 +310,7 @@ class _LoginState extends State<Login> {
                                         padding: EdgeInsets.only(top: 1),
                                         width: Measurements.width /
                                             (_isTablet
-                                                ? _widthFactorTablet
+                                                ? _widthFactorPhone
                                                 : _widthFactorPhone),
                                         height: 55,
                                         child: Container(

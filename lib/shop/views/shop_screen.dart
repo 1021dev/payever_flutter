@@ -381,6 +381,7 @@ class _ShopScreenState extends State<ShopScreen> {
       resizeToAvoidBottomPadding: false,
       appBar: _appBar(state),
       body: SafeArea(
+        bottom: false,
         child: BackgroundBase(
           true,
           body: state.isLoading ?
@@ -611,7 +612,7 @@ class _ShopScreenState extends State<ShopScreen> {
               crossAxisCount: _isPortrait ? 2: 3,
               mainAxisSpacing: 6,
               crossAxisSpacing: 6,
-              childAspectRatio: 0.6,
+              childAspectRatio: 0.8,
             ): Container(),
           ),
         ],

@@ -160,6 +160,7 @@ class _SettingScreenState extends State<SettingScreen> {
                   isDashboard: widget.isDashboard,
                 ),
                 body: SafeArea(
+                  bottom: false,
                   child: BackgroundBase(
                     true,
                     body: widget.isDashboard

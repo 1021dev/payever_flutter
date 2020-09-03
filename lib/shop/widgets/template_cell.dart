@@ -86,7 +86,7 @@ class TemplateCell extends StatelessWidget {
           ),
           Container(
             color: Colors.black87,
-            height: (Measurements.width - 72) * 0.38,
+            height: (Measurements.width - 72) * 0.18,
             child: Stack(
               alignment: Alignment.center,
               children: <Widget>[
@@ -102,7 +102,7 @@ class TemplateCell extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      templateModel.name ?? '',
+                      templateModel.name ?? '-',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 16,
