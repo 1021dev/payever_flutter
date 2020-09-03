@@ -2,6 +2,7 @@ import 'package:date_format/date_format.dart';
 import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
@@ -53,12 +54,10 @@ class _ContactsFilterScreenState extends State<ContactsFilterScreen> {
   Widget build(BuildContext context) {
     _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
     Measurements.height = (_isPortrait
-        ? MediaQuery.of(context).size.height
-        : MediaQuery.of(context).size.width);
+        ? MediaQuery.of(context).size.height : MediaQuery.of(context).size.width);
     Measurements.width = (_isPortrait
-        ? MediaQuery.of(context).size.width
-        : MediaQuery.of(context).size.height);
-    _isTablet = Measurements.width > 600;
+        ? MediaQuery.of(context).size.width : MediaQuery.of(context).size.height);
+    _isTablet = Measurements.width < 600 ? false : true;
 
     Map<String, String> filterTypes = filterConditionsByFilterType('weight');
     return Scaffold(

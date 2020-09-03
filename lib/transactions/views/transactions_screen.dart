@@ -107,7 +107,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
     Measurements.width = (_isPortrait
         ? MediaQuery.of(context).size.width
         : MediaQuery.of(context).size.height);
-    _isTablet = Measurements.width > 600;
+    _isTablet = Measurements.width < 600 ? false : true;
 
     return BlocListener(
       bloc: screenBloc,

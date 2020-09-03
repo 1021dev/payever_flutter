@@ -9,10 +9,13 @@ import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
+import 'package:payever/dashboard/sub_view/business_logo.dart';
 import 'package:payever/dashboard/sub_view/dashboard_menu_view.dart';
 import 'package:payever/dashboard/sub_view/dashboard_settings_view.dart';
 import 'package:payever/dashboard/sub_view/dashboard_transactions_view.dart';
 import 'package:payever/login/login_screen.dart';
+import 'package:payever/notifications/notifications_screen.dart';
+import 'package:payever/search/views/search_screen.dart';
 import 'package:payever/settings/views/general/language_screen.dart';
 import 'package:payever/settings/views/setting_screen.dart';
 import 'package:payever/settings/views/wallpaper/wallpaper_screen.dart';
@@ -98,7 +101,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
     Measurements.width = (_isPortrait
         ? MediaQuery.of(context).size.width
         : MediaQuery.of(context).size.height);
-    _isTablet = Measurements.width > 600;
+    _isTablet = Measurements.width < 600 ? false : true;
 
     return BlocListener(
       bloc: screenBloc,

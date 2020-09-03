@@ -16,6 +16,7 @@ import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/custom_elements.dart';
+import 'package:payever/dashboard/dashboard_screen.dart';
 import 'package:payever/settings/models/models.dart';
 import 'package:payever/settings/widgets/save_button.dart';
 import 'package:payever/theme.dart';
@@ -34,6 +35,8 @@ class BusinessRegisterScreen extends StatefulWidget {
 }
 
 class _BusinessRegisterScreenState extends State<BusinessRegisterScreen> {
+  bool _isPortrait;
+  bool _isTablet;
   double iconSize;
   double margin;
 
@@ -71,6 +74,14 @@ class _BusinessRegisterScreenState extends State<BusinessRegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
+    Measurements.height = (_isPortrait
+        ? MediaQuery.of(context).size.height
+        : MediaQuery.of(context).size.width);
+    Measurements.width = (_isPortrait
+        ? MediaQuery.of(context).size.width
+        : MediaQuery.of(context).size.height);
+    _isTablet = Measurements.width < 600 ? false : true;
 
     return BlocListener(
       bloc: businessBloc,

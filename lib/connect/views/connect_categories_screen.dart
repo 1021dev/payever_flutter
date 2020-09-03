@@ -39,12 +39,10 @@ class _ConnectCategoriesScreenState extends State<ConnectCategoriesScreen> {
   Widget build(BuildContext context) {
     _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
     Measurements.height = (_isPortrait
-        ? MediaQuery.of(context).size.height
-        : MediaQuery.of(context).size.width);
+        ? MediaQuery.of(context).size.height : MediaQuery.of(context).size.width);
     Measurements.width = (_isPortrait
-        ? MediaQuery.of(context).size.width
-        : MediaQuery.of(context).size.height);
-    _isTablet = Measurements.width > 600;
+        ? MediaQuery.of(context).size.width : MediaQuery.of(context).size.height);
+    _isTablet = Measurements.width < 600 ? false : true;
 
     return new OrientationBuilder(builder: (context, orientation) {
       return Scaffold(

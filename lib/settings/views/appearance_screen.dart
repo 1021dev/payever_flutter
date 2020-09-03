@@ -57,7 +57,6 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
   @override
   Widget build(BuildContext context) {
     globalStateModel = Provider.of<GlobalStateModel>(context);
-
     _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
     Measurements.height = (_isPortrait
         ? MediaQuery.of(context).size.height
@@ -65,8 +64,7 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
     Measurements.width = (_isPortrait
         ? MediaQuery.of(context).size.width
         : MediaQuery.of(context).size.height);
-    _isTablet = Measurements.width > 600;
-
+    _isTablet = Measurements.width < 600 ? false : true;
     return BlocListener(
       bloc: widget.setScreenBloc,
       listener: (BuildContext context, SettingScreenState state) async {

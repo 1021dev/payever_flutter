@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
@@ -10,9 +11,11 @@ import 'package:payever/checkout/views/checkout_screen.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
+import 'package:payever/dashboard/sub_view/business_logo.dart';
 import 'package:payever/login/login_screen.dart';
 import 'package:payever/connect/views/connect_screen.dart';
 import 'package:payever/contacts/views/contacts_screen.dart';
+import 'package:payever/notifications/notifications_screen.dart';
 import 'package:payever/pos/views/pos_create_terminal_screen.dart';
 import 'package:payever/pos/views/pos_screen.dart';
 import 'package:payever/products/models/models.dart';
@@ -115,23 +118,26 @@ class _DashboardScreenState extends State<DashboardScreen> {
       Language.language = p.getString(GlobalUtils.LANGUAGE);
       Language(context);
     });
-
-    _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
-    Measurements.height = (_isPortrait
-        ? MediaQuery.of(context).size.height
-        : MediaQuery.of(context).size.width);
-    Measurements.width = (_isPortrait
-        ? MediaQuery.of(context).size.width
-        : MediaQuery.of(context).size.height);
-    _isTablet = Measurements.width > 600;
+//    _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
+//    Measurements.height = (_isPortrait
+//        ? MediaQuery.of(context).size.height
+//        : MediaQuery.of(context).size.width);
+//    Measurements.width = (_isPortrait
+//        ? MediaQuery.of(context).size.width
+//        : MediaQuery.of(context).size.height);
+//
+//    if (_isPortrait) {
+//      _isTablet = MediaQuery.of(context).size.width > 600;
+//    } else {
+//      _isTablet = MediaQuery.of(context).size.height > 600;
+//    }
+    _isPortrait = GlobalUtils.isPortrait(context);
+    _isTablet = GlobalUtils.isTablet(context);
+    Measurements.loadImages(context);
 
     if (_isTablet) {
       Measurements.width =  Measurements.width * 0.7;
     }
-
-    Measurements.loadImages(context);
-
-
     if (globalStateModel.refresh) {
       screenBloc.add(DashboardScreenInitEvent(wallpaper: widget.wallpaper));
       globalStateModel.setRefresh(false);

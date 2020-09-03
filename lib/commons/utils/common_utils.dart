@@ -905,6 +905,25 @@ class GlobalUtils {
     positions.add('Others');
     return positions;
   }
+
+  static bool isPortrait(BuildContext context) {
+    bool _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
+    Measurements.height = (_isPortrait
+        ? MediaQuery.of(context).size.height
+        : MediaQuery.of(context).size.width);
+    Measurements.width = (_isPortrait
+        ? MediaQuery.of(context).size.width
+        : MediaQuery.of(context).size.height);
+    return _isPortrait;
+  }
+
+  static bool isTablet(BuildContext context) {
+    bool _isPortrait = GlobalUtils.isPortrait(context);
+    if (_isPortrait)
+      return MediaQuery.of(context).size.width > 600;
+
+    return MediaQuery.of(context).size.height > 600;
+  }
 }
 
 String imageBase = Env.storage + '/images/';
