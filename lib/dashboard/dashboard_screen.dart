@@ -30,6 +30,7 @@ import 'package:payever/switcher/switcher_page.dart';
 import 'package:payever/theme.dart';
 import 'package:payever/transactions/transactions.dart';
 import 'package:payever/welcome/welcome_screen.dart';
+import 'package:payever/widgets/main_app_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -1201,7 +1202,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     return Scaffold(
       resizeToAvoidBottomPadding: false,
-      appBar: _appBar(state),
+      appBar: MainAppbar(dashboardScreenBloc: screenBloc, dashboardScreenState: state, title: 'Business', icon: SvgPicture.asset(
+        'assets/images/payeverlogo.svg',
+        height: 16,
+        width: 24,
+      ), innerDrawerKey: _innerDrawerKey,),//_appBar(state),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: Container(
         width: 40,

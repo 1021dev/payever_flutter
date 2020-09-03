@@ -311,20 +311,24 @@ class _PersonalScreenState extends State<PersonalScreen> {
                   child: CircularProgressIndicator(),
                 )
               : Container(
-                  margin: EdgeInsets.symmetric(horizontal: 16),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: <Widget>[
-                        _headerView(state),
-                        _searchBar(state),
-                        SizedBox(height: 16),
-                        _transactionView(state),
-                        SizedBox(height: 16),
-                        _settingsView(state),
-                      ],
+                alignment: Alignment.topCenter,
+                child: Container(
+                    width: Measurements.width,
+                    padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: <Widget>[
+                          _headerView(state),
+                          _searchBar(state),
+                          SizedBox(height: 16),
+                          _transactionView(state),
+                          SizedBox(height: 16),
+                          _settingsView(state),
+                        ],
+                      ),
                     ),
                   ),
-                ),
+              ),
         ),
       ),
     );
