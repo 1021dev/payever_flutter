@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/commons/commons.dart';
+import 'package:payever/theme.dart';
 
 import '../../models/app_widget.dart';
 import '../../utils/env.dart';
@@ -19,6 +20,11 @@ class BusinessAppCell extends StatelessWidget {
   Widget build(BuildContext context) {
     String icon = currentApp.dashboardInfo.icon;
     icon = icon.replaceAll('32', '64');
+    String code = currentApp.code;
+    if (code == 'products') {
+      code  = 'product';
+    }
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -28,13 +34,22 @@ class BusinessAppCell extends StatelessWidget {
             Container(
               width: 64,
               height: 64,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: NetworkImage(
-                    '${Env.cdnIcon}$icon',
+              alignment: Alignment.center,
+              child: Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(
+                      '${Env.cdnIcon}icon-comerceos-$code-not-installed.png',
+                    ),
+                    fit: BoxFit.contain,
                   ),
-                  fit: BoxFit.cover,
                 ),
+              ),
+              decoration: BoxDecoration(
+                color: overlayDashboardAppsBackground(),
+                borderRadius: BorderRadius.circular(12),
               ),
             ),
             SizedBox(height: 2),
