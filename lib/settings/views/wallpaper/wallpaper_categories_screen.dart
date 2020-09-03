@@ -44,14 +44,8 @@ class _WallpaperCategoriesScreenState extends State<WallpaperCategoriesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
-    Measurements.height = (_isPortrait
-        ? MediaQuery.of(context).size.height
-        : MediaQuery.of(context).size.width);
-    Measurements.width = (_isPortrait
-        ? MediaQuery.of(context).size.width
-        : MediaQuery.of(context).size.height);
-    _isTablet = Measurements.width < 600 ? false : true;
+    _isPortrait = GlobalUtils.isPortrait(context);
+    _isTablet = GlobalUtils.isTablet(context);
 
     return BlocListener(
       bloc: widget.screenBloc,
@@ -70,6 +64,7 @@ class _WallpaperCategoriesScreenState extends State<WallpaperCategoriesScreen> {
               body: BlurEffectView(
                 radius: 0,
                 child: SafeArea(
+                  bottom: false,
                   child: state.isUpdating
                       ? Center(
                           child: CircularProgressIndicator(),

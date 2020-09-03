@@ -73,6 +73,7 @@ class _CompanyScreenState extends State<CompanyScreen> {
       backgroundColor: Colors.black,
       appBar: Appbar(Language.getSettingsStrings('info_boxes.panels.business_details.menu_list.company.title')),
       body: SafeArea(
+        bottom: false,
         child: BackgroundBase(
           true,
           body: _updateForm,

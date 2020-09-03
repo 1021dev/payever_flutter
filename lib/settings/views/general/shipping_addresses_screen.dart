@@ -72,6 +72,7 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
     return Scaffold(
       appBar: Appbar('Shipping Address'),
       body: SafeArea(
+        bottom: false,
         child: BackgroundBase(
           true,
           body: _updateForm,

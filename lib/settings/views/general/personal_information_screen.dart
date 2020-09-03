@@ -85,6 +85,7 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
     return Scaffold(
       appBar: Appbar('Personal Information'),
       body: SafeArea(
+        bottom: false,
         child: BackgroundBase(
           true,
           body: _updateForm,

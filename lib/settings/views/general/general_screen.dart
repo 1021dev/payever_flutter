@@ -48,14 +48,9 @@ class _GeneralScreenState extends State<GeneralScreen> {
   @override
   Widget build(BuildContext context) {
     globalStateModel = Provider.of<GlobalStateModel>(context);
-    _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
-    Measurements.height = (_isPortrait
-        ? MediaQuery.of(context).size.height
-        : MediaQuery.of(context).size.width);
-    Measurements.width = (_isPortrait
-        ? MediaQuery.of(context).size.width
-        : MediaQuery.of(context).size.height);
-    _isTablet = Measurements.width < 600 ? false : true;
+    _isPortrait = GlobalUtils.isPortrait(context);
+    _isTablet = GlobalUtils.isTablet(context);
+
     return BlocListener(
       bloc: widget.setScreenBloc,
       listener: (BuildContext context, SettingScreenState state) async {
@@ -71,6 +66,7 @@ class _GeneralScreenState extends State<GeneralScreen> {
             resizeToAvoidBottomPadding: false,
             appBar: Appbar('General'),
             body: SafeArea(
+              bottom: false,
               child: BackgroundBase(
                 true,
                 body: state.isLoading

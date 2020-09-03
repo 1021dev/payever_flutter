@@ -58,6 +58,7 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
       backgroundColor: Colors.black,
       appBar: Appbar(Language.getSettingsStrings('form.create_form.currency.label')),
       body: SafeArea(
+        bottom: false,
         child: BackgroundBase(
           true,
           body: _updateForm,

@@ -58,6 +58,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
     return Scaffold(
       appBar: Appbar('Password'),
       body: SafeArea(
+        bottom: false,
         child: BackgroundBase(
           true,
           body: _updateForm,

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:payever/commons/models/app_widget.dart';
-import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/settings/models/models.dart';
 import 'package:payever/theme.dart';
 

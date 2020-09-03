@@ -102,6 +102,7 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
         },
       ),
       body: SafeArea(
+        bottom: false,
         child: BackgroundBase(
           true,
           body: _updateForm,

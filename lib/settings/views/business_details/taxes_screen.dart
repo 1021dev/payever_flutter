@@ -67,6 +67,7 @@ class _TaxesScreenState extends State<TaxesScreen> {
     return Scaffold(
       appBar: Appbar(Language.getSettingsStrings('info_boxes.panels.business_details.menu_list.taxes.title')),
       body: SafeArea(
+        bottom: false,
         child: BackgroundBase(
           true,
           body: _updateForm,

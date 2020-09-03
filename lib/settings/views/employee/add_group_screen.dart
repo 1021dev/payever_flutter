@@ -92,6 +92,7 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
         },
       ),
       body: SafeArea(
+        bottom: false,
         child: BackgroundBase(
           true,
           body: _updateForm,

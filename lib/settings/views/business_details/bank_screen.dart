@@ -86,6 +86,7 @@ class _BankScreenState extends State<BankScreen> {
     return Scaffold(
       appBar: Appbar(Language.getSettingsStrings('info_boxes.panels.business_details.menu_list.bank.title'),),
       body: SafeArea(
+        bottom: false,
         child: BackgroundBase(
           true,
           body: _updateForm,

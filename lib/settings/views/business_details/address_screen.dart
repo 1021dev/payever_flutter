@@ -83,6 +83,7 @@ class _AddressScreenState extends State<AddressScreen> {
     return Scaffold(
       appBar: Appbar(Language.getSettingsStrings('info_boxes.panels.business_details.menu_list.address.title')),
       body: SafeArea(
+        bottom: false,
         child: BackgroundBase(
           true,
           body: _updateForm,

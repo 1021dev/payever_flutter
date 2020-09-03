@@ -57,6 +57,7 @@ class _AddEmailScreenState extends State<AddEmailScreen> {
       'form.create_form.contact_email.edit_contact_email':
       'form.create_form.contact_email.new_contact_email')),
       body: SafeArea(
+        bottom: false,
         child: BackgroundBase(
           true,
           body: _updateForm,
