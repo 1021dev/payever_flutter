@@ -36,8 +36,8 @@ class BusinessAppCell extends StatelessWidget {
               height: 64,
               alignment: Alignment.center,
               child: Container(
-                width: 48,
-                height: 48,
+                width: 44,
+                height: 44,
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: NetworkImage(
