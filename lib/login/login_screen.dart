@@ -498,10 +498,16 @@ class _LoginState extends State<Login> {
 class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    _isPortrait = GlobalUtils.isPortrait(context);
-    _isTablet = GlobalUtils.isTablet(context);
+    _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
+    Measurements.height = (_isPortrait
+        ? MediaQuery.of(context).size.height
+        : MediaQuery.of(context).size.width);
+    Measurements.width = (_isPortrait
+        ? MediaQuery.of(context).size.width
+        : MediaQuery.of(context).size.height);
+    _isTablet = Measurements.width > 600;
     if (_isTablet)
-      Measurements.width = Measurements.width * 0.7;
+      Measurements.width = Measurements.width * 0.5;
 
     return Scaffold(
       key: scaffoldKey,

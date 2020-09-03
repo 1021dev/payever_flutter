@@ -116,13 +116,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
       Language(context);
     });
 
-    _isPortrait = GlobalUtils.isPortrait(context);
-    _isTablet = GlobalUtils.isTablet(context);
-    Measurements.loadImages(context);
+    _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
+    Measurements.height = (_isPortrait
+        ? MediaQuery.of(context).size.height
+        : MediaQuery.of(context).size.width);
+    Measurements.width = (_isPortrait
+        ? MediaQuery.of(context).size.width
+        : MediaQuery.of(context).size.height);
+    _isTablet = Measurements.width > 600;
 
     if (_isTablet) {
       Measurements.width =  Measurements.width * 0.7;
     }
+
+    Measurements.loadImages(context);
+
+
     if (globalStateModel.refresh) {
       screenBloc.add(DashboardScreenInitEvent(wallpaper: widget.wallpaper));
       globalStateModel.setRefresh(false);
