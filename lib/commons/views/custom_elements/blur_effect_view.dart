@@ -27,29 +27,42 @@ class BlurEffectView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return this.isDashboard && (GlobalUtils.theme == 'dark')
-        ? Container(
-            padding: padding,
-            decoration: BoxDecoration(
-                borderRadius: borderRadius ?? BorderRadius.circular(radius),
-                gradient: LinearGradient(
-                  colors: [
-                    Color.fromRGBO(30, 30, 30, 1),
-                    Color.fromRGBO(15, 15, 15, 1)
-                  ],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                )),
-            child: child,
-          )
-        : BlurryContainer(
-            borderRadius: borderRadius != null
-                ? borderRadius
-                : BorderRadius.circular(radius),
-            bgColor: color == null ? overlayColor() : color,
-            blur: blur,
-            padding: padding,
-            child: child,
-          );
+    if (this.isDashboard &&
+        (GlobalUtils.theme == 'dark' || GlobalUtils.theme == 'light')) {
+      if (GlobalUtils.theme == 'dark')
+        return Container(
+          padding: padding,
+          decoration: BoxDecoration(
+              borderRadius: borderRadius ?? BorderRadius.circular(radius),
+              gradient: LinearGradient(
+                colors: [
+                  Color.fromRGBO(30, 30, 30, 1),
+                  Color.fromRGBO(15, 15, 15, 1)
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              )),
+          child: child,
+        );
+      else {
+        return Container(
+          padding: padding,
+          decoration: BoxDecoration(
+              borderRadius: borderRadius ?? BorderRadius.circular(radius),
+              color: Color.fromRGBO(236, 236, 236, 1)
+          ),
+          child: child,
+        );
+      }
+    } else {
+      return BlurryContainer(
+        borderRadius:
+        borderRadius != null ? borderRadius : BorderRadius.circular(radius),
+        bgColor: color == null ? overlayColor() : color,
+        blur: blur,
+        padding: padding,
+        child: child,
+      );
+    }
   }
 }
