@@ -44,7 +44,7 @@ class ProductGridItem extends StatelessWidget {
       });
     }
     return Container(
-      margin: EdgeInsets.only(left: 16, right: 16),
+      margin: EdgeInsets.only(left: 3, right: 3),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(12.0)),
           color: overlayBackground(),
@@ -53,78 +53,91 @@ class ProductGridItem extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.only(top: 16, left: 24),
-                  alignment: Alignment.centerLeft,
-                  child: InkWell(
+//            Row(
+//              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//              crossAxisAlignment: CrossAxisAlignment.center,
+//              children: <Widget>[
+//                Container(
+//                  padding: EdgeInsets.only(top: 16, left: 24),
+//                  alignment: Alignment.centerLeft,
+//                  child: InkWell(
+//                    onTap: () {
+//                      onCheck(product);
+//                    },
+//                    child: product.isChecked
+//                        ? Icon(Icons.check_circle, )
+//                        : Icon(Icons.radio_button_unchecked, ),
+//                  ) ,
+//                ),
+//                Padding(
+//                  padding: EdgeInsets.only(right: 24, top: 16),
+//                  child: Text(
+//                    category,
+//                    style: TextStyle(
+//                      fontSize: 16,
+//                      fontWeight: FontWeight.w400,
+//                    ),
+//                  ),
+//                ),
+//              ],
+//            ),
+            Expanded(
+              child: Stack(
+                children: <Widget>[
+                  GestureDetector(
                     onTap: () {
-                      onCheck(product);
+                      onTap(product);
                     },
-                    child: product.isChecked
-                        ? Icon(Icons.check_circle, )
-                        : Icon(Icons.radio_button_unchecked, ),
-                  ) ,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(right: 24, top: 16),
-                  child: Text(
-                    category,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
+                    child: ProductItemImage(
+                      product.productsModel.images.isEmpty ? null : product.productsModel.images.first,
                     ),
                   ),
-                ),
-              ],
-            ),
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.all(24),
-                child: GestureDetector(
-                  onTap: () {
-                    onTap(product);
-                  },
-                  child: ProductItemImage(
-                    product.productsModel.images.isEmpty ? null : product.productsModel.images.first,
+                  Container(
+                    padding: EdgeInsets.only(top: 4, left: 4),
+                    alignment: Alignment.topLeft,
+                    child: InkWell(
+                      onTap: () {
+                        onCheck(product);
+                      },
+                      child: product.isChecked
+                          ? Icon(Icons.check_circle, color: Colors.black54,)
+                          : Icon(Icons.radio_button_unchecked, color: Colors.black54,)
+                    ) ,
                   ),
-                ),
+                ],
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(left: 24, right: 24, bottom: 16),
+              padding: EdgeInsets.only(left: 8, right: 8, bottom: 6, top: 4),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
                     product.productsModel.title,
                     style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 12,
                         fontWeight: FontWeight.w500
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 8),
+                    padding: EdgeInsets.only(top: 4),
                   ),
                   Text(
                     '${formatter.format(product.productsModel.price)} ${Measurements.currency(product.productsModel.currency)}',
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 8,
                       fontWeight: FontWeight.w300,
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 8),
+                    padding: EdgeInsets.only(top: 2),
                   ),
                   Text(
                     product.productsModel.onSales
                         ? Language.getProductListStrings('filters.quantity.options.outStock')
                         : Language.getProductListStrings('filters.quantity.options.inStock'),
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 8,
                       fontWeight: FontWeight.w300,
                     ),
                   ),
@@ -140,7 +153,7 @@ class ProductGridItem extends StatelessWidget {
               color: Colors.white54,
             ),
             Container(
-              height: 44,
+              height: 28,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
@@ -156,13 +169,13 @@ class ProductGridItem extends StatelessWidget {
                       ) : Container(),
                     ],
                   ),
-                  MaterialButton(
-                    onPressed: (){
+                  InkWell(
+                    onTap: (){
                       onTapMenu(product);
                     },
                     child: Icon(Icons.more_vert),
-                    minWidth: 0,
-                  )                ],
+                  ),
+                ],
               ),
             ),
           ],

@@ -1034,9 +1034,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
           child: CustomScrollView(
             slivers: <Widget>[
               SliverGrid.count(
-                crossAxisCount: _isTablet ? 3: (_isPortrait ? 1: 2),
-                crossAxisSpacing: _isTablet ? 12: (_isPortrait ? 12: 6),
-                mainAxisSpacing: _isTablet ? 12: (_isPortrait ? 12: 6),
+                crossAxisCount: _isTablet ? 3: (_isPortrait ? 2: 2),
+                crossAxisSpacing: _isTablet ? 12: (_isPortrait ? 6: 6),
+                mainAxisSpacing: _isTablet ? 12: (_isPortrait ? 6: 6),
                 childAspectRatio: 1,
                 children: List.generate(
                   collectionItems.length,
@@ -1107,6 +1107,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
               ));
         });
         return Container(
+          padding: EdgeInsets.symmetric(horizontal: 10),
           child: SmartRefresher(
             enablePullDown: true,
             enablePullUp: true,
@@ -1128,10 +1129,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
             child: CustomScrollView(
               slivers: <Widget>[
                 SliverGrid.count(
-                  crossAxisCount: _isTablet ? 3: (_isPortrait ? 1: 2),
-                  crossAxisSpacing: _isTablet ? 12: (_isPortrait ? 12: 6),
-                  mainAxisSpacing: _isTablet ? 12: (_isPortrait ? 12: 6),
-                  childAspectRatio: 0.75,
+                  crossAxisCount: _isTablet ? 3: (_isPortrait ? 2: 2),
+                  crossAxisSpacing: _isTablet ? 12: (_isPortrait ? 0: 6),
+                  mainAxisSpacing: _isTablet ? 12: (_isPortrait ? 6: 6),
                   children: List.generate(
                     productsItems.length,
                         (index) {
@@ -1202,9 +1202,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
             child: CustomScrollView(
               slivers: <Widget>[
                 SliverGrid.count(
-                  crossAxisCount: _isTablet ? 3: (_isPortrait ? 1: 2),
-                  crossAxisSpacing: _isTablet ? 12: (_isPortrait ? 12: 6),
-                  mainAxisSpacing: _isTablet ? 12: (_isPortrait ? 12: 6),
+                  crossAxisCount: _isTablet ? 3: (_isPortrait ? 2: 2),
+                  crossAxisSpacing: _isTablet ? 12: (_isPortrait ? 6: 6),
+                  mainAxisSpacing: _isTablet ? 12: (_isPortrait ? 6: 6),
                   childAspectRatio: 1,
                   children: List.generate(
                     collectionItems.length,
@@ -1359,7 +1359,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
 
   Widget getAddProductItem(ProductsScreenState state) {
     return Container(
-      margin: EdgeInsets.only(left: 16, right: 16,),
+      margin: EdgeInsets.only(left: 3, right: 3,),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(12.0)),
           color: overlayBackground(),
@@ -1395,12 +1395,12 @@ class _ProductsScreenState extends State<ProductsScreen> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(22),
               ),
-              height: 44,
+              height: 30,
               minWidth: 0,
               elevation: 0,
               color: overlayBackground(),
               child: Container(
-                width: 150,
+                width: 100,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -1411,7 +1411,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                     Text(
                       Language.getProductStrings('add_product'),
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 12,
                         fontWeight: FontWeight.w400,
                       ),
                     ),
@@ -1464,12 +1464,12 @@ class _ProductsScreenState extends State<ProductsScreen> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(22),
               ),
-              height: 44,
+              height: 30,
               minWidth: 0,
               elevation: 0,
               color: overlayBackground(),
               child: Container(
-                width: 150,
+                width: 104,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -1480,7 +1480,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                     Text(
                       Language.getProductStrings('Add Collection'),
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 12,
                         fontWeight: FontWeight.w400,
                       ),
                     ),
