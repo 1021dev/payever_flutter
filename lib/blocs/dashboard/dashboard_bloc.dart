@@ -269,15 +269,14 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
     List<Terminal> terminals = [];
     List<ChannelSet> channelSets = [];
     dynamic terminalsObj = await api.getTerminal(activeBusiness.id, token);
-    if (terminalsObj != null){
+    if (terminalsObj != null && terminalsObj is List){
       terminalsObj.forEach((terminal) {
         terminals.add(Terminal.toMap(terminal));
       });
     }
     dynamic channelsObj = await api.getChannelSet(activeBusiness.id, token);
-    if (channelsObj != null){
-      channelsObj.
-      forEach((channelSet) {
+    if (channelsObj != null && channelsObj is List){
+      channelsObj.forEach((channelSet) {
         channelSets.add(ChannelSet.toMap(channelSet));
       });
     }

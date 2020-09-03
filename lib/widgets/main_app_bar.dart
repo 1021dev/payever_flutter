@@ -14,10 +14,12 @@ class MainAppbar extends StatelessWidget with PreferredSizeWidget {
   final String title;
   final Widget icon;
   final bool isDashboard;
+  final bool isClose;
   final DashboardScreenBloc dashboardScreenBloc;
   final DashboardScreenState dashboardScreenState;
   final GlobalKey<InnerDrawerState> innerDrawerKey;
 
+  User user;
   Business activeBusiness;
   String curWall;
   List<BusinessApps> businessWidgets;
@@ -30,7 +32,9 @@ class MainAppbar extends StatelessWidget with PreferredSizeWidget {
     this.dashboardScreenState,
     this.innerDrawerKey,
     this.isDashboard = true,
+    this.isClose = true,
   }) {
+    user = dashboardScreenState.user;
     activeBusiness = dashboardScreenState.activeBusiness;
     curWall = dashboardScreenState.curWall;
     businessWidgets = dashboardScreenState.businessWidgets;
@@ -48,9 +52,22 @@ class MainAppbar extends StatelessWidget with PreferredSizeWidget {
     _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
     _isTablet = MediaQuery.of(context).size.width > 600;
 
-    String businessLogo = '';
-    if (activeBusiness != null && activeBusiness.logo != null) {
-      businessLogo = 'https://payeverproduction.blob.core.windows.net/images/${activeBusiness.logo}';
+    String logo = '';
+    String name = '';
+    if (isDashboard) {
+      if (activeBusiness != null) {
+        name = activeBusiness.name;
+        if (activeBusiness.logo != null)
+          logo =
+              'https://payeverproduction.blob.core.windows.net/images/${activeBusiness.logo}';
+      }
+    } else {
+      if (user != null) {
+        name = user.fullName ?? '';
+        if (user.logo != null)
+          logo =
+              'https://payeverproduction.blob.core.windows.net/images/${user.logo}';
+      }
     }
 
     return AppBar(
@@ -61,8 +78,7 @@ class MainAppbar extends StatelessWidget with PreferredSizeWidget {
         children: <Widget>[
           Container(
             child: Center(
-              child: Container(
-                  child: icon),
+              child: Container(child: icon),
             ),
           ),
           Padding(
@@ -83,17 +99,19 @@ class MainAppbar extends StatelessWidget with PreferredSizeWidget {
           child: InkWell(
             child: Row(
               children: <Widget>[
-                BusinessLogo(url: businessLogo,),
+                BusinessLogo(
+                  url: logo,
+                ),
                 _isTablet || !_isPortrait
                     ? Padding(
-                  padding: EdgeInsets.only(left: 4, right: 4),
-                  child: Text(
-                    activeBusiness.name,
-                    style: TextStyle(
-                      fontSize: 14,
-                    ),
-                  ),
-                )
+                        padding: EdgeInsets.only(left: 4, right: 4),
+                        child: Text(
+                          name,
+                          style: TextStyle(
+                            fontSize: 14,
+                          ),
+                        ),
+                      )
                     : Container(),
               ],
             ),
@@ -143,7 +161,7 @@ class MainAppbar extends StatelessWidget with PreferredSizeWidget {
                   final curvedValue = Curves.ease.transform(a1.value) - 1.0;
                   return Transform(
                     transform:
-                    Matrix4.translationValues(-curvedValue * 200, 0.0, 0),
+                        Matrix4.translationValues(-curvedValue * 200, 0.0, 0),
                     child: NotificationsScreen(
                       business: activeBusiness,
                       businessApps: businessWidgets,
@@ -174,6 +192,20 @@ class MainAppbar extends StatelessWidget with PreferredSizeWidget {
             },
           ),
         ),
+        isClose
+            ? Padding(
+                padding: EdgeInsets.all(6),
+                child: InkWell(
+                  child: SvgPicture.asset(
+                    'assets/images/closeicon.svg',
+                    width: 16,
+                  ),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              )
+            : Container(),
         Padding(
           padding: EdgeInsets.only(right: 8),
         ),

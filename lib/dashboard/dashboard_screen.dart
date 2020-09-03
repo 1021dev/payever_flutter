@@ -209,143 +209,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _appBar(DashboardScreenState state) {
-    String businessLogo = '';
-    if (state.activeBusiness != null && state.activeBusiness.logo != null) {
-      businessLogo = 'https://payeverproduction.blob.core.windows.net/images/${state.activeBusiness.logo}';
-    }
-    return AppBar(
-      centerTitle: false,
-      elevation: 0,
-      automaticallyImplyLeading: false,
-      title: Row(
-        children: <Widget>[
-          Container(
-            child: Center(
-              child: Container(
-                  child: SvgPicture.asset(
-                'assets/images/payeverlogo.svg',
-                height: 16,
-                width: 24,
-              )),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 8),
-          ),
-          Text(
-            'Business',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
-      actions: <Widget>[
-        Padding(
-          padding: EdgeInsets.all(6),
-          child: InkWell(
-            child: Row(
-              children: <Widget>[
-                BusinessLogo(url: businessLogo,),
-                _isTablet || !_isPortrait
-                    ? Padding(
-                        padding: EdgeInsets.only(left: 4, right: 4),
-                        child: Text(
-                          state.activeBusiness.name,
-                          style: TextStyle(
-                            fontSize: 14,
-                          ),
-                        ),
-                      )
-                    : Container(),
-              ],
-            ),
-            onTap: () {},
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.all(6),
-          child: InkWell(
-            child: SvgPicture.asset(
-              'assets/images/searchicon.svg',
-              width: 20,
-            ),
-            onTap: () {
-              Navigator.push(
-                context,
-                PageTransition(
-                  child: SearchScreen(
-                    dashboardScreenBloc: screenBloc,
-                    businessId: state.activeBusiness.id,
-                    searchQuery: '',
-                    appWidgets: state.currentWidgets,
-                    activeBusiness: state.activeBusiness,
-                    currentWall: state.curWall,
-                  ),
-                  type: PageTransitionType.fade,
-                  duration: Duration(milliseconds: 500),
-                ),
-              );
-            },
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.all(6),
-          child: InkWell(
-            child: SvgPicture.asset('assets/images/notificationicon.svg',
-                width: 20),
-            onTap: () async {
-              Provider.of<GlobalStateModel>(context, listen: false)
-                  .setCurrentBusiness(state.activeBusiness);
-              Provider.of<GlobalStateModel>(context, listen: false)
-                  .setCurrentWallpaper(state.curWall);
-
-              await showGeneralDialog(
-                barrierColor: null,
-                transitionBuilder: (context, a1, a2, widget) {
-                  final curvedValue = Curves.ease.transform(a1.value) - 1.0;
-                  return Transform(
-                    transform:
-                    Matrix4.translationValues(-curvedValue * 200, 0.0, 0),
-                    child: NotificationsScreen(
-                      business: state.activeBusiness,
-                      businessApps: state.businessWidgets,
-                      dashboardScreenBloc: screenBloc,
-                    ),
-                  );
-                },
-                transitionDuration: Duration(milliseconds: 200),
-                barrierDismissible: true,
-                barrierLabel: '',
-                context: context,
-                pageBuilder: (context, animation1, animation2) {
-                  return null;
-                },
-              );
-            },
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.all(6),
-          child: InkWell(
-            child: SvgPicture.asset(
-              'assets/images/list.svg',
-              width: 20,
-            ),
-            onTap: () {
-              _innerDrawerKey.currentState.toggle();
-            },
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.only(right: 8),
-        ),
-      ],
-    );
-  }
-
   Widget _showMain(BuildContext context, DashboardScreenState state) {
     if (state.language != null) {
       Language.language = state.language;
@@ -1202,11 +1065,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     return Scaffold(
       resizeToAvoidBottomPadding: false,
-      appBar: MainAppbar(dashboardScreenBloc: screenBloc, dashboardScreenState: state, title: 'Business', icon: SvgPicture.asset(
-        'assets/images/payeverlogo.svg',
-        height: 16,
-        width: 24,
-      ), innerDrawerKey: _innerDrawerKey,),//_appBar(state),
+      appBar: MainAppbar(
+        dashboardScreenBloc: screenBloc,
+        dashboardScreenState: state,
+        title: 'Business',
+        icon: SvgPicture.asset(
+          'assets/images/payeverlogo.svg',
+          height: 16,
+          width: 24,
+        ),
+        innerDrawerKey: _innerDrawerKey,
+        isClose: false,
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: Container(
         width: 40,

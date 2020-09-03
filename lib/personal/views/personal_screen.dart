@@ -23,6 +23,7 @@ import 'package:payever/settings/views/wallpaper/wallpaper_screen.dart';
 import 'package:payever/theme.dart';
 import 'package:payever/transactions/views/transactions_screen.dart';
 import 'package:payever/welcome/welcome_screen.dart';
+import 'package:payever/widgets/main_app_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:payever/blocs/bloc.dart';
 
@@ -132,175 +133,21 @@ class _PersonalScreenState extends State<PersonalScreen> {
     );
   }
 
-  Widget _appBar(PersonalScreenState state) {
-    String businessLogo = '';
-    String userName = '';
-    User user = widget.dashboardScreenBloc.state.user;
-    if (user != null) {
-      if (user.logo != null)
-        businessLogo =
-            'https://payeverproduction.blob.core.windows.net/images/${user.logo}';
-      userName = user.fullName ?? '';
-    }
-    return AppBar(
-      centerTitle: false,
-      elevation: 0,
-      automaticallyImplyLeading: false,
-      title: Row(
-        children: <Widget>[
-          Container(
-            child: Center(
-              child: Container(
-                child: SvgPicture.asset(
-                  'assets/images/payeverlogo.svg',
-                  width: 20,
-                  height: 20,
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 8),
-          ),
-          Text(
-            'Personal',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
-      actions: <Widget>[
-        Padding(
-          padding: EdgeInsets.all(6),
-          child: InkWell(
-            child: Row(
-              children: <Widget>[
-                BusinessLogo(
-                  url: businessLogo,
-                ),
-                _isTablet || !_isPortrait
-                    ? Padding(
-                        padding: EdgeInsets.only(left: 4, right: 4),
-                        child: Text(
-                          userName,
-                          style: TextStyle(
-                            fontSize: 14,
-                          ),
-                        ),
-                      )
-                    : Container(),
-              ],
-            ),
-            onTap: () {},
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.all(6),
-          child: InkWell(
-            child: SvgPicture.asset(
-              'assets/images/searchicon.svg',
-              width: 20,
-            ),
-            onTap: () {
-              Navigator.push(
-                context,
-                PageTransition(
-                  child: SearchScreen(
-                    dashboardScreenBloc: widget.dashboardScreenBloc,
-                    businessId:
-                        widget.dashboardScreenBloc.state.activeBusiness.id,
-                    searchQuery: '',
-                    appWidgets: widget.dashboardScreenBloc.state.currentWidgets,
-                    activeBusiness:
-                        widget.dashboardScreenBloc.state.activeBusiness,
-                    currentWall: widget.dashboardScreenBloc.state.curWall,
-                  ),
-                  type: PageTransitionType.fade,
-                  duration: Duration(milliseconds: 500),
-                ),
-              );
-            },
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.all(6),
-          child: InkWell(
-            child: SvgPicture.asset(
-              'assets/images/notificationicon.svg',
-              width: 20,
-            ),
-            onTap: () async {
-              Provider.of<GlobalStateModel>(context, listen: false)
-                  .setCurrentBusiness(
-                      widget.dashboardScreenBloc.state.activeBusiness);
-              Provider.of<GlobalStateModel>(context, listen: false)
-                  .setCurrentWallpaper(
-                      widget.dashboardScreenBloc.state.curWall);
-
-              await showGeneralDialog(
-                barrierColor: null,
-                transitionBuilder: (context, a1, a2, wg) {
-                  final curvedValue = Curves.ease.transform(a1.value) - 1.0;
-                  return Transform(
-                    transform:
-                        Matrix4.translationValues(-curvedValue * 200, 0.0, 0),
-                    child: NotificationsScreen(
-                      business: widget.dashboardScreenBloc.state.activeBusiness,
-                      businessApps:
-                          widget.dashboardScreenBloc.state.businessWidgets,
-                      dashboardScreenBloc: widget.dashboardScreenBloc,
-                      type: 'transactions',
-                    ),
-                  );
-                },
-                transitionDuration: Duration(milliseconds: 200),
-                barrierDismissible: true,
-                barrierLabel: '',
-                context: context,
-                pageBuilder: (context, animation1, animation2) {
-                  return null;
-                },
-              );
-            },
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.all(6),
-          child: InkWell(
-            child: SvgPicture.asset(
-              'assets/images/list.svg',
-              width: 20,
-            ),
-            onTap: () {
-              _innerDrawerKey.currentState.toggle();
-            },
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.all(6),
-          child: InkWell(
-            child: SvgPicture.asset(
-              'assets/images/closeicon.svg',
-              width: 16,
-            ),
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.only(right: 8),
-        ),
-      ],
-    );
-  }
-
   Widget _body(PersonalScreenState state) {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
-      appBar: _appBar(state),
+      appBar: MainAppbar(
+        dashboardScreenBloc: widget.dashboardScreenBloc,
+        dashboardScreenState: widget.dashboardScreenBloc.state,
+        title: 'Personal',
+        icon: SvgPicture.asset(
+          'assets/images/payeverlogo.svg',
+          height: 16,
+          width: 24,
+        ),
+        innerDrawerKey: _innerDrawerKey,
+        isDashboard: false,
+      ),
       body: SafeArea(
         child: BackgroundBase(
           false,
