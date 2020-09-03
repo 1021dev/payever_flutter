@@ -49,7 +49,7 @@ class BlurEffectView extends StatelessWidget {
           padding: padding,
           decoration: BoxDecoration(
               borderRadius: borderRadius ?? BorderRadius.circular(radius),
-              color: Color.fromRGBO(236, 236, 236, 1)
+              color: Color.fromRGBO(247, 247, 247, 1)
           ),
           child: child,
         );

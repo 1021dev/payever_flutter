@@ -127,6 +127,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
         : MediaQuery.of(context).size.height);
     _isTablet = MediaQuery.of(context).size.width > 600;
     Measurements.loadImages(context);
+    if (_isTablet) {
+      Measurements.width =  Measurements.width * 0.7;
+    }
     if (globalStateModel.refresh) {
       screenBloc.add(DashboardScreenInitEvent(wallpaper: widget.wallpaper));
       globalStateModel.setRefresh(false);
@@ -1097,6 +1100,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
       body: SafeArea(
         top: true,
+        bottom: false,
         child: BackgroundBase(
           false,
           backgroundColor: Colors.transparent,
