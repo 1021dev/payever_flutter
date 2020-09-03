@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:payever/theme.dart';
 
-class SecondAppbar extends StatelessWidget {
+class SecondAppbar extends StatefulWidget {
+  final Function onTap;
 
-  final Function onTapGetStarted;
-  final Function onTapContinueSetup;
-  final Function onTapLearnMore;
+  int selectedIndex;
 
   SecondAppbar({
-    this.onTapGetStarted,
-    this.onTapContinueSetup,
-    this.onTapLearnMore,
+    this.onTap,
+    this.selectedIndex = 0,
   });
 
+  @override
+  _SecondAppbarState createState() => _SecondAppbarState();
+}
+
+class _SecondAppbarState extends State<SecondAppbar> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -24,75 +27,119 @@ class SecondAppbar extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            SizedBox(
-              width: 12,
-            ),
-            MaterialButton(
-              onPressed: () {
-
+            InkWell(
+              onTap: () {
+                widget.onTap(0);
+                setState(() {
+                  widget.selectedIndex = 0;
+                });
               },
-              minWidth: 20,
-              height: double.infinity,
-              padding: EdgeInsets.zero,
-              child: Text('Personal information', style: TextStyle(color: Colors.white),),
+              child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12),
+                  height: double.infinity,
+                  alignment: Alignment.center,
+                  color: widget.selectedIndex == 0
+                      ? Colors.white12
+                      : Colors.transparent,
+                  child: Text(
+                    'Personal information',
+                    style: TextStyle(color: Colors.white),
+                  )),
             ),
-            SizedBox(
-              width: 12,
-            ),
-            MaterialButton(
-              onPressed: () {
-
+            InkWell(
+              onTap: () {
+                widget.onTap(1);
+                setState(() {
+                  widget.selectedIndex = 1;
+                });
               },
-              minWidth: 20,
-              padding: EdgeInsets.zero,
-              child: Text('Language', style: TextStyle(color: Colors.white),),
+              child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12),
+                  height: double.infinity,
+                  alignment: Alignment.center,
+                  color: widget.selectedIndex == 1
+                      ? Colors.white12
+                      : Colors.transparent,
+                  child: Text(
+                    'Language',
+                    style: TextStyle(color: Colors.white),
+                  )),
             ),
-            SizedBox(
-              width: 16,
-            ),
-            MaterialButton(
-              onPressed: () {
-
+            InkWell(
+              onTap: () {
+                widget.onTap(2);
+                setState(() {
+                  widget.selectedIndex = 2;
+                });
               },
-              minWidth: 20,
-              padding: EdgeInsets.zero,
-              child: Text('Shipping address', style: TextStyle(color: Colors.white),),
+              child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12),
+                  height: double.infinity,
+                  alignment: Alignment.center,
+                  color: widget.selectedIndex == 2
+                      ? Colors.white12
+                      : Colors.transparent,
+                  child: Text(
+                    'Shipping address',
+                    style: TextStyle(color: Colors.white),
+                  )),
             ),
-            SizedBox(
-              width: 12,
-            ),
-            MaterialButton(
-              onPressed: () {
-
+            InkWell(
+              onTap: () {
+                widget.onTap(3);
+                setState(() {
+                  widget.selectedIndex = 3;
+                });
               },
-              minWidth: 20,
-              padding: EdgeInsets.zero,
-              child: Text('Password', style: TextStyle(color: Colors.white),),
+              child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12),
+                  height: double.infinity,
+                  alignment: Alignment.center,
+                  color: widget.selectedIndex == 3
+                      ? Colors.white12
+                      : Colors.transparent,
+                  child: Text(
+                    'Password',
+                    style: TextStyle(color: Colors.white),
+                  )),
             ),
-            SizedBox(
-              width: 12,
-            ),
-            MaterialButton(
-              onPressed: () {
-
+            InkWell(
+              onTap: () {
+                widget.onTap(4);
+                setState(() {
+                  widget.selectedIndex = 4;
+                });
               },
-              minWidth: 20,
-              padding: EdgeInsets.zero,
-              child: Text('Email notifications', style: TextStyle(color: Colors.white),),
+              child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12),
+                  height: double.infinity,
+                  alignment: Alignment.center,
+                  color: widget.selectedIndex == 4
+                      ? Colors.white12
+                      : Colors.transparent,
+                  child: Text(
+                    'Email notifications',
+                    style: TextStyle(color: Colors.white),
+                  )),
             ),
-            SizedBox(
-              width: 12,
-            ),
-            MaterialButton(
-              onPressed: () {
-
+            InkWell(
+              onTap: () {
+                widget.onTap(5);
+                setState(() {
+                  widget.selectedIndex = 5;
+                });
               },
-              minWidth: 20,
-              padding: EdgeInsets.zero,
-              child: Text('Wallpapers', style: TextStyle(color: Colors.white),),
-            ),
-            SizedBox(
-              width: 12,
+              child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12),
+                  height: double.infinity,
+                  alignment: Alignment.center,
+                  color: widget.selectedIndex == 5
+                      ? Colors.white12
+                      : Colors.transparent,
+                  child: Text(
+                    'Wallpapers',
+                    style: TextStyle(color: Colors.white),
+                  )),
             ),
           ],
         ),

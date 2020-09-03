@@ -153,7 +153,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
           false,
           backgroundColor: Colors.transparent,
           wallPaper: currentWallpaper,
-          body: state.isLoading
+          body: state.isLoading || state.user == null
               ? Center(
                   child: CircularProgressIndicator(),
                 )
@@ -182,7 +182,6 @@ class _PersonalScreenState extends State<PersonalScreen> {
   }
 
   Widget _headerView(PersonalScreenState state) {
-    if (state.user == null) return Container();
     return Column(
       children: [
         SizedBox(height: 60),
@@ -453,7 +452,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
             PageTransition(
               child: SettingInitScreen(
                 dashboardScreenBloc: widget.dashboardScreenBloc,
-                isPersonal: true,
+                isDashboard: false,
               ),
               type: PageTransitionType.fade,
             ),
