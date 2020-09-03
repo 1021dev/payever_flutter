@@ -733,7 +733,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
 
   Widget _getGridBody(ConnectScreenState state) {
     int crossAxisCount =
-        _isTablet ? (_isPortrait ? 2 : 3) : (_isPortrait ? 1 : 2);
+        _isTablet ? (_isPortrait ? 2 : 3) : (_isPortrait ? 2 : 2);
     double imageRatio = 323.0 / 182.0;
     double contentHeight = 116;
     double cellWidth = _isPortrait
@@ -750,8 +750,8 @@ class _ConnectScreenState extends State<ConnectScreen> {
       child: GridView.count(
         crossAxisCount: crossAxisCount,
         padding: EdgeInsets.all(16),
-        crossAxisSpacing: 12,
-        mainAxisSpacing: 12,
+        crossAxisSpacing: 6,
+        mainAxisSpacing: 6,
         shrinkWrap: true,
         childAspectRatio: cellWidth / cellHeight,
         children: state.connectInstallations.map((installation) {

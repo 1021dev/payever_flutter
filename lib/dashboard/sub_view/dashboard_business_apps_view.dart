@@ -11,11 +11,13 @@ class DashboardBusinessAppsView extends StatefulWidget {
   final List<AppWidget> appWidgets;
   final Function onTapEdit;
   final Function onTapWidget;
+  final bool isTablet;
   DashboardBusinessAppsView({
     this.businessApps,
     this.appWidgets,
     this.onTapEdit,
     this.onTapWidget,
+    this.isTablet,
   });
   @override
   _DashboardBusinessAppsViewState createState() => _DashboardBusinessAppsViewState();
@@ -108,7 +110,7 @@ class _DashboardBusinessAppsViewState extends State<DashboardBusinessAppsView> {
             ),
             if (businessApps != null) Expanded(
               child: GridView.count(
-                crossAxisCount: 4,
+                crossAxisCount: widget.isTablet ? 6 : 4,
                 mainAxisSpacing: 16,
                 shrinkWrap: true,
                 children: businessApps.map((e) => BusinessAppCell(

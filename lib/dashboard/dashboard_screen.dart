@@ -311,6 +311,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     dashboardWidgets.add(DashboardBusinessAppsView(
       businessApps: state.businessWidgets,
       appWidgets: state.currentWidgets,
+      isTablet: _isTablet,
       onTapEdit: () {},
       onTapWidget: (BusinessApps aw) {
         Provider.of<GlobalStateModel>(context, listen: false)

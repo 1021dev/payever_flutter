@@ -18,7 +18,7 @@ import '../switcher/switcher_page.dart';
 
 final double _heightFactorTablet = 0.05;
 final double _heightFactorPhone = 0.07;
-final double _widthFactorTablet = 2.0;
+final double _widthFactorTablet = 1.1;
 final double _widthFactorPhone = 1.1;
 
 const double _paddingText = 16.0;
@@ -506,6 +506,9 @@ class LoginScreen extends StatelessWidget {
         ? MediaQuery.of(context).size.width
         : MediaQuery.of(context).size.height);
     _isTablet = Measurements.width < 600 ? false : true;
+    if (_isTablet)
+      Measurements.width = Measurements.width * 0.7;
+
     return Scaffold(
       key: scaffoldKey,
       body: Login(),

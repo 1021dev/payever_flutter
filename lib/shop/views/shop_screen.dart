@@ -549,7 +549,7 @@ class _ShopScreenState extends State<ShopScreen> {
           ),
           Expanded(
             child: ((selectedTypes == 0 && state.templates.length > 0) || (selectedTypes == 1 && state.ownThemes.length > 0)) ? GridView.count(
-              padding: EdgeInsets.only(left: 36, right: 36, top: 16, bottom: 16),
+              padding: EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 16),
               children: selectedTypes == 0
                   ? state.templates.map((templateModel) {
                 return TemplateCell(
@@ -608,9 +608,9 @@ class _ShopScreenState extends State<ShopScreen> {
                   },
                 );
               }).toList(),
-              crossAxisCount: _isPortrait ? 1: 3,
-              mainAxisSpacing: 36,
-              crossAxisSpacing: 36,
+              crossAxisCount: _isPortrait ? 2: 3,
+              mainAxisSpacing: 6,
+              crossAxisSpacing: 6,
               childAspectRatio: 0.6,
             ): Container(),
           ),

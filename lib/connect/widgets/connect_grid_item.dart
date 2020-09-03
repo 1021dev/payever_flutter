@@ -48,15 +48,15 @@ class ConnectGridItem extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  height: 116,
+                  height: 80,
                   child: Column(
                     children: <Widget>[
                       Expanded(
                         child: Container(
                           padding: EdgeInsets.only(
-                            left: 20,
-                            right: 20,
-                            top: 12,
+                            left: 8,
+                            right: 8,
+                            top: 8,
                           ),
                           child: Column(
                             children: <Widget>[
@@ -67,7 +67,7 @@ class ConnectGridItem extends StatelessWidget {
                                   Language.getConnectStrings(connectModel.integration.displayOptions.title),
                                   maxLines: 1,
                                   style: TextStyle(
-                                      fontSize: 15,
+                                      fontSize: 12,
                                       fontFamily: 'Roboto-Medium',
                                   ),
                                 ),
@@ -78,7 +78,7 @@ class ConnectGridItem extends StatelessWidget {
                                   Language.getConnectStrings(connectModel.integration.installationOptions.price),
                                   maxLines: 1,
                                   style: TextStyle(
-                                      fontSize: 11,
+                                      fontSize: 8,
                                       fontFamily: 'Roboto',
                                   ),
                                 ),
@@ -88,7 +88,7 @@ class ConnectGridItem extends StatelessWidget {
                         ),
                       ),
                       Container(
-                        height: 44,
+                        height: 28,
                         color: overlayBackground(),
                         alignment: Alignment.center,
                         child: SizedBox.expand(
