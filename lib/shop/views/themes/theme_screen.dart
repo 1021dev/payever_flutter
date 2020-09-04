@@ -83,13 +83,13 @@ class _ThemesScreenState extends State<ThemesScreen> {
     );
   }
 
-  Widget _topBar(ShopScreenState state) {
+  Widget _topBar(ShopScreenState state, List<ThemeListModel>themeListModels) {
     String itemsString = '';
     int selectedCount = 0;
-    if (state.themeListModels.length > 0) {
-      selectedCount = state.themeListModels.where((element) => element.isChecked).toList().length;
+    if (themeListModels.length > 0) {
+      selectedCount = themeListModels.where((element) => element.isChecked).toList().length;
     }
-    itemsString = '${state.themeListModels.length} items';
+    itemsString = '${themeListModels.length} themes in ${_getCollections(state)}';
     return selectedCount == 0 ? Container(
       height: 64,
       color: Color(0xFF212122),
@@ -181,6 +181,11 @@ class _ThemesScreenState extends State<ThemesScreen> {
                             fontWeight: FontWeight.w300,
                           ),
                         ),
+                        onChanged: (value) {
+                          setState(() {
+
+                          });
+                        },
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.white,
@@ -293,7 +298,7 @@ class _ThemesScreenState extends State<ThemesScreen> {
               // screenBloc.add(DeleteSelectedContactsEvent());
             },
             child: Text(
-              'Delete',
+              'Duplicate',
               style: TextStyle(color: Colors.white),
             ),
           ),
@@ -327,73 +332,11 @@ class _ThemesScreenState extends State<ThemesScreen> {
   }
 
   Widget _body(ShopScreenState state) {
-    List<ThemeListModel> themes = _getThemes(state);
+    List<ThemeListModel> themes = _getSearchThemes(_getThemes(state)) ;
     return Container(
       child: Column(
         children: <Widget>[
-          // Container(
-          //   height: 44,
-          //   color: Color(0xFF222222),
-          //   child: Stack(
-          //     alignment: Alignment.center,
-          //     children: <Widget>[
-          //       Container(
-          //         padding: EdgeInsets.only(left: 16),
-          //         alignment: Alignment.centerLeft,
-          //         child: InkWell(
-          //           onTap: () async {
-          //             await showGeneralDialog(
-          //               barrierColor: null,
-          //               transitionBuilder: (context, a1, a2, wg) {
-          //                 final curvedValue =
-          //                     1.0 - Curves.ease.transform(a1.value);
-          //                 return Transform(
-          //                   transform: Matrix4.translationValues(
-          //                       -curvedValue * 200, 0.0, 0),
-          //                   child: ShopFilterScreen(
-          //                     screenBloc: widget.screenBloc,
-          //                   ),
-          //                 );
-          //               },
-          //               transitionDuration: Duration(milliseconds: 200),
-          //               barrierDismissible: true,
-          //               barrierLabel: '',
-          //               context: context,
-          //               pageBuilder: (context, animation1, animation2) {
-          //                 return null;
-          //               },
-          //             );
-          //           },
-          //           child: Row(
-          //             children: <Widget>[
-          //               Icon(
-          //                 Icons.filter_list,
-          //                 color: Colors.white,
-          //               ),
-          //               Padding(
-          //                 padding: EdgeInsets.only(left: 8),
-          //               ),
-          //               Text(
-          //                 'Filter',
-          //                 style: TextStyle(color: Colors.white),
-          //               )
-          //             ],
-          //           ),
-          //         ),
-          //       ),
-          //       Text(
-          //         '${themes.length} Themes',
-          //         textAlign: TextAlign.center,
-          //         style: TextStyle(
-          //           color: Colors.white,
-          //           fontSize: 16,
-          //           fontWeight: FontWeight.w400,
-          //         ),
-          //       )
-          //     ],
-          //   ),
-          // ),
-          _topBar(state),
+          _topBar(state, themes),
           Expanded(
             child: (themes.length > 0)
                 ? GridView.count(
@@ -433,7 +376,7 @@ class _ThemesScreenState extends State<ThemesScreen> {
                           }
                         },
                         onCheck: (ThemeListModel model) {
-                          widget.screenBloc.add(SelectThemeEvent(model: model));
+                          widget.screenBloc.add(SelectThemeEvent(model: model,));
                         },
                         onTapEdit: (theme) {},
                       );
@@ -450,17 +393,24 @@ class _ThemesScreenState extends State<ThemesScreen> {
     );
   }
 
+  List<ThemeListModel> _getSearchThemes(List<ThemeListModel>themes) {
+
+    String name = searchTextController.text;
+    print('upate value: $name');
+    if (name.isEmpty) return themes;
+    if (themes == null || themes.isEmpty) return [];
+    List<ThemeListModel>themeListModels = [];
+    themeListModels = themes.where((element) => element.themeModel.name.toLowerCase().contains(name.toLowerCase())).toList();
+    return themeListModels ?? [];
+  }
+
   List<ThemeListModel> _getThemes(ShopScreenState state) {
     String selectedCategory = state.selectedCategory;
-    print('selectedCategory : $selectedCategory');
     List<String> subCategories = state.subCategories;
     if (selectedCategory.isEmpty || selectedCategory == 'All')
       return state.themeListModels;
     else if (selectedCategory == 'My Themes') {
-      List<ThemeListModel> themeListModels = [];
-      state.myThemes.forEach((theme) => themeListModels
-          .add(ThemeListModel(themeModel: theme, isChecked: false)));
-      return themeListModels;
+      return state.myThemeListModels;
     } else {
       if (subCategories.isEmpty)
         return state.themeListModels;
@@ -479,5 +429,21 @@ class _ThemesScreenState extends State<ThemesScreen> {
         return themeListModels;
       }
     }
+  }
+
+  String _getCollections(ShopScreenState state) {
+    String selectedCategory = state.selectedCategory;
+    List<String> subCategories = state.subCategories;
+    int collection = 0;
+    if (selectedCategory.isEmpty || selectedCategory == 'All' || selectedCategory == 'My Themes') {
+      collection = 1;
+    } else {
+      if (subCategories.isEmpty)
+        collection = 1;
+      else {
+        collection = subCategories.length;
+      }
+    }
+    return '$collection collection' + (collection > 1 ? 's' : '');
   }
 }

@@ -54,21 +54,6 @@ class PasswordModel {
   }
 }
 
-
-// class TemplateModel {
-//   String id;
-//   String name;
-//   String picture;
-//   String type;
-//
-//   TemplateModel.toMap(dynamic obj) {
-//     id = obj['id'];
-//     name = obj['name'];
-//     picture = obj['picture'];
-//     type = obj['type'];
-//   }
-// }
-
 class TemplateModel {
   String code;
   String icon;

@@ -9,6 +9,7 @@ class ShopScreenState {
   final List<ThemeModel> themes;
   final List<ThemeListModel> themeListModels;
   final List<ThemeModel> myThemes;
+  final List<ThemeListModel> myThemeListModels;
   final List<ShopDetailModel> shops;
   final ShopDetailModel activeShop;
   final ThemeModel activeTheme;
@@ -23,8 +24,9 @@ class ShopScreenState {
     this.shops = const [],
     this.templates = const [],
     this.themes = const [],
-    this.themeListModels = const [],
     this.myThemes = const [],
+    this.themeListModels = const [],
+    this.myThemeListModels = const [],
     this.activeShop,
     this.activeTheme,
     this.blobName,
@@ -39,8 +41,9 @@ class ShopScreenState {
     this.templates,
     this.shops,
     this.themes,
-    this.themeListModels,
     this.myThemes,
+    this.themeListModels,
+    this.myThemeListModels,
     this.activeShop,
     this.activeShop,
     this.blobName,
@@ -54,8 +57,9 @@ class ShopScreenState {
     bool isUploading,
     List<TemplateModel> templates,
     List<ThemeModel> themes,
-    List<ThemeListModel> themeListModels,
     List<ThemeModel> myThemes,
+    List<ThemeListModel> themeListModels,
+    List<ThemeListModel> myThemeListModels,
     List<ShopDetailModel> shops,
     ShopDetailModel activeShop,
     ThemeModel activeTheme,
@@ -70,8 +74,9 @@ class ShopScreenState {
       templates: templates ?? this.templates,
       shops: shops ?? this.shops,
       themes: themes ?? this.themes,
-      themeListModels: themeListModels ?? this.themeListModels,
       myThemes: myThemes ?? this.myThemes,
+      themeListModels: themeListModels ?? this.themeListModels,
+      myThemeListModels: myThemeListModels ?? this.myThemeListModels,
       activeShop: activeShop ?? this.activeShop,
       activeTheme: activeTheme ?? this.activeTheme,
       blobName: blobName ?? this.blobName,

@@ -121,7 +121,7 @@ class _ShopFilterScreenState extends State<ShopFilterScreen> {
             constraints: BoxConstraints.expand(height: 44),
             child: SizedBox(
               child: MaterialButton(
-                onPressed: () {
+                onPressed: () async {
                   widget.screenBloc.add(ShopCategorySelected(
                       category: selectedCategory,
                       subCategories: subCategories));

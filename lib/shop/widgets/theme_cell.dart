@@ -13,7 +13,7 @@ class ThemeCell extends StatelessWidget {
   final Function onTapEdit;
   final Function onTapDelete;
   final Function onCheck;
-
+  final Function onTapPreview;
   ThemeCell({
     this.themeListModel,
     this.onTapInstall,
@@ -21,6 +21,7 @@ class ThemeCell extends StatelessWidget {
     this.onTapEdit,
     this.onTapDelete,
     this.onCheck,
+    this.onTapPreview,
   });
 
   List<OverflowMenuItem> themePopup(BuildContext context) {
@@ -169,7 +170,7 @@ class ThemeCell extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 InkWell(
-                  onTap: () {},
+                  onTap: onTapPreview,
                   child: Container(
                       color: overlayButtonBackground(),
                       child: Center(child: Text('Preview'))),
@@ -179,7 +180,9 @@ class ThemeCell extends StatelessWidget {
                   color: Color(0xFF888888),
                 ),
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    onTapInstall(themeListModel.themeModel);
+                  },
                   child: Container(
                       color: overlayButtonBackground(),
                       child: Center(child: Text('Install'))),

@@ -190,7 +190,6 @@ class SelectThemeEvent extends ShopScreenEvent {
 
 class SelectAllThemesEvent extends ShopScreenEvent {
   final bool isSelect;
-
   SelectAllThemesEvent({this.isSelect});
   @override
   List<Object> get props => [
