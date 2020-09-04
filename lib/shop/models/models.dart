@@ -107,7 +107,6 @@ class ThemeItemModel {
   }
 }
 
-
 class ThemeModel {
   String id;
   bool isActive = false;
@@ -129,6 +128,14 @@ class ThemeModel {
     type = obj['type'] ?? '';
   }
 }
+
+class ThemeListModel {
+  bool isChecked;
+  ThemeModel themeModel;
+
+  ThemeListModel({this.themeModel, this.isChecked});
+}
+
 
 class ShopDetailModel {
   AccessConfig accessConfig;

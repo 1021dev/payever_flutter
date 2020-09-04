@@ -39,6 +39,10 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
     } else if (event is ShopCategorySelected) {
       yield state.copyWith(
           selectedCategory: event.category, subCategories: event.subCategories);
+    } else if (event is SelectThemeEvent) {
+      yield* selectTheme(event.model);
+    } else if(event is SelectAllThemesEvent) {
+      yield* selectAllThemes(event.isSelect);
     }
   }
 
@@ -47,6 +51,7 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
     List<ShopDetailModel> shops = [];
     List<TemplateModel> templates = [];
     List<ThemeModel> themes = [];
+    List<ThemeListModel> themeListModes = [];
     dynamic response = await api.getShop(activeBusinessId, GlobalUtils.activeToken.accessToken);
     if (response is List) {
       response.forEach((element) {
@@ -68,6 +73,7 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
       template.items.forEach((item) {
         item.themes.forEach((theme) {
           themes.add(theme);
+          themeListModes.add(ThemeListModel(themeModel: theme, isChecked: false));
         });
       });
     });
@@ -84,6 +90,7 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
         activeShop: activeShop,
         myThemes: myThemes,
         templates: templates,
+        themeListModels: themeListModes,
         themes: themes,
         isLoading: false);
     if (activeShop != null) {
@@ -156,5 +163,22 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
       ShopDetailModel model = ShopDetailModel.toMap(defaultObj);
       yield state.copyWith(activeShop: model);
     }
+  }
+
+  Stream<ShopScreenState> selectTheme(ThemeListModel model) async* {
+    List<ThemeListModel> themeListModels = [];
+    themeListModels.addAll(state.themeListModels);
+    int index = themeListModels.indexOf(model);
+    themeListModels[index].isChecked = !model.isChecked;
+    yield state.copyWith(themeListModels: themeListModels);
+  }
+
+  Stream<ShopScreenState> selectAllThemes(bool isSelect) async* {
+    List<ThemeListModel> themeListModels = [];
+    themeListModels.addAll(state.themeListModels);
+    themeListModels.forEach((element) {
+      element.isChecked = isSelect;
+    });
+    yield state.copyWith(themeListModels: themeListModels);
   }
 }

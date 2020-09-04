@@ -176,3 +176,24 @@ class ShopCategorySelected extends ShopScreenEvent {
     this.subCategories,
   ];
 }
+
+class SelectThemeEvent extends ShopScreenEvent {
+  final ThemeListModel model;
+
+  SelectThemeEvent({this.model});
+
+  @override
+  List<Object> get props => [
+    this.model,
+  ];
+}
+
+class SelectAllThemesEvent extends ShopScreenEvent {
+  final bool isSelect;
+
+  SelectAllThemesEvent({this.isSelect});
+  @override
+  List<Object> get props => [
+    this.isSelect,
+  ];
+}

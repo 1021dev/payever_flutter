@@ -4,19 +4,23 @@ import 'package:flutter_svg/svg.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/pos/widgets/pos_top_button.dart';
 import 'package:payever/shop/models/models.dart';
+import 'package:payever/theme.dart';
 
 class ThemeCell extends StatelessWidget {
-  final ThemeModel themeModel;
+  final ThemeListModel themeListModel;
   final Function onTapInstall;
   final Function onTapDuplicate;
   final Function onTapEdit;
   final Function onTapDelete;
+  final Function onCheck;
+
   ThemeCell({
-    this.themeModel,
+    this.themeListModel,
     this.onTapInstall,
     this.onTapDuplicate,
     this.onTapEdit,
     this.onTapDelete,
+    this.onCheck,
   });
 
   List<OverflowMenuItem> themePopup(BuildContext context) {
@@ -48,7 +52,6 @@ class ThemeCell extends StatelessWidget {
     ];
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -62,105 +65,124 @@ class ThemeCell extends StatelessWidget {
       child: Column(
         children: <Widget>[
           Expanded(
-            child: themeModel.picture != null ? CachedNetworkImage(
-              imageUrl: '${Env.storage}${themeModel.picture}',
-              imageBuilder: (context, imageProvider) => Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  image: DecorationImage(
-                    image: imageProvider,
-                    fit: BoxFit.cover,
+            child: Stack(
+              children: <Widget>[
+                themeListModel.themeModel.picture != null
+                    ? CachedNetworkImage(
+                        imageUrl:
+                            '${Env.storage}${themeListModel.themeModel.picture}',
+                        imageBuilder: (context, imageProvider) => Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        color: Colors.white,
+                        placeholder: (context, url) => Container(
+                          color: Colors.white,
+                          child: Center(
+                            child: Container(
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                              ),
+                            ),
+                          ),
+                        ),
+                        errorWidget: (context, url, error) => Container(
+                          color: Colors.white,
+                          child: Center(
+                            child: SvgPicture.asset(
+                              'assets/images/no_image.svg',
+                              color: Colors.black54,
+                              width: 100,
+                              height: 100,
+                            ),
+                          ),
+                        ),
+                      )
+                    : Container(
+                        color: Colors.white,
+                        child: Center(
+                          child: SvgPicture.asset(
+                            'assets/images/no_image.svg',
+                            color: Colors.black54,
+                            width: 100,
+                            height: 100,
+                          ),
+                        ),
+                      ),
+                Container(
+                  padding: EdgeInsets.only(top: 4, left: 4),
+                  alignment: Alignment.topLeft,
+                  child: InkWell(
+                      onTap: () {
+                        onCheck(themeListModel);
+                      },
+                      child: themeListModel.isChecked
+                          ? Icon(
+                              Icons.check_circle,
+                              color: Colors.black87,
+                            )
+                          : Icon(
+                              Icons.radio_button_unchecked,
+                              color: Colors.black87,
+                            )),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.only(right: 8, left: 8, top: 4, bottom: 4),
+            color: overlayColor(),
+            width: double.infinity,
+            height: (Measurements.width - 38) * 0.13,
+            alignment: Alignment.centerLeft,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text(
+                  themeListModel.themeModel.name,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
-              ),
-              color: Colors.white,
-              placeholder: (context, url) => Container(
-                color: Colors.white,
-                child: Center(
-                  child: Container(
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                    ),
+                Text(
+                  themeListModel.themeModel.type,
+                  style: TextStyle(
+                    color: Color(0xffff9000),
+                    fontSize: 10,
                   ),
                 ),
-              ),
-              errorWidget: (context, url, error) =>  Container(
-                color: Colors.white,
-                child: Center(
-                  child: SvgPicture.asset(
-                    'assets/images/no_image.svg',
-                    color: Colors.black54,
-                    width: 100,
-                    height: 100,
-                  ),
-                ),
-              ),
-            ) : Container(
-              color: Colors.white,
-              child: Center(
-                child: SvgPicture.asset(
-                  'assets/images/no_image.svg',
-                  color: Colors.black54,
-                  width: 100,
-                  height: 100,
-                ),
-              ),
+              ],
             ),
           ),
           Container(
             color: Colors.black87,
             height: (Measurements.width - 38) * 0.1,
-            child: Stack(
-              alignment: Alignment.center,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      'new',
-                      style: TextStyle(
-                        color: Color(0xffff9000),
-                        fontSize: 10,
-                      ),
-                    ),
-                    Text(
-                      themeModel.name,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ],
+                InkWell(
+                  onTap: () {},
+                  child: Container(
+                      color: overlayButtonBackground(),
+                      child: Center(child: Text('Preview'))),
                 ),
                 Container(
-                  alignment: Alignment.centerRight,
-                  child: PopupMenuButton<OverflowMenuItem>(
-                    icon: Icon(Icons.more_horiz),
-                    offset: Offset(0, 0),
-                    onSelected: (OverflowMenuItem item) => item.onTap(themeModel),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    color: Colors.black87,
-                    itemBuilder: (BuildContext context) {
-                      return themePopup(context)
-                          .map((OverflowMenuItem item) {
-                        return PopupMenuItem<OverflowMenuItem>(
-                          value: item,
-                          child: Text(
-                            item.title,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w300,
-                            ),
-                          ),
-                        );
-                      }).toList();
-                    },
-                  ),
+                  width: 1,
+                  color: Color(0xFF888888),
+                ),
+                InkWell(
+                  onTap: () {},
+                  child: Container(
+                      color: overlayButtonBackground(),
+                      child: Center(child: Text('Install'))),
                 ),
               ],
             ),
@@ -168,6 +190,5 @@ class ThemeCell extends StatelessWidget {
         ],
       ),
     );
-
   }
 }
