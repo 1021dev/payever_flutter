@@ -31,9 +31,8 @@ import 'business_details/business_details_screen.dart';
 
 class SettingInitScreen extends StatelessWidget {
   final DashboardScreenBloc dashboardScreenBloc;
-  final bool isDashboard;
 
-  const SettingInitScreen({this.dashboardScreenBloc, this.isDashboard = true});
+  const SettingInitScreen({this.dashboardScreenBloc});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +40,6 @@ class SettingInitScreen extends StatelessWidget {
     return SettingScreen(
       globalStateModel: globalStateModel,
       dashboardScreenBloc: dashboardScreenBloc,
-      isDashboard: isDashboard,
     );
   }
 }
@@ -49,10 +47,9 @@ class SettingInitScreen extends StatelessWidget {
 class SettingScreen extends StatefulWidget {
   final GlobalStateModel globalStateModel;
   final DashboardScreenBloc dashboardScreenBloc;
-  final bool isDashboard;
 
   SettingScreen(
-      {this.globalStateModel, this.dashboardScreenBloc, this.isDashboard});
+      {this.globalStateModel, this.dashboardScreenBloc});
 
   @override
   _SettingScreenState createState() => _SettingScreenState();
@@ -157,15 +154,12 @@ class _SettingScreenState extends State<SettingScreen> {
                     height: 20,
                   ),
                   innerDrawerKey: _innerDrawerKey,
-                  isDashboard: widget.isDashboard,
                 ),
                 body: SafeArea(
                   bottom: false,
                   child: BackgroundBase(
                     true,
-                    body: widget.isDashboard
-                        ? _body(state)
-                        : _personalBody(state),
+                    body: _body(state)
                   ),
                 ),
               ),
@@ -266,342 +260,6 @@ class _SettingScreenState extends State<SettingScreen> {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _personalBody(SettingScreenState state) {
-    return Form(
-      key: formKey,
-      child: state.user == null
-          ? Container()
-          : Container(
-              child: Column(
-                children: <Widget>[
-                  SecondAppbar(
-                    onTap: (index) {
-                      print('print Index $index');
-                    },
-                  ),
-                  Expanded(
-                    child: Container(
-                      padding: EdgeInsets.all(16),
-                      width: Measurements.width,
-                      child: Center(
-                        child: BlurEffectView(
-                          color: overlayColor(),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              SizedBox(height: 30),
-                              CustomCircleAvatar(
-                                  state.user.logo,
-                                  state.user.fullName,
-                                  Measurements.width * 0.08),
-                              SizedBox(height: 22),
-                              Padding(
-                                padding:
-                                    EdgeInsets.only(top: 8, left: 8, right: 8),
-                                child: BlurEffectView(
-                                  color: overlayRow(),
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(8),
-                                    topRight: Radius.circular(8),
-                                  ),
-                                  child: Container(
-                                    height: 64,
-                                    child: Row(
-                                      children: <Widget>[
-                                        Flexible(
-                                          child: BlurEffectView(
-                                            color: overlayRow(),
-                                            radius: 0,
-                                            child: Container(
-                                              height: 64,
-                                              alignment: Alignment.center,
-                                              padding: EdgeInsets.only(
-                                                  left: 16, right: 8),
-                                              child: DropdownButtonFormField(
-                                                items:
-                                                    List.generate(2, (index) {
-                                                  return DropdownMenuItem(
-                                                    child: Text(
-                                                      Language.getConnectStrings(
-                                                          index == 0
-                                                              ? 'user_business_form.form.contactDetails.salutation.options.SALUTATION_MR'
-                                                              : 'user_business_form.form.contactDetails.salutation.options.SALUTATION_MRS'),
-                                                    ),
-                                                    value: index == 0
-                                                        ? 'SALUTATION_MR'
-                                                        : 'SALUTATION_MRS',
-                                                  );
-                                                }).toList(),
-                                                onChanged: (val) {
-                                                  setState(() {
-                                                    salutation = val;
-                                                  });
-                                                },
-                                                value: salutation != ''
-                                                    ? salutation
-                                                    : null,
-                                                icon: Flexible(
-                                                  child: Icon(
-                                                    Icons.keyboard_arrow_down,
-                                                  ),
-                                                ),
-                                                decoration: InputDecoration(
-                                                  border: InputBorder.none,
-                                                ),
-                                                hint: Text(
-                                                  Language.getSettingsStrings(
-                                                      'form.create_form.contact.salutation.label'),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.only(left: 2),
-                                        ),
-                                        Flexible(
-                                          child: BlurEffectView(
-                                            color: overlayRow(),
-                                            radius: 0,
-                                            child: Container(
-                                              height: 64,
-                                              alignment: Alignment.center,
-                                              child: TextFormField(
-                                                style: TextStyle(fontSize: 16),
-                                                onChanged: (val) {
-                                                  setState(() {
-                                                    firstName = val;
-                                                  });
-                                                },
-                                                initialValue: firstName ?? '',
-                                                decoration: InputDecoration(
-                                                  contentPadding:
-                                                      EdgeInsets.only(
-                                                          left: 16, right: 16),
-                                                  labelText:
-                                                      Language.getPosTpmStrings(
-                                                          'First Name'),
-                                                  labelStyle: TextStyle(
-                                                    fontSize: 12,
-                                                  ),
-                                                  enabledBorder:
-                                                      InputBorder.none,
-                                                  focusedBorder:
-                                                      UnderlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                        color: Colors.blue,
-                                                        width: 0.5),
-                                                  ),
-                                                ),
-                                                keyboardType:
-                                                    TextInputType.text,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.only(left: 2),
-                                        ),
-                                        Flexible(
-                                          child: BlurEffectView(
-                                            color: overlayRow(),
-                                            radius: 0,
-                                            child: Container(
-                                              height: 64,
-                                              alignment: Alignment.center,
-                                              child: TextFormField(
-                                                style: TextStyle(fontSize: 16),
-                                                onChanged: (val) {
-                                                  setState(() {
-                                                    lastName = val;
-                                                  });
-                                                },
-                                                initialValue: lastName ?? '',
-                                                decoration: InputDecoration(
-                                                  contentPadding:
-                                                      EdgeInsets.only(
-                                                          left: 16, right: 16),
-                                                  labelText: Language
-                                                      .getSettingsStrings(
-                                                          'Last Name'),
-                                                  labelStyle: TextStyle(
-                                                    fontSize: 12,
-                                                  ),
-                                                  enabledBorder:
-                                                      InputBorder.none,
-                                                  focusedBorder:
-                                                      UnderlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                        color: Colors.blue,
-                                                        width: 0.5),
-                                                  ),
-                                                ),
-                                                keyboardType:
-                                                    TextInputType.text,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    EdgeInsets.only(top: 2, left: 8, right: 8),
-                                child: Container(
-                                  height: 64,
-                                  child: Row(
-                                    children: <Widget>[
-                                      Flexible(
-                                        child: BlurEffectView(
-                                          color: overlayRow(),
-                                          radius: 0,
-                                          child: Container(
-                                            height: 64,
-                                            alignment: Alignment.center,
-                                            child: TextFormField(
-                                              style: TextStyle(fontSize: 16),
-                                              onChanged: (val) {
-                                                setState(() {
-                                                  phone = val;
-                                                });
-                                              },
-                                              initialValue: phone ?? '',
-                                              decoration: InputDecoration(
-                                                contentPadding: EdgeInsets.only(
-                                                    left: 16, right: 16),
-                                                labelText: 'Phone(optional)',
-                                                labelStyle: TextStyle(
-                                                  fontSize: 12,
-                                                ),
-                                                enabledBorder: InputBorder.none,
-                                                focusedBorder:
-                                                    UnderlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: Colors.blue,
-                                                      width: 0.5),
-                                                ),
-                                              ),
-                                              keyboardType: TextInputType.text,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.only(left: 2),
-                                      ),
-                                      Flexible(
-                                        child: BlurEffectView(
-                                          color: overlayRow(),
-                                          radius: 0,
-                                          child: Container(
-                                            height: 64,
-                                            alignment: Alignment.center,
-                                            child: TextFormField(
-                                              style: TextStyle(fontSize: 16),
-                                              onChanged: (val) {
-                                                setState(() {
-                                                  email = val;
-                                                });
-                                              },
-                                              initialValue: email ?? '',
-                                              decoration: InputDecoration(
-                                                contentPadding: EdgeInsets.only(
-                                                    left: 16, right: 16),
-                                                labelText: 'E-mail',
-                                                labelStyle: TextStyle(
-                                                  fontSize: 12,
-                                                ),
-                                                enabledBorder: InputBorder.none,
-                                                focusedBorder:
-                                                    UnderlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: Colors.blue,
-                                                      width: 0.5),
-                                                ),
-                                              ),
-                                              keyboardType: TextInputType.text,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(
-                                    top: 2, left: 8, right: 8, bottom: 8),
-                                child: BlurEffectView(
-                                  color: overlayRow(),
-                                  borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(8),
-                                    bottomRight: Radius.circular(8),
-                                  ),
-                                  child: Container(
-                                    height: 64,
-                                    alignment: Alignment.center,
-                                    child: Center(
-                                      child: TextFormField(
-                                        style: TextStyle(fontSize: 16),
-                                        onChanged: (val) {
-                                          setState(() {
-                                            birthDay = val;
-                                          });
-                                        },
-                                        initialValue: birthDay ?? '',
-                                        decoration: InputDecoration(
-                                          contentPadding: EdgeInsets.only(
-                                              left: 16, right: 16),
-                                          labelText: 'Birthday (optional)',
-                                          enabledBorder: InputBorder.none,
-                                          focusedBorder: UnderlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Colors.blue, width: 0.5),
-                                          ),
-                                        ),
-                                        keyboardType: TextInputType.text,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SaveBtn(
-                                isUpdating: state.isUpdating,
-                                color: overlayBackground(),
-                                isBottom: false,
-                                title:
-                                    Language.getSettingsStrings('actions.save'),
-                                onUpdate: () {
-                                  if (formKey.currentState.validate() &&
-                                      !state.isUpdating) {
-//                                Map<String, dynamic> body = {};
-//                                body['companyRegisterNumber'] =
-//                                    companyRegisterNumber;
-//                                body['taxNumber'] = taxNumber;
-//                                body['taxId'] = taxId;
-//                                body['turnoverTaxAct'] = turnoverTaxAct;
-//                                print(body);
-//                                widget.setScreenBloc.add(BusinessUpdateEvent({
-//                                  'taxes': body,
-//                                }));
-                                  }
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
     );
   }
 

@@ -507,7 +507,7 @@ class LoginScreen extends StatelessWidget {
         : MediaQuery.of(context).size.height);
     _isTablet = Measurements.width < 600 ? false : true;
     if (_isTablet)
-      Measurements.width = Measurements.width * 0.7;
+      Measurements.width = Measurements.width * 0.5;
 
     return Scaffold(
       key: scaffoldKey,

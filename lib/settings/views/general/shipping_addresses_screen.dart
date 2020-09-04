@@ -18,8 +18,8 @@ import 'package:payever/theme.dart';
 class ShippingAddressesScreen extends StatefulWidget {
   final GlobalStateModel globalStateModel;
   final SettingScreenBloc setScreenBloc;
-
-  const ShippingAddressesScreen({Key key, this.globalStateModel, this.setScreenBloc}) : super(key: key);
+  final bool isDashboard;
+  const ShippingAddressesScreen({Key key, this.globalStateModel, this.setScreenBloc, this.isDashboard = true}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -70,7 +70,7 @@ class _ShippingAddressesScreenState extends State<ShippingAddressesScreen> {
 
   get _body {
     return Scaffold(
-      appBar: Appbar('Shipping Address'),
+      appBar: widget.isDashboard ? Appbar('Shipping Address') : null,
       body: SafeArea(
         bottom: false,
         child: BackgroundBase(

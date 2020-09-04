@@ -14,8 +14,8 @@ import 'package:payever/theme.dart';
 class PasswordScreen extends StatefulWidget {
   final GlobalStateModel globalStateModel;
   final SettingScreenBloc setScreenBloc;
-
-  const PasswordScreen({Key key, this.globalStateModel, this.setScreenBloc}) : super(key: key);
+  final bool isDashboard;
+  const PasswordScreen({Key key, this.globalStateModel, this.setScreenBloc, this.isDashboard = true}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -56,7 +56,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
 
   get _body {
     return Scaffold(
-      appBar: Appbar('Password'),
+      appBar: widget.isDashboard ? Appbar('Password') : null,
       body: SafeArea(
         bottom: false,
         child: BackgroundBase(

@@ -23,9 +23,11 @@ import 'package:payever/theme.dart';
 class PersonalInformationScreen extends StatefulWidget {
   final GlobalStateModel globalStateModel;
   final SettingScreenBloc setScreenBloc;
+  final bool isDashboard;
   PersonalInformationScreen({
     this.globalStateModel,
     this.setScreenBloc,
+    this.isDashboard = true,
   });
 
   @override
@@ -83,7 +85,7 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
 
   get _body {
     return Scaffold(
-      appBar: Appbar('Personal Information'),
+      appBar: widget.isDashboard ? Appbar('Personal Information') : null,
       body: SafeArea(
         bottom: false,
         child: BackgroundBase(

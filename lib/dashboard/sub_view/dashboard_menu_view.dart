@@ -33,6 +33,28 @@ class DashboardMenuView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
+    Measurements.height = (_isPortrait
+        ? MediaQuery.of(context).size.height
+        : MediaQuery.of(context).size.width);
+    Measurements.width = (_isPortrait
+        ? MediaQuery.of(context).size.width
+        : MediaQuery.of(context).size.height);
+
+    bool _isTablet;
+    if (_isPortrait) {
+      _isTablet = MediaQuery.of(context).size.width > 600;
+    } else {
+      _isTablet = MediaQuery.of(context).size.height > 600;
+    }
+
+    double offset;
+    if (_isTablet) {
+      offset = _isPortrait ? -0.3 : -0.4;
+    } else {
+      offset = _isPortrait ? 0 : - 0.2;
+    }
+
     bool isActive = false;
     if (activeBusiness != null) {
       isActive = activeBusiness.active;
@@ -41,7 +63,8 @@ class DashboardMenuView extends StatelessWidget {
       key: innerDrawerKey,
       rightAnimationType: InnerDrawerAnimation.quadratic,
       onTapClose: true,
-      rightOffset: 0.2,
+//      rightOffset: 0.2,
+      offset: IDOffset.horizontal(offset),
       swipe: false,
       colorTransitionChild: Colors.transparent,
       colorTransitionScaffold: Colors.transparent,

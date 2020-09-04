@@ -18,9 +18,10 @@ class WallpaperScreen extends StatefulWidget {
   final GlobalStateModel globalStateModel;
   final SettingScreenBloc setScreenBloc;
   final bool fromDashboard;
+  final bool isDashboard;
 
   WallpaperScreen(
-      {this.globalStateModel, this.setScreenBloc, this.fromDashboard = false});
+      {this.globalStateModel, this.setScreenBloc, this.fromDashboard = false, this.isDashboard = true});
 
   @override
   _WallpaperScreenState createState() => _WallpaperScreenState();
@@ -65,7 +66,7 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
         builder: (BuildContext context, SettingScreenState state) {
           return Scaffold(
             resizeToAvoidBottomPadding: false,
-            appBar: Appbar('Wallpapers'),
+            appBar: widget.isDashboard ? Appbar('Wallpapers') : null,
             body: SafeArea(
               bottom: false,
               child: BackgroundBase(

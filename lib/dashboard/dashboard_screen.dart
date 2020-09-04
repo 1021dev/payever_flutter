@@ -70,6 +70,7 @@ class DashboardScreen extends StatefulWidget {
   final String wallpaper;
   final bool refresh;
   final bool registered;
+  double mainWidth = 0;
 
   DashboardScreen({this.wallpaper, this.refresh, this.registered = false});
 
@@ -135,9 +136,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
     _isTablet = GlobalUtils.isTablet(context);
     Measurements.loadImages(context);
 
-    if (_isTablet) {
-      Measurements.width =  Measurements.width * 0.7;
+    if (widget.mainWidth == 0) {
+      widget.mainWidth = _isTablet ? Measurements.width * 0.7 : Measurements.width;
     }
+
     if (globalStateModel.refresh) {
       screenBloc.add(DashboardScreenInitEvent(wallpaper: widget.wallpaper));
       globalStateModel.setRefresh(false);
@@ -248,8 +250,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
     List<Widget> dashboardWidgets = [];
     // HEADER
-    dashboardWidgets.add(_headerView(state));
+//    dashboardWidgets.add(_headerView(state));
     // SEARCH BAR
+    dashboardWidgets.add(SizedBox(height: 175,));
     dashboardWidgets.add(_searchBar(state));
 
     // TRANSACTIONS
@@ -1117,33 +1120,38 @@ class _DashboardScreenState extends State<DashboardScreen> {
           body: Container(
             alignment: Alignment.center,
             child: Container(
-              width: Measurements.width,
-              child: RefreshIndicator(
-                onRefresh: () {
-                  screenBloc
-                      .add(DashboardScreenInitEvent(wallpaper: state.curWall));
-                  return Future.delayed(Duration(seconds: 3));
-                },
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: ListView.separated(
-                        padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
-                        itemCount: dashboardWidgets.length,
-                        itemBuilder: (context, index) {
-                          return dashboardWidgets[index];
-                        },
-                        separatorBuilder: (context, index) {
-                          return Divider(
-                            height: 8,
-                            thickness: 8,
-                            color: Colors.transparent,
-                          );
-                        },
-                      ),
+              width: widget.mainWidth,
+              child: Stack(
+                children: <Widget>[
+                  RefreshIndicator(
+                    onRefresh: () {
+                      screenBloc
+                          .add(DashboardScreenInitEvent(wallpaper: state.curWall));
+                      return Future.delayed(Duration(seconds: 3));
+                    },
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: ListView.separated(
+                            padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
+                            itemCount: dashboardWidgets.length,
+                            itemBuilder: (context, index) {
+                              return dashboardWidgets[index];
+                            },
+                            separatorBuilder: (context, index) {
+                              return Divider(
+                                height: 8,
+                                thickness: 8,
+                                color: Colors.transparent,
+                              );
+                            },
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                  Align(alignment: Alignment.center, child: _headerView(state)),
+                ],
               ),
             ),
           ),

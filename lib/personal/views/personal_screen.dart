@@ -15,6 +15,7 @@ import 'package:payever/dashboard/sub_view/dashboard_settings_view.dart';
 import 'package:payever/dashboard/sub_view/dashboard_transactions_view.dart';
 import 'package:payever/login/login_screen.dart';
 import 'package:payever/notifications/notifications_screen.dart';
+import 'package:payever/personal/views/personal_setting_screen.dart';
 import 'package:payever/search/views/search_screen.dart';
 import 'package:payever/settings/views/general/language_screen.dart';
 import 'package:payever/settings/views/setting_screen.dart';
@@ -451,9 +452,8 @@ class _PersonalScreenState extends State<PersonalScreen> {
           Navigator.push(
             context,
             PageTransition(
-              child: SettingInitScreen(
+              child: PersonalSettingInitScreen(
                 dashboardScreenBloc: widget.dashboardScreenBloc,
-                isDashboard: false,
               ),
               type: PageTransitionType.fade,
             ),

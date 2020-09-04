@@ -13,8 +13,8 @@ class LanguageScreen extends StatefulWidget {
   final GlobalStateModel globalStateModel;
   final SettingScreenBloc settingBloc;
   final bool fromDashboard;
-
-  LanguageScreen({this.settingBloc, this.globalStateModel, this.fromDashboard = false,});
+  final bool isDashboard;
+  LanguageScreen({this.settingBloc, this.globalStateModel, this.fromDashboard = false, this.isDashboard = true,});
 
   _LanguageScreenScreenState createState() => _LanguageScreenScreenState();
 
@@ -65,7 +65,7 @@ class _LanguageScreenScreenState extends State<LanguageScreen> {
         builder: (BuildContext context, SettingScreenState state) {
           return Scaffold(
             resizeToAvoidBottomPadding: false,
-            appBar: _appBar(state),
+            appBar: widget.isDashboard ? _appBar(state) : null,
             body: SafeArea(
               bottom: false,
               child: BackgroundBase(
