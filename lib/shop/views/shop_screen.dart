@@ -551,24 +551,7 @@ class _ShopScreenState extends State<ShopScreen> {
           Expanded(
             child: ((selectedTypes == 0 && state.templates.length > 0) || (selectedTypes == 1 && state.ownThemes.length > 0)) ? GridView.count(
               padding: EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 16),
-              children: selectedTypes == 0
-                  ? state.templates.map((templateModel) {
-                return TemplateCell(
-                  templateModel: templateModel,
-                  onTapInstall: (template) {
-                    if (state.activeShop != null) {
-                      screenBloc.add(
-                          InstallTemplateEvent(
-                            businessId: widget.globalStateModel.currentBusiness.id,
-                            templateId: template.id,
-                            shopId: state.activeShop.id,
-                          )
-                      );
-                    }
-                  },
-                );
-              }).toList()
-                  : state.ownThemes.map((theme) {
+              children: state.ownThemes.map((theme) {
                 return ThemeOwnCell(
                   themeModel: theme,
                   onTapInstall: (theme) {

@@ -63,7 +63,7 @@ class ThemeOwnCell extends StatelessWidget {
         children: <Widget>[
           Expanded(
             child: themeModel.picture != null ? CachedNetworkImage(
-              imageUrl: '${Env.storage}/${themeModel.picture}',
+              imageUrl: '${Env.storage}${themeModel.picture}',
               imageBuilder: (context, imageProvider) => Container(
                 decoration: BoxDecoration(
                   color: Colors.white,

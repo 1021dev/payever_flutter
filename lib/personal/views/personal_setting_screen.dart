@@ -218,7 +218,7 @@ class _PersonalSettingScreenState extends State<PersonalSettingScreen> {
                     ? Padding(
                         padding: EdgeInsets.only(left: 4, right: 4),
                         child: Text(
-                          widget.dashboardScreenBloc.state.activeBusiness.name,
+                          name,
                           style: TextStyle(
                             fontSize: 14,
                           ),
@@ -397,13 +397,7 @@ class _PersonalSettingScreenState extends State<PersonalSettingScreen> {
               )
             : Container();
       case 4:
-        return state.user != null
-            ? LanguageScreen(
-                globalStateModel: widget.globalStateModel,
-                settingBloc: screenBloc,
-                isDashboard: false,
-              )
-            : Container();
+        return Container();
       case 5:
         return state.user != null
             ? WallpaperScreen(

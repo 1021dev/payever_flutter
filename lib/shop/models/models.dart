@@ -54,19 +54,59 @@ class PasswordModel {
   }
 }
 
-class TemplateModel {
-  String id;
-  String name;
-  String picture;
-  String type;
 
-  TemplateModel.toMap(dynamic obj) {
+// class TemplateModel {
+//   String id;
+//   String name;
+//   String picture;
+//   String type;
+//
+//   TemplateModel.toMap(dynamic obj) {
+//     id = obj['id'];
+//     name = obj['name'];
+//     picture = obj['picture'];
+//     type = obj['type'];
+//   }
+// }
+
+class TemplateModel {
+  String code;
+  String icon;
+  String id;
+  List<ThemeItemModel> items = [];
+  int order;
+
+  TemplateModel.fromMap(dynamic obj) {
     id = obj['id'];
-    name = obj['name'];
-    picture = obj['picture'];
-    type = obj['type'];
+    icon = obj['icon'];
+    code = obj['code'];
+    order = obj['order'];
+    dynamic itemObj = obj['items'];
+    if (itemObj is List){
+      itemObj.forEach((element)=> items.add(ThemeItemModel.fromMap(element)));
+    }
   }
 }
+
+class ThemeItemModel {
+  String code;
+  String groupId;
+  String id;
+  List<ThemeModel>themes = [];
+  String type;
+
+  ThemeItemModel.fromMap(dynamic obj) {
+    id = obj['id'] ?? '';
+    code = obj['code'] ?? '';
+    groupId = obj['groupId'] ?? '';
+    type = obj['type'] ?? '';
+    dynamic themesObj = obj['themes'];
+    if (themesObj is List){
+      themesObj.forEach((element)=> themes.add(ThemeModel.toMap(element)));
+    }
+  }
+}
+
 
 class ThemeModel {
   String id;
