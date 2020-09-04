@@ -932,7 +932,7 @@ class ApiService {
     }
   }
 
-  Future<dynamic> getOwnThemes(String token, String businessId, String shopId) async {
+  Future<dynamic> getMyThemes(String token, String businessId, String shopId) async {
     try {
       print('$TAG - getOwnThemes()');
       dynamic response = await _client.getTypeless(

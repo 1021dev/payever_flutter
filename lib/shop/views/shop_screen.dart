@@ -22,15 +22,12 @@ import 'package:payever/shop/views/create_shop_screen.dart';
 import 'package:payever/shop/views/enable_password_screen.dart';
 import 'package:payever/shop/views/external_domain_screen.dart';
 import 'package:payever/shop/views/local_domain_screen.dart';
+import 'package:payever/shop/views/shop_filter_screen.dart';
 import 'package:payever/shop/views/switch_shop_screen.dart';
 import 'package:payever/shop/widgets/shop_top_button.dart';
-import 'package:payever/shop/widgets/template_cell.dart';
-import 'package:payever/shop/widgets/theme_filter_content_view.dart';
-import 'package:payever/shop/widgets/theme_own_cell.dart';
-import 'package:payever/switcher/switcher_page.dart';
+import 'package:payever/shop/widgets/theme_cell.dart';
 import 'package:payever/theme.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/login/login_screen.dart';
@@ -92,7 +89,6 @@ class _ShopScreenState extends State<ShopScreen> {
   String url = '';
 
   ShopScreenBloc screenBloc;
-  String wallpaper;
   int selectedIndex = 0;
   bool isShowCommunications = false;
   List<FilterItem> filterTypes = [];
@@ -491,6 +487,7 @@ class _ShopScreenState extends State<ShopScreen> {
   }
 
   Widget _templatesView(ShopScreenState state) {
+    List<ThemeModel> themes = _getThemes(state);
     return Container(
       child: Column(
         children: <Widget>[
@@ -504,21 +501,42 @@ class _ShopScreenState extends State<ShopScreen> {
                   padding: EdgeInsets.only(left: 16),
                   alignment: Alignment.centerLeft,
                   child: InkWell(
-                    onTap: () {
-                      showCupertinoModalPopup(
-                        context: context,
-                        builder: (builder) {
-                          return ThemeFilterContentView(
-                            selectedIndex: selectedTypes ,
-                            onSelected: (val) {
-                              Navigator.pop(context);
-                              setState(() {
-                                selectedTypes = val;
-                              });
-                            },
+                    onTap: () async {
+                      await showGeneralDialog(
+                        barrierColor: null,
+                        transitionBuilder: (context, a1, a2, wg) {
+                          final curvedValue =
+                              1.0 - Curves.ease.transform(a1.value);
+                          return Transform(
+                            transform: Matrix4.translationValues(
+                                -curvedValue * 200, 0.0, 0),
+                            child: ShopFilterScreen(
+                              screenBloc: screenBloc,
+                            ),
                           );
                         },
+                        transitionDuration: Duration(milliseconds: 200),
+                        barrierDismissible: true,
+                        barrierLabel: '',
+                        context: context,
+                        pageBuilder: (context, animation1, animation2) {
+                          return null;
+                        },
                       );
+                      // showCupertinoModalPopup(
+                      //   context: context,
+                      //   builder: (builder) {
+                      //     return ThemeFilterContentView(
+                      //       selectedIndex: selectedTypes ,
+                      //       onSelected: (val) {
+                      //         Navigator.pop(context);
+                      //         setState(() {
+                      //           selectedTypes = val;
+                      //         });
+                      //       },
+                      //     );
+                      //   },
+                      // );
                     },
                     child: Row(
                       children: <Widget>[
@@ -537,7 +555,7 @@ class _ShopScreenState extends State<ShopScreen> {
                 Text(
                   selectedTypes == 0
                       ? '${state.templates.length} Templates'
-                      : '${state.ownThemes.length} Themes',
+                      : '${themes.length} Themes',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white,
@@ -549,10 +567,10 @@ class _ShopScreenState extends State<ShopScreen> {
             ),
           ),
           Expanded(
-            child: ((selectedTypes == 0 && state.templates.length > 0) || (selectedTypes == 1 && state.ownThemes.length > 0)) ? GridView.count(
+            child: ((selectedTypes == 0 && state.templates.length > 0) || (selectedTypes == 1 && themes.length > 0)) ? GridView.count(
               padding: EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 16),
-              children: state.ownThemes.map((theme) {
-                return ThemeOwnCell(
+              children: themes.map((theme) {
+                return ThemeCell(
                   themeModel: theme,
                   onTapInstall: (theme) {
                     if (state.activeShop != null) {
@@ -595,7 +613,7 @@ class _ShopScreenState extends State<ShopScreen> {
               crossAxisCount: _isPortrait ? 2: 3,
               mainAxisSpacing: 6,
               crossAxisSpacing: 6,
-              childAspectRatio: 0.8,
+
             ): Container(),
           ),
         ],
@@ -929,6 +947,30 @@ class _ShopScreenState extends State<ShopScreen> {
     }
   }
 
+  List<ThemeModel> _getThemes(ShopScreenState state) {
+
+    String selectedCategory = state.selectedCategory;
+    print('selectedCategory : $selectedCategory');
+    List<String>subCategories = state.subCategories;
+    if (selectedCategory.isEmpty || selectedCategory == 'All')
+      return state.themes;
+    else if (selectedCategory == 'My Themes')
+      return state.myThemes;
+    else {
+      if (subCategories.isEmpty)
+        return state.themes;
+      else {
+        List<ThemeModel> themes = [];
+        TemplateModel templateModel = state.templates.firstWhere((element) => element.code == selectedCategory);
+        subCategories.forEach((subCategory) {
+          templateModel.items.firstWhere((item) => item.code == subCategory).themes.forEach((theme) {
+            themes.add(theme);
+          });
+        });
+        return themes;
+      }
+    }
+  }
 
 }
 

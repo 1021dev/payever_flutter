@@ -5,13 +5,13 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/pos/widgets/pos_top_button.dart';
 import 'package:payever/shop/models/models.dart';
 
-class ThemeOwnCell extends StatelessWidget {
+class ThemeCell extends StatelessWidget {
   final ThemeModel themeModel;
   final Function onTapInstall;
   final Function onTapDuplicate;
   final Function onTapEdit;
   final Function onTapDelete;
-  ThemeOwnCell({
+  ThemeCell({
     this.themeModel,
     this.onTapInstall,
     this.onTapDuplicate,
@@ -52,11 +52,11 @@ class ThemeOwnCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: Measurements.width - 72,
-      height: (Measurements.width - 72) * 1.8,
+      width: Measurements.width - 38,
+      height: (Measurements.width - 38) * 1.8,
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(8),
         shape: BoxShape.rectangle,
       ),
       child: Column(
@@ -67,10 +67,9 @@ class ThemeOwnCell extends StatelessWidget {
               imageBuilder: (context, imageProvider) => Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(12.0)),
                   image: DecorationImage(
                     image: imageProvider,
-                    fit: BoxFit.contain,
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),
@@ -110,7 +109,7 @@ class ThemeOwnCell extends StatelessWidget {
           ),
           Container(
             color: Colors.black87,
-            height: (Measurements.width - 72) * 0.38,
+            height: (Measurements.width - 38) * 0.1,
             child: Stack(
               alignment: Alignment.center,
               children: <Widget>[

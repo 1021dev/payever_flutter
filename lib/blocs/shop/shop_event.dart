@@ -160,3 +160,19 @@ class UpdateShopSettings extends ShopScreenEvent {
     this.shopId,
   ];
 }
+
+class ShopCategorySelected extends ShopScreenEvent {
+  final String category;
+  final List<String> subCategories;
+
+  ShopCategorySelected({
+    this.category,
+    this.subCategories,
+  });
+
+  @override
+  List<Object> get props => [
+    this.category,
+    this.subCategories,
+  ];
+}

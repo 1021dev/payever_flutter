@@ -36,6 +36,9 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
       yield* setDefaultShop(event.businessId, event.shopId);
     } else if (event is UpdateShopSettings) {
       yield* updateShopSettings(event.businessId, event.shopId, event.config);
+    } else if (event is ShopCategorySelected) {
+      yield state.copyWith(
+          selectedCategory: event.category, subCategories: event.subCategories);
     }
   }
 
@@ -43,7 +46,7 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
     yield state.copyWith(isLoading: true);
     List<ShopDetailModel> shops = [];
     List<TemplateModel> templates = [];
-
+    List<ThemeModel> themes = [];
     dynamic response = await api.getShop(activeBusinessId, GlobalUtils.activeToken.accessToken);
     if (response is List) {
       response.forEach((element) {
@@ -61,8 +64,28 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
         templates.add(TemplateModel.fromMap(element));
       });
     }
+    templates.forEach((template) {
+      template.items.forEach((item) {
+        item.themes.forEach((theme) {
+          themes.add(theme);
+        });
+      });
+    });
+    List<ThemeModel> myThemes = [];
+    dynamic themeObj = await api.getMyThemes(GlobalUtils.activeToken.accessToken, activeBusinessId, activeShop.id);
+    if (themeObj != null) {
+      themeObj.forEach((element) {
+        myThemes.add(ThemeModel.toMap(element));
+      });
+    }
 
-    yield state.copyWith(shops: shops, activeShop: activeShop, templates: templates, isLoading: false);
+    yield state.copyWith(
+        shops: shops,
+        activeShop: activeShop,
+        myThemes: myThemes,
+        templates: templates,
+        themes: themes,
+        isLoading: false);
     if (activeShop != null) {
       add(GetActiveThemeEvent(businessId: activeBusinessId, shopId: activeShop.id));
     }
@@ -96,19 +119,11 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
         yield state.copyWith(activeTheme: ThemeModel.toMap(response.first));
       }
     }
-    List<ThemeModel> themes = [];
-    dynamic themeObj = await api.getOwnThemes(GlobalUtils.activeToken.accessToken, activeBusinessId, shopId);
-    if (themeObj != null) {
-      themeObj.forEach((element) {
-        themes.add(ThemeModel.toMap(element));
-      });
-    }
+
     dynamic defaultObj = await api.getShopDetail(activeBusinessId, GlobalUtils.activeToken.accessToken, shopId);
     if (defaultObj != null) {
       ShopDetailModel model = ShopDetailModel.toMap(defaultObj);
-      yield state.copyWith(activeShop: model, ownThemes: themes);
-    } else {
-      yield state.copyWith(ownThemes: themes);
+      yield state.copyWith(activeShop: model);
     }
   }
 
