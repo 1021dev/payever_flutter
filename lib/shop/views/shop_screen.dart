@@ -21,10 +21,9 @@ import 'package:payever/shop/views/create_shop_screen.dart';
 import 'package:payever/shop/views/enable_password_screen.dart';
 import 'package:payever/shop/views/external_domain_screen.dart';
 import 'package:payever/shop/views/local_domain_screen.dart';
-import 'package:payever/shop/views/shop_filter_screen.dart';
 import 'package:payever/shop/views/switch_shop_screen.dart';
+import 'package:payever/shop/views/themes/theme_screen.dart';
 import 'package:payever/shop/widgets/shop_top_button.dart';
-import 'package:payever/shop/widgets/theme_cell.dart';
 import 'package:payever/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -468,131 +467,18 @@ class _ShopScreenState extends State<ShopScreen> {
       case 0:
         return _dashboardWidget(state);
       case 1:
-        return _templatesView(state);
+        // return _templatesView(state);
+        return ThemesScreen(
+          dashboardScreenBloc: widget.dashboardScreenBloc,
+          screenBloc: screenBloc,
+          globalStateModel: widget.globalStateModel,
+          activeShop: widget.activeShop,
+        );
       case 2:
         return _settings(state);
       default:
         return Container();
     }
-  }
-
-  Widget _templatesView(ShopScreenState state) {
-    List<ThemeModel> themes = _getThemes(state);
-    return Container(
-      child: Column(
-        children: <Widget>[
-          Container(
-            height: 44,
-            color: Color(0xFF222222),
-            child: Stack(
-              alignment: Alignment.center,
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.only(left: 16),
-                  alignment: Alignment.centerLeft,
-                  child: InkWell(
-                    onTap: () async {
-                      await showGeneralDialog(
-                        barrierColor: null,
-                        transitionBuilder: (context, a1, a2, wg) {
-                          final curvedValue =
-                              1.0 - Curves.ease.transform(a1.value);
-                          return Transform(
-                            transform: Matrix4.translationValues(
-                                -curvedValue * 200, 0.0, 0),
-                            child: ShopFilterScreen(
-                              screenBloc: screenBloc,
-                            ),
-                          );
-                        },
-                        transitionDuration: Duration(milliseconds: 200),
-                        barrierDismissible: true,
-                        barrierLabel: '',
-                        context: context,
-                        pageBuilder: (context, animation1, animation2) {
-                          return null;
-                        },
-                      );
-                    },
-                    child: Row(
-                      children: <Widget>[
-                        Icon(Icons.filter_list, color: Colors.white,),
-                        Padding(
-                          padding: EdgeInsets.only(left: 8),
-                        ),
-                        Text(
-                          'Filter',
-                          style: TextStyle(color: Colors.white),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                Text(
-                  '${themes.length} Themes',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                  ),
-                )
-              ],
-            ),
-          ),
-          Expanded(
-            child: (themes.length > 0) ? GridView.count(
-              padding: EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 16),
-              children: themes.map((theme) {
-                return ThemeCell(
-                  themeModel: theme,
-                  onTapInstall: (theme) {
-                    if (state.activeShop != null) {
-                      screenBloc.add(
-                          InstallTemplateEvent(
-                            businessId: widget.globalStateModel.currentBusiness.id,
-                            templateId: theme.id,
-                            shopId: state.activeShop.id,
-                          )
-                      );
-                    }
-                  },
-                  onTapDelete: (theme) {
-                    if (state.activeShop != null) {
-                      screenBloc.add(
-                          DeleteThemeEvent(
-                            businessId: widget.globalStateModel.currentBusiness.id,
-                            themeId: theme.id,
-                            shopId: state.activeShop.id,
-                          )
-                      );
-                    }
-                  },
-                  onTapDuplicate: (theme) {
-                    if (state.activeShop != null) {
-                      screenBloc.add(
-                          DuplicateThemeEvent(
-                            businessId: widget.globalStateModel.currentBusiness.id,
-                            themeId: theme.id,
-                            shopId: state.activeShop.id,
-                          )
-                      );
-                    }
-                  },
-                  onTapEdit: (theme) {
-
-                  },
-                );
-              }).toList(),
-              crossAxisCount: (_isTablet || !_isPortrait) ? 3 : 2,
-              mainAxisSpacing: 6,
-              crossAxisSpacing: 6,
-
-            ): Container(),
-          ),
-        ],
-      ),
-    );
   }
 
   Widget _settings(ShopScreenState state) {
@@ -918,31 +804,6 @@ class _ShopScreenState extends State<ShopScreen> {
       await launch(url);
     } else {
       throw 'Could not launch $url';
-    }
-  }
-
-  List<ThemeModel> _getThemes(ShopScreenState state) {
-
-    String selectedCategory = state.selectedCategory;
-    print('selectedCategory : $selectedCategory');
-    List<String>subCategories = state.subCategories;
-    if (selectedCategory.isEmpty || selectedCategory == 'All')
-      return state.themes;
-    else if (selectedCategory == 'My Themes')
-      return state.myThemes;
-    else {
-      if (subCategories.isEmpty)
-        return state.themes;
-      else {
-        List<ThemeModel> themes = [];
-        TemplateModel templateModel = state.templates.firstWhere((element) => element.code == selectedCategory);
-        subCategories.forEach((subCategory) {
-          templateModel.items.firstWhere((item) => item.code == subCategory).themes.forEach((theme) {
-            themes.add(theme);
-          });
-        });
-        return themes;
-      }
     }
   }
 

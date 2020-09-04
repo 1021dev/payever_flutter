@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="icon-filter-drinks" viewBox="0 0 22 22" preserveaspectratio="xMidYMin slice" width="100%">
+        <g fill="none" fill-rule="evenodd">
+          <rect width="22" height="22" fill="#86868B" rx="5.5"></rect>
+          <g>
+              <path fill="#FFF" d="M13.405 0c.506 0 .78.55.453.908l-6.405 7.04c-.237.26-.669.26-.906 0L.142.908C-.185.55.089 0 .595 0h12.81zM7.773 1.906c-.643 0-1.164.485-1.164 1.083s.521 1.083 1.164 1.083c.644 0 1.165-.485 1.165-1.083s-.521-1.083-1.165-1.083z" transform="translate(4 4)"></path>
+              <path stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width=".917" d="M7 14.293L7 8.159M3 14.289L11 14.289" transform="translate(4 4)"></path>
+          </g>
+        </g>
+</svg>

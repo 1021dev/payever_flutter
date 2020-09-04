@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
@@ -8,9 +9,6 @@ import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/theme.dart';
-
-bool _isPortrait;
-bool _isTablet;
 
 class ShopFilterScreen extends StatefulWidget {
   final ShopScreenBloc screenBloc;
@@ -27,6 +25,8 @@ class ShopFilterScreen extends StatefulWidget {
 class _ShopFilterScreenState extends State<ShopFilterScreen> {
   String selectedCategory = '';
   List<String> subCategories = [];
+  bool _isPortrait;
+  bool _isTablet;
 
   @override
   void initState() {
@@ -131,9 +131,10 @@ class _ShopFilterScreenState extends State<ShopFilterScreen> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 elevation: 0,
-                color: overlayColor(),
+                color: overlayButtonBackground(),
                 child: Text(
                   'Done',
+                  style: TextStyle(color: iconColor()),
                 ),
               ),
             ),
@@ -211,8 +212,7 @@ class _ShopFilterScreenState extends State<ShopFilterScreen> {
                     shrinkWrap: true,
                     padding: EdgeInsets.symmetric(horizontal: 8),
                     itemBuilder: (context, index) {
-                      String category = widget
-                          .screenBloc.state.templates[index].code;
+                      String category = state.templates[index].code;
                       return Column(
                         children: <Widget>[
                           GestureDetector(
@@ -230,9 +230,9 @@ class _ShopFilterScreenState extends State<ShopFilterScreen> {
                               padding: EdgeInsets.all(8),
                               child: Row(
                                 children: <Widget>[
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 8),
-                                  ),
+                                  SizedBox(width: 8,),
+                                  SvgPicture.asset('assets/images/filter_${state.templates[index].icon}.svg'),
+                                  SizedBox(width: 8,),
                                   Text(
                                     getMainCategory(category),
                                     style: TextStyle(
@@ -250,14 +250,12 @@ class _ShopFilterScreenState extends State<ShopFilterScreen> {
                               ),
                             ),
                           ),
-                          _subCategories(widget
-                              .screenBloc.state.templates[index]),
+                          _subCategories(state.templates[index]),
                         ],
                       );
                     },
                     separatorBuilder: (context, index) => _divider(),
-                    itemCount:
-                        widget.screenBloc.state.templates.length,
+                    itemCount:state.templates.length,
                   ),
                 ],
               ),
