@@ -5,7 +5,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
@@ -31,7 +30,6 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/login/login_screen.dart';
-
 
 bool _isPortrait;
 bool _isTablet;
@@ -90,9 +88,6 @@ class _ShopScreenState extends State<ShopScreen> {
 
   ShopScreenBloc screenBloc;
   int selectedIndex = 0;
-  bool isShowCommunications = false;
-  List<FilterItem> filterTypes = [];
-  int selectedTypes = 0;
 
   List<OverflowMenuItem> appBarPopUpActions(BuildContext context, ShopScreenState state) {
     return [
@@ -162,14 +157,9 @@ class _ShopScreenState extends State<ShopScreen> {
     super.initState();
     screenBloc = ShopScreenBloc(
       dashboardScreenBloc: widget.dashboardScreenBloc,
-    );
-    filterTypes.add(FilterItem(disPlayName: 'All themes', value: 'All themes'));
-    filterTypes.add(FilterItem(disPlayName: 'Own themes', value: 'Own themes'));
-    screenBloc.add(
-        ShopScreenInitEvent(
-          currentBusinessId: widget.globalStateModel.currentBusiness.id,
-        )
-    );
+    )..add(ShopScreenInitEvent(
+        currentBusinessId: widget.globalStateModel.currentBusiness.id,
+      ));
   }
 
   @override
@@ -492,7 +482,7 @@ class _ShopScreenState extends State<ShopScreen> {
       child: Column(
         children: <Widget>[
           Container(
-            height: 64,
+            height: 44,
             color: Color(0xFF222222),
             child: Stack(
               alignment: Alignment.center,
@@ -523,20 +513,6 @@ class _ShopScreenState extends State<ShopScreen> {
                           return null;
                         },
                       );
-                      // showCupertinoModalPopup(
-                      //   context: context,
-                      //   builder: (builder) {
-                      //     return ThemeFilterContentView(
-                      //       selectedIndex: selectedTypes ,
-                      //       onSelected: (val) {
-                      //         Navigator.pop(context);
-                      //         setState(() {
-                      //           selectedTypes = val;
-                      //         });
-                      //       },
-                      //     );
-                      //   },
-                      // );
                     },
                     child: Row(
                       children: <Widget>[
@@ -553,9 +529,7 @@ class _ShopScreenState extends State<ShopScreen> {
                   ),
                 ),
                 Text(
-                  selectedTypes == 0
-                      ? '${state.templates.length} Templates'
-                      : '${themes.length} Themes',
+                  '${themes.length} Themes',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white,
@@ -567,7 +541,7 @@ class _ShopScreenState extends State<ShopScreen> {
             ),
           ),
           Expanded(
-            child: ((selectedTypes == 0 && state.templates.length > 0) || (selectedTypes == 1 && themes.length > 0)) ? GridView.count(
+            child: (themes.length > 0) ? GridView.count(
               padding: EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 16),
               children: themes.map((theme) {
                 return ThemeCell(
@@ -610,7 +584,7 @@ class _ShopScreenState extends State<ShopScreen> {
                   },
                 );
               }).toList(),
-              crossAxisCount: _isPortrait ? 2: 3,
+              crossAxisCount: (_isTablet || !_isPortrait) ? 3 : 2,
               mainAxisSpacing: 6,
               crossAxisSpacing: 6,
 

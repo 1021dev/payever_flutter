@@ -9,16 +9,13 @@ import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
-import 'package:payever/dashboard/sub_view/business_logo.dart';
 import 'package:payever/dashboard/sub_view/dashboard_menu_view.dart';
 import 'package:payever/dashboard/sub_view/dashboard_settings_view.dart';
 import 'package:payever/dashboard/sub_view/dashboard_transactions_view.dart';
 import 'package:payever/login/login_screen.dart';
-import 'package:payever/notifications/notifications_screen.dart';
 import 'package:payever/personal/views/personal_setting_screen.dart';
 import 'package:payever/search/views/search_screen.dart';
 import 'package:payever/settings/views/general/language_screen.dart';
-import 'package:payever/settings/views/setting_screen.dart';
 import 'package:payever/settings/views/wallpaper/wallpaper_screen.dart';
 
 import 'package:payever/theme.dart';
@@ -160,8 +157,8 @@ class _PersonalScreenState extends State<PersonalScreen> {
                   child: CircularProgressIndicator(),
                 )
               : Container(
-                alignment: Alignment.topCenter,
-                child: Container(
+                  alignment: Alignment.topCenter,
+                  child: Container(
                     width: Measurements.width,
                     padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
                     child: SingleChildScrollView(
@@ -177,7 +174,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                       ),
                     ),
                   ),
-              ),
+                ),
         ),
       ),
     );
@@ -278,36 +275,36 @@ class _PersonalScreenState extends State<PersonalScreen> {
                         if (val.length == 0) {
                           return;
                         }
-//                        final result = await Navigator.push(
-//                          context,
-//                          PageTransition(
-//                            child: SearchScreen(
-//                              dashboardScreenBloc: screenBloc,
-//                              businessId: state.activeBusiness.id,
-//                              searchQuery: searchController.text,
-//                              appWidgets: state.currentWidgets,
-//                              activeBusiness: state.activeBusiness,
-//                              currentWall: state.curWall,
-//                            ),
-//                            type: PageTransitionType.fade,
-//                            duration: Duration(milliseconds: 500),
-//                          ),
-//                        );
-//                        if ((result != null) && (result == 'changed')) {
-//                          setState(() {
-//                            searchString = '';
-//                            searchController.text = searchString;
-//                            FocusScope.of(context).unfocus();
-//                          });
-//                          screenBloc.add(DashboardScreenInitEvent(
-//                              wallpaper: globalStateModel.currentWallpaper));
-//                        } else {
-//                          setState(() {
-//                            searchString = '';
-//                            searchController.text = searchString;
-//                            FocusScope.of(context).unfocus();
-//                          });
-//                        }
+                        final result = await Navigator.push(
+                          context,
+                          PageTransition(
+                            child: SearchScreen(
+                              dashboardScreenBloc: widget.dashboardScreenBloc,
+                              businessId: activeBusiness.id,
+                              searchQuery: searchController.text,
+                              appWidgets: widget.dashboardScreenBloc.state.currentWidgets,
+                              activeBusiness: activeBusiness,
+                              currentWall: currentWallpaper,
+                            ),
+                            type: PageTransitionType.fade,
+                            duration: Duration(milliseconds: 500),
+                          ),
+                        );
+                        if ((result != null) && (result == 'changed')) {
+                          setState(() {
+                            searchString = '';
+                            searchController.text = searchString;
+                            FocusScope.of(context).unfocus();
+                          });
+                          // screenBloc.add(DashboardScreenInitEvent(
+                          //     wallpaper: currentWallpaper));
+                        } else {
+                          setState(() {
+                            searchString = '';
+                            searchController.text = searchString;
+                            FocusScope.of(context).unfocus();
+                          });
+                        }
                       },
                     ),
                   ),
@@ -338,38 +335,38 @@ class _PersonalScreenState extends State<PersonalScreen> {
                       ? Container()
                       : MaterialButton(
                           onPressed: () async {
-//                      FocusScope.of(context).unfocus();
-//                      final result = await Navigator.push(
-//                        context,
-//                        PageTransition(
-//                          child: SearchScreen(
-//                            dashboardScreenBloc: screenBloc,
-//                            businessId: state.activeBusiness.id,
-//                            searchQuery: searchController.text,
-//                            appWidgets: state.currentWidgets,
-//                            activeBusiness: state.activeBusiness,
-//                            currentWall: state.curWall,
-//                          ),
-//                          type: PageTransitionType.fade,
-//                          duration: Duration(milliseconds: 500),
-//                        ),
-//                      );
-//                      if ((result != null) && (result == 'changed')) {
-//                        setState(() {
-//                          searchString = '';
-//                          searchController.text = searchString;
-//                          FocusScope.of(context).unfocus();
-//                        });
-//                        screenBloc.add(DashboardScreenInitEvent(
-//                            wallpaper:
-//                            globalStateModel.currentWallpaper));
-//                      } else {
-//                        setState(() {
-//                          searchString = '';
-//                          searchController.text = searchString;
-//                          FocusScope.of(context).unfocus();
-//                        });
-//                      }
+                            FocusScope.of(context).unfocus();
+                            final result = await Navigator.push(
+                              context,
+                              PageTransition(
+                                child: SearchScreen(
+                                  dashboardScreenBloc:
+                                      widget.dashboardScreenBloc,
+                                  businessId: activeBusiness.id,
+                                  searchQuery: searchController.text,
+                                  appWidgets: widget.dashboardScreenBloc.state.currentWidgets,
+                                  activeBusiness: activeBusiness,
+                                  currentWall: currentWallpaper,
+                                ),
+                                type: PageTransitionType.fade,
+                                duration: Duration(milliseconds: 500),
+                              ),
+                            );
+                            if ((result != null) && (result == 'changed')) {
+                              setState(() {
+                                searchString = '';
+                                searchController.text = searchString;
+                                FocusScope.of(context).unfocus();
+                              });
+                              // screenBloc.add(DashboardScreenInitEvent(
+                              //     wallpaper: currentWallpaper));
+                            } else {
+                              setState(() {
+                                searchString = '';
+                                searchController.text = searchString;
+                                FocusScope.of(context).unfocus();
+                              });
+                            }
                           },
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10)),
