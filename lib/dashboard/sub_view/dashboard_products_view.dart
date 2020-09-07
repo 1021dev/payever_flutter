@@ -170,32 +170,21 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
                   SizedBox(height: 8),
                   widget.lastSales != null
                       ? Container(
-                          height: 100,
+                          height: (Measurements.width - 20)/ 4,
                           child: GridView.count(
-                            crossAxisCount: 3,
+                            crossAxisCount: 4,
+                            crossAxisSpacing: 6,
                             physics: NeverScrollableScrollPhysics(),
-                            children: widget.lastSales.length > 3
-                                ? List.generate(
-                                    3,
-                                    (index) => ProductCell(
-                                      product: widget.lastSales[index],
-                                      business: widget.business,
-                                      onTap: (Products product) {
-                                        widget.onSelect(product);
-                                      },
-                                    ),
-                                  ).toList()
-                                : widget.lastSales
-                                    .map((e) => ProductCell(
-                                          product: e,
-                                          business: widget.business,
-                                          onTap: (Products product) {
-                                            widget.onSelect(product);
-                                          },
-                                        ))
-                                    .toList(),
-                            childAspectRatio:
-                                (Measurements.width - 32) / 3.0 / 92.0,
+                            children: List.generate(
+                              4,
+                              (index) => ProductCell(
+                                product: widget.lastSales[index],
+                                business: widget.business,
+                                onTap: (Products product) {
+                                  widget.onSelect(product);
+                                },
+                              ),
+                            ).toList(),
                           ))
                       : Container(
                           height: 92,

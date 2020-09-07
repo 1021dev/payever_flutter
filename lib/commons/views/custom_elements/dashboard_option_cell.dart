@@ -28,25 +28,32 @@ class DashboardOptionCell extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                children: [
-                  Container(
-                    width: 4,
-                    height: 4,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(2),
+              Flexible(
+                child: Row(
+                  children: [
+                    Container(
+                      width: 4,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(2),
+                        color: iconColor(),
+                      ),
                     ),
-                  ),
-                  SizedBox(width: 12),
-                  Text(
-                    Language.getCommerceOSStrings(message),
-                    softWrap: true,
-                    style: TextStyle(
-                      fontSize: 12,
+                    SizedBox(width: 12),
+                    Flexible(
+                      child: Text(
+                        Language.getCommerceOSStrings(message),
+                        softWrap: true,
+                        style: TextStyle(
+                          fontSize: 12,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
-                  ),
-                  SizedBox(width: 12),
-                ],
+                    SizedBox(width: 12),
+                  ],
+                ),
               ),
               Row(
                 children: [
