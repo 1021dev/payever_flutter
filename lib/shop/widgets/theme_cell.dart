@@ -118,7 +118,6 @@ class ThemeCell extends StatelessWidget {
                 Text(
                   themeListModel.themeModel.name,
                   style: TextStyle(
-                    color: Colors.white,
                     fontSize: 12,
                     fontWeight: FontWeight.w400,
                   ),
@@ -141,7 +140,7 @@ class ThemeCell extends StatelessWidget {
               children: <Widget>[
                 InkWell(
                   onTap: onTapPreview,
-                  child: Container(child: Center(child: Text('Preview'))),
+                  child: Container(child: Center(child: Text('Preview', style: TextStyle(color: Colors.white),))),
                 ),
                 Container(
                   width: 1,
@@ -162,7 +161,7 @@ class ThemeCell extends StatelessWidget {
                                     strokeWidth: 2,
                                   ),
                                 )
-                              : Text('Install'))),
+                              : Text('Install', style: TextStyle(color: Colors.white),))),
                 ),
               ],
             ),

@@ -26,6 +26,7 @@ class DashboardTransactionsView extends StatefulWidget {
   final List<NotificationModel> notifications;
   final Function openNotification;
   final Function deleteNotification;
+
   DashboardTransactionsView({
     this.onOpen,
     this.businessApps,
@@ -48,6 +49,7 @@ class DashboardTransactionsView extends StatefulWidget {
 
 class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
   bool isExpanded = false;
+  var f = NumberFormat('###,###,##0.00', 'en_US');
   @override
   Widget build(BuildContext context) {
     String currency = '';
@@ -177,7 +179,7 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                   widget.lastYear.length > 0 ?  Row(
                     children: [
                       Text(
-                        '${widget.lastYear.last.amount} $currency',
+                        '${f.format(widget.total)} $currency',
                         textAlign: TextAlign.start,
                         style: TextStyle(
                           fontSize: 44,

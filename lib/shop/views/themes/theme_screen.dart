@@ -231,7 +231,6 @@ class _ThemesScreenState extends State<ThemesScreen> {
                             isGridMode
                                 ? 'assets/images/grid.svg'
                                 : 'assets/images/list.svg',
-                            color: iconColor(),
                           ),
                           offset: Offset(0, 100),
                           onSelected: (MenuItem item) => item.onTap(),

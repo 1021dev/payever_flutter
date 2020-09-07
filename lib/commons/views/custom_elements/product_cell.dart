@@ -101,7 +101,7 @@ class ProductCell extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    '${product.price} $currency',
+                    '$currency${product.price}',
                     softWrap: true,
                     textAlign: TextAlign.center,
                     style: TextStyle(

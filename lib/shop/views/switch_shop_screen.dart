@@ -210,7 +210,7 @@ class _SwitchShopScreenState extends State<SwitchShopScreen> {
                   shape: BoxShape.circle,
                   color: Colors.blueGrey.withOpacity(0.5),
                   image: DecorationImage(
-                    image: NetworkImage('$imageBase${defaultShop.picture}'),
+                    image: NetworkImage('${defaultShop.picture}'),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -290,7 +290,7 @@ class _SwitchShopScreenState extends State<SwitchShopScreen> {
                 height: 64.0 * 2 + MediaQuery.of(context).padding.bottom,
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
-                  color: Colors.black,
+                  color: overlayColor(),
                   borderRadius: BorderRadius.all(Radius.circular(15)),
                 ),
                 padding: EdgeInsets.only(top: 16),
@@ -375,16 +375,9 @@ class ShopCell extends StatelessWidget {
       avatarName = name.substring(0, 1) + name.substring(name.length - 1).toUpperCase();
       avatarName = avatarName.toUpperCase();
     }
-    return MaterialButton(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(24),
-      ),
-      elevation: 0,
-      focusElevation: 0,
-      hoverElevation: 0,
-      highlightElevation: 0,
-      color: selected.id == shopModel.id ? overlayBackground().withOpacity(0.8) : Colors.transparent.withOpacity(0),
-      onPressed: () {
+    return InkWell(
+
+      onTap: () {
         onTap(shopModel);
       },
       child: Container(
@@ -400,7 +393,7 @@ class ShopCell extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   image: DecorationImage(
-                    image: NetworkImage('$imageBase${shopModel.picture}'),
+                    image: NetworkImage('${shopModel.picture}'),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -474,6 +467,10 @@ class ShopCell extends StatelessWidget {
               ): Container(),
             ),
           ],
+        ),
+        decoration: BoxDecoration(
+          color: selected.id == shopModel.id ? overlayBackground().withOpacity(0.8) : Colors.transparent.withOpacity(0),
+          borderRadius: BorderRadius.circular(24),
         ),
       ),
     );
