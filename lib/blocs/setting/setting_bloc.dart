@@ -607,6 +607,7 @@ class SettingScreenBloc extends Bloc<SettingScreenEvent, SettingScreenState> {
     preferences.setString(GlobalUtils.LANGUAGE, user.language);
     Language.setLanguage(user.language);
     dashboardScreenBloc.add(UpdateUserEvent(user));
+    yield SettingScreenUpdateSuccess(business: state.business,);
     yield state.copyWith(isUpdating: false, user: user);
   }
 

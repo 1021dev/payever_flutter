@@ -87,15 +87,15 @@ class _DashboardBusinessAppsViewState extends State<DashboardBusinessAppsView> {
                 InkWell(
                   onTap: widget.onTapEdit,
                   child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
                     height: 20,
-                    width: 40,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       color: overlayButtonBackground(),
                     ),
                     child: Center(
                       child: Text(
-                        Language.getCommerceOSStrings('Edit'),
+                        Language.getCommerceOSStrings('edit_apps.enter_button'),
                         style: TextStyle(
                           fontSize: 10,
                         ),

@@ -109,7 +109,7 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                                 color: overlayButtonBackground(),
                               ),
                               child: Center(
-                                child: Text('Open',
+                                child: Text(Language.getCommerceOSStrings('actions.open'),
                                   style: TextStyle(
                                     fontSize: 10,
                                   ),

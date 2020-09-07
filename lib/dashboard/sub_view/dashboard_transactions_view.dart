@@ -100,7 +100,7 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                               ),
                               child: Center(
                                 child: Text(
-                                  'Open',
+                                  Language.getCommerceOSStrings('actions.open'),
                                   style: TextStyle(
                                     fontSize: 10,
                                   ),
