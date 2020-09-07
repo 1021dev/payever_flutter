@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/env.dart';
@@ -26,31 +28,67 @@ class ProductCell extends StatelessWidget {
           onTap(product);
         },
         child: Stack(
+          alignment: AlignmentDirectional.bottomCenter,
           children: <Widget>[
-            Container(
-              decoration: BoxDecoration(
-
-                gradient: LinearGradient(
-                  colors: [
-                    Colors.transparent,
-                    Color.fromRGBO(0, 0, 0, 1)
-                  ],
-                  begin: Alignment.center,
-                  end: Alignment.bottomCenter,
+            CachedNetworkImage(
+              imageUrl:
+              '${Env.storage}/products/${product.thumbnail}',
+              imageBuilder: (context, imageProvider) => Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(14),
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.contain,
+                  ),
                 ),
-                // color: overlayBackground(),
-                borderRadius: BorderRadius.circular(14),
-                image:product.thumbnail != null ? DecorationImage(
-                  image: NetworkImage('${Env.storage}/products/${product.thumbnail}'),
-                  fit: BoxFit.cover,
-                ): null,
+              ),
+              color: Colors.white,
+              placeholder: (context, url) => Container(
+                color: Colors.white,
+                child: Center(
+                  child: Container(
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                    ),
+                  ),
+                ),
+              ),
+              errorWidget: (context, url, error) => Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: Center(
+                  child: AspectRatio(
+                    aspectRatio: 0.8,
+                    child: SvgPicture.asset(
+                      'assets/images/no_image.svg',
+                      color: Colors.black54,
+                    ),
+                  ),
+                ),
               ),
             ),
             Container(
-              alignment: Alignment.bottomCenter,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(8.0),
+                    bottomRight: Radius.circular(8.0),
+                  ),
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.transparent,
+                      Color.fromRGBO(0, 0, 0, 1)
+                    ],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  )),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
+                  SizedBox(height: 4),
                   Text(
                     product.name,
                     softWrap: true,
@@ -71,7 +109,7 @@ class ProductCell extends StatelessWidget {
                       fontSize: 12,
                     ),
                   ),
-                  SizedBox(height: 6),
+                  SizedBox(height: 4),
                 ],
               ),
             ),

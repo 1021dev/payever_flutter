@@ -176,7 +176,7 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
                             crossAxisSpacing: 6,
                             physics: NeverScrollableScrollPhysics(),
                             children: List.generate(
-                              4,
+                              widget.lastSales.length > 4 ? 4 : widget.lastSales.length,
                               (index) => ProductCell(
                                 product: widget.lastSales[index],
                                 business: widget.business,
