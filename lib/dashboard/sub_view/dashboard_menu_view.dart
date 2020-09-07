@@ -294,10 +294,13 @@ class DashboardMenuView extends StatelessWidget {
                           ),
                         ),
                         SizedBox(width: 8,),
-                        Text(
-                          Language.getCommerceOSStrings('dashboard.profile_menu.contact'),
-                          style: TextStyle(
-                              fontSize: 14,
+                        Flexible(
+                          child: Text(
+                            Language.getCommerceOSStrings('dashboard.profile_menu.contact'),
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                fontSize: 14,
+                            ),
                           ),
                         )
                       ],
@@ -329,10 +332,13 @@ class DashboardMenuView extends StatelessWidget {
                           ),
                         ),
                         SizedBox(width: 8,),
-                        Text(
-                          Language.getCommerceOSStrings('dashboard.profile_menu.feedback'),
-                          style: TextStyle(
-                              fontSize: 14,
+                        Flexible(
+                          child: Text(
+                            Language.getCommerceOSStrings('dashboard.profile_menu.feedback'),
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                fontSize: 14,
+                            ),
                           ),
                         )
                       ],

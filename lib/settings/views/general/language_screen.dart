@@ -56,7 +56,6 @@ class _LanguageScreenScreenState extends State<LanguageScreen> {
         if (state is SettingScreenUpdateSuccess) {
           globalStateModel.setLanguage(defaultLanguage);
           Language.setLanguage(defaultLanguage);
-          print('update Language: $defaultLanguage');
           Language(context);
           Navigator.pop(context);
         } else if (state is SettingScreenStateFailure) {

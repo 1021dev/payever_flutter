@@ -141,9 +141,6 @@ class ProductGridItem extends StatelessWidget {
                       fontWeight: FontWeight.w300,
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 8),
-                  ),
                 ],
               ),
             ),

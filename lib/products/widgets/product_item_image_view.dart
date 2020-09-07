@@ -49,7 +49,7 @@ class ProductItemImage extends StatelessWidget {
           errorWidget: (context, url, error) =>  Container(
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(12.0)),
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(8.0), topRight: Radius.circular(8.0)),
             ),
             child: Center(
               child: SvgPicture.asset(
@@ -65,7 +65,7 @@ class ProductItemImage extends StatelessWidget {
         return Container(
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(12.0)),
+            borderRadius: BorderRadius.only(topLeft: Radius.circular(8.0), topRight: Radius.circular(8.0)),
           ),
           child: Center(
             child: SvgPicture.asset(

@@ -709,18 +709,10 @@ class _ContactScreenState extends State<ContactScreen> {
   }
 
   Widget _getGridBody(ContactScreenState state) {
-    int crossAxisCount = _isTablet ? (_isPortrait ? 2 : 3): (_isPortrait ? 1 : 2);
-    double imageRatio= 323.0 / 182.0;
-    double contentHeight = 116;
-    double cellWidth = _isPortrait ? (Measurements.width - 44) / crossAxisCount : (Measurements.height - 56) / crossAxisCount;
-    double imageHeight = cellWidth / imageRatio;
-    double cellHeight = imageHeight + contentHeight;
-    print('$cellWidth,  $cellHeight, $imageHeight  => ${cellHeight / cellWidth}');
-
+    int crossAxisCount = _isTablet ? (_isPortrait ? 2 : 3): (_isPortrait ? 2 : 3);
     List<Widget> widgets = [];
     widgets.add(
       Container(
-        padding: EdgeInsets.only(left: 16, right: 16),
         child: ContactGridAddItem(
           onAdd: () {
             Navigator.push(
@@ -741,7 +733,6 @@ class _ContactScreenState extends State<ContactScreen> {
     if (state.contacts != null) {
       widgets.addAll(state.contactLists.map((contact) {
         return Container(
-          padding: EdgeInsets.only(left: 16, right: 16),
           child: ContactGridItem(
             contact: contact,
             onTap: (contactModel) {
@@ -766,7 +757,7 @@ class _ContactScreenState extends State<ContactScreen> {
     }
 
     return Container(
-      padding: EdgeInsets.only(top: 16),
+      padding: EdgeInsets.only(left:12, top: 16, right: 12, bottom: 16),
       clipBehavior: Clip.none,
       child: SmartRefresher(
         enablePullDown: true,
@@ -790,9 +781,8 @@ class _ContactScreenState extends State<ContactScreen> {
           slivers: <Widget>[
             SliverGrid.count(
               crossAxisCount: crossAxisCount,
-              crossAxisSpacing: 12,
-              mainAxisSpacing: 12,
-              childAspectRatio: cellWidth / cellHeight,
+              crossAxisSpacing: 6,
+              mainAxisSpacing: 6,
               children: widgets,
             ),
             new SliverToBoxAdapter(

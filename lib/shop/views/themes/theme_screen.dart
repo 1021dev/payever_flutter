@@ -409,7 +409,6 @@ class _ThemesScreenState extends State<ThemesScreen> {
                         crossAxisCount: (_isTablet || !_isPortrait) ? 3 : 2,
                         mainAxisSpacing: 6,
                         crossAxisSpacing: 6,
-                        childAspectRatio: 4 / 5,
                       )
                     : ListView.builder(
                         itemCount: themes.length,

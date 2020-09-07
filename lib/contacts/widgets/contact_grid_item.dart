@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/contacts/models/model.dart';
 import 'package:payever/contacts/widgets/contact_item_image_view.dart';
+import 'package:payever/theme.dart';
 
 class ContactGridItem extends StatelessWidget {
   final Function onTap;
@@ -76,15 +77,17 @@ class ContactGridItem extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  height: 116,
+                  height: 100,
+                  color: overlayBackground(),
                   child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       Expanded(
                         child: Container(
                           padding: EdgeInsets.only(
                             left: 20,
                             right: 20,
-                            top: 12,
+                            top: 8,
                           ),
                           child: Column(
                             children: <Widget>[

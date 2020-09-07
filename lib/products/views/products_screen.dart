@@ -1401,8 +1401,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
               elevation: 0,
               color: overlayBackground(),
               child: Container(
-                width: 100,
                 child: Row(
+                  mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
