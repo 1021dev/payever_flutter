@@ -5,6 +5,7 @@ class ShopScreenState {
   final bool isLoading;
   final bool isUpdating;
   final bool isUploading;
+  final bool isDuplicate;
   final List<TemplateModel> templates;
   final List<ThemeModel> themes;
   final List<ThemeListModel> themeListModels;
@@ -14,6 +15,7 @@ class ShopScreenState {
   final ShopDetailModel activeShop;
   final ThemeModel activeTheme;
   final String blobName;
+  final String installThemeId;
   final String selectedCategory;
   final List<String>subCategories;
 
@@ -21,6 +23,7 @@ class ShopScreenState {
     this.isLoading = false,
     this.isUpdating = false,
     this.isUploading = false,
+    this.isDuplicate = false,
     this.shops = const [],
     this.templates = const [],
     this.themes = const [],
@@ -30,6 +33,7 @@ class ShopScreenState {
     this.activeShop,
     this.activeTheme,
     this.blobName,
+    this.installThemeId = '',
     this.selectedCategory = 'All',
     this.subCategories,
   });
@@ -38,6 +42,7 @@ class ShopScreenState {
     this.isLoading,
     this.isUpdating,
     this.isUploading,
+    this.isDuplicate,
     this.templates,
     this.shops,
     this.themes,
@@ -47,6 +52,7 @@ class ShopScreenState {
     this.activeShop,
     this.activeShop,
     this.blobName,
+    this.installThemeId,
     this.selectedCategory,
     this.subCategories,
   ];
@@ -55,6 +61,7 @@ class ShopScreenState {
     bool isLoading,
     bool isUpdating,
     bool isUploading,
+    bool isDuplicate,
     List<TemplateModel> templates,
     List<ThemeModel> themes,
     List<ThemeModel> myThemes,
@@ -64,6 +71,7 @@ class ShopScreenState {
     ShopDetailModel activeShop,
     ThemeModel activeTheme,
     String blobName,
+    String installThemeId,
     String selectedCategory,
     List<String>subCategories,
   }) {
@@ -71,6 +79,7 @@ class ShopScreenState {
       isLoading: isLoading ?? this.isLoading,
       isUpdating: isUpdating ?? this.isUpdating,
       isUploading: isUploading ?? this.isUploading,
+      isDuplicate: isDuplicate ?? this.isDuplicate,
       templates: templates ?? this.templates,
       shops: shops ?? this.shops,
       themes: themes ?? this.themes,
@@ -80,6 +89,7 @@ class ShopScreenState {
       activeShop: activeShop ?? this.activeShop,
       activeTheme: activeTheme ?? this.activeTheme,
       blobName: blobName ?? this.blobName,
+      installThemeId: installThemeId ?? this.installThemeId,
       selectedCategory: selectedCategory ?? this.selectedCategory,
       subCategories: subCategories ?? this.subCategories,
     );
@@ -92,6 +102,17 @@ class ShopScreenStateFailure extends ShopScreenState {
   final String error;
 
   ShopScreenStateFailure({@required this.error}) : super();
+
+  @override
+  String toString() {
+    return 'ShopScreenStateFailure { error $error }';
+  }
+}
+
+class ShopScreenStateThemeFailure extends ShopScreenState {
+  final String error;
+
+  ShopScreenStateThemeFailure({@required this.error}) : super();
 
   @override
   String toString() {

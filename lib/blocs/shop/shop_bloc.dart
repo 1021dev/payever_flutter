@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
+import 'package:dio/dio.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
@@ -21,7 +22,7 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
     if (event is ShopScreenInitEvent) {
       yield* fetchShop(event.currentBusinessId);
     } else if (event is InstallTemplateEvent) {
-      yield* installTemplate(event.businessId, event.shopId, event.templateId);
+      yield* installTheme(event.businessId, event.shopId, event.themeId);
     } else if (event is GetActiveThemeEvent) {
       yield* getActiveTheme(event.businessId, event.shopId);
     } else if (event is DuplicateThemeEvent) {
@@ -101,20 +102,26 @@ class ShopScreenBloc extends Bloc<ShopScreenEvent, ShopScreenState> {
     }
   }
 
-  Stream<ShopScreenState> installTemplate(String activeBusinessId, String shopId, String templateId) async* {
-    dynamic response = await api.installTemplate(GlobalUtils.activeToken.accessToken, activeBusinessId, shopId, templateId);
+  Stream<ShopScreenState> installTheme(String activeBusinessId, String shopId, String themeId) async* {
+    yield state.copyWith(isUpdating: true, installThemeId: themeId);
+    dynamic response = await api.installTemplate(GlobalUtils.activeToken.accessToken, activeBusinessId, shopId, themeId);
     if (response != null) {
       print(ThemeResponse.toMap(response));
     }
     add(GetActiveThemeEvent(businessId: activeBusinessId, shopId: shopId));
+    yield state.copyWith(isUpdating: false, installThemeId: '');
   }
 
   Stream<ShopScreenState> duplicateTheme(String activeBusinessId, String shopId, String themeId) async* {
+    yield state.copyWith(isDuplicate: true);
     dynamic response = await api.duplicateTheme(GlobalUtils.activeToken.accessToken, activeBusinessId, shopId, themeId);
-    if (response != null) {
+    if (response is DioError) {
+      yield ShopScreenStateThemeFailure(error:  response.message);
+    } else if (response is Map) {
       print(ThemeResponse.toMap(response));
+      add(GetActiveThemeEvent(businessId: activeBusinessId, shopId: shopId));
     }
-    add(GetActiveThemeEvent(businessId: activeBusinessId, shopId: shopId));
+    yield state.copyWith(isDuplicate: false);
   }
 
   Stream<ShopScreenState> deleteTheme(String activeBusinessId, String shopId, String themeId) async* {

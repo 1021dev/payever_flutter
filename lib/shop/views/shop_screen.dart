@@ -717,40 +717,40 @@ class _ShopScreenState extends State<ShopScreen> {
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 8),
-                    ),
-                    PopupMenuButton<OverflowMenuItem>(
-                      child: Material(
-                        color: overlayBackground().withOpacity(1),
-                        shape: CircleBorder(),
-                        child: Icon(
-                          Icons.more_horiz,
-                          size: 32,
-                        ),
-                      ),
-                      offset: Offset(0, 100),
-                      onSelected: (OverflowMenuItem item) => item.onTap(),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      color: overlayBackground().withOpacity(1),
-                      itemBuilder: (BuildContext context) {
-                        return dashboardPopup(context, state)
-                            .map((OverflowMenuItem item) {
-                          return PopupMenuItem<OverflowMenuItem>(
-                            value: item,
-                            child: Text(
-                              item.title,
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w300,
-                              ),
-                            ),
-                          );
-                        }).toList();
-                      },
-                    ),
+                    // Padding(
+                    //   padding: EdgeInsets.only(left: 8),
+                    // ),
+                    // PopupMenuButton<OverflowMenuItem>(
+                    //   child: Material(
+                    //     color: overlayBackground().withOpacity(1),
+                    //     shape: CircleBorder(),
+                    //     child: Icon(
+                    //       Icons.more_horiz,
+                    //       size: 32,
+                    //     ),
+                    //   ),
+                    //   offset: Offset(0, 100),
+                    //   onSelected: (OverflowMenuItem item) => item.onTap(),
+                    //   shape: RoundedRectangleBorder(
+                    //     borderRadius: BorderRadius.circular(8),
+                    //   ),
+                    //   color: overlayBackground().withOpacity(1),
+                    //   itemBuilder: (BuildContext context) {
+                    //     return dashboardPopup(context, state)
+                    //         .map((OverflowMenuItem item) {
+                    //       return PopupMenuItem<OverflowMenuItem>(
+                    //         value: item,
+                    //         child: Text(
+                    //           item.title,
+                    //           style: TextStyle(
+                    //             fontSize: 14,
+                    //             fontWeight: FontWeight.w300,
+                    //           ),
+                    //         ),
+                    //       );
+                    //     }).toList();
+                    //   },
+                    // ),
                     Padding(
                       padding: EdgeInsets.only(right: 16),
                     )

@@ -9,49 +9,19 @@ import 'package:payever/theme.dart';
 class ThemeCell extends StatelessWidget {
   final ThemeListModel themeListModel;
   final Function onTapInstall;
-  final Function onTapDuplicate;
-  final Function onTapEdit;
-  final Function onTapDelete;
   final Function onCheck;
   final Function onTapPreview;
+  final bool isInstall;
+  final String installThemeId;
+
   ThemeCell({
     this.themeListModel,
     this.onTapInstall,
-    this.onTapDuplicate,
-    this.onTapEdit,
-    this.onTapDelete,
     this.onCheck,
     this.onTapPreview,
+    this.isInstall,
+    this.installThemeId,
   });
-
-  List<OverflowMenuItem> themePopup(BuildContext context) {
-    return [
-      OverflowMenuItem(
-        title: 'Install',
-        onTap: (theme) async {
-          onTapInstall(theme);
-        },
-      ),
-      OverflowMenuItem(
-        title: 'Duplicate',
-        onTap: (theme) async {
-          onTapDuplicate(theme);
-        },
-      ),
-      OverflowMenuItem(
-        title: 'Edit',
-        onTap: (theme) async {
-          onTapEdit(theme);
-        },
-      ),
-      OverflowMenuItem(
-        title: 'Delete',
-        onTap: (theme) async {
-          onTapDelete(theme);
-        },
-      ),
-    ];
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -137,7 +107,7 @@ class ThemeCell extends StatelessWidget {
           ),
           Container(
             padding: EdgeInsets.only(right: 8, left: 8, top: 4, bottom: 4),
-            color: overlayColor(),
+            color: overlayBackground(),
             width: double.infinity,
             height: (Measurements.width - 38) * 0.13,
             alignment: Alignment.centerLeft,
@@ -171,8 +141,7 @@ class ThemeCell extends StatelessWidget {
               children: <Widget>[
                 InkWell(
                   onTap: onTapPreview,
-                  child: Container(
-                      child: Center(child: Text('Preview'))),
+                  child: Container(child: Center(child: Text('Preview'))),
                 ),
                 Container(
                   width: 1,
@@ -183,7 +152,17 @@ class ThemeCell extends StatelessWidget {
                     onTapInstall(themeListModel.themeModel);
                   },
                   child: Container(
-                      child: Center(child: Text('Install'))),
+                      child: Center(
+                          child: isInstall &&
+                                  installThemeId == themeListModel.themeModel.id
+                              ? Container(
+                                  width: 15,
+                                  height: 15,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : Text('Install'))),
                 ),
               ],
             ),

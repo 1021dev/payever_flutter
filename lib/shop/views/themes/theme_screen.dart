@@ -73,6 +73,8 @@ class _ThemesScreenState extends State<ThemesScreen> {
       listener: (BuildContext context, ShopScreenState state) async {
         if (state is ShopScreenStateFailure) {
           Fluttertoast.showToast(msg: state.error);
+        } else if (state is ShopScreenStateThemeFailure) {
+          Fluttertoast.showToast(msg: state.error);
         }
       },
       child: BlocBuilder<ShopScreenBloc, ShopScreenState>(
@@ -299,20 +301,31 @@ class _ThemesScreenState extends State<ThemesScreen> {
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
-                Container(
-                  height: 36,
-                  width: 0.5,
-                  color: Colors.white38,
-                ),
-                MaterialButton(
-                  onPressed: () {
-                    // screenBloc.add(DeleteSelectedContactsEvent());
-                  },
-                  child: Text(
-                    'Duplicate',
-                    style: TextStyle(color: Colors.white),
+                if (selectedCount < 2)
+                  Row(
+                    children: <Widget>[
+                      Container(
+                        height: 36,
+                        width: 0.5,
+                        color: Colors.white38,
+                      ),
+                      MaterialButton(
+                        onPressed: () {
+                          String themeId = themeListModels.firstWhere((element) => element.isChecked).themeModel.id;
+                          duplicateTheme(state, themeId);
+                          // screenBloc.add(DeleteSelectedContactsEvent());
+                        },
+                        child: state.isDuplicate ? Container(
+                          width: 30,
+                          height: 30,
+                          child: CircularProgressIndicator(strokeWidth: 2,),
+                        ) :Text(
+                          'Duplicate',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
               ],
             ),
           );
@@ -363,42 +376,35 @@ class _ThemesScreenState extends State<ThemesScreen> {
                         children: themes.map((theme) {
                           return ThemeCell(
                             themeListModel: theme,
-                            onTapInstall: (theme) {
-                              if (state.activeShop != null) {
-                                widget.screenBloc.add(InstallTemplateEvent(
-                                  businessId: widget
-                                      .globalStateModel.currentBusiness.id,
-                                  templateId: theme.id,
-                                  shopId: state.activeShop.id,
-                                ));
-                              }
-                            },
-                            onTapDelete: (theme) {
-                              if (state.activeShop != null) {
-                                widget.screenBloc.add(DeleteThemeEvent(
-                                  businessId: widget
-                                      .globalStateModel.currentBusiness.id,
-                                  themeId: theme.id,
-                                  shopId: state.activeShop.id,
-                                ));
-                              }
-                            },
-                            onTapDuplicate: (theme) {
-                              if (state.activeShop != null) {
-                                widget.screenBloc.add(DuplicateThemeEvent(
-                                  businessId: widget
-                                      .globalStateModel.currentBusiness.id,
-                                  themeId: theme.id,
-                                  shopId: state.activeShop.id,
-                                ));
-                              }
-                            },
+                            isInstall: state.isUpdating,
+                            installThemeId: state.installThemeId,
+                            onTapInstall: (theme) =>
+                                installTheme(state, theme.id),
+                            // onTapDelete: (theme) {
+                            //   if (state.activeShop != null) {
+                            //     widget.screenBloc.add(DeleteThemeEvent(
+                            //       businessId: widget
+                            //           .globalStateModel.currentBusiness.id,
+                            //       themeId: theme.id,
+                            //       shopId: state.activeShop.id,
+                            //     ));
+                            //   }
+                            // },
+                            // onTapDuplicate: (theme) {
+                            //   if (state.activeShop != null) {
+                            //     widget.screenBloc.add(DuplicateThemeEvent(
+                            //       businessId: widget
+                            //           .globalStateModel.currentBusiness.id,
+                            //       themeId: theme.id,
+                            //       shopId: state.activeShop.id,
+                            //     ));
+                            //   }
+                            // },
                             onCheck: (ThemeListModel model) {
                               widget.screenBloc.add(SelectThemeEvent(
                                 model: model,
                               ));
                             },
-                            onTapEdit: (theme) {},
                           );
                         }).toList(),
                         crossAxisCount: (_isTablet || !_isPortrait) ? 3 : 2,
@@ -503,14 +509,7 @@ class _ThemesScreenState extends State<ThemesScreen> {
                   ),
                   InkWell(
                     onTap: () {
-                      if (state.activeShop != null) {
-                        widget.screenBloc.add(InstallTemplateEvent(
-                          businessId:
-                              widget.globalStateModel.currentBusiness.id,
-                          templateId: themeListModel.themeModel.id,
-                          shopId: state.activeShop.id,
-                        ));
-                      }
+                      installTheme(state, themeListModel.themeModel.id);
                     },
                     child: Container(
                       height: 20,
@@ -520,12 +519,22 @@ class _ThemesScreenState extends State<ThemesScreen> {
                         color: overlayButtonBackground(),
                       ),
                       child: Center(
-                        child: Text(
-                          'Set',
-                          style: TextStyle(
-                            fontSize: 10,
-                          ),
-                        ),
+                        child: state.isUpdating &&
+                                state.installThemeId ==
+                                    themeListModel.themeModel.id
+                            ? Container(
+                                width: 15,
+                                height: 15,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 1,
+                                ),
+                              )
+                            : Text(
+                                'Set',
+                                style: TextStyle(
+                                  fontSize: 10,
+                                ),
+                              ),
                       ),
                     ),
                   ),
@@ -578,6 +587,31 @@ class _ThemesScreenState extends State<ThemesScreen> {
         return themeListModels;
       }
     }
+  }
+
+  void installTheme(ShopScreenState state, String themeId) {
+    if (state.activeShop != null) {
+      widget.screenBloc.add(InstallTemplateEvent(
+        businessId: widget.globalStateModel.currentBusiness.id,
+        themeId: themeId,
+        shopId: state.activeShop.id,
+      ));
+    } else {
+      Fluttertoast.showToast(msg: 'There is no active shop!');
+    }
+  }
+
+  void duplicateTheme(ShopScreenState state, String themeId) {
+      if (state.activeShop != null && themeId.isNotEmpty) {
+        widget.screenBloc.add(DuplicateThemeEvent(
+          businessId: widget
+              .globalStateModel.currentBusiness.id,
+          themeId: themeId,
+          shopId: state.activeShop.id,
+        ));
+      } else {
+        Fluttertoast.showToast(msg: 'There is no active shop!');
+      }
   }
 
   String _getCollections(ShopScreenState state) {

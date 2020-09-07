@@ -26,19 +26,19 @@ class ShopScreenInitEvent extends ShopScreenEvent {
 class InstallTemplateEvent extends ShopScreenEvent {
   final String businessId;
   final String shopId;
-  final String templateId;
+  final String themeId;
 
   InstallTemplateEvent({
     this.businessId,
     this.shopId,
-    this.templateId,
+    this.themeId,
   });
 
   @override
   List<Object> get props => [
     this.businessId,
     this.shopId,
-    this.templateId,
+    this.themeId,
   ];
 }
 
