@@ -118,10 +118,13 @@ class DashboardMenuView extends StatelessWidget {
                           ),
                         ),
                         SizedBox(width: 8,),
-                        Text(
-                          Language.getCommerceOSStrings('dashboard.profile_menu.switch_profile'),
-                          style: TextStyle(
-                              fontSize: 14,
+                        Flexible(
+                          child: Text(
+                            Language.getCommerceOSStrings('dashboard.profile_menu.switch_profile'),
+                            style: TextStyle(
+                                fontSize: 14,
+                            ),
+                            overflow: TextOverflow.ellipsis,
                           ),
                         )
                       ],
@@ -211,10 +214,13 @@ class DashboardMenuView extends StatelessWidget {
                           ),
                         ),
                         SizedBox(width: 8,),
-                        Text(
-                          Language.getCommerceOSStrings('dashboard.profile_menu.add_business'),
-                          style: TextStyle(
-                            fontSize: 14,
+                        Flexible(
+                          child: Text(
+                            Language.getCommerceOSStrings('dashboard.profile_menu.add_business'),
+                            style: TextStyle(
+                              fontSize: 14,
+                            ),
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ],
@@ -260,10 +266,13 @@ class DashboardMenuView extends StatelessWidget {
                           ),
                         ),
                         SizedBox(width: 8,),
-                        Text(
-                          Language.getCommerceOSStrings('dashboard.profile_menu.log_out'),
-                          style: TextStyle(
-                              fontSize: 14,
+                        Flexible(
+                          child: Text(
+                            Language.getCommerceOSStrings('dashboard.profile_menu.log_out'),
+                            style: TextStyle(
+                                fontSize: 14,
+                            ),
+                            overflow: TextOverflow.ellipsis,
                           ),
                         )
                       ],

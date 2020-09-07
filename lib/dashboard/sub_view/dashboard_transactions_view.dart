@@ -173,6 +173,19 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                       ),
                     ),
                   ):
+                  !widget.isLoading ?  SizedBox(height: 8): Container(),
+                  widget.lastYear.length > 0 ?  Row(
+                    children: [
+                      Text(
+                        '${widget.lastYear.last.amount} $currency',
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          fontSize: 44,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      )
+                    ],
+                  ): Container(),
                   SizedBox(height: 8),
                   !widget.isLoading ?  Row(
                     children: [
@@ -196,8 +209,9 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                         '${widget.lastYear.last.amount} $currency',
                         textAlign: TextAlign.start,
                         style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Color.fromRGBO(28, 187, 45, 1),
                         ),
                       )
                     ],

@@ -1035,7 +1035,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
           child: CustomScrollView(
             slivers: <Widget>[
               SliverGrid.count(
-                crossAxisCount: _isTablet ? 3: (_isPortrait ? 2: 2),
+                crossAxisCount: _isTablet ? 3: (_isPortrait ? 2: 3),
                 crossAxisSpacing: _isTablet ? 12: (_isPortrait ? 6: 6),
                 mainAxisSpacing: _isTablet ? 12: (_isPortrait ? 6: 6),
                 childAspectRatio: 1,
@@ -1130,7 +1130,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
             child: CustomScrollView(
               slivers: <Widget>[
                 SliverGrid.count(
-                  crossAxisCount: _isTablet ? 3: (_isPortrait ? 2: 2),
+                  crossAxisCount: _isTablet ? 3: (_isPortrait ? 2: 3),
                   crossAxisSpacing: _isTablet ? 12: (_isPortrait ? 0: 6),
                   mainAxisSpacing: _isTablet ? 12: (_isPortrait ? 6: 6),
                   children: List.generate(
@@ -1203,7 +1203,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
             child: CustomScrollView(
               slivers: <Widget>[
                 SliverGrid.count(
-                  crossAxisCount: _isTablet ? 3: (_isPortrait ? 2: 2),
+                  crossAxisCount: _isTablet ? 3: (_isPortrait ? 2: 3),
                   crossAxisSpacing: _isTablet ? 12: (_isPortrait ? 6: 6),
                   mainAxisSpacing: _isTablet ? 12: (_isPortrait ? 6: 6),
                   childAspectRatio: 1,
