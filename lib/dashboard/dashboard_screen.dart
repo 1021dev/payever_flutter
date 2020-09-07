@@ -1092,24 +1092,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
         innerDrawerKey: _innerDrawerKey,
         isClose: false,
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-      floatingActionButton: Container(
-        width: 40,
-        height: 40,
-        margin: EdgeInsets.only(bottom: 44),
-        alignment: Alignment.bottomLeft,
-        child: RawMaterialButton(
-          shape: CircleBorder(),
-          elevation: 4,
-          fillColor: overlayColor(),
-          child: SvgPicture.asset(
-            'assets/images/help.svg',
-            width: 24,
-            color: iconColor(),
-          ),
-          onPressed: () {},
-        ),
-      ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+      // floatingActionButton: Container(
+      //   width: 40,
+      //   height: 40,
+      //   margin: EdgeInsets.only(bottom: 44),
+      //   alignment: Alignment.bottomLeft,
+      //   child: RawMaterialButton(
+      //     shape: CircleBorder(),
+      //     elevation: 4,
+      //     fillColor: overlayColor(),
+      //     child: SvgPicture.asset(
+      //       'assets/images/help.svg',
+      //       width: 24,
+      //       color: iconColor(),
+      //     ),
+      //     onPressed: () {},
+      //   ),
+      // ),
       body: SafeArea(
         top: true,
         bottom: false,
@@ -1123,6 +1123,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               width: widget.mainWidth,
               child: Stack(
                 children: <Widget>[
+                  Align(alignment: Alignment.center, child: _headerView(state)),
                   RefreshIndicator(
                     onRefresh: () {
                       screenBloc
@@ -1150,7 +1151,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ],
                     ),
                   ),
-                  Align(alignment: Alignment.center, child: _headerView(state)),
                 ],
               ),
             ),

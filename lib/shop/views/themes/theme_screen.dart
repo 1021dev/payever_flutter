@@ -50,7 +50,6 @@ class _ThemesScreenState extends State<ThemesScreen> {
 
   @override
   void dispose() {
-    widget.screenBloc.close();
     super.dispose();
   }
 

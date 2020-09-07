@@ -54,6 +54,7 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
         ? MediaQuery.of(context).size.width
         : MediaQuery.of(context).size.height);
     _isTablet = Measurements.width < 600 ? false : true;
+    print('Current wall paper: ${widget.globalStateModel.currentWallpaper}');
     return BlocListener(
       bloc: widget.setScreenBloc,
       listener: (BuildContext context, SettingScreenState state) async {
@@ -305,7 +306,7 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
                     strokeWidth: 2,
                   ),
                 ),
-              ): Text('Set'),
+              ): Text(isInstalled(wallpaper) ? 'Installed' : 'Set'),
               decoration: BoxDecoration(
                   color: overlayBackground(),
                   borderRadius: BorderRadius.only(
@@ -410,7 +411,12 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
   }
 
   void updateWallpaper(Wallpaper wallpaper) {
+    if (isInstalled(wallpaper)) return;
     widget.setScreenBloc.add(UpdateWallpaperEvent(body: wallpaper.toDictionary()));
+  }
+
+  bool isInstalled(Wallpaper wallpaper) {
+    return widget.globalStateModel.currentWallpaper == '${Env.storage}/wallpapers/${wallpaper.wallpaper}';
   }
 }
 

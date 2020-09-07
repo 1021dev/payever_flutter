@@ -39,12 +39,14 @@ class DashboardProductsView extends StatefulWidget {
     this.onTapContinueSetup,
     this.onTapLearnMore,
   });
+
   @override
   _DashboardProductsViewState createState() => _DashboardProductsViewState();
 }
 
 class _DashboardProductsViewState extends State<DashboardProductsView> {
   bool isExpanded = false;
+
   @override
   Widget build(BuildContext context) {
     if (widget.businessApps.setupStatus == 'completed') {
@@ -67,13 +69,17 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
                             height: 16,
                             decoration: BoxDecoration(
                                 image: DecorationImage(
-                                    image: NetworkImage('${iconString()}product.png'),
-                                    fit: BoxFit.fitWidth,
-                                )),
+                              image: NetworkImage('${iconString()}product.png'),
+                              fit: BoxFit.fitWidth,
+                            )),
                           ),
-                          SizedBox(width: 8,),
+                          SizedBox(
+                            width: 8,
+                          ),
                           Text(
-                            Language.getCommerceOSStrings('dashboard.apps.products').toUpperCase(),
+                            Language.getCommerceOSStrings(
+                                    'dashboard.apps.products')
+                                .toUpperCase(),
                             style: TextStyle(
                               fontSize: 12,
                             ),
@@ -88,69 +94,75 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
                               height: 20,
                               width: 40,
                               decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: overlayButtonBackground(),
+                                borderRadius: BorderRadius.circular(10),
+                                color: overlayButtonBackground(),
                               ),
                               child: Center(
                                 child: Text(
                                   Language.getCommerceOSStrings('actions.open'),
                                   style: TextStyle(
-                                      fontSize: 10,
+                                    fontSize: 10,
                                   ),
                                 ),
                               ),
                             ),
                           ),
-                          widget.notifications.length > 0 ?
-                          SizedBox(width: 8) : Container(),
-                          widget.notifications.length > 0 ? Container(
-                            height: 20,
-                            width: 40,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.white10,
-                            ),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  flex: 1,
-                                  child: Center(
-                                    child: Text(
-                                      '${widget.notifications.length}',
-                                      style: TextStyle(
-                                          fontSize: 10,
-                                      ),
-                                    ),
+                          widget.notifications.length > 0
+                              ? SizedBox(width: 8)
+                              : Container(),
+                          widget.notifications.length > 0
+                              ? Container(
+                                  height: 20,
+                                  width: 40,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.white10,
                                   ),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        isExpanded = !isExpanded;
-                                      });
-                                    },
-                                    child: Container(
-                                      width: 21,
-                                      height: 21,
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(10.5),
-                                          color: overlayButtonBackground(),
-                                      ),
-                                      child: Center(
-                                        child: SvgPicture.asset(
-                                          isExpanded ? 'assets/images/closeicon.svg' : 'assets/images/icon_plus.svg',
-                                          width: 8,
-                                          color: iconColor(),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        flex: 1,
+                                        child: Center(
+                                          child: Text(
+                                            '${widget.notifications.length}',
+                                            style: TextStyle(
+                                              fontSize: 10,
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                    ),
+                                      Expanded(
+                                        flex: 1,
+                                        child: InkWell(
+                                          onTap: () {
+                                            setState(() {
+                                              isExpanded = !isExpanded;
+                                            });
+                                          },
+                                          child: Container(
+                                            width: 21,
+                                            height: 21,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10.5),
+                                              color: overlayButtonBackground(),
+                                            ),
+                                            child: Center(
+                                              child: SvgPicture.asset(
+                                                isExpanded
+                                                    ? 'assets/images/closeicon.svg'
+                                                    : 'assets/images/icon_plus.svg',
+                                                width: 8,
+                                                color: iconColor(),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                              ],
-                            ),
-                          ): Container(),
+                                )
+                              : Container(),
                         ],
                       )
                     ],
@@ -158,38 +170,45 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
                   SizedBox(height: 8),
                   widget.lastSales != null
                       ? Container(
-                    height: 100,
-                    child: GridView.count(
-                      crossAxisCount: 3,
-                      physics: NeverScrollableScrollPhysics(),
-                      children: widget.lastSales.length > 3 ? List.generate(3, (index) => ProductCell(
-                        product: widget.lastSales[index],
-                        business: widget.business,
-                        onTap: (Products product) {
-                          widget.onSelect(product);
-                        },
-                      ),
-                      ).toList() : widget.lastSales.map((e) => ProductCell(
-                        product: e,
-                        business: widget.business,
-                        onTap: (Products product) {
-                          widget.onSelect(product);
-                        },
-                      )).toList(),
-                      childAspectRatio: (Measurements.width - 32) / 3.0 / 92.0,
-                    )
-                  ): Container(
-                    height: 92,
-                    child: Center(
-                      child: Container(
-                        width: 32,
-                        height: 32,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
+                          height: 100,
+                          child: GridView.count(
+                            crossAxisCount: 3,
+                            physics: NeverScrollableScrollPhysics(),
+                            children: widget.lastSales.length > 3
+                                ? List.generate(
+                                    3,
+                                    (index) => ProductCell(
+                                      product: widget.lastSales[index],
+                                      business: widget.business,
+                                      onTap: (Products product) {
+                                        widget.onSelect(product);
+                                      },
+                                    ),
+                                  ).toList()
+                                : widget.lastSales
+                                    .map((e) => ProductCell(
+                                          product: e,
+                                          business: widget.business,
+                                          onTap: (Products product) {
+                                            widget.onSelect(product);
+                                          },
+                                        ))
+                                    .toList(),
+                            childAspectRatio:
+                                (Measurements.width - 32) / 3.0 / 92.0,
+                          ))
+                      : Container(
+                          height: 92,
+                          child: Center(
+                            child: Container(
+                              width: 32,
+                              height: 32,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),
@@ -197,8 +216,10 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
               Container(
                 height: 50.0 * widget.notifications.length,
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(6), bottomRight: Radius.circular(6)),
-                    color: overlayBackground(),
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(6),
+                      bottomRight: Radius.circular(6)),
+                  color: overlayBackground(),
                 ),
                 child: ListView.builder(
                   itemBuilder: _itemBuilderDDetails,
@@ -224,21 +245,20 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
                     height: 40,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                          image: NetworkImage('${Env.cdnIcon}icon-comerceos-product-not-installed.png'),
+                          image: NetworkImage(
+                              '${Env.cdnIcon}icon-comerceos-product-not-installed.png'),
                           fit: BoxFit.contain),
                     ),
                   ),
                   SizedBox(height: 8),
                   Text(
                     Language.getWidgetStrings(widget.appWidget.title),
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold
-                    ),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 4),
                   Text(
-                    Language.getWidgetStrings('widgets.products.actions.add-new'),
+                    Language.getWidgetStrings(
+                        'widgets.products.actions.add-new'),
                     style: TextStyle(
                       fontSize: 10,
                     ),
@@ -259,15 +279,7 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
       );
     }
   }
-  Widget _itemBuilder(BuildContext context, int index) {
-    return ProductCell(
-      product: widget.lastSales[index],
-      business: widget.business,
-      onTap: (Products product) {
-        widget.onSelect(product);
-      },
-    );
-  }
+
   Widget _itemBuilderDDetails(BuildContext context, int index) {
     return DashboardOptionCell(
       notificationModel: widget.notifications[index],
@@ -279,5 +291,4 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
       },
     );
   }
-
 }

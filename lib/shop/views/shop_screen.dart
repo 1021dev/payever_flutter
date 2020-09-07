@@ -423,16 +423,16 @@ class _ShopScreenState extends State<ShopScreen> {
               });
             },
           ),
-          ShopTopButton(
-            title: Language.getSettingsStrings('Edit'),
-            selectedIndex: selectedIndex,
-            index: 3,
-            onTap: () {
-              setState(() {
-                selectedIndex = 3;
-              });
-            },
-          ),
+          // ShopTopButton(
+          //   title: Language.getSettingsStrings('Edit'),
+          //   selectedIndex: selectedIndex,
+          //   index: 3,
+          //   onTap: () {
+          //     setState(() {
+          //       selectedIndex = 3;
+          //     });
+          //   },
+          // ),
           PopupMenuButton<OverflowMenuItem>(
             icon: Icon(Icons.more_horiz, color: Colors.white,),
             offset: Offset(0, 100),

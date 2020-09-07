@@ -188,7 +188,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           elevation: 0,
-                          color: overlayBackground(),
+                          color: overlayButtonBackground(),
                           child: state.isLoading ? SizedBox(
                             child: CircularProgressIndicator(
                               valueColor: AlwaysStoppedAnimation<Color>(iconColor()),
