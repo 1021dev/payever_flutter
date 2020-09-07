@@ -172,7 +172,6 @@ class ThemeCell extends StatelessWidget {
                 InkWell(
                   onTap: onTapPreview,
                   child: Container(
-                      color: overlayButtonBackground(),
                       child: Center(child: Text('Preview'))),
                 ),
                 Container(
@@ -184,7 +183,6 @@ class ThemeCell extends StatelessWidget {
                     onTapInstall(themeListModel.themeModel);
                   },
                   child: Container(
-                      color: overlayButtonBackground(),
                       child: Center(child: Text('Install'))),
                 ),
               ],

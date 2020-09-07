@@ -4,8 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:payever/blocs/bloc.dart';
-import 'package:payever/commons/commons.dart';
-import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/shop/models/models.dart';
 import 'package:payever/theme.dart';
@@ -25,12 +23,11 @@ class ShopFilterScreen extends StatefulWidget {
 class _ShopFilterScreenState extends State<ShopFilterScreen> {
   String selectedCategory = '';
   List<String> subCategories = [];
-  bool _isPortrait;
-  bool _isTablet;
+
 
   @override
   void initState() {
-//    selectedCategory = widget.screenBloc.state.selectedCategory;
+   // selectedCategory = widget.screenBloc.state.selectedCategory;
     super.initState();
   }
 
@@ -41,14 +38,6 @@ class _ShopFilterScreenState extends State<ShopFilterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
-    Measurements.height = (_isPortrait
-        ? MediaQuery.of(context).size.height
-        : MediaQuery.of(context).size.width);
-    Measurements.width = (_isPortrait
-        ? MediaQuery.of(context).size.width
-        : MediaQuery.of(context).size.height);
-    _isTablet = Measurements.width < 600 ? false : true;
 
     return BlocListener(
       bloc: widget.screenBloc,
