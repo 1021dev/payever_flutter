@@ -233,7 +233,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     }
 
     yield state.copyWith(
-      isLoading: false,
+      // isLoading: false,
       checkouts: checkouts,
       integrations: integrations,
       defaultCheckout: defaultCheckout,
@@ -273,6 +273,8 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     if (checkoutFlowResponse is Map) {
       channelSetFlow = ChannelSetFlow.fromMap(checkoutFlowResponse);
     }
+    await api.checkoutFlowStorage(
+        token, channelSetFlow.id);
 
     yield state.copyWith(
       isLoading: false,

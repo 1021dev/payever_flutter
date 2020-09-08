@@ -2419,6 +2419,24 @@ class ApiService {
     }
   }
 
+  Future<dynamic> checkoutFlowStorage(String token, String channelSetId) async {
+    try {
+      print('$TAG - checkoutFlowStorage()');
+      dynamic response = await _client.getTypeless(
+          'https://media.payever.org/api/storage/flow_$channelSetId',
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+
   Future<dynamic> getCheckoutChannelSetFlow(String token, String local, String checkoutFlowId) async {
     try {
       print('$TAG - getCheckoutChannelSetFlow()');

@@ -91,7 +91,7 @@ class _DashboardShopViewState extends State<DashboardShopView> {
                           ),
                           SizedBox(width: 8,),
                           Text(
-                            Language.getWidgetStrings(widget.appWidget.title).toUpperCase(),
+                            Language.getCommerceOSStrings('dashboard.apps.store').toUpperCase(),
                             style: TextStyle(
                               fontSize: 12,
                             ),
@@ -254,7 +254,7 @@ class _DashboardShopViewState extends State<DashboardShopView> {
                                     SvgPicture.asset('assets/images/edit_pen.svg', width: 24, color: iconColor(),),
                                     SizedBox(width: 8),
                                     Text(
-                                      'Edit',
+                                      Language.getCommerceOSStrings('dashboard.edit_apps.enter_button'),
                                       softWrap: true,
                                       style: TextStyle(
                                           fontSize: 16),

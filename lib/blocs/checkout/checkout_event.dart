@@ -289,9 +289,5 @@ class BusinessUploadEvent extends CheckoutScreenEvent {
 }
 
 class GetChannelSetFlowEvent extends CheckoutScreenEvent {
-  final Map<String, dynamic> body;
-  GetChannelSetFlowEvent(this.body);
 
-  @override
-  List<Object> get props => [body];
 }

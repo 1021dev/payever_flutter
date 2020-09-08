@@ -53,7 +53,7 @@ class _DashboardSettingsViewState extends State<DashboardSettingsView> {
                     ),
                     SizedBox(width: 8,),
                     Text(
-                      'SETTINGS',
+                      Language.getCommerceOSStrings('info_boxes.settings.heading').toUpperCase(),
                       style: TextStyle(
                         fontSize: 12,
                       ),

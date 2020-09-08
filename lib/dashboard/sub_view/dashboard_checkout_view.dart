@@ -77,7 +77,7 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                           ),
                           SizedBox(width: 8,),
                           Text(
-                            Language.getWidgetStrings(widget.appWidget.title).toUpperCase(),
+                            Language.getCommerceOSStrings('dashboard.apps.checkout').toUpperCase(),
                             style: TextStyle(
                               fontSize: 12,
                             ),

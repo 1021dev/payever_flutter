@@ -62,7 +62,7 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                           Icon(Icons.add, size: 20,),
                           SizedBox(width: 8,),
                           Text(
-                            'CONNECT',
+                            Language.getCommerceOSStrings('dashboard.apps.connect').toUpperCase(),
                             style: TextStyle(
                               fontSize: 12,
                             ),

@@ -1226,7 +1226,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         contentPadding: EdgeInsets.all(0),
                         isDense: true,
                         border: InputBorder.none,
-                        hintText: 'Search',
+                        hintText: Language.getTransactionStrings('form.filter.labels.search'),
                       ),
                       style: TextStyle(
                         fontSize: 14,

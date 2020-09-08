@@ -90,7 +90,7 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                             padding: EdgeInsets.only(right: 8),
                           ),
                           Text(
-                            'POINT OF SALE',
+                            Language.getCommerceOSStrings('dashboard.apps.pos').toUpperCase(),
                             style: TextStyle(
                               fontSize: 12,
                             ),
@@ -257,7 +257,7 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                                 SvgPicture.asset('assets/images/edit_pen.svg', width: 24, color: iconColor(),),
                                 SizedBox(width: 8),
                                 Text(
-                                  'Edit',
+                                  Language.getCommerceOSStrings('dashboard.edit_apps.enter_button'),
                                   softWrap: true,
                                   style: TextStyle(fontSize: 16),
                                 )

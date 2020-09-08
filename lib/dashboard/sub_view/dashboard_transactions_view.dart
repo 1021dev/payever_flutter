@@ -82,7 +82,7 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                           ),
                           SizedBox(width: 8,),
                           Text(
-                            Language.getWidgetStrings(widget.appWidget.title).toUpperCase(),
+                            Language.getCommerceOSStrings('dashboard.apps.transactions').toUpperCase(),
                             style: TextStyle(
                               fontSize: 12,
                             ),
