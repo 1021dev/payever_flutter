@@ -814,8 +814,11 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   ),
                   color: overlayBackground().withOpacity(1),
                   itemBuilder: (BuildContext context) {
-                    return appBarPopUpActions()
-                        .map((MenuItem item) {
+                    return gridListPopUpActions((grid) => {
+                      setState(() {
+                        isGridMode = grid;
+                      })
+                    },).map((MenuItem item) {
                       return PopupMenuItem<MenuItem>(
                         value: item,
                         child: Row(
@@ -1148,7 +1151,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
               ));
         });
         return Container(
-          padding: EdgeInsets.symmetric(horizontal: 10),
+          padding: EdgeInsets.only(left: 12, right: 12, top: 16, bottom: 16),
           child: SmartRefresher(
             enablePullDown: true,
             enablePullUp: true,
@@ -1273,6 +1276,13 @@ class _ProductsScreenState extends State<ProductsScreen> {
     }
   }
 
+  Widget gridBody() {
+
+  }
+
+  Widget listBody() {
+
+  }
   List<Widget> popupButtons(BuildContext context, ProductListModel model) {
     return [
       Container(
@@ -1593,35 +1603,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
         );
       },
     );
-  }
-
-  List<MenuItem> appBarPopUpActions() {
-    return [
-      MenuItem(
-        title: 'List',
-        icon: SvgPicture.asset(
-          'assets/images/list.svg',
-          color: iconColor(),
-        ),
-        onTap: () {
-          setState(() {
-            isGridMode = false;
-          });
-        },
-      ),
-      MenuItem(
-        title: 'Grid',
-        icon: SvgPicture.asset(
-          'assets/images/grid.svg',
-          color: iconColor(),
-        ),
-        onTap: () {
-          setState(() {
-            isGridMode = true;
-          });
-        },
-      ),
-    ];
   }
 }
 

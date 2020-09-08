@@ -239,7 +239,11 @@ class _ThemesScreenState extends State<ThemesScreen> {
                           ),
                           color: overlayBackground().withOpacity(1),
                           itemBuilder: (BuildContext context) {
-                            return appBarPopUpActions().map((MenuItem item) {
+                            return gridListPopUpActions((grid) => {
+                              setState(() {
+                                isGridMode = grid;
+                              })
+                            },).map((MenuItem item) {
                               return PopupMenuItem<MenuItem>(
                                 value: item,
                                 child: Row(
@@ -326,35 +330,6 @@ class _ThemesScreenState extends State<ThemesScreen> {
               ],
             ),
           );
-  }
-
-  List<MenuItem> appBarPopUpActions() {
-    return [
-      MenuItem(
-        title: 'List',
-        icon: SvgPicture.asset(
-          'assets/images/list.svg',
-          color: iconColor(),
-        ),
-        onTap: () {
-          setState(() {
-            isGridMode = false;
-          });
-        },
-      ),
-      MenuItem(
-        title: 'Grid',
-        icon: SvgPicture.asset(
-          'assets/images/grid.svg',
-          color: iconColor(),
-        ),
-        onTap: () {
-          setState(() {
-            isGridMode = true;
-          });
-        },
-      ),
-    ];
   }
 
   Widget _body(ShopScreenState state) {

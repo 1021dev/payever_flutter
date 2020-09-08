@@ -307,7 +307,7 @@ class _ShopFilterScreenState extends State<ShopFilterScreen> {
   }
 
   bool isSelected(String category) {
-    if (selectedCategory == null) return false;
+    if (selectedCategory == null || selectedCategory.isEmpty) return false;
     return selectedCategory == category;
   }
 
@@ -323,12 +323,15 @@ class _ShopFilterScreenState extends State<ShopFilterScreen> {
   }
 
   String getMainCategory(String code) {
+    print('Shop filter code: $code');
+    if (code.isEmpty) return '';
     code = code.replaceAll('BUSINESS_PRODUCT_', '');
     code = code.replaceAll('_', ' ');
     return code[0].toUpperCase() + code.substring(1).toLowerCase();
   }
 
   String getSubCategory(String code) {
+    if (code.isEmpty) return '';
     String title = code.split('_').first;
     code = code.replaceAll('${title}_', '');
     code = code.replaceAll('_', ' ');

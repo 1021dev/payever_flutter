@@ -969,3 +969,24 @@ class MenuItem {
     this.onTap,
   });
 }
+
+List<MenuItem> gridListPopUpActions(Function onTapGrid) {
+  return [
+    MenuItem(
+      title: 'List',
+      icon: SvgPicture.asset(
+        'assets/images/list.svg',
+        color: iconColor(),
+      ),
+      onTap:() {onTapGrid(false);}
+    ),
+    MenuItem(
+      title: 'Grid',
+      icon: SvgPicture.asset(
+        'assets/images/grid.svg',
+        color: iconColor(),
+      ),
+      onTap: () {onTapGrid(true);},
+    ),
+  ];
+}
