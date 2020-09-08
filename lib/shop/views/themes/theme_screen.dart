@@ -239,8 +239,7 @@ class _ThemesScreenState extends State<ThemesScreen> {
                           ),
                           color: overlayBackground().withOpacity(1),
                           itemBuilder: (BuildContext context) {
-                            return appBarPopUpActions(context, state)
-                                .map((MenuItem item) {
+                            return appBarPopUpActions().map((MenuItem item) {
                               return PopupMenuItem<MenuItem>(
                                 value: item,
                                 child: Row(
@@ -329,8 +328,7 @@ class _ThemesScreenState extends State<ThemesScreen> {
           );
   }
 
-  List<MenuItem> appBarPopUpActions(
-      BuildContext context, ShopScreenState state) {
+  List<MenuItem> appBarPopUpActions() {
     return [
       MenuItem(
         title: 'List',

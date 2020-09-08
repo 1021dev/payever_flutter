@@ -163,7 +163,6 @@ class DashboardMenuView extends StatelessWidget {
                             child: SvgPicture.asset(
                               'assets/images/business_person.svg',
                               width: 20,
-                              color: iconColor(),
                             ),
                           ),
                         ),

@@ -99,6 +99,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
     initialRefresh: false,
   );
 
+  bool isGridMode = true;
+
   List<OverflowMenuItem> productsPopUpActions(BuildContext context, ProductsScreenState state) {
     return [
       OverflowMenuItem(
@@ -581,7 +583,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
       radius: 0,
       child: Container(
         height: 44,
-        color: overlayBackground(),
+        color: Colors.black87,
         child: Row(
           children: <Widget>[
             ProductsTopButton(
@@ -631,7 +633,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
       children: <Widget>[
         Container(
           height: 50,
-          color: overlayBackground().withOpacity(0.5),
+          color: Color(0xFF212122),
           child: Row(
             children: <Widget>[
               Flexible(
@@ -647,7 +649,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                       },
                       child: Container(
                         padding: EdgeInsets.all(8),
-                        child: SvgPicture.asset('assets/images/searchicon.svg', width: 20, color: iconColor(),),
+                        child: SvgPicture.asset('assets/images/searchicon.svg', width: 20,),
                       ),
                     ),
                     InkWell(
@@ -689,7 +691,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                       },
                       child: Container(
                         padding: EdgeInsets.all(8),
-                        child: SvgPicture.asset('assets/images/filter.svg', width: 20, color: iconColor(),),
+                        child: SvgPicture.asset('assets/images/filter.svg', width: 20,),
                       ),
                     ),
                   ],
@@ -792,10 +794,48 @@ class _ProductsScreenState extends State<ProductsScreen> {
                     },
                     child: Container(
                       padding: EdgeInsets.all(8),
-                      child: SvgPicture.asset('assets/images/sort-by-button.svg', width: 20, color: iconColor(),),
+                      child: SvgPicture.asset('assets/images/sort-by-button.svg', width: 20,),
                     ),
                   ),
                 ) : Container(),
+              ),
+              Container(
+                alignment: Alignment.centerRight,
+                child: PopupMenuButton<MenuItem>(
+                  icon: SvgPicture.asset(
+                    isGridMode
+                        ? 'assets/images/grid.svg'
+                        : 'assets/images/list.svg',
+                  ),
+                  offset: Offset(0, 100),
+                  onSelected: (MenuItem item) => item.onTap(),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  color: overlayBackground().withOpacity(1),
+                  itemBuilder: (BuildContext context) {
+                    return appBarPopUpActions()
+                        .map((MenuItem item) {
+                      return PopupMenuItem<MenuItem>(
+                        value: item,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                item.title,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w300,
+                                ),
+                              ),
+                            ),
+                            item.icon,
+                          ],
+                        ),
+                      );
+                    }).toList();
+                  },
+                ),
               ),
             ],
           ),
@@ -1555,6 +1595,33 @@ class _ProductsScreenState extends State<ProductsScreen> {
     );
   }
 
-
+  List<MenuItem> appBarPopUpActions() {
+    return [
+      MenuItem(
+        title: 'List',
+        icon: SvgPicture.asset(
+          'assets/images/list.svg',
+          color: iconColor(),
+        ),
+        onTap: () {
+          setState(() {
+            isGridMode = false;
+          });
+        },
+      ),
+      MenuItem(
+        title: 'Grid',
+        icon: SvgPicture.asset(
+          'assets/images/grid.svg',
+          color: iconColor(),
+        ),
+        onTap: () {
+          setState(() {
+            isGridMode = true;
+          });
+        },
+      ),
+    ];
+  }
 }
 

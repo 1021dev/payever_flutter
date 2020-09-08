@@ -148,6 +148,16 @@ Color overlayButtonBackground() {
   }
 }
 
+Color overlayFilterViewBackground() {
+  if (GlobalUtils.theme == 'dark') {
+    return Color.fromRGBO(255, 255, 255, 0.1);
+  } else if (GlobalUtils.theme == 'light') {
+    return Color.fromRGBO(227, 227, 227, 1);
+  } else {
+    return Color.fromRGBO(255, 255, 255, 0.1);
+  }
+}
+
 Color overlayDashboardAppsBackground() {
   if (GlobalUtils.theme == 'dark') {
     return Color.fromRGBO(0, 0, 0, 0.3);

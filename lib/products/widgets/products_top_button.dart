@@ -32,6 +32,7 @@ class ProductsTopButton extends StatelessWidget {
             maxFontSize: 14,
             style: TextStyle(
               fontSize: 14,
+              color: Colors.white,
               fontWeight: FontWeight.w500,
             ),
           ),

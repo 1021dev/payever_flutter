@@ -88,7 +88,7 @@ class ProductCell extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  SizedBox(height: 4),
+                  SizedBox(height: 14),
                   Text(
                     product.name,
                     softWrap: true,
