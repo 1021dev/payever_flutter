@@ -111,7 +111,24 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       yield* installIntegration(event.integrationId);
     } else if (event is BusinessUploadEvent) {
       yield* uploadBusiness(event.body);
+    } else if (event is GetChannelSetFlowEvent) {
+      yield* getChannelSetFlow();
     }
+  }
+
+  Stream<CheckoutScreenState> getChannelSetFlow() async* {
+    String langCode = getDefaultLanguage();
+    dynamic checkoutFlowResponse = await api.getCheckoutChannelSetFlow(token, langCode, state.channelSetFlow.id);
+    ChannelSetFlow channelSetFlow;
+    if (checkoutFlowResponse is Map) {
+      channelSetFlow = ChannelSetFlow.fromMap(checkoutFlowResponse);
+      dynamic response = await api.getChannelSetQRcode(token, checkoutFlowResponse);
+      if (response is Map) {
+        String id = response['id'];
+
+      }
+    }
+
   }
 
   Stream<CheckoutScreenState> fetchConnectInstallations(String business,
@@ -191,14 +208,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     (element.checkout == state.defaultCheckout.id && element.type == 'link'));
 
     CheckoutFlow checkoutFlow;
-    Lang defaultLang;
-    List<Lang> langList = state.defaultCheckout.settings.languages.where((
-        element) => element.active).toList();
-    if (langList.length > 0) {
-      defaultLang = langList.first;
-    }
-
-    String langCode = defaultLang != null ? defaultLang.code : 'en';
+    String langCode = getDefaultLanguage();
 
     dynamic channelFlowResponse = await api.getCheckoutChannelFlow(
         token, channelSet.id);
@@ -213,7 +223,6 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       channelSetFlow = ChannelSetFlow.fromMap(checkoutFlowResponse);
     }
 
-
     yield state.copyWith(
       isLoading: false,
       channelSets: channelSets,
@@ -221,6 +230,16 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       channelSetFlow: channelSetFlow,
       checkoutFlow: checkoutFlow,
     );
+  }
+
+  String getDefaultLanguage() {
+    Lang defaultLang;
+    List<Lang> langList = state.defaultCheckout.settings.languages.where((
+        element) => element.active).toList();
+    if (langList.length > 0) {
+      defaultLang = langList.first;
+    }
+    return defaultLang != null ? defaultLang.code : 'en';
   }
 
   Stream<CheckoutScreenState> getPaymentData() async* {

@@ -287,3 +287,11 @@ class BusinessUploadEvent extends CheckoutScreenEvent {
   @override
   List<Object> get props => [body];
 }
+
+class GetChannelSetFlowEvent extends CheckoutScreenEvent {
+  final Map<String, dynamic> body;
+  GetChannelSetFlowEvent(this.body);
+
+  @override
+  List<Object> get props => [body];
+}

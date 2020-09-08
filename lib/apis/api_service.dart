@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:dio/dio.dart';
+import 'package:intl/intl.dart';
 import 'package:payever/apis/baseClient.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
@@ -2417,6 +2418,45 @@ class ApiService {
       return Future.error(e);
     }
   }
+
+  Future<dynamic> getCheckoutChannelSetFlow(String token, String local, String checkoutFlowId) async {
+    try {
+      print('$TAG - getCheckoutChannelSetFlow()');
+      var rand = randomString(8);
+      print(rand);
+      dynamic response = await _client.getTypeless(
+        '$checkoutV3/$checkoutFlowId?_locale=$local&rand=$rand',
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+  
+  Future<dynamic> getChannelSetQRcode(String token, Map body) async {
+    try {
+      print('$TAG - getChannelSetQRcode()');
+      // "2021-09-08T08:56:23.413Z"
+      String dateString = DateFormat("yyyy-MM-dd'T'hh:mm:ss").format(DateTime.now());
+      dynamic response = await _client.postTypeLess(
+          '$storageUrl',
+          body: {
+            'data': body,
+            'expiresAt': dateString,
+          },
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
 
   Future<dynamic> getCheckoutIntegrations(String idBusiness, String token) async {
     try {
