@@ -101,7 +101,7 @@ class _DashboardSettingsViewState extends State<DashboardSettingsView> {
                             Image.asset("assets/images/wallpapericon.png", width: 14, color: iconColor(),),
                             SizedBox(width: 8),
                             Text(
-                              "Edit Wallpaper",
+                              Language.getSettingsStrings('info_boxes.panels.wallpaper.title'),
                               softWrap: true,
                               style: TextStyle(
                                   fontSize: 16),
@@ -130,7 +130,7 @@ class _DashboardSettingsViewState extends State<DashboardSettingsView> {
                             Image.asset("assets/images/languageicon.png", width: 16, color: iconColor(),),
                             SizedBox(width: 8),
                             Text(
-                              "Edit Language",
+                              Language.getSettingsStrings('form.create_form.language.label'),
                               softWrap: true,
                               style: TextStyle( fontSize: 16),
                             )

@@ -315,6 +315,7 @@
     "info_boxes.panels.business_details.menu_list.taxes.title": "Taxes",
     "info_boxes.panels.business_details.title": "Business Details",
     "info_boxes.panels.employee.title": "Employee",
+    "info_boxes.panels.policies.title": "Policies",
     "info_boxes.panels.general.menu_list.authentication_2fa.title": "2FA authentication",
     "info_boxes.panels.general.menu_list.change_password.title": "Change password",
     "info_boxes.panels.general.menu_list.email_notifications.title": "Email notifications",

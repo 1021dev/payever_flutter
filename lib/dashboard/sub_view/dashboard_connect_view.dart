@@ -207,7 +207,7 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                               ),
                               child: Center(
                                 child: Text(
-                                  'Connect',
+                                  Language.getCommerceOSStrings('dashboard.apps.connect'),
                                   softWrap: true,
                                   style: TextStyle(
                                     fontSize: 16,

@@ -172,5 +172,6 @@
     "remove_products_from_shop": "Remove products from shop",
     "remove_products_from_terminal": "Remove products from terminal",
     "select_products": "Select products",
-    "remove_products_from_widget": "Remove products from widget"
+    "remove_products_from_widget": "Remove products from widget",
+    "info_boxes.panels.policies.title": "Riktlinjer"
 }

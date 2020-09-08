@@ -51,6 +51,19 @@ class SettingScreen extends StatefulWidget {
   _SettingScreenState createState() => _SettingScreenState();
 }
 
+
+List<SettingItem> settingItems = [
+  SettingItem(name: 'Business Info', image: 'assets/images/setting-info.svg'),
+  SettingItem(
+      name: Language.getSettingsStrings('info_boxes.panels.business_details.title'), image: 'assets/images/setting-business.svg'),
+  SettingItem(name: Language.getSettingsStrings('info_boxes.panels.wallpaper.title'), image: 'assets/images/setting-wallpaper.svg'),
+  SettingItem(name: Language.getSettingsStrings('info_boxes.panels.employee.title'), image: 'assets/images/setting-employee.svg'),
+  SettingItem(name: Language.getSettingsStrings('info_boxes.panels.policies.title'), image: 'assets/images/setting-policies.svg'),
+  SettingItem(name: Language.getSettingsStrings('info_boxes.panels.general.title'), image: 'assets/images/setting-general.svg'),
+  SettingItem(
+      name: 'Appearance', image: 'assets/images/setting-appearance.svg'),
+];
+
 class _SettingScreenState extends State<SettingScreen> {
   bool _isPortrait;
   bool _isTablet;
@@ -143,7 +156,7 @@ class _SettingScreenState extends State<SettingScreen> {
                   dashboardScreenBloc: widget.dashboardScreenBloc,
                   dashboardScreenState: widget.dashboardScreenBloc.state,
                   title:
-                      Language.getCommerceOSStrings('dashboard.apps.settings'),
+                  Language.getCommerceOSStrings('info_boxes.settings.heading'),
                   icon: SvgPicture.asset(
                     'assets/images/setting.svg',
                     width: 20,

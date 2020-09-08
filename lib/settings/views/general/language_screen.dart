@@ -92,7 +92,7 @@ class _LanguageScreenScreenState extends State<LanguageScreen> {
       elevation: 0,
       automaticallyImplyLeading: false,
       title: Text(
-        Language.getPosStrings('settings.language.title'),
+        Language.getSettingsStrings('form.create_form.language.label'),
         style: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w500,

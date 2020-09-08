@@ -222,7 +222,7 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                                   ),
                                   SizedBox(width: 8),
                                   Text(
-                                    'Manage',
+                                    Language.getCommerceOSStrings('menu.customer.manage'),
                                     softWrap: true,
                                     style: TextStyle(fontSize: 16),
                                   )
