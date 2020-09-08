@@ -250,3 +250,5 @@ class CheckoutScreenConnectInstallStateFailure extends CheckoutScreenState {
     return 'CheckoutScreenConnectInstallStateFailure { error $error }';
   }
 }
+
+class CheckoutScreenStatePrefilledQRCodeSuccess extends CheckoutScreenState {}

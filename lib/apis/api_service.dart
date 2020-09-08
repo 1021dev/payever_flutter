@@ -2433,12 +2433,12 @@ class ApiService {
       return Future.error(e);
     }
   }
-  
+
   Future<dynamic> getChannelSetQRcode(String token, Map body) async {
     try {
       print('$TAG - getChannelSetQRcode()');
-      // "2021-09-08T08:56:23.413Z"
-      String dateString = DateFormat("yyyy-MM-dd'T'hh:mm:ss").format(DateTime.now());
+      DateTime date = DateTime.now().add(Duration(days: 365));
+      String dateString = DateFormat("yyyy-MM-dd'T'hh:mm:ss").format(date);
       dynamic response = await _client.postTypeLess(
           '$storageUrl',
           body: {

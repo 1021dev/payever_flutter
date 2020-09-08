@@ -12,10 +12,11 @@ class WorkshopTopBar extends StatefulWidget {
   final Function onOpenTap;
   final Function onCloseTap;
   final Function onSwitchTap;
+  final Function onPrefilledQrcode;
   final String title;
 
   WorkshopTopBar(
-      {this.checkoutScreenBloc, this.onOpenTap, this.onSwitchTap, this.title, this.onCloseTap});
+      {this.checkoutScreenBloc, this.onOpenTap, this.onSwitchTap, this.onPrefilledQrcode, this.title, this.onCloseTap});
 
   @override
   _WorkshopTopBarState createState() => _WorkshopTopBarState();
@@ -181,7 +182,7 @@ class _WorkshopTopBarState extends State<WorkshopTopBar> {
           color: iconColor(),
         ),
         onTap: () async {
-          setState(() {});
+          widget.onPrefilledQrcode();
         },
       ),
     ];

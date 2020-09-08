@@ -785,6 +785,22 @@ class APIkey {
 
 }
 
+// class Storage {
+//
+// }
+//
+// class Steppermanagerparams {
+//   String cancelButtonText: "Switch Checkout"
+//   bool embeddedMode: true
+//   bool forceFullScreen: true
+//   bool forceNoPaddings: false
+//   bool forceShowBusinessHeader: true
+//   bool layoutWithPaddings: true
+// }
+//
+// class TemporaryAddress {
+//
+// }
 
 class ChannelItem {
   String name;

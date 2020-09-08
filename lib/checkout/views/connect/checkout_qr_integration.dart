@@ -14,7 +14,8 @@ class CheckoutQRIntegrationScreen extends StatefulWidget {
 
   final CheckoutScreenBloc screenBloc;
   final String title;
-  CheckoutQRIntegrationScreen({this.screenBloc, this.title});
+  final bool prefilledCode;
+  CheckoutQRIntegrationScreen({this.screenBloc, this.title, this.prefilledCode = false});
 
   _CheckoutQRIntegrationScreenState createState() => _CheckoutQRIntegrationScreenState();
 }
@@ -25,7 +26,9 @@ class _CheckoutQRIntegrationScreenState extends State<CheckoutQRIntegrationScree
   @override
   void initState() {
     super.initState();
-    widget.screenBloc.add(GetQrIntegration());
+    if (!widget.prefilledCode) {
+      widget.screenBloc.add(GetQrIntegration());
+    }
   }
 
   @override

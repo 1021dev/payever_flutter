@@ -68,6 +68,9 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                     switchCheckout = true;
                   });
                 },
+                onPrefilledQrcode: () {
+                  
+                },
               ),
               Flexible(
                 child: state.channelSet == null
