@@ -11,33 +11,8 @@ class ProductFilterContentView extends StatefulWidget {
 }
 
 class _ProductFilterContentViewState extends State<ProductFilterContentView> {
-  void showMeDialog(BuildContext context, String filterType) {
-    String filtername = filterProducts[filterType];
-    debugPrint('FilterTypeName => $filterType');
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(
-              'Filter by: $filtername',
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-            ),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-            ),
-            content: ProductFilterRangeContentView(
-              type: filterType,
-              onSelected: (value) {
-                Navigator.pop(context);
-                widget.onSelected(value);
-              }
-            ),
-          );
-        });
-  }
   @override
   Widget build(BuildContext context) {
-
     return Container(
       height: 430,
       color: Colors.transparent,
@@ -89,5 +64,30 @@ class _ProductFilterContentViewState extends State<ProductFilterContentView> {
         ),
       ),
     );
+  }
+
+  void showMeDialog(BuildContext context, String filterType) {
+    String filtername = filterProducts[filterType];
+    debugPrint('FilterTypeName => $filterType');
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+              'Filter by: $filtername',
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+            ),
+            content: ProductFilterRangeContentView(
+                type: filterType,
+                onSelected: (value) {
+                  Navigator.pop(context);
+                  widget.onSelected(value);
+                }
+            ),
+          );
+        });
   }
 }
