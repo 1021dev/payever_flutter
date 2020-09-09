@@ -84,13 +84,8 @@ class ProductGridItem extends StatelessWidget {
             Expanded(
               child: Stack(
                 children: <Widget>[
-                  GestureDetector(
-                    onTap: () {
-                      onTap(product);
-                    },
-                    child: ProductItemImage(
-                      product.productsModel.images.isEmpty ? null : product.productsModel.images.first,
-                    ),
+                  ProductItemImage(
+                    product.productsModel.images.isEmpty ? null : product.productsModel.images.first,
                   ),
                   Container(
                     padding: EdgeInsets.only(top: 4, left: 4),
@@ -149,30 +144,15 @@ class ProductGridItem extends StatelessWidget {
               thickness: 0.5,
               color: Colors.white54,
             ),
-            Container(
-              height: 28,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      isPos ? Padding(
-                        padding: EdgeInsets.only(left: 16),
-                        child: SvgPicture.asset('assets/images/pos.svg', width: 20, height: 20, color: iconColor(),),
-                      ) : Container(),
-                      isShop ? Padding(
-                        padding: EdgeInsets.only(left: 16),
-                        child: SvgPicture.asset('assets/images/shopicon.svg', width: 20, height: 20, color: iconColor(),),
-                      ) : Container(),
-                    ],
-                  ),
-                  InkWell(
-                    onTap: (){
-                      onTapMenu(product);
-                    },
-                    child: Icon(Icons.more_vert),
-                  ),
-                ],
+            AspectRatio(
+              aspectRatio: 6/1,
+              child: Container(              
+                child: InkWell(
+                  onTap: (){
+                    onTap(product);
+                  },
+                  child: Center(child: Text('Open')),
+                ),
               ),
             ),
           ],

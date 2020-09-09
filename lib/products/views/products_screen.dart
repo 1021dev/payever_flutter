@@ -465,6 +465,14 @@ class _ProductsScreenState extends State<ProductsScreen> {
                         child: SvgPicture.asset('assets/images/searchicon.svg', width: 20,),
                       ),
                     ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 8,right: 8),
+                      child: Container(
+                        width: 1,
+                        color: Color(0xFF888888),
+                        height: 24,
+                      ),
+                    ),
                     InkWell(
                       onTap: () {
                         showModalBottomSheet<void>(
@@ -507,82 +515,99 @@ class _ProductsScreenState extends State<ProductsScreen> {
                         child: SvgPicture.asset('assets/images/filter.svg', width: 20,),
                       ),
                     ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 8, right: 12),
+                      child: Container(
+                        width: 1,
+                        color: Color(0xFF888888),
+                        height: 24,
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {},
+                      child: Text(
+                        'Reset',
+                        style: TextStyle(
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
                   ],
                 ): Container(),
               ),
-              Flexible(
-                flex: 2,
-                child: Container(
-                    alignment: Alignment.center,
-                    child: Container(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Expanded(
-                            child: MaterialButton(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(12),
-                                  bottomLeft: Radius.circular(12),
-                                ),
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  isProducts = true;
-                                });
-                              },
-                              color: isProducts ? overlayBackground(): overlayBackground().withOpacity(0.1),
-                              height: 24,
-                              elevation: 0,
-                              minWidth: 0,
-                              padding: EdgeInsets.zero,
-                              child: AutoSizeText(
-                                Language.getProductStrings('Products'),
-                                minFontSize: 8,
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(left: 2),
-                          ),
-                          Expanded(
-                            child: MaterialButton(
-                              onPressed: () {
-                                setState(() {
-                                  isProducts = false;
-                                });
-                              },
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(12),
-                                  bottomRight: Radius.circular(12),
-                                ),
-                              ),
-                              color: !isProducts ? overlayBackground(): overlayBackground().withOpacity(0.1),
-                              elevation: 0,
-                              minWidth: 0,
-                              height: 24,
-                              padding: EdgeInsets.zero,
-                              child: AutoSizeText(
-                                Language.getProductStrings('Collections'),
-                                maxLines: 1,
-                                minFontSize: 8,
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                ),
-              ),
+              // Flexible(
+              //   flex: 2,
+              //   child: Container(
+              //       alignment: Alignment.center,
+              //       child: Container(
+              //         child: Row(
+              //           mainAxisAlignment: MainAxisAlignment.center,
+              //           children: <Widget>[
+              //             Expanded(
+              //               child: MaterialButton(
+              //                 shape: RoundedRectangleBorder(
+              //                   borderRadius: BorderRadius.only(
+              //                     topLeft: Radius.circular(12),
+              //                     bottomLeft: Radius.circular(12),
+              //                   ),
+              //                 ),
+              //                 onPressed: () {
+              //                   setState(() {
+              //                     isProducts = true;
+              //                   });
+              //                 },
+              //                 color: isProducts ? overlayBackground(): overlayBackground().withOpacity(0.1),
+              //                 height: 24,
+              //                 elevation: 0,
+              //                 minWidth: 0,
+              //                 padding: EdgeInsets.zero,
+              //                 child: AutoSizeText(
+              //                   Language.getProductStrings('Products'),
+              //                   minFontSize: 8,
+              //                   style: TextStyle(
+              //                     fontSize: 12,
+              //                     fontWeight: FontWeight.bold,
+              //                   ),
+              //                 ),
+              //               ),
+              //             ),
+              //             Padding(
+              //               padding: EdgeInsets.only(left: 2),
+              //             ),
+              //             Expanded(
+              //               child: MaterialButton(
+              //                 onPressed: () {
+              //                   setState(() {
+              //                     isProducts = false;
+              //                   });
+              //                 },
+              //                 shape: RoundedRectangleBorder(
+              //                   borderRadius: BorderRadius.only(
+              //                     topRight: Radius.circular(12),
+              //                     bottomRight: Radius.circular(12),
+              //                   ),
+              //                 ),
+              //                 color: !isProducts ? overlayBackground(): overlayBackground().withOpacity(0.1),
+              //                 elevation: 0,
+              //                 minWidth: 0,
+              //                 height: 24,
+              //                 padding: EdgeInsets.zero,
+              //                 child: AutoSizeText(
+              //                   Language.getProductStrings('Collections'),
+              //                   maxLines: 1,
+              //                   minFontSize: 8,
+              //                   style: TextStyle(
+              //                     fontSize: 12,
+              //                     fontWeight: FontWeight.bold,
+              //                   ),
+              //                 ),
+              //               ),
+              //             ),
+              //           ],
+              //         ),
+              //       )
+              //   ),
+              // ),
               Flexible(
                 flex: 1,
                 child: isProducts ? Container(
@@ -849,21 +874,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
             CollectionGridItem(
               collection,
               addCollection: state.addToCollection,
-              onTap: (CollectionListModel model) {
-                Navigator.push(
-                  context,
-                  PageTransition(
-                    child: CollectionDetailScreen(
-                      businessId: widget.globalStateModel.currentBusiness.id,
-                      screenBloc: screenBloc,
-                      addProducts: state.addToCollection,
-                      collection: model.collectionModel,
-                    ),
-                    type: PageTransitionType.fade,
-                    duration: Duration(milliseconds: 500),
-                  ),
-                );
-              },
+              onTap: (CollectionListModel model) => goDetailCollection(model: model),
               onCheck: (CollectionListModel model) {
                 screenBloc.add(CheckCollectionItem(model: model));
               },
@@ -924,20 +935,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
         productsItems.add(
             ProductGridItem(
               product,
-              onTap: (ProductListModel model) {
-                Navigator.push(
-                  context,
-                  PageTransition(
-                    child: ProductDetailScreen(
-                      businessId: widget.globalStateModel.currentBusiness.id,
-                      screenBloc: screenBloc,
-                      productsModel: model.productsModel,
-                    ),
-                    type: PageTransitionType.fade,
-                    duration: Duration(milliseconds: 500),
-                  ),
-                );
-              },
+              onTap: (ProductListModel model) => goDetailProduct(productListModel: model),
               onCheck: (ProductListModel model) {
                 screenBloc.add(CheckProductItem(model: model));
               },
@@ -1025,20 +1023,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
           collectionItems.add(
               CollectionGridItem(
                 collection,
-                onTap: (CollectionListModel model) {
-                  Navigator.push(
-                    context,
-                    PageTransition(
-                      child: CollectionDetailScreen(
-                        businessId: widget.globalStateModel.currentBusiness.id,
-                        screenBloc: screenBloc,
-                        collection: model.collectionModel,
-                      ),
-                      type: PageTransitionType.fade,
-                      duration: Duration(milliseconds: 500),
-                    ),
-                  );
-                },
+                onTap: (CollectionListModel model) => goDetailCollection(model: model),
                 onCheck: (CollectionListModel model) {
                   screenBloc.add(CheckCollectionItem(model: model));
                 },
@@ -1095,13 +1080,18 @@ class _ProductsScreenState extends State<ProductsScreen> {
   }
 
   Widget listBody(ProductsScreenState state) {
-    return ListView.builder(
-        itemCount: state.productLists.length,
-        itemBuilder: (context, index) =>
-            _listItemBuilder(state, state.productLists[index]));
+    return isProducts
+        ? ListView.builder(
+            itemCount: state.productLists.length,
+            itemBuilder: (context, index) =>
+                _productListBody(state, state.productLists[index]))
+        : ListView.builder(
+            itemCount: state.collectionLists.length,
+            itemBuilder: (context, index) =>
+                _collectionListBody(state, state.collectionLists[index]));
   }
 
-  Widget _listItemBuilder(
+  Widget _productListBody(
       ProductsScreenState state, ProductListModel model) {
     return Column(
       children: <Widget>[
@@ -1164,6 +1154,78 @@ class _ProductsScreenState extends State<ProductsScreen> {
               Text('${Measurements.currency(model.productsModel.currency)}${model.productsModel.price}'),
               IconButton(
                 icon: Icon(Icons.navigate_next),
+                onPressed: () => goDetailProduct(productListModel: model),
+              ),
+            ],
+          ),
+        ),
+        Divider(height: 1, color: Colors.white.withOpacity(0.5)),
+      ],
+    );
+  }
+
+  Widget _collectionListBody(
+      ProductsScreenState state, CollectionListModel model) {
+    return Column(
+      children: <Widget>[
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          height: 70,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                width:Measurements.width * 0.5,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Container(
+                      child: InkWell(
+                          onTap: () {
+                            screenBloc.add(CheckCollectionItem(model: model));
+                          },
+                          child: model.isChecked
+                              ? Icon(
+                            Icons.check_circle,
+                            size: 20,
+                          )
+                              : Icon(
+                            Icons.radio_button_unchecked,
+                            size: 20,
+                          )),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(left: 19, right: 17),
+                      height: 40,
+                      width: 40,
+                      child: model.collectionModel.image != null && model.collectionModel.image.isNotEmpty
+                          ? CachedNetworkImage(
+                        imageUrl:
+                        '${Env.storage}/products/${model.collectionModel.image}',
+                        imageBuilder: (context, imageProvider) => Container(
+                          decoration: BoxDecoration(
+                            color: overlayBackground(),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(6.0),
+                            ),
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.fill,
+                            ),
+                          ),
+                        ),
+                        placeholder: (context, url) => Container(
+                            child: Center(child: CircularProgressIndicator())),
+                        errorWidget: (context, url, error) => Icon(Icons.error),
+                      )
+                          : SvgPicture.asset('assets/images/no_image.svg'),
+                    ),
+                    Flexible(child: Text(model.collectionModel.name)),
+                  ],
+                ),
+              ),
+              IconButton(
+                icon: Icon(Icons.navigate_next),
                 onPressed: (){
 
                 },
@@ -1176,6 +1238,35 @@ class _ProductsScreenState extends State<ProductsScreen> {
     );
   }
 
+  void goDetailProduct({ProductListModel productListModel}) {
+    Navigator.push(
+      context,
+      PageTransition(
+        child: ProductDetailScreen(
+          businessId: widget.globalStateModel.currentBusiness.id,
+          screenBloc: screenBloc,
+          productsModel: productListModel != null ? productListModel.productsModel : null,
+        ),
+        type: PageTransitionType.fade,
+        duration: Duration(milliseconds: 500),
+      ),
+    );
+  }
+
+  void goDetailCollection({CollectionListModel model}) {
+    Navigator.push(
+      context,
+      PageTransition(
+        child: CollectionDetailScreen(
+          businessId: widget.globalStateModel.currentBusiness.id,
+          screenBloc: screenBloc,
+          collection: model != null ? model.collectionModel : null,
+        ),
+        type: PageTransitionType.fade,
+        duration: Duration(milliseconds: 500),
+      ),
+    );
+  }
   List<Widget> popupButtons(BuildContext context, ProductListModel model) {
     return [
       Container(
@@ -1306,65 +1397,66 @@ class _ProductsScreenState extends State<ProductsScreen> {
       margin: EdgeInsets.only(left: 3, right: 3,),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(12.0)),
-          color: overlayBackground(),
+        color: overlayBackground()
       ),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            SvgPicture.asset(
-              'assets/images/productsicon.svg',
-              width: 80,
-              height: 80,
-              color: iconColor().withOpacity(0.5),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 16),
-            ),
-            MaterialButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  PageTransition(
-                    child: ProductDetailScreen(
-                      businessId: widget.globalStateModel.currentBusiness.id,
-                      screenBloc: screenBloc,
-                    ),
-                    type: PageTransitionType.fade,
-                    duration: Duration(milliseconds: 500),
-                  ),
-                );
-              },
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(22),
+      child: Column(
+        children: <Widget>[
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(topLeft:Radius.circular(12.0), topRight: Radius.circular(12.0)),
+                  color:Color.fromRGBO(174, 176, 183, 1),
               ),
-              height: 30,
-              minWidth: 0,
-              elevation: 0,
-              color: overlayBackground(),
-              child: Container(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Icon(
-                      Icons.add,
-                    ),
-                    Text(
+              child: Center(
+                child: SvgPicture.asset(
+                  'assets/images/productsicon.svg',
+                  width: 80,
+                  height: 80,
+                  color: iconColor().withOpacity(0.5),
+                ),
+              ),
+            ),
+          ),
+          AspectRatio(
+            aspectRatio: 6/1,
+            child: Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(bottomLeft:Radius.circular(12.0), bottomRight: Radius.circular(12.0)),
+                  color: overlayBackground()
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  InkWell(
+                    onTap: () => goDetailProduct(),
+                    child: Text(
                       Language.getProductStrings('add_product'),
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w400,
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                  Container(
+                    width: 1,
+                    color: Color(0xFF888888),
+                  ),
+                  InkWell(
+                    onTap: () => goDetailCollection(),
+                    child: Text(
+                      Language.getProductStrings('Add Collection'),
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            )
-          ],
-        ),
+            ),
+          )
+        ],
       ),
     );
   }
@@ -1391,20 +1483,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
               padding: EdgeInsets.only(top: 16),
             ),
             MaterialButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  PageTransition(
-                    child: CollectionDetailScreen(
-                      businessId: widget.globalStateModel.currentBusiness.id,
-                      screenBloc: screenBloc,
-                      addProducts: state.addToCollection,
-                    ),
-                    type: PageTransitionType.fade,
-                    duration: Duration(milliseconds: 500),
-                  ),
-                );
-              },
+              onPressed: () => goDetailCollection(),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(22),
               ),
