@@ -13,9 +13,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
-import 'package:payever/dashboard/sub_view/business_logo.dart';
 import 'package:payever/dashboard/sub_view/dashboard_menu_view.dart';
-import 'package:payever/notifications/notifications_screen.dart';
 import 'package:payever/pos/widgets/pos_top_button.dart';
 import 'package:payever/products/models/models.dart';
 import 'package:payever/products/views/collection_detail_screen.dart';
@@ -25,11 +23,11 @@ import 'package:payever/products/widgets/product_filter_content_view.dart';
 import 'package:payever/products/widgets/product_grid_item.dart';
 import 'package:payever/products/widgets/product_sort_content_view.dart';
 import 'package:payever/products/widgets/products_top_button.dart';
-import 'package:payever/search/views/search_screen.dart';
 import 'package:payever/theme.dart';
 import 'package:payever/transactions/models/enums.dart';
 import 'package:payever/transactions/views/sub_view/search_text_content_view.dart';
 import 'package:payever/transactions/views/transactions_screen.dart';
+import 'package:payever/widgets/main_app_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
@@ -359,6 +357,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
     Measurements.height = (_isPortrait
         ? MediaQuery.of(context).size.height
@@ -398,161 +397,20 @@ class _ProductsScreenState extends State<ProductsScreen> {
     );
   }
 
-  Widget _appBar(ProductsScreenState state) {
-    String businessLogo = '';
-    if (widget.dashboardScreenBloc.state.activeBusiness != null && widget.dashboardScreenBloc.state.activeBusiness.logo != null) {
-      businessLogo = 'https://payeverproduction.blob.core.windows.net/images/${widget.dashboardScreenBloc.state.activeBusiness.logo}';
-    }
-    return AppBar(
-      centerTitle: false,
-      elevation: 0,
-      automaticallyImplyLeading: false,
-      title: Row(
-        children: <Widget>[
-          Container(
-            child: Center(
-              child: Container(
-                  child: SvgPicture.asset(
-                    'assets/images/productsicon.svg',
-                    color: Colors.white,
-                    height: 16,
-                    width: 24,
-                  )
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 8),
-          ),
-          Text(
-            Language.getWidgetStrings('widgets.products.title'),
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
-      actions: <Widget>[
-        Padding(
-          padding: EdgeInsets.all(6),
-          child: InkWell(
-            child: Row(
-              children: <Widget>[
-                BusinessLogo(url: businessLogo,),
-                _isTablet || !_isPortrait ? Padding(
-                  padding: EdgeInsets.only(left: 4, right: 4),
-                  child: Text(
-                    widget.dashboardScreenBloc.state.activeBusiness.name,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                    ),
-                  ),
-                ): Container(),
-              ],
-            ),
-            onTap: () {
-            },
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.all(6),
-          child: InkWell(
-            child: SvgPicture.asset('assets/images/searchicon.svg', width: 20,),
-            onTap: () {
-              Navigator.push(
-                context,
-                PageTransition(
-                  child: SearchScreen(
-                    dashboardScreenBloc: widget.dashboardScreenBloc,
-                    businessId: widget.dashboardScreenBloc.state.activeBusiness.id,
-                    searchQuery: '',
-                    appWidgets: widget.dashboardScreenBloc.state.currentWidgets,
-                    activeBusiness: widget.dashboardScreenBloc.state.activeBusiness,
-                    currentWall: widget.dashboardScreenBloc.state.curWall,
-                  ),
-                  type: PageTransitionType.fade,
-                  duration: Duration(milliseconds: 500),
-                ),
-              );
-            },
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.all(6),
-          child: InkWell(
-            child: SvgPicture.asset(
-              'assets/images/notificationicon.svg',
-              width: 20,
-            ),
-            onTap: () async {
-              Provider.of<GlobalStateModel>(context,listen: false)
-                  .setCurrentBusiness(widget.dashboardScreenBloc.state.activeBusiness);
-              Provider.of<GlobalStateModel>(context,listen: false)
-                  .setCurrentWallpaper(widget.dashboardScreenBloc.state.curWall);
-
-              await showGeneralDialog(
-                barrierColor: null,
-                transitionBuilder: (context, a1, a2, wg) {
-                  final curvedValue = Curves.ease.transform(a1.value) -   1.0;
-                  return Transform(
-                    transform: Matrix4.translationValues(-curvedValue * 200, 0.0, 0),
-                    child: NotificationsScreen(
-                      business: widget.dashboardScreenBloc.state.activeBusiness,
-                      businessApps: widget.dashboardScreenBloc.state.businessWidgets,
-                      dashboardScreenBloc: widget.dashboardScreenBloc,
-                      type: 'products',
-                    ),
-                  );
-                },
-                transitionDuration: Duration(milliseconds: 200),
-                barrierDismissible: true,
-                barrierLabel: '',
-                context: context,
-                pageBuilder: (context, animation1, animation2) {
-                  return null;
-                },
-              );
-            },
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.all(6),
-          child: InkWell(
-            child: SvgPicture.asset(
-              'assets/images/list.svg',
-              width: 20,
-            ),
-            onTap: () {
-              _innerDrawerKey.currentState.toggle();
-            },
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.all(6),
-          child: InkWell(
-            child: SvgPicture.asset(
-              'assets/images/closeicon.svg',
-              width: 16,
-            ),
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.only(right: 8),
-        ),
-      ],
-    );
-  }
-
   Widget _body(ProductsScreenState state) {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
-      appBar: _appBar(state),
+      appBar: MainAppbar(
+        dashboardScreenBloc: widget.dashboardScreenBloc,
+        dashboardScreenState: widget.dashboardScreenBloc.state,
+        title: 'Products',
+        icon: SvgPicture.asset(
+          'assets/images/productsicon.svg',
+          height: 20,
+          width: 20,
+        ),
+        innerDrawerKey: _innerDrawerKey,
+      ),
       body: SafeArea(
         bottom: false,
         child: BackgroundBase(

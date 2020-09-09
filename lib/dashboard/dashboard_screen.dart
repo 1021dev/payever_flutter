@@ -1083,7 +1083,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       appBar: MainAppbar(
         dashboardScreenBloc: screenBloc,
         dashboardScreenState: state,
-        title: 'Business',
+        title: Language.getCommerceOSStrings('registration.container.buttons.business'),
         icon: SvgPicture.asset(
           'assets/images/payeverlogo.svg',
           height: 16,

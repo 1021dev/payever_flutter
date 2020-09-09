@@ -25,6 +25,7 @@ import 'package:payever/shop/views/switch_shop_screen.dart';
 import 'package:payever/shop/views/themes/theme_screen.dart';
 import 'package:payever/shop/widgets/shop_top_button.dart';
 import 'package:payever/theme.dart';
+import 'package:payever/widgets/main_app_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
@@ -208,163 +209,21 @@ class _ShopScreenState extends State<ShopScreen> {
     );
   }
 
-  Widget _appBar(ShopScreenState state) {
-    String businessLogo = '';
-    if (widget.dashboardScreenBloc.state.activeBusiness != null && widget.dashboardScreenBloc.state.activeBusiness.logo != null) {
-      businessLogo = 'https://payeverproduction.blob.core.windows.net/images/${widget.dashboardScreenBloc.state.activeBusiness.logo}';
-    }
-    return AppBar(
-      centerTitle: false,
-      elevation: 0,
-      automaticallyImplyLeading: false,
-      backgroundColor: Colors.black87,
-      title: Row(
-        children: <Widget>[
-          Container(
-            child: Center(
-              child: Container(
-                  child: SvgPicture.asset(
-                    'assets/images/shopicon.svg',
-                    color: Colors.white,
-                    height: 16,
-                    width: 24,
-                  )
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 8),
-          ),
-          Text(
-            Language.getWidgetStrings('widgets.store.title'),
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
-      actions: <Widget>[
-        Padding(
-          padding: EdgeInsets.all(6),
-          child: InkWell(
-            child: Row(
-              children: <Widget>[
-                BusinessLogo(url: businessLogo,),
-                _isTablet || !_isPortrait ? Padding(
-                  padding: EdgeInsets.only(left: 4, right: 4),
-                  child: Text(
-                    widget.dashboardScreenBloc.state.activeBusiness.name,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                    ),
-                  ),
-                ): Container(),
-              ],
-            ),
-            onTap: () {
-            },
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.all(6),
-          child: InkWell(
-            child: SvgPicture.asset('assets/images/searchicon.svg', width: 20,),
-            onTap: () {
-              Navigator.push(
-                context,
-                PageTransition(
-                  child: SearchScreen(
-                    dashboardScreenBloc: widget.dashboardScreenBloc,
-                    businessId: widget.dashboardScreenBloc.state.activeBusiness.id,
-                    searchQuery: '',
-                    appWidgets: widget.dashboardScreenBloc.state.currentWidgets,
-                    activeBusiness: widget.dashboardScreenBloc.state.activeBusiness,
-                    currentWall: widget.dashboardScreenBloc.state.curWall,
-                  ),
-                  type: PageTransitionType.fade,
-                  duration: Duration(milliseconds: 500),
-                ),
-              );
-            },
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.all(6),
-          child: InkWell(
-            child: SvgPicture.asset(
-              'assets/images/notificationicon.svg',
-              width: 20,
-            ),
-            onTap: () async {
-              Provider.of<GlobalStateModel>(context,listen: false)
-                  .setCurrentBusiness(widget.dashboardScreenBloc.state.activeBusiness);
-              Provider.of<GlobalStateModel>(context,listen: false)
-                  .setCurrentWallpaper(widget.dashboardScreenBloc.state.curWall);
-
-              await showGeneralDialog(
-                barrierColor: null,
-                transitionBuilder: (context, a1, a2, wg) {
-                  final curvedValue = Curves.ease.transform(a1.value) -   1.0;
-                  return Transform(
-                    transform: Matrix4.translationValues(-curvedValue * 200, 0.0, 0),
-                    child: NotificationsScreen(
-                      business: widget.dashboardScreenBloc.state.activeBusiness,
-                      businessApps: widget.dashboardScreenBloc.state.businessWidgets,
-                      dashboardScreenBloc: widget.dashboardScreenBloc,
-                      type: 'shops',
-                    ),
-                  );
-                },
-                transitionDuration: Duration(milliseconds: 200),
-                barrierDismissible: true,
-                barrierLabel: '',
-                context: context,
-                pageBuilder: (context, animation1, animation2) {
-                  return null;
-                },
-              );
-            },
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.all(6),
-          child: InkWell(
-            child: SvgPicture.asset(
-              'assets/images/list.svg',
-              width: 20,
-            ),
-            onTap: () {
-              _innerDrawerKey.currentState.toggle();
-            },
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.all(6),
-          child: InkWell(
-            child: SvgPicture.asset(
-              'assets/images/closeicon.svg',
-              width: 16,
-            ),
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.only(right: 8),
-        ),
-      ],
-    );
-  }
-
   Widget _body(ShopScreenState state) {
     return Scaffold(
       backgroundColor: Colors.black,
       resizeToAvoidBottomPadding: false,
-      appBar: _appBar(state),
+      appBar: MainAppbar(
+        dashboardScreenBloc: widget.dashboardScreenBloc,
+        dashboardScreenState: widget.dashboardScreenBloc.state,
+        title: Language.getWidgetStrings('widgets.store.title'),
+        icon: SvgPicture.asset(
+          'assets/images/shopicon.svg',
+          height: 20,
+          width: 20,
+        ),
+        innerDrawerKey: _innerDrawerKey,
+      ),
       body: SafeArea(
         bottom: false,
         child: BackgroundBase(
