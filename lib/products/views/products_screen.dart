@@ -95,7 +95,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
     initialRefresh: false,
   );
 
-  bool isProducts = true;
   bool isGridMode = true;
 
   List<OverflowMenuItem> productsPopUpActions(
@@ -405,7 +404,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
       appBar: MainAppbar(
         dashboardScreenBloc: widget.dashboardScreenBloc,
         dashboardScreenState: widget.dashboardScreenBloc.state,
-        title: 'Products',
+        title: state.isProductMode ? 'Products' : 'Collections',
         icon: SvgPicture.asset(
           'assets/images/productsicon.svg',
           height: 20,
@@ -440,12 +439,12 @@ class _ProductsScreenState extends State<ProductsScreen> {
 
   Widget _toolBar(ProductsScreenState state) {
     int selectedCount = 0;
-    if (isProducts && state.productLists.length > 0) {
+    if (state.isProductMode && state.productLists.length > 0) {
       selectedCount = state.productLists
           .where((element) => element.isChecked)
           .toList()
           .length;
-    } else if (!isProducts && state.collectionLists.length > 0) {
+    } else if (!state.isProductMode && state.collectionLists.length > 0) {
       selectedCount = state.collectionLists
           .where((element) => element.isChecked)
           .toList()
@@ -460,7 +459,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
             children: <Widget>[
               Flexible(
                 flex: 1,
-                child: isProducts
+                child: state.isProductMode
                     ? Row(
                         children: <Widget>[
                           Padding(
@@ -577,82 +576,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
                       )
                     : Container(),
               ),
-              // Flexible(
-              //   flex: 2,
-              //   child: Container(
-              //       alignment: Alignment.center,
-              //       child: Container(
-              //         child: Row(
-              //           mainAxisAlignment: MainAxisAlignment.center,
-              //           children: <Widget>[
-              //             Expanded(
-              //               child: MaterialButton(
-              //                 shape: RoundedRectangleBorder(
-              //                   borderRadius: BorderRadius.only(
-              //                     topLeft: Radius.circular(12),
-              //                     bottomLeft: Radius.circular(12),
-              //                   ),
-              //                 ),
-              //                 onPressed: () {
-              //                   setState(() {
-              //                     isProducts = true;
-              //                   });
-              //                 },
-              //                 color: isProducts ? overlayBackground(): overlayBackground().withOpacity(0.1),
-              //                 height: 24,
-              //                 elevation: 0,
-              //                 minWidth: 0,
-              //                 padding: EdgeInsets.zero,
-              //                 child: AutoSizeText(
-              //                   Language.getProductStrings('Products'),
-              //                   minFontSize: 8,
-              //                   style: TextStyle(
-              //                     fontSize: 12,
-              //                     fontWeight: FontWeight.bold,
-              //                   ),
-              //                 ),
-              //               ),
-              //             ),
-              //             Padding(
-              //               padding: EdgeInsets.only(left: 2),
-              //             ),
-              //             Expanded(
-              //               child: MaterialButton(
-              //                 onPressed: () {
-              //                   setState(() {
-              //                     isProducts = false;
-              //                   });
-              //                 },
-              //                 shape: RoundedRectangleBorder(
-              //                   borderRadius: BorderRadius.only(
-              //                     topRight: Radius.circular(12),
-              //                     bottomRight: Radius.circular(12),
-              //                   ),
-              //                 ),
-              //                 color: !isProducts ? overlayBackground(): overlayBackground().withOpacity(0.1),
-              //                 elevation: 0,
-              //                 minWidth: 0,
-              //                 height: 24,
-              //                 padding: EdgeInsets.zero,
-              //                 child: AutoSizeText(
-              //                   Language.getProductStrings('Collections'),
-              //                   maxLines: 1,
-              //                   minFontSize: 8,
-              //                   style: TextStyle(
-              //                     fontSize: 12,
-              //                     fontWeight: FontWeight.bold,
-              //                   ),
-              //                 ),
-              //               ),
-              //             ),
-              //           ],
-              //         ),
-              //       )
-              //   ),
-              // ),
               Flexible(
                 flex: 1,
-                child: isProducts
+                child: state.isProductMode
                     ? Container(
                         alignment: Alignment.centerRight,
                         padding: EdgeInsets.only(right: 8),
@@ -755,7 +681,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                             child: SvgPicture.asset(
                                 'assets/images/xsinacircle.svg'),
                             onTap: () {
-                              screenBloc.add(isProducts
+                              screenBloc.add(state.isProductMode
                                   ? UnSelectProductsEvent()
                                   : UnSelectCollectionsEvent());
                             },
@@ -782,7 +708,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                         ),
                         color: Colors.black87,
                         itemBuilder: (BuildContext context) {
-                          return isProducts
+                          return state.isProductMode
                               ? productsPopUpActions(context, state)
                                   .map((OverflowMenuItem item) {
                                   return PopupMenuItem<OverflowMenuItem>(
@@ -908,7 +834,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                         padding: EdgeInsets.only(left: 16),
                       ),
                       Text(
-                        'Total: ${isProducts ? state.productsInfo.itemCount : state.collectionInfo.itemCount}',
+                        'Total: ${state.isProductMode ? state.productsInfo.itemCount : state.collectionInfo.itemCount}',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
@@ -1002,7 +928,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
         ),
       );
     }
-    if (isProducts) {
+    if (state.isProductMode) {
       List<Widget> productsItems = [];
       productsItems.add(getAddProductItem(state));
       state.productLists.forEach((product) {
@@ -1158,7 +1084,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
   }
 
   Widget listBody(ProductsScreenState state) {
-    return isProducts
+    return state.isProductMode
         ? SmartRefresher(
             enablePullDown: true,
             enablePullUp: true,
