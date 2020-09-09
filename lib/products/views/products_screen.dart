@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:ui';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -22,7 +23,6 @@ import 'package:payever/products/widgets/collection_grid_item.dart';
 import 'package:payever/products/widgets/product_filter_content_view.dart';
 import 'package:payever/products/widgets/product_grid_item.dart';
 import 'package:payever/products/widgets/product_sort_content_view.dart';
-import 'package:payever/products/widgets/products_top_button.dart';
 import 'package:payever/theme.dart';
 import 'package:payever/transactions/models/enums.dart';
 import 'package:payever/transactions/views/sub_view/search_text_content_view.dart';
@@ -32,7 +32,6 @@ import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/login/login_screen.dart';
-
 
 bool _isPortrait;
 bool _isTablet;
@@ -89,7 +88,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
   int selectedIndex = 0;
   List<FilterItem> filterTypes = [];
   int selectedTypes = 0;
-  int _selectedIndexValue = 0;
+
   RefreshController _productsRefreshController = RefreshController(
     initialRefresh: false,
   );
@@ -97,6 +96,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
     initialRefresh: false,
   );
 
+  bool isProducts = true;
   bool isGridMode = true;
 
   List<OverflowMenuItem> productsPopUpActions(BuildContext context, ProductsScreenState state) {
@@ -421,7 +421,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
           ): Center(
             child: Column(
               children: <Widget>[
-                _topBar(state),
                 _toolBar(state),
                 _tagsBar(state),
                 Expanded(
@@ -436,55 +435,11 @@ class _ProductsScreenState extends State<ProductsScreen> {
     );
   }
 
-  Widget _topBar(ProductsScreenState state) {
-    return BlurEffectView(
-      radius: 0,
-      child: Container(
-        height: 44,
-        color: Colors.black87,
-        child: Row(
-          children: <Widget>[
-            ProductsTopButton(
-              title: Language.getProductStrings('product_list.all'),
-              selectedIndex: selectedIndex,
-              index: 0,
-              onTap: () {
-                setState(() {
-                  selectedIndex = 0;
-                });
-              },
-            ),
-            ProductsTopButton(
-              title: Language.getProductStrings('add_product'),
-              selectedIndex: selectedIndex,
-              index: 1,
-              onTap: () {
-                setState(() {
-                  Navigator.push(
-                    context,
-                    PageTransition(
-                      child: ProductDetailScreen(
-                        businessId: widget.globalStateModel.currentBusiness.id,
-                        screenBloc: screenBloc,
-                      ),
-                      type: PageTransitionType.fade,
-                      duration: Duration(milliseconds: 500),
-                    ),
-                  );
-                });
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _toolBar(ProductsScreenState state) {
     int selectedCount = 0;
-    if (_selectedIndexValue == 0 && state.productLists.length > 0) {
+    if (isProducts && state.productLists.length > 0) {
       selectedCount = state.productLists.where((element) => element.isChecked).toList().length;
-    } else if (_selectedIndexValue == 1 && state.collectionLists.length > 0){
+    } else if (!isProducts && state.collectionLists.length > 0){
       selectedCount = state.collectionLists.where((element) => element.isChecked).toList().length;
     }
     return Stack(
@@ -496,7 +451,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
             children: <Widget>[
               Flexible(
                 flex: 1,
-                child: _selectedIndexValue == 0 ? Row(
+                child: isProducts ? Row(
                   children: <Widget>[
                     Padding(
                       padding: EdgeInsets.only(left: 8),
@@ -573,10 +528,10 @@ class _ProductsScreenState extends State<ProductsScreen> {
                               ),
                               onPressed: () {
                                 setState(() {
-                                  _selectedIndexValue = 0;
+                                  isProducts = true;
                                 });
                               },
-                              color: _selectedIndexValue == 0 ? overlayBackground(): overlayBackground().withOpacity(0.1),
+                              color: isProducts ? overlayBackground(): overlayBackground().withOpacity(0.1),
                               height: 24,
                               elevation: 0,
                               minWidth: 0,
@@ -598,7 +553,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                             child: MaterialButton(
                               onPressed: () {
                                 setState(() {
-                                  _selectedIndexValue = 1;
+                                  isProducts = false;
                                 });
                               },
                               shape: RoundedRectangleBorder(
@@ -607,7 +562,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                   bottomRight: Radius.circular(12),
                                 ),
                               ),
-                              color: _selectedIndexValue == 1 ? overlayBackground(): overlayBackground().withOpacity(0.1),
+                              color: !isProducts ? overlayBackground(): overlayBackground().withOpacity(0.1),
                               elevation: 0,
                               minWidth: 0,
                               height: 24,
@@ -630,7 +585,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
               ),
               Flexible(
                 flex: 1,
-                child: _selectedIndexValue == 0 ? Container(
+                child: isProducts ? Container(
                   alignment: Alignment.centerRight,
                   padding: EdgeInsets.only(right: 8),
                   child: InkWell(
@@ -725,11 +680,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                     InkWell(
                       child: SvgPicture.asset('assets/images/xsinacircle.svg'),
                       onTap: () {
-                        if (_selectedIndexValue == 0) {
-                          screenBloc.add(UnSelectProductsEvent());
-                        } else {
-                          screenBloc.add(UnSelectCollectionsEvent());
-                        }
+                        screenBloc.add(isProducts ? UnSelectProductsEvent() : UnSelectCollectionsEvent());
                       },
                     ),
                     Padding(
@@ -754,7 +705,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   ),
                   color: Colors.black87,
                   itemBuilder: (BuildContext context) {
-                    return _selectedIndexValue == 0 ? productsPopUpActions(context, state).map((OverflowMenuItem item) {
+                    return isProducts ? productsPopUpActions(context, state).map((OverflowMenuItem item) {
                       return PopupMenuItem<OverflowMenuItem>(
                         value: item,
                         child: Text(
@@ -863,7 +814,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   padding: EdgeInsets.only(left: 16),
                 ),
                 Text(
-                  'Total: ${_selectedIndexValue == 0 ? state.productsInfo.itemCount : state.collectionInfo.itemCount}',
+                  'Total: ${isProducts ? state.productsInfo.itemCount : state.collectionInfo.itemCount}',
                   style: TextStyle(               
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
@@ -885,6 +836,10 @@ class _ProductsScreenState extends State<ProductsScreen> {
     if (state.productsInfo == null) {
       return Container();
     }
+    return isGridMode ? gridBody(state) : listBody(state);
+  }
+
+  Widget gridBody(ProductsScreenState state) {
     if (state.addToCollection) {
       List<Widget> collectionItems  = [];
       collectionItems.add(getAddCollectionItem(state));
@@ -962,100 +917,107 @@ class _ProductsScreenState extends State<ProductsScreen> {
         ),
       );
     }
-    switch(_selectedIndexValue) {
-      case 0:
-        List<Widget> productsItems  = [];
-        productsItems.add(getAddProductItem(state));
-        state.productLists.forEach ((product) {
-          productsItems.add(
-              ProductGridItem(
-                product,
-                onTap: (ProductListModel model) {
-                  Navigator.push(
-                    context,
-                    PageTransition(
-                      child: ProductDetailScreen(
-                        businessId: widget.globalStateModel.currentBusiness.id,
-                        screenBloc: screenBloc,
-                        productsModel: model.productsModel,
-                      ),
-                      type: PageTransitionType.fade,
-                      duration: Duration(milliseconds: 500),
+    if(isProducts) {
+      List<Widget> productsItems = [];
+      productsItems.add(getAddProductItem(state));
+      state.productLists.forEach((product) {
+        productsItems.add(
+            ProductGridItem(
+              product,
+              onTap: (ProductListModel model) {
+                Navigator.push(
+                  context,
+                  PageTransition(
+                    child: ProductDetailScreen(
+                      businessId: widget.globalStateModel.currentBusiness.id,
+                      screenBloc: screenBloc,
+                      productsModel: model.productsModel,
                     ),
-                  );
-                },
-                onCheck: (ProductListModel model) {
-                  screenBloc.add(CheckProductItem(model: model));
-                },
-                onTapMenu: (ProductListModel model) {
-                  showCupertinoModalPopup(
-                    context: context,
-                    builder: (builder) {
-                      return Container(
-                        height: 64.0 * 2.0 + MediaQuery.of(context).padding.bottom,
-                        width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
-                          color: overlayBackground().withOpacity(1),
-                          borderRadius: BorderRadius.all(Radius.circular(15)),
-                        ),
-                        padding: EdgeInsets.only(top: 16),
-                        child: Column(
-                          children: popupButtons(context, model,),
-                        ),
-                      );
-                    },
-                  );
-                },
-              ));
-        });
-        return Container(
-          padding: EdgeInsets.only(left: 12, right: 12, top: 16, bottom: 16),
-          child: SmartRefresher(
-            enablePullDown: true,
-            enablePullUp: true,
-            header: MaterialClassicHeader(semanticsLabel: '',),
-            footer: CustomFooter(
-              loadStyle: LoadStyle.ShowWhenLoading,
-              height: 1,
-              builder: (context, status) {
-                return Container();
-              },
-            ),
-            controller: _productsRefreshController,
-            onRefresh: () {
-              _refreshProducts();
-            },
-            onLoading: () {
-              _loadMoreProducts(state);
-            },
-            child: CustomScrollView(
-              slivers: <Widget>[
-                SliverGrid.count(
-                  crossAxisCount: _isTablet ? 3: (_isPortrait ? 2: 3),
-                  crossAxisSpacing: _isTablet ? 12: (_isPortrait ? 0: 6),
-                  mainAxisSpacing: _isTablet ? 12: (_isPortrait ? 6: 6),
-                  children: List.generate(
-                    productsItems.length,
-                        (index) {
-                      return productsItems[index];
-                    },
+                    type: PageTransitionType.fade,
+                    duration: Duration(milliseconds: 500),
                   ),
-                ),
-                new SliverToBoxAdapter(
-                  child: state.productLists.length < state.productsInfo.itemCount ? Container(
-                    child: Padding(
-                      padding: EdgeInsets.all(16),
-                      child: Center(
-                        child: CircularProgressIndicator(),
+                );
+              },
+              onCheck: (ProductListModel model) {
+                screenBloc.add(CheckProductItem(model: model));
+              },
+              onTapMenu: (ProductListModel model) {
+                showCupertinoModalPopup(
+                  context: context,
+                  builder: (builder) {
+                    return Container(
+                      height: 64.0 * 2.0 + MediaQuery
+                          .of(context)
+                          .padding
+                          .bottom,
+                      width: MediaQuery
+                          .of(context)
+                          .size
+                          .width,
+                      decoration: BoxDecoration(
+                        color: overlayBackground().withOpacity(1),
+                        borderRadius: BorderRadius.all(Radius.circular(15)),
                       ),
-                    ),
-                  ) : Container(),
-                )
-              ],
-            ),
+                      padding: EdgeInsets.only(top: 16),
+                      child: Column(
+                        children: popupButtons(context, model,),
+                      ),
+                    );
+                  },
+                );
+              },
+            ));
+      });
+      return Container(
+        padding: EdgeInsets.only(left: 12, right: 12, top: 16, bottom: 16),
+        child: SmartRefresher(
+          enablePullDown: true,
+          enablePullUp: true,
+          header: MaterialClassicHeader(semanticsLabel: '',),
+          footer: CustomFooter(
+            loadStyle: LoadStyle.ShowWhenLoading,
+            height: 1,
+            builder: (context, status) {
+              return Container();
+            },
           ),
-        );
-      case 1:
+          controller: _productsRefreshController,
+          onRefresh: () {
+            _refreshProducts();
+          },
+          onLoading: () {
+            _loadMoreProducts(state);
+          },
+          child: CustomScrollView(
+            slivers: <Widget>[
+              SliverGrid.count(
+                crossAxisCount: _isTablet ? 3 : (_isPortrait ? 2 : 3),
+                crossAxisSpacing: _isTablet ? 12 : (_isPortrait ? 0 : 6),
+                mainAxisSpacing: _isTablet ? 12 : (_isPortrait ? 6 : 6),
+                children: List.generate(
+                  productsItems.length,
+                      (index) {
+                    return productsItems[index];
+                  },
+                ),
+              ),
+              new SliverToBoxAdapter(
+                child: state.productLists.length < state.productsInfo.itemCount
+                    ? Container(
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                )
+                    : Container(),
+              )
+            ],
+          ),
+        ),
+      );
+    } else {
         List<Widget> collectionItems  = [];
         collectionItems.add(getAddCollectionItem(state));
         print(state.collections);
@@ -1129,18 +1091,91 @@ class _ProductsScreenState extends State<ProductsScreen> {
             ),
           ),
         );
-      default:
-        return Container();
     }
   }
 
-  Widget gridBody() {
-
+  Widget listBody(ProductsScreenState state) {
+    return ListView.builder(
+        itemCount: state.productLists.length,
+        itemBuilder: (context, index) =>
+            _listItemBuilder(state, state.productLists[index]));
   }
 
-  Widget listBody() {
+  Widget _listItemBuilder(
+      ProductsScreenState state, ProductListModel model) {
+    return Column(
+      children: <Widget>[
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          height: 70,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                width:Measurements.width * 0.5,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Container(
+                      child: InkWell(
+                          onTap: () {
+                            screenBloc.add(CheckProductItem(model: model));
+                          },
+                          child: model.isChecked
+                              ? Icon(
+                            Icons.check_circle,
+                            size: 20,
+                          )
+                              : Icon(
+                            Icons.radio_button_unchecked,
+                            size: 20,
+                          )),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(left: 19, right: 17),
+                      height: 40,
+                      width: 40,
+                      child: model.productsModel.images != null && model.productsModel.images.isNotEmpty && model.productsModel.images.first != null
+                          ? CachedNetworkImage(
+                        imageUrl:
+                        '${Env.storage}/products/${model.productsModel.images.first}',
+                        imageBuilder: (context, imageProvider) => Container(
+                          decoration: BoxDecoration(
+                            color: overlayBackground(),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(6.0),
+                            ),
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.fill,
+                            ),
+                          ),
+                        ),
+                        placeholder: (context, url) => Container(
+                            child: Center(child: CircularProgressIndicator())),
+                        errorWidget: (context, url, error) => Icon(Icons.error),
+                      )
+                          : SvgPicture.asset('assets/images/no_image.svg'),
+                    ),
+                    Flexible(child: Text(model.productsModel.title)),
+                  ],
+                ),
+              ),
+              Text('${Measurements.currency(model.productsModel.currency)}${model.productsModel.price}'),
+              IconButton(
+                icon: Icon(Icons.navigate_next),
+                onPressed: (){
 
+                },
+              ),
+            ],
+          ),
+        ),
+        Divider(height: 1, color: Colors.white.withOpacity(0.5)),
+      ],
+    );
   }
+
   List<Widget> popupButtons(BuildContext context, ProductListModel model) {
     return [
       Container(
