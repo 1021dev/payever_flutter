@@ -98,7 +98,7 @@ class _ConnectCategoriesScreenState extends State<ConnectCategoriesScreen> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        color: overlayBackground(),
+                        color: overlayButtonBackground(),
                         elevation: 0,
                         child: Text(
                           'Done',

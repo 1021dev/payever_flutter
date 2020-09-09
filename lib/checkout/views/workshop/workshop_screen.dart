@@ -99,6 +99,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
       return CheckoutFlowWebView(
         checkoutScreenBloc: widget.checkoutScreenBloc,
         checkoutUrl:
+          // 'https://checkout-backend.test.devpayever.com/api/flow/channel-set/${state.channelSetFlow.id}'
         'https://checkout.payever.org/pay/create-flow/channel-set-id/${state.channelSet.id}',
       );
     }

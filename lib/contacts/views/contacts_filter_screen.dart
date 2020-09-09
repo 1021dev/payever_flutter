@@ -111,7 +111,7 @@ class _ContactsFilterScreenState extends State<ContactsFilterScreen> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      color: overlayColor(),
+                      color: overlayButtonBackground(),
                       child: Text(
                         'Done',
                       ),
