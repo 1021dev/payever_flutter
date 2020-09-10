@@ -56,6 +56,8 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
 
     } else if(event is UpdateUserEvent) {
       yield state.copyWith(user: event.user);
+    } else if(event is BusinessAppInstallEvent) {
+      yield* installBusinessApp(event.uuid, businessId)
     }
   }
 
@@ -503,5 +505,9 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
   Stream<DashboardScreenState> watchTutorial(Tutorial tutorial) async* {
     dynamic response = await api.patchTutorials(GlobalUtils.activeToken.accessToken, state.activeBusiness.id, tutorial.id);
     add(FetchTutorials(business: state.activeBusiness));
+  }
+
+  Stream<DashboardScreenState> installBusinessApp(String uuid, bool isInstall) async* {
+    dynamic response = await api.toggleInstalled(GlobalUtils.activeToken.accessToken, state.activeBusiness.id, uuid, isInstall: isInstall);
   }
 }

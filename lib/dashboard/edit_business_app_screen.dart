@@ -1,8 +1,8 @@
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
@@ -36,7 +36,7 @@ class _EditBusinessAppScreenState extends State<EditBusinessAppScreen> {
 
   List<BusinessApps> businessApps = [];
   List<AppWidget> appWidgets = [];
-  int selectedIndex = -1;
+  int notInstallIndex = -1;
   List<Acl> acls = [];
 
   @override
@@ -65,8 +65,12 @@ class _EditBusinessAppScreenState extends State<EditBusinessAppScreen> {
           }).toList();
       List<BusinessApps> businessApps1 = [];
       businessApps1.addAll(businessAppsDefault);
+      businessApps1.addAll(businessAppsInstall);
       businessApps.forEach((element) {
-        if (!businessAppsDefault.contains(element) ) {
+        if (!businessApps1.contains(element)) {
+          if (notInstallIndex == -1) {
+            notInstallIndex = businessApps1.length;
+          }
           businessApps1.add(element);
         }
       });
@@ -230,89 +234,85 @@ class _EditBusinessAppScreenState extends State<EditBusinessAppScreen> {
         businessApp.dashboardInfo != null
             ? businessApp.dashboardInfo.icon
             : null;
-        if (icon == null) {
-          return Container();
+        Color bgColor = businessApp.installed ? Colors.transparent : overlayBackground();
+        if (businessApp.code == 'settings' && businessApp.setupStatus == 'notStarted') {
+          bgColor = overlayBackground();
         }
         icon = icon.replaceAll('32', '64');
-        // int aclIndex = acls.indexWhere((element) =>
-        // element.microService ==
-        //     businessApp.code);
-        // if (aclIndex > -1 && aclIndex < 100) {
-        // } else {
-        //   return Container();
-        // }
 
         return BlurEffectView(
-          color: Colors.transparent,
+          color: bgColor,
           radius: 0,
           child: Column(
             children: <Widget>[
-              MaterialButton(
-                onPressed: () {
-                  setState(() {
-                    if (selectedIndex == index) {
-                      selectedIndex = -1;
-                    } else {
-                      selectedIndex = index;
-                    }
-                  });
-                },
+              Visibility(
+                visible: notInstallIndex == index,
                 child: Container(
-                  height: 65,
-                  child: Row(
-                    mainAxisAlignment:
-                    MainAxisAlignment
-                        .spaceBetween,
-                    children: <Widget>[
-                      Flexible(
-                        child: Row(
-                          children: <Widget>[
-                            Container(
-                              width: 30,
-                              height: 30,
-                              decoration:
-                              BoxDecoration(
+                  alignment: Alignment.bottomLeft,
+                  height: 50,
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: Text('Not installed', style: TextStyle(color: Colors.grey),),
+                ),
+              ),
+              Container(
+                height: 65,
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  mainAxisAlignment:
+                  MainAxisAlignment
+                      .spaceBetween,
+                  children: <Widget>[
+                    Flexible(
+                      child: Row(
+                        children: <Widget>[
+                          Container(
+                            width: 30,
+                            height: 30,
+                            decoration:
+                            BoxDecoration(
+                              image:
+                              DecorationImage(
                                 image:
-                                DecorationImage(
-                                  image:
-                                  NetworkImage(
-                                    '${Env.cdnIcon}$icon',
-                                  ),
-                                  fit: BoxFit.cover,
+                                NetworkImage(
+                                  '${Env.cdnIcon}$icon',
                                 ),
+                                fit: BoxFit.cover,
                               ),
                             ),
-                            SizedBox(
-                              width: 16,
+                          ),
+                          SizedBox(
+                            width: 16,
+                          ),
+                          Flexible(
+                            child: Text(
+                              businessApp.code[0]
+                                  .toUpperCase() +
+                                  businessApp.code
+                                      .substring(
+                                      1),
                             ),
-                            Flexible(
-                              child: Text(
-                                businessApp.code[0]
-                                    .toUpperCase() +
-                                    businessApp.code
-                                        .substring(
-                                        1),
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                      Visibility(
-                        visible: !businessApp.isDefault,
-                        child: InkWell(
-                          child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 18, vertical: 6),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              color: overlayButtonBackground(),
-                            ),
-                            child: Text(businessApp.installed ? 'Uninstall' : 'Install',
-                            ),
+                    ),
+                    Visibility(
+                      visible: !businessApp.isDefault,
+                      child: InkWell(
+                        onTap: () {
+                          widget.dashboardScreenBloc.add(BusinessAppInstallEvent(uuid: businessApp.microUuid, install: !businessApp.installed));
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 18, vertical: 6),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: overlayButtonBackground(),
+                          ),
+                          child: Text(businessApp.installed ? 'Uninstall' : 'Install',
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
               Divider(
@@ -353,68 +353,58 @@ class _EditBusinessAppScreenState extends State<EditBusinessAppScreen> {
           radius: 0,
           child: Column(
             children: <Widget>[
-              MaterialButton(
-                onPressed: () {
-                  setState(() {
-                    if (selectedIndex == index) {
-                      selectedIndex = -1;
-                    } else {
-                      selectedIndex = index;
-                    }
-                  });
-                },
-                child: Container(
-                  height: 65,
-                  child: Row(
-                    mainAxisAlignment:
-                    MainAxisAlignment
-                        .spaceBetween,
-                    children: <Widget>[
-                      Flexible(
-                        child: Row(
-                          children: <Widget>[
-                            Container(
-                              width: 30,
-                              height: 30,
-                              decoration:
-                              BoxDecoration(
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                height: 65,
+                child: Row(
+                  mainAxisAlignment:
+                  MainAxisAlignment
+                      .spaceBetween,
+                  children: <Widget>[
+                    Flexible(
+                      child: Row(
+                        children: <Widget>[
+                          Container(
+                            width: 30,
+                            height: 30,
+                            decoration:
+                            BoxDecoration(
+                              image:
+                              DecorationImage(
                                 image:
-                                DecorationImage(
-                                  image:
-                                  NetworkImage(
-                                    '${Env.cdnIcon}$icon',
-                                  ),
-                                  fit: BoxFit.cover,
+                                NetworkImage(
+                                  '${Env.cdnIcon}$icon',
                                 ),
+                                fit: BoxFit.cover,
                               ),
                             ),
-                            SizedBox(
-                              width: 16,
+                          ),
+                          SizedBox(
+                            width: 16,
+                          ),
+                          Flexible(
+                            child: Text(
+                              appWidget.title,
                             ),
-                            Flexible(
-                              child: Text(
-                                appWidget.title,
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                      Visibility(
-                        visible: appWidget.install && !appWidget.defaultWid,
-                        child: InkWell(
-                          child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 18, vertical: 6),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              color: overlayButtonBackground(),
-                            ),
-                            child: Text('Delete',
-                            ),
+                    ),
+                    Visibility(
+                      visible: appWidget.install && !appWidget.defaultWid,
+                      child: InkWell(
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 18, vertical: 6),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: overlayButtonBackground(),
+                          ),
+                          child: Text('Delete',
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
               Divider(

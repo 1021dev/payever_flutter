@@ -1357,13 +1357,13 @@ class ApiService {
     }
   }
 
-  Future<dynamic> toggleInstalled(String token, String id, String uuid) async {
+  Future<dynamic> toggleInstalled(String token, String id, String uuid, {bool isInstall = true}) async {
     try {
       print('$TAG - toggleInstalled()');
       dynamic response = await _client.postTypeLess(
           '${Env.commerceOs}/api/apps/business/$id/toggle-installed',
           body: {
-            'installed': true,
+            'installed': isInstall,
             'microUuid': uuid,
           },
           headers: {
