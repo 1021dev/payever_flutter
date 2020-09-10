@@ -11,6 +11,7 @@ import 'package:payever/checkout/views/checkout_screen.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
+import 'package:payever/dashboard/edit_business_app_screen.dart';
 import 'package:payever/dashboard/sub_view/business_logo.dart';
 import 'package:payever/login/login_screen.dart';
 import 'package:payever/connect/views/connect_screen.dart';
@@ -323,7 +324,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
       businessApps: state.businessWidgets,
       appWidgets: state.currentWidgets,
       isTablet: _isTablet,
-      onTapEdit: () {},
+      onTapEdit: () {
+        _navigateAppsScreen(state, EditBusinessAppScreen(dashboardScreenBloc: screenBloc, globalStateModel: globalStateModel,));
+      },
       onTapWidget: (BusinessApps aw) {
         Provider.of<GlobalStateModel>(context, listen: false)
             .setCurrentBusiness(state.activeBusiness);
