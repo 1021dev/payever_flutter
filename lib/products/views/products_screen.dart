@@ -485,76 +485,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                               height: 24,
                             ),
                           ),
-                          InkWell(
-                            onTap: () async {
-                              await showGeneralDialog(
-                                barrierColor: null,
-                                transitionBuilder: (context, a1, a2, wg) {
-                                  final curvedValue =
-                                      1.0 - Curves.ease.transform(a1.value);
-                                  return Transform(
-                                    transform: Matrix4.translationValues(
-                                        -curvedValue * 200, 0.0, 0),
-                                    child: ProductsFilterScreen(
-                                      screenBloc: screenBloc,
-                                    ),
-                                  );
-                                },
-                                transitionDuration: Duration(milliseconds: 200),
-                                barrierDismissible: true,
-                                barrierLabel: '',
-                                context: context,
-                                pageBuilder: (context, animation1, animation2) {
-                                  return null;
-                                },
-                              );
-
-                              // showModalBottomSheet<void>(
-                              //   context: context,
-                              //   builder: (BuildContext context) {
-                              //     return ProductFilterContentView(
-                              //       onSelected: (FilterItem val) {
-                              //         Navigator.pop(context);
-                              //         List<FilterItem> filterTypes = [];
-                              //         filterTypes.addAll(state.filterTypes);
-                              //         if (val != null) {
-                              //           if (filterTypes.length > 0) {
-                              //             int isExist = filterTypes.indexWhere(
-                              //                 (element) =>
-                              //                     element.type == val.type);
-                              //             if (isExist > -1) {
-                              //               filterTypes[isExist] = val;
-                              //             } else {
-                              //               filterTypes.add(val);
-                              //             }
-                              //           } else {
-                              //             filterTypes.add(val);
-                              //           }
-                              //         } else {
-                              //           if (filterTypes.length > 0) {
-                              //             int isExist = filterTypes.indexWhere(
-                              //                 (element) =>
-                              //                     element.type == val.type);
-                              //             if (isExist != null) {
-                              //               filterTypes.removeAt(isExist);
-                              //             }
-                              //           }
-                              //         }
-                              //         screenBloc.add(UpdateProductFilterTypes(
-                              //             filterTypes: filterTypes));
-                              //       },
-                              //     );
-                              //   },
-                              // );
-                            },
-                            child: Container(
-                              padding: EdgeInsets.all(8),
-                              child: SvgPicture.asset(
-                                'assets/images/filter.svg',
-                                width: 20,
-                              ),
-                            ),
-                          ),
+                          _filterButton(),
                           Padding(
                             padding: EdgeInsets.only(left: 8, right: 12),
                             child: Container(
@@ -748,6 +679,42 @@ class _ProductsScreenState extends State<ProductsScreen> {
                 height: 0,
               ),
       ],
+    );
+  }
+
+  Widget _filterButton() {
+    return InkWell(
+      onTap: () async {
+        await showGeneralDialog(
+          barrierColor: null,
+          transitionBuilder: (context, a1, a2, wg) {
+            final curvedValue =
+                1.0 - Curves.ease.transform(a1.value);
+            return Transform(
+              transform: Matrix4.translationValues(
+                  -curvedValue * 200, 0.0, 0),
+              child: ProductsFilterScreen(
+                screenBloc: screenBloc,
+                globalStateModel: widget.globalStateModel,
+              ),
+            );
+          },
+          transitionDuration: Duration(milliseconds: 200),
+          barrierDismissible: true,
+          barrierLabel: '',
+          context: context,
+          pageBuilder: (context, animation1, animation2) {
+            return null;
+          },
+        );
+      },
+      child: Container(
+        padding: EdgeInsets.all(8),
+        child: SvgPicture.asset(
+          'assets/images/filter.svg',
+          width: 20,
+        ),
+      ),
     );
   }
 

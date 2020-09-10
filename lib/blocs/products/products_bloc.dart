@@ -122,9 +122,11 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
         collectionProducts: [],
       );
     } else if (event is AddToCollectionEvent) {
-      yield state.copyWith(addToCollection: true);
+      yield state.copyWith(addToCollection: true, isProductMode: false);
     } else if (event is CreateCategoryEvent) {
       yield* createCategory(event.title);
+    } else if (event is SwitchProductCollectionMode) {
+      yield state.copyWith(isProductMode: event.isProductMode);
     }
   }
 

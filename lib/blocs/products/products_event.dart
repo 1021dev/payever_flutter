@@ -276,3 +276,12 @@ class CreateCategoryEvent extends ProductsScreenEvent {
     this.title,
   ];
 }
+
+class SwitchProductCollectionMode extends ProductsScreenEvent {
+  final bool isProductMode;
+  SwitchProductCollectionMode({this.isProductMode = true});
+
+  List<Object> get props => [
+    this.isProductMode,
+  ];
+}

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
@@ -9,12 +10,14 @@ import 'package:payever/products/widgets/product_filter_range_content_view.dart'
 import 'package:payever/transactions/models/enums.dart';
 
 import '../../theme.dart';
+import 'collection_detail_screen.dart';
 
 class ProductsFilterScreen extends StatefulWidget {
   final ProductsScreenBloc screenBloc;
-
+  final GlobalStateModel globalStateModel;
   ProductsFilterScreen({
     this.screenBloc,
+    this.globalStateModel,
   });
 
   @override
@@ -114,7 +117,7 @@ class _ProductsFilterScreenState extends State<ProductsFilterScreen> {
                           ),
                         ),
                         Container(
-                          padding: EdgeInsets.only(left: 24, bottom: 16),
+                          padding: EdgeInsets.only(left: 24, right: 24),
                           height: 50,
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -135,9 +138,7 @@ class _ProductsFilterScreenState extends State<ProductsFilterScreen> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
                                   InkWell(
-                                    onTap: (){
-
-                                    },
+                                    onTap: ()=> goDetailCollection(),
                                     child: Container(
                                       alignment: Alignment.center,
                                       height: 30,
@@ -168,12 +169,12 @@ class _ProductsFilterScreenState extends State<ProductsFilterScreen> {
                           child: ListView.separated(
                             shrinkWrap: true,
                             physics: NeverScrollableScrollPhysics(),
-                            padding: EdgeInsets.all(8),
+                            padding: EdgeInsets.only(top: 8, bottom: 8,left: 24, right: 24),
                             itemBuilder: (context, index) {
                               CollectionListModel item = index == 0 ? null : widget.screenBloc.state.collectionLists[index];
                               return Container(
                                 height: 44,
-                                padding: EdgeInsets.only(left: 20, right: 20),
+                                padding: EdgeInsets.only(left: 16, right: 16),
                                 child: Row(
                                   children: <Widget>[
                                     SvgPicture.asset('assets/images/collections-icon-filter.svg'),
@@ -259,6 +260,21 @@ class _ProductsFilterScreenState extends State<ProductsFilterScreen> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  void goDetailCollection() {
+    widget.screenBloc.add(AddToCollectionEvent());
+    Navigator.push(
+      context,
+      PageTransition(
+        child: CollectionDetailScreen(
+          businessId: widget.globalStateModel.currentBusiness.id,
+          screenBloc: widget.screenBloc,
+        ),
+        type: PageTransitionType.fade,
+        duration: Duration(milliseconds: 500),
       ),
     );
   }
