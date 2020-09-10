@@ -151,13 +151,21 @@ class UpdateTheme extends DashboardScreenEvent {
 }
 
 class BusinessAppInstallEvent extends DashboardScreenEvent {
-  final String uuid;
-  final bool install;
-  BusinessAppInstallEvent({this.install, this.uuid,});
+  final BusinessApps businessApp;
+  BusinessAppInstallEvent({this.businessApp,});
 
   @override
   List<Object> get props => [
-    this.uuid,
-    this.install,
+    this.businessApp,
+  ];
+}
+
+class WidgetInstallEvent extends DashboardScreenEvent {
+  final AppWidget appWidget;
+  WidgetInstallEvent({this.appWidget,});
+
+  @override
+  List<Object> get props => [
+    this.appWidget,
   ];
 }

@@ -13,6 +13,7 @@ import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/settings/models/models.dart';
 import 'package:payever/settings/widgets/app_bar.dart';
 import 'package:payever/theme.dart';
+import 'package:provider/provider.dart';
 
 class EditBusinessAppScreen extends StatefulWidget {
   final GlobalStateModel globalStateModel;
@@ -29,25 +30,53 @@ class EditBusinessAppScreen extends StatefulWidget {
 
 class _EditBusinessAppScreenState extends State<EditBusinessAppScreen> {
   Business activeBusiness;
-
-  final _formKey = GlobalKey<FormState>();
-
   bool isApps = true;
 
   List<BusinessApps> businessApps = [];
   List<AppWidget> appWidgets = [];
   int notInstallIndex = -1;
-  List<Acl> acls = [];
 
   @override
   void initState() {
     activeBusiness = widget.globalStateModel.currentBusiness;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener(
+      bloc: widget.dashboardScreenBloc,
+      listener: (BuildContext context, DashboardScreenState state) async {
+        if (state is WelcomeScreenStateFailure) {
+
+        } else if (state is WelcomeScreenStateSuccess) {
+          GlobalStateModel globalStateModel = Provider.of<GlobalStateModel>(context, listen: false);
+          globalStateModel.setRefresh(true);
+        }
+      },
+      child: BlocBuilder<DashboardScreenBloc, DashboardScreenState>(
+        bloc: widget.dashboardScreenBloc,
+        builder: (BuildContext context, DashboardScreenState state) {
+          return _body(state);
+        },
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    super.dispose();
+  }
+
+  Widget _body(DashboardScreenState state) {
+
     if (widget.dashboardScreenBloc.state.businessWidgets != null) {
       appWidgets = widget.dashboardScreenBloc.state.currentWidgets;
       businessApps =
           widget.dashboardScreenBloc.state.businessWidgets.where((element) {
-        return (element.dashboardInfo != null && element.dashboardInfo.title != null && element.dashboardInfo.title.isNotEmpty);
-      }).toList();
+            return (element.dashboardInfo != null && element.dashboardInfo.title != null && element.dashboardInfo.title.isNotEmpty);
+          }).toList();
       List<BusinessApps> businessAppsDefault = [];
       List<BusinessApps> businessAppsInstall = [];
 
@@ -77,23 +106,7 @@ class _EditBusinessAppScreenState extends State<EditBusinessAppScreen> {
       businessApps = [];
       businessApps.addAll(businessApps1);
     }
-    print(
-        'business apps length :${businessApps.length}');
-    super.initState();
-  }
 
-  @override
-  Widget build(BuildContext context) {
-    return _body;
-  }
-
-  @override
-  void dispose() {
-    // Clean up the controller when the widget is disposed.
-    super.dispose();
-  }
-
-  get _body {
     return Scaffold(
       appBar: Appbar(
         'Edit Apps',
@@ -105,126 +118,107 @@ class _EditBusinessAppScreenState extends State<EditBusinessAppScreen> {
         bottom: false,
         child: BackgroundBase(
           true,
-          body: _updateForm,
-        ),
-      ),
-    );
-  }
-
-  get _updateForm {
-    return BlocListener(
-      bloc: widget.dashboardScreenBloc,
-      listener: (BuildContext context, DashboardScreenState state) {
-        if (state is SettingScreenUpdateSuccess) {
-        } else if (state is SettingScreenStateFailure) {}
-      },
-      child: BlocBuilder<DashboardScreenBloc, DashboardScreenState>(
-        bloc: widget.dashboardScreenBloc,
-        builder: (context, state) {
-          return Center(
-            child: Form(
-              key: _formKey,
-              child: Container(
-                padding: EdgeInsets.all(16),
-                width: Measurements.width,
-                child: BlurEffectView(
-                  color: overlayBackground(),
-                  child: SingleChildScrollView(
-                    child: Container(
-                      child: Column(
-                        children: <Widget>[
-                          BlurEffectView(
+          body: Center(
+            child: Container(
+              padding: EdgeInsets.all(16),
+              width: Measurements.width,
+              child: BlurEffectView(
+                color: overlayBackground(),
+                child: SingleChildScrollView(
+                  child: Container(
+                    child: Column(
+                      children: <Widget>[
+                        BlurEffectView(
+                          color: overlayBackground(),
+                          radius: 0,
+                          child: Container(
+                            height: 56,
                             color: overlayBackground(),
-                            radius: 0,
                             child: Container(
-                              height: 56,
-                              color: overlayBackground(),
-                              child: Container(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: EdgeInsets.only(left: 8),
-                                      child: MaterialButton(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(12),
-                                            bottomLeft: Radius.circular(12),
-                                          ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 8),
+                                    child: MaterialButton(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(12),
+                                          bottomLeft: Radius.circular(12),
                                         ),
-                                        onPressed: () {
-                                          setState(() {
-                                            isApps = true;
-                                          });
-                                        },
-                                        color: overlayButtonBackground()
-                                            .withOpacity(isApps ? 1.0 : 0.6),
-                                        height: 24,
-                                        elevation: 0,
-                                        child: AutoSizeText(
-                                          'Apps',
-                                          minFontSize: 8,
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          isApps = true;
+                                        });
+                                      },
+                                      color: overlayButtonBackground()
+                                          .withOpacity(isApps ? 1.0 : 0.6),
+                                      height: 24,
+                                      elevation: 0,
+                                      child: AutoSizeText(
+                                        'Apps',
+                                        minFontSize: 8,
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                     ),
-                                    Padding(
-                                      padding: EdgeInsets.only(left: 2),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(right: 8),
-                                      child: MaterialButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            isApps = false;
-                                          });
-                                        },
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.only(
-                                            topRight: Radius.circular(12),
-                                            bottomRight: Radius.circular(12),
-                                          ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 2),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(right: 8),
+                                    child: MaterialButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          isApps = false;
+                                        });
+                                      },
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.only(
+                                          topRight: Radius.circular(12),
+                                          bottomRight: Radius.circular(12),
                                         ),
-                                        color: overlayButtonBackground()
-                                            .withOpacity(isApps ? 0.6 : 1),
-                                        elevation: 0,
-                                        height: 24,
-                                        child: AutoSizeText(
-                                          'Widgets',
-                                          maxLines: 1,
-                                          minFontSize: 8,
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                      ),
+                                      color: overlayButtonBackground()
+                                          .withOpacity(isApps ? 0.6 : 1),
+                                      elevation: 0,
+                                      height: 24,
+                                      child: AutoSizeText(
+                                        'Widgets',
+                                        maxLines: 1,
+                                        minFontSize: 8,
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
-                          isApps
-                              ? _appsBody()
-                              : _widgetBody(),
-                        ],
-                      ),
+                        ),
+                        isApps
+                            ? _appsBody(state)
+                            : _widgetBody(state),
+                      ],
                     ),
                   ),
                 ),
               ),
             ),
-          );
-        },
+          ),
+        ),
       ),
     );
   }
 
-  Widget _appsBody() {
+  Widget _appsBody(DashboardScreenState state) {
     return ListView.separated(
       shrinkWrap: true,
       itemBuilder: (context, index) {
@@ -299,7 +293,7 @@ class _EditBusinessAppScreenState extends State<EditBusinessAppScreen> {
                       visible: !businessApp.isDefault,
                       child: InkWell(
                         onTap: () {
-                          widget.dashboardScreenBloc.add(BusinessAppInstallEvent(uuid: businessApp.microUuid, install: !businessApp.installed));
+                          widget.dashboardScreenBloc.add(BusinessAppInstallEvent(businessApp: businessApp));
                         },
                         child: Container(
                           padding: EdgeInsets.symmetric(horizontal: 18, vertical: 6),
@@ -307,7 +301,13 @@ class _EditBusinessAppScreenState extends State<EditBusinessAppScreen> {
                             borderRadius: BorderRadius.circular(8),
                             color: overlayButtonBackground(),
                           ),
-                          child: Text(businessApp.installed ? 'Uninstall' : 'Install',
+                          child: state.installBusinessAppId == businessApp.microUuid ? Container(
+                            height: 20,
+                            width: 20,
+                            child: Center(
+                              child: CircularProgressIndicator(strokeWidth: 1,),
+                            ),
+                          ): Text(businessApp.installed ? 'Uninstall' : 'Install',
                           ),
                         ),
                       ),
@@ -333,7 +333,7 @@ class _EditBusinessAppScreenState extends State<EditBusinessAppScreen> {
     );
   }
 
-  Widget _widgetBody() {
+  Widget _widgetBody(DashboardScreenState state) {
     return ListView.separated(
       shrinkWrap: true,
       itemBuilder: (context, index) {
@@ -393,14 +393,26 @@ class _EditBusinessAppScreenState extends State<EditBusinessAppScreen> {
                     Visibility(
                       visible: appWidget.install && !appWidget.defaultWid,
                       child: InkWell(
+                        onTap: () {
+                          widget.dashboardScreenBloc.add(WidgetInstallEvent(appWidget: appWidget));
+                        },
                         child: Container(
                           padding: EdgeInsets.symmetric(horizontal: 18, vertical: 6),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(8),
                             color: overlayButtonBackground(),
                           ),
-                          child: Text('Delete',
-                          ),
+                          child: state.installBusinessAppId == appWidget.id
+                              ? Container(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 1,
+                                  ),
+                                )
+                              : Text(
+                                  'Delete',
+                                ),
                         ),
                       ),
                     ),

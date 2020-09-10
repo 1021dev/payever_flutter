@@ -1339,6 +1339,20 @@ class ApiService {
     }
   }
 
+  Future<dynamic> installWidget(String token, String businessId, String widgetId, bool isInstall) async {
+    try {
+      print('$TAG - installWidget()');
+      String installEnd = isInstall ? 'install' : 'uninstall';
+      dynamic response = await _client.patchTypeless(
+          '$widgetsUrl$businessId/widget/$widgetId/$installEnd',
+          headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<dynamic> watchTutorial(String token, String id, String video) async {
     try {
       print('$TAG - watchTutorial()');

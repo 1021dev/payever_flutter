@@ -7,7 +7,7 @@ class BusinessApps {
   final String code;
   final DashboardInfo dashboardInfo;
   final bool isDefault;
-  final bool installed;
+  bool installed;
   final String microUuid;
   final int order;
   final DateTime startAt;
@@ -30,6 +30,7 @@ class BusinessApps {
       this.tag,
       this.url});
 
+
   factory BusinessApps.fromMap(dynamic app) {
     return BusinessApps(
       id: app['_id'],
@@ -49,6 +50,7 @@ class BusinessApps {
       url: app['url'],
     );
   }
+
 }
 
 class DashboardInfo {

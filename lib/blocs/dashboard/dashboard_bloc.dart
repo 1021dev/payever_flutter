@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:package_info/package_info.dart';
@@ -57,7 +58,9 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
     } else if(event is UpdateUserEvent) {
       yield state.copyWith(user: event.user);
     } else if(event is BusinessAppInstallEvent) {
-      yield* installBusinessApp(event.uuid, businessId)
+      yield* installBusinessApp(event.businessApp);
+    } else if(event is WidgetInstallEvent) {
+      yield* installWidget(event.appWidget);
     }
   }
 
@@ -507,7 +510,30 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
     add(FetchTutorials(business: state.activeBusiness));
   }
 
-  Stream<DashboardScreenState> installBusinessApp(String uuid, bool isInstall) async* {
-    dynamic response = await api.toggleInstalled(GlobalUtils.activeToken.accessToken, state.activeBusiness.id, uuid, isInstall: isInstall);
+  Stream<DashboardScreenState> installBusinessApp(BusinessApps businessApp) async* {
+    yield state.copyWith(installBusinessAppId: businessApp.id);
+    dynamic response = await api.toggleInstalled(GlobalUtils.activeToken.accessToken, state.activeBusiness.id, businessApp.microUuid, isInstall: !businessApp.installed);
+    if (response is DioError) {
+      yield state.copyWith(installBusinessAppId: '');
+    } else {
+        List<BusinessApps>businessAppsList = state.businessWidgets;
+        int index = businessAppsList.indexWhere((element) => element.id == businessApp.id);
+        businessAppsList[index].installed = !businessApp.installed;
+        print('current element index: $index');
+        yield state.copyWith(installBusinessAppId: '', businessWidgets: businessAppsList);
+    }
+  }
+
+  Stream<DashboardScreenState> installWidget(AppWidget appWidget) async* {
+    yield state.copyWith(installBusinessAppId: appWidget.id);
+    dynamic response = await api.installWidget(GlobalUtils.activeToken.accessToken, state.activeBusiness.id, appWidget.id, !appWidget.install);
+    if (response is DioError) {
+      yield state.copyWith(installBusinessAppId: '');
+    } else {
+      List<AppWidget>appWidgets = state.currentWidgets;
+      int index = appWidgets.indexWhere((element) => element.id == appWidget.id);
+      appWidgets[index].installed = !appWidget.install;
+      yield state.copyWith(installBusinessAppId: '', currentWidgets: appWidgets);
+    }
   }
 }

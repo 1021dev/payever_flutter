@@ -37,6 +37,7 @@ class DashboardScreenState {
   final Map<String, List<NotificationModel>> notifications;
   final List<Checkout> checkouts;
   final Checkout defaultCheckout;
+  final String installBusinessAppId;
 
   DashboardScreenState({
     this.isLoading = false,
@@ -69,6 +70,7 @@ class DashboardScreenState {
     this.notifications = const {},
     this.checkouts = const [],
     this.defaultCheckout,
+    this.installBusinessAppId = '',
   });
 
   List<Object> get props => [
@@ -102,6 +104,7 @@ class DashboardScreenState {
     this.notifications,
     this.checkouts,
     this.defaultCheckout,
+    this.installBusinessAppId,
   ];
 
   DashboardScreenState copyWith({
@@ -135,6 +138,7 @@ class DashboardScreenState {
     Map<String, List<NotificationModel>> notifications,
     List<Checkout> checkouts,
     Checkout defaultCheckout,
+    String installBusinessAppId,
   }) {
     return DashboardScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -166,7 +170,7 @@ class DashboardScreenState {
       activeShop: activeShop ?? this.activeShop,
       notifications: notifications ?? this.notifications,
       checkouts: checkouts ?? this.checkouts,
-      defaultCheckout: defaultCheckout ?? this.defaultCheckout,
+      installBusinessAppId: installBusinessAppId ?? this.installBusinessAppId,
     );
   }
 }
