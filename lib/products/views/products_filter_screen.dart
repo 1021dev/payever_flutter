@@ -6,6 +6,7 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/products/models/models.dart';
+import 'package:payever/products/views/product_detail_screen.dart';
 import 'package:payever/products/widgets/product_filter_range_content_view.dart';
 import 'package:payever/transactions/models/enums.dart';
 
@@ -26,7 +27,8 @@ class ProductsFilterScreen extends StatefulWidget {
 
 class _ProductsFilterScreenState extends State<ProductsFilterScreen> {
   String selectedCategory = '';
-  bool isProducts = true;
+  int selectedIndex = -1;
+
   @override
   void initState() {
     super.initState();
@@ -103,21 +105,80 @@ class _ProductsFilterScreenState extends State<ProductsFilterScreen> {
                 Expanded(
                   child: SingleChildScrollView(
                     scrollDirection: Axis.vertical,
+                    padding: EdgeInsets.only(left: 24, right: 24),
                     child: Column(
                       children: <Widget>[
                         Container(
-                          alignment: Alignment.centerLeft,
-                          padding: EdgeInsets.only(left: 24, bottom: 16),
-                          child: Text(
-                            'My products',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                          height: 50,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: <Widget>[
+                              Expanded(
+                                child: Container(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    'My products',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  InkWell(
+                                    onTap: ()=> goDetailProduct(),
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      height: 30,
+                                      padding: EdgeInsets.symmetric(horizontal: 16),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(15),
+                                        color: overlayButtonBackground(),
+                                      ),
+                                      child: Text('Add'),
+                                    ),
+                                  ),
+                                  SizedBox(width: 10,),
+                                  InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        selectedIndex = (selectedIndex == 0) ? -1 : 0;
+                                      });
+                                    },
+                                    child: Icon(selectedIndex != 0 ? Icons.add : Icons.clear),
+                                  )
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                        Visibility(
+                          visible: selectedIndex == 0 ,
+                          child: InkWell(
+                            onTap: () {
+                              widget.screenBloc.add(SwitchProductCollectionMode(isProductMode: true));
+                            },
+                            child: Container(
+                              height: 44,
+                              padding: EdgeInsets.only(left: 16, right: 16),
+                              child: Row(
+                                children: <Widget>[
+                                  SvgPicture.asset('assets/images/collections-icon-filter.svg'),
+                                  SizedBox(width: 14,),
+                                  Text('All'),
+                                ],
+                              ),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  color: overlayButtonBackground()
+                              ),
                             ),
                           ),
                         ),
                         Container(
-                          padding: EdgeInsets.only(left: 24, right: 24),
                           height: 50,
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -154,10 +215,10 @@ class _ProductsFilterScreenState extends State<ProductsFilterScreen> {
                                   InkWell(
                                     onTap: () {
                                       setState(() {
-                                        isProducts = !isProducts;
+                                        selectedIndex = (selectedIndex == 1) ? -1 : 1;
                                       });
                                     },
-                                    child: Icon(isProducts ? Icons.add : Icons.clear),
+                                    child: Icon(selectedIndex != 1 ? Icons.add : Icons.clear),
                                   )
                                 ],
                               )
@@ -165,26 +226,31 @@ class _ProductsFilterScreenState extends State<ProductsFilterScreen> {
                           ),
                         ),
                         Visibility(
-                          visible: !isProducts,
+                          visible: selectedIndex == 1,
                           child: ListView.separated(
                             shrinkWrap: true,
                             physics: NeverScrollableScrollPhysics(),
-                            padding: EdgeInsets.only(top: 8, bottom: 8,left: 24, right: 24),
+                            padding: EdgeInsets.only(top: 8, bottom: 8,),
                             itemBuilder: (context, index) {
                               CollectionListModel item = index == 0 ? null : widget.screenBloc.state.collectionLists[index];
-                              return Container(
-                                height: 44,
-                                padding: EdgeInsets.only(left: 16, right: 16),
-                                child: Row(
-                                  children: <Widget>[
-                                    SvgPicture.asset('assets/images/collections-icon-filter.svg'),
-                                    SizedBox(width: 14,),
-                                    Text(item == null ? 'All' : item.collectionModel.name),
-                                  ],
-                                ),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: overlayButtonBackground()
+                              return InkWell(
+                                onTap: () {
+                                  widget.screenBloc.add(SwitchProductCollectionMode(isProductMode: false));
+                                },
+                                child: Container(
+                                  height: 44,
+                                  padding: EdgeInsets.only(left: 16, right: 16),
+                                  child: Row(
+                                    children: <Widget>[
+                                      SvgPicture.asset('assets/images/collections-icon-filter.svg'),
+                                      SizedBox(width: 14,),
+                                      Text(item == null ? 'All' : item.collectionModel.name),
+                                    ],
+                                  ),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: overlayButtonBackground()
+                                  ),
                                 ),
                               );
                             },
@@ -196,7 +262,7 @@ class _ProductsFilterScreenState extends State<ProductsFilterScreen> {
                         ),
                         ListView.separated(
                           shrinkWrap: true,
-                          padding: EdgeInsets.all(8),
+                          padding: EdgeInsets.symmetric(vertical: 8),
                           physics: NeverScrollableScrollPhysics(),
                           separatorBuilder: (context, index) {
                             return Divider(
@@ -264,8 +330,21 @@ class _ProductsFilterScreenState extends State<ProductsFilterScreen> {
     );
   }
 
+  void goDetailProduct() {
+    Navigator.push(
+      context,
+      PageTransition(
+        child: ProductDetailScreen(
+          businessId: widget.globalStateModel.currentBusiness.id,
+          screenBloc: widget.screenBloc,
+        ),
+        type: PageTransitionType.fade,
+        duration: Duration(milliseconds: 500),
+      ),
+    );
+  }
+
   void goDetailCollection() {
-    widget.screenBloc.add(AddToCollectionEvent());
     Navigator.push(
       context,
       PageTransition(

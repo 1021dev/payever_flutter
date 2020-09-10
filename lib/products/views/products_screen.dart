@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -459,8 +460,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
             children: <Widget>[
               Flexible(
                 flex: 1,
-                child: state.isProductMode
-                    ? Row(
+                child: Row(
                         children: <Widget>[
                           Padding(
                             padding: EdgeInsets.only(left: 8),
@@ -505,12 +505,10 @@ class _ProductsScreenState extends State<ProductsScreen> {
                           ),
                         ],
                       )
-                    : Container(),
               ),
               Flexible(
                 flex: 1,
-                child: state.isProductMode
-                    ? Container(
+                child: Container(
                         alignment: Alignment.centerRight,
                         padding: EdgeInsets.only(right: 8),
                         child: InkWell(
@@ -537,9 +535,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                             ),
                           ),
                         ),
-                      )
-                    : Container(),
-              ),
+                      )),
               Container(
                 alignment: Alignment.centerRight,
                 child: PopupMenuButton<MenuItem>(
@@ -829,7 +825,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
   Widget gridBody(ProductsScreenState state) {
     if (state.addToCollection) {
       List<Widget> collectionItems = [];
-      collectionItems.add(getAddCollectionItem(state));
+      collectionItems.add(getAddProductItem(state));
       print(state.collections);
       state.collectionLists.forEach((collection) {
         collectionItems.add(CollectionGridItem(
@@ -843,6 +839,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
         ));
       });
       return Container(
+        padding: EdgeInsets.only(left: 12, right: 12, top: 16, bottom: 16),
         child: SmartRefresher(
           enablePullDown: true,
           enablePullUp: true,
@@ -983,7 +980,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
       );
     } else {
       List<Widget> collectionItems = [];
-      collectionItems.add(getAddCollectionItem(state));
+      collectionItems.add(getAddProductItem(state));
       print(state.collections);
       state.collectionLists.forEach((collection) {
         collectionItems.add(CollectionGridItem(
@@ -996,6 +993,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
         ));
       });
       return Container(
+        padding: EdgeInsets.only(left: 12, right: 12, top: 16, bottom: 16),
         child: SmartRefresher(
           enablePullDown: true,
           enablePullUp: true,
@@ -1435,15 +1433,16 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   color: overlayBackground()),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
                 children: <Widget>[
                   InkWell(
                     onTap: () => goDetailProduct(),
-                    child: Text(
+                    child: AutoSizeText(
                       Language.getProductStrings('add_product'),
                       style: TextStyle(
                         fontSize: 12,
-                        fontWeight: FontWeight.w400,
                       ),
+                      maxLines: 1,
                     ),
                   ),
                   Container(
@@ -1452,12 +1451,13 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   ),
                   InkWell(
                     onTap: () => goDetailCollection(),
-                    child: Text(
+                    child: AutoSizeText(
                       Language.getProductStrings('Add Collection'),
                       style: TextStyle(
                         fontSize: 12,
-                        fontWeight: FontWeight.w400,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],
@@ -1465,62 +1465,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
             ),
           )
         ],
-      ),
-    );
-  }
-
-  Widget getAddCollectionItem(ProductsScreenState state) {
-    return Container(
-      margin: EdgeInsets.only(left: 16, right: 16, top: 8),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(12.0)),
-        color: overlayBackground(),
-      ),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            SvgPicture.asset(
-              'assets/images/collection.svg',
-              width: 80,
-              height: 80,
-              color: iconColor().withOpacity(0.5),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 16),
-            ),
-            MaterialButton(
-              onPressed: () => goDetailCollection(),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(22),
-              ),
-              height: 30,
-              minWidth: 0,
-              elevation: 0,
-              color: overlayBackground(),
-              child: Container(
-                width: 104,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Icon(
-                      Icons.add,
-                    ),
-                    Text(
-                      Language.getProductStrings('Add Collection'),
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            )
-          ],
-        ),
       ),
     );
   }

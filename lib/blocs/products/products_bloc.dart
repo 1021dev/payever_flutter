@@ -370,7 +370,7 @@ class ProductsScreenBloc extends Bloc<ProductsScreenEvent, ProductsScreenState> 
       'variables': {
         'product': bodyObj,
       },
-      'query': 'mutation createProduct(\$product: ProductInput!) {\n  createProduct(product: \$product) {\n    titlen\n    id\n  }\n}\n'
+      'query': 'mutation createProduct(\$product: ProductInput!) {\n  createProduct(product: \$product) {\n    title\n    id\n  }\n}\n'
     };
     dynamic response = await api.getProducts(token, body);
     if (response != null) {

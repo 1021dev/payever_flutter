@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -102,41 +103,49 @@ class ProductGridItem extends StatelessWidget {
                 ],
               ),
             ),
-            Padding(
-              padding: EdgeInsets.only(left: 8, right: 8, bottom: 6, top: 4),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    product.productsModel.title,
-                    style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500
-                    ),
+            AspectRatio(
+              aspectRatio: 6/1.7,
+              child: Padding(
+                padding: EdgeInsets.only(left: 8, right: 8, bottom: 3, top: 4),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      AutoSizeText(
+                        product.productsModel.title,
+                        style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500
+                        ),
+                        maxLines: 1,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 3),
+                      ),
+                      Text(
+                        '${formatter.format(product.productsModel.price)} ${Measurements.currency(product.productsModel.currency)}',
+                        style: TextStyle(
+                          fontSize: 8,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 1),
+                      ),
+                      Text(
+                        product.productsModel.onSales
+                            ? Language.getProductListStrings('filters.quantity.options.outStock')
+                            : Language.getProductListStrings('filters.quantity.options.inStock'),
+                        style: TextStyle(
+                          fontSize: 8,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                    ],
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 4),
-                  ),
-                  Text(
-                    '${formatter.format(product.productsModel.price)} ${Measurements.currency(product.productsModel.currency)}',
-                    style: TextStyle(
-                      fontSize: 8,
-                      fontWeight: FontWeight.w300,
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 2),
-                  ),
-                  Text(
-                    product.productsModel.onSales
-                        ? Language.getProductListStrings('filters.quantity.options.outStock')
-                        : Language.getProductListStrings('filters.quantity.options.inStock'),
-                    style: TextStyle(
-                      fontSize: 8,
-                      fontWeight: FontWeight.w300,
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
             Divider(
@@ -151,7 +160,7 @@ class ProductGridItem extends StatelessWidget {
                   onTap: (){
                     onTap(product);
                   },
-                  child: Center(child: Text('Open')),
+                  child: Center(child: Text('Open', style: TextStyle(fontSize: 12),)),
                 ),
               ),
             ),
