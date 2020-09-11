@@ -197,9 +197,6 @@ class MainAppbar extends StatelessWidget with PreferredSizeWidget {
                     return DashboardMenuView1(
                       dashboardScreenBloc: dashboardScreenBloc,
                       activeBusiness: dashboardScreenState.activeBusiness,
-                      onClose: () {
-
-                      },
                     );
                   });
             },

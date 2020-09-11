@@ -18,13 +18,11 @@ import '../../theme.dart';
 
 class DashboardMenuView1 extends StatelessWidget {
   final Widget scaffold;
-  final VoidCallback onClose;
   final Business activeBusiness;
   final DashboardScreenBloc dashboardScreenBloc;
 
   DashboardMenuView1({
     this.scaffold,
-    this.onClose,
     this.dashboardScreenBloc,
     @required this.activeBusiness,
   });
@@ -76,7 +74,6 @@ class DashboardMenuView1 extends StatelessWidget {
                   child: SvgPicture.asset('assets/images/closeicon.svg', color: iconColor(),),
                   onTap: () {
                     Navigator.pop(context);
-                    print('tap close');
                   },
                 ),
               ),

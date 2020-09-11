@@ -24,6 +24,7 @@ import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/dashboard/sub_view/business_logo.dart';
 import 'package:payever/dashboard/sub_view/dashboard_menu_view.dart';
+import 'package:payever/dashboard/sub_view/dashboard_menu_view1.dart';
 import 'package:payever/login/login_screen.dart';
 import 'package:payever/notifications/notifications_screen.dart';
 import 'package:payever/search/views/search_screen.dart';
@@ -316,7 +317,15 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               width: 20,
             ),
             onTap: () {
-              _innerDrawerKey.currentState.toggle();
+              // _innerDrawerKey.currentState.toggle();
+              showCupertinoModalPopup(
+                  context: context,
+                  builder: (builder) {
+                    return DashboardMenuView1(
+                      dashboardScreenBloc: widget.dashboardScreenBloc,
+                      activeBusiness: widget.dashboardScreenBloc.state.activeBusiness,
+                    );
+                  });
             },
           ),
         ),

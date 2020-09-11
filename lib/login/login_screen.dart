@@ -377,6 +377,51 @@ class _LoginState extends State<Login> {
                                       },
                                     ),
                                   ),
+                                  Container(
+                                    margin: EdgeInsets.only(top: 36, bottom: 15),
+                                    width: double.infinity,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Flexible(
+                                          child: Container(
+                                            height: 1,
+                                            color: Color.fromRGBO(120, 120, 125, 1),
+                                          ),
+                                        ),
+                                        Container(
+                                          padding: EdgeInsets.symmetric(horizontal: 10),
+                                            alignment: Alignment.center,
+                                            child: Text('or', style: TextStyle(color: Color.fromRGBO(120, 120, 125, 1), fontSize: 12),)),
+                                        Flexible(
+                                          child: Container(
+                                            height: 1,
+                                            color: Color.fromRGBO(120, 120, 125, 1),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+
+                                    },
+                                    child: Container(
+                                        height: 55,
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: [
+                                            Color.fromRGBO(237, 237, 244, 1),
+                                            Color.fromRGBO(174, 176, 183, 1)
+                                            ],
+                                            begin: Alignment.topCenter,
+                                            end: Alignment.bottomCenter,
+                                          ),
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                      child: Center(child: Text('Sign Up', style: TextStyle(color: Colors.black, fontSize: 16),)),
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
