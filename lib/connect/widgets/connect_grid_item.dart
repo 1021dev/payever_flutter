@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -48,69 +49,69 @@ class ConnectGridItem extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  height: 80,
+                  width: double.infinity,
                   child: Column(
                     children: <Widget>[
-                      Expanded(
+                      AspectRatio(
+                        aspectRatio: 6/1.5,
                         child: Container(
-                          padding: EdgeInsets.only(
-                            left: 8,
-                            right: 8,
-                            top: 8,
-                          ),
+                          alignment: Alignment.centerLeft,
+                          padding: EdgeInsets.symmetric(horizontal: 8),
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
-                              Container(
-                                height: 25,
-                                alignment: Alignment.topLeft,
-                                child: Text(
-                                  Language.getConnectStrings(connectModel.integration.displayOptions.title),
-                                  maxLines: 1,
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      fontFamily: 'Roboto-Medium',
-                                  ),
+                              AutoSizeText(
+                                Language.getConnectStrings(connectModel.integration.displayOptions.title),
+                                maxLines: 1,
+                                minFontSize: 8,
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    fontFamily: 'Roboto-Medium',
                                 ),
                               ),
-                              Container(
-                                alignment: Alignment.topLeft,
-                                child: Text(
-                                  Language.getConnectStrings(connectModel.integration.installationOptions.price),
-                                  maxLines: 1,
-                                  style: TextStyle(
-                                      fontSize: 8,
-                                      fontFamily: 'Roboto',
-                                  ),
+                              SizedBox(height: 3,),
+                              AutoSizeText(
+                                Language.getConnectStrings(connectModel.integration.installationOptions.price),
+                                maxLines: 1,
+                                minFontSize: 6,
+                                style: TextStyle(
+                                    fontSize: 11,
+                                    fontFamily: 'Roboto',
                                 ),
                               ),
                             ],
                           ),
                         ),
                       ),
-                      Container(
-                        height: 28,
-                        color: overlayBackground(),
-                        alignment: Alignment.center,
-                        child: SizedBox.expand(
-                          child: MaterialButton(
-                            child: installingConnect ? Center(
-                              child: Container(
-                                width: 16,
-                                height: 16,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
+                      AspectRatio(
+                        aspectRatio: 6/1,
+                        child: Container(
+                          width: double.infinity,
+                          color: overlayBackground(),
+                          alignment: Alignment.center,
+                          child: SizedBox.expand(
+                            child: MaterialButton(
+                              child: installingConnect ? Center(
+                                child: Container(
+                                  width: 16,
+                                  height: 16,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ),
                                 ),
+                              ) : Text(
+                                connectModel.installed ? Language.getConnectStrings('actions.uninstall'): Language.getConnectStrings('actions.install'),
+                                style: TextStyle(fontSize: 12),
                               ),
-                            ) : Text(
-                              connectModel.installed ? Language.getConnectStrings('actions.uninstall'): Language.getConnectStrings('actions.install'),
+                              onPressed: () {
+                                if (connectModel.installed) {
+                                  onUninstall(connectModel);
+                                } else {
+                                  onInstall(connectModel);
+                                }
+                              },
                             ),
-                            onPressed: () {
-                              if (connectModel.installed) {
-                                onUninstall(connectModel);
-                              } else {
-                                onInstall(connectModel);
-                              }
-                            },
                           ),
                         ),
                       ),

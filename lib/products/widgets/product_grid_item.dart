@@ -122,17 +122,14 @@ class ProductGridItem extends StatelessWidget {
                         maxLines: 1,
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: 3),
-                      ),
-                      Text(
-                        '${formatter.format(product.productsModel.price)} ${Measurements.currency(product.productsModel.currency)}',
-                        style: TextStyle(
-                          fontSize: 8,
-                          fontWeight: FontWeight.w300,
+                        padding: EdgeInsets.only(top: 3, bottom: 1),
+                        child: Text(
+                          '${formatter.format(product.productsModel.price)} ${Measurements.currency(product.productsModel.currency)}',
+                          style: TextStyle(
+                            fontSize: 8,
+                            fontWeight: FontWeight.w300,
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 1),
                       ),
                       Text(
                         product.productsModel.onSales

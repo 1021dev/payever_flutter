@@ -429,7 +429,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                       Expanded(
                         child: _getBody(state),
                       ),
-                      _bottomBar(state),
+                      // _bottomBar(state),
                     ],
                   ),
                 ),

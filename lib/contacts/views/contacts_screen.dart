@@ -757,7 +757,7 @@ class _ContactScreenState extends State<ContactScreen> {
     }
 
     return Container(
-      padding: EdgeInsets.only(left:12, top: 16, right: 12, bottom: 16),
+      padding: EdgeInsets.symmetric(horizontal:12, vertical: 16,),
       clipBehavior: Clip.none,
       child: SmartRefresher(
         enablePullDown: true,
