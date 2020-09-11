@@ -928,7 +928,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
         ));
       });
       return Container(
-        padding: EdgeInsets.only(left: 12, right: 12, top: 16, bottom: 16),
+        padding: EdgeInsets.only(left: 12, right: 12, top: 16),
         child: SmartRefresher(
           enablePullDown: true,
           enablePullUp: true,

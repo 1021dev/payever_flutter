@@ -24,7 +24,7 @@ class DashboardOptionCell extends StatelessWidget {
         Divider(height: 0,),
         Container(
           height: 49,
-          padding: EdgeInsets.fromLTRB(12, 0, 12, 0),
+          padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
