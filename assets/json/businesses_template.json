@@ -1,0 +1,875 @@
+[
+  {
+    "active": true,
+    "hidden": false,
+    "contactEmails": [],
+    "cspAllowedHosts": [],
+    "_id": "d0de55b4-5a2a-41a9-a0de-f38256f541ee",
+    "name": "Abiant",
+    "companyAddress": {
+      "_id": "33b62331-26eb-430f-b932-857ef9d1b78d",
+      "city": "Berlin",
+      "country": "DE",
+      "street": "Friedrichstrasse",
+      "zipCode": "10118",
+      "updatedAt": "2020-08-31T14:04:55.791Z",
+      "createdAt": "2020-08-31T14:04:55.791Z"
+    },
+    "companyDetails": {
+      "_id": "854c4bbb-3476-4c09-b1f0-6b25d280d6a3",
+      "foundationYear": "",
+      "industry": "BRANCHE_ROBOTICS",
+      "legalForm": "",
+      "product": "BUSINESS_PRODUCT_RETAIL_B2B",
+      "urlWebsite": "",
+      "updatedAt": "2020-08-31T14:04:55.791Z",
+      "createdAt": "2020-08-31T14:04:55.791Z"
+    },
+    "currency": "EUR",
+    "contactDetails": {
+      "_id": "a002aae7-33c9-432b-9c1e-a19dc270ef70",
+      "additionalPhone": "",
+      "fax": "",
+      "firstName": "Test",
+      "lastName": "Test",
+      "phone": "+49123445",
+      "salutation": "",
+      "updatedAt": "2020-08-31T14:04:55.791Z",
+      "createdAt": "2020-08-31T14:04:55.791Z"
+    },
+    "createdAt": "2019-03-13T06:17:46.147Z",
+    "updatedAt": "2020-09-11T16:55:23.394Z",
+    "__v": 0,
+    "logo": "1c5775a0-fe63-49ab-b079-49b3c638b589-icon-p-square-santander-128.png",
+    "documents": {
+      "_id": "df435dfb-2621-4f11-b412-ac3ae269a532",
+      "commercialRegisterExcerptFilename": null,
+      "updatedAt": "2020-09-01T05:54:15.562Z",
+      "createdAt": "2020-09-01T05:54:15.562Z"
+    },
+    "defaultLanguage": "de",
+    "bankAccount": {
+      "_id": "9769c6e7-9781-43be-8744-2810da2bcca7",
+      "bankName": "Musterbank",
+      "bic": "MARKDEF1100",
+      "city": "Hamburg",
+      "country": "DE",
+      "iban": "DE91100000000123456789",
+      "owner": "Abiant GmbH",
+      "updatedAt": "2020-08-31T14:04:55.791Z",
+      "createdAt": "2020-08-31T14:04:55.791Z"
+    },
+    "currentWallpaper": {
+      "theme": "default",
+      "_id": "5f59ee3e88aa8e0013921d45",
+      "auto": false
+    },
+    "themeSettings": {
+      "theme": "default",
+      "_id": "b6073c5d-6511-47cc-b65a-d84ef1aff1f6",
+      "updatedAt": "2020-09-10T09:13:34.539Z",
+      "createdAt": "2020-09-10T09:13:34.539Z"
+    },
+    "taxes": {
+      "_id": "8098cb6d-ce23-46fa-96c4-e9be6ec7f057",
+      "companyRegisterNumber": "",
+      "taxId": "",
+      "taxNumber": "",
+      "turnoverTaxAct": false,
+      "updatedAt": "2020-08-31T14:04:55.791Z",
+      "createdAt": "2020-08-31T14:04:55.791Z"
+    },
+    "email": "abiantgmbh@payever.de",
+    "userId": "21abcef8-186d-4197-a0c1-86b75035f00a"
+  },
+  {
+    "active": false,
+    "hidden": false,
+    "contactEmails": [],
+    "cspAllowedHosts": [],
+    "_id": "41afe10b-1443-4006-a75e-97550f500d49",
+    "name": "Abiant2",
+    "companyAddress": {
+      "_id": "757b8963-473f-419b-ac1e-a5546dee33bb",
+      "country": "DE",
+      "city": "Nürnberg",
+      "street": "Marthastraße 31",
+      "zipCode": "90482",
+      "updatedAt": "2020-07-28T13:45:19.186Z",
+      "createdAt": "2020-07-28T13:45:19.186Z"
+    },
+    "companyDetails": {
+      "_id": "26bf741d-d392-4160-9a50-f83e8e38dc03",
+      "legalForm": "LEGAL_FORM_AG",
+      "product": "BUSINESS_PRODUCT_RETAIL_B2C",
+      "industry": "BRANCHE_FASHION",
+      "urlWebsite": "google.com",
+      "foundationYear": "1999",
+      "updatedAt": "2020-07-28T13:45:19.186Z",
+      "createdAt": "2020-07-28T13:45:19.186Z"
+    },
+    "contactDetails": {
+      "_id": "c384a9c2-c694-42f1-8568-e1beed7a915c",
+      "salutation": "SALUTATION_MR",
+      "firstName": "Tom",
+      "lastName": "Huldt",
+      "phone": "+4912341234",
+      "fax": "",
+      "additionalPhone": "",
+      "updatedAt": "2020-08-25T15:32:00.996Z",
+      "createdAt": "2020-08-25T15:32:00.996Z"
+    },
+    "currency": "EUR",
+    "themeSettings": {
+      "theme": "light",
+      "_id": "b724e600-96b1-43c9-8d27-9cb438fea893",
+      "updatedAt": "2020-09-09T07:40:43.090Z",
+      "createdAt": "2020-09-09T07:40:43.090Z"
+    },
+    "defaultLanguage": "de",
+    "createdAt": "2020-07-02T09:26:48.477Z",
+    "updatedAt": "2020-09-11T16:55:23.240Z",
+    "__v": 0,
+    "documents": {
+      "_id": "426cba10-c621-4f1a-b4b6-174932a09937",
+      "commercialRegisterExcerptFilename": null,
+      "updatedAt": "2020-08-25T10:17:17.669Z",
+      "createdAt": "2020-08-25T10:17:17.669Z"
+    },
+    "currentWallpaper": {
+      "theme": "default",
+      "_id": "5f5886fb88aa8e001392179c",
+      "auto": false
+    },
+    "logo": null,
+    "bankAccount": {
+      "_id": "b8c71140-55ee-4292-ad19-e73c0074b3c6",
+      "owner": "Test",
+      "bankName": "Test",
+      "country": "DE",
+      "city": "Hamburg",
+      "bic": "001",
+      "iban": "\tDE89 3704 0044 0532 0130 00",
+      "updatedAt": "2020-08-25T10:11:54.768Z",
+      "createdAt": "2020-08-25T10:11:54.768Z"
+    },
+    "taxes": {
+      "_id": "4711e390-9ad8-4acf-9e27-a81f90cf5c50",
+      "companyRegisterNumber": "",
+      "taxId": "11",
+      "taxNumber": "",
+      "turnoverTaxAct": false,
+      "updatedAt": "2020-07-28T13:45:19.186Z",
+      "createdAt": "2020-07-28T13:45:19.186Z"
+    },
+    "email": "abiantgmbh@payever.de",
+    "userId": "21abcef8-186d-4197-a0c1-86b75035f00a"
+  },
+  {
+    "active": false,
+    "hidden": false,
+    "contactEmails": [],
+    "cspAllowedHosts": [],
+    "_id": "d19ee2a7-1418-4a8e-8645-d286a82f508b",
+    "name": "Mexico",
+    "companyAddress": {
+      "_id": "29287a2e-2fb1-48ff-91b9-c6433a9f583f",
+      "country": "MX",
+      "createdAt": "2020-07-02T14:57:16.388Z",
+      "updatedAt": "2020-07-02T14:57:16.388Z"
+    },
+    "companyDetails": {
+      "_id": "0629e9b2-0da7-4046-b508-60e19f54f84c",
+      "status": "BUSINESS_STATUS_JUST_LOOKING",
+      "industry": "BRANCHE_ART_CRAFT",
+      "product": "BUSINESS_PRODUCT_RETAIL_B2C",
+      "createdAt": "2020-07-02T14:57:16.388Z",
+      "updatedAt": "2020-07-02T14:57:16.388Z"
+    },
+    "contactDetails": {
+      "_id": "c113463d-e419-4aad-932f-c71b25d424bf",
+      "phone": "+5212341234",
+      "firstName": "Tom",
+      "lastName": "Huldt",
+      "createdAt": "2020-07-02T14:57:16.388Z",
+      "updatedAt": "2020-07-02T14:57:16.388Z"
+    },
+    "currency": "USD",
+    "themeSettings": {
+      "theme": "default",
+      "_id": "a3b30b55-9df9-4d7a-a1ac-ad3544fe17de",
+      "createdAt": "2020-07-02T14:57:16.388Z",
+      "updatedAt": "2020-07-02T14:57:16.388Z"
+    },
+    "defaultLanguage": "es",
+    "createdAt": "2020-07-02T14:57:16.389Z",
+    "updatedAt": "2020-09-11T16:55:23.240Z",
+    "__v": 0,
+    "email": "abiantgmbh@payever.de",
+    "userId": "21abcef8-186d-4197-a0c1-86b75035f00a"
+  },
+  {
+    "active": false,
+    "hidden": false,
+    "contactEmails": [],
+    "cspAllowedHosts": [],
+    "_id": "67c810de-b281-49df-b54e-44be0673c34b",
+    "name": "Abiant 4",
+    "companyAddress": {
+      "_id": "62929431-811b-4ff6-be0c-52dbc4fa8208",
+      "country": "DE",
+      "createdAt": "2020-07-04T07:26:49.653Z",
+      "updatedAt": "2020-07-04T07:26:49.653Z"
+    },
+    "companyDetails": {
+      "_id": "30f9b0af-17ce-46a8-98d3-02c475090006",
+      "status": "BUSINESS_STATUS_HAVE_IDEA",
+      "industry": "BRANCHE_DOOR_PRODUTS",
+      "product": "BUSINESS_PRODUCT_RETAIL_B2B",
+      "createdAt": "2020-07-04T07:26:49.653Z",
+      "updatedAt": "2020-07-04T07:26:49.653Z"
+    },
+    "contactDetails": {
+      "_id": "9a10cefd-7ce9-4745-a98b-ec9be38c3acc",
+      "phone": "+4934343433",
+      "firstName": "Tom",
+      "lastName": "Huldt",
+      "createdAt": "2020-07-04T07:26:49.653Z",
+      "updatedAt": "2020-07-04T07:26:49.653Z"
+    },
+    "currency": "EUR",
+    "themeSettings": {
+      "theme": "light",
+      "_id": "3f3f0626-7e43-4eca-8bd3-114097ea324f",
+      "updatedAt": "2020-08-26T10:10:28.007Z",
+      "createdAt": "2020-08-26T10:10:28.007Z"
+    },
+    "defaultLanguage": "de",
+    "createdAt": "2020-07-04T07:26:49.654Z",
+    "updatedAt": "2020-09-11T16:55:23.240Z",
+    "__v": 0,
+    "logo": null,
+    "currentWallpaper": {
+      "theme": "default",
+      "_id": "5f463514e63882001416241d",
+      "auto": false
+    },
+    "email": "abiantgmbh@payever.de",
+    "userId": "21abcef8-186d-4197-a0c1-86b75035f00a"
+  },
+  {
+    "active": false,
+    "hidden": false,
+    "contactEmails": [],
+    "cspAllowedHosts": [],
+    "_id": "7d1e7849-911e-4546-9753-f7193669042f",
+    "name": "newtry",
+    "companyAddress": {
+      "_id": "b2efc913-6b4d-42d7-9da5-83b06b7d62e4",
+      "country": "DE",
+      "createdAt": "2020-07-17T15:06:51.663Z",
+      "updatedAt": "2020-07-17T15:06:51.663Z"
+    },
+    "companyDetails": {
+      "_id": "c7f54096-1874-4c7b-aa62-dd7ab4ec58c1",
+      "status": "BUSINESS_STATUS_JUST_LOOKING",
+      "industry": "BRANCHE_FASHION",
+      "product": "BUSINESS_PRODUCT_RETAIL_B2C",
+      "createdAt": "2020-07-17T15:06:51.663Z",
+      "updatedAt": "2020-07-17T15:06:51.663Z"
+    },
+    "contactDetails": {
+      "_id": "8c8041a5-c388-4ed5-ae58-2c33bb14180f",
+      "phone": "+4912341234",
+      "firstName": "Tom",
+      "lastName": "Huldt",
+      "createdAt": "2020-07-17T15:06:51.663Z",
+      "updatedAt": "2020-07-17T15:06:51.663Z"
+    },
+    "currency": "EUR",
+    "themeSettings": {
+      "theme": "dark",
+      "_id": "062f99be-76cb-4e1e-a0b5-e7c42124ef69",
+      "updatedAt": "2020-09-05T07:55:44.602Z",
+      "createdAt": "2020-09-05T07:55:44.602Z"
+    },
+    "defaultLanguage": "de",
+    "createdAt": "2020-07-17T15:06:51.664Z",
+    "updatedAt": "2020-09-11T16:55:23.240Z",
+    "__v": 0,
+    "currentWallpaper": {
+      "theme": "default",
+      "_id": "5f53448088aa8e0013920565",
+      "auto": false
+    },
+    "email": "abiantgmbh@payever.de",
+    "userId": "21abcef8-186d-4197-a0c1-86b75035f00a"
+  },
+  {
+    "active": false,
+    "hidden": false,
+    "contactEmails": [],
+    "cspAllowedHosts": [],
+    "_id": "2b4c0194-c5b8-4d2d-a687-afab53a9efe5",
+    "name": "Test business",
+    "companyAddress": {
+      "_id": "b2be3817-f695-47e3-b4dc-e8436f23ee0e",
+      "country": "RU",
+      "createdAt": "2020-07-22T08:18:36.207Z",
+      "updatedAt": "2020-07-22T08:18:36.207Z"
+    },
+    "companyDetails": {
+      "_id": "23e62751-0a8a-4e19-9323-9d20d18dba09",
+      "status": "BUSINESS_STATUS_JUST_LOOKING",
+      "product": "BUSINESS_PRODUCT_RETAIL_B2C",
+      "industry": "BRANCHE_ELECTRONICS",
+      "createdAt": "2020-07-22T08:18:36.207Z",
+      "updatedAt": "2020-07-22T08:18:36.207Z"
+    },
+    "contactDetails": {
+      "_id": "dcf8f344-ed41-4ae3-b03d-01c4be9a5161",
+      "phone": "+7123",
+      "firstName": "Tom",
+      "lastName": "Huldt",
+      "createdAt": "2020-07-22T08:18:36.207Z",
+      "updatedAt": "2020-07-22T08:18:36.207Z"
+    },
+    "currency": "USD",
+    "themeSettings": {
+      "theme": "light",
+      "_id": "f5c0384d-69bc-4b4a-abee-de9bcd5a2bd2",
+      "updatedAt": "2020-09-01T05:36:19.764Z",
+      "createdAt": "2020-09-01T05:36:19.764Z"
+    },
+    "createdAt": "2020-07-22T08:18:36.207Z",
+    "updatedAt": "2020-09-11T16:55:23.240Z",
+    "__v": 0,
+    "taxes": {
+      "_id": "293c5951-adba-4c1f-95dc-9b81bb231d7d",
+      "companyRegisterNumber": "",
+      "taxId": "",
+      "taxNumber": "",
+      "turnoverTaxAct": false,
+      "updatedAt": "2020-08-19T06:03:56.972Z",
+      "createdAt": "2020-08-19T06:03:56.972Z"
+    },
+    "currentWallpaper": {
+      "theme": "default",
+      "_id": "5f4dddd300385d0012a431b1",
+      "auto": false
+    },
+    "email": "abiantgmbh@payever.de",
+    "userId": "21abcef8-186d-4197-a0c1-86b75035f00a"
+  },
+  {
+    "active": false,
+    "hidden": false,
+    "contactEmails": [],
+    "cspAllowedHosts": [],
+    "_id": "f2f87f63-c462-4e60-8042-d7d963ef4873",
+    "name": "Test transactions",
+    "companyAddress": {
+      "_id": "ef61069f-eff9-475f-9434-ede649fb4109",
+      "city": "Berlin",
+      "country": "DE",
+      "street": "Pariser Platz",
+      "zipCode": "10117",
+      "updatedAt": "2020-08-19T10:38:50.736Z",
+      "createdAt": "2020-08-19T10:38:50.736Z"
+    },
+    "companyDetails": {
+      "_id": "fd830340-ac0b-46d2-9edd-52050cb2b7f5",
+      "status": "BUSINESS_STATUS_JUST_LOOKING",
+      "product": "BUSINESS_PRODUCT_RETAIL_B2C",
+      "industry": "BRANCHE_ELECTRONICS",
+      "createdAt": "2020-07-22T12:53:33.592Z",
+      "updatedAt": "2020-07-22T12:53:33.592Z"
+    },
+    "contactDetails": {
+      "_id": "e8cfaaee-a705-48a1-a1cb-9888ae2a906c",
+      "phone": "+491234",
+      "firstName": "Tom",
+      "lastName": "Huldt",
+      "createdAt": "2020-07-22T12:53:33.593Z",
+      "updatedAt": "2020-07-22T12:53:33.593Z"
+    },
+    "currency": "EUR",
+    "themeSettings": {
+      "theme": "default",
+      "_id": "feeb3141-076c-4d60-9d35-b4ef9fdb3bba",
+      "createdAt": "2020-07-22T12:53:33.593Z",
+      "updatedAt": "2020-07-22T12:53:33.593Z"
+    },
+    "defaultLanguage": "de",
+    "createdAt": "2020-07-22T12:53:33.593Z",
+    "updatedAt": "2020-09-11T16:55:23.240Z",
+    "__v": 0,
+    "bankAccount": {
+      "_id": "746325e0-dddd-4a7c-933f-6bbc02cf01d6",
+      "country": "AQ",
+      "owner": "Test",
+      "updatedAt": "2020-08-19T10:39:54.813Z",
+      "createdAt": "2020-08-19T10:39:54.813Z"
+    },
+    "email": "abiantgmbh@payever.de",
+    "userId": "21abcef8-186d-4197-a0c1-86b75035f00a"
+  },
+  {
+    "active": false,
+    "hidden": false,
+    "contactEmails": [],
+    "cspAllowedHosts": [],
+    "_id": "d8eea152-4cb6-4f8b-a75a-0910dbcff847",
+    "name": "asdfasdf",
+    "companyAddress": {
+      "_id": "0fe53337-f4e6-4e23-a441-f5da5704f2a4",
+      "country": "DE",
+      "createdAt": "2020-07-30T19:28:49.860Z",
+      "updatedAt": "2020-07-30T19:28:49.860Z"
+    },
+    "companyDetails": {
+      "_id": "7c0cd961-668c-4678-89ec-591be59b63c5",
+      "status": "BUSINESS_STATUS_HAVE_IDEA",
+      "product": "BUSINESS_PRODUCT_RETAIL_B2C",
+      "industry": "BRANCHE_FASHION",
+      "createdAt": "2020-07-30T19:28:49.860Z",
+      "updatedAt": "2020-07-30T19:28:49.860Z"
+    },
+    "contactDetails": {
+      "_id": "51225cd0-c38e-4b21-9005-bc9d6199d42a",
+      "phone": "+491234567890",
+      "firstName": "Tom",
+      "lastName": "Huldt",
+      "createdAt": "2020-07-30T19:28:49.860Z",
+      "updatedAt": "2020-07-30T19:28:49.860Z"
+    },
+    "currency": "EUR",
+    "themeSettings": {
+      "theme": "default",
+      "_id": "a30d2ab7-9c47-4c7e-ac09-c86fe6167c6f",
+      "createdAt": "2020-07-30T19:28:49.861Z",
+      "updatedAt": "2020-07-30T19:28:49.861Z"
+    },
+    "defaultLanguage": "de",
+    "createdAt": "2020-07-30T19:28:49.861Z",
+    "updatedAt": "2020-09-11T16:55:23.240Z",
+    "__v": 0,
+    "email": "abiantgmbh@payever.de",
+    "userId": "21abcef8-186d-4197-a0c1-86b75035f00a"
+  },
+  {
+    "active": false,
+    "hidden": false,
+    "contactEmails": [
+      "adrian.rusin@payever.org"
+    ],
+    "cspAllowedHosts": [],
+    "_id": "2a7467b5-e0a2-4729-87e4-806567ee6f13",
+    "name": "own2",
+    "companyAddress": {
+      "_id": "06673016-56e8-4b4d-8d24-ee05d532606c",
+      "country": "US",
+      "createdAt": "2020-07-31T11:18:25.580Z",
+      "updatedAt": "2020-07-31T11:18:25.580Z"
+    },
+    "companyDetails": {
+      "_id": "ac7c87bd-7d90-4e69-92bc-84d2c29cf602",
+      "legalForm": "LEGAL_FORM_EG",
+      "employeesRange": {
+        "_id": "ee3845ef-d12f-4dca-828d-8d4497b207ed",
+        "min": 1,
+        "max": 5
+      },
+      "salesRange": {
+        "_id": "6a810fb1-4d57-4543-aae0-41ff961589e0",
+        "max": 0
+      },
+      "product": "BUSINESS_PRODUCT_RETAIL_B2C",
+      "industry": "BRANCHE_BOOKS",
+      "urlWebsite": "https://www.test.com",
+      "updatedAt": "2020-08-18T16:11:15.517Z",
+      "createdAt": "2020-08-18T16:11:15.517Z"
+    },
+    "contactDetails": {
+      "_id": "67cf06e5-fa3e-4544-8f81-cbd6e72222e1",
+      "salutation": "SALUTATION_MRS",
+      "firstName": "Tom",
+      "lastName": "Huldt",
+      "phone": null,
+      "fax": null,
+      "additionalPhone": null,
+      "updatedAt": "2020-08-19T14:09:52.376Z",
+      "createdAt": "2020-08-19T14:09:52.376Z"
+    },
+    "currency": "USD",
+    "themeSettings": {
+      "theme": "light",
+      "_id": "766e8354-1dab-49c9-a8dd-e27f3b3639dd",
+      "updatedAt": "2020-08-19T16:05:18.226Z",
+      "createdAt": "2020-08-19T16:05:18.226Z"
+    },
+    "defaultLanguage": "en",
+    "createdAt": "2020-07-31T11:18:25.582Z",
+    "updatedAt": "2020-09-11T16:55:23.240Z",
+    "__v": 0,
+    "logo": null,
+    "taxes": {
+      "_id": "130a05a1-6383-499f-bd2d-392716684c55",
+      "companyRegisterNumber": null,
+      "taxNumber": null,
+      "taxId": "",
+      "turnoverTaxAct": true,
+      "updatedAt": "2020-08-19T14:30:07.999Z",
+      "createdAt": "2020-08-19T14:30:07.999Z"
+    },
+    "currentWallpaper": {
+      "theme": "default",
+      "_id": "5f3d4dbeb6461f001290d52a",
+      "auto": false
+    },
+    "email": "abiantgmbh@payever.de",
+    "userId": "21abcef8-186d-4197-a0c1-86b75035f00a"
+  },
+  {
+    "active": false,
+    "hidden": false,
+    "contactEmails": [],
+    "cspAllowedHosts": [],
+    "_id": "c937ded2-792f-496a-bc50-82ec9caad334",
+    "name": "Abiant3",
+    "companyAddress": {
+      "_id": "39044792-5071-46d2-835f-1682432ece44",
+      "country": "RU",
+      "createdAt": "2020-08-07T14:37:59.197Z",
+      "updatedAt": "2020-08-07T14:37:59.197Z"
+    },
+    "companyDetails": {
+      "_id": "cff00c4d-af9c-4b47-937a-4d5a2e3cd523",
+      "status": "BUSINESS_STATUS_JUST_LOOKING",
+      "product": "BUSINESS_PRODUCT_RETAIL_B2C",
+      "industry": "BRANCHE_ELECTRONICS",
+      "createdAt": "2020-08-07T14:37:59.197Z",
+      "updatedAt": "2020-08-07T14:37:59.197Z"
+    },
+    "contactDetails": {
+      "_id": "0d53c0b3-e9d0-4506-9233-5c6474aefe97",
+      "phone": "+7123",
+      "firstName": "Tom",
+      "lastName": "Huldt",
+      "createdAt": "2020-08-07T14:37:59.198Z",
+      "updatedAt": "2020-08-07T14:37:59.198Z"
+    },
+    "currency": "USD",
+    "themeSettings": {
+      "theme": "default",
+      "_id": "88a9cd83-a08a-4c04-ae05-b29ba55b3773",
+      "updatedAt": "2020-09-02T14:56:20.661Z",
+      "createdAt": "2020-09-02T14:56:20.661Z"
+    },
+    "createdAt": "2020-08-07T14:37:59.198Z",
+    "updatedAt": "2020-09-11T16:55:23.240Z",
+    "__v": 0,
+    "documents": {
+      "_id": "7b4dbe4b-0870-4e04-867a-afbe615da088",
+      "commercialRegisterExcerptFilename": null,
+      "updatedAt": "2020-09-02T13:29:04.595Z",
+      "createdAt": "2020-09-02T13:29:04.595Z"
+    },
+    "currentWallpaper": {
+      "theme": "default",
+      "_id": "5f4fb294e63882001416419e",
+      "auto": false
+    },
+    "email": "abiantgmbh@payever.de",
+    "userId": "21abcef8-186d-4197-a0c1-86b75035f00a"
+  },
+  {
+    "active": false,
+    "hidden": false,
+    "contactEmails": [],
+    "cspAllowedHosts": [],
+    "_id": "9024bb88-a84e-480c-93e4-c8d339e0a226",
+    "name": "Payever",
+    "companyAddress": {
+      "_id": "3211b55b-0162-4ffb-98bb-d87a08b5d2ca",
+      "country": "US",
+      "createdAt": "2020-08-21T12:55:41.606Z",
+      "updatedAt": "2020-08-21T12:55:41.606Z"
+    },
+    "companyDetails": {
+      "_id": "03bbe0b1-ea5f-495d-b281-46af3c55e41b",
+      "businessStatus": "SOLO_ENTREPRENEUR",
+      "status": "BUSINESS_STATUS_JUST_LOOKING",
+      "salesRange": {
+        "_id": "75d1c388-97bf-465e-846a-7a38706b1fa6",
+        "max": 0
+      },
+      "product": "BUSINESS_PRODUCT_RETAIL_B2B",
+      "industry": "BRANCHE_ROBOTICS",
+      "phone": "+1+12063978921",
+      "employeesRange": null,
+      "foundationYear": null,
+      "createdAt": "2020-08-21T12:55:41.607Z",
+      "updatedAt": "2020-08-21T12:55:41.607Z"
+    },
+    "contactDetails": {
+      "_id": "640280fa-e86d-437c-b6c8-c6cc255e9247",
+      "firstName": "Tom",
+      "lastName": "Huldt",
+      "createdAt": "2020-08-21T12:55:41.607Z",
+      "updatedAt": "2020-08-21T12:55:41.607Z"
+    },
+    "currency": "USD",
+    "themeSettings": {
+      "theme": "default",
+      "_id": "2b1183c4-bbde-414a-8017-67072e06d763",
+      "createdAt": "2020-08-21T12:55:41.607Z",
+      "updatedAt": "2020-08-21T12:55:41.607Z"
+    },
+    "defaultLanguage": "en",
+    "createdAt": "2020-08-21T12:55:41.607Z",
+    "updatedAt": "2020-09-11T16:55:23.240Z",
+    "__v": 0,
+    "email": "abiantgmbh@payever.de",
+    "userId": "21abcef8-186d-4197-a0c1-86b75035f00a"
+  },
+  {
+    "active": false,
+    "hidden": false,
+    "contactEmails": [],
+    "cspAllowedHosts": [],
+    "_id": "250a1551-a8ca-441a-8fc0-6afcb10938eb",
+    "name": "test company",
+    "companyAddress": {
+      "_id": "044f3961-1e90-48ca-b2af-50f9f5d8fbb9",
+      "country": "DE",
+      "createdAt": "2020-08-27T14:17:48.805Z",
+      "updatedAt": "2020-08-27T14:17:48.805Z"
+    },
+    "companyDetails": {
+      "_id": "f726b55b-4789-41ef-8057-068bbf6d7327",
+      "status": "BUSINESS_STATUS_JUST_LOOKING",
+      "product": "BUSINESS_PRODUCT_RETAIL_B2B",
+      "industry": "BRANCHE_HEALTH",
+      "createdAt": "2020-08-27T14:17:48.805Z",
+      "updatedAt": "2020-08-27T14:17:48.805Z"
+    },
+    "contactDetails": {
+      "_id": "ac98d586-2790-4ad7-bbb0-6e4688fae714",
+      "phone": "+49206234234",
+      "firstName": "Tom",
+      "lastName": "Huldt",
+      "createdAt": "2020-08-27T14:17:48.805Z",
+      "updatedAt": "2020-08-27T14:17:48.805Z"
+    },
+    "currency": "EUR",
+    "themeSettings": {
+      "theme": "dark",
+      "_id": "c57c691f-704a-4240-b186-bf613f4e79d2",
+      "updatedAt": "2020-09-03T10:25:47.595Z",
+      "createdAt": "2020-09-03T10:25:47.595Z"
+    },
+    "defaultLanguage": "de",
+    "createdAt": "2020-08-27T14:17:48.806Z",
+    "updatedAt": "2020-09-11T16:55:23.240Z",
+    "__v": 0,
+    "currentWallpaper": {
+      "theme": "default",
+      "_id": "5f50c4abe638820014164742",
+      "auto": false
+    },
+    "email": "abiantgmbh@payever.de",
+    "userId": "21abcef8-186d-4197-a0c1-86b75035f00a"
+  },
+  {
+    "active": false,
+    "hidden": false,
+    "contactEmails": [],
+    "cspAllowedHosts": [],
+    "_id": "984891b9-4927-4217-9e8f-2b3350a225d7",
+    "name": "test 2",
+    "companyAddress": {
+      "_id": "21c470c8-c081-4fce-89cd-3a4eed2a5312",
+      "country": "DE",
+      "createdAt": "2020-08-27T14:59:32.289Z",
+      "updatedAt": "2020-08-27T14:59:32.289Z"
+    },
+    "companyDetails": {
+      "_id": "e34027cf-c7dd-433f-8c19-bdb0cf53d9bc",
+      "status": "BUSINESS_STATUS_JUST_LOOKING",
+      "product": "BUSINESS_PRODUCT_RETAIL_B2B",
+      "industry": "BRANCHE_FINISHING_PRODUTS",
+      "createdAt": "2020-08-27T14:59:32.289Z",
+      "updatedAt": "2020-08-27T14:59:32.289Z"
+    },
+    "contactDetails": {
+      "_id": "281f8074-eec9-442c-b48f-d4e884e63a85",
+      "phone": "+492312312321",
+      "firstName": "Tom",
+      "lastName": "Huldt",
+      "createdAt": "2020-08-27T14:59:32.289Z",
+      "updatedAt": "2020-08-27T14:59:32.289Z"
+    },
+    "currency": "EUR",
+    "themeSettings": {
+      "theme": "default",
+      "_id": "8b7c1839-6ee3-4683-9557-019942164112",
+      "updatedAt": "2020-08-27T15:42:30.774Z",
+      "createdAt": "2020-08-27T15:42:30.774Z"
+    },
+    "defaultLanguage": "de",
+    "createdAt": "2020-08-27T14:59:32.294Z",
+    "updatedAt": "2020-09-11T16:55:23.240Z",
+    "__v": 0,
+    "currentWallpaper": {
+      "theme": "default",
+      "_id": "5f47d466e638820014162a7d",
+      "auto": false
+    },
+    "email": "abiantgmbh@payever.de",
+    "userId": "21abcef8-186d-4197-a0c1-86b75035f00a"
+  },
+  {
+    "active": false,
+    "hidden": false,
+    "contactEmails": [],
+    "cspAllowedHosts": [],
+    "_id": "56fe5853-173a-43de-b613-011c590d74b3",
+    "name": "Abiant6",
+    "companyAddress": {
+      "_id": "fc58f71f-fd7a-472c-be80-5860d5be0f2c",
+      "country": "DE",
+      "createdAt": "2020-08-31T11:40:20.918Z",
+      "updatedAt": "2020-08-31T11:40:20.918Z"
+    },
+    "companyDetails": {
+      "_id": "d00e3fa5-6b17-4245-908f-5128f2e70a4c",
+      "status": "BUSINESS_STATUS_JUST_LOOKING",
+      "product": "BUSINESS_PRODUCT_RETAIL_B2C",
+      "industry": "BRANCHE_ELECTRONICS",
+      "createdAt": "2020-08-31T11:40:20.919Z",
+      "updatedAt": "2020-08-31T11:40:20.919Z"
+    },
+    "contactDetails": {
+      "_id": "55e0b199-1736-4be3-826e-ce8b81de4a64",
+      "phone": "+4912341234",
+      "firstName": "Tom",
+      "lastName": "Huldt",
+      "createdAt": "2020-08-31T11:40:20.919Z",
+      "updatedAt": "2020-08-31T11:40:20.919Z"
+    },
+    "currency": "EUR",
+    "themeSettings": {
+      "theme": "light",
+      "_id": "ae00900f-cac4-475b-95e5-329e416109d6",
+      "updatedAt": "2020-09-03T08:49:40.203Z",
+      "createdAt": "2020-09-03T08:49:40.203Z"
+    },
+    "defaultLanguage": "de",
+    "createdAt": "2020-08-31T11:40:20.919Z",
+    "updatedAt": "2020-09-11T16:55:23.240Z",
+    "__v": 0,
+    "currentWallpaper": {
+      "theme": "default",
+      "_id": "5f50ae2400385d0012a441a0",
+      "auto": false
+    },
+    "email": "abiantgmbh@payever.de",
+    "userId": "21abcef8-186d-4197-a0c1-86b75035f00a"
+  },
+  {
+    "active": false,
+    "hidden": false,
+    "contactEmails": [],
+    "cspAllowedHosts": [],
+    "_id": "2180b3e2-6354-4c77-ab2f-f1aefd6ea294",
+    "name": "Abiant10",
+    "companyAddress": {
+      "_id": "730f6fbe-40e1-4be9-a493-86064ce6a94a",
+      "country": "DE",
+      "createdAt": "2020-09-01T13:48:21.262Z",
+      "updatedAt": "2020-09-01T13:48:21.262Z"
+    },
+    "companyDetails": {
+      "_id": "8a58e70e-ca11-48c2-8a69-077be63642a7",
+      "status": "BUSINESS_STATUS_JUST_LOOKING",
+      "product": "BUSINESS_PRODUCT_RETAIL_B2C",
+      "industry": "BRANCHE_BABY",
+      "createdAt": "2020-09-01T13:48:21.262Z",
+      "updatedAt": "2020-09-01T13:48:21.262Z"
+    },
+    "contactDetails": {
+      "_id": "2071e75a-386a-4973-9529-12d1f09d083d",
+      "phone": "+4912341234",
+      "firstName": "Tom",
+      "lastName": "Huldt",
+      "createdAt": "2020-09-01T13:48:21.262Z",
+      "updatedAt": "2020-09-01T13:48:21.262Z"
+    },
+    "currency": "EUR",
+    "themeSettings": {
+      "theme": "dark",
+      "_id": "fe08c5e4-3b44-4304-9b77-c20d7a5f221f",
+      "updatedAt": "2020-09-02T14:35:03.538Z",
+      "createdAt": "2020-09-02T14:35:03.538Z"
+    },
+    "defaultLanguage": "de",
+    "createdAt": "2020-09-01T13:48:21.263Z",
+    "updatedAt": "2020-09-11T16:55:23.240Z",
+    "__v": 0,
+    "currentWallpaper": {
+      "theme": "default",
+      "_id": "5f4fad97e638820014164163",
+      "auto": false
+    },
+    "email": "abiantgmbh@payever.de",
+    "userId": "21abcef8-186d-4197-a0c1-86b75035f00a"
+  },
+  {
+    "active": false,
+    "hidden": false,
+    "contactEmails": [],
+    "cspAllowedHosts": [],
+    "_id": "98e37306-4626-425e-8683-c42bd72c6042",
+    "name": "Test",
+    "companyAddress": {
+      "_id": "fc7c4919-fdb3-4620-8fb3-8ffe8c381f27",
+      "country": "RU",
+      "createdAt": "2020-09-08T12:36:48.951Z",
+      "updatedAt": "2020-09-08T12:36:48.951Z"
+    },
+    "companyDetails": {
+      "_id": "c27140ea-e79e-47ea-a188-e8925b01820d",
+      "status": "BUSINESS_STATUS_JUST_LOOKING",
+      "product": "BUSINESS_PRODUCT_RETAIL_B2B",
+      "industry": "BRANCHE_MEASURE",
+      "createdAt": "2020-09-08T12:36:48.952Z",
+      "updatedAt": "2020-09-08T12:36:48.952Z"
+    },
+    "contactDetails": {
+      "_id": "ea88dffd-a045-42c2-85ce-21ec4347dc52",
+      "phone": "+7123123",
+      "firstName": "Tom",
+      "lastName": "Huldt",
+      "createdAt": "2020-09-08T12:36:48.952Z",
+      "updatedAt": "2020-09-08T12:36:48.952Z"
+    },
+    "currency": "USD",
+    "themeSettings": {
+      "theme": "default",
+      "_id": "860e284e-171c-4b1d-8e1f-3045df1a21a6",
+      "updatedAt": "2020-09-10T14:54:57.501Z",
+      "createdAt": "2020-09-10T14:54:57.501Z"
+    },
+    "createdAt": "2020-09-08T12:36:48.952Z",
+    "updatedAt": "2020-09-11T16:55:23.240Z",
+    "__v": 0,
+    "currentWallpaper": {
+      "theme": "default",
+      "_id": "5f5a3e41c17ca8001239fce1",
+      "auto": false
+    },
+    "email": "abiantgmbh@payever.de",
+    "userId": "21abcef8-186d-4197-a0c1-86b75035f00a"
+  }
+]

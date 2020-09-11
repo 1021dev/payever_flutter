@@ -9,7 +9,9 @@ import 'package:payever/commons/models/user.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
+import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
+import 'package:payever/dashboard/fake_dashboard_screen.dart';
 import 'package:payever/dashboard/sub_view/dashboard_menu_view.dart';
 import 'package:payever/login/login_screen.dart';
 import 'package:payever/settings/models/models.dart';
@@ -164,7 +166,10 @@ class _SettingScreenState extends State<SettingScreen> {
                 bottom: false,
                 child: BackgroundBase(
                   true,
-                  body: _body(state)
+                  body: Stack(children: <Widget>[
+                    FakeDashboardScreen(),
+                    BlurEffectView(child: _body(state)),
+                  ],)
                 ),
               ),
             ),

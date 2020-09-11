@@ -10,6 +10,7 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/dashboard/dashboard.dart';
 import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/commons.dart';
+import 'package:payever/commons/utils/standard_data.dart';
 import 'package:payever/connect/models/connect.dart';
 import 'package:payever/commons/models/fetchwallpaper.dart';
 import 'package:payever/products/models/models.dart';
@@ -61,6 +62,16 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
       yield* installBusinessApp(event.businessApp);
     } else if(event is WidgetInstallEvent) {
       yield* installWidget(event.appWidget);
+    } else if(event is AddStandardDataEvent) {
+      GlobalUtils.theme = 'dark';
+      yield state.copyWith(
+        currentWidgets: StandardData.currentWidgets,
+        businessWidgets: StandardData.businessWidgets,
+        businesses: StandardData.businesses,
+        activeBusiness: StandardData.activeBusiness,
+        user: StandardData.user,
+        curWall: 'https://payever.azureedge.net/images/commerceos-background.jpg'
+      );
     }
   }
 

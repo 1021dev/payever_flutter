@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,32 +5,15 @@ import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
-import 'package:payever/checkout/views/checkout_screen.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
-import 'package:payever/dashboard/edit_business_app_screen.dart';
-import 'package:payever/login/login_screen.dart';
-import 'package:payever/connect/views/connect_screen.dart';
-import 'package:payever/contacts/views/contacts_screen.dart';
-import 'package:payever/pos/views/pos_create_terminal_screen.dart';
-import 'package:payever/pos/views/pos_screen.dart';
-import 'package:payever/products/models/models.dart';
-import 'package:payever/products/views/product_detail_screen.dart';
-import 'package:payever/products/views/products_screen.dart';
 import 'package:payever/search/views/search_screen.dart';
-import 'package:payever/settings/views/general/language_screen.dart';
-import 'package:payever/settings/views/setting_screen.dart';
-import 'package:payever/settings/views/wallpaper/wallpaper_screen.dart';
-import 'package:payever/shop/views/shop_screen.dart';
-import 'package:payever/switcher/switcher_page.dart';
 import 'package:payever/theme.dart';
 import 'package:payever/transactions/transactions.dart';
-import 'package:payever/welcome/welcome_screen.dart';
 import 'package:payever/widgets/main_app_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import 'sub_view/dashboard_app_pos.dart';
 import 'sub_view/dashboard_business_apps_view.dart';
@@ -47,23 +29,22 @@ import 'sub_view/dashboard_tutorial_view.dart';
 
 class FakeDashboardScreen extends StatefulWidget {
 
-  final DashboardScreenBloc screenBloc;
   final String wallpaper;
   final bool registered;
   double mainWidth = 0;
 
-  FakeDashboardScreen({this.wallpaper, this.registered = false, this.screenBloc});
+  FakeDashboardScreen({this.wallpaper = '', this.registered = false,});
 
   @override
-  _FakeDashboardScreenState createState() => _FakeDashboardScreenState(screenBloc);
+  _FakeDashboardScreenState createState() => _FakeDashboardScreenState();
 }
 
 class _FakeDashboardScreenState extends State<FakeDashboardScreen> {
+  DashboardScreenBloc screenBloc = DashboardScreenBloc();
   String uiKit = '${Env.commerceOs}/assets/ui-kit/icons-png/';
   final GlobalKey<InnerDrawerState> _innerDrawerKey =
       GlobalKey<InnerDrawerState>();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final DashboardScreenBloc screenBloc;
   bool isLoaded = false;
   String searchString = '';
   TextEditingController searchController = TextEditingController();
@@ -72,10 +53,10 @@ class _FakeDashboardScreenState extends State<FakeDashboardScreen> {
   bool _isPortrait;
   bool _isTablet;
 
-  _FakeDashboardScreenState(this.screenBloc);
 
   @override
   void initState() {
+    screenBloc.add(AddStandardDataEvent());
     super.initState();
   }
 
@@ -114,6 +95,9 @@ class _FakeDashboardScreenState extends State<FakeDashboardScreen> {
   }
 
   Widget _showMain(BuildContext context, DashboardScreenState state) {
+    if (state.businessWidgets.isEmpty || state.currentWidgets.isEmpty) {
+      return Container();
+    }
     if (state.language != null) {
       Language.language = state.language;
       Language(context);
@@ -412,32 +396,25 @@ class _FakeDashboardScreenState extends State<FakeDashboardScreen> {
               child: Stack(
                 children: <Widget>[
                   Align(alignment: Alignment.center, child: _headerView(state)),
-                  RefreshIndicator(
-                    onRefresh: () {
-                      screenBloc
-                          .add(DashboardScreenInitEvent(wallpaper: state.curWall));
-                      return Future.delayed(Duration(seconds: 3));
-                    },
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: ListView.separated(
-                            padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
-                            itemCount: dashboardWidgets.length,
-                            itemBuilder: (context, index) {
-                              return dashboardWidgets[index];
-                            },
-                            separatorBuilder: (context, index) {
-                              return Divider(
-                                height: 8,
-                                thickness: 8,
-                                color: Colors.transparent,
-                              );
-                            },
-                          ),
+                  Column(
+                    children: [
+                      Expanded(
+                        child: ListView.separated(
+                          padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
+                          itemCount: dashboardWidgets.length,
+                          itemBuilder: (context, index) {
+                            return dashboardWidgets[index];
+                          },
+                          separatorBuilder: (context, index) {
+                            return Divider(
+                              height: 8,
+                              thickness: 8,
+                              color: Colors.transparent,
+                            );
+                          },
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -453,7 +430,7 @@ class _FakeDashboardScreenState extends State<FakeDashboardScreen> {
       children: [
         SizedBox(height: 60),
         Text(
-          'Welcome ${state.user.firstName ?? 'undefined'},',
+          'Welcome undefined',
           style: TextStyle(
             fontSize: 26,
             fontWeight: FontWeight.bold,

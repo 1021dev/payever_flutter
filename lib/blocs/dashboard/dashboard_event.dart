@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:payever/commons/commons.dart';
 
 abstract class DashboardScreenEvent extends Equatable {
@@ -22,6 +23,19 @@ class DashboardScreenInitEvent extends DashboardScreenEvent {
 }
 
 class DashboardScreenLoadDataEvent extends DashboardScreenEvent {}
+
+class AddStandardDataEvent extends DashboardScreenEvent {
+  final BuildContext context;
+  AddStandardDataEvent({
+    this.context,
+  });
+
+  @override
+  List<Object> get props => [
+    this.context,
+  ];
+
+}
 
 class FetchPosEvent extends DashboardScreenEvent {
   final Business business;

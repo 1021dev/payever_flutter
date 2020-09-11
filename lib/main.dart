@@ -7,6 +7,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/payever_bloc_delegate.dart';
 import 'package:payever/commons/commons.dart';
+import 'package:payever/commons/utils/standard_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 
@@ -51,6 +52,8 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    StandardData(context);
+    Language(context);
     return MultiProvider(
       providers: [
         Provider.value(value: globalStateModel),

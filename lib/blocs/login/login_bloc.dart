@@ -18,7 +18,9 @@ class LoginScreenBloc extends Bloc<LoginScreenEvent, LoginScreenState> {
 
   @override
   Stream<LoginScreenState> mapEventToState(LoginScreenEvent event) async* {
-    if (event is LoginEvent) {
+    if (event is FetchEnvEvent) {
+      yield* getEnv();
+    } else if (event is LoginEvent) {
       yield* login(event.email, event.password);
     } else if (event is FetchLoginCredentialsEvent) {
       FlutterSecureStorage storage = FlutterSecureStorage();
@@ -26,6 +28,19 @@ class LoginScreenBloc extends Bloc<LoginScreenEvent, LoginScreenState> {
       String password = await storage.read(key: GlobalUtils.PASSWORD) ?? '';
       yield state.copyWith(email: email, password: password);
       yield LoadedCredentialsState(username: email, password: password);
+    }
+  }
+
+  Stream<LoginScreenState> getEnv() async* {
+    yield state.copyWith(isLoading: true);
+    try {
+      var obj = await api.getEnv();
+      Env.map(obj);
+      yield state.copyWith(isLoading: false,);
+    } catch (error){
+      print(onError.toString());
+      yield state.copyWith(isLoading: false,);
+      yield LoginScreenFailure(error: error.toString());
     }
   }
 

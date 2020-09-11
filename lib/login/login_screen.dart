@@ -9,6 +9,7 @@ import 'package:payever/commons/models/version.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/global_keys.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
+import 'package:payever/dashboard/fake_dashboard_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:device_info/device_info.dart';
@@ -47,6 +48,7 @@ class _LoginState extends State<Login> {
   @override
   void initState() {
     super.initState();
+    loginScreenBloc.add(FetchEnvEvent());
     loginScreenBloc.add(FetchLoginCredentialsEvent());
     String fingerPrint = '${Platform.operatingSystem}  ${Platform.operatingSystemVersion}';
     GlobalUtils.fingerprint = fingerPrint;
@@ -127,9 +129,10 @@ class _LoginState extends State<Login> {
           fit: BoxFit.cover,
         ),
       ),
-      child: BlurEffectView(
-
-      ),
+      child: Stack(children: <Widget>[
+        state.isLoading ? Container() : FakeDashboardScreen(),
+        BlurEffectView(),
+      ],),
     );
   }
 

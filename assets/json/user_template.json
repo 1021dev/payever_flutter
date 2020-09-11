@@ -1,0 +1,24 @@
+{
+  "_id": "b3ea89ef-1b73-4e4c-a942-f04c6d9571ca",
+  "shippingAddresses": [
+    {
+      "_id": "5f43c25ed1b3790015492573",
+      "apartment": "",
+      "city": "a",
+      "country": "PL",
+      "street": "b",
+      "zipCode": "d"
+    }
+  ],
+  "firstName": "Tom",
+  "lastName": "Huldt",
+  "email": "abiantgmbh@payever.de",
+  "language": "en",
+  "createdAt": "2020-09-08T18:01:31.752Z",
+  "updatedAt": "2020-09-08T18:01:31.752Z",
+  "salutation": "SALUTATION_MR",
+  "phone": "+989122009994",
+  "birthday": "2001-10-02T00:00:00.000",
+  "logo": "50258a19-d747-4975-a542-9fb68e9c6e15-Tom_Hulme_Parkway_0355_pure_2_.jpg",
+  "hasUnfinishedBusinessRegistration": false
+}

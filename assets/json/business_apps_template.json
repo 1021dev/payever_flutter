@@ -1,0 +1,138 @@
+[
+  {
+    "__v": 0,
+    "createdAt": "2019-01-28T18:27:52.014Z",
+    "installed": true,
+    "default": true,
+    "_id": "24568b8d-2fbb-43cf-9ef1-9e1523219e32",
+    "type": "transactions",
+    "icon": "icon-commerceos-transactions-64.png",
+    "title": "Transactions",
+    "order": 120,
+    "helpUrl": "https://getpayever.com/transactions/"
+  },
+  {
+    "installed": true,
+    "default": true,
+    "_id": "9254aea5-d360-4f00-9430-81477e8e3ed5",
+    "type": "apps",
+    "title": "Apps",
+    "order": 110,
+    "helpUrl": "https://getpayever.com/apps/",
+    "icon": "icon-commerceos-applications-64.png"
+  },
+  {
+    "__v": 0,
+    "createdAt": "2019-01-28T18:27:52.014Z",
+    "installed": true,
+    "default": false,
+    "_id": "38a8aa9c-784c-4c4e-a603-7da71a446af3",
+    "type": "shop",
+    "icon": "icon-commerceos-store-64.png",
+    "title": "Shop",
+    "order": 100,
+    "helpUrl": "https://getpayever.com/shop/"
+  },
+  {
+    "createdAt": "2019-10-13T05:19:23.484Z",
+    "installed": false,
+    "default": false,
+    "_id": "e82c2960-21ad-405f-976d-2b8857714052",
+    "icon": "icon-commerceos-shipping-64.png",
+    "order": 100,
+    "title": "Shipping",
+    "type": "shipping"
+  },
+  {
+    "__v": 0,
+    "createdAt": "2019-01-28T18:27:52.014Z",
+    "installed": true,
+    "default": false,
+    "_id": "c4a68f1e-e8ac-418c-a6d0-acc1e906d9a9",
+    "type": "pos",
+    "icon": "icon-commerceos-pos-64.png",
+    "title": "Point of sale",
+    "order": 90,
+    "helpUrl": "https://getpayever.com/pos"
+  },
+  {
+    "__v": 0,
+    "createdAt": "2019-01-28T18:27:52.014Z",
+    "installed": true,
+    "default": true,
+    "_id": "0b53fcef-11a6-45ed-8579-7603aee42a7b",
+    "type": "checkout",
+    "icon": "icon-commerceos-checkout-64.png",
+    "title": "Checkout",
+    "order": 80,
+    "helpUrl": "https://getpayever.com/checkout/"
+  },
+  {
+    "__v": 0,
+    "createdAt": "2020-02-03T16:46:58.883Z",
+    "installed": false,
+    "default": false,
+    "_id": "336dcace-9249-40e4-94c8-b277a2bb3901",
+    "type": "studio",
+    "icon": "icon-commerceos-studio-64.png",
+    "title": "Payever Studio",
+    "order": 60
+  },
+  {
+    "__v": 0,
+    "createdAt": "2020-02-03T16:46:58.883Z",
+    "installed": true,
+    "default": false,
+    "_id": "c2971ecb-4da2-4adc-8268-d458e25dfdfc",
+    "type": "ads",
+    "icon": "icon-commerceos-ad-64.png",
+    "title": "Advertising",
+    "order": 50
+  },
+  {
+    "__v": 0,
+    "createdAt": "2019-01-28T18:27:52.014Z",
+    "installed": true,
+    "default": true,
+    "_id": "fe7d398c-194c-46ca-b00a-943d928919ba",
+    "type": "products",
+    "icon": "icon-commerceos-products-64.png",
+    "title": "Products",
+    "order": 30,
+    "helpUrl": "https://getpayever.com/products/"
+  },
+  {
+    "__v": 0,
+    "createdAt": "2019-01-28T18:27:52.014Z",
+    "installed": true,
+    "default": true,
+    "_id": "35c33640-cc49-47f3-b137-f6c0a110ae0a",
+    "type": "connect",
+    "icon": "icon-commerceos-connect-64.png",
+    "title": "Connect",
+    "order": 20,
+    "helpUrl": "https://getpayever.com/connect/"
+  },
+  {
+    "__v": 0,
+    "createdAt": "2019-01-28T18:27:52.014Z",
+    "installed": true,
+    "default": true,
+    "_id": "6c969c34-e79b-4ec5-b11b-ff45aff397e4",
+    "type": "settings",
+    "icon": "icon-commerceos-settings-64.png",
+    "title": "Settings",
+    "order": 10
+  },
+  {
+    "__v": 0,
+    "createdAt": "2019-01-28T18:27:52.014Z",
+    "installed": true,
+    "default": false,
+    "_id": "7ef6a850-ed59-41cc-9c6e-85bf6d0a310d",
+    "type": "tutorial",
+    "icon": "icon-commerceos-tutorial-40.png",
+    "title": "Tutorial",
+    "order": 0
+  }
+]

@@ -1,0 +1,102 @@
+{
+  "_id": "5c88a08a97c717d0682e2916",
+  "business": "d0de55b4-5a2a-41a9-a0de-f38256f541ee",
+  "__v": 0,
+  "createdAt": "2019-03-13T06:17:46.180Z",
+  "updatedAt": "2020-09-10T08:58:47.905Z",
+  "myWallpapers": [
+    {
+      "theme": "default",
+      "wallpaper": "9f187c94-f3b9-4450-aeec-63d4034786fd-Screenshot2019-03-13at14.02.10.png"
+    },
+    {
+      "theme": "default",
+      "wallpaper": "de00f4f0-c2ad-4476-a842-d403f6622f51-AdobeStock_168387417.jpeg"
+    },
+    {
+      "theme": "default",
+      "wallpaper": "23b179a9-c68e-40be-9f0c-28a40f8b92a5-AdobeStock_140708630.jpeg"
+    },
+    {
+      "theme": "default",
+      "wallpaper": "1fac992f-626c-4ff5-82ab-f8e037fc6798-AdobeStock_133928236.jpeg"
+    },
+    {
+      "theme": "default",
+      "wallpaper": "1bfaacdf-866a-40e2-9759-ac7bc0c499f2-AdobeStock_68210173-min.jpeg"
+    },
+    {
+      "theme": "default",
+      "wallpaper": "d4c08ec2-8b18-44e5-8eb0-2eecfac0342b-51acf4b0-829b-4715-b76d-229fffdfa61e-mediamarkt_er_ffnet_am_16_august_neuen_elektronikmarkt_im_schultheiss_quartier"
+    },
+    {
+      "theme": "default",
+      "wallpaper": "cfedb8e7-0c5c-4c41-b07e-75096827a84c-Ehinger_Kraftrad_Speedster_02_RGB_Kopie"
+    },
+    {
+      "theme": "default",
+      "wallpaper": "780eaafd-13e0-4fd9-b47e-2ea3b281b0ff-stmb_20466"
+    },
+    {
+      "theme": "default",
+      "wallpaper": "39f5007b-c45b-4229-94c6-1df627abd6fb-flaunter-com-nGKKhltw0ik-unsplash.jpg"
+    },
+    {
+      "theme": "default",
+      "wallpaper": "5cdf01bd-e805-4b50-b0ff-af9575fa199e-workspace_laptop_headphones_watch-wallpaper-2880x1800.jpg"
+    },
+    {
+      "theme": "default",
+      "_id": "5ec5030814615100131ec775",
+      "wallpaper": "baae6785-51aa-42b6-bbbb-a030e122039b-3578a5887907e4e38e9b786bbdc6b2a3.jpg"
+    },
+    {
+      "theme": "default",
+      "_id": "5f3b853c136aab00143eeba9",
+      "wallpaper": "09da05ba-7c95-4d49-8247-f6ff510c15f6-sample-photo.jpeg"
+    },
+    {
+      "theme": "default",
+      "_id": "5f3b8560089c7b00139f643c",
+      "wallpaper": "34e484a5-6609-4ef6-af1b-596a778ef1c4-sample-photo.jpeg"
+    },
+    {
+      "theme": "default",
+      "_id": "5f3b8f4e089c7b00139f644a",
+      "wallpaper": "ec5ed9d3-b14e-44e1-b17d-99a02c2ba84d-image_picker_998DB434-A343-4195-BE1F-405FAC8581B1-22521-00000CE23662C27F.jpg"
+    },
+    {
+      "theme": "default",
+      "_id": "5f3b906f136aab00143eebb6",
+      "wallpaper": "321da8cf-f657-4d9a-a4de-d9dc5fa606c9-image_picker_175BD58E-23AE-4366-A29B-3FCB693B23B0-30456-00000D2809ACBEC2.jpg"
+    },
+    {
+      "theme": "default",
+      "_id": "5f3b968b089c7b00139f645c",
+      "wallpaper": "fde6d1e2-003d-40a0-ad7a-82d7c8b9a354-image_picker_EF792496-2355-4514-998D-578D5CEC4D61-30279-000131FE8B91523F.jpg"
+    },
+    {
+      "theme": "light",
+      "_id": "5f3b9840136aab00143eebc9",
+      "wallpaper": "333659e0-8fee-4ce6-9987-fe353a8d3a86-OpenUpYourHeart.png"
+    },
+    {
+      "theme": "default",
+      "_id": "5f3b9dc9089c7b00139f6473",
+      "wallpaper": "4669d79b-175d-433b-8ef8-44a027fbefd5-image_picker_4315EE33-C0F2-4BF0-B907-C4A547EAEFA2-37360-0000103C61A4D88E.jpg"
+    },
+    {
+      "theme": "dark",
+      "_id": "5f4cfe99f30ad10013a78194",
+      "wallpaper": "e5301e5c-0326-4569-ab00-e649e0e0cf66-unnamed-3.jpg"
+    }
+  ],
+  "type": "custom",
+  "industry": "BRANCHE_ROBOTICS",
+  "product": "BUSINESS_PRODUCT_RETAIL_B2B",
+  "currentWallpaper": {
+    "theme": "default",
+    "_id": "5f59eac76bcb22001475fd7b",
+    "wallpaper": "e165fad6-3588-4cad-99b6-f1fe0dbdb726-black-and-white-car-classic-474.jpg"
+  }
+}

@@ -86,6 +86,11 @@ flutter:
   assets:
     - assets/images/
     - assets/json/currency.json
+    - assets/json/businesses_template.json
+    - assets/json/wallpapers_template.json
+    - assets/json/user_template.json
+    - assets/json/app_widgets_template.json
+    - assets/json/business_apps_template.json
     - assets/videos/phone_landscape.mp4
     - assets/videos/phone_portrait.mp4
     - assets/videos/tablet_landscape.mp4
