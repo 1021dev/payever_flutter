@@ -147,29 +147,24 @@ class _SettingScreenState extends State<SettingScreen> {
             onClose: () {
               _innerDrawerKey.currentState.toggle();
             },
-            scaffold: DefaultTabController(
-              length: 6,
-              initialIndex: 0,
-              child: Scaffold(
-                resizeToAvoidBottomPadding: false,
-                appBar: MainAppbar(
-                  dashboardScreenBloc: widget.dashboardScreenBloc,
-                  dashboardScreenState: widget.dashboardScreenBloc.state,
-                  title:
-                  Language.getCommerceOSStrings('info_boxes.settings.heading'),
-                  icon: SvgPicture.asset(
-                    'assets/images/setting.svg',
-                    width: 20,
-                    height: 20,
-                  ),
-                  innerDrawerKey: _innerDrawerKey,
+            scaffold: Scaffold(
+              appBar: MainAppbar(
+                dashboardScreenBloc: widget.dashboardScreenBloc,
+                dashboardScreenState: widget.dashboardScreenBloc.state,
+                title:
+                Language.getCommerceOSStrings('info_boxes.settings.heading'),
+                icon: SvgPicture.asset(
+                  'assets/images/setting.svg',
+                  width: 20,
+                  height: 20,
                 ),
-                body: SafeArea(
-                  bottom: false,
-                  child: BackgroundBase(
-                    true,
-                    body: _body(state)
-                  ),
+                innerDrawerKey: _innerDrawerKey,
+              ),
+              body: SafeArea(
+                bottom: false,
+                child: BackgroundBase(
+                  true,
+                  body: _body(state)
                 ),
               ),
             ),

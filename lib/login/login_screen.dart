@@ -96,389 +96,404 @@ class _LoginState extends State<Login> {
         child: BlocBuilder<LoginScreenBloc, LoginScreenState>(
             bloc: loginScreenBloc,
             builder: (BuildContext context, LoginScreenState state) {
-              return Container(
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: <Widget>[
-                    Container(
-                      height: MediaQuery.of(context).size.height,
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: NetworkImage(
-                            'https://payever.azureedge.net/images/commerceos-background.jpg',
-                          ),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      width: Measurements.width,
-                      padding: EdgeInsets.all(8),
-                      alignment: Alignment.center,
-                      child: SingleChildScrollView(
-                        physics: ScrollPhysics(),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            BlurEffectView (
-                              padding: EdgeInsets.fromLTRB(12, 55, 12, 55),
-                              color: Color.fromRGBO(67, 67, 67, 0.6),
-                              child: Column(
-                                children: <Widget>[
-                                  Center(
-                                    child: Container(
-                                        width: Measurements.width /
-                                            ((_isTablet
-                                                ? _widthFactorTablet
-                                                : _widthFactorPhone) *
-                                                2),
-                                        child: Image.asset(
-                                            'assets/images/logo-payever-white.png')),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                      top: (Measurements.height *
-                                          (_isTablet
-                                              ? _heightFactorTablet
-                                              : _heightFactorPhone)
-                                      ) / 1.5,
-                                    ),
-                                  ),
-                                  if (_isInvalidInformation)
-                                    Container(
-                                      padding: EdgeInsets.fromLTRB(15, 10, 8, 10),
-                                      decoration: BoxDecoration(
-                                        color: Color(0xffff644e),
-                                        borderRadius: BorderRadius.circular(6),
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          Icon(
-                                            Icons.warning,
-                                            color: Colors.white,
-                                          ),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          Flexible(
-                                            child: Text(
-                                              'Your account information was entered incorrectly.',
-                                              softWrap: true,
-                                              style: TextStyle(
-                                                  color: Colors.white, fontSize: 14),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  if (_isInvalidInformation)
-                                    SizedBox(
-                                      height: 6,
-                                    ),
-                                  Form(
-                                    key: formKey,
-                                    child: Center(
-                                        child: Column(
-                                          children: <Widget>[
-                                            Container(
-                                              padding: EdgeInsets.only(top: 1.0),
-                                              width: Measurements.width /
-                                                  (_isTablet
-                                                      ? _widthFactorPhone
-                                                      : _widthFactorPhone),
-                                              height: 55,
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  color: Colors.black.withOpacity(0.25),
-                                                  shape: BoxShape.rectangle,
-                                                  borderRadius: BorderRadius.only(
-                                                    topLeft: Radius.circular(8.0),
-                                                    topRight: Radius.circular(8.0),
-                                                  ),
-                                                ),
-                                                child: Padding(
-                                                  padding: EdgeInsets.only(
-                                                      left: _paddingText,
-                                                      right: _paddingText),
-                                                  child: TextFormField(
-                                                    controller: emailController,
-                                                    enabled: !state.isLoading,
-                                                    onSaved: (val) => _username = val,
-                                                    onChanged: (val) {
-                                                      setState(() {
-                                                        _isInvalidInformation = false;
-                                                      });
-                                                    },
-                                                    validator: (value) {
-                                                      if (value.isEmpty) {
-                                                        return 'Username or email is required!';
-                                                      }
-                                                      if (!value.contains('@')) {
-                                                        return 'Enter valid email address';
-                                                      }
-                                                      return null;
-                                                    },
-                                                    decoration: new InputDecoration(
-                                                      labelText: 'E-Mail Address',
-                                                      labelStyle: TextStyle(
-                                                        color: Colors.white70,
-                                                      ),
-                                                      border: InputBorder.none,
-                                                      contentPadding: _isTablet
-                                                          ? EdgeInsets.all(
-                                                          Measurements.height * 0.007,
-                                                      )
-                                                          : null,
-                                                    ),
-                                                    style: TextStyle(
-                                                      fontSize: 16,
-                                                      color: Colors.white,
-                                                    ),
-                                                    keyboardType:
-                                                    TextInputType.emailAddress,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Container(
-                                              padding: EdgeInsets.only(top: 1),
-                                              width: Measurements.width /
-                                                  (_isTablet
-                                                      ? _widthFactorPhone
-                                                      : _widthFactorPhone),
-                                              height: 55,
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  color: Colors.black.withOpacity(0.25),
-                                                  shape: BoxShape.rectangle,
-                                                ),
-                                                child: Container(
-                                                  child: Stack(
-                                                    alignment: Alignment.centerRight,
-                                                    children: <Widget>[
-                                                      Padding(
-                                                        padding: const EdgeInsets.only(
-                                                            left: _paddingText,
-                                                            right: _paddingText),
-                                                        child: TextFormField(
-                                                          controller: passwordController,
-                                                          enabled: !state.isLoading,
-                                                          onSaved: (val) => _password = val,
-                                                          onChanged: (val) {
-                                                            setState(() {
-                                                              _isInvalidInformation = false;
-                                                            });
-                                                          },
-                                                          validator: (value) {
-                                                            if (value.isEmpty) {
-                                                              return 'Password is required';
-                                                            }
-                                                            return null;
-                                                          },
-                                                          decoration: new InputDecoration(
-                                                            labelText: 'Password',
-                                                            labelStyle: TextStyle(
-                                                              color: Colors.white70,
-                                                            ),
-                                                            border: InputBorder.none,
-                                                            contentPadding: _isTablet
-                                                                ? EdgeInsets.all(
-                                                                Measurements.height *
-                                                                    0.007,
-                                                            )
-                                                                : null,
-                                                          ),
-                                                          obscureText: true,
-                                                          style: TextStyle(
-                                                            fontSize: 16,
-                                                            color: Colors.white,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        )),
-                                  ),
-                                  Center(
-                                      child: Container(
-                                        padding: EdgeInsets.only(top: 1),
-                                        width: Measurements.width /
-                                            (_isTablet
-                                                ? _widthFactorPhone
-                                                : _widthFactorPhone),
-                                        height: 55,
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            color: Colors.black.withOpacity(0.8),
-                                            shape: BoxShape.rectangle,
-                                            borderRadius: BorderRadius.only(
-                                              bottomLeft: Radius.circular(8.0),
-                                              bottomRight: Radius.circular(8.0),
-                                            ),
-                                          ),
-                                          child: !state.isLoading
-                                              ? InkWell(
-                                            key: GlobalKeys.loginButton,
-                                            child: Center(
-                                              child: Text(
-                                                'Login',
-                                                style: TextStyle(
-                                                  fontSize: 16,
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                            ),
-                                            onTap: () {
-                                              print('login');
-                                              _submit();
-                                            },
-                                          )
-                                              : Center(
-                                            child: Container(
-                                              width: 24,
-                                              height: 24,
-                                              child: CircularProgressIndicator(
-                                                strokeWidth: 2,
-                                                valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                        top: (Measurements.height *
-                                            (_isTablet
-                                                ? _heightFactorTablet
-                                                : _heightFactorPhone)) /
-                                            2),
-                                  ),
-                                  Container(
-                                    padding:
-                                    EdgeInsets.only(right: Measurements.width * 0.02),
-                                    child: InkWell(
-                                      child: Text(
-                                        'Forgot your password?',
-                                        style: TextStyle(
-                                          decoration: TextDecoration.underline,
-                                          fontSize: 14,
-                                          color: Color.fromRGBO(255, 255, 255, 0.6),
-                                        ),
-                                      ),
-                                      onTap: () {
-                                        _launchURL(GlobalUtils.FORGOT_PASS);
-                                      },
-                                    ),
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.only(top: 36, bottom: 15),
-                                    width: double.infinity,
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        Flexible(
-                                          child: Container(
-                                            height: 1,
-                                            color: Color.fromRGBO(120, 120, 125, 1),
-                                          ),
-                                        ),
-                                        Container(
-                                          padding: EdgeInsets.symmetric(horizontal: 10),
-                                            alignment: Alignment.center,
-                                            child: Text('or', style: TextStyle(color: Color.fromRGBO(120, 120, 125, 1), fontSize: 12),)),
-                                        Flexible(
-                                          child: Container(
-                                            height: 1,
-                                            color: Color.fromRGBO(120, 120, 125, 1),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  InkWell(
-                                    onTap: () {
-
-                                    },
-                                    child: Container(
-                                        height: 55,
-                                        decoration: BoxDecoration(
-                                          gradient: LinearGradient(
-                                            colors: [
-                                            Color.fromRGBO(237, 237, 244, 1),
-                                            Color.fromRGBO(174, 176, 183, 1)
-                                            ],
-                                            begin: Alignment.topCenter,
-                                            end: Alignment.bottomCenter,
-                                          ),
-                                          borderRadius: BorderRadius.circular(8),
-                                        ),
-                                      child: Center(child: Text('Sign Up', style: TextStyle(color: Colors.black, fontSize: 16),)),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Container(
-                      alignment: Alignment.bottomCenter,
-                      child: Container(
-                        width: 60,
-                        height: 40,
-                        padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
-                        child: Container(
-                          height: 30,
-                          padding: EdgeInsets.fromLTRB(4, 0, 4, 0),
-                          decoration: BoxDecoration(
-                            color: Color.fromRGBO(0, 0, 0, 0.6),
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              DropdownButton(
-                                value: 'EN',
-                                isDense: true,
-                                icon: Icon(
-                                  Icons.keyboard_arrow_down,
-                                  color: Colors.white.withAlpha(160),
-                                  size: 18,
-                                ),
-                                elevation: 4,
-                                style: TextStyle(
-                                    color: Colors.white.withAlpha(160),
-                                    fontSize: 12
-                                ),
-                                underline: Container(),
-                                onChanged: (val) {
-
-                                },
-                                items: <String>['EN', 'DE', 'NR', 'PL', 'UK'].map<DropdownMenuItem<String>>((String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value),
-                                  );
-                                }).toList(),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              );
+              return _getBody(state);
             }
         ),
+    );
+  }
+
+  Widget _getBody(LoginScreenState state) {
+    return Container(
+      child: Stack(
+        alignment: Alignment.center,
+        children: <Widget>[
+          _background(state),
+          _loginBody(state),
+          _selectLanguageBody(state),
+        ],
+      ),
+    );
+  }
+
+  Widget _background(LoginScreenState state) {
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: NetworkImage(
+            'https://payever.azureedge.net/images/commerceos-background.jpg',
+          ),
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: BlurEffectView(
+
+      ),
+    );
+  }
+
+  Widget _loginBody(LoginScreenState state) {
+    return Container(
+      width: Measurements.width /
+          (_isTablet
+              ? _widthFactorPhone
+              : _widthFactorPhone),
+      padding: EdgeInsets.all(8),
+      alignment: Alignment.center,
+      child: SingleChildScrollView(
+        physics: ScrollPhysics(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Column(
+              children: <Widget>[
+                Center(
+                  child: Container(
+                      width: Measurements.width /
+                          ((_isTablet
+                              ? _widthFactorTablet
+                              : _widthFactorPhone) *
+                              2),
+                      child: Image.asset(
+                          'assets/images/logo-payever-white.png')),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                    top: (Measurements.height *
+                        (_isTablet
+                            ? _heightFactorTablet
+                            : _heightFactorPhone)
+                    ) / 1.5,
+                  ),
+                ),
+                if (_isInvalidInformation)
+                  Container(
+                    padding: EdgeInsets.fromLTRB(15, 10, 8, 10),
+                    decoration: BoxDecoration(
+                      color: Color(0xffff644e),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.warning,
+                          color: Colors.white,
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Flexible(
+                          child: Text(
+                            'Your account information was entered incorrectly.',
+                            softWrap: true,
+                            style: TextStyle(
+                                color: Colors.white, fontSize: 14),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                if (_isInvalidInformation)
+                  SizedBox(
+                    height: 6,
+                  ),
+                Form(
+                  key: formKey,
+                  child: Center(
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                            padding: EdgeInsets.only(top: 1.0),
+
+                            height: 55,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.black.withOpacity(0.25),
+                                shape: BoxShape.rectangle,
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(8.0),
+                                  topRight: Radius.circular(8.0),
+                                ),
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                    left: _paddingText,
+                                    right: _paddingText),
+                                child: TextFormField(
+                                  controller: emailController,
+                                  enabled: !state.isLoading,
+                                  onSaved: (val) => _username = val,
+                                  onChanged: (val) {
+                                    setState(() {
+                                      _isInvalidInformation = false;
+                                    });
+                                  },
+                                  validator: (value) {
+                                    if (value.isEmpty) {
+                                      return 'Username or email is required!';
+                                    }
+                                    if (!value.contains('@')) {
+                                      return 'Enter valid email address';
+                                    }
+                                    return null;
+                                  },
+                                  decoration: new InputDecoration(
+                                    labelText: 'E-Mail Address',
+                                    labelStyle: TextStyle(
+                                      color: Colors.white70,
+                                    ),
+                                    border: InputBorder.none,
+                                    contentPadding: _isTablet
+                                        ? EdgeInsets.all(
+                                      Measurements.height * 0.007,
+                                    )
+                                        : null,
+                                  ),
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                  ),
+                                  keyboardType:
+                                  TextInputType.emailAddress,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            padding: EdgeInsets.only(top: 1),
+                            width: Measurements.width /
+                                (_isTablet
+                                    ? _widthFactorPhone
+                                    : _widthFactorPhone),
+                            height: 55,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.black.withOpacity(0.25),
+                                shape: BoxShape.rectangle,
+                              ),
+                              child: Container(
+                                child: Stack(
+                                  alignment: Alignment.centerRight,
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: _paddingText,
+                                          right: _paddingText),
+                                      child: TextFormField(
+                                        controller: passwordController,
+                                        enabled: !state.isLoading,
+                                        onSaved: (val) => _password = val,
+                                        onChanged: (val) {
+                                          setState(() {
+                                            _isInvalidInformation = false;
+                                          });
+                                        },
+                                        validator: (value) {
+                                          if (value.isEmpty) {
+                                            return 'Password is required';
+                                          }
+                                          return null;
+                                        },
+                                        decoration: new InputDecoration(
+                                          labelText: 'Password',
+                                          labelStyle: TextStyle(
+                                            color: Colors.white70,
+                                          ),
+                                          border: InputBorder.none,
+                                          contentPadding: _isTablet
+                                              ? EdgeInsets.all(
+                                            Measurements.height *
+                                                0.007,
+                                          )
+                                              : null,
+                                        ),
+                                        obscureText: true,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )),
+                ),
+                Center(
+                  child: Container(
+                    padding: EdgeInsets.only(top: 1),
+                    width: Measurements.width /
+                        (_isTablet
+                            ? _widthFactorPhone
+                            : _widthFactorPhone),
+                    height: 55,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.8),
+                        shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(8.0),
+                          bottomRight: Radius.circular(8.0),
+                        ),
+                      ),
+                      child: !state.isLoading
+                          ? InkWell(
+                        key: GlobalKeys.loginButton,
+                        child: Center(
+                          child: Text(
+                            'Login',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        onTap: () {
+                          print('login');
+                          _submit();
+                        },
+                      )
+                          : Center(
+                        child: Container(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                      top: (Measurements.height *
+                          (_isTablet
+                              ? _heightFactorTablet
+                              : _heightFactorPhone)) /
+                          2),
+                ),
+                Container(
+                  padding:
+                  EdgeInsets.only(right: Measurements.width * 0.02),
+                  child: InkWell(
+                    child: Text(
+                      'Forgot your password?',
+                      style: TextStyle(
+                        decoration: TextDecoration.underline,
+                        fontSize: 14,
+                        color: Colors.white,
+                      ),
+                    ),
+                    onTap: () {
+                      _launchURL(GlobalUtils.FORGOT_PASS);
+                    },
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 36, bottom: 15),
+                  width: double.infinity,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Flexible(
+                        child: Container(
+                          height: 1,
+                          color: Colors.white,
+                        ),
+                      ),
+                      Container(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          alignment: Alignment.center,
+                          child: Text('or', style: TextStyle(color: Colors.white, fontSize: 14),)),
+                      Flexible(
+                        child: Container(
+                          height: 1,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+
+                  },
+                  child: Container(
+                    height: 55,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Color.fromRGBO(237, 237, 244, 1),
+                          Color.fromRGBO(174, 176, 183, 1)
+                        ],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Center(child: Text('Sign Up', style: TextStyle(color: Colors.black, fontSize: 16),)),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _selectLanguageBody(LoginScreenState state) {
+    return Container(
+      alignment: Alignment.bottomCenter,
+      child: Container(
+        width: 60,
+        height: 40,
+        padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
+        child: Container(
+          height: 30,
+          padding: EdgeInsets.fromLTRB(4, 0, 4, 0),
+          decoration: BoxDecoration(
+            color: Color.fromRGBO(0, 0, 0, 0.6),
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              DropdownButton(
+                value: 'EN',
+                isDense: true,
+                icon: Icon(
+                  Icons.keyboard_arrow_down,
+                  color: Colors.white.withAlpha(160),
+                  size: 18,
+                ),
+                elevation: 4,
+                style: TextStyle(
+                    color: Colors.white.withAlpha(160),
+                    fontSize: 12
+                ),
+                underline: Container(),
+                onChanged: (val) {
+
+                },
+                items: <String>['EN', 'DE', 'NR', 'PL', 'UK'].map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -537,7 +552,6 @@ class _LoginState extends State<Login> {
         }
         );
   }
-
 }
 
 class LoginScreen extends StatelessWidget {
