@@ -248,7 +248,7 @@ class _ShopScreenState extends State<ShopScreen> {
 
   Widget _toolBar(ShopScreenState state) {
     return Container(
-      height: 44,
+      height: 50,
       color: Colors.black87,
       child: Row(
         children: <Widget>[

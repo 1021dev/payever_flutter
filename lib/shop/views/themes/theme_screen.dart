@@ -272,8 +272,8 @@ class _ThemesScreenState extends State<ThemesScreen> {
             ),
           )
         : Container(
-            height: 64,
-            color: Color(0xFF212122),
+            height: 50,
+            color: overlaySecondAppBar(),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,

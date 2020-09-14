@@ -8,12 +8,11 @@ class ShopTopButton extends StatelessWidget {
   final int index;
 
   ShopTopButton({
-    Key key,
     this.onTap,
     this.selectedIndex = 0,
     this.title = '',
     this.index,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +20,7 @@ class ShopTopButton extends StatelessWidget {
       child: Material(
         color: index == selectedIndex ? Colors.white10: Colors.transparent,
         child: index == 0 ? Container(
-          height: 44,
+          height: 50,
           constraints:  BoxConstraints(minWidth: 44, maxWidth: 100),
           alignment: Alignment.center,
           padding: EdgeInsets.only(left: 8, right: 8),
@@ -37,7 +36,7 @@ class ShopTopButton extends StatelessWidget {
             ),
           ),
         ): Container(
-          height: 44,
+          height: 50,
           alignment: Alignment.center,
           padding: EdgeInsets.only(left: 8, right: 8),
           child: Text(

@@ -164,7 +164,7 @@ Color overlaySwitcherBackground() {
 
 Color overlayFilterViewBackground() {
   if (GlobalUtils.theme == 'dark') {
-    return Color.fromRGBO(5, 5, 5, 1);
+    return Color.fromRGBO(30, 30, 30, 1);
   } else if (GlobalUtils.theme == 'light') {
     return Color.fromRGBO(227, 227, 227, 1);
   } else {

@@ -228,7 +228,7 @@ class _CheckoutSwitchScreenState extends State<CheckoutSwitchScreen> {
                 height: 64.0 * (isDefault ? 1.0 : 3.0) + MediaQuery.of(context).padding.bottom,
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
-                  color: overlayBackground(),
+                  color: overlayFilterViewBackground(),
                   borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12)),
                 ),
                 padding: EdgeInsets.only(top: 16),
@@ -459,34 +459,38 @@ class CheckoutCell extends StatelessWidget {
             Container(
               height: 36,
               child: selected.id == checkout.id ? Row(
+                mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  MaterialButton(
-                    minWidth: 0,
-                    onPressed: () {
+                  InkWell(
+                    onTap: () {
                       onOpen(checkout);
                     },
-                    height: 20,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    color: overlayBackground(),
-                    child: Text(
-                      'Open',
-                      style: TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w500,
+                    child: Container(
+                      height: 20,
+                      alignment: Alignment.center,
+                      padding: EdgeInsets.symmetric(horizontal: 12),
+                      decoration: BoxDecoration(
+                        color: overlayBackground(),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Text(
+                        'Open',
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                   ),
-                  Flexible(
-                    child: MaterialButton(
-                      onPressed: () {
-                        onMore(checkout);
-                      },
-                      minWidth: 0,
+                  SizedBox(width: 10,),
+                  InkWell(
+                    onTap: () {
+                      onMore(checkout);
+                    },
+                    child: Container(
                       height: 20,
-                      shape: RoundedRectangleBorder(
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Icon(

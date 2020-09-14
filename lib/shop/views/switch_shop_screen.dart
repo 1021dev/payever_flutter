@@ -290,7 +290,7 @@ class _SwitchShopScreenState extends State<SwitchShopScreen> {
                 height: 64.0 * 2 + MediaQuery.of(context).padding.bottom,
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
-                  color: overlayColor(),
+                  color: overlayFilterViewBackground(),
                   borderRadius: BorderRadius.all(Radius.circular(15)),
                 ),
                 padding: EdgeInsets.only(top: 16),
@@ -427,39 +427,47 @@ class ShopCell extends StatelessWidget {
             ),
             Container(
               height: 36,
+              alignment: Alignment.center,
               child: selected.id == shopModel.id ? Row(
+                mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  MaterialButton(
-                    minWidth: 0,
-                    onPressed: () {
+                  InkWell(
+                    onTap: () {
                       onOpen(shopModel);
                     },
-                    height: 20,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    color: overlayBackground(),
-                    child: Text(
-                      'Open',
-                      style: TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w500,
+                    child: Container(
+                      alignment: Alignment.center,
+                      height: 20,
+                      padding: EdgeInsets.symmetric(horizontal: 12,),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: overlayBackground(),
+                      ),
+
+                      child: Text(
+                        'Open',
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                   ),
+                  SizedBox(width: 10,),
                   Flexible(
-                    child: MaterialButton(
-                      onPressed: () {
+                    child: InkWell(
+                      onTap: () {
                         onMore(shopModel);
                       },
-                      minWidth: 0,
-                      height: 20,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Icon(
-                        Icons.more_horiz,
-                        size: 16,
+                      child: Container(
+                        height: 20,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Icon(
+                          Icons.more_horiz,
+                          size: 16,
+                        ),
                       ),
                     ),
                   ),
