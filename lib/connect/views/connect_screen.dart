@@ -241,8 +241,8 @@ class _ConnectScreenState extends State<ConnectScreen> {
           ' ${Language.getConnectStrings('categories.${state.selectedCategory}.title')}';
     }
     return Container(
-      height: 64,
-      color: overlayBackground(),
+      height: 50,
+      color: overlaySecondAppBar(),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
@@ -325,7 +325,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    color: overlayBackground().withOpacity(1),
+                    color: overlayFilterViewBackground(),
                     itemBuilder: (BuildContext context) {
                       return appBarPopUpActions(context, state)
                           .map((ConnectPopupButton item) {

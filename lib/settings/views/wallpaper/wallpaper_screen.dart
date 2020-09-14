@@ -160,7 +160,7 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
   Widget _secondAppBar(SettingScreenState state) {
     return Container(
       height: 50,
-      color: overlayBackground(),
+      color: overlaySecondAppBar(),
       child: Row(
         children: [
           SizedBox(
@@ -232,7 +232,7 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),
-            color: overlayBackground().withOpacity(1),
+            color: overlayFilterViewBackground(),
             itemBuilder: (BuildContext context) {
               return appBarPopUpActions(context, state)
                   .map((OverflowMenuItem item) {

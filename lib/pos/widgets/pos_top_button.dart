@@ -21,7 +21,7 @@ class PosTopButton extends StatelessWidget {
       child: Material(
         color: index == selectedIndex ? Colors.white10: Colors.transparent,
         child: index == 0 ? Container(
-          height: 44,
+          height: 50,
           constraints:  BoxConstraints(minWidth: 44, maxWidth: 100),
           alignment: Alignment.center,
           padding: EdgeInsets.only(left: 8, right: 8),
@@ -37,7 +37,7 @@ class PosTopButton extends StatelessWidget {
             ),
           ),
         ): Container(
-          height: 44,
+          height: 50,
           alignment: Alignment.center,
           padding: EdgeInsets.only(left: 8, right: 8),
           child: Text(

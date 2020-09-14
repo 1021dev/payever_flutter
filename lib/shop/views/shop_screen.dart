@@ -299,7 +299,7 @@ class _ShopScreenState extends State<ShopScreen> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),
-            color: overlayBackground().withOpacity(1),
+            color: overlayFilterViewBackground(),
             itemBuilder: (BuildContext context) {
               return appBarPopUpActions(context, state)
                   .map((OverflowMenuItem item) {
@@ -571,7 +571,7 @@ class _ShopScreenState extends State<ShopScreen> {
                       child: Text(
                         'Open',
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 14,
                           fontWeight: FontWeight.w500,
                         ),
                       ),

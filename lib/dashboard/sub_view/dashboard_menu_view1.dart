@@ -57,7 +57,7 @@ class DashboardMenuView1 extends StatelessWidget {
           margin: EdgeInsets.only(top: _isPortrait ? 46 : 0),
           padding: EdgeInsets.symmetric(horizontal: _isPortrait ? 20 : 40),
           decoration: BoxDecoration(
-            color: overlayColor().withOpacity(1),
+            color: overlayFilterViewBackground(),
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(20.0),
               topRight: Radius.circular(20.0),

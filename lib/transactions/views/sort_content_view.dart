@@ -20,7 +20,7 @@ class SortContentView extends StatelessWidget {
         body: Container(
           padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
           decoration: BoxDecoration(
-            color: overlayColor(),
+            color: overlayFilterViewBackground(),
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(20.0),
               topRight: Radius.circular(20.0),

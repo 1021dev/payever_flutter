@@ -394,8 +394,8 @@ class _PosScreenState extends State<PosScreen> {
 
   Widget _toolBar(PosScreenState state) {
     return Container(
-      height: 44,
-      color: Colors.black87,
+      height: 50,
+      color: overlaySecondAppBar(),
       child: Row(
         children: <Widget>[
           PosTopButton(
@@ -445,7 +445,7 @@ class _PosScreenState extends State<PosScreen> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),
-            color: overlayBackground().withOpacity(1),
+            color: overlayFilterViewBackground(),
             itemBuilder: (BuildContext context) {
               return appBarPopUpActions(context, state)
                   .map((OverflowMenuItem item) {

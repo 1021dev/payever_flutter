@@ -49,7 +49,7 @@ class _FilterContentViewState extends State<FilterContentView> {
         body: Container(
           padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
           decoration: BoxDecoration(
-            color: overlayBackground(),
+            color: overlayFilterViewBackground(),
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(20.0),
               topRight: Radius.circular(20.0),

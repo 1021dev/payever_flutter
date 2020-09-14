@@ -112,7 +112,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
     return Container(
       height: 50,
       width: double.infinity,
-      color: overlayBackground(),
+      color: overlaySecondAppBar(),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
@@ -146,7 +146,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
-              color: overlayBackground().withOpacity(1),
+              color: overlayFilterViewBackground(),
               itemBuilder: (BuildContext context) {
                 return (isEmployee ? appBarEmployeePopUpActions(context, state): appBarGroupPopUpActions(context, state)).map((MenuItem item) {
                   return PopupMenuItem<MenuItem>(
@@ -294,7 +294,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
-              color: overlayBackground().withOpacity(1),
+              color: overlayFilterViewBackground(),
               itemBuilder: (BuildContext context) {
                 return (isEmployee ? appBarEmployeeTablePopUpActions(context, state) : appBarGroupTablePopUpActions(context, state))
                     .map((MenuItem item) {
@@ -568,7 +568,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
         ),
         child: Container(
           decoration: BoxDecoration(
-            color: overlayBackground().withOpacity(1),
+            color: overlayFilterViewBackground(),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Row(
@@ -606,7 +606,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
-                color: overlayBackground().withOpacity(1),
+                color: overlayFilterViewBackground(),
                 itemBuilder: (BuildContext context) {
                   return (isEmployee ? selectEmployeePopUpActions(context, state) : selectGroupPopUpActions(context, state)).map((MenuItem item) {
                     return PopupMenuItem<MenuItem>(

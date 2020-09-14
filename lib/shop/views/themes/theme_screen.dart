@@ -96,8 +96,8 @@ class _ThemesScreenState extends State<ThemesScreen> {
         '${themeListModels.length} themes in ${_getCollections(state)}';
     return selectedCount == 0
         ? Container(
-            height: 64,
-            color: Color(0xFF212122),
+            height: 50,
+            color: overlaySecondAppBar(),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -237,7 +237,7 @@ class _ThemesScreenState extends State<ThemesScreen> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          color: overlayBackground().withOpacity(1),
+                          color: overlayFilterViewBackground(),
                           itemBuilder: (BuildContext context) {
                             return gridListPopUpActions((grid) => {
                               setState(() {

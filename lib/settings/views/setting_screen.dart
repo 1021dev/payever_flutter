@@ -166,7 +166,7 @@ class _SettingScreenState extends State<SettingScreen> {
                 bottom: false,
                 child: BackgroundBase(
                   true,
-                  body: BlurEffectView(child: _body(state))
+                  body: _body(state)
                 ),
               ),
             ),

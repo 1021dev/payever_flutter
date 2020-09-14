@@ -188,7 +188,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
             children: [
               Container(
                 height: 50,
-                color: overlayBackground(),
+                color: overlaySecondAppBar(),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

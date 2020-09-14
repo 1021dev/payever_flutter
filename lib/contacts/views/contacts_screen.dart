@@ -374,8 +374,8 @@ class _ContactScreenState extends State<ContactScreen> {
     }
     itemsString = '${state.contactLists.length} items';
     return selectedCount == 0 ? Container(
-          height: 64,
-          color: Color(0xFF212122),
+          height: 50,
+          color: overlaySecondAppBar(),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
@@ -511,7 +511,7 @@ class _ContactScreenState extends State<ContactScreen> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        color: overlayBackground().withOpacity(1),
+                        color: overlayFilterViewBackground(),
                         itemBuilder: (BuildContext context) {
                           return sortPopup(context, state)
                               .map((ConnectPopupButton item) {
@@ -541,7 +541,7 @@ class _ContactScreenState extends State<ContactScreen> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        color: overlayBackground().withOpacity(1),
+                        color: overlayFilterViewBackground(),
                         itemBuilder: (BuildContext context) {
                           return appBarPopUpActions(context, state)
                               .map((ConnectPopupButton item) {

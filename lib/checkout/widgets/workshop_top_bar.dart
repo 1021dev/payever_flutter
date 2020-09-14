@@ -27,7 +27,7 @@ class _WorkshopTopBarState extends State<WorkshopTopBar> {
   Widget build(BuildContext context) {
     return Container(
       height: 50,
-      color: Colors.black87,
+      color: overlaySecondAppBar(),
       child: Row(
         children: <Widget>[
           SizedBox(
@@ -96,7 +96,7 @@ class _WorkshopTopBarState extends State<WorkshopTopBar> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
-              color: overlayBackground().withOpacity(1),
+              color: overlayFilterViewBackground(),
               itemBuilder: (BuildContext context) {
                 return _morePopup(context).map((CheckOutPopupButton item) {
                   return PopupMenuItem<CheckOutPopupButton>(

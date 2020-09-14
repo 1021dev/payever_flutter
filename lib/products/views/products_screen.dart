@@ -455,7 +455,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
       children: <Widget>[
         Container(
           height: 50,
-          color: Color(0xFF212122),
+          color: overlaySecondAppBar(),
           child: Row(
             children: <Widget>[
               Flexible(
@@ -513,7 +513,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                         padding: EdgeInsets.only(right: 8),
                         child: InkWell(
                           onTap: () {
-                            showModalBottomSheet<void>(
+                            showCupertinoModalPopup(
                               context: context,
                               builder: (BuildContext context) {
                                 return ProductSortContentView(
@@ -549,7 +549,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  color: overlayBackground().withOpacity(1),
+                  color: overlayFilterViewBackground(),
                   itemBuilder: (BuildContext context) {
                     return gridListPopUpActions(
                       (grid) => {
@@ -911,7 +911,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   height: 64.0 * 2.0 + MediaQuery.of(context).padding.bottom,
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
-                    color: overlayBackground().withOpacity(1),
+                    color: overlayFilterViewBackground(),
                     borderRadius: BorderRadius.all(Radius.circular(15)),
                   ),
                   padding: EdgeInsets.only(top: 16),

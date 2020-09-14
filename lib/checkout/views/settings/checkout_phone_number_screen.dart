@@ -154,7 +154,7 @@ class _CheckoutPhoneNumberScreenState extends State<CheckoutPhoneNumberScreen> {
                       widget.checkout.settings.phoneNumber = phoneNum;
                       widget.settingBloc.add(UpdateCheckoutSettingsEvent());
                     },
-                    color: overlayBackground().withOpacity(1),
+                    color: overlayFilterViewBackground(),
                     child: state.isUpdating
                         ? CircularProgressIndicator(
                       strokeWidth: 2,

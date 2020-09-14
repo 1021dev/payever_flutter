@@ -138,6 +138,16 @@ Color overlayBackground() {
   }
 }
 
+Color overlaySecondAppBar() {
+  if (GlobalUtils.theme == 'dark') {
+    return Color(0xFF212122);
+  } else if (GlobalUtils.theme == 'light') {
+    return Color(0xFF212122);
+  } else {
+    return Color(0xFF212122);
+  }
+}
+
 Color overlayButtonBackground() {
   if (GlobalUtils.theme == 'dark') {
     return Color.fromRGBO(255, 255, 255, 0.1);
@@ -150,11 +160,11 @@ Color overlayButtonBackground() {
 
 Color overlayFilterViewBackground() {
   if (GlobalUtils.theme == 'dark') {
-    return Color.fromRGBO(255, 255, 255, 0.1);
+    return Color.fromRGBO(5, 5, 5, 1);
   } else if (GlobalUtils.theme == 'light') {
     return Color.fromRGBO(227, 227, 227, 1);
   } else {
-    return Color.fromRGBO(255, 255, 255, 0.1);
+    return Color.fromRGBO(40, 40, 40, 1);
   }
 }
 
