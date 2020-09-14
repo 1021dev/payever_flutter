@@ -177,7 +177,7 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                   widget.isLoading ? Container(
                     height: 50,
                     child: Center(
-                      child: CircularProgressIndicator(),
+                      child: CircularProgressIndicator(strokeWidth: 2,),
                     ),
                   ):
                   widget.activeTerminal == null ? Container(

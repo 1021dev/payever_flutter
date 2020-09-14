@@ -8,7 +8,6 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/models/version.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/global_keys.dart';
-import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/dashboard/fake_dashboard_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -129,10 +128,11 @@ class _LoginState extends State<Login> {
           fit: BoxFit.cover,
         ),
       ),
-      child: Stack(children: <Widget>[
-        state.isLoading ? Container() : FakeDashboardScreen(),
-        BlurEffectView(),
-      ],),
+      child: Stack(
+        children: <Widget>[
+          state.isLoading ? Container() : FakeDashboardScreen(),
+        ],
+      ),
     );
   }
 
@@ -209,11 +209,10 @@ class _LoginState extends State<Login> {
                         children: <Widget>[
                           Container(
                             padding: EdgeInsets.only(top: 1.0),
-
                             height: 55,
                             child: Container(
                               decoration: BoxDecoration(
-                                color: Colors.black.withOpacity(0.25),
+                                color: Colors.black.withOpacity(0.6),
                                 shape: BoxShape.rectangle,
                                 borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(8.0),
@@ -226,7 +225,7 @@ class _LoginState extends State<Login> {
                                     right: _paddingText),
                                 child: TextFormField(
                                   controller: emailController,
-                                  enabled: !state.isLoading,
+                                  enabled: !state.isLogIn,
                                   onSaved: (val) => _username = val,
                                   onChanged: (val) {
                                     setState(() {
@@ -273,7 +272,7 @@ class _LoginState extends State<Login> {
                             height: 55,
                             child: Container(
                               decoration: BoxDecoration(
-                                color: Colors.black.withOpacity(0.25),
+                                color: Colors.black.withOpacity(0.6),
                                 shape: BoxShape.rectangle,
                               ),
                               child: Container(
@@ -286,7 +285,7 @@ class _LoginState extends State<Login> {
                                           right: _paddingText),
                                       child: TextFormField(
                                         controller: passwordController,
-                                        enabled: !state.isLoading,
+                                        enabled: !state.isLogIn,
                                         onSaved: (val) => _password = val,
                                         onChanged: (val) {
                                           setState(() {
@@ -337,14 +336,21 @@ class _LoginState extends State<Login> {
                     height: 55,
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.8),
                         shape: BoxShape.rectangle,
+                        gradient: LinearGradient(
+                          colors: [
+                            Color.fromRGBO(47, 47, 47, 1),
+                            Color.fromRGBO(0, 0, 0, 1)
+                          ],
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                        ),
                         borderRadius: BorderRadius.only(
                           bottomLeft: Radius.circular(8.0),
                           bottomRight: Radius.circular(8.0),
                         ),
                       ),
-                      child: !state.isLoading
+                      child: !state.isLogIn
                           ? InkWell(
                         key: GlobalKeys.loginButton,
                         child: Center(

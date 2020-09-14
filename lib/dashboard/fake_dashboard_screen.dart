@@ -109,7 +109,17 @@ class _FakeDashboardScreenState extends State<FakeDashboardScreen> {
       onClose: () {
         _innerDrawerKey.currentState.toggle();
       },
-      scaffold: _body(state),
+      scaffold: Stack(children: <Widget>[
+        _body(state),
+        BlurEffectView(
+          blur: 6.5,
+          color: Colors.black,
+        ),
+        BlurEffectView(
+          blur: 6.5,
+          color: Colors.black,
+        ),
+      ],),
     );
   }
 
@@ -152,7 +162,7 @@ class _FakeDashboardScreenState extends State<FakeDashboardScreen> {
       dashboardWidgets.add(DashboardTransactionsView(
         appWidget: appWidget,
         businessApps: businessApp,
-        isLoading: state.isInitialScreen,
+        isLoading: false,
         total: state.total,
         lastMonth: state.lastMonth,
         lastYear: state.lastYear,
@@ -206,7 +216,7 @@ class _FakeDashboardScreenState extends State<FakeDashboardScreen> {
         notifications = state.notifications['pos'];
       }
       dashboardWidgets.add(DashboardAppPosView(
-        isLoading: state.isPosLoading,
+        isLoading: false,
         businessApps: businessApp,
         appWidget: appWidget,
         terminals: state.terminalList,

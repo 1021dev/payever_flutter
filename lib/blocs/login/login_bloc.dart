@@ -45,7 +45,7 @@ class LoginScreenBloc extends Bloc<LoginScreenEvent, LoginScreenState> {
   }
 
   Stream<LoginScreenState> login(String email, String password) async* {
-    yield state.copyWith(isLoading: true);
+    yield state.copyWith(isLogIn: true);
     try {
       var obj = await api.getEnv();
       Env.map(obj);
@@ -66,11 +66,11 @@ class LoginScreenBloc extends Bloc<LoginScreenEvent, LoginScreenState> {
 
       GlobalUtils.activeToken = tokenData;
 
-      yield state.copyWith(isLoading: false);
+      yield state.copyWith(isLogIn: false);
       yield LoginScreenSuccess();
     } catch (error){
       print(onError.toString());
-      yield state.copyWith(isLoading: false,);
+      yield state.copyWith(isLogIn: false,);
       yield LoginScreenFailure(error: error.toString());
     }
   }
