@@ -28,7 +28,6 @@ class SearchResultBusinessView extends StatelessWidget {
                   Text(
                     business.name,
                     style: TextStyle(
-                      color: Colors.white,
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
                     ),
@@ -36,7 +35,6 @@ class SearchResultBusinessView extends StatelessWidget {
                   Text(
                     business.email,
                     style: TextStyle(
-                      color: Colors.white70,
                       fontSize: 12,
                       fontWeight: FontWeight.normal,
                     ),

@@ -42,7 +42,6 @@ class SearchResultTransactionView extends StatelessWidget {
                           collection.originalId,
                           maxLines: 1,
                           style: TextStyle(
-                            color: Colors.white,
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
                           ),
@@ -53,7 +52,6 @@ class SearchResultTransactionView extends StatelessWidget {
                               collection.customerName,
                               maxLines: 1,
                               style: TextStyle(
-                                color: Colors.white70,
                                 fontSize: 12,
                                 fontWeight: FontWeight.normal,
                               ),
@@ -64,7 +62,6 @@ class SearchResultTransactionView extends StatelessWidget {
                             Text(
                               '$symbol${collection.total}',
                               style: TextStyle(
-                                color: Colors.white70,
                                 fontSize: 12,
                                 fontWeight: FontWeight.normal,
                               ),

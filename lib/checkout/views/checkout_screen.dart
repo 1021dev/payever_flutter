@@ -28,7 +28,9 @@ import 'package:payever/dashboard/sub_view/dashboard_menu_view1.dart';
 import 'package:payever/login/login_screen.dart';
 import 'package:payever/notifications/notifications_screen.dart';
 import 'package:payever/search/views/search_screen.dart';
+import 'package:payever/shop/widgets/shop_top_button.dart';
 import 'package:payever/theme.dart';
+import 'package:payever/widgets/main_app_bar.dart';
 import 'package:provider/provider.dart';
 
 import 'channels/channels_checkout_flow_screen.dart';
@@ -351,37 +353,119 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   Widget _body(CheckoutScreenState state) {
     iconSize = _isTablet ? 120: 80;
     margin = _isTablet ? 24: 16;
-    return DefaultTabController(
-      length: 6,
-      initialIndex: 0,
-      child: Scaffold(
-        backgroundColor: overlayBackground(),
-        resizeToAvoidBottomPadding: false,
-        appBar: _appBar(state),
-        body: SafeArea(
-          bottom: false,
-          child: BackgroundBase(
-            true,
-            body: TabBarView(
-              physics: NeverScrollableScrollPhysics(),
-              children: <Widget>[
-                _getBody(state, 0),
-                _getBody(state, 1),
-                _getBody(state, 2),
-                _getBody(state, 3),
-                _getBody(state, 4),
-                _getBody(state, 5),
-              ],
-            ),
+    return Scaffold(
+      backgroundColor: overlayBackground(),
+      appBar: MainAppbar(
+        dashboardScreenBloc: widget.dashboardScreenBloc,
+        dashboardScreenState: widget.dashboardScreenBloc.state,
+        title: Language.getCommerceOSStrings('dashboard.apps.checkout'),
+        icon: SvgPicture.asset(
+          'assets/images/checkout.svg',
+          height: 20,
+          width: 20,
+        ),
+        innerDrawerKey: _innerDrawerKey,
+      ),
+      body: SafeArea(
+        bottom: false,
+        child: BackgroundBase(
+          true,
+          body: Column(
+            children: <Widget>[
+              _toolBar(state),
+              Expanded(child: _getBody(state)),
+            ],
           ),
         ),
       ),
     );
   }
 
-  Widget _getBody(CheckoutScreenState state, int index) {
+  Widget _toolBar(CheckoutScreenState state) {
+    String defaultCheckoutTitle = '-';
+    if (state.defaultCheckout != null) {
+      defaultCheckoutTitle = state.defaultCheckout.name;
+    }
+    return Container(
+      height: 50,
+      width: double.infinity,
+      color: Colors.black87,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: <Widget>[
+            ShopTopButton(
+              title: defaultCheckoutTitle,
+              selectedIndex: selectedIndex,
+              index: 0,
+              onTap: () {
+                setState(() {
+                  selectedIndex = 0;
+                });
+              },
+            ),
+            ShopTopButton(
+              title: Language.getPosConnectStrings('integrations.payments.instant_payment.category'),
+              selectedIndex: selectedIndex,
+              index: 1,
+              onTap: () {
+                screenBloc.add(GetPaymentConfig());
+                setState(() {
+                  selectedIndex = 1;
+                });
+              },
+            ),
+            ShopTopButton(
+              title: Language.getWidgetStrings('widgets.checkout.channels'),
+              index: 2,
+              selectedIndex: selectedIndex,
+              onTap: () {
+                screenBloc.add(GetChannelConfig());
+                setState(() {
+                  selectedIndex = 2;
+                });
+              },
+            ),
+            ShopTopButton(
+              title: Language.getCommerceOSStrings('dashboard.apps.connect'),
+              selectedIndex: selectedIndex,
+              index: 3,
+              onTap: () {
+                screenBloc.add(GetConnectConfig());
+                setState(() {
+                  selectedIndex = 3;
+                });
+              },
+            ),
+            ShopTopButton(
+              title: Language.getPosConnectStrings('Sections'),
+              selectedIndex: selectedIndex,
+              index: 4,
+              onTap: () {
+                screenBloc.add(GetSectionDetails());
+                setState(() {
+                  selectedIndex = 4;
+                });
+              },
+            ),
+            ShopTopButton(
+              title: Language.getConnectStrings('categories.communications.main.titles.settings'),
+              selectedIndex: selectedIndex,
+              index: 5,
+              onTap: () {
+                setState(() {
+                  selectedIndex = 5;
+                });
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
-    switch (index) {
+  Widget _getBody(CheckoutScreenState state) {
+    switch (selectedIndex) {
       case 0:
         return state.isLoading ?
         Center(
