@@ -90,18 +90,20 @@ class _ConnectCategoriesScreenState extends State<ConnectCategoriesScreen> {
                     height: 44,
                     constraints: BoxConstraints.expand(height: 44),
                     child: SizedBox(
-                      child: MaterialButton(
-                        onPressed: () {
+                      child: InkWell(
+                        onTap: () {
                           widget.screenBloc.add(ConnectCategorySelected(category: selectedCategory));
                           Navigator.pop(context);
                         },
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        color: overlayButtonBackground(),
-                        elevation: 0,
-                        child: Text(
-                          'Done',
+                        child: Container(
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: overlayFilterViewBackground(),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                            'Done',
+                          ),
                         ),
                       ),
                     ),
@@ -131,7 +133,7 @@ class _ConnectCategoriesScreenState extends State<ConnectCategoriesScreen> {
                             height: 44,
                             padding: EdgeInsets.all(8),
                             decoration: BoxDecoration(
-                              color: selectedCategory == category ? overlayBackground(): Colors.transparent,
+                              color: selectedCategory == category ? overlayButtonBackground(): Colors.transparent,
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Row(

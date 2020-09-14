@@ -389,7 +389,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
                               child: SvgPicture.asset(
                                 Measurements.channelIcon(category),
                                 height: 32,
-                                color: iconColor(),
+
                               ),
                             ),
                             Padding(

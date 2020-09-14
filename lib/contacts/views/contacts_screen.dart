@@ -574,8 +574,8 @@ class _ContactScreenState extends State<ContactScreen> {
             ],
           ),
     ): Container(
-      height: 64,
-      color: Color(0xFF212122),
+      height: 50,
+      color: overlaySecondAppBar(),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -651,7 +651,7 @@ class _ContactScreenState extends State<ContactScreen> {
                     }
                   },
                   child: Icon(
-                    selectedCount == state.contactLists.length ? Icons.check_circle_outline : Icons.radio_button_unchecked,
+                    selectedCount == state.contactLists.length ? Icons.check_circle_outline : Icons.radio_button_unchecked, color: Colors.white,
                   ),
                 ),
                 Padding(
@@ -660,6 +660,7 @@ class _ContactScreenState extends State<ContactScreen> {
                 Text(
                   'Contacts',
                   style: TextStyle(
+                    color: Colors.white,
                     fontFamily: 'Helvetica Neue',
                     fontSize: 14,
                   ),

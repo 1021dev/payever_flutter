@@ -104,16 +104,19 @@ class _ContactsFilterScreenState extends State<ContactsFilterScreen> {
                   height: 44,
                   constraints: BoxConstraints.expand(height: 44),
                   child: SizedBox(
-                    child: MaterialButton(
-                      onPressed: () {
+                    child: InkWell(
+                      onTap: () {
                         Navigator.pop(context);
                       },
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      color: overlayButtonBackground(),
-                      child: Text(
-                        'Done',
+                      child: Container(
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: overlayFilterViewBackground(),
+                        ),
+                        child: Text(
+                          'Done',
+                        ),
                       ),
                     ),
                   ),

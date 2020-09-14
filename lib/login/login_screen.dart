@@ -161,7 +161,7 @@ class _LoginState extends State<Login> {
                               : _widthFactorPhone) *
                               2),
                       child: Image.asset(
-                          'assets/images/logo-payever-white.png')),
+                          'assets/images/logo-payever-${GlobalUtils.theme == 'light' ? 'black' : 'white'}.png')),
                 ),
                 Padding(
                   padding: EdgeInsets.only(
@@ -390,7 +390,7 @@ class _LoginState extends State<Login> {
                       style: TextStyle(
                         decoration: TextDecoration.underline,
                         fontSize: 14,
-                        color: Colors.white,
+                        color: GlobalUtils.theme == 'light' ? Color.fromRGBO(150, 150, 150, 1) : Colors.white,
                       ),
                     ),
                     onTap: () {
@@ -407,17 +407,17 @@ class _LoginState extends State<Login> {
                       Expanded(
                         child: Container(
                           height: 1,
-                          color: Colors.white,
+                          color: GlobalUtils.theme == 'light' ? Color.fromRGBO(150, 150, 150, 1) : Colors.white,
                         ),
                       ),
                       Container(
                           padding: EdgeInsets.symmetric(horizontal: 10),
                           alignment: Alignment.center,
-                          child: Text('or', style: TextStyle(color: Colors.white, fontSize: 14),)),
+                          child: Text('or', style: TextStyle(color: GlobalUtils.theme == 'light' ? Color.fromRGBO(150, 150, 150, 1) : Colors.white, fontSize: 14),)),
                       Expanded(
                         child: Container(
                           height: 1,
-                          color: Colors.white,
+                          color: GlobalUtils.theme == 'light' ? Color.fromRGBO(150, 150, 150, 1) : Colors.white,
                         ),
                       ),
                     ],

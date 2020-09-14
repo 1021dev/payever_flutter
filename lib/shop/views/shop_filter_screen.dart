@@ -109,21 +109,23 @@ class _ShopFilterScreenState extends State<ShopFilterScreen> {
             height: 44,
             constraints: BoxConstraints.expand(height: 44),
             child: SizedBox(
-              child: MaterialButton(
-                onPressed: () async {
+              child: InkWell(
+                onTap: () async {
                   widget.screenBloc.add(ShopCategorySelected(
                       category: selectedCategory,
                       subCategories: subCategories));
                   Navigator.pop(context);
                 },
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                elevation: 0,
-                color: overlayButtonBackground(),
-                child: Text(
-                  'Done',
-                  style: TextStyle(color: iconColor()),
+                child: Container(
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: overlayFilterViewBackground(),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    'Done',
+                    style: TextStyle(color: iconColor()),
+                  ),
                 ),
               ),
             ),
@@ -141,7 +143,8 @@ class _ShopFilterScreenState extends State<ShopFilterScreen> {
                       });
                     },
                     child: Container(
-                      padding: EdgeInsets.only(left: 24),
+                      margin: EdgeInsets.symmetric(horizontal: 16),
+                      padding: EdgeInsets.only(left: 8),
                       height: 44,
                       child: Row(
                         children: <Widget>[
@@ -163,7 +166,7 @@ class _ShopFilterScreenState extends State<ShopFilterScreen> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: _divider(),
                   ),
                   GestureDetector(
@@ -174,8 +177,9 @@ class _ShopFilterScreenState extends State<ShopFilterScreen> {
                       });
                     },
                     child: Container(
+                      margin: EdgeInsets.symmetric(horizontal: 16),
                       alignment: Alignment.centerLeft,
-                      padding: EdgeInsets.only(left: 24),
+                      padding: EdgeInsets.only(left: 8),
                       height: 44,
                       child: Text(
                         'All Themes',
@@ -193,7 +197,7 @@ class _ShopFilterScreenState extends State<ShopFilterScreen> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: _divider(),
                   ),
                   ListView.separated(
@@ -230,10 +234,13 @@ class _ShopFilterScreenState extends State<ShopFilterScreen> {
                                     ),
                                   ),
                                   Spacer(),
-                                  Icon(
-                                    isSelected(category)
-                                        ? Icons.clear
-                                        : Icons.add,
+                                  Visibility(
+                                    visible: getMainCategory(category).isNotEmpty,
+                                    child: Icon(
+                                      isSelected(category)
+                                          ? Icons.clear
+                                          : Icons.add,
+                                    ),
                                   ),
                                 ],
                               ),

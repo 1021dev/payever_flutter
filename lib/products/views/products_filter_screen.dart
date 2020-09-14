@@ -93,7 +93,7 @@ class _ProductsFilterScreenState extends State<ProductsFilterScreen> {
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
-                          color: overlayButtonBackground(),
+                          color: overlayFilterViewBackground(),
                         ),
                         child: Text(
                           'Done',

@@ -56,11 +56,9 @@ class ContactListItem extends StatelessWidget {
               margin: EdgeInsets.all(10),
               child: contact.isChecked ? Icon(
                 Icons.check_circle_outline,
-                color: Colors.white60,
                 size: 24,
               ) : Icon(
                 Icons.radio_button_unchecked,
-                color: Colors.white60,
                 size: 24,
               ),
             ),
@@ -75,7 +73,6 @@ class ContactListItem extends StatelessWidget {
                     child: Text(
                       '$firstName $lastName',
                       style: TextStyle(
-                        color: Colors.white,
                         fontFamily: 'HelveticaNeueMed',
                         fontSize: 14,
                       ),
@@ -123,7 +120,6 @@ class ContactListItem extends StatelessWidget {
                       child: Text(
                         Language.getPosConnectStrings('integrations.actions.open'),
                         style: TextStyle(
-                          color: Colors.white,
                           fontFamily: 'HelveticaNeueMed',
                           fontSize: 14,
                         ),

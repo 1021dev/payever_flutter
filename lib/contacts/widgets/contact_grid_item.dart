@@ -96,7 +96,6 @@ class ContactGridItem extends StatelessWidget {
                               maxLines: 1,
                               minFontSize: 8,
                               style: TextStyle(
-                                  color: Colors.white,
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500,
                                   fontFamily: 'Roboto-Medium'
@@ -108,7 +107,6 @@ class ContactGridItem extends StatelessWidget {
                               maxLines: 1,
                               minFontSize: 8,
                               style: TextStyle(
-                                  color: Colors.white,
                                   fontSize: 11,
                                   fontFamily: 'Roboto'
                               ),
