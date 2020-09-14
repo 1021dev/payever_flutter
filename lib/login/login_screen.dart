@@ -405,7 +405,7 @@ class _LoginState extends State<Login> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Flexible(
+                      Expanded(
                         child: Container(
                           height: 1,
                           color: Colors.white,
@@ -415,7 +415,7 @@ class _LoginState extends State<Login> {
                           padding: EdgeInsets.symmetric(horizontal: 10),
                           alignment: Alignment.center,
                           child: Text('or', style: TextStyle(color: Colors.white, fontSize: 14),)),
-                      Flexible(
+                      Expanded(
                         child: Container(
                           height: 1,
                           color: Colors.white,

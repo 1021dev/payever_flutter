@@ -819,7 +819,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
     if (state.productsInfo == null) {
       return Container();
     }
-    return isGridMode ? gridBody(state) : listBody(state);
+    return isGridMode ? gridBody(state) : _listBody(state);
   }
 
   Widget gridBody(ProductsScreenState state) {
@@ -1048,7 +1048,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
     }
   }
 
-  Widget listBody(ProductsScreenState state) {
+  Widget _listBody(ProductsScreenState state) {
     return state.isProductMode
         ? SmartRefresher(
             enablePullDown: true,
@@ -1058,9 +1058,15 @@ class _ProductsScreenState extends State<ProductsScreen> {
             ),
             footer: CustomFooter(
               loadStyle: LoadStyle.ShowWhenLoading,
-              height: 1,
+              height: 60,
               builder: (context, status) {
-                return Container();
+                return Container(
+                  child: Center(child: Container(
+                    margin: EdgeInsets.only(top: 20),
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 1,))),
+                );
               },
             ),
             controller: _productsRefreshController,
@@ -1471,7 +1477,10 @@ class _ProductsScreenState extends State<ProductsScreen> {
 
   void _loadMoreProducts(ProductsScreenState state) async {
     print('Load more products');
-    if (state.productsInfo.page == state.productsInfo.pageCount) return;
+    if (state.productsInfo.page == state.productsInfo.pageCount) {
+      _productsRefreshController.loadComplete();
+      return;
+    }
     screenBloc.add(ProductsLoadMoreEvent());
     await Future.delayed(Duration(seconds: 0, milliseconds: 1000));
     _productsRefreshController.loadComplete();

@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:page_transition/page_transition.dart';
@@ -55,6 +54,7 @@ class DashboardMenuView1 extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: Container(
+          margin: EdgeInsets.only(top: _isPortrait ? 46 : 0),
           padding: EdgeInsets.symmetric(horizontal: _isPortrait ? 20 : 40),
           decoration: BoxDecoration(
             color: overlayColor().withOpacity(1),
