@@ -9,13 +9,37 @@ import 'package:payever/commons/models/version.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/global_keys.dart';
 import 'package:payever/dashboard/fake_dashboard_screen.dart';
-import 'package:payever/theme.dart';
+import 'package:payever/login/register_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:device_info/device_info.dart';
 import 'package:page_transition/page_transition.dart';
 
 import '../switcher/switcher_page.dart';
+
+
+class LoginScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
+    Measurements.height = (_isPortrait
+        ? MediaQuery.of(context).size.height
+        : MediaQuery.of(context).size.width);
+    Measurements.width = (_isPortrait
+        ? MediaQuery.of(context).size.width
+        : MediaQuery.of(context).size.height);
+    _isTablet = Measurements.width < 600 ? false : true;
+    if (_isTablet)
+      Measurements.width = Measurements.width * 0.5;
+
+    return Scaffold(
+      key: scaffoldKey,
+      body: Login(),
+      resizeToAvoidBottomPadding: !_isPortrait,
+    );
+  }
+}
+
 
 final double _heightFactorTablet = 0.05;
 final double _heightFactorPhone = 0.07;
@@ -153,16 +177,14 @@ class _LoginState extends State<Login> {
           children: <Widget>[
             Column(
               children: <Widget>[
-                Center(
-                  child: Container(
-                      width: Measurements.width /
-                          ((_isTablet
-                              ? _widthFactorTablet
-                              : _widthFactorPhone) *
-                              2),
-                      child: Image.asset(
-                          'assets/images/logo-payever-${GlobalUtils.theme == 'light' ? 'black' : 'white'}.png')),
-                ),
+                Container(
+                    width: Measurements.width /
+                        ((_isTablet
+                            ? _widthFactorTablet
+                            : 1.5) *
+                            2),
+                    child: Image.asset(
+                        'assets/images/logo-payever-${GlobalUtils.theme == 'light' ? 'black' : 'white'}.png')),
                 Padding(
                   padding: EdgeInsets.only(
                     top: (Measurements.height *
@@ -209,7 +231,6 @@ class _LoginState extends State<Login> {
                       child: Column(
                         children: <Widget>[
                           Container(
-                            padding: EdgeInsets.only(top: 1.0),
                             height: 55,
                             child: Container(
                               decoration: BoxDecoration(
@@ -425,7 +446,13 @@ class _LoginState extends State<Login> {
                 ),
                 InkWell(
                   onTap: () {
-
+                    Navigator.push(
+                        context,
+                        PageTransition(
+                          type: PageTransitionType.fade,
+                          child: RegisterInitScreen(logInScreenBloc: loginScreenBloc),
+                        )
+                    );
                   },
                   child: Container(
                     height: 55,
@@ -553,27 +580,5 @@ class _LoginState extends State<Login> {
           );
         }
         );
-  }
-}
-
-class LoginScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
-    Measurements.height = (_isPortrait
-        ? MediaQuery.of(context).size.height
-        : MediaQuery.of(context).size.width);
-    Measurements.width = (_isPortrait
-        ? MediaQuery.of(context).size.width
-        : MediaQuery.of(context).size.height);
-    _isTablet = Measurements.width < 600 ? false : true;
-    if (_isTablet)
-      Measurements.width = Measurements.width * 0.5;
-
-    return Scaffold(
-      key: scaffoldKey,
-      body: Login(),
-      resizeToAvoidBottomPadding: !_isPortrait,
-    );
   }
 }
