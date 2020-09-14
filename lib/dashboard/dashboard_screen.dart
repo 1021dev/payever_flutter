@@ -1130,21 +1130,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           .add(DashboardScreenInitEvent(wallpaper: state.curWall));
                       return Future.delayed(Duration(seconds: 3));
                     },
-                    child: Expanded(
-                      child: ListView.separated(
-                        padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
-                        itemCount: dashboardWidgets.length,
-                        itemBuilder: (context, index) {
-                          return dashboardWidgets[index];
-                        },
-                        separatorBuilder: (context, index) {
-                          return Divider(
-                            height: 8,
-                            thickness: 8,
-                            color: Colors.transparent,
-                          );
-                        },
-                      ),
+                    child: ListView.separated(
+                      padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
+                      itemCount: dashboardWidgets.length,
+                      itemBuilder: (context, index) {
+                        return dashboardWidgets[index];
+                      },
+                      separatorBuilder: (context, index) {
+                        return Divider(
+                          height: 8,
+                          thickness: 8,
+                          color: Colors.transparent,
+                        );
+                      },
                     ),
                   ),
                 ],

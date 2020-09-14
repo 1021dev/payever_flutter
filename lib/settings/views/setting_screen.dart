@@ -166,10 +166,7 @@ class _SettingScreenState extends State<SettingScreen> {
                 bottom: false,
                 child: BackgroundBase(
                   true,
-                  body: Stack(children: <Widget>[
-                    FakeDashboardScreen(),
-                    BlurEffectView(child: _body(state)),
-                  ],)
+                  body: BlurEffectView(child: _body(state))
                 ),
               ),
             ),

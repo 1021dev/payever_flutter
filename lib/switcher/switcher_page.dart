@@ -11,6 +11,7 @@ import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/commons/views/custom_elements/custom_elements.dart';
 import 'package:payever/dashboard/dashboard_screen.dart';
+import 'package:payever/dashboard/fake_dashboard_screen.dart';
 import 'package:payever/login/login_screen.dart';
 import 'package:payever/theme.dart';
 import 'package:provider/provider.dart';
@@ -89,7 +90,9 @@ class _SwitcherScreenState extends State<SwitcherScreen> {
             Measurements.loadImages(context);
             isSetLanguage = true;
           }
-          return _body(state);
+          return Stack(
+            children: <Widget>[ FakeDashboardScreen(), _body(state),],
+          );
         },
       ),
     );
@@ -97,30 +100,27 @@ class _SwitcherScreenState extends State<SwitcherScreen> {
 //  NetworkImage(
 //  '${Env.cdn}/images/commerceos-background.jpg')
   Widget _body(SwitcherScreenState state) {
-    return BackgroundBase(
-      true,
-      body: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Stack(
-          children: <Widget>[
-            AnimatedOpacity(
-              child: state.isLoading ? Wait() : Switcher(screenBloc: screenBloc,),
-              duration: Duration(milliseconds: 500),
-              opacity: 1.0,
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: Stack(
+        children: <Widget>[
+          AnimatedOpacity(
+            child: state.isLoading ? Wait() : Switcher(screenBloc: screenBloc,),
+            duration: Duration(milliseconds: 500),
+            opacity: 1.0,
+          ),
+          !widget.isLogin ? SafeArea(
+            bottom: false,
+            child: MaterialButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              minWidth: 0,
+              shape: CircleBorder(),
+              child: SvgPicture.asset('assets/images/closeicon.svg', color: iconColor(),),
             ),
-            !widget.isLogin ? SafeArea(
-              bottom: false,
-              child: MaterialButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                minWidth: 0,
-                shape: CircleBorder(),
-                child: SvgPicture.asset('assets/images/closeicon.svg', color: iconColor(),),
-              ),
-            ): Container()
-          ],
-        ),
+          ): Container()
+        ],
       ),
     );
   }

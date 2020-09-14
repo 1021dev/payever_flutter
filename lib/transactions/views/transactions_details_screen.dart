@@ -62,6 +62,18 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
+    Measurements.height = (_isPortrait
+        ? MediaQuery.of(context).size.height
+        : MediaQuery.of(context).size.width);
+    Measurements.width = (_isPortrait
+        ? MediaQuery.of(context).size.width
+        : MediaQuery.of(context).size.height);
+    _isTablet = Measurements.width < 600 ? false : true;
+    parts.padding = EdgeInsets.symmetric(
+        horizontal: Measurements.width * 0.05,
+        vertical: Measurements.height * 0.01);
+
     return BlocListener(
       bloc: screenBloc,
       listener: (BuildContext context, TransactionDetailScreenState state) async {
@@ -108,67 +120,66 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
             ),
             body: BackgroundBase(
               true,
-              body: OrientationBuilder(
-                builder: (BuildContext context, Orientation orientation) {
-                  if (state.data != null ) {
-                    parts.currentTransaction = state.data;
-                    _isPortrait = Orientation.portrait == orientation;
-                    print('_isPortrait: $_isPortrait');
-                    parts.isPortrait = Orientation.portrait == orientation;
-                    Measurements.height = (parts.isPortrait
-                        ? MediaQuery.of(context).size.height
-                        : MediaQuery.of(context).size.width);
-                    Measurements.width = (parts.isPortrait
-                        ? MediaQuery.of(context).size.width
-                        : MediaQuery.of(context).size.height);
-                    _isTablet = Measurements.width < 600 ? false : true;
-                    parts.padding = EdgeInsets.symmetric(
-                        horizontal: Measurements.width * 0.05,
-                        vertical: Measurements.height * 0.01);
-                    CustomExpansionTile productRowsList = CustomExpansionTile(
-                      scrollable: false,
-                      isWithCustomIcon: true,
-                      addBorderRadius: true,
-                      headerColor: Colors.transparent,
-                      widgetsTitleList: <Widget>[
-                        orderRowHeader(),
-                        shippingRowHeader(),
-                        billingRowHeader(),
-                        paymentRoWHeader(),
-                        timeLineRowHeader(),
-                      ],
-                      widgetsBodyList: <Widget>[
-                        orderRowBody(),
-                        shippingRowBody(),
-                        billingRowBody(),
-                        paymentRowBody(),
-                        timeLineRowBody(),
-                      ],
-                    );
-                    return ListView(
-                      children: <Widget>[
-                        highlightHeaderRow(),
-                        Divider(
-                          height: 0,
-                          thickness: 0.5,
-                        ),
-                        productRowsList,
-                        totalPriceRow(),
-                      ],
-                    );
-                  } else {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                },
-              ),
+              body: _getBody(state),
             ),
           );
         },
       ),
     );
   }
+
+  Widget _getBody(TransactionDetailScreenState state) {
+    if (state.data != null ) {
+      parts.currentTransaction = state.data;
+      // CustomExpansionTile productRowsList = CustomExpansionTile(
+      //   scrollable: false,
+      //   isWithCustomIcon: true,
+      //   addBorderRadius: false,
+      //   headerColor: Colors.transparent,
+      //   widgetsTitleList: <Widget>[
+      //     orderRowHeader(),
+      //     shippingRowHeader(),
+      //     billingRowHeader(),
+      //     paymentRoWHeader(),
+      //     timeLineRowHeader(),
+      //   ],
+      //   widgetsBodyList: <Widget>[
+      //     orderRowBody(),
+      //     shippingRowBody(),
+      //     billingRowBody(),
+      //     paymentRowBody(),
+      //     timeLineRowBody(),
+      //   ],
+      // );
+      return ListView(
+        shrinkWrap: true,
+        children: <Widget>[
+          highlightHeaderRow(),
+          Divider(
+            height: 0,
+            thickness: 0.5,
+          ),
+          // productRowsList,
+          orderRowHeader(),
+          orderRowBody(),
+          shippingRowHeader(),
+          shippingRowBody(),
+          billingRowHeader(),
+          billingRowBody(),
+          paymentRoWHeader(),
+          paymentRowBody(),
+          timeLineRowHeader(),
+          timeLineRowBody(),
+          totalPriceRow(),
+        ],
+      );
+    } else {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+  }
+
 
   num getCustomNumber(num option1, num option2) {
     return _isTablet ? option1 : option2;
@@ -330,6 +341,7 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
 
   Widget orderRowHeader() {
     return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Row(
         children: <Widget>[
           Container(
@@ -375,210 +387,208 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
 
     print('Length: $length');
 
-    return Expanded(
+    return Container(
+      padding: EdgeInsets.all(Measurements.width * 0.02),
+      decoration: BoxDecoration(
+        shape: BoxShape.rectangle,
+        borderRadius: BorderRadius.circular(12),
+        // color: Colors.black.withOpacity(0.3),
+      ),
       child: Container(
-        padding: EdgeInsets.all(Measurements.width * 0.02),
-        decoration: BoxDecoration(
-          shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.circular(12),
-          // color: Colors.black.withOpacity(0.3),
-        ),
-        child: Container(
-          //height: Measurements.height * getCustomNumber(0.015, 0.06) * length,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Flexible(
-                    child: parts.currentTransaction.transaction.originalID !=
-                        null
-                        ? Container(
-                      padding: EdgeInsets.all(5),
-                      alignment: Alignment.centerLeft,
-                      // height: Measurements.height *
-                      //     getCustomNumber(0.015, 0.05),
-                      child: RichText(
-                        maxLines: 2,
-                        text: TextSpan(
-                          style: TextStyle(
-                            fontSize: AppStyle.fontSizeTabContent(),
-                            color: iconColor(),
+        //height: Measurements.height * getCustomNumber(0.015, 0.06) * length,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                Flexible(
+                  child: parts.currentTransaction.transaction.originalID !=
+                      null
+                      ? Container(
+                    padding: EdgeInsets.all(5),
+                    alignment: Alignment.centerLeft,
+                    // height: Measurements.height *
+                    //     getCustomNumber(0.015, 0.05),
+                    child: RichText(
+                      maxLines: 2,
+                      text: TextSpan(
+                        style: TextStyle(
+                          fontSize: AppStyle.fontSizeTabContent(),
+                          color: iconColor(),
+                        ),
+                        children: [
+                          TextSpan(
+                            text:
+                            '${Language.getTransactionStrings('details.order.payeverId')}: ',
+                            style: TextStyle(
+                              fontSize: AppStyle.fontSizeTabContent(),
+                              fontWeight: FontWeight.w200,
+                            ),
                           ),
-                          children: [
-                            TextSpan(
-                              text:
-                              '${Language.getTransactionStrings('details.order.payeverId')}: ',
-                              style: TextStyle(
-                                fontSize: AppStyle.fontSizeTabContent(),
-                                fontWeight: FontWeight.w200,
-                              ),
-                            ),
-                            TextSpan(
-                              text:
-                              '${parts.currentTransaction.transaction.originalID ?? parts.currentTransaction.transaction.uuid}',
-                            ),
-                          ],
-                        ),
+                          TextSpan(
+                            text:
+                            '${parts.currentTransaction.transaction.originalID ?? parts.currentTransaction.transaction.uuid}',
+                          ),
+                        ],
                       ),
-                    )
-                        : Container(),
+                    ),
+                  )
+                      : Container(),
+                ),
+              ],
+            ),
+            parts.currentTransaction.details.reference != null
+                ? Container(
+              alignment: Alignment.centerLeft,
+              padding: EdgeInsets.all(5),
+              //height: Measurements.height * getCustomNumber(0.05, 0.05),
+              child: RichText(
+                maxLines: 2,
+                text: TextSpan(
+                  style: TextStyle(
+                    fontSize: AppStyle.fontSizeTabContent(),
+                    color: iconColor(),
                   ),
-                ],
+                  children: [
+                    TextSpan(
+                      text:
+                      '${Language.getTransactionStrings('details.order.reference')}: ',
+                      style: TextStyle(
+                        fontSize: AppStyle.fontSizeTabContent(),
+                        fontWeight: FontWeight.w200,
+                      ),
+                    ),
+                    TextSpan(
+                      text:
+                      '${parts.currentTransaction.details.reference}',
+                    ),
+                  ],
+                ),
               ),
-              parts.currentTransaction.details.reference != null
-                  ? Container(
-                alignment: Alignment.centerLeft,
-                padding: EdgeInsets.all(5),
-                //height: Measurements.height * getCustomNumber(0.05, 0.05),
-                child: RichText(
-                  maxLines: 2,
-                  text: TextSpan(
-                    style: TextStyle(
-                      fontSize: AppStyle.fontSizeTabContent(),
-                      color: iconColor(),
-                    ),
-                    children: [
-                      TextSpan(
-                        text:
-                        '${Language.getTransactionStrings('details.order.reference')}: ',
-                        style: TextStyle(
-                          fontSize: AppStyle.fontSizeTabContent(),
-                          fontWeight: FontWeight.w200,
-                        ),
-                      ),
-                      TextSpan(
-                        text:
-                        '${parts.currentTransaction.details.reference}',
-                      ),
-                    ],
+            )
+                : Container(),
+            parts.currentTransaction.details.panId != null
+                ? Container(
+              alignment: Alignment.centerLeft,
+              padding: EdgeInsets.all(5),
+              // height: Measurements.height * getCustomNumber(0.05, 0.05),
+              child: RichText(
+                maxLines: 2,
+                text: TextSpan(
+                  style: TextStyle(
+                    fontSize: AppStyle.fontSizeTabContent(),
+                    color: iconColor(),
                   ),
-                ),
-              )
-                  : Container(),
-              parts.currentTransaction.details.panId != null
-                  ? Container(
-                alignment: Alignment.centerLeft,
-                padding: EdgeInsets.all(5),
-                // height: Measurements.height * getCustomNumber(0.05, 0.05),
-                child: RichText(
-                  maxLines: 2,
-                  text: TextSpan(
-                    style: TextStyle(
-                      fontSize: AppStyle.fontSizeTabContent(),
-                      color: iconColor(),
+                  children: [
+                    TextSpan(
+                      text:
+                      '${Language.getTransactionStrings('details.order.panId')}: ',
+                      style: TextStyle(
+                        fontSize: AppStyle.fontSizeTabContent(),
+                        fontWeight: FontWeight.w200,
+                      ),
                     ),
-                    children: [
-                      TextSpan(
-                        text:
-                        '${Language.getTransactionStrings('details.order.panId')}: ',
-                        style: TextStyle(
-                          fontSize: AppStyle.fontSizeTabContent(),
-                          fontWeight: FontWeight.w200,
-                        ),
-                      ),
-                      TextSpan(
-                        text:
-                        '${parts.currentTransaction.details.panId}',
-                      ),
-                    ],
-                  ),
-                ),
-              )
-                  : Container(),
-              parts.currentTransaction.details.applicationNo != null
-                  ? Container(
-                alignment: Alignment.centerLeft,
-                padding: EdgeInsets.all(5),
-                // height: Measurements.height * getCustomNumber(0.05, 0.05),
-                child: RichText(
-                  maxLines: 2,
-                  text: TextSpan(
-                    style: TextStyle(
-                      fontSize: AppStyle.fontSizeTabContent(),
-                      color: iconColor(),
+                    TextSpan(
+                      text:
+                      '${parts.currentTransaction.details.panId}',
                     ),
-                    children: [
-                      TextSpan(
-                        text:
-                        '${Language.getTransactionStrings('details.order.santanderApplicationId')}: ',
-                        style: TextStyle(
-                          fontSize: AppStyle.fontSizeTabContent(),
-                          fontWeight: FontWeight.w200,
-                        ),
-                      ),
-                      TextSpan(
-                        text:
-                        '${parts.currentTransaction.details.applicationNo}',
-                      ),
-                    ],
-                  ),
+                  ],
                 ),
-              )
-                  : Container(),
-              parts.currentTransaction.details.applicationNumber != null
-                  ? Container(
-                alignment: Alignment.centerLeft,
-                padding: EdgeInsets.all(5),
-                // height: Measurements.height * getCustomNumber(0.05, 0.05),
-                child: RichText(
-                  maxLines: 2,
-                  text: TextSpan(
-                    style: TextStyle(
-                      fontSize: AppStyle.fontSizeTabContent(),
-                      color: iconColor(),
+              ),
+            )
+                : Container(),
+            parts.currentTransaction.details.applicationNo != null
+                ? Container(
+              alignment: Alignment.centerLeft,
+              padding: EdgeInsets.all(5),
+              // height: Measurements.height * getCustomNumber(0.05, 0.05),
+              child: RichText(
+                maxLines: 2,
+                text: TextSpan(
+                  style: TextStyle(
+                    fontSize: AppStyle.fontSizeTabContent(),
+                    color: iconColor(),
+                  ),
+                  children: [
+                    TextSpan(
+                      text:
+                      '${Language.getTransactionStrings('details.order.santanderApplicationId')}: ',
+                      style: TextStyle(
+                        fontSize: AppStyle.fontSizeTabContent(),
+                        fontWeight: FontWeight.w200,
+                      ),
                     ),
-                    children: [
-                      TextSpan(
-                        text:
-                        '${Language.getTransactionStrings('details.order.santanderApplicationId')}: ',
-                        style: TextStyle(
-                          fontSize: AppStyle.fontSizeTabContent(),
-                          fontWeight: FontWeight.w200,
-                        ),
-                      ),
-                      TextSpan(
-                        text:
-                        '${parts.currentTransaction.details.applicationNumber}',
-                      ),
-                    ],
-                  ),
-                ),
-              )
-                  : Container(),
-              parts.currentTransaction.details.financeId != null
-                  ? Container(
-                alignment: Alignment.centerLeft,
-                padding: EdgeInsets.all(5),
-                // height: Measurements.height * getCustomNumber(0.05, 0.05),
-                child: RichText(
-                  maxLines: 2,
-                  text: TextSpan(
-                    style: TextStyle(
-                      fontSize: AppStyle.fontSizeTabContent(),
-                      color: iconColor(),
+                    TextSpan(
+                      text:
+                      '${parts.currentTransaction.details.applicationNo}',
                     ),
-                    children: [
-                      TextSpan(
-                        text:
-                        '${Language.getTransactionStrings('details.order.paymentId')}: ',
-                        style: TextStyle(
-                          fontSize: AppStyle.fontSizeTabContent(),
-                          fontWeight: FontWeight.w200,
-                        ),
-                      ),
-                      TextSpan(
-                        text:
-                        '${parts.currentTransaction.details.financeId}',
-                      ),
-                    ],
-                  ),
+                  ],
                 ),
-              )
-                  : Container(),
-            ],
-          ),
+              ),
+            )
+                : Container(),
+            parts.currentTransaction.details.applicationNumber != null
+                ? Container(
+              alignment: Alignment.centerLeft,
+              padding: EdgeInsets.all(5),
+              // height: Measurements.height * getCustomNumber(0.05, 0.05),
+              child: RichText(
+                maxLines: 2,
+                text: TextSpan(
+                  style: TextStyle(
+                    fontSize: AppStyle.fontSizeTabContent(),
+                    color: iconColor(),
+                  ),
+                  children: [
+                    TextSpan(
+                      text:
+                      '${Language.getTransactionStrings('details.order.santanderApplicationId')}: ',
+                      style: TextStyle(
+                        fontSize: AppStyle.fontSizeTabContent(),
+                        fontWeight: FontWeight.w200,
+                      ),
+                    ),
+                    TextSpan(
+                      text:
+                      '${parts.currentTransaction.details.applicationNumber}',
+                    ),
+                  ],
+                ),
+              ),
+            )
+                : Container(),
+            parts.currentTransaction.details.financeId != null
+                ? Container(
+              alignment: Alignment.centerLeft,
+              padding: EdgeInsets.all(5),
+              // height: Measurements.height * getCustomNumber(0.05, 0.05),
+              child: RichText(
+                maxLines: 2,
+                text: TextSpan(
+                  style: TextStyle(
+                    fontSize: AppStyle.fontSizeTabContent(),
+                    color: iconColor(),
+                  ),
+                  children: [
+                    TextSpan(
+                      text:
+                      '${Language.getTransactionStrings('details.order.paymentId')}: ',
+                      style: TextStyle(
+                        fontSize: AppStyle.fontSizeTabContent(),
+                        fontWeight: FontWeight.w200,
+                      ),
+                    ),
+                    TextSpan(
+                      text:
+                      '${parts.currentTransaction.details.financeId}',
+                    ),
+                  ],
+                ),
+              ),
+            )
+                : Container(),
+          ],
         ),
       ),
     );
@@ -586,6 +596,7 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
 
   Widget shippingRowHeader() {
     return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
       alignment: Alignment.centerLeft,
       height: Measurements.height * 0.05,
       width: Measurements.width * getCustomNumber(0.17, 0.25),
@@ -597,39 +608,37 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
   }
 
   Widget shippingRowBody() {
-    return Expanded(
-      child: Container(
-        // height: Measurements.height * getCustomNumber(0.07, 0.08),
-        decoration: BoxDecoration(
-          shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.circular(12),
-          // color: Colors.black.withOpacity(0.3),
-        ),
-        padding: EdgeInsets.all(Measurements.width * 0.02),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                Flexible(
-                  child: Container(
-                    padding: EdgeInsets.all(5),
-                    alignment: Alignment.centerLeft,
-                    child: AutoSizeText(
-                      'Shipping method: ${Measurements.paymentTypeName(parts.currentTransaction.shipping?.methodName?.toUpperCase()??'')}',
-                      style: TextStyle(
-                        fontSize: AppStyle.fontSizeTabContent(),
-                        fontWeight: FontWeight.w200,
-                      ),
+    return Container(
+      // height: Measurements.height * getCustomNumber(0.07, 0.08),
+      decoration: BoxDecoration(
+        shape: BoxShape.rectangle,
+        borderRadius: BorderRadius.circular(12),
+        // color: Colors.black.withOpacity(0.3),
+      ),
+      padding: EdgeInsets.all(Measurements.width * 0.02),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Flexible(
+                child: Container(
+                  padding: EdgeInsets.all(5),
+                  alignment: Alignment.centerLeft,
+                  child: AutoSizeText(
+                    'Shipping method: ${Measurements.paymentTypeName(parts.currentTransaction.shipping?.methodName?.toUpperCase()??'')}',
+                    style: TextStyle(
+                      fontSize: AppStyle.fontSizeTabContent(),
+                      fontWeight: FontWeight.w200,
                     ),
                   ),
                 ),
-              ],
-            ),
-          ],
-        ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -639,6 +648,7 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
       //height: Measurements.height * 0.07,
 //      width:
 //      getDeviceOrientation() ? Measurements.width - 73 : Measurements.width - 13,
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
       width: Measurements.width * 0.75,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -684,119 +694,117 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
   }
 
   Widget billingRowBody() {
-    return Expanded(
-      child: Container(
-        decoration: BoxDecoration(
-          shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        padding: EdgeInsets.all(Measurements.width * 0.02),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                Flexible(
-                  child: Container(
-                    padding: EdgeInsets.all(5),
-                    alignment: Alignment.centerLeft,
-                    child: RichText(
-                      maxLines: 2,
-                      text: TextSpan(
-                        style: TextStyle(
-                          fontSize: AppStyle.fontSizeTabContent(),
-                          color: iconColor(),
-                        ),
-                        children: [
-                          TextSpan(
-                            text:
-                            '${Language.getTransactionStrings('details.billing.name')}: ',
-                            style: TextStyle(
-                              fontSize: AppStyle.fontSizeTabContent(),
-                              fontWeight: FontWeight.w200,
-                            ),
-                          ),
-                          TextSpan(
-                            text:
-                            '${Measurements.salutation(parts.currentTransaction.billingAddress.salutation)} ${parts.currentTransaction.billingAddress.firstName} ${parts.currentTransaction.billingAddress.lastName}',
-                          ),
-                        ],
+    return Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.rectangle,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      padding: EdgeInsets.all(Measurements.width * 0.02),
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Flexible(
+                child: Container(
+                  padding: EdgeInsets.all(5),
+                  alignment: Alignment.centerLeft,
+                  child: RichText(
+                    maxLines: 2,
+                    text: TextSpan(
+                      style: TextStyle(
+                        fontSize: AppStyle.fontSizeTabContent(),
+                        color: iconColor(),
                       ),
+                      children: [
+                        TextSpan(
+                          text:
+                          '${Language.getTransactionStrings('details.billing.name')}: ',
+                          style: TextStyle(
+                            fontSize: AppStyle.fontSizeTabContent(),
+                            fontWeight: FontWeight.w200,
+                          ),
+                        ),
+                        TextSpan(
+                          text:
+                          '${Measurements.salutation(parts.currentTransaction.billingAddress.salutation)} ${parts.currentTransaction.billingAddress.firstName} ${parts.currentTransaction.billingAddress.lastName}',
+                        ),
+                      ],
                     ),
                   ),
                 ),
-              ],
-            ),
-            Row(
-              children: <Widget>[
-                Flexible(
-                  child: Container(
-                    padding: EdgeInsets.all(5),
-                    alignment: Alignment.centerLeft,
-                    child: RichText(
-                      maxLines: 2,
-                      text: TextSpan(
-                        style: TextStyle(
-                          fontSize: AppStyle.fontSizeTabContent(),
-                          color: iconColor(),
-                        ),
-                        children: [
-                          TextSpan(
-                            text:
-                            '${Language.getTransactionStrings('details.billing.email')}: ',
-                            style: TextStyle(
-                              fontSize: AppStyle.fontSizeTabContent(),
-                              fontWeight: FontWeight.w200,
-                            ),
-                          ),
-                          TextSpan(
-                            text:
-                            '${parts.currentTransaction.billingAddress.email}',
-                          ),
-                        ],
+              ),
+            ],
+          ),
+          Row(
+            children: <Widget>[
+              Flexible(
+                child: Container(
+                  padding: EdgeInsets.all(5),
+                  alignment: Alignment.centerLeft,
+                  child: RichText(
+                    maxLines: 2,
+                    text: TextSpan(
+                      style: TextStyle(
+                        fontSize: AppStyle.fontSizeTabContent(),
+                        color: iconColor(),
                       ),
+                      children: [
+                        TextSpan(
+                          text:
+                          '${Language.getTransactionStrings('details.billing.email')}: ',
+                          style: TextStyle(
+                            fontSize: AppStyle.fontSizeTabContent(),
+                            fontWeight: FontWeight.w200,
+                          ),
+                        ),
+                        TextSpan(
+                          text:
+                          '${parts.currentTransaction.billingAddress.email}',
+                        ),
+                      ],
                     ),
                   ),
                 ),
-              ],
-            ),
-            Row(
-              children: <Widget>[
-                Flexible(
-                  child: Container(
-                    padding: EdgeInsets.all(5),
-                    alignment: Alignment.centerLeft,
-                    child: RichText(
-                      maxLines: 2,
-                      text: TextSpan(
-                        style: TextStyle(
-                          fontSize: AppStyle.fontSizeTabContent(),
-                          color: iconColor(),
-                        ),
-                        children: [
-                          TextSpan(
-                            text:
-                            '${Language.getTransactionStrings('details.billing.address')}: ',
-                            style: TextStyle(
-                              fontSize: AppStyle.fontSizeTabContent(),
-                              fontWeight: FontWeight.w200,
-                            ),
-                          ),
-                          TextSpan(
-                            text:
-                            '${parts.currentTransaction.billingAddress.street}, ${parts.currentTransaction.billingAddress.zipCode} ${parts.currentTransaction.billingAddress.city}, ${parts.currentTransaction.billingAddress.countryName}',
-                          ),
-                        ],
+              ),
+            ],
+          ),
+          Row(
+            children: <Widget>[
+              Flexible(
+                child: Container(
+                  padding: EdgeInsets.all(5),
+                  alignment: Alignment.centerLeft,
+                  child: RichText(
+                    maxLines: 2,
+                    text: TextSpan(
+                      style: TextStyle(
+                        fontSize: AppStyle.fontSizeTabContent(),
+                        color: iconColor(),
                       ),
+                      children: [
+                        TextSpan(
+                          text:
+                          '${Language.getTransactionStrings('details.billing.address')}: ',
+                          style: TextStyle(
+                            fontSize: AppStyle.fontSizeTabContent(),
+                            fontWeight: FontWeight.w200,
+                          ),
+                        ),
+                        TextSpan(
+                          text:
+                          '${parts.currentTransaction.billingAddress.street}, ${parts.currentTransaction.billingAddress.zipCode} ${parts.currentTransaction.billingAddress.city}, ${parts.currentTransaction.billingAddress.countryName}',
+                        ),
+                      ],
                     ),
                   ),
                 ),
-              ],
-            ),
-          ],
-        ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -804,6 +812,7 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
   Widget paymentRoWHeader() {
     return Container(
       width: Measurements.width - 73,
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -838,95 +847,94 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
   }
 
   Widget paymentRowBody() {
-    return Expanded(
-      child: Container(
-        decoration: BoxDecoration(
-          shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.circular(12),
-          // color: Colors.black.withOpacity(0.3),
-        ),
-        padding: EdgeInsets.all(Measurements.width * 0.02),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                Flexible(
-                  child: Container(
-                    padding: EdgeInsets.all(5),
-                    alignment: Alignment.centerLeft,
-                    child: RichText(
-                      maxLines: 2,
-                      text: TextSpan(
-                        style: TextStyle(
-                          color: iconColor(),
-                          fontSize: AppStyle.fontSizeTabContent(),
-                        ),
-                        children: [
-                          TextSpan(
-                            text:
-                            '${Language.getTransactionStrings('details.payment.type')}: ',
-                            style: TextStyle(
-                              fontSize: AppStyle.fontSizeTabContent(),
-                              fontWeight: FontWeight.w200,
-                            ),
-                          ),
-                          TextSpan(
-                            text:
-                            '${Measurements.paymentTypeName(parts.currentTransaction.paymentOption.type)}',
-                          ),
-                        ],
+    return Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.rectangle,
+        borderRadius: BorderRadius.circular(12),
+        // color: Colors.black.withOpacity(0.3),
+      ),
+      padding: EdgeInsets.all(Measurements.width * 0.02),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Flexible(
+                child: Container(
+                  padding: EdgeInsets.all(5),
+                  alignment: Alignment.centerLeft,
+                  child: RichText(
+                    maxLines: 2,
+                    text: TextSpan(
+                      style: TextStyle(
+                        color: iconColor(),
+                        fontSize: AppStyle.fontSizeTabContent(),
                       ),
+                      children: [
+                        TextSpan(
+                          text:
+                          '${Language.getTransactionStrings('details.payment.type')}: ',
+                          style: TextStyle(
+                            fontSize: AppStyle.fontSizeTabContent(),
+                            fontWeight: FontWeight.w200,
+                          ),
+                        ),
+                        TextSpan(
+                          text:
+                          '${Measurements.paymentTypeName(parts.currentTransaction.paymentOption.type)}',
+                        ),
+                      ],
                     ),
                   ),
                 ),
-              ],
-            ),
-            Row(
-              children: <Widget>[
-                Flexible(
-                  child: parts.currentTransaction.details.iban != null
-                      ? Container(
-                    padding: EdgeInsets.all(5),
-                    alignment: Alignment.centerLeft,
-                    child: RichText(
-                      maxLines: 2,
-                      text: TextSpan(
-                        style: TextStyle(
-                          fontSize: AppStyle.fontSizeTabContent(),
-                          color: iconColor(),
-                        ),
-                        children: [
-                          TextSpan(
-                            text:
-                            '${Language.getTransactionStrings('details.payment.iban')}: ',
-                            style: TextStyle(
-                              fontSize:
-                              AppStyle.fontSizeTabContent(),
-                              fontWeight: FontWeight.w200,
-                            ),
-                          ),
-                          TextSpan(
-                            text:
-                            '**** ${parts.currentTransaction.details.iban.replaceAll(' ', '').substring(parts.currentTransaction.details.iban.replaceAll(' ', '').length - 4)}',
-                          ),
-                        ],
+              ),
+            ],
+          ),
+          Row(
+            children: <Widget>[
+              Flexible(
+                child: parts.currentTransaction.details.iban != null
+                    ? Container(
+                  padding: EdgeInsets.all(5),
+                  alignment: Alignment.centerLeft,
+                  child: RichText(
+                    maxLines: 2,
+                    text: TextSpan(
+                      style: TextStyle(
+                        fontSize: AppStyle.fontSizeTabContent(),
+                        color: iconColor(),
                       ),
+                      children: [
+                        TextSpan(
+                          text:
+                          '${Language.getTransactionStrings('details.payment.iban')}: ',
+                          style: TextStyle(
+                            fontSize:
+                            AppStyle.fontSizeTabContent(),
+                            fontWeight: FontWeight.w200,
+                          ),
+                        ),
+                        TextSpan(
+                          text:
+                          '**** ${parts.currentTransaction.details.iban.replaceAll(' ', '').substring(parts.currentTransaction.details.iban.replaceAll(' ', '').length - 4)}',
+                        ),
+                      ],
                     ),
-                  )
-                      : Container(),
-                ),
-              ],
-            ),
-          ],
-        ),
+                  ),
+                )
+                    : Container(),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
 
   Widget timeLineRowHeader() {
     return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -946,50 +954,48 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
   }
 
   Widget timeLineRowBody() {
-    return Expanded(
-      child: Container(
-        padding: EdgeInsets.all(Measurements.width * 0.02),
-        decoration: BoxDecoration(
-          shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.circular(12),
-          // color: Colors.black.withOpacity(0.3),
-        ),
-        child: ListView.builder(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          itemCount: parts.currentTransaction.history.length,
-          itemBuilder: (BuildContext context, int index) {
-            DateTime time = DateTime.parse(
-                parts.currentTransaction.history[index].createdAt);
-            return Container(
-              child: Container(
-                padding: EdgeInsets.all(5),
-                child: RichText(
-                  maxLines: 2,
-                  text: TextSpan(
-                    style: TextStyle(
-                      fontSize: AppStyle.fontSizeTabContent(),
-                      color: iconColor(),
-                    ),
-                    children: [
-                      TextSpan(
-                        text:
-                        '${DateFormat.d('en_US').add_MMM().add_y().format(time)} ${DateFormat.Hm('en_US').format(time.add(Duration(hours: 2)))}  ',
-                        style: TextStyle(
-                          fontSize: AppStyle.fontSizeTabContent(),
-                          fontWeight: FontWeight.w200,
-                        ),
-                      ),
-                      TextSpan(
-                        text: '${Measurements.actions(parts.currentTransaction.history[index].action, parts.currentTransaction.history[index], parts.currentTransaction)}',
-                      ),
-                    ],
+    return Container(
+      padding: EdgeInsets.all(Measurements.width * 0.02),
+      decoration: BoxDecoration(
+        shape: BoxShape.rectangle,
+        borderRadius: BorderRadius.circular(12),
+        // color: Colors.black.withOpacity(0.3),
+      ),
+      child: ListView.builder(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: parts.currentTransaction.history.length,
+        itemBuilder: (BuildContext context, int index) {
+          DateTime time = DateTime.parse(
+              parts.currentTransaction.history[index].createdAt);
+          return Container(
+            child: Container(
+              padding: EdgeInsets.all(5),
+              child: RichText(
+                maxLines: 2,
+                text: TextSpan(
+                  style: TextStyle(
+                    fontSize: AppStyle.fontSizeTabContent(),
+                    color: iconColor(),
                   ),
+                  children: [
+                    TextSpan(
+                      text:
+                      '${DateFormat.d('en_US').add_MMM().add_y().format(time)} ${DateFormat.Hm('en_US').format(time.add(Duration(hours: 2)))}  ',
+                      style: TextStyle(
+                        fontSize: AppStyle.fontSizeTabContent(),
+                        fontWeight: FontWeight.w200,
+                      ),
+                    ),
+                    TextSpan(
+                      text: '${Measurements.actions(parts.currentTransaction.history[index].action, parts.currentTransaction.history[index], parts.currentTransaction)}',
+                    ),
+                  ],
                 ),
               ),
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
   }

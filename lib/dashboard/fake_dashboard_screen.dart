@@ -68,6 +68,7 @@ class _FakeDashboardScreenState extends State<FakeDashboardScreen> {
 
   @override
   void dispose() {
+    screenBloc.close();
     super.dispose();
   }
 
