@@ -282,7 +282,6 @@ class _ConnectScreenState extends State<ConnectScreen> {
                   padding: EdgeInsets.all(8),
                   child: SvgPicture.asset(
                     'assets/images/filter.svg',
-                    color: iconColor(),
                     width: 16,
                     height: 16,
                   ),
@@ -301,6 +300,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
+                        color: Colors.white,
                       ),
                     ),
                   ),
@@ -313,11 +313,9 @@ class _ConnectScreenState extends State<ConnectScreen> {
                       child: selectedStyle == 0
                           ? SvgPicture.asset(
                               'assets/images/list.svg',
-                              color: iconColor(),
                             )
                           : SvgPicture.asset(
                               'assets/images/grid.svg',
-                              color: iconColor(),
                             ),
                     ),
                     offset: Offset(0, 100),

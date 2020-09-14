@@ -149,8 +149,8 @@ class _CheckoutCSPAllowedHostScreenState
                 height: 50,
                 color: Colors.black87,
                 child: SizedBox.expand(
-                  child: MaterialButton(
-                    onPressed: () {
+                  child: InkWell(
+                    onTap: () {
                       List<String> hosts = [];
                       controllers.forEach((element) {
                         hosts.add(element.text);
@@ -158,14 +158,17 @@ class _CheckoutCSPAllowedHostScreenState
                       widget.checkout.settings.cspAllowedHosts = hosts;
                       widget.settingBloc.add(UpdateCheckoutSettingsEvent());
                     },
-                    color: overlayBackground(),
                     child: state.isUpdating
                         ? CircularProgressIndicator(
                             strokeWidth: 2,
                           )
-                        : Text(
-                            Language.getCommerceOSStrings('actions.save'),
-                          ),
+                        : Container(
+                          color: overlayBackground(),
+                          alignment: Alignment.center,
+                          child: Text(
+                              Language.getCommerceOSStrings('actions.save'),
+                            ),
+                        ),
                   ),
                 ),
               ),

@@ -205,7 +205,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
                           child: SvgPicture.asset(
                             'assets/images/searchicon.svg',
                             width: 20,
-                            color: iconColor(),
                           ),
                         ),
                         SizedBox(
@@ -252,7 +251,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                             width: 30,
                             height: 30,
                             alignment: Alignment.center,
-                            child: SvgPicture.asset('assets/images/filter.svg', width: 20, color: iconColor(),),
+                            child: SvgPicture.asset('assets/images/filter.svg', width: 20,),
                           ),
                         ),
                         FlatButton(
@@ -277,6 +276,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                             'Export',
                             style: TextStyle(
                               fontSize: 16,
+                              color: Colors.white
                             ),
                           ),
                         ),
@@ -304,7 +304,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
                           child: SvgPicture.asset(
                             'assets/images/sort-by-button.svg',
                             width: 20,
-                            color: iconColor(),
                           ),
                         ),
                         SizedBox(

@@ -500,6 +500,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                               'Reset',
                               style: TextStyle(
                                 fontSize: 14,
+                                color: Colors.white,
                               ),
                             ),
                           ),

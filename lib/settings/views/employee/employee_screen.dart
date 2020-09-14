@@ -131,14 +131,12 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
               child: SvgPicture.asset(
                 'assets/images/searchicon.svg',
                 width: 20,
-                color: iconColor(),
               ),
             ),
             PopupMenuButton<MenuItem>(
               icon: SvgPicture.asset(
                 'assets/images/filter.svg',
                 width: 20,
-                color: iconColor(),
               ),
               offset: Offset(0, 100),
               padding: EdgeInsets.zero,
@@ -188,7 +186,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
               ),
               height: 24,
               minWidth: 110,
-              color: overlayBackground(),
+              color: overlayBackground().withOpacity(1),
               elevation: 0,
               child: Text(
                 isEmployee ? 'Add Employee' : 'Add Group',
@@ -208,6 +206,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                       : '${state.groupList.length} ${state.groupList.length > 1 ? 'groups' : 'group'}',
                   style: TextStyle(
                     fontSize: 12,
+                    color: Colors.white
                   ),
                 ),
               ),
@@ -234,7 +233,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                           widget.setScreenBloc.add(GetEmployeesEvent());
                         });
                       },
-                      color: overlayBackground().withOpacity(isEmployee ? 1.0: 0.8),
+                      color: overlaySwitcherBackground().withOpacity(isEmployee ? 1.0: 0.6),
                       height: 24,
                       elevation: 0,
                       child: AutoSizeText(
@@ -265,7 +264,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                           bottomRight: Radius.circular(12),
                         ),
                       ),
-                      color: overlayBackground().withOpacity(!isEmployee ? 1.0: 0.8),
+                      color: overlaySwitcherBackground().withOpacity(!isEmployee ? 1.0: 0.6),
                       elevation: 0,
                       height: 24,
                       child: AutoSizeText(
@@ -287,7 +286,6 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                 'assets/images/employee-filter.svg',
                 width: 20,
                 height: 20,
-                color: iconColor(),
               ),
               offset: Offset(0, 100),
               onSelected: (MenuItem item) => item.onTap(),
@@ -633,7 +631,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
     return Container(
       width: Measurements.width,
       padding: EdgeInsets.only(
-        left: 16, right: 16, top: 8, bottom: 8,
+        left: 16, right: 16, top: 0, bottom: 0,
       ),
       child: Tags(
         key: _tagStateKey,

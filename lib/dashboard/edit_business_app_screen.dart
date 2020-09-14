@@ -139,96 +139,87 @@ class _EditBusinessAppScreenState extends State<EditBusinessAppScreen> {
         bottom: false,
         child: BackgroundBase(
           true,
-          body: Center(
-            child: Container(
-              padding: EdgeInsets.all(16),
-              width: Measurements.width,
-              child: Container(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Container(
-                      height: 56,
-                      decoration: BoxDecoration(
-                        color: overlayBackground().withOpacity(0.6),
-                        borderRadius: BorderRadius.only(topLeft: Radius.circular(8), topRight: Radius.circular(8)),
-                      ),
-                      child: Container(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.only(left: 8),
-                              child: MaterialButton(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(12),
-                                    bottomLeft: Radius.circular(12),
-                                  ),
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    isApps = true;
-                                  });
-                                },
-                                color: overlayBackground()
-                                    .withOpacity(isApps ? 1.0 : 0.6),
-                                height: 24,
-                                elevation: 0,
-                                child: AutoSizeText(
-                                  'Apps',
-                                  minFontSize: 8,
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
+          body: Container(
+            width: double.infinity,
+            child: Column(
+              children: <Widget>[
+                Container(
+                  height: 50,
+                  color: overlaySecondAppBar(),
+                  child: Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(left: 8),
+                          child: MaterialButton(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(12),
+                                bottomLeft: Radius.circular(12),
                               ),
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 2),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(right: 8),
-                              child: MaterialButton(
-                                onPressed: () {
-                                  setState(() {
-                                    isApps = false;
-                                  });
-                                },
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(12),
-                                    bottomRight: Radius.circular(12),
-                                  ),
-                                ),
-                                color: overlayBackground()
-                                    .withOpacity(isApps ? 0.6 : 1),
-                                elevation: 0,
-                                height: 24,
-                                child: AutoSizeText(
-                                  'Widgets',
-                                  maxLines: 1,
-                                  minFontSize: 8,
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
+                            onPressed: () {
+                              setState(() {
+                                isApps = true;
+                              });
+                            },
+                            color: overlaySwitcherBackground()
+                                .withOpacity(isApps ? 1.0 : 0.6),
+                            height: 24,
+                            elevation: 0,
+                            child: AutoSizeText(
+                              'Apps',
+                              minFontSize: 8,
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                          ],
+                          ),
                         ),
-                      ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 2),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(right: 8),
+                          child: MaterialButton(
+                            onPressed: () {
+                              setState(() {
+                                isApps = false;
+                              });
+                            },
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(12),
+                                bottomRight: Radius.circular(12),
+                              ),
+                            ),
+                            color: overlaySwitcherBackground()
+                                .withOpacity(isApps ? 0.6 : 1),
+                            elevation: 0,
+                            height: 24,
+                            child: AutoSizeText(
+                              'Widgets',
+                              maxLines: 1,
+                              minFontSize: 8,
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                    Expanded(
-                      child: isApps
-                          ? _appsBody(state)
-                          : _widgetBody(state),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
+                Expanded(
+                  child: isApps
+                      ? _appsBody(state)
+                      : _widgetBody(state),
+                ),
+              ],
             ),
           ),
         ),
@@ -239,163 +230,38 @@ class _EditBusinessAppScreenState extends State<EditBusinessAppScreen> {
   Widget _appsBody(DashboardScreenState state) {
     return Container(
       alignment: Alignment.topCenter,
-      child: Container(
-        decoration: BoxDecoration(
-          color: overlayBackground(),
-          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(8), bottomRight: Radius.circular(8)),
-        ),
-        child: ListView.separated(
-          shrinkWrap: true,
-          itemBuilder: (context, index) {
-            BusinessApps businessApp =
-            businessApps[index];
-            String icon =
-            businessApp.dashboardInfo != null
-                ? businessApp.dashboardInfo.icon
-                : null;
-            Color bgColor = businessApp.installed ? Colors.transparent : overlayBackground();
-            if (businessApp.code == 'settings' && businessApp.setupStatus == 'notStarted') {
-              bgColor = overlayBackground();
-            }
-            icon = icon.replaceAll('32', '64');
-
-            return BlurEffectView(
-              color: bgColor,
-              radius: 0,
-              child: Column(
-                children: <Widget>[
-                  Visibility(
-                    visible: notInstallIndex == index,
-                    child: Container(
-                      alignment: Alignment.bottomLeft,
-                      height: 50,
-                      padding: EdgeInsets.symmetric(horizontal: 16),
-                      child: Text('Not installed', style: TextStyle(color: Colors.grey),),
-                    ),
-                  ),
-                  Container(
-                    height: 65,
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: Row(
-                      mainAxisAlignment:
-                      MainAxisAlignment
-                          .spaceBetween,
-                      children: <Widget>[
-                        Flexible(
-                          child: Row(
-                            children: <Widget>[
-                              Container(
-                                width: 30,
-                                height: 30,
-                                decoration:
-                                BoxDecoration(
-                                  image:
-                                  DecorationImage(
-                                    image:
-                                    NetworkImage(
-                                      '${Env.cdnIcon}$icon',
-                                    ),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 16,
-                              ),
-                              Flexible(
-                                child: Text(
-                                  businessApp.code[0]
-                                      .toUpperCase() +
-                                      businessApp.code
-                                          .substring(
-                                          1),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Visibility(
-                          visible: !businessApp.isDefault,
-                          child: InkWell(
-                            onTap: () {
-                              widget.dashboardScreenBloc.add(BusinessAppInstallEvent(businessApp: businessApp));
-                            },
-                            child: Container(
-                              padding: EdgeInsets.symmetric(horizontal: 18, vertical: 6),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                color: overlayButtonBackground(),
-                              ),
-                              child: state.installBusinessAppId == businessApp.microUuid ? Container(
-                                height: 20,
-                                width: 20,
-                                child: Center(
-                                  child: CircularProgressIndicator(strokeWidth: 1,),
-                                ),
-                              ): Text(businessApp.installed ? 'Uninstall' : 'Install',
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Divider(
-                    height: 0,
-                    thickness: 0.5,
-                  ),
-                ],
-              ),
-            );
-          },
-          separatorBuilder: (context, index) {
-            return Divider(
-              height: 0,
-              thickness: 0.5,
-            );
-          },
-          itemCount: businessApps.length,
-        ),
-      ),
-    );
-  }
-
-  Widget _widgetBody(DashboardScreenState state) {
-    return Container(
-      decoration: BoxDecoration(
-        color: overlayBackground(),
-        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(8), bottomRight: Radius.circular(8)),
-      ),
       child: ListView.separated(
         shrinkWrap: true,
         itemBuilder: (context, index) {
-          AppWidget appWidget =
-          appWidgets[index];
+          BusinessApps businessApp =
+          businessApps[index];
           String icon =
-          appWidget.icon != null
-              ? appWidget.icon
+          businessApp.dashboardInfo != null
+              ? businessApp.dashboardInfo.icon
               : null;
-          if (icon == null) {
-            return Container();
+          Color bgColor = businessApp.installed ? Colors.transparent : overlayBackground();
+          if (businessApp.code == 'settings' && businessApp.setupStatus == 'notStarted') {
+            bgColor = overlayBackground();
           }
           icon = icon.replaceAll('32', '64');
+
           return BlurEffectView(
-            color: Colors.transparent,
+            color: bgColor,
             radius: 0,
             child: Column(
               children: <Widget>[
                 Visibility(
-                  visible: notInstallWebIndex == index,
+                  visible: notInstallIndex == index,
                   child: Container(
                     alignment: Alignment.bottomLeft,
                     height: 50,
                     padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: Text('Not Added', style: TextStyle(color: Colors.grey),),
+                    child: Text('Not installed', style: TextStyle(color: Colors.grey),),
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
                   height: 65,
+                  padding: EdgeInsets.symmetric(horizontal: 16),
                   child: Row(
                     mainAxisAlignment:
                     MainAxisAlignment
@@ -424,17 +290,21 @@ class _EditBusinessAppScreenState extends State<EditBusinessAppScreen> {
                             ),
                             Flexible(
                               child: Text(
-                                appWidget.title,
+                                businessApp.code[0]
+                                    .toUpperCase() +
+                                    businessApp.code
+                                        .substring(
+                                        1),
                               ),
                             ),
                           ],
                         ),
                       ),
                       Visibility(
-                        visible: !appWidget.defaultWid,
+                        visible: !businessApp.isDefault,
                         child: InkWell(
                           onTap: () {
-                            widget.dashboardScreenBloc.add(WidgetInstallEvent(appWidget: appWidget));
+                            widget.dashboardScreenBloc.add(BusinessAppInstallEvent(businessApp: businessApp));
                           },
                           child: Container(
                             padding: EdgeInsets.symmetric(horizontal: 18, vertical: 6),
@@ -442,17 +312,14 @@ class _EditBusinessAppScreenState extends State<EditBusinessAppScreen> {
                               borderRadius: BorderRadius.circular(8),
                               color: overlayButtonBackground(),
                             ),
-                            child: state.installBusinessAppId == appWidget.id
-                                ? Container(
-                                    width: 20,
-                                    height: 20,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 1,
-                                    ),
-                                  )
-                                : Text(
-                                    appWidget.install ? 'Delete' : 'Add',
-                                  ),
+                            child: state.installBusinessAppId == businessApp.microUuid ? Container(
+                              height: 20,
+                              width: 20,
+                              child: Center(
+                                child: CircularProgressIndicator(strokeWidth: 1,),
+                              ),
+                            ): Text(businessApp.installed ? 'Uninstall' : 'Install',
+                            ),
                           ),
                         ),
                       ),
@@ -473,8 +340,120 @@ class _EditBusinessAppScreenState extends State<EditBusinessAppScreen> {
             thickness: 0.5,
           );
         },
-        itemCount: appWidgets.length,
+        itemCount: businessApps.length,
       ),
+    );
+  }
+
+  Widget _widgetBody(DashboardScreenState state) {
+    return ListView.separated(
+      shrinkWrap: true,
+      itemBuilder: (context, index) {
+        AppWidget appWidget =
+        appWidgets[index];
+        String icon =
+        appWidget.icon != null
+            ? appWidget.icon
+            : null;
+        if (icon == null) {
+          return Container();
+        }
+        icon = icon.replaceAll('32', '64');
+        return BlurEffectView(
+          color: Colors.transparent,
+          radius: 0,
+          child: Column(
+            children: <Widget>[
+              Visibility(
+                visible: notInstallWebIndex == index,
+                child: Container(
+                  alignment: Alignment.bottomLeft,
+                  height: 50,
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: Text('Not Added', style: TextStyle(color: Colors.grey),),
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                height: 65,
+                child: Row(
+                  mainAxisAlignment:
+                  MainAxisAlignment
+                      .spaceBetween,
+                  children: <Widget>[
+                    Flexible(
+                      child: Row(
+                        children: <Widget>[
+                          Container(
+                            width: 30,
+                            height: 30,
+                            decoration:
+                            BoxDecoration(
+                              image:
+                              DecorationImage(
+                                image:
+                                NetworkImage(
+                                  '${Env.cdnIcon}$icon',
+                                ),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 16,
+                          ),
+                          Flexible(
+                            child: Text(
+                              appWidget.title,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Visibility(
+                      visible: !appWidget.defaultWid,
+                      child: InkWell(
+                        onTap: () {
+                          widget.dashboardScreenBloc.add(WidgetInstallEvent(appWidget: appWidget));
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 18, vertical: 6),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: overlayButtonBackground(),
+                          ),
+                          child: state.installBusinessAppId == appWidget.id
+                              ? Container(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 1,
+                                  ),
+                                )
+                              : Text(
+                                  appWidget.install ? 'Delete' : 'Add',
+                                ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Divider(
+                height: 0,
+                thickness: 0.5,
+              ),
+            ],
+          ),
+        );
+      },
+      separatorBuilder: (context, index) {
+        return Divider(
+          height: 0,
+          thickness: 0.5,
+        );
+      },
+      itemCount: appWidgets.length,
     );
   }
 

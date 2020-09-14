@@ -151,19 +151,23 @@ class _CheckoutMessageScreenState extends State<CheckoutMessageScreen> {
                 height: 50,
                 color: Colors.black87,
                 child: SizedBox.expand(
-                  child: MaterialButton(
-                    onPressed: () {
+                  child: InkWell(
+                    onTap: () {
                       widget.checkout.settings.message = controller.text;
                       widget.settingBloc.add(UpdateCheckoutSettingsEvent());
                     },
-                    color: overlayBackground(),
+
                     child: state.isUpdating
                         ? CircularProgressIndicator(
                       strokeWidth: 2,
                     )
-                        : Text(
+                        : Container(
+                      color: overlayBackground(),
+                      alignment: Alignment.center,
+                          child: Text(
                       Language.getCommerceOSStrings('actions.save'),
                     ),
+                        ),
                   ),
                 ),
               ),

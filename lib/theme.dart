@@ -158,6 +158,10 @@ Color overlayButtonBackground() {
   }
 }
 
+Color overlaySwitcherBackground() {
+  return Color.fromRGBO(227, 227, 227, 1);
+}
+
 Color overlayFilterViewBackground() {
   if (GlobalUtils.theme == 'dark') {
     return Color.fromRGBO(5, 5, 5, 1);
