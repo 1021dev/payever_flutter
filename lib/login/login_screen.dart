@@ -9,6 +9,7 @@ import 'package:payever/commons/models/version.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/global_keys.dart';
 import 'package:payever/dashboard/fake_dashboard_screen.dart';
+import 'package:payever/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:device_info/device_info.dart';
@@ -212,7 +213,7 @@ class _LoginState extends State<Login> {
                             height: 55,
                             child: Container(
                               decoration: BoxDecoration(
-                                color: Colors.black.withOpacity(0.6),
+                                color: GlobalUtils.theme == 'light' ? Colors.white : Colors.black.withOpacity(0.7),
                                 shape: BoxShape.rectangle,
                                 borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(8.0),
@@ -243,9 +244,6 @@ class _LoginState extends State<Login> {
                                   },
                                   decoration: new InputDecoration(
                                     labelText: 'E-Mail Address',
-                                    labelStyle: TextStyle(
-                                      color: Colors.white70,
-                                    ),
                                     border: InputBorder.none,
                                     contentPadding: _isTablet
                                         ? EdgeInsets.all(
@@ -255,7 +253,6 @@ class _LoginState extends State<Login> {
                                   ),
                                   style: TextStyle(
                                     fontSize: 16,
-                                    color: Colors.white,
                                   ),
                                   keyboardType:
                                   TextInputType.emailAddress,
@@ -272,7 +269,7 @@ class _LoginState extends State<Login> {
                             height: 55,
                             child: Container(
                               decoration: BoxDecoration(
-                                color: Colors.black.withOpacity(0.6),
+                                color: GlobalUtils.theme == 'light' ? Colors.white : Colors.black.withOpacity(0.7),
                                 shape: BoxShape.rectangle,
                               ),
                               child: Container(
@@ -300,9 +297,6 @@ class _LoginState extends State<Login> {
                                         },
                                         decoration: new InputDecoration(
                                           labelText: 'Password',
-                                          labelStyle: TextStyle(
-                                            color: Colors.white70,
-                                          ),
                                           border: InputBorder.none,
                                           contentPadding: _isTablet
                                               ? EdgeInsets.all(
@@ -314,7 +308,6 @@ class _LoginState extends State<Login> {
                                         obscureText: true,
                                         style: TextStyle(
                                           fontSize: 16,
-                                          color: Colors.white,
                                         ),
                                       ),
                                     ),
@@ -439,15 +432,15 @@ class _LoginState extends State<Login> {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          Color.fromRGBO(237, 237, 244, 1),
-                          Color.fromRGBO(174, 176, 183, 1)
+                          GlobalUtils.theme == 'light' ? Color.fromRGBO(49, 161, 239, 1) : Color.fromRGBO(237, 237, 244, 1),
+                          GlobalUtils.theme == 'light' ? Color.fromRGBO(0, 120, 208, 1) : Color.fromRGBO(174, 176, 183, 1)
                         ],
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                       ),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: Center(child: Text('Sign Up', style: TextStyle(color: Colors.black, fontSize: 16),)),
+                    child: Center(child: Text('Sign Up', style: TextStyle(color: GlobalUtils.theme == 'light' ? Colors.white : Colors.black, fontSize: 16),)),
                   ),
                 ),
               ],

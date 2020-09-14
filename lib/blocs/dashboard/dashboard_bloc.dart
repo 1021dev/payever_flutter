@@ -63,7 +63,6 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
     } else if(event is WidgetInstallEvent) {
       yield* installWidget(event.appWidget);
     } else if(event is AddStandardDataEvent) {
-      GlobalUtils.theme = 'dark';
       yield state.copyWith(
         currentWidgets: StandardData.currentWidgets,
         businessWidgets: StandardData.businessWidgets,

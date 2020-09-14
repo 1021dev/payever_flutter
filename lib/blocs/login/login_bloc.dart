@@ -32,15 +32,17 @@ class LoginScreenBloc extends Bloc<LoginScreenEvent, LoginScreenState> {
   }
 
   Stream<LoginScreenState> getEnv() async* {
-    yield state.copyWith(isLoading: true);
-    try {
-      var obj = await api.getEnv();
-      Env.map(obj);
-      yield state.copyWith(isLoading: false,);
-    } catch (error){
-      print(onError.toString());
-      yield state.copyWith(isLoading: false,);
-      yield LoginScreenFailure(error: error.toString());
+    if (Env.cdnIcon == null || Env.cdnIcon.isEmpty) {
+      yield state.copyWith(isLoading: true);
+      try {
+        var obj = await api.getEnv();
+        Env.map(obj);
+        yield state.copyWith(isLoading: false,);
+      } catch (error){
+        print(onError.toString());
+        yield state.copyWith(isLoading: false,);
+        yield LoginScreenFailure(error: error.toString());
+      }
     }
   }
 
