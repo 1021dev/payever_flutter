@@ -36,7 +36,7 @@ class EditVariantScreen extends StatefulWidget {
 }
 
 class _EditVariantScreenState extends State<EditVariantScreen> {
-
+  final formKey = new GlobalKey<FormState>();
   VariantsScreenBloc screenBloc;
   bool isLoading = false;
   Map<String, Color> colorsMap = {

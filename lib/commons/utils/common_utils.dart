@@ -351,6 +351,9 @@ class GlobalUtils {
   //static const String SIGN_UP = COMMERCE_OS_URL+'/entry/registration/business';
   static const String SIGN_UP = 'https://getpayever.com/business/trial';
 
+  static const String termsLink = 'https://getpayever.com/agb?_ga=2.220255708.595830855.1600031280-238550036.1593180292';
+  static const String privacyLink = 'https://getpayever.com/about/privacy?_ga=2.155685503.595830855.1600031280-238550036.1593180292';
+
   //Preferences Keys
   static const String EMAIL = 'email';
   static const String PASSWORD = 'password';
@@ -955,6 +958,30 @@ Future<Country> getCountryForCodeWithIdentifier(
 
 String getCountryCode(String countryName, List<Country> countryList) {
   return countryList.where((element) => element.name == countryName).toList().first.countryCode;
+}
+
+Color authScreenBgColor() {
+  return GlobalUtils.theme == 'light'
+      ? Colors.white
+      : Colors.black.withOpacity(0.7);
+}
+
+BoxDecoration authBtnDecoration() {
+  return BoxDecoration(
+    shape: BoxShape.rectangle,
+    gradient: LinearGradient(
+      colors: [
+        Color.fromRGBO(31, 31, 31, 1),
+        Color.fromRGBO(15, 15, 15, 1)
+      ],
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+    ),
+    borderRadius: BorderRadius.only(
+      bottomLeft: Radius.circular(8.0),
+      bottomRight: Radius.circular(8.0),
+    ),
+  );
 }
 
 class MenuItem {

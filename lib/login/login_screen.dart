@@ -10,6 +10,8 @@ import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/global_keys.dart';
 import 'package:payever/dashboard/fake_dashboard_screen.dart';
 import 'package:payever/login/register_screen.dart';
+import 'package:payever/login/wiget/dashboard_background.dart';
+import 'package:payever/login/wiget/select_language.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:device_info/device_info.dart';
@@ -19,7 +21,7 @@ import '../switcher/switcher_page.dart';
 
 
 class LoginInitScreen extends StatelessWidget {
-
+  final scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -53,9 +55,6 @@ const double _paddingText = 16.0;
 bool _isTablet = false;
 bool _isPortrait = true;
 
-final scaffoldKey = new GlobalKey<ScaffoldState>();
-final formKey = new GlobalKey<FormState>();
-
 class LoginScreen extends StatefulWidget {
   double mainWidth = 0;
   @override
@@ -63,6 +62,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+
+  final formKey = new GlobalKey<FormState>();
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   bool _isInvalidInformation = false;
 
@@ -131,29 +132,9 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Stack(
         alignment: Alignment.center,
         children: <Widget>[
-          _background(state),
+          DashBoardBackGround(isLoading: state.isLoading,),
           _loginBody(state),
-          _selectLanguageBody(state),
-        ],
-      ),
-    );
-  }
-
-  Widget _background(LoginScreenState state) {
-    return Container(
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: NetworkImage(
-            'https://payever.azureedge.net/images/commerceos-background.jpg',
-          ),
-          fit: BoxFit.cover,
-        ),
-      ),
-      child: Stack(
-        children: <Widget>[
-          state.isLoading ? Container() : FakeDashboardScreen(),
+          SelectLanguage()
         ],
       ),
     );
@@ -232,7 +213,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             height: 55,
                             child: Container(
                               decoration: BoxDecoration(
-                                color: GlobalUtils.theme == 'light' ? Colors.white : Colors.black.withOpacity(0.7),
+                                color: authScreenBgColor(),
                                 shape: BoxShape.rectangle,
                                 borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(8.0),
@@ -288,7 +269,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             height: 55,
                             child: Container(
                               decoration: BoxDecoration(
-                                color: GlobalUtils.theme == 'light' ? Colors.white : Colors.black.withOpacity(0.7),
+                                color: authScreenBgColor(),
                                 shape: BoxShape.rectangle,
                               ),
                               child: Container(
@@ -471,54 +452,6 @@ class _LoginScreenState extends State<LoginScreen> {
               ],
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _selectLanguageBody(LoginScreenState state) {
-    return Container(
-      alignment: Alignment.bottomCenter,
-      child: Container(
-        width: 60,
-        height: 40,
-        padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
-        child: Container(
-          height: 30,
-          padding: EdgeInsets.fromLTRB(4, 0, 4, 0),
-          decoration: BoxDecoration(
-            color: Color.fromRGBO(0, 0, 0, 0.6),
-            borderRadius: BorderRadius.circular(4),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              DropdownButton(
-                value: 'EN',
-                isDense: true,
-                icon: Icon(
-                  Icons.keyboard_arrow_down,
-                  color: Colors.white.withAlpha(160),
-                  size: 18,
-                ),
-                elevation: 4,
-                style: TextStyle(
-                    color: Colors.white.withAlpha(160),
-                    fontSize: 12
-                ),
-                underline: Container(),
-                onChanged: (val) {
-
-                },
-                items: <String>['EN', 'DE', 'NR', 'PL', 'UK'].map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-              ),
-            ],
-          ),
         ),
       ),
     );

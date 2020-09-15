@@ -12,6 +12,8 @@ import 'package:payever/commons/models/version.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/dashboard/fake_dashboard_screen.dart';
 import 'package:payever/login/register_business_screen.dart';
+import 'package:payever/login/wiget/dashboard_background.dart';
+import 'package:payever/login/wiget/select_language.dart';
 import 'package:payever/theme.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:device_info/device_info.dart';
@@ -32,9 +34,6 @@ class RegisterScreen extends StatefulWidget {
   @override
   _RegisterScreenState createState() => _RegisterScreenState();
 }
-
-const String termsLink = 'https://getpayever.com/agb?_ga=2.220255708.595830855.1600031280-238550036.1593180292';
-const String privacyLink = 'https://getpayever.com/about/privacy?_ga=2.155685503.595830855.1600031280-238550036.1593180292';
 
 class _RegisterScreenState extends State<RegisterScreen> {
   RegisterScreenBloc screenBloc;
@@ -94,7 +93,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               context,
               PageTransition(
                 type: PageTransitionType.fade,
-                child: RegisterBusinessScreen(registerScreenBloc: screenBloc,),
+                child: RegisterBusinessScreen(),
               ));
         } else if (state is LoadedRegisterCredentialsState) {
           firstNameController.text = state.firstName;
@@ -117,32 +116,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
         child: Stack(
           alignment: Alignment.center,
           children: <Widget>[
-            _background(state),
+            DashBoardBackGround(),
             _loginBody(state),
-            _selectLanguageBody(state),
-            _tabletTermsOfService(),
+            SelectLanguage(),
+            tabletTermsOfService(_isTablet),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _background(RegisterScreenState state) {
-    return Container(
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: NetworkImage(
-            'https://payever.azureedge.net/images/commerceos-background.jpg',
-          ),
-          fit: BoxFit.cover,
-        ),
-      ),
-      child: Stack(
-        children: <Widget>[
-          state.isLoading ? Container() : FakeDashboardScreen(),
-        ],
       ),
     );
   }
@@ -183,9 +162,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         height: 55,
                         child: Container(
                           decoration: BoxDecoration(
-                            color: GlobalUtils.theme == 'light'
-                                ? Colors.white
-                                : Colors.black.withOpacity(0.7),
+                            color: authScreenBgColor(),
                             shape: BoxShape.rectangle,
                             borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(8.0),
@@ -229,9 +206,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         height: 55,
                         child: Container(
                           decoration: BoxDecoration(
-                            color: GlobalUtils.theme == 'light'
-                                ? Colors.white
-                                : Colors.black.withOpacity(0.7),
+                            color: authScreenBgColor(),
                             shape: BoxShape.rectangle,
                           ),
                           child: Container(
@@ -275,9 +250,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         padding: EdgeInsets.only(top: 1.0),
                         height: 55,
                         child: Container(
-                          color: GlobalUtils.theme == 'light'
-                              ? Colors.white
-                              : Colors.black.withOpacity(0.7),
+                          color: authScreenBgColor(),
                           child: Padding(
                             padding: EdgeInsets.only(
                                 left: _paddingText, right: _paddingText),
@@ -317,9 +290,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         height: 55,
                         child: Container(
                           decoration: BoxDecoration(
-                            color: GlobalUtils.theme == 'light'
-                                ? Colors.white
-                                : Colors.black.withOpacity(0.7),
+                            color: authScreenBgColor(),
                             shape: BoxShape.rectangle,
                           ),
                           child: Container(
@@ -381,21 +352,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         (_isTablet ? _widthFactorPhone : _widthFactorPhone),
                     height: 55,
                     child: Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.rectangle,
-                        gradient: LinearGradient(
-                          colors: [
-                            Color.fromRGBO(31, 31, 31, 1),
-                            Color.fromRGBO(15, 15, 15, 1)
-                          ],
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                        ),
-                        borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(8.0),
-                          bottomRight: Radius.circular(8.0),
-                        ),
-                      ),
+                      decoration: authBtnDecoration(),
                       child: InkWell(
                         child: Center(
                           child: state.isRegister
@@ -423,7 +380,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 context,
                                 PageTransition(
                                   type: PageTransitionType.fade,
-                                  child: RegisterBusinessScreen(registerScreenBloc: screenBloc,),
+                                  child: RegisterBusinessScreen(),
                                 )
                             );
                           } else {
@@ -446,9 +403,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   padding: EdgeInsets.symmetric(horizontal: 40, vertical: 16),
                   height: 104,
                   decoration: BoxDecoration(
-                    color: GlobalUtils.theme == 'light'
-                        ? Colors.white
-                        : Colors.black.withOpacity(0.7),
+                    color: authScreenBgColor(),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Column(
@@ -482,83 +437,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ? Container()
                     : Padding(
                         padding: EdgeInsets.symmetric(horizontal: 26.0),
-                        child: _termsOfServiceNote(),
+                        child: termsOfServiceNote(),
                       )
               ],
             ),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _selectLanguageBody(RegisterScreenState state) {
-    return Container(
-      alignment: Alignment.bottomRight,
-      padding: EdgeInsets.fromLTRB(0, 0, 16, 0),
-      child: Container(
-        width: 60,
-        height: 40,
-        padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
-        child: Container(
-          height: 30,
-          padding: EdgeInsets.fromLTRB(4, 0, 4, 0),
-          decoration: BoxDecoration(
-            color: Color.fromRGBO(0, 0, 0, 0.6),
-            borderRadius: BorderRadius.circular(4),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              DropdownButton(
-                value: 'EN',
-                isDense: true,
-                icon: Icon(
-                  Icons.keyboard_arrow_down,
-                  color: Colors.white.withAlpha(160),
-                  size: 18,
-                ),
-                elevation: 4,
-                style:
-                    TextStyle(fontSize: 12),
-                underline: Container(),
-                onChanged: (val) {},
-                items: <String>['EN', 'DE', 'NR', 'PL', 'UK']
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _tabletTermsOfService() {
-    return _isTablet ? Container(
-      margin: EdgeInsets.only(bottom: 20),
-      alignment: Alignment.bottomCenter,
-      width: 370,
-      child: _termsOfServiceNote(),
-    ) : Container();
-  }
-
-  Widget _termsOfServiceNote() {
-    return  SuperRichText(
-      text:
-      'By registering you agree to payever llTerms of Servicell and have read the llPrivacy Policyll',
-      style: TextStyle(color: iconColor(), fontSize: 14),
-      textAlign: TextAlign.center,
-      othersMarkers: [
-        MarkerText.withUrl(
-            marker: 'll',
-            style: TextStyle(color: iconColor(), fontWeight: FontWeight.bold),
-            urls: [termsLink, privacyLink]),
-      ],
     );
   }
 

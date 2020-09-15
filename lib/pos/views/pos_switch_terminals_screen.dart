@@ -135,7 +135,6 @@ class _PosSwitchTerminalsScreenState extends State<PosSwitchTerminalsScreen> {
 
   Widget _body(PosScreenState state) {
     return Scaffold(
-      key: scaffoldKey,
       backgroundColor: Colors.black,
       resizeToAvoidBottomPadding: false,
       appBar: _appBar(state),

@@ -136,7 +136,6 @@ class _SwitchShopScreenState extends State<SwitchShopScreen> {
 
   Widget _body(ShopScreenState state) {
     return Scaffold(
-      key: scaffoldKey,
       resizeToAvoidBottomPadding: false,
       appBar: _appBar(state),
       body: SafeArea(
