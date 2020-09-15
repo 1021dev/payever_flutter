@@ -1,3 +1,4 @@
+import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -116,9 +117,10 @@ class _FakeDashboardScreenState extends State<FakeDashboardScreen> {
           blur: 6.5,
           color: overlayBackground(),
         ),
-        BlurEffectView(
+        BlurryContainer(
           blur: 6.5,
-          color: overlayBackground(),
+          child: Container(),
+          // color: overlayBackground(),
         ),
       ],),
     );

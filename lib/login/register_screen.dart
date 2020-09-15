@@ -1,14 +1,17 @@
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/models/version.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/global_keys.dart';
 import 'package:payever/dashboard/fake_dashboard_screen.dart';
+import 'package:payever/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:device_info/device_info.dart';
@@ -145,7 +148,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return Container(
       width: Measurements.width /
           (_isTablet ? _widthFactorPhone : _widthFactorPhone),
-      padding: EdgeInsets.all(8),
+      padding: EdgeInsets.symmetric(vertical:80),
       alignment: Alignment.center,
       child: SingleChildScrollView(
         physics: ScrollPhysics(),
@@ -388,8 +391,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         shape: BoxShape.rectangle,
                         gradient: LinearGradient(
                           colors: [
-                            Color.fromRGBO(47, 47, 47, 1),
-                            Color.fromRGBO(0, 0, 0, 1)
+                            Color.fromRGBO(31, 31, 31, 1),
+                            Color.fromRGBO(15, 15, 15, 1)
                           ],
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
@@ -420,12 +423,39 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 Container(
                   margin: EdgeInsets.only(top: 19, bottom: 16),
+                  padding: EdgeInsets.symmetric(horizontal: 40, vertical: 16),
                   height: 104,
                   decoration: BoxDecoration(
                     color: GlobalUtils.theme == 'light'
                         ? Colors.white
                         : Colors.black.withOpacity(0.7),
                     borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          SvgPicture.asset('assets/images/get-started-icon.svg', color: iconColor(),),
+                          SizedBox(width: 12,),
+                          Expanded(child: Text('Get started for free', overflow: TextOverflow.ellipsis,)),
+                        ],
+                      ),
+                      Row(
+                        children: <Widget>[
+                          SvgPicture.asset('assets/images/grow-your-business-icon.svg'),
+                          SizedBox(width: 12,),
+                          Expanded(child: Text('Start, run and grow your business', overflow: TextOverflow.ellipsis,)),
+                        ],
+                      ),
+                      Row(
+                        children: <Widget>[
+                          SvgPicture.asset('assets/images/grow-your-sales-icon.svg'),
+                          SizedBox(width: 12,),
+                          Expanded(child: Text('No credit Card required', overflow: TextOverflow.ellipsis,)),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
                 Padding(
@@ -448,7 +478,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Widget _selectLanguageBody(LoginScreenState state) {
     return Container(
-      alignment: Alignment.bottomCenter,
+      alignment: Alignment.bottomRight,
+      padding: EdgeInsets.fromLTRB(0, 0, 16, 0),
       child: Container(
         width: 60,
         height: 40,
@@ -473,7 +504,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 elevation: 4,
                 style:
-                    TextStyle(color: Colors.white.withAlpha(160), fontSize: 12),
+                    TextStyle(fontSize: 12),
                 underline: Container(),
                 onChanged: (val) {},
                 items: <String>['EN', 'DE', 'NR', 'PL', 'UK']

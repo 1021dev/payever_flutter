@@ -71,7 +71,13 @@ class DashboardMenuView1 extends StatelessWidget {
                 alignment: Alignment.centerRight,
                 padding: EdgeInsets.only(top: 8),
                 child: InkWell(
-                  child: SvgPicture.asset('assets/images/closeicon.svg', color: iconColor(),),
+                  child: Container(
+                    alignment: Alignment.centerRight,
+                      width: 70,
+                      child: SvgPicture.asset(
+                        'assets/images/closeicon.svg',
+                        color: iconColor(),
+                      )),
                   onTap: () {
                     Navigator.pop(context);
                   },
