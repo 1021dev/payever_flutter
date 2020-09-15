@@ -105,65 +105,75 @@ class ThemeCell extends StatelessWidget {
               ],
             ),
           ),
-          Container(
-            padding: EdgeInsets.only(right: 8, left: 8, top: 4, bottom: 4),
-            color: overlayBackground(),
-            width: double.infinity,
-            height: (Measurements.width - 38) * 0.13,
-            alignment: Alignment.centerLeft,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Text(
-                  themeListModel.themeModel.name,
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
+          AspectRatio(
+            aspectRatio: 6/1.7,
+            child: Container(
+              padding: EdgeInsets.only(right: 8, left: 8, top: 4, bottom: 4),
+              color: overlayBackground(),
+              width: double.infinity,
+              alignment: Alignment.centerLeft,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Text(
+                    themeListModel.themeModel.name,
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
-                ),
-                Text(
-                  themeListModel.themeModel.type,
-                  style: TextStyle(
-                    color: Color(0xffff9000),
-                    fontSize: 10,
+                  Text(
+                    themeListModel.themeModel.type,
+                    style: TextStyle(
+                      color: Color(0xffff9000),
+                      fontSize: 10,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-          Container(
-            color: Colors.black87,
-            height: (Measurements.width - 38) * 0.1,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                InkWell(
-                  onTap: onTapPreview,
-                  child: Container(child: Center(child: Text('Preview', style: TextStyle(color: Colors.white),))),
-                ),
-                Container(
-                  width: 1,
-                  color: Color(0xFF888888),
-                ),
-                InkWell(
-                  onTap: () {
-                    onTapInstall(themeListModel.themeModel);
-                  },
-                  child: Container(
-                      child: Center(
-                          child: isInstall &&
-                                  installThemeId == themeListModel.themeModel.id
-                              ? Container(
-                                  width: 15,
-                                  height: 15,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                  ),
-                                )
-                              : Text('Install', style: TextStyle(color: Colors.white),))),
-                ),
-              ],
+          AspectRatio(
+            aspectRatio: 6/1,
+            child: Container(
+              color: Colors.black87,
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  Expanded(
+                    flex: 1,
+                    child: InkWell(
+                      onTap: onTapPreview,
+                      child: Container(child: Center(child: Text('Preview', style: TextStyle(color: Colors.white),))),
+                    ),
+                  ),
+                  Container(
+                    width: 1,
+                    color: Color(0xFF888888),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: InkWell(
+                      onTap: () {
+                        onTapInstall(themeListModel.themeModel);
+                      },
+                      child: Container(
+                          child: Center(
+                              child: isInstall &&
+                                      installThemeId == themeListModel.themeModel.id
+                                  ? Container(
+                                      width: 15,
+                                      height: 15,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                      ),
+                                    )
+                                  : Text('Install', style: TextStyle(color: Colors.white),))),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],

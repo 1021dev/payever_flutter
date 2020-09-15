@@ -118,7 +118,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           alignment: Alignment.center,
           children: <Widget>[
             DashBoardBackGround(),
-            _loginBody(state),
+            _registerBody(state),
             SelectLanguage(),
             tabletTermsOfService(_isTablet),
           ],
@@ -127,11 +127,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  Widget _loginBody(RegisterScreenState state) {
+  Widget _registerBody(RegisterScreenState state) {
     return Container(
       width: Measurements.width /
           (_isTablet ? _widthFactorPhone : _widthFactorPhone),
-      padding: EdgeInsets.symmetric(vertical:80),
+      padding: EdgeInsets.symmetric(vertical:20),
       alignment: Alignment.center,
       child: SingleChildScrollView(
         physics: ScrollPhysics(),

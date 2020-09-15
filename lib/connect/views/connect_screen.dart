@@ -577,7 +577,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
 
   Widget _getGridBody(ConnectScreenState state) {
     int crossAxisCount =
-        _isTablet ? (_isPortrait ? 2 : 3) : (_isPortrait ? 2 : 3);
+        _isTablet ? (_isPortrait ? 3 : 3) : (_isPortrait ? 2 : 3);
     double imageRatio = 323.0 / 182.0;
     double contentHeight = 116;
     double cellWidth = _isPortrait

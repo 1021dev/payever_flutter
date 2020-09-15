@@ -84,7 +84,6 @@ class ContactGridItem extends StatelessWidget {
                       aspectRatio: 6/1.67,
                       child: Container(
                         width:double.infinity,
-                        color: overlayBackground(),
                         alignment: Alignment.centerLeft,
                         padding: EdgeInsets.symmetric(horizontal: 8),
                         child: Column(
@@ -119,7 +118,7 @@ class ContactGridItem extends StatelessWidget {
                       aspectRatio: 6/1,
                       child: Container(
                         width: double.infinity,
-                        color: Color.fromRGBO(0, 0, 0, 0.3),
+                        color: overlayBackground(),
                         alignment: Alignment.center,
                         child: SizedBox.expand(
                           child: MaterialButton(

@@ -40,6 +40,7 @@ class _SelectLanguageState extends State<SelectLanguage> {
                 elevation: 4,
                 style:
                 TextStyle(fontSize: 12),
+                dropdownColor: Color.fromRGBO(0, 0, 0, 0.6),
                 underline: Container(),
                 onChanged: (val) {},
                 items: <String>['EN', 'DE', 'NR', 'PL', 'UK']

@@ -710,7 +710,7 @@ class _ContactScreenState extends State<ContactScreen> {
   }
 
   Widget _getGridBody(ContactScreenState state) {
-    int crossAxisCount = _isTablet ? (_isPortrait ? 2 : 3): (_isPortrait ? 2 : 3);
+    int crossAxisCount = _isTablet ? (_isPortrait ? 3 : 3): (_isPortrait ? 2 : 3);
     List<Widget> widgets = [];
     widgets.add(
       Container(
