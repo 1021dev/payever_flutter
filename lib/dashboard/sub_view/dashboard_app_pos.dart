@@ -106,12 +106,13 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                               width: 40,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
-                                color: overlayButtonBackground(),
+                                color: overlayDashboardButtonsBackground(),
                               ),
                               child: Center(
                                 child: Text(Language.getCommerceOSStrings('actions.open'),
                                   style: TextStyle(
                                     fontSize: 10,
+                                    color: Colors.white,
                                   ),
                                 ),
                               ),
@@ -247,21 +248,15 @@ class _DashboardAppPosViewState extends State<DashboardAppPosView> {
                           onTap: widget.onTapEditTerminal,
                           child: Container(
                             height: 60,
+                            alignment: Alignment.center,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8),
-                              color: overlayButtonBackground(),
+                              color: overlayDashboardButtonsBackground(),
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SvgPicture.asset('assets/images/edit_pen.svg', width: 24, color: iconColor(),),
-                                SizedBox(width: 8),
-                                Text(
-                                  Language.getCommerceOSStrings('dashboard.edit_apps.enter_button'),
-                                  softWrap: true,
-                                  style: TextStyle(fontSize: 16),
-                                )
-                              ],
+                            child: Text(
+                              Language.getCommerceOSStrings('dashboard.edit_apps.enter_button'),
+                              softWrap: true,
+                              style: TextStyle(fontSize: 16, color: Colors.white),
                             ),
                           ),
                         ),

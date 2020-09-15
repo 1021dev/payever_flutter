@@ -67,13 +67,14 @@ class _DashboardSettingsViewState extends State<DashboardSettingsView> {
                     width: 40,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        color: overlayButtonBackground(),
+                        color: overlayDashboardButtonsBackground(),
                     ),
                     child: Center(
                       child: Text(
                         Language.getCommerceOSStrings('actions.open'),
                         style: TextStyle(
                             fontSize: 10,
+                          color: Colors.white,
                         ),
                       ),
                     ),
@@ -91,22 +92,18 @@ class _DashboardSettingsViewState extends State<DashboardSettingsView> {
                       onTap: widget.onTapOpenWallpaper,
                       child: Container(
                         height: 50,
+                        alignment: Alignment.center,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(6),
-                            color: overlayButtonBackground(),
+                            color: overlayDashboardButtonsBackground(),
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset("assets/images/wallpapericon.png", width: 14, color: iconColor(),),
-                            SizedBox(width: 8),
-                            Text(
-                              Language.getSettingsStrings('info_boxes.panels.wallpaper.title'),
-                              softWrap: true,
-                              style: TextStyle(
-                                  fontSize: 16),
-                            )
-                          ],
+                        child: Text(
+                          Language.getSettingsStrings('info_boxes.panels.wallpaper.title'),
+                          softWrap: true,
+                          style: TextStyle(
+                              fontSize: 16,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
@@ -120,21 +117,15 @@ class _DashboardSettingsViewState extends State<DashboardSettingsView> {
                       onTap: widget.onTapOpenLanguage,
                       child: Container(
                         height: 50,
+                        alignment: Alignment.center,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(6),
-                            color: overlayButtonBackground(),
+                            color: overlayDashboardButtonsBackground(),
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset("assets/images/languageicon.png", width: 16, color: iconColor(),),
-                            SizedBox(width: 8),
-                            Text(
-                              Language.getSettingsStrings('form.create_form.language.label'),
-                              softWrap: true,
-                              style: TextStyle( fontSize: 16),
-                            )
-                          ],
+                        child: Text(
+                          Language.getSettingsStrings('form.create_form.language.label'),
+                          softWrap: true,
+                          style: TextStyle(fontSize: 16, color: Colors.white,),
                         ),
                       ),
                     ),

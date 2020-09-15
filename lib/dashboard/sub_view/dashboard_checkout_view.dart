@@ -93,13 +93,14 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                               width: 40,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
-                                color: overlayButtonBackground(),
+                                color: overlayDashboardButtonsBackground(),
                               ),
                               child: Center(
                                 child: Text(
                                   Language.getCommerceOSStrings('actions.open'),
                                   style: TextStyle(
                                     fontSize: 10,
+                                    color: Colors.white,
                                   ),
                                 ),
                               ),
@@ -172,25 +173,14 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                             },
                             child: Container(
                               height: 60,
+                              alignment: Alignment.center,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(6),
-                                color: overlayButtonBackground(),
+                                color: overlayDashboardButtonsBackground(),
                               ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SvgPicture.asset(
-                                    'assets/images/link.svg',
-                                    width: 24,
-                                    color: iconColor(),
-                                  ),
-                                  SizedBox(width: 8),
-                                  Text(
-                                    'Link',
-                                    softWrap: true,
-                                    style: TextStyle(fontSize: 16),
-                                  )
-                                ],
+                              child: Text(
+                                'Link',
+                                style: TextStyle(fontSize: 16, color: Colors.white,),
                               ),
                             ),
                           ),
@@ -208,25 +198,15 @@ class _DashboardCheckoutViewState extends State<DashboardCheckoutView> {
                             },
                             child: Container(
                               height: 60,
+                              alignment: Alignment.center,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(6),
-                                  color: overlayButtonBackground(),
+                                  color: overlayDashboardButtonsBackground(),
                               ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SvgPicture.asset(
-                                    'assets/images/edit_pen.svg',
-                                    width: 24,
-                                    color: iconColor(),
-                                  ),
-                                  SizedBox(width: 8),
-                                  Text(
-                                    Language.getCommerceOSStrings('menu.customer.manage'),
-                                    softWrap: true,
-                                    style: TextStyle(fontSize: 16),
-                                  )
-                                ],
+                              child: Text(
+                                Language.getCommerceOSStrings('menu.customer.manage'),
+                                softWrap: true,
+                                style: TextStyle(fontSize: 16, color: Colors.white),
                               ),
                             ),
                           ),

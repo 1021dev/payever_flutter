@@ -95,13 +95,14 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
                               width: 40,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
-                                color: overlayButtonBackground(),
+                                color: overlayDashboardButtonsBackground(),
                               ),
                               child: Center(
                                 child: Text(
                                   Language.getCommerceOSStrings('actions.open'),
                                   style: TextStyle(
                                     fontSize: 10,
+                                    color: Colors.white,
                                   ),
                                 ),
                               ),

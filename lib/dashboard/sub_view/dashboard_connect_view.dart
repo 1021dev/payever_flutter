@@ -78,13 +78,14 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                               width: 40,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
-                                color: overlayButtonBackground(),
+                                color: overlayDashboardButtonsBackground(),
                               ),
                               child: Center(
                                 child: Text(
                                   Language.getCommerceOSStrings('actions.open'),
                                   style: TextStyle(
                                     fontSize: 10,
+                                    color: Colors.white,
                                   ),
                                 ),
                               ),
@@ -203,7 +204,7 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                               height: 50,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(6),
-                                color: overlayButtonBackground(),
+                                color: overlayDashboardButtonsBackground(),
                               ),
                               child: Center(
                                 child: Text(
@@ -211,6 +212,7 @@ class _DashboardConnectViewState extends State<DashboardConnectView> {
                                   softWrap: true,
                                   style: TextStyle(
                                     fontSize: 16,
+                                    color: Colors.white,
                                   ),
                                 ),
                               ),

@@ -91,13 +91,14 @@ class _DashboardBusinessAppsViewState extends State<DashboardBusinessAppsView> {
                     height: 20,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: overlayButtonBackground(),
+                      color: overlayDashboardButtonsBackground(),
                     ),
                     child: Center(
                       child: Text(
                         Language.getCommerceOSStrings('edit_apps.enter_button'),
                         style: TextStyle(
                           fontSize: 10,
+                          color: Colors.white,
                         ),
                       ),
                     ),

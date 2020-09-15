@@ -145,7 +145,7 @@ class _LoginScreenState extends State<LoginScreen> {
           (_isTablet
               ? _widthFactorTablet
               : _widthFactorPhone),
-      padding: EdgeInsets.symmetric(vertical: 80),
+      padding: EdgeInsets.symmetric(vertical: 20),
       alignment: Alignment.center,
       child: SingleChildScrollView(
         physics: ScrollPhysics(),

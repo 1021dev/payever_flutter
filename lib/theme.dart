@@ -176,7 +176,17 @@ Color overlayDashboardAppsBackground() {
   if (GlobalUtils.theme == 'dark') {
     return Color.fromRGBO(0, 0, 0, 0.3);
   } else if (GlobalUtils.theme == 'light') {
-    return Color.fromRGBO(0, 0, 0, 0.08);
+    return Color.fromRGBO(29, 29, 32, 1);
+  } else {
+    return Color.fromRGBO(0, 0, 0, 0.2);
+  }
+}
+
+Color overlayDashboardButtonsBackground() {
+  if (GlobalUtils.theme == 'dark') {
+    return Color.fromRGBO(255, 255, 255, 0.1);
+  } else if (GlobalUtils.theme == 'light') {
+    return Color.fromRGBO(29, 29, 32, 1);
   } else {
     return Color.fromRGBO(0, 0, 0, 0.2);
   }
