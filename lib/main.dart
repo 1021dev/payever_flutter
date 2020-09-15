@@ -82,7 +82,7 @@ class _MyAppState extends State<MyApp> {
             theme: state.themeData,
             home: _loadCredentials.value
                 ? Center(child: CircularProgressIndicator())
-                : _haveCredentials ? DashboardScreenInit(refresh: false,) : LoginScreen(),
+                : _haveCredentials ? DashboardScreenInit(refresh: false,) : LoginInitScreen(),
           );
         },
       ),

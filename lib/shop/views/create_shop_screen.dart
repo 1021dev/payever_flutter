@@ -81,7 +81,7 @@ class _CreateShopScreenState extends State<CreateShopScreen> {
           Navigator.pushReplacement(
             context,
             PageTransition(
-              child: LoginScreen(),
+              child: LoginInitScreen(),
               type: PageTransitionType.fade,
             ),
           );

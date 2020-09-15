@@ -82,7 +82,7 @@ class _CreateEditCheckoutScreenState extends State<CreateEditCheckoutScreen> {
           Navigator.pushReplacement(
             context,
             PageTransition(
-              child: LoginScreen(),
+              child: LoginInitScreen(),
               type: PageTransitionType.fade,
             ),
           );

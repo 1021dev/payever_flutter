@@ -18,7 +18,9 @@ import 'package:page_transition/page_transition.dart';
 import '../switcher/switcher_page.dart';
 
 
-class LoginScreen extends StatelessWidget {
+class LoginInitScreen extends StatelessWidget {
+
+
   @override
   Widget build(BuildContext context) {
     _isPortrait = Orientation.portrait == MediaQuery.of(context).orientation;
@@ -29,12 +31,12 @@ class LoginScreen extends StatelessWidget {
         ? MediaQuery.of(context).size.width
         : MediaQuery.of(context).size.height);
     _isTablet = Measurements.width < 600 ? false : true;
-    if (_isTablet)
-      Measurements.width = Measurements.width * 0.5;
+    // if (_isTablet)
+    //   Measurements.width = Measurements.width * 0.5;
 
     return Scaffold(
       key: scaffoldKey,
-      body: Login(),
+      body: LoginScreen(),
       resizeToAvoidBottomPadding: !_isPortrait,
     );
   }
@@ -54,12 +56,13 @@ bool _isPortrait = true;
 final scaffoldKey = new GlobalKey<ScaffoldState>();
 final formKey = new GlobalKey<FormState>();
 
-class Login extends StatefulWidget {
+class LoginScreen extends StatefulWidget {
+  double mainWidth = 0;
   @override
-  _LoginState createState() => _LoginState();
+  _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _LoginState extends State<Login> {
+class _LoginScreenState extends State<LoginScreen> {
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   bool _isInvalidInformation = false;
 
@@ -81,24 +84,19 @@ class _LoginState extends State<Login> {
     });
   }
 
-  void _submit() {
-    final form = formKey.currentState;
-    if (form.validate()) {
-      form.save();
-      loginScreenBloc.add(LoginEvent(email: _username, password: _password));
-    }
-  }
-
-  _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
+  @override
+  void dispose() {
+    loginScreenBloc.close();
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (widget.mainWidth == 0) {
+      widget.mainWidth = _isTablet ? Measurements.width * 0.5 : Measurements.width;
+    }
     return BlocListener(
         bloc: loginScreenBloc,
         listener: (BuildContext context, LoginScreenState state) async {
@@ -163,11 +161,11 @@ class _LoginState extends State<Login> {
 
   Widget _loginBody(LoginScreenState state) {
     return Container(
-      width: Measurements.width /
+      width: widget.mainWidth /
           (_isTablet
-              ? _widthFactorPhone
+              ? _widthFactorTablet
               : _widthFactorPhone),
-      padding: EdgeInsets.all(8),
+      padding: EdgeInsets.symmetric(vertical: 80),
       alignment: Alignment.center,
       child: SingleChildScrollView(
         physics: ScrollPhysics(),
@@ -178,9 +176,9 @@ class _LoginState extends State<Login> {
             Column(
               children: <Widget>[
                 Container(
-                    width: Measurements.width /
+                    width: widget.mainWidth /
                         ((_isTablet
-                            ? _widthFactorTablet
+                            ? 1.5
                             : 1.5) *
                             2),
                     child: Image.asset(
@@ -283,7 +281,7 @@ class _LoginState extends State<Login> {
                           ),
                           Container(
                             padding: EdgeInsets.only(top: 1),
-                            width: Measurements.width /
+                            width: widget.mainWidth /
                                 (_isTablet
                                     ? _widthFactorPhone
                                     : _widthFactorPhone),
@@ -343,9 +341,9 @@ class _LoginState extends State<Login> {
                 Center(
                   child: Container(
                     padding: EdgeInsets.only(top: 1),
-                    width: Measurements.width /
+                    width: widget.mainWidth /
                         (_isTablet
-                            ? _widthFactorPhone
+                            ? _widthFactorTablet
                             : _widthFactorPhone),
                     height: 55,
                     child: Container(
@@ -404,7 +402,7 @@ class _LoginState extends State<Login> {
                 ),
                 Container(
                   padding:
-                  EdgeInsets.only(right: Measurements.width * 0.02),
+                  EdgeInsets.only(right: widget.mainWidth * 0.02),
                   child: InkWell(
                     child: Text(
                       'Forgot your password?',
@@ -450,7 +448,7 @@ class _LoginState extends State<Login> {
                         context,
                         PageTransition(
                           type: PageTransitionType.fade,
-                          child: RegisterInitScreen(logInScreenBloc: loginScreenBloc),
+                          child: RegisterInitScreen(),
                         )
                     );
                   },
@@ -580,5 +578,21 @@ class _LoginState extends State<Login> {
           );
         }
         );
+  }
+
+  void _submit() {
+    final form = formKey.currentState;
+    if (form.validate()) {
+      form.save();
+      loginScreenBloc.add(LoginEvent(email: _username, password: _password));
+    }
+  }
+
+  _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }

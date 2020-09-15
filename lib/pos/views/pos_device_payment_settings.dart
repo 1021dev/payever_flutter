@@ -75,7 +75,7 @@ class _PosDevicePaymentSettingsState extends State<PosDevicePaymentSettings> {
           Navigator.pushReplacement(
             context,
             PageTransition(
-              child: LoginScreen(),
+              child: LoginInitScreen(),
               type: PageTransitionType.fade,
             ),
           );

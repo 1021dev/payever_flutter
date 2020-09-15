@@ -75,7 +75,7 @@ class _LocalDomainScreenState extends State<LocalDomainScreen> {
           Navigator.pushReplacement(
             context,
             PageTransition(
-              child: LoginScreen(),
+              child: LoginInitScreen(),
               type: PageTransitionType.fade,
             ),
           );

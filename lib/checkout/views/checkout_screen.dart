@@ -130,7 +130,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           Navigator.pushReplacement(
             context,
             PageTransition(
-              child: LoginScreen(),
+              child: LoginInitScreen(),
               type: PageTransitionType.fade,
             ),
           );

@@ -81,7 +81,7 @@ class _PosTwilioAddPhoneNumberState extends State<PosTwilioAddPhoneNumber> {
           Navigator.pushReplacement(
             context,
             PageTransition(
-              child: LoginScreen(),
+              child: LoginInitScreen(),
               type: PageTransitionType.fade,
             ),
           );

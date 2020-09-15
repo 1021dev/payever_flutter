@@ -112,7 +112,7 @@ class _PersonalSettingScreenState extends State<PersonalSettingScreen> {
           Navigator.pushReplacement(
             context,
             PageTransition(
-              child: LoginScreen(),
+              child: LoginInitScreen(),
               type: PageTransitionType.fade,
             ),
           );

@@ -245,7 +245,7 @@ class DashboardMenuView extends StatelessWidget {
                     Navigator.pushReplacement(
                       context,
                       PageTransition(
-                        child: LoginScreen(), type: PageTransitionType.fade,
+                        child: LoginInitScreen(), type: PageTransitionType.fade,
                       ),
                     );
 

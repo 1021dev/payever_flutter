@@ -76,7 +76,7 @@ class _EnablePasswordScreenState extends State<EnablePasswordScreen> {
           Navigator.pushReplacement(
             context,
             PageTransition(
-              child: LoginScreen(),
+              child: LoginInitScreen(),
               type: PageTransitionType.fade,
             ),
           );

@@ -108,7 +108,7 @@ class _ConnectDetailScreenState extends State<ConnectDetailScreen> {
           Navigator.pushReplacement(
             context,
             PageTransition(
-              child: LoginScreen(),
+              child: LoginInitScreen(),
               type: PageTransitionType.fade,
             ),
           );

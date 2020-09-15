@@ -74,7 +74,7 @@ class _PosSwitchTerminalsScreenState extends State<PosSwitchTerminalsScreen> {
           Navigator.pushReplacement(
             context,
             PageTransition(
-              child: LoginScreen(),
+              child: LoginInitScreen(),
               type: PageTransitionType.fade,
             ),
           );

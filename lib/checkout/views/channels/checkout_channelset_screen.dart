@@ -67,7 +67,7 @@ class _CheckoutChannelSetScreenState extends State<CheckoutChannelSetScreen> {
           Navigator.pushReplacement(
             context,
             PageTransition(
-              child: LoginScreen(),
+              child: LoginInitScreen(),
               type: PageTransitionType.fade,
             ),
           );

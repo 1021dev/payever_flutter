@@ -80,7 +80,7 @@ class _ConnectReviewsScreenState extends State<ConnectReviewsScreen> {
           Navigator.pushReplacement(
             context,
             PageTransition(
-              child: LoginScreen(),
+              child: LoginInitScreen(),
               type: PageTransitionType.fade,
             ),
           );

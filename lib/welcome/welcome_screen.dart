@@ -78,7 +78,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           Navigator.pushReplacement(
             context,
             PageTransition(
-              child: LoginScreen(),
+              child: LoginInitScreen(),
               type: PageTransitionType.fade,
             ),
           );

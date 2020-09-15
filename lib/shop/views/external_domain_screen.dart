@@ -75,7 +75,7 @@ class _ExternalDomainScreenState extends State<ExternalDomainScreen> {
           Navigator.pushReplacement(
             context,
             PageTransition(
-              child: LoginScreen(),
+              child: LoginInitScreen(),
               type: PageTransitionType.fade,
             ),
           );

@@ -80,7 +80,7 @@ class _ConnectPaymentSettingsScreenState extends State<ConnectPaymentSettingsScr
           Navigator.pushReplacement(
             context,
             PageTransition(
-              child: LoginScreen(),
+              child: LoginInitScreen(),
               type: PageTransitionType.fade,
             ),
           );

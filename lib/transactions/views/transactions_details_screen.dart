@@ -81,7 +81,7 @@ class _TransactionDetailsState extends State<TransactionDetailsScreen> {
           Navigator.pushReplacement(
             context,
             PageTransition(
-              child: LoginScreen(),
+              child: LoginInitScreen(),
               type: PageTransitionType.fade,
             ),
           );

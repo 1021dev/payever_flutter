@@ -74,7 +74,7 @@ class _CheckoutTwilioScreenState extends State<CheckoutTwilioScreen> {
           Navigator.pushReplacement(
             context,
             PageTransition(
-              child: LoginScreen(),
+              child: LoginInitScreen(),
               type: PageTransitionType.fade,
             ),
           );

@@ -75,7 +75,7 @@ class _CheckoutTwilioAddPhoneNumberState extends State<CheckoutTwilioAddPhoneNum
           Navigator.pushReplacement(
             context,
             PageTransition(
-              child: LoginScreen(),
+              child: LoginInitScreen(),
               type: PageTransitionType.fade,
             ),
           );

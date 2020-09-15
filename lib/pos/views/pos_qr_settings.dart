@@ -89,7 +89,7 @@ class _PosQRSettingsState extends State<PosQRSettings> {
           Navigator.pushReplacement(
             context,
             PageTransition(
-              child: LoginScreen(),
+              child: LoginInitScreen(),
               type: PageTransitionType.fade,
             ),
           );

@@ -93,7 +93,7 @@ class _AddNewFieldScreenState extends State<AddNewFieldScreen> {
           Navigator.pushReplacement(
             context,
             PageTransition(
-              child: LoginScreen(),
+              child: LoginInitScreen(),
               type: PageTransitionType.fade,
             ),
           );

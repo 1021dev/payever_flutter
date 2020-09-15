@@ -16,25 +16,25 @@ import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/custom_elements.dart';
-import 'package:payever/dashboard/dashboard_screen.dart';
 import 'package:payever/settings/models/models.dart';
 import 'package:payever/settings/widgets/save_button.dart';
 import 'package:payever/theme.dart';
 import 'package:payever/welcome/welcome_screen.dart';
 import 'package:provider/provider.dart';
 
-class BusinessRegisterScreen extends StatefulWidget {
+class RegisterBusinessScreen extends StatefulWidget {
 
-  final DashboardScreenBloc dashboardScreenBloc;
+  final RegisterScreenBloc registerScreenBloc;
 
-  BusinessRegisterScreen({this.dashboardScreenBloc});
+  const RegisterBusinessScreen({this.registerScreenBloc});
+
   @override
   State<StatefulWidget> createState() {
-    return _BusinessRegisterScreenState();
+    return _RegisterBusinessScreenState();
   }
 }
 
-class _BusinessRegisterScreenState extends State<BusinessRegisterScreen> {
+class _RegisterBusinessScreenState extends State<RegisterBusinessScreen> {
   bool _isPortrait;
   bool _isTablet;
   double iconSize;
@@ -58,8 +58,8 @@ class _BusinessRegisterScreenState extends State<BusinessRegisterScreen> {
   BusinessBloc businessBloc;
   @override
   void initState() {
-    businessBloc = BusinessBloc(dashboardScreenBloc: widget.dashboardScreenBloc);
-    businessBloc.add(BusinessFormEvent());
+    businessBloc = BusinessBloc();
+    // businessBloc.add(BusinessFormEvent());
     super.initState();
   }
 

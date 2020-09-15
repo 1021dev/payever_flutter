@@ -73,7 +73,7 @@ class _CheckoutConnectScreenState extends State<CheckoutConnectScreen> {
           Navigator.pushReplacement(
             context,
             PageTransition(
-              child: LoginScreen(),
+              child: LoginInitScreen(),
               type: PageTransitionType.fade,
             ),
           );

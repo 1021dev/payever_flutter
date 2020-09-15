@@ -65,7 +65,7 @@ class _ConnectVersionHistoryScreenState extends State<ConnectVersionHistoryScree
           Navigator.pushReplacement(
             context,
             PageTransition(
-              child: LoginScreen(),
+              child: LoginInitScreen(),
               type: PageTransitionType.fade,
             ),
           );

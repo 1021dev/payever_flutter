@@ -81,7 +81,7 @@ class _PosCreateTerminalScreenState extends State<PosCreateTerminalScreen> {
           Navigator.pushReplacement(
             context,
             PageTransition(
-              child: LoginScreen(),
+              child: LoginInitScreen(),
               type: PageTransitionType.fade,
             ),
           );

@@ -62,7 +62,7 @@ class _SwitcherScreenState extends State<SwitcherScreen> {
           Navigator.pushReplacement(
             context,
             PageTransition(
-              child: LoginScreen(),
+              child: LoginInitScreen(),
               type: PageTransitionType.fade,
             ),
           );

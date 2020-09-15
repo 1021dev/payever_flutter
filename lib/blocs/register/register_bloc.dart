@@ -31,20 +31,6 @@ class RegisterScreenBloc extends Bloc<RegisterScreenEvent, RegisterScreenState> 
     // }
   }
 
-  Stream<RegisterScreenState> getEnv() async* {
-    if (Env.cdnIcon == null || Env.cdnIcon.isEmpty) {
-      yield state.copyWith(isLoading: true);
-      try {
-        var obj = await api.getEnv();
-        Env.map(obj);
-        yield state.copyWith(isLoading: false,);
-      } catch (error){
-        print(onError.toString());
-        yield state.copyWith(isLoading: false,);
-        yield RegisterScreenFailure(error: error.toString());
-      }
-    }
-  }
 
   Stream<RegisterScreenState> login(String email, String password) async* {
     yield state.copyWith(isLogIn: true);

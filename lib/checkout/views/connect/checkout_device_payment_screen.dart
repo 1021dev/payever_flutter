@@ -67,7 +67,7 @@ class _CheckoutDevicePaymentScreenState extends State<CheckoutDevicePaymentScree
           Navigator.pushReplacement(
             context,
             PageTransition(
-              child: LoginScreen(),
+              child: LoginInitScreen(),
               type: PageTransitionType.fade,
             ),
           );

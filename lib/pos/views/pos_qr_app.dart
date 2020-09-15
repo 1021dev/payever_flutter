@@ -80,7 +80,7 @@ class _PosQRAppScreenState extends State<PosQRAppScreen> {
           Navigator.pushReplacement(
             context,
             PageTransition(
-              child: LoginScreen(),
+              child: LoginInitScreen(),
               type: PageTransitionType.fade,
             ),
           );

@@ -150,7 +150,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             Navigator.pushReplacement(
               context,
               PageTransition(
-                child: LoginScreen(),
+                child: LoginInitScreen(),
                 type: PageTransitionType.fade,
               ),
             );

@@ -11,8 +11,8 @@ import 'package:payever/commons/models/version.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/global_keys.dart';
 import 'package:payever/dashboard/fake_dashboard_screen.dart';
+import 'package:payever/login/register_business_screen.dart';
 import 'package:payever/theme.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:device_info/device_info.dart';
 import 'package:page_transition/page_transition.dart';
@@ -20,28 +20,22 @@ import 'package:page_transition/page_transition.dart';
 import '../switcher/switcher_page.dart';
 
 class RegisterInitScreen extends StatelessWidget {
-  final LoginScreenBloc logInScreenBloc;
-
-  const RegisterInitScreen({this.logInScreenBloc});
 
   @override
   Widget build(BuildContext context) {
-    return RegisterScreen(
-      loginScreenBloc: this.logInScreenBloc,
-    );
+    return RegisterScreen();
   }
 }
 
 class RegisterScreen extends StatefulWidget {
-  final LoginScreenBloc loginScreenBloc;
-
-  const RegisterScreen({this.loginScreenBloc});
 
   @override
   _RegisterScreenState createState() => _RegisterScreenState();
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  RegisterScreenBloc screenBloc;
+
   final double _heightFactorTablet = 0.05;
   final double _heightFactorPhone = 0.07;
   final double _widthFactorTablet = 1.1;
@@ -67,7 +61,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   void initState() {
+    screenBloc = RegisterScreenBloc();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    screenBloc.close();
+    super.dispose();
   }
 
   @override
@@ -83,13 +84,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (_isTablet) Measurements.width = Measurements.width * 0.5;
 
     return BlocListener(
-      bloc: widget.loginScreenBloc,
-      listener: (BuildContext context, LoginScreenState state) async {
+      bloc: screenBloc,
+      listener: (BuildContext context, RegisterScreenState state) async {
         if (state is LoginScreenFailure) {
           _isInvalidInformation = true;
-        } else if (state is LoginScreenVersionFailed) {
-          showPopUp(state.version);
-        } else if (state is LoginScreenSuccess) {
+        } else if (state is RegisterScreenSuccess) {
           Navigator.pushReplacement(
               context,
               PageTransition(
@@ -97,19 +96,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: SwitcherScreen(true),
               ));
         } else if (state is LoadedCredentialsState) {
-          emailController.text = state.username;
+          // emailController.text = state.username;
           passwordController.text = state.password;
         }
       },
-      child: BlocBuilder<LoginScreenBloc, LoginScreenState>(
-          bloc: widget.loginScreenBloc,
-          builder: (BuildContext context, LoginScreenState state) {
+      child: BlocBuilder<RegisterScreenBloc, RegisterScreenState>(
+          bloc: screenBloc,
+          builder: (BuildContext context, RegisterScreenState state) {
             return _getBody(state);
           }),
     );
   }
 
-  Widget _getBody(LoginScreenState state) {
+  Widget _getBody(RegisterScreenState state) {
     return Scaffold(
       body: Container(
         child: Stack(
@@ -124,7 +123,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  Widget _background(LoginScreenState state) {
+  Widget _background(RegisterScreenState state) {
     return Container(
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
@@ -144,7 +143,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  Widget _loginBody(LoginScreenState state) {
+  Widget _loginBody(RegisterScreenState state) {
     return Container(
       width: Measurements.width /
           (_isTablet ? _widthFactorPhone : _widthFactorPhone),
@@ -160,7 +159,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               children: <Widget>[
                 Container(
                     width: Measurements.width /
-                        ((_isTablet ? _widthFactorTablet : 1.5) * 2),
+                        ((_isTablet ? 1.5 : 1.5) * 2),
                     child: Image.asset(
                         'assets/images/logo-payever-${GlobalUtils.theme == 'light' ? 'black' : 'white'}.png')),
                 Padding(
@@ -415,7 +414,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                         ),
                         onTap: () {
-                          Navigator.pop(context);
+                          // Navigator.pop(context);
+                          Navigator.push(
+                              context,
+                              PageTransition(
+                                type: PageTransitionType.fade,
+                                child: RegisterBusinessScreen(registerScreenBloc: screenBloc,),
+                              )
+                          );
                         },
                       ),
                     ),
@@ -443,14 +449,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       Row(
                         children: <Widget>[
-                          SvgPicture.asset('assets/images/grow-your-business-icon.svg'),
+                          SvgPicture.asset('assets/images/grow-your-business-icon.svg', color: iconColor(),),
                           SizedBox(width: 12,),
                           Expanded(child: Text('Start, run and grow your business', overflow: TextOverflow.ellipsis,)),
                         ],
                       ),
                       Row(
                         children: <Widget>[
-                          SvgPicture.asset('assets/images/grow-your-sales-icon.svg'),
+                          SvgPicture.asset('assets/images/grow-your-sales-icon.svg', color: iconColor(),),
                           SizedBox(width: 12,),
                           Expanded(child: Text('No credit Card required', overflow: TextOverflow.ellipsis,)),
                         ],
@@ -476,7 +482,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  Widget _selectLanguageBody(LoginScreenState state) {
+  Widget _selectLanguageBody(RegisterScreenState state) {
     return Container(
       alignment: Alignment.bottomRight,
       padding: EdgeInsets.fromLTRB(0, 0, 16, 0),
@@ -581,14 +587,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
         });
   }
 
-  void _submit() {
-    final form = formKey.currentState;
-    if (form.validate()) {
-      form.save();
-      widget.loginScreenBloc
-          .add(LoginEvent(email: _username, password: _password));
-    }
-  }
 
   _launchURL(String url) async {
     if (await canLaunch(url)) {

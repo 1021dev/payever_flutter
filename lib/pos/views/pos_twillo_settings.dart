@@ -85,7 +85,7 @@ class _PosTwilioScreenState extends State<PosTwilioScreen> {
           Navigator.pushReplacement(
             context,
             PageTransition(
-              child: LoginScreen(),
+              child: LoginInitScreen(),
               type: PageTransitionType.fade,
             ),
           );
