@@ -17,9 +17,7 @@ import 'package:payever/dashboard/dashboard_screen.dart';
 import 'package:payever/login/wiget/dashboard_background.dart';
 import 'package:payever/login/wiget/select_language.dart';
 import 'package:payever/settings/models/models.dart';
-import 'package:payever/theme.dart';
 import 'package:provider/provider.dart';
-import 'package:super_rich_text/super_rich_text.dart';
 
 class RegisterBusinessScreen extends StatefulWidget {
 
@@ -54,7 +52,7 @@ class _RegisterBusinessScreenState extends State<RegisterBusinessScreen> {
   @override
   void initState() {
     businessBloc = BusinessBloc();
-    businessBloc.add(BusinessFormEvent(isRegister: false));
+    businessBloc.add(BusinessFormEvent(isRegister: true));
     super.initState();
   }
 
@@ -135,7 +133,7 @@ class _RegisterBusinessScreenState extends State<RegisterBusinessScreen> {
   Widget _body(BusinessState state) {
     return Center(
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 30),
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         width: Measurements.width,
         child: Form(
           key: formKey,
@@ -236,15 +234,16 @@ class _RegisterBusinessScreenState extends State<RegisterBusinessScreen> {
                 ),
                 Divider(height: 0, thickness: 0.5,),
                 Container(
-                  color: authScreenBgColor(),
                   child: Row(
                     children: <Widget>[
                       Flexible(
                         flex: 1,
                         child: Container(
                           height: 60,
+                          color: authScreenBgColor(),
                           alignment: Alignment.center,
                           padding: EdgeInsets.only(left: 16, right: 8),
+                          margin: EdgeInsets.only(right: 0.5),
                           child: DropdownButtonFormField(
                             isExpanded: true,
                             validator: (val) {
@@ -293,6 +292,7 @@ class _RegisterBusinessScreenState extends State<RegisterBusinessScreen> {
                         flex: 1,
                         child: Container(
                           height: 60,
+                          color: authScreenBgColor(),
                           alignment: Alignment.center,
                           padding: EdgeInsets.only(left: 16, right: 8),
                           child: DropdownButtonFormField(
@@ -392,15 +392,16 @@ class _RegisterBusinessScreenState extends State<RegisterBusinessScreen> {
                 ),
                 Divider(height: 0, thickness: 0.5,),
                 Container(
-                  color: authScreenBgColor(),
                   child: Row(
                     children: <Widget>[
                       Flexible(
                         flex: 1,
                         child: Container(
+                          color: authScreenBgColor(),
                           height: 60,
                           alignment: Alignment.center,
                           padding: EdgeInsets.only(left: 16, right: 8),
+                          margin: EdgeInsets.only(right: 0.5),
                           child: CountryPickerDropdown(
                             initialValue: 'DE',
                             itemBuilder: _buildDropdownItem,
@@ -429,6 +430,7 @@ class _RegisterBusinessScreenState extends State<RegisterBusinessScreen> {
                         flex: 1,
                         child: Container(
                           height: 60,
+                          color: authScreenBgColor(),
                           alignment: Alignment.center,
                           child: TextFormField(
                             style: TextStyle(fontSize: 16),

@@ -16,7 +16,6 @@ import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/custom_elements.dart';
-import 'package:payever/dashboard/dashboard_screen.dart';
 import 'package:payever/settings/models/models.dart';
 import 'package:payever/settings/widgets/save_button.dart';
 import 'package:payever/theme.dart';
@@ -499,6 +498,7 @@ class _BusinessRegisterScreenState extends State<BusinessRegisterScreen> {
                     ),
                     Divider(height: 0, thickness: 0.5,),
                     BlurEffectView(
+                      radius: 0,
                       child: SaveBtn(
                         title: 'Register',
                         isBottom: true,

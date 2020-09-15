@@ -10,7 +10,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/models/version.dart';
 import 'package:payever/commons/utils/common_utils.dart';
-import 'package:payever/dashboard/fake_dashboard_screen.dart';
 import 'package:payever/login/register_business_screen.dart';
 import 'package:payever/login/wiget/dashboard_background.dart';
 import 'package:payever/login/wiget/select_language.dart';
@@ -19,7 +18,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:device_info/device_info.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:the_validator/the_validator.dart';
-import 'package:super_rich_text/super_rich_text.dart';
 
 class RegisterInitScreen extends StatelessWidget {
 
@@ -37,10 +35,6 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   RegisterScreenBloc screenBloc;
-
-  final double _heightFactorTablet = 0.05;
-  final double _heightFactorPhone = 0.07;
-  final double _widthFactorTablet = 1.1;
   final double _widthFactorPhone = 1.1;
 
   double _paddingText = 16.0;
@@ -68,6 +62,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   void dispose() {
     screenBloc.close();
+    firstNameController.dispose();
+    lastNameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
     super.dispose();
   }
 
@@ -89,12 +87,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
         if (state is RegisterScreenFailure) {
           Fluttertoast.showToast(msg: state.error);
         } else if (state is RegisterScreenSuccess) {
-          Navigator.pushReplacement(
-              context,
-              PageTransition(
-                type: PageTransitionType.fade,
-                child: RegisterBusinessScreen(),
-              ));
+          Fluttertoast.showToast(msg: 'Successfully Registered, Please confirm your email address to get started.');
+          Future.delayed(Duration(milliseconds: 2000)).then((value) {
+            Navigator.pushReplacement(
+                context,
+                PageTransition(
+                  type: PageTransitionType.fade,
+                  child: RegisterBusinessScreen(),
+                ));
+          });
         } else if (state is LoadedRegisterCredentialsState) {
           firstNameController.text = state.firstName;
           lastNameController.text = state.lastName;
