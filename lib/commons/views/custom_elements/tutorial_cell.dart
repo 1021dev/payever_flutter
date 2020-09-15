@@ -47,18 +47,19 @@ class TutorialCell extends StatelessWidget {
                       height: 20,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          color: overlayButtonBackground(),
+                          color: overlayDashboardButtonsBackground(),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           SizedBox(width: 6),
-                          SvgPicture.asset('assets/images/icon_arrow.svg', color: iconColor(),),
+                          SvgPicture.asset('assets/images/icon_arrow.svg',),
                           SizedBox(width: 4),
                           Text(
                             Language.getWidgetStrings('widgets.tutorial.watch'),
                             style: TextStyle(
                                 fontSize: 10,
+                              color: Colors.white,
                             ),
                           ),
                           SizedBox(width: 6),

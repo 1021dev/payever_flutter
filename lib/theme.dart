@@ -192,6 +192,17 @@ Color overlayDashboardButtonsBackground() {
   }
 }
 
+Color overlayDashboardNotificationBtnBgColor() {
+  if (GlobalUtils.theme == 'dark') {
+    return Color.fromRGBO(255, 255, 255, 0.2);
+  } else if (GlobalUtils.theme == 'light') {
+    return Color.fromRGBO(95, 95, 95, 1);
+  } else {
+    return Color.fromRGBO(0, 0, 0, 0.2);
+  }
+}
+
+
 Color overlaySection() {
   if (GlobalUtils.theme == 'dark') {
     return Color.fromRGBO(0, 0, 0, 0.75);

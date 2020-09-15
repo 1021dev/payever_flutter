@@ -146,13 +146,12 @@ class _DashboardTransactionsViewState extends State<DashboardTransactionsView> {
                                       height: 21,
                                       decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(10.5),
-                                          color: overlayBackground(),
+                                          color: overlayDashboardNotificationBtnBgColor(),
                                       ),
                                       child: Center(
                                         child: SvgPicture.asset(
                                           isExpanded ? 'assets/images/closeicon.svg' : 'assets/images/icon_plus.svg',
                                           width: 8,
-                                          color: iconColor(),
                                         ),
                                       ),
                                     ),

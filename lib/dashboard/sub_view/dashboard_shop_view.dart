@@ -127,7 +127,7 @@ class _DashboardShopViewState extends State<DashboardShopView> {
                             width: 40,
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
-                                color: Colors.white10
+                                color: overlayDashboardButtonsBackground(),
                             ),
                             child: Row(
                               children: [
@@ -138,6 +138,7 @@ class _DashboardShopViewState extends State<DashboardShopView> {
                                       '${widget.notifications.length}',
                                       style: TextStyle(
                                           fontSize: 10,
+                                        color: Colors.white,
                                       ),
                                     ),
                                   ),
@@ -155,13 +156,12 @@ class _DashboardShopViewState extends State<DashboardShopView> {
                                       height: 21,
                                       decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(10.5),
-                                          color: overlayBackground(),
+                                          color: overlayDashboardNotificationBtnBgColor(),
                                       ),
                                       child: Center(
                                         child: SvgPicture.asset(
                                           isExpanded ? 'assets/images/closeicon.svg' : 'assets/images/icon_plus.svg',
                                           width: 8,
-                                          color: iconColor(),
                                         ),
                                       ),
                                     ),

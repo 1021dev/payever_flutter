@@ -117,7 +117,7 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
                                   width: 40,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
-                                    color: Colors.white10,
+                                    color: overlayDashboardButtonsBackground(),
                                   ),
                                   child: Row(
                                     children: [
@@ -128,6 +128,7 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
                                             '${widget.notifications.length}',
                                             style: TextStyle(
                                               fontSize: 10,
+                                              color: Colors.white,
                                             ),
                                           ),
                                         ),
@@ -146,7 +147,7 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
                                             decoration: BoxDecoration(
                                               borderRadius:
                                                   BorderRadius.circular(10.5),
-                                              color: overlayButtonBackground(),
+                                              color: overlayDashboardNotificationBtnBgColor(),
                                             ),
                                             child: Center(
                                               child: SvgPicture.asset(
@@ -154,7 +155,6 @@ class _DashboardProductsViewState extends State<DashboardProductsView> {
                                                     ? 'assets/images/closeicon.svg'
                                                     : 'assets/images/icon_plus.svg',
                                                 width: 8,
-                                                color: iconColor(),
                                               ),
                                             ),
                                           ),

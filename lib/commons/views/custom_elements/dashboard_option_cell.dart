@@ -66,13 +66,14 @@ class DashboardOptionCell extends StatelessWidget {
                       width: 40,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        color: overlayButtonBackground(),
+                        color: overlayDashboardButtonsBackground(),
                       ),
                       child: Center(
                         child: Text(
                           Language.getCommerceOSStrings('actions.open'),
                           style: TextStyle(
                             fontSize: 10,
+                            color: Colors.white,
                           ),
                         ),
                       ),
@@ -88,10 +89,10 @@ class DashboardOptionCell extends StatelessWidget {
                       height: 21,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10.5),
-                        color: overlayButtonBackground(),
+                        color: overlayDashboardButtonsBackground(),
                       ),
                       child: Center(
-                        child: SvgPicture.asset('assets/images/closeicon.svg', width: 8, color: iconColor(),),
+                        child: SvgPicture.asset('assets/images/closeicon.svg', width: 8),
                       ),
                     ),
                   )
