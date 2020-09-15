@@ -27,3 +27,4 @@ export './setting/setting.dart';
 export './personal/personal.dart';
 export './theme/theme.dart';
 export './business/business.dart';
+export './register/register.dart';
