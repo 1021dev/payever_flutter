@@ -17,7 +17,7 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
   BusinessBloc({this.dashboardScreenBloc, this.globalStateModel});
 
   ApiService api = ApiService();
-
+  final _storage = FlutterSecureStorage();
   String token = GlobalUtils.activeToken.accessToken;
   @override
   BusinessState get initialState => BusinessState();
@@ -25,7 +25,7 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
   @override
   Stream<BusinessState> mapEventToState(BusinessEvent event) async* {
     if (event is BusinessFormEvent) {
-      yield* loadBusinessForm();
+      yield* loadBusinessForm(event.isRegister);
     } else if (event is GetIndustrySuggestionEvent) {
       yield* searchFilter(event.search);
     } else if (event is ClearSuggestionEvent) {
@@ -35,7 +35,7 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
     }
   }
 
-  Stream<BusinessState> loadBusinessForm() async* {
+  Stream<BusinessState> loadBusinessForm(bool isRegister) async* {
     yield state.copyWith(isLoading: true);
     BusinessFormData formData;
     dynamic formDataResponse = await api.getBusinessRegistrationFormData(token);
@@ -48,7 +48,15 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
         industryList.addAll(element.industries);
       });
     }
-
+    if (isRegister) {
+      String userId = await _storage.read(key: GlobalUtils.USER_ID);
+      if (userId != null && userId.isNotEmpty) {
+        dynamic response = await api.putUser(token, userId);
+        token = response['accessToken'];
+        await _storage.write(key: GlobalUtils.TOKEN, value: token);
+        GlobalUtils.activeToken.accessToken = token;
+      }
+    }
     yield state.copyWith(isLoading: false, formData: formData, industryList: industryList);
   }
 

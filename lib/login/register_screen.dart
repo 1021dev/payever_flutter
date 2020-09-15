@@ -96,7 +96,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 type: PageTransitionType.fade,
                 child: RegisterBusinessScreen(registerScreenBloc: screenBloc,),
               ));
-        } else if (state is LoadedCredentialsState) {
+        } else if (state is LoadedRegisterCredentialsState) {
           firstNameController.text = state.firstName;
           lastNameController.text = state.lastName;
           emailController.text = state.email;
@@ -120,6 +120,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             _background(state),
             _loginBody(state),
             _selectLanguageBody(state),
+            _tabletTermsOfService(),
           ],
         ),
       ),
@@ -482,13 +483,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     : Padding(
                         padding: EdgeInsets.symmetric(horizontal: 26.0),
                         child: _termsOfServiceNote(),
-                        // Text(
-                        //   'By registering you agree to payever Terms of Service and have read the Privacy Policy',
-                        //   style: TextStyle(fontSize: 14),
-                        //   maxLines: 2,
-                        //   overflow: TextOverflow.ellipsis,
-                        //   textAlign: TextAlign.center,
-                        // ),
                       )
               ],
             ),
@@ -544,6 +538,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
+  Widget _tabletTermsOfService() {
+    return _isTablet ? Container(
+      margin: EdgeInsets.only(bottom: 20),
+      alignment: Alignment.bottomCenter,
+      width: 370,
+      child: _termsOfServiceNote(),
+    ) : Container();
+  }
+
   Widget _termsOfServiceNote() {
     return  SuperRichText(
       text:
@@ -558,7 +561,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ],
     );
   }
-  
+
   showPopUp(Version _version) {
     showDialog(
         barrierDismissible: false,

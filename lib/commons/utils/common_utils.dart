@@ -354,6 +354,7 @@ class GlobalUtils {
   //Preferences Keys
   static const String EMAIL = 'email';
   static const String PASSWORD = 'password';
+  static const String USER_ID = 'user_id';
   static const String DEVICE_ID = 'id';
   static const String FINGERPRINT = 'fingerPrint';
   static const String WALLPAPER = 'wallpaper';

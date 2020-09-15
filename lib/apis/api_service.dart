@@ -428,6 +428,19 @@ class ApiService {
     }
   }
 
+  Future<dynamic> putUser(String token, String userId) async {
+    try {
+      print('$TAG - putUser()');
+      dynamic response = await _client.putTypeless(
+        '$authBaseUrl/api/$userId',
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<dynamic> registerUser(String firstName, String lastName, String email, String password) async {
     try {
       print('$TAG - registerUser()');
@@ -437,7 +450,7 @@ class ApiService {
           'first_name': firstName,
           'last_name': lastName,
           'email': email,
-          'plainPassword': password,
+          'password': password,
         },
         headers: {
           HttpHeaders.contentTypeHeader: 'application/json',

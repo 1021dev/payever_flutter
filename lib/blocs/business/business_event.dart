@@ -21,7 +21,16 @@ class CreateBusiness extends BusinessEvent {
 
 }
 
-class BusinessFormEvent extends BusinessEvent{}
+class BusinessFormEvent extends BusinessEvent{
+  final bool isRegister;
+
+  BusinessFormEvent({this.isRegister = false,});
+
+  @override
+  List<Object> get props => [
+    this.isRegister,
+  ];
+}
 
 class ClearSuggestionEvent extends BusinessEvent{}
 
