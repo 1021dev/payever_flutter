@@ -6,17 +6,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/commons/models/version.dart';
 import 'package:payever/commons/utils/common_utils.dart';
-import 'package:payever/commons/utils/global_keys.dart';
 import 'package:payever/dashboard/fake_dashboard_screen.dart';
 import 'package:payever/login/register_business_screen.dart';
 import 'package:payever/theme.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:device_info/device_info.dart';
 import 'package:page_transition/page_transition.dart';
-
+import 'package:the_validator/the_validator.dart';
 import '../switcher/switcher_page.dart';
 
 class RegisterInitScreen extends StatelessWidget {
@@ -49,8 +49,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final formKey = new GlobalKey<FormState>();
 
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-  bool _isInvalidInformation = false;
-  String _password, _username;
 
   TextEditingController firstNameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
@@ -86,8 +84,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return BlocListener(
       bloc: screenBloc,
       listener: (BuildContext context, RegisterScreenState state) async {
-        if (state is LoginScreenFailure) {
-          _isInvalidInformation = true;
+        if (state is RegisterScreenFailure) {
+          Fluttertoast.showToast(msg: state.error);
         } else if (state is RegisterScreenSuccess) {
           Navigator.pushReplacement(
               context,
@@ -193,19 +191,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 left: _paddingText, right: _paddingText),
                             child: TextFormField(
                               controller: firstNameController,
-                              enabled: !state.isLogIn,
-                              onSaved: (val) => _username = val,
-                              onChanged: (val) {
-                                setState(() {
-                                  _isInvalidInformation = false;
-                                });
-                              },
+                              enabled: !state.isRegister,
                               validator: (value) {
                                 if (value.isEmpty) {
                                   return 'Name is required!';
                                 }
                                 return null;
                               },
+                              textCapitalization: TextCapitalization.words,
                               decoration: new InputDecoration(
                                 labelText: 'First Name',
                                 border: InputBorder.none,
@@ -218,7 +211,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               style: TextStyle(
                                 fontSize: 16,
                               ),
-                              keyboardType: TextInputType.emailAddress,
+                              keyboardType: TextInputType.text,
                             ),
                           ),
                         ),
@@ -243,20 +236,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   padding: EdgeInsets.only(
                                       left: _paddingText, right: _paddingText),
                                   child: TextFormField(
-                                    controller: passwordController,
-                                    enabled: !state.isLogIn,
-                                    onSaved: (val) => _password = val,
-                                    onChanged: (val) {
-                                      setState(() {
-                                        _isInvalidInformation = false;
-                                      });
-                                    },
+                                    controller: lastNameController,
+                                    enabled: !state.isRegister,
                                     validator: (value) {
                                       if (value.isEmpty) {
                                         return 'Name is required';
                                       }
                                       return null;
                                     },
+                                    textCapitalization: TextCapitalization.words,
                                     decoration: new InputDecoration(
                                       labelText: 'Last Name',
                                       border: InputBorder.none,
@@ -266,7 +254,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                             )
                                           : null,
                                     ),
-                                    obscureText: true,
+                                    keyboardType: TextInputType.text,
                                     style: TextStyle(
                                       fontSize: 16,
                                     ),
@@ -289,13 +277,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 left: _paddingText, right: _paddingText),
                             child: TextFormField(
                               controller: emailController,
-                              enabled: !state.isLogIn,
-                              onSaved: (val) => _username = val,
-                              onChanged: (val) {
-                                setState(() {
-                                  _isInvalidInformation = false;
-                                });
-                              },
+                              enabled: !state.isRegister,
                               validator: (value) {
                                 if (value.isEmpty) {
                                   return 'Email is required!';
@@ -343,19 +325,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       left: _paddingText, right: _paddingText),
                                   child: TextFormField(
                                     controller: passwordController,
-                                    enabled: !state.isLogIn,
-                                    onSaved: (val) => _password = val,
+                                    enabled: !state.isRegister,
                                     onChanged: (val) {
-                                      setState(() {
-                                        _isInvalidInformation = false;
-                                      });
+
                                     },
-                                    validator: (value) {
-                                      if (value.isEmpty) {
-                                        return 'Password is required';
-                                      }
-                                      return null;
-                                    },
+                                    // validator: (value) {
+                                    //   if (value.isEmpty) {
+                                    //     return 'Password is required';
+                                    //   }
+                                    //   return null;
+                                    // },
+                                    validator: FieldValidator.password(
+                                        minLength: 8,
+                                        shouldContainNumber: true,
+                                        shouldContainCapitalLetter: true,
+                                        shouldContainSpecialChars: true,
+                                        errorMessage: "Password must match the required format",
+                                        isNumberNotPresent: () { return "Password must contain number"; },
+                                        isSpecialCharsNotPresent: () { return "Password must contain special characters"; },
+                                        isCapitalLetterNotPresent: () { return "Password must contain capital letters"; }
+                                    ),
                                     decoration: new InputDecoration(
                                       labelText: 'Password',
                                       border: InputBorder.none,
@@ -402,26 +391,45 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                       ),
                       child: InkWell(
-                        key: GlobalKeys.loginButton,
                         child: Center(
-                          child: Text(
-                            'Next Step',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
+                          child: state.isRegister
+                              ? Container(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : Text(state.isRegistered ?
+                                  'Next Step' : 'Sign up for free',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
                         ),
                         onTap: () {
+                          if (state.isRegister)
+                            return;
+                          if (state.isRegistered) {
+                            Navigator.pushReplacement(
+                                context,
+                                PageTransition(
+                                  type: PageTransitionType.fade,
+                                  child: RegisterBusinessScreen(registerScreenBloc: screenBloc,),
+                                )
+                            );
+                          } else {
+                            if (formKey.currentState.validate()) {
+                              screenBloc.add(RegisterEvent(
+                                  firstName: firstNameController.text,
+                                  lastName: lastNameController.text,
+                                  email: emailController.text,
+                                  password: passwordController.text));
+                            }
+                          }
                           // Navigator.pop(context);
-                          Navigator.push(
-                              context,
-                              PageTransition(
-                                type: PageTransitionType.fade,
-                                child: RegisterBusinessScreen(registerScreenBloc: screenBloc,),
-                              )
-                          );
                         },
                       ),
                     ),
@@ -586,7 +594,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
           );
         });
   }
-
 
   _launchURL(String url) async {
     if (await canLaunch(url)) {

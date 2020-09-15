@@ -17,6 +17,7 @@ class ApiService {
   static String widgets = Env.widgets;
 
   static String loginUrl = '$authBaseUrl/api/login';
+  static String registerUrl = '$authBaseUrl/api/register';
   static String refreshUrl = '$authBaseUrl/api/refresh';
 
   static String userUrl = '$baseUrl/api/user';
@@ -404,6 +405,28 @@ class ApiService {
             HttpHeaders.contentTypeHeader: 'application/json',
             HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
           },
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> registerUser(String firstName, String lastName, String email, String password) async {
+    try {
+      print('$TAG - registerUser()');
+      dynamic response = await _client.postTypeLess(
+        registerUrl,
+        body: {
+          'first_name': firstName,
+          'last_name': lastName,
+          'email': email,
+          'plainPassword': password,
+        },
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+        },
       );
       return response;
     } catch (e) {

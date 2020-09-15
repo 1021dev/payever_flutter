@@ -3,33 +3,48 @@ import 'package:payever/commons/models/version.dart';
 
 class RegisterScreenState {
   final bool isLoading;
-  final bool isLogIn;
+  final bool isRegister;
+  final bool isRegistered;
+  final String firstName;
+  final String lastName;
   final String email;
   final String password;
 
   RegisterScreenState({
     this.isLoading = false,
-    this.isLogIn = false,
+    this.isRegister = false,
+    this.isRegistered = false,
+    this.firstName,
+    this.lastName,
     this.email,
     this.password,
   });
 
   List<Object> get props => [
     this.isLoading,
-    this.isLogIn,
+    this.isRegister,
+    this.isRegistered,
+    this.firstName,
+    this.lastName,
     this.email,
     this.password,
   ];
 
   RegisterScreenState copyWith({
     bool isLoading,
-    bool isLogIn,
+    bool isRegister,
+    bool isRegistered,
+    String firstName,
+    String lastName,
     String email,
     String password,
   }) {
     return RegisterScreenState(
       isLoading: isLoading ?? this.isLoading,
-      isLogIn: isLogIn ?? this.isLogIn,
+      isRegister: isRegister ?? this.isRegister,
+      isRegistered: isRegistered ?? this.isRegistered,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
       email: email ?? this.email,
       password: password ?? this.password,
     );
