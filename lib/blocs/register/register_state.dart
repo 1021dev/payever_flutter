@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:payever/commons/models/user.dart';
 import 'package:payever/commons/models/version.dart';
 
 class RegisterScreenState {
@@ -9,6 +10,7 @@ class RegisterScreenState {
   final String lastName;
   final String email;
   final String password;
+  final User user;
 
   RegisterScreenState({
     this.isLoading = false,
@@ -18,6 +20,7 @@ class RegisterScreenState {
     this.lastName,
     this.email,
     this.password,
+    this.user,
   });
 
   List<Object> get props => [
@@ -28,6 +31,7 @@ class RegisterScreenState {
     this.lastName,
     this.email,
     this.password,
+    this.user,
   ];
 
   RegisterScreenState copyWith({
@@ -38,6 +42,7 @@ class RegisterScreenState {
     String lastName,
     String email,
     String password,
+    User user,
   }) {
     return RegisterScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -47,6 +52,7 @@ class RegisterScreenState {
       lastName: lastName ?? this.lastName,
       email: email ?? this.email,
       password: password ?? this.password,
+      user: user ?? this.user,
     );
   }
 }

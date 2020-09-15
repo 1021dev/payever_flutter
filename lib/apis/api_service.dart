@@ -286,6 +286,22 @@ class ApiService {
     }
   }
 
+  Future<dynamic> postUser(String token) async {
+    try {
+      print('TAG - postUser()');
+      print('Bearer $token');
+      print('${GlobalUtils.fingerprint}');
+      dynamic response = await _client.postTypeLess(
+          userUrl,
+          body: {'hasUnfinishedBusinessRegistration': true},
+          headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<dynamic> getAuthUser(String token) async {
     try {
       print('TAG - getAuthUser()');

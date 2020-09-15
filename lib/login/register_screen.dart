@@ -17,7 +17,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:device_info/device_info.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:the_validator/the_validator.dart';
-import '../switcher/switcher_page.dart';
+import 'package:super_rich_text/super_rich_text.dart';
 
 class RegisterInitScreen extends StatelessWidget {
 
@@ -32,6 +32,9 @@ class RegisterScreen extends StatefulWidget {
   @override
   _RegisterScreenState createState() => _RegisterScreenState();
 }
+
+const String termsLink = 'https://getpayever.com/agb?_ga=2.220255708.595830855.1600031280-238550036.1593180292';
+const String privacyLink = 'https://getpayever.com/about/privacy?_ga=2.155685503.595830855.1600031280-238550036.1593180292';
 
 class _RegisterScreenState extends State<RegisterScreen> {
   RegisterScreenBloc screenBloc;
@@ -91,10 +94,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
               context,
               PageTransition(
                 type: PageTransitionType.fade,
-                child: SwitcherScreen(true),
+                child: RegisterBusinessScreen(registerScreenBloc: screenBloc,),
               ));
         } else if (state is LoadedCredentialsState) {
-          // emailController.text = state.username;
+          firstNameController.text = state.firstName;
+          lastNameController.text = state.lastName;
+          emailController.text = state.email;
           passwordController.text = state.password;
         }
       },
@@ -472,16 +477,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ],
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 26.0),
-                  child: Text(
-                    'By registering you agree to payever Terms of Service and have read the Privacy Policy',
-                    style: TextStyle(fontSize: 14),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.center,
-                  ),
-                )
+                _isTablet
+                    ? Container()
+                    : Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 26.0),
+                        child: _termsOfServiceNote(),
+                        // Text(
+                        //   'By registering you agree to payever Terms of Service and have read the Privacy Policy',
+                        //   style: TextStyle(fontSize: 14),
+                        //   maxLines: 2,
+                        //   overflow: TextOverflow.ellipsis,
+                        //   textAlign: TextAlign.center,
+                        // ),
+                      )
               ],
             ),
           ],
@@ -536,6 +544,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
+  Widget _termsOfServiceNote() {
+    return  SuperRichText(
+      text:
+      'By registering you agree to payever llTerms of Servicell and have read the llPrivacy Policyll',
+      style: TextStyle(color: iconColor(), fontSize: 14),
+      textAlign: TextAlign.center,
+      othersMarkers: [
+        MarkerText.withUrl(
+            marker: 'll',
+            style: TextStyle(color: iconColor(), fontWeight: FontWeight.bold),
+            urls: [termsLink, privacyLink]),
+      ],
+    );
+  }
+  
   showPopUp(Version _version) {
     showDialog(
         barrierDismissible: false,

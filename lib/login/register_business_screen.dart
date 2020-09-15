@@ -16,6 +16,7 @@ import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/custom_elements.dart';
+import 'package:payever/dashboard/dashboard_screen.dart';
 import 'package:payever/settings/models/models.dart';
 import 'package:payever/settings/widgets/save_button.dart';
 import 'package:payever/theme.dart';
@@ -59,7 +60,7 @@ class _RegisterBusinessScreenState extends State<RegisterBusinessScreen> {
   @override
   void initState() {
     businessBloc = BusinessBloc();
-    // businessBloc.add(BusinessFormEvent());
+    businessBloc.add(BusinessFormEvent());
     super.initState();
   }
 
@@ -94,29 +95,28 @@ class _RegisterBusinessScreenState extends State<RegisterBusinessScreen> {
               .setCurrentBusiness(state.business);
           Provider.of<GlobalStateModel>(context,listen: false)
               .setCurrentWallpaper('$wallpaperBase${state.wallpaper.currentWallpaper.wallpaper}');
-          BusinessApps commerceApp;
-          List<BusinessApps> businessApps = state.businessApps.where((element) => element.code.contains('commerceos')).toList();
-          if (businessApps.length > 0) {
-            commerceApp = businessApps.first;
-          }
-          Navigator.push(
-            context,
-            PageTransition(
-              child: WelcomeScreen(
-                business: state.business,
-                businessApps: commerceApp,
-              ),
-              type: PageTransitionType.fade,
-            ),
-          );
-//          Navigator.pushReplacement(
-//              context,
-//              PageTransition(
-//                child: DashboardScreenInit(refresh: true,),
-//                type: PageTransitionType.fade,
-//                duration: Duration(microseconds: 300),
-//              )
-//          );
+          // BusinessApps commerceApp;
+          // List<BusinessApps> businessApps = state.businessApps.where((element) => element.code.contains('commerceos')).toList();
+          // if (businessApps.length > 0) {
+          //   commerceApp = businessApps.first;
+          // }
+          // Navigator.push(
+          //   context,
+          //   PageTransition(
+          //     child: WelcomeScreen(
+          //       business: state.business,
+          //       businessApps: commerceApp,
+          //     ),
+          //     type: PageTransitionType.fade,
+          //   ),
+          // );
+         Navigator.pushReplacement(
+             context,
+             PageTransition(
+               child: DashboardScreenInit(refresh: true,),
+               type: PageTransitionType.fade,
+             )
+         );
         }
       },
       child: BlocBuilder<BusinessBloc, BusinessState>(

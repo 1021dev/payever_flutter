@@ -56,8 +56,9 @@ class RegisterScreenBloc extends Bloc<RegisterScreenEvent, RegisterScreenState> 
         await _storage.write(key: GlobalUtils.TOKEN, value: tokenData.accessToken);
 
         GlobalUtils.activeToken = tokenData;
-
-        yield state.copyWith(isRegister: false, isRegistered: true);
+        dynamic userObj = await api.postUser(tokenData.accessToken);
+        User user = User.map(userObj);
+        yield state.copyWith(isRegister: false, isRegistered: true, user: user);
         yield RegisterScreenSuccess();
       }
     } catch (error){
