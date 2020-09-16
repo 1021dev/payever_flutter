@@ -469,7 +469,7 @@ class TerminalCell extends StatelessWidget {
       focusElevation: 0,
       hoverElevation: 0,
       highlightElevation: 0,
-      color: selected.id == terminal.id ? Colors.white24 : Colors.transparent.withOpacity(0),
+      color: selected.id == terminal.id ? overlayBackground().withOpacity(0.5) : Colors.transparent.withOpacity(0),
       onPressed: () {
         onTap(terminal);
       },
@@ -522,33 +522,36 @@ class TerminalCell extends StatelessWidget {
             Container(
               height: 36,
               child: selected.id == terminal.id ? Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  MaterialButton(
-                    minWidth: 0,
-                    onPressed: () {
+                  InkWell(
+                    onTap: () {
                       onOpen(terminal);
                     },
-                    height: 20,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    color: overlayBackground(),
-                    child: Text(
-                      'Open',
-                      style: TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w500,
+                    child: Container(
+                      height: 20,
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: overlayBackground(),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Text(
+                        'Open',
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                   ),
-                  Flexible(
-                    child: MaterialButton(
-                      onPressed: () {
-                        onMore(terminal);
-                      },
-                      minWidth: 0,
+                  InkWell(
+                    onTap: () {
+                      onMore(terminal);
+                    },
+                    child: Container(
                       height: 20,
-                      shape: RoundedRectangleBorder(
+                      decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Icon(
