@@ -16,7 +16,7 @@ class _GoogleMapAddressFieldState extends State<GoogleMapAddressField> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 50,
+      height: 65,
       padding: EdgeInsets.only(left: 12, right: 12),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,

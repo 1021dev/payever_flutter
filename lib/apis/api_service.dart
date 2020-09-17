@@ -2644,9 +2644,9 @@ class ApiService {
     }
   }
 
-  Future<dynamic> patchCheckoutFlow(String token, String checkoutFlowId, String local, Map<String, dynamic>body) async {
+  Future<dynamic> patchCheckoutFlowOrder(String token, String checkoutFlowId, String local, Map<String, dynamic>body) async {
     try {
-      print('$TAG - patchCheckoutOrder()');
+      print('$TAG - patchCheckoutFlowOrder()');
       var rand = randomString(8);
       print(rand);
       dynamic response = await _client.patchTypeless(
@@ -2660,6 +2660,21 @@ class ApiService {
     }
   }
 
+  Future<dynamic> patchCheckoutFlowAddress(String token, String checkoutFlowId, String addressId, String local, Map<String, dynamic>body) async {
+    try {
+      print('$TAG - patchCheckoutFlowAddress()');
+      var rand = randomString(8);
+      print(rand);
+      dynamic response = await _client.patchTypeless(
+        '$checkoutV3/$checkoutFlowId/address/$addressId?_locale=$local&rand=$rand',
+        body: body,
+        headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
   ///---------------------------------------------------------------------------
   ///                   Checkout - Switch / Create / Edit / Delete
   ///---------------------------------------------------------------------------

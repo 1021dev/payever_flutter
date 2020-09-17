@@ -5,7 +5,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/checkout/checkout_bloc.dart';
-import 'package:payever/blocs/checkout/checkout_state.dart';
 import 'package:payever/checkout/models/models.dart';
 import 'package:payever/checkout/widgets/checkout_top_button.dart';
 import 'package:payever/checkout/widgets/workshop_header_item.dart';
@@ -66,8 +65,12 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
     'Your payment option'
   ];
 
+  WorkshopScreenBloc screenBloc;
+
   @override
   void initState() {
+    screenBloc = WorkshopScreenBloc();
+    screenBloc.add(WorkshopScreenInitEvent());
     super.initState();
   }
 
@@ -81,8 +84,8 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
   @override
   Widget build(BuildContext context) {
 
-    return BlocBuilder<CheckoutScreenBloc, CheckoutScreenState>(
-      bloc: widget.checkoutScreenBloc,
+    return BlocBuilder<WorkshopScreenBloc, WorkshopScreenState>(
+      bloc: screenBloc,
       builder: (BuildContext context, state) {
         return Container(
           child: Column(
@@ -183,14 +186,13 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
     );
   }
 
-  Widget _body(CheckoutScreenState state) {
+  Widget _body(WorkshopScreenState state) {
     Business business = widget.checkoutScreenBloc.dashboardScreenBloc.state.activeBusiness;
     String currencyString = business.currency;
     NumberFormat format = NumberFormat();
     currency = format.simpleCurrencySymbol(currencyString);
 
     if (switchCheckout) {
-
       return CheckoutSwitchScreen(
         businessId: state.business,
         checkoutScreenBloc: widget.checkoutScreenBloc,
@@ -352,7 +354,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
     );
   }
 
-  Widget _cautionTestMode(CheckoutScreenState state) {
+  Widget _cautionTestMode(WorkshopScreenState state) {
     String title = 'Caution. Your checkout is in test mode. You just can test but there will be no regular transactions. In order to have real transactions please switch your checkout to live.';
     return Visibility(
         visible: state.defaultCheckout.settings.testingMode,
@@ -363,7 +365,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
     );
   }
 
-  Widget _editOrderView(CheckoutScreenState state) {
+  Widget _editOrderView(WorkshopScreenState state) {
     return Column(
       children: <Widget>[
         Container(
@@ -492,7 +494,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
     );
   }
 
-  Widget _orderView(CheckoutScreenState state) {
+  Widget _orderView(WorkshopScreenState state) {
     if (state.channelSetFlow == null) {
       return Container();
     }
@@ -525,6 +527,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                   child: Column(
                     children: <Widget>[
                       Container(
+                        height: 65,
                         child: TextFormField(
                           style: TextStyle(
                             fontSize: 16,
@@ -577,7 +580,9 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                       ),
                       Divider(height: 1,color: Colors.black54,),
                       Container(
+                        height: 65,
                         padding: EdgeInsets.only(left: 4, right: 4),
+                        alignment: Alignment.center,
                         child: TextFormField(
                           style: TextStyle(
                             fontSize: 16,
@@ -627,8 +632,8 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                     child: MaterialButton(
                       onPressed: () {
                         if (!state.isUpdating) {
-                          widget.checkoutScreenBloc.add(
-                              PatchCheckoutFlowEvent(body: {'amount': double.parse(controllerAmount.text), 'reference': controllerReference.text}));
+                          screenBloc.add(
+                              PatchCheckoutFlowOrderEvent(body: {'amount': double.parse(controllerAmount.text), 'reference': controllerReference.text}));
                           _selectedSectionIndex = 1;
                           isAccountApproved = true;
                         }
@@ -637,7 +642,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                         borderRadius: BorderRadius.circular(4),
                       ),
                       color: Colors.black87,
-                      child: state.isUpdating ?
+                      child: state.isUpdating && state.updatePayflowIndex == 0 ?
                       CircularProgressIndicator() :
                       Text(
                         'Next Step',
@@ -659,7 +664,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
     );
   }
 
-  Widget _orderDetailView(CheckoutScreenState state) {
+  Widget _orderDetailView(WorkshopScreenState state) {
     return Container(
       padding: EdgeInsets.only(top: 16, bottom: 16,),
       child: Row(
@@ -800,7 +805,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
     );
   }
 
-  Widget _accountView(CheckoutScreenState state) {
+  Widget _accountView(WorkshopScreenState state) {
     return Visibility(
       visible: isVisible(state, 'user'),
       child: Column(
@@ -855,9 +860,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                         borderRadius: BorderRadius.circular(4),
                       ),
                       color: Colors.black87,
-                      child: state.isUpdating ?
-                      CircularProgressIndicator() :
-                      Text(
+                      child: Text(
                         Language.getCheckoutStrings('checkout_send_flow.action.continue'),
                         style: TextStyle(
                           fontSize: 16,
@@ -878,7 +881,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
     );
   }
 
-  Widget _billingView(CheckoutScreenState state) {
+  Widget _billingView(WorkshopScreenState state) {
     return Column(
       children: <Widget>[
         WorkshopHeader(
@@ -968,6 +971,28 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                 child: SizedBox.expand(
                   child: MaterialButton(
                     onPressed: () {
+                      Map<String, dynamic> body = {
+                        'city': "Berlin",
+                        'company': null,
+                        'country': "DE",
+                        'email': "test@gmail.com",
+                        'first_name': "Test",
+                        'full_address':
+                        "Germaniastraße, 12099, 12099 Berlin, Germany",
+                        'id': "673d6c97-2341-449f-82b6-eb15a00f9478",
+                        'last_name': "User",
+                        'phone': null,
+                        'salutation': "SALUTATION_MR",
+                        'select_address': "",
+                        'social_security_number': "",
+                        'street': "Germaniastraße, 12099",
+                        'street_name': "Germaniastraße,",
+                        'street_number': "12099",
+                        'type': "billing",
+                        'zip_code': "12099",
+                      };
+                      screenBloc
+                          .add(PatchCheckoutFlowAddressEvent(body: body));
                       setState(() {
                         _selectedSectionIndex++;
                       });
@@ -976,7 +1001,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                       borderRadius: BorderRadius.circular(4),
                     ),
                     color: Colors.black87,
-                    child: state.isUpdating ?
+                    child: state.isUpdating && state.updatePayflowIndex == 1 ?
                     CircularProgressIndicator() :
                     Text(
                       Language.getCheckoutStrings('checkout_send_flow.action.continue'),
@@ -997,7 +1022,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
     );
   }
 
-  Widget _sendToDeviceView(CheckoutScreenState state) {
+  Widget _sendToDeviceView(WorkshopScreenState state) {
     return Visibility(
       visible: isVisible(state, 'send_to_device'),
       child: Column(
@@ -1161,7 +1186,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
     );
   }
 
-  Widget _selectPaymentView(CheckoutScreenState state) {
+  Widget _selectPaymentView(WorkshopScreenState state) {
     return Visibility(
       visible: isVisible(state, 'choosePayment'),
       child: Column(
@@ -1304,7 +1329,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
     );
   }
 
-  Widget _paymentOptionView(CheckoutScreenState state) {
+  Widget _paymentOptionView(WorkshopScreenState state) {
     return Visibility(
       visible: isVisible(state, 'payment'),
       child: Column(
@@ -1441,7 +1466,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
     );
   }
 
-  Widget _addressView(CheckoutScreenState state) {
+  Widget _addressView(WorkshopScreenState state) {
     return Visibility(
       visible: isVisible(state, 'address'),
       child: Container(),
@@ -1457,7 +1482,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
     );
   }
 
-  bool isVisible(CheckoutScreenState state, String code) {
+  bool isVisible(WorkshopScreenState state, String code) {
     List<Section> sections = state.defaultCheckout.sections.where((element) => (element.code == code)).toList();
     if (sections.length > 0)
       return sections.first.enabled;
@@ -1467,7 +1492,8 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
 
   Widget _emailField({bool isInitValue = false}) {
     return Container(
-      height: 50,
+      height: 65,
+      alignment: Alignment.center,
       child: TextFormField(
         style: TextStyle(
           fontSize: 16,

@@ -22,6 +22,8 @@ class AddressFieldGroup extends StatefulWidget {
   final Function onChangedZipCode;
   final Function onChangedGoogleAutocomplete;
 
+  final hasBorder;
+
   AddressFieldGroup(
       {this.city,
       this.countryCode,
@@ -32,7 +34,8 @@ class AddressFieldGroup extends StatefulWidget {
       this.onChangedCode,
       this.onChangedStreet,
       this.onChangedZipCode,
-      this.onChangedGoogleAutocomplete});
+      this.onChangedGoogleAutocomplete,
+      this.hasBorder = true});
 
   @override
   _AddressFieldGroupState createState() => _AddressFieldGroupState();
@@ -67,14 +70,12 @@ class _AddressFieldGroupState extends State<AddressFieldGroup> {
       child: Column(
         children: <Widget>[
           Container(
-            padding:
-            EdgeInsets.only(left: 8, top: 8, right: 8),
             height: 65,
             child: BlurEffectView(
               color: overlayRow(),
               borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(8),
-                topRight: Radius.circular(8),
+                topLeft: Radius.circular(widget.hasBorder ? 8 : 0),
+                topRight: Radius.circular(widget.hasBorder ? 8 : 0),
               ),
               child: GoogleMapAddressField(
                 googleAutocomplete: widget.googleAutocomplete,
@@ -86,11 +87,13 @@ class _AddressFieldGroupState extends State<AddressFieldGroup> {
           ),
           Container(
             padding:
-            EdgeInsets.only(left: 8, top: 2, right: 8),
+            EdgeInsets.only(top: 2),
             child: BlurEffectView(
               color: overlayRow(),
               radius: 0,
               child: Container(
+                height: 65,
+                alignment: Alignment.center,
                 padding: EdgeInsets.only(left: 12, right: 12),
                 child: DropdownButtonFormField(
                   items: List.generate(countryList.length,
@@ -121,9 +124,7 @@ class _AddressFieldGroupState extends State<AddressFieldGroup> {
           ),
           Container(
             padding: EdgeInsets.only(
-              left: 8,
               top: 2,
-              right: 8,
             ),
             height: 65,
             child: BlurEffectView(
@@ -160,9 +161,7 @@ class _AddressFieldGroupState extends State<AddressFieldGroup> {
           ),
           Container(
             padding: EdgeInsets.only(
-              left: 8,
               top: 2,
-              right: 8,
             ),
             height: 65,
             child: BlurEffectView(
@@ -198,15 +197,11 @@ class _AddressFieldGroupState extends State<AddressFieldGroup> {
             ),
           ),
           Container(
-            padding: EdgeInsets.only(
-                left: 8, top: 2, right: 8, bottom: 8),
+            padding: EdgeInsets.only(top: 2, bottom: 2),
             height: 65,
             child: BlurEffectView(
+              radius: 0,
               color: overlayRow(),
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(8),
-                bottomRight: Radius.circular(8),
-              ),
               child: Container(
                 padding: EdgeInsets.only(left: 12, right: 12),
                 child: TextFormField(

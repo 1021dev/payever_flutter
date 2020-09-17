@@ -29,7 +29,7 @@ class _PersonalNameFieldState extends State<PersonalNameField> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 50,
+      height: 65,
       child: Row(
         children: <Widget>[
           Flexible(

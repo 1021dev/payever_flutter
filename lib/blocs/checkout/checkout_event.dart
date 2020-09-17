@@ -50,16 +50,6 @@ class GetSectionDetails extends CheckoutScreenEvent {
 class UpdateCheckoutSections extends CheckoutScreenEvent {
 }
 
-class PatchCheckoutFlowEvent extends CheckoutScreenEvent {
-  final Map<String, dynamic> body;
-
-  PatchCheckoutFlowEvent({this.body,});
-
-  @override
-  List<Object> get props => [
-    this.body,
-  ];
-}
 
 class ReorderSection1Event extends CheckoutScreenEvent {
   final int oldIndex;

@@ -16,6 +16,7 @@ export './connect/connect_settings_detail/connect_settings_detail.dart';
 export './contact/contact.dart';
 export './contact/contact_detail/contact_detail.dart';
 export './checkout/checkout.dart';
+export './checkout/workshop/workshop.dart';
 export './checkout/checkout_connect/checkout_connect.dart';
 export './checkout/checkout_switch/checkout_switch.dart';
 export './checkout/checkout_channel_set/checkout_channel_set.dart';

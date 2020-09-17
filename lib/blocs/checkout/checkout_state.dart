@@ -140,6 +140,7 @@ class CheckoutScreenState {
   CheckoutScreenState copyWith({
     bool isLoading,
     bool isUpdating,
+    int updatePayflowIndex,
     bool loadingChannel,
     bool loadingConnect,
     bool loadingPaymentOption,
