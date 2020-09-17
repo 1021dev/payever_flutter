@@ -712,7 +712,7 @@ class _DragProxyState extends State<_DragProxy> {
 }
 
 class _VerticalPointerState extends MultiDragPointerState {
-  _VerticalPointerState(Offset initialPosition) : super(initialPosition, PointerDeviceKind.touch) {
+  _VerticalPointerState(Offset initialPosition) : super(initialPosition/*, PointerDeviceKind.touch*/) {
     _resolveTimer = Timer(Duration(milliseconds: 150), () {
       resolve(GestureDisposition.accepted);
       _resolveTimer = null;
