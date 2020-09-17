@@ -18,6 +18,7 @@ import 'package:payever/checkout/views/payments/payment_options_screen.dart';
 import 'package:payever/checkout/views/sections/sections_screen.dart';
 import 'package:payever/checkout/views/settings/settings_screen.dart';
 import 'package:payever/checkout/views/workshop/workshop_screen.dart';
+import 'package:payever/checkout/views/workshop/workshop_screen1.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/utils/translations.dart';
 import 'package:payever/commons/view_models/global_state_model.dart';
@@ -470,7 +471,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         return state.isLoading ?
         Center(
           child: CircularProgressIndicator(),
-        ) : WorkshopScreen(checkoutScreenBloc: this.screenBloc,);
+        ) : WorkshopScreen1(checkoutScreenBloc: this.screenBloc,);
       case 1:
         return PaymentOptionsScreen(
           connects: state.connects,
