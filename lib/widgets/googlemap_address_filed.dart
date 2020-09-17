@@ -4,18 +4,19 @@ import 'package:payever/commons/utils/translations.dart';
 
 import '../theme.dart';
 
-class GoogleMapAddressTextField extends StatefulWidget {
+class GoogleMapAddressField extends StatefulWidget {
   final String googleAutocomplete;
   final Function onChanged;
-  const GoogleMapAddressTextField({this.googleAutocomplete, this.onChanged});
+  const GoogleMapAddressField({this.googleAutocomplete, this.onChanged});
   @override
-  _GoogleMapAddressTextFieldState createState() => _GoogleMapAddressTextFieldState();
+  _GoogleMapAddressFieldState createState() => _GoogleMapAddressFieldState();
 }
 
-class _GoogleMapAddressTextFieldState extends State<GoogleMapAddressTextField> {
+class _GoogleMapAddressFieldState extends State<GoogleMapAddressField> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 50,
       padding: EdgeInsets.only(left: 12, right: 12),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,

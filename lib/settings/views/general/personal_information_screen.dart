@@ -19,6 +19,7 @@ import 'package:payever/settings/widgets/app_bar.dart';
 import 'package:payever/settings/widgets/profile_image_view.dart';
 import 'package:payever/settings/widgets/save_button.dart';
 import 'package:payever/theme.dart';
+import 'package:payever/widgets/peronal_name_field.dart';
 
 class PersonalInformationScreen extends StatefulWidget {
   final GlobalStateModel globalStateModel;
@@ -168,114 +169,25 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                             ),
                           ),
                           SizedBox(height: 2,),
-                          Container(
-                            height: 64,
-                            child: Row(
-                              children: <Widget>[
-                                Flexible(
-                                  child: BlurEffectView(
-                                    color: overlayRow(),
-                                    radius: 0,
-                                    child: Container(
-                                      height: 64,
-                                      alignment: Alignment.center,
-                                      padding: EdgeInsets.only(left: 16, right: 8),
-                                      child: DropdownButtonFormField(
-                                        items: List.generate(2, (index) {
-                                          return DropdownMenuItem(
-                                            child: Text(
-                                              Language.getConnectStrings(index == 0 ?
-                                              'user_business_form.form.contactDetails.salutation.options.SALUTATION_MR':
-                                              'user_business_form.form.contactDetails.salutation.options.SALUTATION_MRS'),
-                                            ),
-                                            value: index == 0 ? 'SALUTATION_MR': 'SALUTATION_MRS',
-                                          );
-                                        }).toList(),
-                                        onChanged: (val) {
-                                          setState(() {
-                                            salutation = val;
-                                          });
-                                        },
-                                        value: salutation != '' ? salutation : null,
-                                        icon: Flexible(
-                                          child: Icon(
-                                            Icons.keyboard_arrow_down,
-                                          ),
-                                        ),
-                                        decoration: InputDecoration(
-                                          border: InputBorder.none,
-                                        ),
-                                        hint: Text(
-                                          Language.getSettingsStrings('form.create_form.contact.salutation.label'),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(left: 2),
-                                ),
-                                Flexible(
-                                  child: BlurEffectView(
-                                    color: overlayRow(),
-                                    radius: 0,
-                                    child: Container(
-                                      height: 64,
-                                      alignment: Alignment.center,
-                                      child: TextFormField(
-                                        style: TextStyle(fontSize: 16),
-                                        onChanged: (val) {
-                                          setState(() {
-                                            firstName = val;
-                                          });
-                                        },
-                                        initialValue: firstName ?? '',
-                                        decoration: InputDecoration(
-                                          contentPadding: EdgeInsets.only(left: 16, right: 16),
-                                          labelText: Language.getPosTpmStrings('First Name'),
-                                          enabledBorder: InputBorder.none,
-                                          focusedBorder: UnderlineInputBorder(
-                                            borderSide: BorderSide(color: Colors.blue, width: 0.5),
-                                          ),
-                                        ),
-                                        keyboardType: TextInputType.text,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(left: 2),
-                                ),
-                                Flexible(
-                                  child: BlurEffectView(
-                                    color: overlayRow(),
-                                    radius: 0,
-                                    child: Container(
-                                      height: 64,
-                                      alignment: Alignment.center,
-                                      child: TextFormField(
-                                        style: TextStyle(fontSize: 16),
-                                        onChanged: (val) {
-                                          setState(() {
-                                            lastName = val;
-                                          });
-                                        },
-                                        initialValue: lastName ?? '',
-                                        decoration: InputDecoration(
-                                          contentPadding: EdgeInsets.only(left: 16, right: 16),
-                                          labelText: Language.getPosTpmStrings('Last Name'),
-                                          enabledBorder: InputBorder.none,
-                                          focusedBorder: UnderlineInputBorder(
-                                            borderSide: BorderSide(color: Colors.blue, width: 0.5),
-                                          ),
-                                        ),
-                                        keyboardType: TextInputType.text,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                          PersonalNameField(
+                            salutation: salutation,
+                            firstName: firstName,
+                            lastName: lastName,
+                            salutationChanged: (val) {
+                              setState(() {
+                                salutation = val;
+                              });
+                            },
+                            firstNameChanged: (val) {
+                              setState(() {
+                                firstName = val;
+                              });
+                            },
+                            lastNameChanged: (val) {
+                              setState(() {
+                                lastName = val;
+                              });
+                            },
                           ),
                           SizedBox(height: 2,),
                           Container(

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 import 'package:iso_countries/iso_countries.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
@@ -14,7 +15,8 @@ import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/settings/widgets/app_bar.dart';
 import 'package:payever/settings/widgets/save_button.dart';
 import 'package:payever/theme.dart';
-import 'package:payever/widgets/googlemap_address_textfiled.dart';
+import 'package:payever/widgets/address_field_group.dart';
+import 'package:payever/widgets/googlemap_address_filed.dart';
 
 class AddressScreen extends StatefulWidget {
   final GlobalStateModel globalStateModel;
@@ -116,184 +118,36 @@ class _AddressScreenState extends State<AddressScreen> {
                     child: Container(
                       child: Column(
                         children: <Widget>[
-                          Container(
-                            padding:
-                            EdgeInsets.only(left: 8, top: 8, right: 8),
-                            height: 65,
-                            child: BlurEffectView(
-                              color: overlayRow(),
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(8),
-                                topRight: Radius.circular(8),
-                              ),
-                              child: GoogleMapAddressTextField(
-                                googleAutocomplete: googleAutocomplete,
-                                onChanged: (val) {
-                                  googleAutocomplete = val;
-                                },
-                              ),
-                            ),
-                          ),
-                          Container(
-                            padding:
-                            EdgeInsets.only(left: 8, top: 2, right: 8),
-                            child: BlurEffectView(
-                              color: overlayRow(),
-                              radius: 0,
-                              child: Container(
-                                padding: EdgeInsets.only(left: 12, right: 12),
-                                child: DropdownButtonFormField(
-                                  items: List.generate(widget.countryList.length,
-                                          (index) {
-                                        return DropdownMenuItem(
-                                          child: Text(
-                                            widget.countryList[index].name,
-                                          ),
-                                          value: widget.countryList[index].name,
-                                        );
-                                      }).toList(),
-                                  value: countryName ?? null,
-                                  onChanged: (val) {
-                                    countryName = val;
-                                  },
-                                  icon: Icon(
-                                    Icons.keyboard_arrow_down,
-                                  ),
-                                  decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                  ),
-                                  hint: Text(
-                                    Language.getSettingsStrings('form.create_form.address.country.label'),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            padding: EdgeInsets.only(
-                              left: 8,
-                              top: 2,
-                              right: 8,
-                            ),
-                            height: 65,
-                            child: BlurEffectView(
-                              color: overlayRow(),
-                              radius: 0,
-                              child: Container(
-                                padding: EdgeInsets.only(left: 12, right: 12),
-                                child: TextFormField(
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                  ),
-                                  initialValue: city ?? '',
-                                  textInputAction: TextInputAction.done,
-                                  keyboardType: TextInputType.url,
-                                  onChanged: (val) {
-                                    setState(() {
-                                      city = val;
-                                      setGoogleAutoComplete();
-                                    });
-                                  },
-                                  validator: (value) {
-                                    if (value.isEmpty) {
-                                      return 'City is required.';
-                                    }
-                                    return null;
-                                  },
-                                  decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    labelText: Language.getSettingsStrings('form.create_form.address.city.label'),
-                                    labelStyle: TextStyle(
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            padding: EdgeInsets.only(
-                              left: 8,
-                              top: 2,
-                              right: 8,
-                            ),
-                            height: 65,
-                            child: BlurEffectView(
-                              color: overlayRow(),
-                              radius: 0,
-                              child: Container(
-                                padding: EdgeInsets.only(left: 12, right: 12),
-                                child: TextFormField(
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                  ),
-                                  initialValue: street ?? '',
-                                  textInputAction: TextInputAction.done,
-                                  keyboardType: TextInputType.url,
-                                  onChanged: (val) {
-                                    setState(() {
-                                      street = val;
-                                      setGoogleAutoComplete();
-                                    });
-                                  },
-                                  validator: (value) {
-                                    if (value.isEmpty) {
-                                      return 'Street is required.';
-                                    }
-                                    return null;
-                                  },
-                                  decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    labelText: Language.getSettingsStrings('form.create_form.address.street.label'),
-                                    labelStyle: TextStyle(
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            padding: EdgeInsets.only(
-                                left: 8, top: 2, right: 8, bottom: 8),
-                            height: 65,
-                            child: BlurEffectView(
-                              color: overlayRow(),
-                              borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(8),
-                                bottomRight: Radius.circular(8),
-                              ),
-                              child: Container(
-                                padding: EdgeInsets.only(left: 12, right: 12),
-                                child: TextFormField(
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                  ),
-                                  initialValue: zipCode ?? '',
-                                  textInputAction: TextInputAction.done,
-                                  keyboardType: TextInputType.url,
-                                  onChanged: (val) {
-                                    setState(() {
-                                      zipCode = val;
-                                      setGoogleAutoComplete();
-                                    });
-                                  },
-                                  validator: (value) {
-                                    if (value.isEmpty) {
-                                      return 'ZIP Code is required.';
-                                    }
-                                    return null;
-                                  },
-                                  decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    labelText: Language.getSettingsStrings('form.create_form.address.zip_code.label'),
-                                    labelStyle: TextStyle(
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
+                          AddressFieldGroup(
+                            googleAutocomplete: googleAutocomplete,
+                            city: city,
+                            countryCode: countryCode,
+                            street: street,
+                            zipCode: zipCode,
+                            onChangedGoogleAutocomplete: (val) {
+                              googleAutocomplete = val;
+                            },
+                            onChangedCode: (val) {
+                              countryName = val;
+                            },
+                            onChangedCity: (val) {
+                              setState(() {
+                                city = val;
+                                setGoogleAutoComplete();
+                              });
+                            },
+                            onChangedStreet: (val) {
+                              setState(() {
+                                street = val;
+                                setGoogleAutoComplete();
+                              });
+                            },
+                            onChangedZipCode: (val) {
+                              setState(() {
+                                zipCode = val;
+                                setGoogleAutoComplete();
+                              });
+                            },
                           ),
                           SaveBtn(
                             isUpdating: state.isUpdating,

@@ -10,6 +10,9 @@ import 'package:payever/checkout/models/models.dart';
 import 'package:payever/checkout/widgets/checkout_top_button.dart';
 import 'package:payever/checkout/widgets/workshop_header_item.dart';
 import 'package:payever/commons/commons.dart';
+import 'package:payever/widgets/address_field_group.dart';
+import 'package:payever/widgets/googlemap_address_filed.dart';
+import 'package:payever/widgets/peronal_name_field.dart';
 
 import 'checkout_switch_screen.dart';
 
@@ -32,6 +35,18 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
   bool isBillingApproved = false;
   String currency = '';
   bool editOrder = false;
+
+  String email;
+  String city;
+  String countryName;
+  String countryCode;
+  String street;
+  String zipCode;
+  String googleAutocomplete;
+
+  String salutation;
+  String firstName;
+  String lastName;
 
   var controllerAmount = TextEditingController();
   var controllerReference = TextEditingController();
@@ -294,7 +309,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                 ],
               ),
             ),
-            divider,
+            _divider,
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
@@ -310,19 +325,19 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                       child: Column(
                         children: <Widget>[
                           _orderView(state),
-                          divider,
+                          _divider,
                           _accountView(state),
-                          divider,
+                          _divider,
                           _billingView(state),
-                          divider,
+                          _divider,
                           _sendToDeviceView(state),
-                          divider,
+                          _divider,
                           _selectPaymentView(state),
-                          divider,
+                          _divider,
                           _paymentOptionView(state),
-                          divider,
+                          _divider,
                           _addressView(state),
-                          divider,
+                          _divider,
                           _orderDetailView(state),
                         ],
                       ),
@@ -767,7 +782,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                     ),
                     Container(
                       child: Text(
-                        '${currency}0.00',
+                        state.channelSetFlow != null ? '$currency${state.channelSetFlow.amount.toStringAsFixed(2)}': '',
                         style: TextStyle(
                           color: Colors.black87,
                           fontSize: 13,
@@ -808,55 +823,19 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                 Container(
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                    borderRadius: BorderRadius.all(Radius.circular(4)),
                   ),
                   child: Column(
                     children: <Widget>[
-                      Container(
-                        height: 50,
-                        child: TextFormField(
-                          style: TextStyle(
-                            fontSize: 16,
-                            color:Colors.black54,
-                            fontWeight: FontWeight.w400,
-                          ),
-                          onChanged: (val) {
-                          },
-                          initialValue: '',
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.only(left: 16, right: 16),
-                            labelText: 'Mobile number',
-                            labelStyle: TextStyle(
-                              color: Colors.grey,
-                            ),
-                            enabledBorder: InputBorder.none,
-                          ),
-                          keyboardType: TextInputType.text,
-                        ),
+                      _emailField(),
+                      _divider,
+                      GoogleMapAddressField(
+                        googleAutocomplete: googleAutocomplete,
+                        onChanged: (val) {
+                          googleAutocomplete = val;
+                        },
                       ),
-                      Divider(height: 1,color: Colors.black54,),
-                      Container(
-                        height: 50,
-                        child: TextFormField(
-                          style: TextStyle(
-                            fontSize: 16,
-                            color:Colors.black54,
-                            fontWeight: FontWeight.w400,
-                          ),
-                          onChanged: (val) {
-                          },
-                          initialValue: '',
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.only(left: 16, right: 16),
-                            labelText: 'E-Mail Address',
-                            labelStyle: TextStyle(
-                              color: Colors.grey,
-                            ),
-                            enabledBorder: InputBorder.none,
-                          ),
-                          keyboardType: TextInputType.text,
-                        ),
-                      ),
+                      _divider,
                     ],
                   ),
                 ),
@@ -865,63 +844,32 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                 ),
                 Container(
                   height: 50,
-                  child: Row(
-                    children: <Widget>[
-                      Flexible(
-                        child: SizedBox.expand(
-                          child: MaterialButton(
-                            onPressed: () {
-                              if (!state.isUpdating) {
-                                setState(() {
-                                  _selectedSectionIndex++;
-                                });
-                              }
-                            },
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: state.isUpdating ?
-                            CircularProgressIndicator() :
-                            Text(
-                              Language.getCheckoutStrings('checkout_send_flow.action.skip'),
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.black87,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          ),
+                  child: SizedBox.expand(
+                    child: MaterialButton(
+                      onPressed: () {
+                        setState(() {
+                          _selectedSectionIndex++;
+                        });
+                      },
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      color: Colors.black87,
+                      child: state.isUpdating ?
+                      CircularProgressIndicator() :
+                      Text(
+                        Language.getCheckoutStrings('checkout_send_flow.action.continue'),
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w400,
                         ),
                       ),
-                      Flexible(
-                        child: SizedBox.expand(
-                          child: MaterialButton(
-                            onPressed: () {
-                              setState(() {
-                                _selectedSectionIndex++;
-                              });
-                            },
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            color: Colors.black87,
-                            child: state.isUpdating ?
-                            CircularProgressIndicator() :
-                            Text(
-                              Language.getCheckoutStrings('checkout_send_flow.action.continue'),
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
                 SizedBox(height: 20,),
+
               ],
             ),
           ),
@@ -951,54 +899,63 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
               Container(
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                  borderRadius: BorderRadius.all(Radius.circular(4)),
                 ),
                 child: Column(
                   children: <Widget>[
-                    Container(
-                      height: 50,
-                      child: TextFormField(
-                        style: TextStyle(
-                          fontSize: 16,
-                          color:Colors.black54,
-                          fontWeight: FontWeight.w400,
-                        ),
-                        onChanged: (val) {
-                        },
-                        initialValue: '',
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.only(left: 16, right: 16),
-                          labelText: 'Mobile number',
-                          labelStyle: TextStyle(
-                            color: Colors.grey,
-                          ),
-                          enabledBorder: InputBorder.none,
-                        ),
-                        keyboardType: TextInputType.text,
-                      ),
+                    _emailField(isInitValue: true),
+                    _divider,
+                    PersonalNameField(
+                      salutation: salutation,
+                      firstName: firstName,
+                      lastName: lastName,
+                      salutationChanged: (val) {
+                        setState(() {
+                          salutation = val;
+                        });
+                      },
+                      firstNameChanged: (val) {
+                        setState(() {
+                          firstName = val;
+                        });
+                      },
+                      lastNameChanged: (val) {
+                        setState(() {
+                          lastName = val;
+                        });
+                      },
                     ),
-                    Divider(height: 1,color: Colors.black54,),
-                    Container(
-                      height: 50,
-                      child: TextFormField(
-                        style: TextStyle(
-                          fontSize: 16,
-                          color:Colors.black54,
-                          fontWeight: FontWeight.w400,
-                        ),
-                        onChanged: (val) {
-                        },
-                        initialValue: '',
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.only(left: 16, right: 16),
-                          labelText: 'E-Mail Address',
-                          labelStyle: TextStyle(
-                            color: Colors.grey,
-                          ),
-                          enabledBorder: InputBorder.none,
-                        ),
-                        keyboardType: TextInputType.text,
-                      ),
+                    _divider,
+                    AddressFieldGroup(
+                      googleAutocomplete: googleAutocomplete,
+                      city: city,
+                      countryCode: countryCode,
+                      street: street,
+                      zipCode: zipCode,
+                      onChangedGoogleAutocomplete: (val) {
+                        googleAutocomplete = val;
+                      },
+                      onChangedCode: (val) {
+                        countryName = val;
+                      },
+                      onChangedCity: (val) {
+                        setState(() {
+                          city = val;
+                          setGoogleAutoComplete();
+                        });
+                      },
+                      onChangedStreet: (val) {
+                        setState(() {
+                          street = val;
+                          setGoogleAutoComplete();
+                        });
+                      },
+                      onChangedZipCode: (val) {
+                        setState(() {
+                          zipCode = val;
+                          setGoogleAutoComplete();
+                        });
+                      },
                     ),
                   ],
                 ),
@@ -1008,58 +965,28 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
               ),
               Container(
                 height: 50,
-                child: Row(
-                  children: <Widget>[
-                    Flexible(
-                      child: SizedBox.expand(
-                        child: MaterialButton(
-                          onPressed: () {
-                            setState(() {
-                              _selectedSectionIndex++;
-                            });
-                          },
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: state.isUpdating ?
-                          CircularProgressIndicator() :
-                          Text(
-                            Language.getCheckoutStrings('checkout_send_flow.action.skip'),
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.black87,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        ),
+                child: SizedBox.expand(
+                  child: MaterialButton(
+                    onPressed: () {
+                      setState(() {
+                        _selectedSectionIndex++;
+                      });
+                    },
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    color: Colors.black87,
+                    child: state.isUpdating ?
+                    CircularProgressIndicator() :
+                    Text(
+                      Language.getCheckoutStrings('checkout_send_flow.action.continue'),
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
-                    Flexible(
-                      child: SizedBox.expand(
-                        child: MaterialButton(
-                          onPressed: () {
-                            setState(() {
-                              _selectedSectionIndex++;
-                            });
-                          },
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          color: Colors.black87,
-                          child: state.isUpdating ?
-                          CircularProgressIndicator() :
-                          Text(
-                            Language.getCheckoutStrings('checkout_send_flow.action.continue'),
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
               SizedBox(height: 20,),
@@ -1522,7 +1449,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
 
   }
 
-  get divider {
+  get _divider {
     return Divider(
       height: 0,
       thickness: 0.5,
@@ -1536,6 +1463,47 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
       return sections.first.enabled;
     else
       return false;
+  }
+
+  Widget _emailField({bool isInitValue = false}) {
+    return Container(
+      height: 50,
+      child: TextFormField(
+        style: TextStyle(
+          fontSize: 16,
+          color:Colors.black54,
+          fontWeight: FontWeight.w400,
+        ),
+        onChanged: (val) {
+          email = val;
+        },
+        initialValue: isInitValue ? email : '',
+        decoration: InputDecoration(
+          contentPadding: EdgeInsets.only(left: 16, right: 16),
+          labelText: 'E-Mail Address',
+          labelStyle: TextStyle(
+            color: Colors.grey,
+          ),
+          enabledBorder: InputBorder.none,
+        ),
+        keyboardType: TextInputType.text,
+      ),
+    );
+  }
+
+  void setGoogleAutoComplete() {
+    setState(() {
+      if (street != null && street.isNotEmpty) {
+        googleAutocomplete = street;
+      }
+      if (zipCode != null && zipCode.isNotEmpty) {
+        googleAutocomplete = googleAutocomplete + ', ' + zipCode;
+      }
+      if (city != null && city.isNotEmpty) {
+        googleAutocomplete = googleAutocomplete + ', ' + city;
+      }
+      print('googleAutocomplete ' + googleAutocomplete);
+    });
   }
 
   List<CheckOutPopupButton> _morePopup(BuildContext context) {
