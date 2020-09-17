@@ -55,13 +55,11 @@ dependencies:
   pull_to_refresh: ^1.6.1
   dropdown_formfield: 0.1.2
   image_cropper: ^1.2.3
-  flutter_reorderable_list: ^0.1.4
   flutter_colorpicker: ^0.3.4
   fluttertoast: ^7.0.2
   flutter_rating_bar: ^3.0.1+1
   smooth_star_rating: ^1.1.1
   date_range_picker: ^1.0.6
-  flutter_secure_storage: 3.3.3
   iso_countries: ^1.1.1
   dynamic_theme: ^1.0.1
   quill_delta: ^1.0.2

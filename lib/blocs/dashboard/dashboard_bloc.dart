@@ -1,9 +1,7 @@
-import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:package_info/package_info.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/blocs/bloc.dart';
@@ -23,13 +21,14 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
   DashboardScreenBloc();
   ApiService api = ApiService();
   String uiKit = '${Env.commerceOs}/assets/ui-kit/icons-png/';
-  final _storage = FlutterSecureStorage();
+  SharedPreferences preferences;
 
   @override
   DashboardScreenState get initialState => DashboardScreenState();
 
   @override
   Stream<DashboardScreenState> mapEventToState(DashboardScreenEvent event) async* {
+    preferences = await SharedPreferences.getInstance();
     if (event is DashboardScreenInitEvent) {
       yield* _checkVersion(event.wallpaper, event.isRefresh);
     } else if (event is DashboardScreenLoadDataEvent) {
@@ -111,7 +110,6 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
   }
 
   Stream<DashboardScreenState> _reLogin() async* {
-    var preferences = await SharedPreferences.getInstance();
     if (DateTime.now().difference(DateTime.parse(preferences.getString(GlobalUtils.LAST_OPEN))).inHours < 720) {
       try {
         var refreshTokenLogin = await api.login(
@@ -122,29 +120,28 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
 
         preferences.setString(GlobalUtils.LAST_OPEN, DateTime.now().toString());
         print('REFRESH TOKEN = ${tokenData.refreshToken}');
-        await _storage.write(key: GlobalUtils.REFRESH_TOKEN, value: tokenData.refreshToken);
-        await _storage.write(key: GlobalUtils.TOKEN, value: tokenData.accessToken);
-
+        preferences.setString(GlobalUtils.REFRESH_TOKEN, tokenData.refreshToken);
+        preferences.setString(GlobalUtils.TOKEN, tokenData.accessToken);
         GlobalUtils.activeToken = tokenData;
+
         yield* _fetchInitialData();
       } catch (error) {
         if (error.toString().contains('SocketException')) {
           Future.delayed(Duration(milliseconds: 1500)).then((value) async =>
               _reLogin());
         } else {
-          await _storage.deleteAll();
+          GlobalUtils.clearCredentials();
           yield DashboardScreenLogout();
         }
       }
     } else {
-      await _storage.deleteAll();
+      GlobalUtils.clearCredentials();
       yield DashboardScreenLogout();
     }
   }
 
   Stream<DashboardScreenState> loadData() async* {
-    var preferences = await SharedPreferences.getInstance();
-    String rfTokenString = await _storage.read(key: GlobalUtils.REFRESH_TOKEN) ?? '';
+    String rfTokenString = preferences.getString(GlobalUtils.REFRESH_TOKEN) ?? '';
     dynamic interval = Measurements.parseJwt(rfTokenString)['exp'] * 1000;
     if (DateTime.now().difference(DateTime.fromMillisecondsSinceEpoch(interval)).inHours < 1) {
       try {
@@ -185,8 +182,8 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
       String language;
       String currentWallpaper;
       SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-      String refreshToken = await _storage.read(key: GlobalUtils.REFRESH_TOKEN) ?? '';
-      String accessToken = await _storage.read(key: GlobalUtils.TOKEN) ?? '';
+      String refreshToken = preferences.getString(GlobalUtils.REFRESH_TOKEN) ?? '';
+      String accessToken = preferences.getString(GlobalUtils.TOKEN) ?? '';
       GlobalUtils.activeToken = Token(accessToken: accessToken, refreshToken: refreshToken);
 
       dynamic user = await api.getUser(accessToken);
@@ -268,13 +265,11 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
   Stream<DashboardScreenState> _fetchInitialDataRenew(Token token, bool renew) async* {
 
     GlobalUtils.activeToken = token;
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     if (!renew) {
-      GlobalUtils.activeToken.refreshToken = await _storage.read(key: GlobalUtils.REFRESH_TOKEN) ?? '';
+      GlobalUtils.activeToken.refreshToken = preferences.getString(GlobalUtils.REFRESH_TOKEN) ?? '';
     }
-
-    await _storage.write(key: GlobalUtils.TOKEN, value: GlobalUtils.activeToken.accessToken);
-    sharedPreferences.setString(GlobalUtils.LAST_OPEN, DateTime.now().toString());
+    preferences.setString(GlobalUtils.TOKEN, GlobalUtils.activeToken.accessToken);
+    preferences.setString(GlobalUtils.LAST_OPEN, DateTime.now().toString());
     add(DashboardScreenLoadDataEvent());
   }
 

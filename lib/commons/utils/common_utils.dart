@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:iso_countries/iso_countries.dart';
@@ -882,12 +881,16 @@ class GlobalUtils {
   static const String APP_WID_LAST_DATE = 'date';
   static const String APP_WID_LAST_AMOUNT = 'amount';
 
-  static void clearCredentials() async {
-    FlutterSecureStorage storage = FlutterSecureStorage();
-    await storage.delete(key: GlobalUtils.TOKEN);
-    await storage.delete(key: GlobalUtils.BUSINESS);
-    await storage.delete(key: GlobalUtils.REFRESH_TOKEN);
+  static void setCredentials(String email, String password, String token, String refreshToken) async {
+    SharedPreferences.getInstance().then((p) {
+      p.setString(GlobalUtils.EMAIL, email);
+      p.setString(GlobalUtils.PASSWORD, password);
+      p.setString(GlobalUtils.TOKEN, token);
+      p.setString(GlobalUtils.REFRESH_TOKEN, refreshToken);
+    });
+  }
 
+  static void clearCredentials() async {
     SharedPreferences.getInstance().then((p) {
       p.setString(GlobalUtils.BUSINESS, '');
       p.setString(GlobalUtils.WALLPAPER, '');

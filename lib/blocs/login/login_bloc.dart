@@ -1,5 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/blocs/login/login.dart';
 import 'package:payever/commons/commons.dart';
@@ -11,21 +10,21 @@ import '../bloc.dart';
 class LoginScreenBloc extends Bloc<LoginScreenEvent, LoginScreenState> {
   LoginScreenBloc();
   ApiService api = ApiService();
-  final _storage = FlutterSecureStorage();
+  SharedPreferences preferences;
 
   @override
   LoginScreenState get initialState => LoginScreenState();
 
   @override
   Stream<LoginScreenState> mapEventToState(LoginScreenEvent event) async* {
+    preferences = await SharedPreferences.getInstance();
     if (event is FetchEnvEvent) {
       yield* getEnv();
     } else if (event is LoginEvent) {
       yield* login(event.email, event.password);
     } else if (event is FetchLoginCredentialsEvent) {
-      FlutterSecureStorage storage = FlutterSecureStorage();
-      String email = await storage.read(key: GlobalUtils.EMAIL) ?? '';
-      String password = await storage.read(key: GlobalUtils.PASSWORD) ?? '';
+      String email = preferences.getString(GlobalUtils.EMAIL) ?? '';
+      String password = preferences.getString(GlobalUtils.PASSWORD) ?? '';
       yield state.copyWith(email: email, password: password);
       yield LoadedCredentialsState(username: email, password: password);
     }
@@ -60,12 +59,7 @@ class LoginScreenBloc extends Bloc<LoginScreenEvent, LoginScreenState> {
       final preferences = await SharedPreferences.getInstance();
       preferences.setString(GlobalUtils.LAST_OPEN, DateTime.now().toString());
       print('REFRESH TOKEN = ${tokenData.refreshToken}');
-
-      await _storage.write(key: GlobalUtils.EMAIL, value: email);
-      await _storage.write(key: GlobalUtils.PASSWORD, value: password);
-      await _storage.write(key: GlobalUtils.REFRESH_TOKEN, value: tokenData.refreshToken);
-      await _storage.write(key: GlobalUtils.TOKEN, value: tokenData.accessToken);
-
+      GlobalUtils.setCredentials(email, password, tokenData.accessToken, tokenData.refreshToken);
       GlobalUtils.activeToken = tokenData;
 
       yield state.copyWith(isLogIn: false);

@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/payever_bloc_delegate.dart';
 import 'package:payever/commons/commons.dart';
@@ -91,12 +90,12 @@ class _MyAppState extends State<MyApp> {
 
   _storedCredentials() async {
     String fingerPrint = '${Platform.operatingSystem}  ${Platform.operatingSystemVersion}';
-    FlutterSecureStorage storage = new FlutterSecureStorage();
+
 
     preferences = await SharedPreferences.getInstance();
     wallpaper = preferences.getString(GlobalUtils.WALLPAPER) ?? '';
     String bus = preferences.getString(GlobalUtils.BUSINESS) ?? '';
-    String rfToken = await storage.read(key: GlobalUtils.REFRESH_TOKEN) ?? '';
+    String rfToken = preferences.getString(GlobalUtils.REFRESH_TOKEN) ?? '';
     GlobalUtils.fingerprint = preferences.getString(GlobalUtils.FINGERPRINT) ?? fingerPrint;
     print('Refresh Token $rfToken');
     print('Finger print ${GlobalUtils.fingerprint}');

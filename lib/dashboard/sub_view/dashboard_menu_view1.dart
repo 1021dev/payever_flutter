@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
@@ -230,13 +229,11 @@ class DashboardMenuView1 extends StatelessWidget {
               InkWell(
                 onTap: () async {
                   Navigator.pop(context);
-                  FlutterSecureStorage storage = FlutterSecureStorage();
-                  await storage.delete(key: GlobalUtils.TOKEN);
-                  await storage.delete(key: GlobalUtils.BUSINESS);
-                  await storage.delete(key: GlobalUtils.REFRESH_TOKEN);
                   SharedPreferences.getInstance().then((p) {
                     p.setString(GlobalUtils.BUSINESS, '');
                     p.setString(GlobalUtils.DEVICE_ID, '');
+                    p.setString(GlobalUtils.REFRESH_TOKEN, '');
+                    p.setString(GlobalUtils.TOKEN, '');
                   });
                   Navigator.pushReplacement(
                     context,

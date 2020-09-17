@@ -115,6 +115,7 @@ class _FakeDashboardScreenState extends State<FakeDashboardScreen> {
         _body(state),
         BlurEffectView(
           blur: 6.5,
+          radius: 0,
           color: overlayBackground(),
         ),
         BlurryContainer(
