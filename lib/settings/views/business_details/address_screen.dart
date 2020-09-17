@@ -14,6 +14,7 @@ import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/settings/widgets/app_bar.dart';
 import 'package:payever/settings/widgets/save_button.dart';
 import 'package:payever/theme.dart';
+import 'package:payever/widgets/googlemap_address_textfiled.dart';
 
 class AddressScreen extends StatefulWidget {
   final GlobalStateModel globalStateModel;
@@ -125,40 +126,11 @@ class _AddressScreenState extends State<AddressScreen> {
                                 topLeft: Radius.circular(8),
                                 topRight: Radius.circular(8),
                               ),
-                              child: Container(
-                                padding: EdgeInsets.only(left: 12, right: 12),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: <Widget>[
-                                    SvgPicture.asset(
-                                      'assets/images/google-auto-complete.svg',
-                                      color: iconColor(),
-                                    ),
-                                    SizedBox(
-                                      width: 8,
-                                    ),
-                                    Expanded(
-                                      child: TextFormField(
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                        ),
-                                        initialValue: googleAutocomplete ?? '',
-                                        textInputAction: TextInputAction.done,
-                                        keyboardType: TextInputType.url,
-                                        onChanged: (val) {
-                                          googleAutocomplete = val;
-                                        },
-                                        decoration: InputDecoration(
-                                          border: InputBorder.none,
-                                          labelText: Language.getSettingsStrings('form.create_form.address.google_autocomplete.label'),
-                                          labelStyle: TextStyle(
-                                            fontSize: 12,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                              child: GoogleMapAddressTextField(
+                                googleAutocomplete: googleAutocomplete,
+                                onChanged: (val) {
+                                  googleAutocomplete = val;
+                                },
                               ),
                             ),
                           ),
@@ -360,14 +332,17 @@ class _AddressScreenState extends State<AddressScreen> {
   }
 
   void setGoogleAutoComplete() {
-    if (street != null && street.isNotEmpty) {
-      googleAutocomplete = street;
-    }
-    if (zipCode != null && zipCode.isNotEmpty) {
-      googleAutocomplete = googleAutocomplete + ', ' + zipCode;
-    }
-    if (city != null && city.isNotEmpty) {
-      googleAutocomplete = googleAutocomplete + ', ' + city;
-    }
+    setState(() {
+      if (street != null && street.isNotEmpty) {
+        googleAutocomplete = street;
+      }
+      if (zipCode != null && zipCode.isNotEmpty) {
+        googleAutocomplete = googleAutocomplete + ', ' + zipCode;
+      }
+      if (city != null && city.isNotEmpty) {
+        googleAutocomplete = googleAutocomplete + ', ' + city;
+      }
+      print('googleAutocomplete ' + googleAutocomplete);
+    });
   }
 }
