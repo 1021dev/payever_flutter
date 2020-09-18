@@ -10,7 +10,7 @@ class PaymentSelectView extends StatefulWidget {
   final bool isUpdating;
   final Function onTapApprove;
   final Function onTapPay;
-  final List<Payment>paymentOptions;
+  final List<Payment> paymentOptions;
   final String paymentOptionId;
 
   const PaymentSelectView(
@@ -41,27 +41,64 @@ class _PaymentSelectViewState extends State<PaymentSelectView> {
         WorkshopHeader(
           title: 'SELECT PAYMENT',
           subTitle: 'Select a payment method',
-          isExpanded: true/*widget.expanded*/,
+          isExpanded: true /*widget.expanded*/,
           isApproved: widget.approved,
           onTap: () => widget.onTapApprove,
         ),
         Visibility(
-          visible: true/*widget.expanded*/,
-          child: ListView.separated(
-            shrinkWrap: true,
-              itemBuilder: (context, index) {
-                Payment payment = widget.paymentOptions[index];
-                return PaymentOptionCell(
-                  payment: payment,
-                  isSelected: widget.paymentOptionId == '${payment.id}',
-                );
-              },
-              separatorBuilder: (context, index) {
-                return Divider(thickness: 0, height: 30, color: Colors.transparent,);
-              },
-              itemCount: widget.paymentOptions.length),
+          visible: true /*widget.expanded*/,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListView.separated(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    Payment payment = widget.paymentOptions[index];
+                    return PaymentOptionCell(
+                      payment: payment,
+                      isSelected: widget.paymentOptionId == '${payment.id}',
+                    );
+                  },
+                  separatorBuilder: (context, index) {
+                    return Divider(
+                      thickness: 0,
+                      height: 10,
+                      color: Colors.transparent,
+                    );
+                  },
+                  itemCount: widget.paymentOptions.length
+              ),
+              Container(
+                height: 50,
+                child: SizedBox.expand(
+                  child: MaterialButton(
+                    onPressed: () => widget.onTapPay,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    color: Colors.black87,
+                    child: widget.isUpdating
+                        ? CircularProgressIndicator()
+                        : Text(
+                            'Next Step',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );
+  }
+
+  String _paybuttonTitle() {
+    
   }
 }

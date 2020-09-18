@@ -1182,7 +1182,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
     return PaymentSelectView(
       enable: isVisible(state, 'choosePayment'),
       approved: isSelectPaymentApproved,
-      isUpdating: state.isUpdating,
+      isUpdating: state.isUpdating && state.updatePayflowIndex == 3,
       paymentOptions: state.channelSetFlow.paymentOptions,
       paymentOptionId: state.channelSetFlow.paymentOptionId,
       expanded: _selectedSectionIndex == 3,

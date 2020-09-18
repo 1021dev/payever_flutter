@@ -1,6 +1,7 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:payever/commons/utils/app_style.dart';
+import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/connect/models/connect.dart';
 
 class PaymentOptionCell extends StatefulWidget {
@@ -37,47 +38,19 @@ class _PaymentOptionCellState extends State<PaymentOptionCell> {
               ),
             ),
           ),
-          Container(
-            child: CachedNetworkImage(
-              imageUrl: widget.payment.imagePrimaryFilename,
-              // imageBuilder: (context, imageProvider) => Container(
-              //   decoration: BoxDecoration(
-              //     color: Colors.white,
-              //     image: DecorationImage(
-              //       image: imageProvider,
-              //       fit: BoxFit.contain,
-              //     ),
-              //   ),
-              // ),
-              // color: Colors.white,
-              fit: BoxFit.contain,
-              placeholder: (context, url) => Container(
-                child: Center(
-                  child: Container(
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                    ),
-                  ),
-                ),
-              ),
-              errorWidget: (context, url, error) =>  Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(topLeft: Radius.circular(8.0), topRight: Radius.circular(8.0)),
-                ),
-                child: Center(
-                  child: SvgPicture.asset(
-                    'assets/images/no_image.svg',
-                    color: Colors.black54,
-                    width: 100,
-                    height: 100,
-                  ),
-                ),
-              ),
-            ),
-          )
+          paymentType(widget.payment.paymentMethod)
         ],
       ),
     );
   }
+
+  Widget paymentType(String type) {
+    double size = AppStyle.iconRowSize(false);
+    return SvgPicture.asset(
+      Measurements.paymentType(type),
+      height: size,
+      color: Colors.red,
+    );
+  }
+
 }
