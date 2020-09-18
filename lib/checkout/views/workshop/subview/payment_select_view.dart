@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:payever/checkout/models/models.dart';
 import 'package:payever/checkout/views/workshop/widget/payment_option.dart';
 import 'package:payever/checkout/widgets/workshop_header_item.dart';
+import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/connect/models/connect.dart';
 
 class PaymentSelectView extends StatefulWidget {
@@ -9,9 +11,9 @@ class PaymentSelectView extends StatefulWidget {
   final bool expanded;
   final bool isUpdating;
   final Function onTapApprove;
+  final Function onTapChangePayment;
   final Function onTapPay;
-  final List<Payment> paymentOptions;
-  final String paymentOptionId;
+  final ChannelSetFlow channelSetFlow;
 
   const PaymentSelectView(
       {this.enable,
@@ -20,8 +22,8 @@ class PaymentSelectView extends StatefulWidget {
       this.isUpdating,
       this.onTapApprove,
       this.onTapPay,
-      this.paymentOptionId,
-      this.paymentOptions});
+      this.channelSetFlow,
+      this.onTapChangePayment});
 
   @override
   _PaymentSelectViewState createState() => _PaymentSelectViewState();
@@ -30,10 +32,30 @@ class PaymentSelectView extends StatefulWidget {
 class _PaymentSelectViewState extends State<PaymentSelectView> {
   @override
   Widget build(BuildContext context) {
-    if (!widget.enable ||
-        widget.paymentOptions == null ||
-        widget.paymentOptions.isEmpty) {
+    ChannelSetFlow channelSetFlow = widget.channelSetFlow;
+    List<Payment> paymentOptions = channelSetFlow.paymentOptions;
+    String paymentOptionId = channelSetFlow.paymentOptionId;
+
+    if (!widget.enable || paymentOptions == null || paymentOptions.isEmpty) {
       return Container();
+    }
+
+    String payBtnTitle;
+    List<Payment>payments = paymentOptions.where((element) => '${element.id}' == paymentOptionId).toList();
+    if (payments == null || payments.isEmpty) {
+      payBtnTitle = 'Continue';
+    } else {
+      String paymentMethod = payments.first.paymentMethod;
+      if (paymentMethod == null) {
+        payBtnTitle = 'Continue';
+      } else if (paymentMethod.contains('santander')) {
+        payBtnTitle =
+        'Buy now for ${Measurements.currency(channelSetFlow.currency)}${channelSetFlow.amount}';
+      } else if (paymentMethod.contains('cash')) {
+        payBtnTitle = 'Pay now';
+      } else if (paymentMethod.contains('instant')) {
+        payBtnTitle = 'Pay';
+      }
     }
 
     return Column(
@@ -54,10 +76,11 @@ class _PaymentSelectViewState extends State<PaymentSelectView> {
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
-                    Payment payment = widget.paymentOptions[index];
+                    Payment payment = paymentOptions[index];
                     return PaymentOptionCell(
                       payment: payment,
-                      isSelected: widget.paymentOptionId == '${payment.id}',
+                      isSelected: paymentOptionId == '${payment.id}',
+                      onTapChangePayment: (id) => widget.onTapChangePayment(id),
                     );
                   },
                   separatorBuilder: (context, index) {
@@ -67,8 +90,7 @@ class _PaymentSelectViewState extends State<PaymentSelectView> {
                       color: Colors.transparent,
                     );
                   },
-                  itemCount: widget.paymentOptions.length
-              ),
+                  itemCount: paymentOptions.length),
               Container(
                 height: 50,
                 child: SizedBox.expand(
@@ -81,7 +103,7 @@ class _PaymentSelectViewState extends State<PaymentSelectView> {
                     child: widget.isUpdating
                         ? CircularProgressIndicator()
                         : Text(
-                            'Next Step',
+                            payBtnTitle,
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.white,
@@ -96,9 +118,5 @@ class _PaymentSelectViewState extends State<PaymentSelectView> {
         ),
       ],
     );
-  }
-
-  String _paybuttonTitle() {
-    
   }
 }

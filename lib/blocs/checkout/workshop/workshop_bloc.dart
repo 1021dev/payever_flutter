@@ -40,7 +40,7 @@ class WorkshopScreenBloc extends Bloc<WorkshopScreenEvent, WorkshopScreenState> 
   Stream<WorkshopScreenState> patchCheckoutFlowOrder(Map body) async* {
     yield state.copyWith(
       isUpdating: true,
-      updatePayflowIndex: 0,
+      updatePayflowIndex: body.containsKey('amount') ? 0 : 3,
     );
     ChannelSetFlow channelSetFlow;
     dynamic response = await api.patchCheckoutFlowOrder(

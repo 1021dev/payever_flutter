@@ -90,6 +90,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
 
   @override
   void dispose() {
+    screenBloc.close();
     super.dispose();
   }
 
@@ -1183,8 +1184,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
       enable: isVisible(state, 'choosePayment'),
       approved: isSelectPaymentApproved,
       isUpdating: state.isUpdating && state.updatePayflowIndex == 3,
-      paymentOptions: state.channelSetFlow.paymentOptions,
-      paymentOptionId: state.channelSetFlow.paymentOptionId,
+      channelSetFlow: state.channelSetFlow,
       expanded: _selectedSectionIndex == 3,
       onTapApprove: () {
         setState(() {
@@ -1195,6 +1195,9 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
         setState(() {
           _selectedSectionIndex++;
         });
+      },
+      onTapChangePayment: (id){
+        screenBloc.add(PatchCheckoutFlowOrderEvent(body:{'payment_option_id': id}));
       },
     );
   }

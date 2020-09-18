@@ -7,8 +7,10 @@ import 'package:payever/connect/models/connect.dart';
 class PaymentOptionCell extends StatefulWidget {
   final Payment payment;
   final bool isSelected;
+  final Function onTapChangePayment;
 
-  const PaymentOptionCell({this.payment, this.isSelected = false});
+  const PaymentOptionCell(
+      {this.payment, this.isSelected = false, this.onTapChangePayment});
 
   @override
   _PaymentOptionCellState createState() => _PaymentOptionCellState();
@@ -26,8 +28,17 @@ class _PaymentOptionCellState extends State<PaymentOptionCell> {
       ),
       child: Row(
         children: [
-          Icon(widget.isSelected ? Icons.check_circle : Icons.radio_button_unchecked, color: Colors.black54,),
-          SizedBox(width: 8,),
+          IconButton(
+              onPressed: () => widget.onTapChangePayment(widget.payment.id),
+              icon: Icon(
+                widget.isSelected
+                    ? Icons.check_circle
+                    : Icons.radio_button_unchecked,
+                color: Colors.black54,
+              )),
+          SizedBox(
+            width: 8,
+          ),
           Expanded(
             child: Text(
               widget.payment.name,
