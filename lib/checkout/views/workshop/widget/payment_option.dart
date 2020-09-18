@@ -7,7 +7,7 @@ class PaymentOptionCell extends StatefulWidget {
   final Payment payment;
   final bool isSelected;
 
-  const PaymentOptionCell({this.payment, this.isSelected});
+  const PaymentOptionCell({this.payment, this.isSelected = false});
 
   @override
   _PaymentOptionCellState createState() => _PaymentOptionCellState();
@@ -25,7 +25,8 @@ class _PaymentOptionCellState extends State<PaymentOptionCell> {
       ),
       child: Row(
         children: [
-          Icon(widget.isSelected ? Icons.check_circle : widget.isSelected, color: Colors.black54,),
+          Icon(widget.isSelected ? Icons.check_circle : Icons.radio_button_unchecked, color: Colors.black54,),
+          SizedBox(width: 8,),
           Expanded(
             child: Text(
               widget.payment.name,
@@ -36,38 +37,41 @@ class _PaymentOptionCellState extends State<PaymentOptionCell> {
               ),
             ),
           ),
-          CachedNetworkImage(
-            imageUrl: widget.payment.imagePrimaryFilename,
-            imageBuilder: (context, imageProvider) => Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                image: DecorationImage(
-                  image: imageProvider,
-                  fit: BoxFit.contain,
-                ),
-              ),
-            ),
-            color: Colors.white,
-            placeholder: (context, url) => Container(
-              child: Center(
-                child: Container(
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
+          Container(
+            child: CachedNetworkImage(
+              imageUrl: widget.payment.imagePrimaryFilename,
+              // imageBuilder: (context, imageProvider) => Container(
+              //   decoration: BoxDecoration(
+              //     color: Colors.white,
+              //     image: DecorationImage(
+              //       image: imageProvider,
+              //       fit: BoxFit.contain,
+              //     ),
+              //   ),
+              // ),
+              // color: Colors.white,
+              fit: BoxFit.contain,
+              placeholder: (context, url) => Container(
+                child: Center(
+                  child: Container(
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                    ),
                   ),
                 ),
               ),
-            ),
-            errorWidget: (context, url, error) =>  Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(8.0), topRight: Radius.circular(8.0)),
-              ),
-              child: Center(
-                child: SvgPicture.asset(
-                  'assets/images/no_image.svg',
-                  color: Colors.black54,
-                  width: 100,
-                  height: 100,
+              errorWidget: (context, url, error) =>  Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(8.0), topRight: Radius.circular(8.0)),
+                ),
+                child: Center(
+                  child: SvgPicture.asset(
+                    'assets/images/no_image.svg',
+                    color: Colors.black54,
+                    width: 100,
+                    height: 100,
+                  ),
                 ),
               ),
             ),

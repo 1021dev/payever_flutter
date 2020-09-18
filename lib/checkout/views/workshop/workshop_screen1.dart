@@ -1098,55 +1098,59 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                   child: SizedBox.expand(
                     child: MaterialButton(
                       onPressed: () {
-                        if (countryCode == null || countryCode.isEmpty) {
-                          Fluttertoast.showToast(msg: 'Country is needed');
-                          return;
-                        }
-                        if (salutation == null || salutation.isEmpty) {
-                          Fluttertoast.showToast(msg: 'Salutation is needed');
-                          return;
-                        }
-                        if (_formKeyBilling.currentState.validate() && !state.isUpdating) {
-                          Map<String, dynamic> body = {
-                            'city': city,
-                            'company': company,
-                            'country': countryCode,
-                            'email': email,
-                            'first_name': firstName,
-                            'full_address': googleAutocomplete,
-                            'id': state.channelSetFlow.billingAddress.id,
-                            'last_name': lastName,
-                            'phone': phone,
-                            'salutation': salutation,
-                            'select_address': '',
-                            'social_security_number': '',
-                            'street': street,
-                            'street_name': street,
-                            'street_number': "12099",
-                            'type': 'billing',
-                            'zip_code': zipCode,
-                          };
-                          print('body: $body');
-                          screenBloc
-                              .add(PatchCheckoutFlowAddressEvent(body: body));
-                          // city: "Berlin"
-                          // company: null
-                          // country: "DE"
-                          // email: "abiantgmbh@payever.de"
-                          // first_name: "Artur"
-                          // full_address: "Germaniastraße, 12099, 12099 Berlin, Germany"
-                          // id: "c1d295fb-abf1-463c-994e-5b8b1a98604b"
-                          // last_name: "S"
-                          // phone: null
-                          // salutation: "SALUTATION_MR"
-                          // select_address: ""
-                          // social_security_number: ""
-                          // street: "Germaniastraße, 12099"
-                          // street_name: "Germaniastraße,"
-                          // street_number: "12099"
-                          // type: "billing"
-                          // zip_code: "12099"
-                        }
+                        Map<String, dynamic> body = {
+                          'city': 'Berlin',
+                          'company': company,
+                          'country': 'DE',
+                          'email': 'abiantgmbh@payever.de',
+                          'first_name': 'Artur',
+                          'full_address': 'Germaniastraße, 12099, 12099 Berlin, Germany',
+                          'id': state.channelSetFlow.billingAddress.id,
+                          'last_name': 'S',
+                          'phone': phone,
+                          'salutation': 'SALUTATION_MR',
+                          'select_address': '',
+                          'social_security_number': '',
+                          'street': 'Germaniastraße, 12099',
+                          'street_name': 'Germaniastraße',
+                          'street_number': '12099',
+                          'type': 'billing',
+                          'zip_code': 'billing',
+                        };
+                        screenBloc
+                            .add(PatchCheckoutFlowAddressEvent(body: body));
+                        // if (countryCode == null || countryCode.isEmpty) {
+                        //   Fluttertoast.showToast(msg: 'Country is needed');
+                        //   return;
+                        // }
+                        // if (salutation == null || salutation.isEmpty) {
+                        //   Fluttertoast.showToast(msg: 'Salutation is needed');
+                        //   return;
+                        // }
+                        // if (_formKeyBilling.currentState.validate() && !state.isUpdating) {
+                        //   Map<String, dynamic> body = {
+                        //     'city': city,
+                        //     'company': company,
+                        //     'country': countryCode,
+                        //     'email': email,
+                        //     'first_name': firstName,
+                        //     'full_address': googleAutocomplete,
+                        //     'id': state.channelSetFlow.billingAddress.id,
+                        //     'last_name': lastName,
+                        //     'phone': phone,
+                        //     'salutation': salutation,
+                        //     'select_address': '',
+                        //     'social_security_number': '',
+                        //     'street': street,
+                        //     'street_name': street,
+                        //     'street_number': "12099",
+                        //     'type': 'billing',
+                        //     'zip_code': zipCode,
+                        //   };
+                        //   print('body: $body');
+                        //   screenBloc
+                        //       .add(PatchCheckoutFlowAddressEvent(body: body));
+                        // }
                       },
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(4),
@@ -1179,6 +1183,9 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
       enable: isVisible(state, 'choosePayment'),
       approved: isSelectPaymentApproved,
       isUpdating: state.isUpdating,
+      paymentOptions: state.channelSetFlow.paymentOptions,
+      paymentOptionId: state.channelSetFlow.paymentOptionId,
+      expanded: _selectedSectionIndex == 3,
       onTapApprove: () {
         setState(() {
           _selectedSectionIndex = _selectedSectionIndex == 3 ? -1 : 3;
@@ -1530,7 +1537,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
         onChanged: (val) {
           email = val;
         },
-        initialValue: isInitValue ? email : '',
+        initialValue: (isInitValue || isAccountApproved) ? email : '',
         decoration: InputDecoration(
           contentPadding: EdgeInsets.symmetric(horizontal: 12,  vertical: 4),
           labelText: 'E-Mail Address',

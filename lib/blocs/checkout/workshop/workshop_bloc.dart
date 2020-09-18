@@ -71,14 +71,21 @@ class WorkshopScreenBloc extends Bloc<WorkshopScreenEvent, WorkshopScreenState> 
     ChannelSetFlow channelSetFlow;
     dynamic response = await api.patchCheckoutFlowAddress(
         token, state.channelSetFlow.id, state.channelSetFlow.billingAddress.id,'en', body);
-    if (response is Map) {
+    if (response is DioError) {
+      yield WorkshopScreenStateFailure(error: response.message);
+      yield state.copyWith(
+        isUpdating: false,
+        updatePayflowIndex: -1,
+      );
+    } else if (response is Map) {
+      yield WorkshopScreenPayflowStateSuccess();
       channelSetFlow = ChannelSetFlow.fromMap(response);
+      yield state.copyWith(
+        isUpdating: false,
+        updatePayflowIndex: -1,
+        channelSetFlow: channelSetFlow,
+      );
+      checkoutScreenBloc.add(UpdateChannelSetFlowEvent(channelSetFlow));
     }
-    yield state.copyWith(
-      isUpdating: false,
-      updatePayflowIndex: -1,
-      channelSetFlow: channelSetFlow,
-    );
-    checkoutScreenBloc.add(UpdateChannelSetFlowEvent(channelSetFlow));
   }
 }
