@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/checkout/checkout_bloc.dart';
 import 'package:payever/checkout/models/models.dart';
+import 'package:payever/checkout/views/workshop/subview/payment_select_view.dart';
 import 'package:payever/checkout/widgets/checkout_top_button.dart';
 import 'package:payever/checkout/widgets/workshop_header_item.dart';
 import 'package:payever/commons/commons.dart';
@@ -42,9 +43,8 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
   String reference;
 
   String email;
-  String city;
-  String countryName;
   String countryCode;
+  String city;
   String street;
   String zipCode;
   String googleAutocomplete;
@@ -84,8 +84,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
       channelSetFlow: widget.checkoutScreenBloc.state.channelSetFlow,
       defaultCheckout: widget.checkoutScreenBloc.state.defaultCheckout,
     ));
-    amount = (widget.checkoutScreenBloc.state.channelSetFlow == null || widget.checkoutScreenBloc.state.channelSetFlow.amount == 0) ? 0 : widget.checkoutScreenBloc.state.channelSetFlow.amount.toDouble();
-    reference = (widget.checkoutScreenBloc.state.channelSetFlow != null && widget.checkoutScreenBloc.state.channelSetFlow.reference != null) ? widget.checkoutScreenBloc.state.channelSetFlow.reference : '';
+    initialize(widget.checkoutScreenBloc.state.channelSetFlow);
     super.initState();
   }
 
@@ -1176,147 +1175,20 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
   }
 
   Widget _selectPaymentView(WorkshopScreenState state) {
-    return Visibility(
-      visible: isVisible(state, 'choosePayment'),
-      child: Column(
-        children: <Widget>[
-          WorkshopHeader(
-            title: 'SELECT PAYMENT',
-            subTitle: 'Select a payment method',
-            // isExpanded: _selectedSectionIndex == 3,
-            isExpanded: true,
-            isApproved: isSelectPaymentApproved,
-            onTap: () {
-              setState(() {
-                _selectedSectionIndex = _selectedSectionIndex == 3 ? -1 : 3;
-              });
-            },
-          ),
-          Visibility(
-            // visible: _selectedSectionIndex == 3,
-            visible: true,
-            child: Column(
-              children: <Widget>[
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.all(Radius.circular(8)),
-                  ),
-                  child: Column(
-                    children: <Widget>[
-                      Container(
-                        height: 50,
-                        child: TextFormField(
-                          style: TextStyle(
-                            fontSize: 16,
-                            color:Colors.black54,
-                            fontWeight: FontWeight.w400,
-                          ),
-                          onChanged: (val) {
-                          },
-                          initialValue: '',
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.only(left: 16, right: 16),
-                            labelText: 'Mobile number',
-                            labelStyle: TextStyle(
-                              color: Colors.grey,
-                            ),
-                            enabledBorder: InputBorder.none,
-                          ),
-                          keyboardType: TextInputType.text,
-                        ),
-                      ),
-                      Divider(height: 1,color: Colors.black54,),
-                      Container(
-                        height: 50,
-                        child: TextFormField(
-                          style: TextStyle(
-                            fontSize: 16,
-                            color:Colors.black54,
-                            fontWeight: FontWeight.w400,
-                          ),
-                          onChanged: (val) {
-                          },
-                          initialValue: '',
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.only(left: 16, right: 16),
-                            labelText: 'E-Mail Address',
-                            labelStyle: TextStyle(
-                              color: Colors.grey,
-                            ),
-                            enabledBorder: InputBorder.none,
-                          ),
-                          keyboardType: TextInputType.text,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  height: 50,
-                  child: Row(
-                    children: <Widget>[
-                      Flexible(
-                        child: SizedBox.expand(
-                          child: MaterialButton(
-                            onPressed: () {
-                              setState(() {
-                                _selectedSectionIndex++;
-                              });
-                            },
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: state.isUpdating ?
-                            CircularProgressIndicator() :
-                            Text(
-                              Language.getCheckoutStrings('checkout_send_flow.action.skip'),
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.black87,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Flexible(
-                        child: SizedBox.expand(
-                          child: MaterialButton(
-                            onPressed: () {
-                              setState(() {
-                                _selectedSectionIndex++;
-                              });
-                            },
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            color: Colors.black87,
-                            child: state.isUpdating ?
-                            CircularProgressIndicator() :
-                            Text(
-                              Language.getCheckoutStrings('checkout_send_flow.action.continue'),
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 20,),
-              ],
-            ),
-          ),
-        ],
-      ),
+    return PaymentSelectView(
+      enable: isVisible(state, 'choosePayment'),
+      approved: isSelectPaymentApproved,
+      isUpdating: state.isUpdating,
+      onTapApprove: () {
+        setState(() {
+          _selectedSectionIndex = _selectedSectionIndex == 3 ? -1 : 3;
+        });
+      },
+      onTapPay: () {
+        setState(() {
+          _selectedSectionIndex++;
+        });
+      },
     );
   }
 
@@ -1679,6 +1551,28 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
         keyboardType: TextInputType.text,
       ),
     );
+  }
+
+  void initialize(ChannelSetFlow channelSetFlow) {
+    if (channelSetFlow == null)
+      return;
+    amount = channelSetFlow.amount == 0 ? 0 : channelSetFlow.amount.toDouble();
+    reference = channelSetFlow.reference != null ? channelSetFlow.reference : '';
+    BillingAddress billingAddress = channelSetFlow.billingAddress;
+    if (billingAddress != null) {
+      email = billingAddress.email;
+      googleAutocomplete = billingAddress.fullAddress  ??'';
+      countryCode = billingAddress.country ?? '';
+      city = billingAddress.city ?? '';
+      street = billingAddress.street ?? '';
+      zipCode = billingAddress.zipCode ?? '';
+
+      salutation = billingAddress.salutation ?? '';
+      firstName = billingAddress.firstName ?? '';
+      lastName = billingAddress.lastName ?? '';
+      company = billingAddress.company ?? '';
+      phone = billingAddress.phone ?? '';
+    }
   }
 
   void setGoogleAutoComplete() {
