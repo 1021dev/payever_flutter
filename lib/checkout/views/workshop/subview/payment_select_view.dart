@@ -78,6 +78,7 @@ class _PaymentSelectViewState extends State<PaymentSelectView> {
                   itemBuilder: (context, index) {
                     Payment payment = paymentOptions[index];
                     return PaymentOptionCell(
+                      channelSetFlow: widget.channelSetFlow,
                       payment: payment,
                       isSelected: paymentOptionId == '${payment.id}',
                       onTapChangePayment: (id) => widget.onTapChangePayment(id),
