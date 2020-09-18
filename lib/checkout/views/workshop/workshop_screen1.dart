@@ -12,6 +12,7 @@ import 'package:payever/checkout/widgets/checkout_top_button.dart';
 import 'package:payever/checkout/widgets/workshop_header_item.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
+import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/widgets/address_field_group.dart';
 import 'package:payever/widgets/googlemap_address_filed.dart';
 import 'package:payever/widgets/peronal_name_field.dart';
@@ -237,9 +238,9 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
         },
       );
     }
-    return Container(
-      color: Colors.white,
-      child: Container(
+    return BackgroundBase(
+      true,
+      body: Container(
         height: double.infinity,
         child: Column(
           children: <Widget>[
@@ -255,13 +256,11 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                       children: <Widget>[
                         Icon(
                           Icons.keyboard_arrow_left,
-                          color: Colors.black54,
                           size: 24,
                         ),
                         Text(
                           'Pay',
                           style: TextStyle(
-                            color: Colors.black54,
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
                           ),
@@ -282,7 +281,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                   )
                       : SvgPicture.asset(
                     'assets/images/payeverlogoandname.svg',
-                    color: Colors.black,
+                    color: iconColor(),
                     height: 16,
                   ),
                   Spacer(),
@@ -292,14 +291,12 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                         Text(
                           state.channelSetFlow != null ? '$currency${state.channelSetFlow.amount.toStringAsFixed(2)}': '',
                           style: TextStyle(
-                            color: Colors.black54,
                             fontSize: 14,
                             fontWeight: FontWeight.w400,
                           ),
                         ),
                         Icon(
                           Icons.keyboard_arrow_down,
-                          color: Colors.black54,
                           size: 16,
                         ),
                       ],
@@ -318,10 +315,10 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                   ): Container(),
                   Spacer(),
                   MaterialButton(
+                    color: overlayBackground(),
                     child: Text(
                       'Switch Checkout',
                       style: TextStyle(
-                        color: Colors.black,
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
                       ),
@@ -404,7 +401,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
       children: <Widget>[
         Container(
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey),
+            border: Border.all(color: iconColor()),
             borderRadius: BorderRadius.all(Radius.circular(8)),
           ),
           child: Column(
@@ -413,7 +410,6 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                 child: TextFormField(
                   style: TextStyle(
                     fontSize: 16,
-                    color:Colors.black54,
                     fontWeight: FontWeight.w400,
                   ),
                   onChanged: (val) {
@@ -426,7 +422,6 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                         child: Text(
                           currency,
                           style: TextStyle(
-                            color: Colors.black54,
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
                           ),
@@ -454,14 +449,12 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                   keyboardType: TextInputType.numberWithOptions(decimal: true),
                 ),
               ),
-              Divider(height: 1,color: Colors.black54,),
+              _divider,
               Container(
                 padding: EdgeInsets.only(left: 4, right: 4),
                 child: TextFormField(
                   style: TextStyle(
                     fontSize: 16,
-                    color:Colors.black54,
-                    fontWeight: FontWeight.w400,
                   ),
                   onChanged: (val) {
                   },
@@ -565,7 +558,6 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                           child: TextFormField(
                             style: TextStyle(
                               fontSize: 16,
-                              color:Colors.black87,
                               fontWeight: FontWeight.w400,
                             ),
                             initialValue: amount > 0 ? '$amount' : '',
@@ -585,7 +577,6 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                                   child: Text(
                                     currency,
                                     style: TextStyle(
-                                      color: Colors.black87,
                                       fontSize: 16,
                                       fontWeight: FontWeight.w400,
                                     ),
@@ -613,7 +604,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                             keyboardType: TextInputType.numberWithOptions(decimal: true),
                           ),
                         ),
-                        Divider(height: 1,color: Colors.black54,),
+                        _divider,
                         Container(
                           height: 50,
                           padding: EdgeInsets.only(left: 4, right: 4),
@@ -621,7 +612,6 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                           child: TextFormField(
                             style: TextStyle(
                               fontSize: 16,
-                              color:Colors.black,
                               fontWeight: FontWeight.w400,
                             ),
                             onChanged: (val) {
@@ -675,14 +665,13 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(4),
                         ),
-                        color: Colors.black87,
+                        color: overlayBackground(),
                         child: state.isUpdating && state.updatePayflowIndex == 0 ?
                         CircularProgressIndicator() :
                         Text(
                           'Next Step',
                           style: TextStyle(
                             fontSize: 16,
-                            color: Colors.white,
                             fontWeight: FontWeight.w400,
                           ),
                         ),
@@ -712,7 +701,6 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
               child: Text(
                 Language.getCheckoutStrings('checkout_order_summary.title').toUpperCase(),
                 style: TextStyle(
-                  color: Colors.black54,
                   fontSize: 12,
                   fontFamily: 'Helvetica Neue',
                 ),
@@ -730,7 +718,6 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                       child: Text(
                         Language.getCartStrings('checkout_cart_edit.form.label.subtotal').toUpperCase(),
                         style: TextStyle(
-                          color: Colors.black54,
                           fontSize: 12,
                           fontFamily: 'Helvetica Neue',
                         ),
@@ -740,7 +727,6 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                       child: Text(
                         '${currency}${state.channelSetFlow.amount.toStringAsFixed(2)}',
                         style: TextStyle(
-                          color: Colors.black54,
                           fontSize: 12,
                           fontFamily: 'Helvetica Neue',
                         ),
@@ -758,7 +744,6 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                       child: Text(
                         Language.getCartStrings('checkout_cart_view.payment_costs').toUpperCase(),
                         style: TextStyle(
-                          color: Colors.black54,
                           fontSize: 12,
                           fontFamily: 'Helvetica Neue',
                         ),
@@ -768,7 +753,6 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                       child: Text(
                         '${currency}0.00',
                         style: TextStyle(
-                          color: Colors.black54,
                           fontSize: 12,
                           fontFamily: 'Helvetica Neue',
                         ),
@@ -786,7 +770,6 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                       child: Text(
                         Language.getCartStrings('checkout_cart_view.shipping').toUpperCase(),
                         style: TextStyle(
-                          color: Colors.black54,
                           fontSize: 12,
                           fontFamily: 'Helvetica Neue',
                         ),
@@ -796,7 +779,6 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                       child: Text(
                         '${currency}0.00',
                         style: TextStyle(
-                          color: Colors.black54,
                           fontSize: 12,
                           fontFamily: 'Helvetica Neue',
                         ),
@@ -814,7 +796,6 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                       child: Text(
                         Language.getCartStrings('checkout_cart_view.total').toUpperCase(),
                         style: TextStyle(
-                          color: Colors.black87,
                           fontSize: 13,
                           fontFamily: 'Helvetica Neue',
                         ),
@@ -824,7 +805,6 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                       child: Text(
                         state.channelSetFlow != null ? '$currency${state.channelSetFlow.amount.toStringAsFixed(2)}': '',
                         style: TextStyle(
-                          color: Colors.black87,
                           fontSize: 13,
                           fontFamily: 'Helvetica Neue',
                         ),
@@ -1018,7 +998,6 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                           child: TextFormField(
                             style: TextStyle(
                               fontSize: 16,
-                              color:Colors.black,
                               fontWeight: FontWeight.w400,
                             ),
                             onChanged: (val) {
@@ -1058,7 +1037,6 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                           child: TextFormField(
                             style: TextStyle(
                               fontSize: 16,
-                              color:Colors.black,
                               fontWeight: FontWeight.w400,
                             ),
                             onChanged: (val) {
@@ -1099,71 +1077,72 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                   child: SizedBox.expand(
                     child: MaterialButton(
                       onPressed: () {
-                        Map<String, dynamic> body = {
-                          'city': 'Berlin',
-                          'company': company,
-                          'country': 'DE',
-                          'email': 'abiantgmbh@payever.de',
-                          'first_name': 'Artur',
-                          'full_address': 'Germaniastraße, 12099, 12099 Berlin, Germany',
-                          'id': state.channelSetFlow.billingAddress.id,
-                          'last_name': 'S',
-                          'phone': phone,
-                          'salutation': 'SALUTATION_MR',
-                          'select_address': '',
-                          'social_security_number': '',
-                          'street': 'Germaniastraße, 12099',
-                          'street_name': 'Germaniastraße',
-                          'street_number': '12099',
-                          'type': 'billing',
-                          'zip_code': 'billing',
-                        };
-                        screenBloc
-                            .add(PatchCheckoutFlowAddressEvent(body: body));
-                        // if (countryCode == null || countryCode.isEmpty) {
-                        //   Fluttertoast.showToast(msg: 'Country is needed');
-                        //   return;
-                        // }
-                        // if (salutation == null || salutation.isEmpty) {
-                        //   Fluttertoast.showToast(msg: 'Salutation is needed');
-                        //   return;
-                        // }
-                        // if (_formKeyBilling.currentState.validate() && !state.isUpdating) {
-                        //   Map<String, dynamic> body = {
-                        //     'city': city,
-                        //     'company': company,
-                        //     'country': countryCode,
-                        //     'email': email,
-                        //     'first_name': firstName,
-                        //     'full_address': googleAutocomplete,
-                        //     'id': state.channelSetFlow.billingAddress.id,
-                        //     'last_name': lastName,
-                        //     'phone': phone,
-                        //     'salutation': salutation,
-                        //     'select_address': '',
-                        //     'social_security_number': '',
-                        //     'street': street,
-                        //     'street_name': street,
-                        //     'street_number': "12099",
-                        //     'type': 'billing',
-                        //     'zip_code': zipCode,
-                        //   };
-                        //   print('body: $body');
-                        //   screenBloc
-                        //       .add(PatchCheckoutFlowAddressEvent(body: body));
-                        // }
+                        // Map<String, dynamic> body = {
+                        //   'city': 'Berlin',
+                        //   'company': company,
+                        //   'country': 'DE',
+                        //   'email': 'abiantgmbh@payever.de',
+                        //   'first_name': 'Artur',
+                        //   'full_address': 'Germaniastraße, 12099, 12099 Berlin, Germany',
+                        //   'id': state.channelSetFlow.billingAddress.id,
+                        //   'last_name': 'S',
+                        //   'phone': phone,
+                        //   'salutation': 'SALUTATION_MR',
+                        //   'select_address': '',
+                        //   'social_security_number': '',
+                        //   'street': 'Germaniastraße, 12099',
+                        //   'street_name': 'Germaniastraße',
+                        //   'street_number': '12099',
+                        //   'type': 'billing',
+                        //   'zip_code': 'billing',
+                        // };
+                        // screenBloc
+                        //     .add(PatchCheckoutFlowAddressEvent(body: body));
+
+
+                        if (countryCode == null || countryCode.isEmpty) {
+                          Fluttertoast.showToast(msg: 'Country is needed');
+                          return;
+                        }
+                        if (salutation == null || salutation.isEmpty) {
+                          Fluttertoast.showToast(msg: 'Salutation is needed');
+                          return;
+                        }
+                        if (_formKeyBilling.currentState.validate() && !state.isUpdating) {
+                          Map<String, dynamic> body = {
+                            'city': city,
+                            'company': company,
+                            'country': countryCode,
+                            'email': email,
+                            'first_name': firstName,
+                            'full_address': googleAutocomplete,
+                            'id': state.channelSetFlow.billingAddress.id,
+                            'last_name': lastName,
+                            'phone': phone,
+                            'salutation': salutation,
+                            'select_address': '',
+                            'social_security_number': '',
+                            'street': street,
+                            'street_name': street,
+                            'street_number': "12099",
+                            'type': 'billing',
+                            'zip_code': zipCode,
+                          };
+                          print('body: $body');
+                          screenBloc
+                              .add(PatchCheckoutFlowAddressEvent(body: body));
+                        }
                       },
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(4),
                       ),
-                      color: Colors.black87,
+                      color: overlayBackground(),
                       child: state.isUpdating && state.updatePayflowIndex == 1 ?
                       CircularProgressIndicator() :
                       Text(
                         Language.getCheckoutStrings('checkout_send_flow.action.continue'),
                         style: TextStyle(
                           fontSize: 16,
-                          color: Colors.white,
                           fontWeight: FontWeight.w400,
                         ),
                       ),
@@ -1196,8 +1175,9 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
           _selectedSectionIndex++;
         });
       },
-      onTapChangePayment: (id){
-        screenBloc.add(PatchCheckoutFlowOrderEvent(body:{'payment_option_id': id}));
+      onTapChangePayment: (num id) {
+        print(id);
+        screenBloc.add(PatchCheckoutFlowOrderEvent(body:{'payment_option_id': '$id'}));
       },
     );
   }
@@ -1515,7 +1495,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
     return Divider(
       height: 0,
       thickness: 0.5,
-      color: Colors.black54,
+      color: iconColor(),
     );
   }
 
@@ -1534,7 +1514,6 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
       child: TextFormField(
         style: TextStyle(
           fontSize: 16,
-          color:Colors.black,
           fontWeight: FontWeight.w400,
         ),
         onChanged: (val) {

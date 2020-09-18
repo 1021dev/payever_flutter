@@ -6,6 +6,7 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/app_style.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/connect/models/connect.dart';
+import 'package:payever/theme.dart';
 
 class PaymentOptionCell extends StatefulWidget {
   final Payment payment;
@@ -23,17 +24,12 @@ class PaymentOptionCell extends StatefulWidget {
 class _PaymentOptionCellState extends State<PaymentOptionCell> {
   @override
   Widget build(BuildContext context) {
-    BillingAddress billingAddress = widget.channelSetFlow.billingAddress;
-    String name = '';
-    if (billingAddress != null) {
-      name = '${billingAddress.firstName ?? ''} ${billingAddress.lastName ?? ''}';
-    }
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(4),
-        border: Border.all(color: Colors.grey),
+        border: Border.all(color: iconColor()),
       ),
       child: Column(
         children: [
@@ -47,7 +43,6 @@ class _PaymentOptionCellState extends State<PaymentOptionCell> {
                       widget.isSelected
                           ? Icons.check_circle
                           : Icons.radio_button_unchecked,
-                      color: Colors.black54,
                     )),
                 SizedBox(
                   width: 8,
@@ -58,7 +53,6 @@ class _PaymentOptionCellState extends State<PaymentOptionCell> {
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
-                      color: Colors.grey[800],
                     ),
                   ),
                 ),
@@ -66,13 +60,33 @@ class _PaymentOptionCellState extends State<PaymentOptionCell> {
               ],
             ),
           ),
-          InstantPaymentView(
-            isSelected: true,
-            name: name,
-          ),
+          _expandedView,
         ],
       ),
     );
+  }
+
+  get _expandedView {
+    BillingAddress billingAddress = widget.channelSetFlow.billingAddress;
+    String name = '';
+    if (billingAddress != null) {
+      name =
+      '${billingAddress.firstName ?? ''} ${billingAddress.lastName ?? ''}';
+      if (name == ' ') name = '';
+    }
+    if (widget.payment.paymentMethod.contains('instant')) {
+      return InstantPaymentView(
+        isSelected: widget.isSelected,
+        name: name,
+      );
+    } else if (widget.payment.paymentMethod.contains('santander')) {
+      return InstantPaymentView(
+        isSelected: widget.isSelected,
+        name: name,
+      );
+    } else {
+      return Container();
+    }
   }
 
   Widget paymentType(String type) {

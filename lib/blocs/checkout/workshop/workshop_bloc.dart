@@ -52,7 +52,8 @@ class WorkshopScreenBloc extends Bloc<WorkshopScreenEvent, WorkshopScreenState> 
         updatePayflowIndex: -1,
       );
     } else if (response is Map) {
-      yield WorkshopScreenPayflowStateSuccess();
+      if (body.containsKey('amount'))
+        yield WorkshopScreenPayflowStateSuccess();
       channelSetFlow = ChannelSetFlow.fromMap(response);
       yield state.copyWith(
         isUpdating: false,

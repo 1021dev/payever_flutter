@@ -487,7 +487,7 @@ class ChannelSetFlow {
   String noticeUrl;
   String payment;
   String paymentMethod;
-  String paymentOptionId;
+  num paymentOptionId;
   List<Payment> paymentOptions = [];
   String pendingUrl;
   String posMerchantMode;

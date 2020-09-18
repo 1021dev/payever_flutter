@@ -28,7 +28,6 @@ class WorkshopHeader extends StatelessWidget {
             child: Text(
               title.toUpperCase(),
               style: TextStyle(
-                color: Colors.black54,
                 fontSize: 12,
               ),
             ),
@@ -45,7 +44,6 @@ class WorkshopHeader extends StatelessWidget {
                   child: Text(
                     subTitle,
                     style: TextStyle(
-                      color: Colors.black87,
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
                     ),
@@ -58,7 +56,6 @@ class WorkshopHeader extends StatelessWidget {
                       this.isExpanded
                           ? Icons.keyboard_arrow_up
                           : Icons.keyboard_arrow_down,
-                      color: Colors.black38,
                     ),
                     onPressed: () {
                       this.onTap();
