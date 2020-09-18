@@ -9,10 +9,12 @@ import 'package:payever/checkout/models/models.dart';
 import 'package:payever/checkout/widgets/checkout_top_button.dart';
 import 'package:payever/checkout/widgets/workshop_header_item.dart';
 import 'package:payever/commons/commons.dart';
+import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/widgets/address_field_group.dart';
 import 'package:payever/widgets/googlemap_address_filed.dart';
 import 'package:payever/widgets/peronal_name_field.dart';
 
+import '../../../theme.dart';
 import 'checkout_switch_screen.dart';
 
 class WorkshopScreen1 extends StatefulWidget {
@@ -69,8 +71,13 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
 
   @override
   void initState() {
-    screenBloc = WorkshopScreenBloc();
-    screenBloc.add(WorkshopScreenInitEvent());
+    screenBloc = WorkshopScreenBloc(checkoutScreenBloc: widget.checkoutScreenBloc);
+    screenBloc.add(WorkshopScreenInitEvent(
+      business: widget.checkoutScreenBloc.state.business,
+      checkoutFlow: widget.checkoutScreenBloc.state.checkoutFlow,
+      channelSetFlow: widget.checkoutScreenBloc.state.channelSetFlow,
+      defaultCheckout: widget.checkoutScreenBloc.state.defaultCheckout,
+    ));
     super.initState();
   }
 
@@ -84,20 +91,29 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
   @override
   Widget build(BuildContext context) {
 
-    return BlocBuilder<WorkshopScreenBloc, WorkshopScreenState>(
+    return BlocListener(
       bloc: screenBloc,
-      builder: (BuildContext context, state) {
-        return Container(
-          child: Column(
-            children: <Widget>[
-              _topBar(),
-              Flexible(
-                child: _body(state),
-              ),
-            ],
-          ),
-        );
+      listener: (BuildContext context, WorkshopScreenState state) async {
+        if (state is CheckoutScreenStateFailure) {
+
+        }
       },
+      child: BlocBuilder<WorkshopScreenBloc, WorkshopScreenState>(
+        bloc: screenBloc,
+        builder: (BuildContext context, state) {
+          return state.defaultCheckout == null ? Container() :
+          Container(
+            child: Column(
+              children: <Widget>[
+                _topBar(),
+                Flexible(
+                  child: _body(state),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 
@@ -527,7 +543,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                   child: Column(
                     children: <Widget>[
                       Container(
-                        height: 65,
+                        height: 50,
                         child: TextFormField(
                           style: TextStyle(
                             fontSize: 16,
@@ -580,7 +596,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                       ),
                       Divider(height: 1,color: Colors.black54,),
                       Container(
-                        height: 65,
+                        height: 50,
                         padding: EdgeInsets.only(left: 4, right: 4),
                         alignment: Alignment.center,
                         child: TextFormField(
@@ -836,6 +852,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                       _divider,
                       GoogleMapAddressField(
                         googleAutocomplete: googleAutocomplete,
+                        height: 50,
                         onChanged: (val) {
                           googleAutocomplete = val;
                         },
@@ -906,12 +923,16 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                 ),
                 child: Column(
                   children: <Widget>[
-                    _emailField(isInitValue: true),
-                    _divider,
+                    BlurEffectView(
+                        color: overlayRow(),
+                        radius: 0,
+                        child: _emailField(isInitValue: true)),
+                    SizedBox(height: 2,),
                     PersonalNameField(
                       salutation: salutation,
                       firstName: firstName,
                       lastName: lastName,
+                      height: 50,
                       salutationChanged: (val) {
                         setState(() {
                           salutation = val;
@@ -928,13 +949,15 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                         });
                       },
                     ),
-                    _divider,
+                    SizedBox(height: 2,),
                     AddressFieldGroup(
                       googleAutocomplete: googleAutocomplete,
                       city: city,
                       countryCode: countryCode,
                       street: street,
                       zipCode: zipCode,
+                      height: 50,
+                      hasBorder: false,
                       onChangedGoogleAutocomplete: (val) {
                         googleAutocomplete = val;
                       },
@@ -1492,7 +1515,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
 
   Widget _emailField({bool isInitValue = false}) {
     return Container(
-      height: 65,
+      height: 50,
       alignment: Alignment.center,
       child: TextFormField(
         style: TextStyle(

@@ -111,6 +111,8 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       yield* uploadBusiness(event.body);
     } else if (event is GetChannelSetFlowEvent) {
       yield* getChannelSetFlow();
+    } else if (event is UpdateChannelSetFlowEvent) {
+      yield state.copyWith(channelSetFlow: event.channelSetFlow);
     }
   }
 

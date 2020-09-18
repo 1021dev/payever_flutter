@@ -10,20 +10,23 @@ abstract class WorkshopScreenEvent extends Equatable {
 
 class WorkshopScreenInitEvent extends WorkshopScreenEvent {
   final String business;
-  final List<Checkout> checkouts;
+  final ChannelSetFlow channelSetFlow;
   final Checkout defaultCheckout;
+  final CheckoutFlow checkoutFlow;
 
   WorkshopScreenInitEvent({
     this.business,
-    this.checkouts,
     this.defaultCheckout,
+    this.channelSetFlow,
+    this.checkoutFlow,
   });
 
   @override
   List<Object> get props => [
     this.business,
-    this.checkouts,
     this.defaultCheckout,
+    this.channelSetFlow,
+    this.checkoutFlow,
   ];
 }
 
