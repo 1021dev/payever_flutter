@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:payever/apis/api_service.dart';
 import 'package:payever/blocs/bloc.dart';
@@ -41,15 +42,22 @@ class WorkshopScreenBloc extends Bloc<WorkshopScreenEvent, WorkshopScreenState> 
     ChannelSetFlow channelSetFlow;
     dynamic response = await api.patchCheckoutFlowOrder(
         token, state.channelSetFlow.id, 'en', body);
-    if (response is Map) {
+    if (response is DioError) {
+      yield WorkshopScreenStateFailure(error: response.message);
+      yield state.copyWith(
+        isUpdating: false,
+        updatePayflowIndex: -1,
+      );
+    } else if (response is Map) {
       channelSetFlow = ChannelSetFlow.fromMap(response);
+      yield state.copyWith(
+        isUpdating: false,
+        updatePayflowIndex: -1,
+        channelSetFlow: channelSetFlow,
+      );
+      yield WorkshopScreenPayflowStateSuccess();
+      checkoutScreenBloc.add(UpdateChannelSetFlowEvent(channelSetFlow));
     }
-    yield state.copyWith(
-      isUpdating: false,
-      updatePayflowIndex: -1,
-      channelSetFlow: channelSetFlow,
-    );
-    checkoutScreenBloc.add(UpdateChannelSetFlowEvent(channelSetFlow));
   }
 
   Stream<WorkshopScreenState> patchCheckoutFlowAddress(Map body) async* {

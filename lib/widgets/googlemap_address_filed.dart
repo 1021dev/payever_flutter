@@ -7,7 +7,8 @@ import '../theme.dart';
 class GoogleMapAddressField extends StatefulWidget {
   final String googleAutocomplete;
   final Function onChanged;
-  const GoogleMapAddressField({this.googleAutocomplete, this.onChanged});
+  final double height;
+  const GoogleMapAddressField({this.googleAutocomplete, this.onChanged, this.height = 65});
   @override
   _GoogleMapAddressFieldState createState() => _GoogleMapAddressFieldState();
 }
@@ -16,7 +17,7 @@ class _GoogleMapAddressFieldState extends State<GoogleMapAddressField> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 65,
+      height: widget.height,
       padding: EdgeInsets.only(left: 12, right: 12),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,

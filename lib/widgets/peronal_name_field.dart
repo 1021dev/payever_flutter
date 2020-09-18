@@ -12,6 +12,7 @@ class PersonalNameField extends StatefulWidget {
   final Function salutationChanged;
   final Function firstNameChanged;
   final Function lastNameChanged;
+  final double height;
 
   const PersonalNameField(
       {this.salutation,
@@ -19,7 +20,8 @@ class PersonalNameField extends StatefulWidget {
       this.lastName,
       this.salutationChanged,
       this.firstNameChanged,
-      this.lastNameChanged});
+      this.lastNameChanged,
+      this.height = 65});
 
   @override
   _PersonalNameFieldState createState() => _PersonalNameFieldState();
@@ -29,7 +31,7 @@ class _PersonalNameFieldState extends State<PersonalNameField> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 65,
+      height: widget.height,
       child: Row(
         children: <Widget>[
           Flexible(
@@ -37,7 +39,7 @@ class _PersonalNameFieldState extends State<PersonalNameField> {
               color: overlayRow(),
               radius: 0,
               child: Container(
-                height: 64,
+                height: widget.height,
                 alignment: Alignment.center,
                 padding: EdgeInsets.only(left: 16, right: 8),
                 child: DropdownButtonFormField(
@@ -79,7 +81,7 @@ class _PersonalNameFieldState extends State<PersonalNameField> {
               color: overlayRow(),
               radius: 0,
               child: Container(
-                height: 64,
+                height: widget.height,
                 alignment: Alignment.center,
                 child: TextFormField(
                   style: TextStyle(fontSize: 16),
@@ -96,6 +98,12 @@ class _PersonalNameFieldState extends State<PersonalNameField> {
                     ),
                   ),
                   keyboardType: TextInputType.text,
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'First name is required!';
+                    }
+                    return null;
+                  },
                 ),
               ),
             ),
@@ -108,7 +116,7 @@ class _PersonalNameFieldState extends State<PersonalNameField> {
               color: overlayRow(),
               radius: 0,
               child: Container(
-                height: 64,
+                height: widget.height,
                 alignment: Alignment.center,
                 child: TextFormField(
                   style: TextStyle(fontSize: 16),
@@ -125,6 +133,12 @@ class _PersonalNameFieldState extends State<PersonalNameField> {
                     ),
                   ),
                   keyboardType: TextInputType.text,
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Last name is required!';
+                    }
+                    return null;
+                  },
                 ),
               ),
             ),

@@ -52,6 +52,8 @@ class WorkshopScreenState {
   }
 }
 
+class WorkshopScreenPayflowStateSuccess extends WorkshopScreenState {}
+
 class WorkshopScreenStateSuccess extends WorkshopScreenState {}
 
 class WorkshopScreenStateFailure extends WorkshopScreenState {
