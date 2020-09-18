@@ -2666,7 +2666,7 @@ class ApiService {
       var rand = randomString(8);
       print(rand);
       dynamic response = await _client.patchTypeless(
-        '$checkoutV3/$checkoutFlowId/address/$addressId?_locale=$local&rand=$rand',
+        '$checkoutV3/$checkoutFlowId/addresses/$addressId?_locale=$local&rand=$rand',
         body: body,
         headers: _getHeaders(token),
       );

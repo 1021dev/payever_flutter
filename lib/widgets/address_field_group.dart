@@ -110,6 +110,7 @@ class _AddressFieldGroupState extends State<AddressFieldGroup> {
                   value: countryName ?? null,
                   onChanged: (val) {
                     countryName = val;
+                    widget.onChangedCode(getCountryCode(countryName, countryList).toUpperCase());
                   },
                   icon: Icon(
                     Icons.keyboard_arrow_down,

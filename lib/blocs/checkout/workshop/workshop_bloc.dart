@@ -29,8 +29,11 @@ class WorkshopScreenBloc extends Bloc<WorkshopScreenEvent, WorkshopScreenState> 
           defaultCheckout: event.defaultCheckout,
         );
       }
+      print('channelSetFlow :${state.channelSetFlow.billingAddress.id}');
     } else if (event is PatchCheckoutFlowOrderEvent) {
       yield* patchCheckoutFlowOrder(event.body);
+    } else if (event is PatchCheckoutFlowAddressEvent) {
+      yield* patchCheckoutFlowAddress(event.body);
     }
   }
 
@@ -49,13 +52,13 @@ class WorkshopScreenBloc extends Bloc<WorkshopScreenEvent, WorkshopScreenState> 
         updatePayflowIndex: -1,
       );
     } else if (response is Map) {
+      yield WorkshopScreenPayflowStateSuccess();
       channelSetFlow = ChannelSetFlow.fromMap(response);
       yield state.copyWith(
         isUpdating: false,
         updatePayflowIndex: -1,
         channelSetFlow: channelSetFlow,
       );
-      yield WorkshopScreenPayflowStateSuccess();
       checkoutScreenBloc.add(UpdateChannelSetFlowEvent(channelSetFlow));
     }
   }
@@ -67,7 +70,7 @@ class WorkshopScreenBloc extends Bloc<WorkshopScreenEvent, WorkshopScreenState> 
     );
     ChannelSetFlow channelSetFlow;
     dynamic response = await api.patchCheckoutFlowAddress(
-        token, state.channelSetFlow.id, '','en', body);
+        token, state.channelSetFlow.id, state.channelSetFlow.billingAddress.id,'en', body);
     if (response is Map) {
       channelSetFlow = ChannelSetFlow.fromMap(response);
     }

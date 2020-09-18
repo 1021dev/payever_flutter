@@ -167,7 +167,7 @@ class BillingAddress {
     salutation = obj[GlobalUtils.DB_TRANSACTIONS_C_B_SALUTATION];
     street = obj[GlobalUtils.DB_TRANSACTIONS_C_B_STREET];
     zipCode = obj[GlobalUtils.DB_TRANSACTIONS_C_B_ZIP_CODE];
-    id = obj[GlobalUtils.DB_TRANSACTIONS_C_B_ID];
+    id = obj['id'];
     company = obj['company'];
     fullAddress = obj['full_address'];
     phone = obj['phone'];

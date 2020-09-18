@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/checkout/checkout_bloc.dart';
@@ -27,15 +28,18 @@ class WorkshopScreen1 extends StatefulWidget {
 }
 
 class _WorkshopScreen1State extends State<WorkshopScreen1> {
-
   int _selectedSectionIndex = 0;
   bool isOrderApproved = true;
   bool isAccountApproved = false;
+  bool isBillingApproved = false;
   bool isSendDeviceApproved = false;
   bool isSelectPaymentApproved = false;
-  bool isBillingApproved = false;
+
   String currency = '';
   bool editOrder = false;
+
+  double amount = 0;
+  String reference;
 
   String email;
   String city;
@@ -48,9 +52,6 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
   String salutation;
   String firstName;
   String lastName;
-
-  var controllerAmount = TextEditingController();
-  var controllerReference = TextEditingController();
 
   bool switchCheckout = false;
   final _formKeyOrder = GlobalKey<FormState>();
@@ -80,14 +81,14 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
       channelSetFlow: widget.checkoutScreenBloc.state.channelSetFlow,
       defaultCheckout: widget.checkoutScreenBloc.state.defaultCheckout,
     ));
+    amount = (widget.checkoutScreenBloc.state.channelSetFlow == null || widget.checkoutScreenBloc.state.channelSetFlow.amount == 0) ? 0 : widget.checkoutScreenBloc.state.channelSetFlow.amount.toDouble();
+    reference = (widget.checkoutScreenBloc.state.channelSetFlow != null && widget.checkoutScreenBloc.state.channelSetFlow.reference != null) ? widget.checkoutScreenBloc.state.channelSetFlow.reference : '';
     super.initState();
   }
 
   @override
   void dispose() {
     super.dispose();
-    controllerAmount.dispose();
-    controllerReference.dispose();
   }
 
   @override
@@ -99,12 +100,14 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
           setState(() {
             switch(_selectedSectionIndex) {
               case 0:
-                isAccountApproved = true;
+                // isOrderApproved = true;
+                break;
+              case 2:
+                isBillingApproved = true;
                 break;
               default:
-
+                break;
             }
-
             _selectedSectionIndex ++;
           });
         }
@@ -526,8 +529,6 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
     if (state.channelSetFlow == null) {
       return Container();
     }
-    controllerAmount = TextEditingController(text: (state.channelSetFlow == null || state.channelSetFlow.amount == 0) ? '' : '${state.channelSetFlow.amount}');
-    controllerReference = TextEditingController(text: state.channelSetFlow.reference != null ? state.channelSetFlow.reference : '');
     return Form(
       key: _formKeyOrder,
       child: Visibility(
@@ -564,11 +565,12 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                               color:Colors.black87,
                               fontWeight: FontWeight.w400,
                             ),
+                            initialValue: amount > 0 ? '$amount' : '',
                             onChanged: (val) {
+                              amount = double.parse(val);
                             },
-                            controller: controllerAmount,
                             validator: (text) {
-                              if (text.isEmpty){
+                              if (text.isEmpty || double.parse(text) <= 0){
                                 return 'Amount required';
                               }
                               return null;
@@ -620,8 +622,9 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                               fontWeight: FontWeight.w400,
                             ),
                             onChanged: (val) {
+                              reference = val;
                             },
-                            controller: controllerReference,
+                            initialValue: reference,
                             validator: (text) {
                               if (text.isEmpty){
                                 return 'Reference required';
@@ -663,7 +666,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                         onPressed: () {
                           if (_formKeyOrder.currentState.validate() && !state.isUpdating) {
                             screenBloc.add(
-                                PatchCheckoutFlowOrderEvent(body: {'amount': double.parse(controllerAmount.text), 'reference': controllerReference.text}));
+                                PatchCheckoutFlowOrderEvent(body: {'amount': amount, 'reference': reference}));
                           }
                         },
                         shape: RoundedRectangleBorder(
@@ -887,6 +890,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                           if (_formKeyAccount.currentState.validate()) {
                             setState(() {
                               _selectedSectionIndex++;
+                              isAccountApproved = true;
                             });
                           }
                         },
@@ -981,7 +985,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                           googleAutocomplete = val;
                         },
                         onChangedCode: (val) {
-                          countryName = val;
+                          countryCode = val;
                         },
                         onChangedCity: (val) {
                           setState(() {
@@ -1013,32 +1017,57 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                   child: SizedBox.expand(
                     child: MaterialButton(
                       onPressed: () {
-                        if (_formKeyBilling.currentState.validate() && state.isUpdating) {
+                        if (countryCode == null || countryCode.isEmpty) {
+                          Fluttertoast.showToast(msg: 'Country is needed');
+                          return;
+                        }
+                        if (salutation == null || salutation.isEmpty) {
+                          Fluttertoast.showToast(msg: 'Salutation is needed');
+                          return;
+                        }
+
+                        if (_formKeyBilling.currentState.validate() && !state.isUpdating) {
+                          // Map<String, dynamic> body = {
+                          //   'city': city,
+                          //   'company': null,
+                          //   'country': countryCode,
+                          //   'email': email,
+                          //   'first_name': firstName,
+                          //   'full_address': googleAutocomplete,
+                          //   'id': state.channelSetFlow.billingAddress.id,
+                          //   'last_name': lastName,
+                          //   'phone': null,
+                          //   'salutation': salutation,
+                          //   'select_address': '',
+                          //   'social_security_number': '',
+                          //   'street': street,
+                          //   'street_name': street,
+                          //   'street_number': "12099",
+                          //   'type': 'billing',
+                          //   'zip_code': zipCode,
+                          // };
                           Map<String, dynamic> body = {
-                            'city': "Berlin",
+                            'city': 'Berlin',
                             'company': null,
-                            'country': "DE",
-                            'email': "test@gmail.com",
-                            'first_name': "Test",
-                            'full_address':
-                            "Germaniastraße, 12099, 12099 Berlin, Germany",
-                            'id': "673d6c97-2341-449f-82b6-eb15a00f9478",
-                            'last_name': "User",
+                            'country': 'DE',
+                            'email': 'abiantgmbh@payever.de',
+                            'first_name': 'Artur',
+                            'full_address': "Germaniastraße, 12099, 12099 Berlin, Germany",
+                            'id': state.channelSetFlow.billingAddress.id,
+                            'last_name': 'S',
                             'phone': null,
                             'salutation': "SALUTATION_MR",
-                            'select_address': "",
-                            'social_security_number': "",
+                            'select_address': '',
+                            'social_security_number': '',
                             'street': "Germaniastraße, 12099",
                             'street_name': "Germaniastraße,",
                             'street_number': "12099",
-                            'type': "billing",
+                            'type': 'billing',
                             'zip_code': "12099",
                           };
+                          print('body: $body');
                           screenBloc
                               .add(PatchCheckoutFlowAddressEvent(body: body));
-                          setState(() {
-                            _selectedSectionIndex++;
-                          });
                         }
                       },
                       shape: RoundedRectangleBorder(
