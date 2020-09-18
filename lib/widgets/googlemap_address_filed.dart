@@ -46,6 +46,7 @@ class _GoogleMapAddressFieldState extends State<GoogleMapAddressField> {
                 labelStyle: TextStyle(
                   fontSize: 12,
                 ),
+                contentPadding: EdgeInsets.symmetric(vertical: 4),
               ),
             ),
           ),

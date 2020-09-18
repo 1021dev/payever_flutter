@@ -126,110 +126,104 @@ class _AddressFieldGroupState extends State<AddressFieldGroup> {
             ),
           ),
           Container(
-            padding: EdgeInsets.only(
+            margin: EdgeInsets.only(
               top: 2,
             ),
             height:  widget.height,
             child: BlurEffectView(
               color: overlayRow(),
               radius: 0,
-              child: Container(
-                padding: EdgeInsets.only(left: 12, right: 12),
-                child: TextFormField(
-                  style: TextStyle(
-                    fontSize: 16,
+              child: TextFormField(
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+                initialValue: widget.city ?? '',
+                textInputAction: TextInputAction.done,
+                keyboardType: TextInputType.url,
+                onChanged: (val) {
+                  widget.onChangedCity(val);
+                },
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'City is required.';
+                  }
+                  return null;
+                },
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  labelText: Language.getSettingsStrings('form.create_form.address.city.label'),
+                  labelStyle: TextStyle(
+                    fontSize: 12,
                   ),
-                  initialValue: widget.city ?? '',
-                  textInputAction: TextInputAction.done,
-                  keyboardType: TextInputType.url,
-                  onChanged: (val) {
-                    widget.onChangedCity(val);
-                  },
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'City is required.';
-                    }
-                    return null;
-                  },
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    labelText: Language.getSettingsStrings('form.create_form.address.city.label'),
-                    labelStyle: TextStyle(
-                      fontSize: 12,
-                    ),
-                  ),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 12,  vertical: 4),
                 ),
               ),
             ),
           ),
           Container(
-            padding: EdgeInsets.only(
+            margin: EdgeInsets.only(
               top: 2,
             ),
             height: widget.height,
             child: BlurEffectView(
               color: overlayRow(),
               radius: 0,
-              child: Container(
-                padding: EdgeInsets.only(left: 12, right: 12),
-                child: TextFormField(
-                  style: TextStyle(
-                    fontSize: 16,
+              child: TextFormField(
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+                initialValue: widget.street ?? '',
+                textInputAction: TextInputAction.done,
+                keyboardType: TextInputType.url,
+                onChanged: (val) {
+                  widget.onChangedStreet(val);
+                },
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Street is required.';
+                  }
+                  return null;
+                },
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  labelText: Language.getSettingsStrings('form.create_form.address.street.label'),
+                  labelStyle: TextStyle(
+                    fontSize: 12,
                   ),
-                  initialValue: widget.street ?? '',
-                  textInputAction: TextInputAction.done,
-                  keyboardType: TextInputType.url,
-                  onChanged: (val) {
-                    widget.onChangedStreet(val);
-                  },
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Street is required.';
-                    }
-                    return null;
-                  },
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    labelText: Language.getSettingsStrings('form.create_form.address.street.label'),
-                    labelStyle: TextStyle(
-                      fontSize: 12,
-                    ),
-                  ),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 12,  vertical: 4),
                 ),
               ),
             ),
           ),
           Container(
-            padding: EdgeInsets.only(top: 2, bottom: 2),
+            margin: EdgeInsets.only(top: 2),
             height: widget.height,
             child: BlurEffectView(
               radius: 0,
               color: overlayRow(),
-              child: Container(
-                padding: EdgeInsets.only(left: 12, right: 12),
-                child: TextFormField(
-                  style: TextStyle(
-                    fontSize: 16,
+              child: TextFormField(
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+                initialValue: widget.zipCode ?? '',
+                textInputAction: TextInputAction.done,
+                keyboardType: TextInputType.url,
+                onChanged: (val) {
+                  widget.onChangedZipCode(val);
+                },
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'ZIP Code is required.';
+                  }
+                  return null;
+                },
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  labelText: Language.getSettingsStrings('form.create_form.address.zip_code.label'),
+                  labelStyle: TextStyle(
+                    fontSize: 12,
                   ),
-                  initialValue: widget.zipCode ?? '',
-                  textInputAction: TextInputAction.done,
-                  keyboardType: TextInputType.url,
-                  onChanged: (val) {
-                    widget.onChangedZipCode(val);
-                  },
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'ZIP Code is required.';
-                    }
-                    return null;
-                  },
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    labelText: Language.getSettingsStrings('form.create_form.address.zip_code.label'),
-                    labelStyle: TextStyle(
-                      fontSize: 12,
-                    ),
-                  ),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 12,  vertical: 4),
                 ),
               ),
             ),

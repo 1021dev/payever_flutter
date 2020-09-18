@@ -53,6 +53,9 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
   String firstName;
   String lastName;
 
+  String company;
+  String phone;
+
   bool switchCheckout = false;
   final _formKeyOrder = GlobalKey<FormState>();
   final _formKeyAccount = GlobalKey<FormState>();
@@ -363,9 +366,9 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                           _divider,
                           _billingView(state),
                           _divider,
-                          _sendToDeviceView(state),
-                          _divider,
                           _selectPaymentView(state),
+                          _divider,
+                          _sendToDeviceView(state),
                           _divider,
                           _paymentOptionView(state),
                           _divider,
@@ -1006,6 +1009,85 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                           });
                         },
                       ),
+                      SizedBox(height: 2,),
+                      BlurEffectView(
+                        color: overlayRow(),
+                        radius: 0,
+                        child: Container(
+                          height: 50,
+                          child: TextFormField(
+                            style: TextStyle(
+                              fontSize: 16,
+                              color:Colors.black,
+                              fontWeight: FontWeight.w400,
+                            ),
+                            onChanged: (val) {
+                              company = val;
+                            },
+                            initialValue: company,
+                            decoration: InputDecoration(
+                              labelText: 'Company',
+                              labelStyle: TextStyle(
+                                color: Colors.grey,
+                              ),
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.transparent,
+                                  width: 0.5,
+                                ),
+                              ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.black,
+                                  width: 0.5,
+                                ),
+                              ),
+                              contentPadding: EdgeInsets.symmetric(horizontal: 12,  vertical: 4),
+                            ),
+                            keyboardType: TextInputType.text,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 2,),
+                      BlurEffectView(
+                        color: overlayRow(),
+                        radius: 0,
+                        child: Container(
+                          height: 50,
+                          alignment: Alignment.center,
+                          child: TextFormField(
+                            style: TextStyle(
+                              fontSize: 16,
+                              color:Colors.black,
+                              fontWeight: FontWeight.w400,
+                            ),
+                            onChanged: (val) {
+                              phone = val;
+                            },
+                            initialValue: phone,
+                            decoration: InputDecoration(
+                              labelText: 'Phone',
+                              labelStyle: TextStyle(
+                                color: Colors.grey,
+                              ),
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.transparent,
+                                  width: 0.5,
+                                ),
+                              ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.black,
+                                  width: 0.5,
+                                ),
+                              ),
+                              contentPadding: EdgeInsets.only(left: 12, right: 12, top: 4, bottom: 4),
+                            ),
+                            keyboardType: TextInputType.text,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -1025,49 +1107,46 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                           Fluttertoast.showToast(msg: 'Salutation is needed');
                           return;
                         }
-
                         if (_formKeyBilling.currentState.validate() && !state.isUpdating) {
-                          // Map<String, dynamic> body = {
-                          //   'city': city,
-                          //   'company': null,
-                          //   'country': countryCode,
-                          //   'email': email,
-                          //   'first_name': firstName,
-                          //   'full_address': googleAutocomplete,
-                          //   'id': state.channelSetFlow.billingAddress.id,
-                          //   'last_name': lastName,
-                          //   'phone': null,
-                          //   'salutation': salutation,
-                          //   'select_address': '',
-                          //   'social_security_number': '',
-                          //   'street': street,
-                          //   'street_name': street,
-                          //   'street_number': "12099",
-                          //   'type': 'billing',
-                          //   'zip_code': zipCode,
-                          // };
                           Map<String, dynamic> body = {
-                            'city': 'Berlin',
-                            'company': null,
-                            'country': 'DE',
-                            'email': 'abiantgmbh@payever.de',
-                            'first_name': 'Artur',
-                            'full_address': "Germaniastraße, 12099, 12099 Berlin, Germany",
+                            'city': city,
+                            'company': company,
+                            'country': countryCode,
+                            'email': email,
+                            'first_name': firstName,
+                            'full_address': googleAutocomplete,
                             'id': state.channelSetFlow.billingAddress.id,
-                            'last_name': 'S',
-                            'phone': null,
-                            'salutation': "SALUTATION_MR",
+                            'last_name': lastName,
+                            'phone': phone,
+                            'salutation': salutation,
                             'select_address': '',
                             'social_security_number': '',
-                            'street': "Germaniastraße, 12099",
-                            'street_name': "Germaniastraße,",
+                            'street': street,
+                            'street_name': street,
                             'street_number': "12099",
                             'type': 'billing',
-                            'zip_code': "12099",
+                            'zip_code': zipCode,
                           };
                           print('body: $body');
                           screenBloc
                               .add(PatchCheckoutFlowAddressEvent(body: body));
+                          // city: "Berlin"
+                          // company: null
+                          // country: "DE"
+                          // email: "abiantgmbh@payever.de"
+                          // first_name: "Artur"
+                          // full_address: "Germaniastraße, 12099, 12099 Berlin, Germany"
+                          // id: "c1d295fb-abf1-463c-994e-5b8b1a98604b"
+                          // last_name: "S"
+                          // phone: null
+                          // salutation: "SALUTATION_MR"
+                          // select_address: ""
+                          // social_security_number: ""
+                          // street: "Germaniastraße, 12099"
+                          // street_name: "Germaniastraße,"
+                          // street_number: "12099"
+                          // type: "billing"
+                          // zip_code: "12099"
                         }
                       },
                       shape: RoundedRectangleBorder(
@@ -1093,6 +1172,151 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _selectPaymentView(WorkshopScreenState state) {
+    return Visibility(
+      visible: isVisible(state, 'choosePayment'),
+      child: Column(
+        children: <Widget>[
+          WorkshopHeader(
+            title: 'SELECT PAYMENT',
+            subTitle: 'Select a payment method',
+            // isExpanded: _selectedSectionIndex == 3,
+            isExpanded: true,
+            isApproved: isSelectPaymentApproved,
+            onTap: () {
+              setState(() {
+                _selectedSectionIndex = _selectedSectionIndex == 3 ? -1 : 3;
+              });
+            },
+          ),
+          Visibility(
+            // visible: _selectedSectionIndex == 3,
+            visible: true,
+            child: Column(
+              children: <Widget>[
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                  ),
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        height: 50,
+                        child: TextFormField(
+                          style: TextStyle(
+                            fontSize: 16,
+                            color:Colors.black54,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          onChanged: (val) {
+                          },
+                          initialValue: '',
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.only(left: 16, right: 16),
+                            labelText: 'Mobile number',
+                            labelStyle: TextStyle(
+                              color: Colors.grey,
+                            ),
+                            enabledBorder: InputBorder.none,
+                          ),
+                          keyboardType: TextInputType.text,
+                        ),
+                      ),
+                      Divider(height: 1,color: Colors.black54,),
+                      Container(
+                        height: 50,
+                        child: TextFormField(
+                          style: TextStyle(
+                            fontSize: 16,
+                            color:Colors.black54,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          onChanged: (val) {
+                          },
+                          initialValue: '',
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.only(left: 16, right: 16),
+                            labelText: 'E-Mail Address',
+                            labelStyle: TextStyle(
+                              color: Colors.grey,
+                            ),
+                            enabledBorder: InputBorder.none,
+                          ),
+                          keyboardType: TextInputType.text,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  height: 50,
+                  child: Row(
+                    children: <Widget>[
+                      Flexible(
+                        child: SizedBox.expand(
+                          child: MaterialButton(
+                            onPressed: () {
+                              setState(() {
+                                _selectedSectionIndex++;
+                              });
+                            },
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: state.isUpdating ?
+                            CircularProgressIndicator() :
+                            Text(
+                              Language.getCheckoutStrings('checkout_send_flow.action.skip'),
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.black87,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Flexible(
+                        child: SizedBox.expand(
+                          child: MaterialButton(
+                            onPressed: () {
+                              setState(() {
+                                _selectedSectionIndex++;
+                              });
+                            },
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            color: Colors.black87,
+                            child: state.isUpdating ?
+                            CircularProgressIndicator() :
+                            Text(
+                              Language.getCheckoutStrings('checkout_send_flow.action.continue'),
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 20,),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -1187,149 +1411,6 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                             contentPadding: EdgeInsets.only(left: 16, right: 16, top: 0, bottom: 0),
                           ),
                           keyboardType: TextInputType.emailAddress,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  height: 50,
-                  child: Row(
-                    children: <Widget>[
-                      Flexible(
-                        child: SizedBox.expand(
-                          child: MaterialButton(
-                            onPressed: () {
-                              setState(() {
-                                _selectedSectionIndex++;
-                              });
-                            },
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: state.isUpdating ?
-                            CircularProgressIndicator() :
-                            Text(
-                              Language.getCheckoutStrings('checkout_send_flow.action.skip'),
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.black87,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Flexible(
-                        child: SizedBox.expand(
-                          child: MaterialButton(
-                            onPressed: () {
-                              setState(() {
-                                _selectedSectionIndex++;
-                              });
-                            },
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            color: Colors.black87,
-                            child: state.isUpdating ?
-                            CircularProgressIndicator() :
-                            Text(
-                              Language.getCheckoutStrings('checkout_send_flow.action.continue'),
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 20,),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _selectPaymentView(WorkshopScreenState state) {
-    return Visibility(
-      visible: isVisible(state, 'choosePayment'),
-      child: Column(
-        children: <Widget>[
-          WorkshopHeader(
-            title: 'SELECT PAYMENT',
-            subTitle: 'Select a payment method',
-            isExpanded: _selectedSectionIndex == 4,
-            isApproved: isBillingApproved,
-            onTap: () {
-              setState(() {
-                _selectedSectionIndex = _selectedSectionIndex == 4 ? -1 : 4;
-              });
-            },
-          ),
-          Visibility(
-            visible: _selectedSectionIndex == 4,
-            child: Column(
-              children: <Widget>[
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.all(Radius.circular(8)),
-                  ),
-                  child: Column(
-                    children: <Widget>[
-                      Container(
-                        height: 50,
-                        child: TextFormField(
-                          style: TextStyle(
-                            fontSize: 16,
-                            color:Colors.black54,
-                            fontWeight: FontWeight.w400,
-                          ),
-                          onChanged: (val) {
-                          },
-                          initialValue: '',
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.only(left: 16, right: 16),
-                            labelText: 'Mobile number',
-                            labelStyle: TextStyle(
-                              color: Colors.grey,
-                            ),
-                            enabledBorder: InputBorder.none,
-                          ),
-                          keyboardType: TextInputType.text,
-                        ),
-                      ),
-                      Divider(height: 1,color: Colors.black54,),
-                      Container(
-                        height: 50,
-                        child: TextFormField(
-                          style: TextStyle(
-                            fontSize: 16,
-                            color:Colors.black54,
-                            fontWeight: FontWeight.w400,
-                          ),
-                          onChanged: (val) {
-                          },
-                          initialValue: '',
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.only(left: 16, right: 16),
-                            labelText: 'E-Mail Address',
-                            labelStyle: TextStyle(
-                              color: Colors.grey,
-                            ),
-                            enabledBorder: InputBorder.none,
-                          ),
-                          keyboardType: TextInputType.text,
                         ),
                       ),
                     ],
@@ -1579,7 +1660,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
         },
         initialValue: isInitValue ? email : '',
         decoration: InputDecoration(
-          contentPadding: EdgeInsets.only(left: 16, right: 16),
+          contentPadding: EdgeInsets.symmetric(horizontal: 12,  vertical: 4),
           labelText: 'E-Mail Address',
           labelStyle: TextStyle(
             color: Colors.grey,
