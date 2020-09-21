@@ -66,3 +66,5 @@ class WorkshopScreenStateFailure extends WorkshopScreenState {
     return 'CheckoutScreenStateFailure { error $error }';
   }
 }
+
+class WorkshopScreenPaySuccess extends WorkshopScreenState{}

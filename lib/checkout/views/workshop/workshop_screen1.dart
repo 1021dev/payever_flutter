@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/checkout/checkout_bloc.dart';
 import 'package:payever/checkout/models/models.dart';
+import 'package:payever/checkout/views/workshop/subview/pay_success_view.dart';
 import 'package:payever/checkout/views/workshop/subview/payment_select_view.dart';
 import 'package:payever/checkout/widgets/checkout_top_button.dart';
 import 'package:payever/checkout/widgets/workshop_header_item.dart';
@@ -114,6 +115,8 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
             }
             _selectedSectionIndex ++;
           });
+        } else if (state is WorkshopScreenPaySuccess) {
+          showPaySuccessDialog(state);
         }
       },
       child: BlocBuilder<WorkshopScreenBloc, WorkshopScreenState>(
@@ -154,7 +157,9 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
           ),
           Spacer(),
           InkWell(
-            onTap: () {},
+            onTap: () {
+
+            },
             child: Container(
               height: 30,
               width: 80,
@@ -1174,7 +1179,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
       },
       onTapPay: () {
         setState(() {
-          _selectedSectionIndex++;
+          screenBloc.add(CheckoutPayEvent());
         });
       },
       onTapChangePayment: (num id) {
@@ -1628,5 +1633,19 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
         },
       ),
     ];
+  }
+
+  showPaySuccessDialog(WorkshopScreenState state) {
+    showCupertinoDialog(
+      context: context,
+      builder: (builder) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: PaySuccessView(
+            channelSetFlow: state.channelSetFlow,
+          ),
+        );
+      },
+    );
   }
 }

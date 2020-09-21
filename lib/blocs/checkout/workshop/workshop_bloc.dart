@@ -34,6 +34,8 @@ class WorkshopScreenBloc extends Bloc<WorkshopScreenEvent, WorkshopScreenState> 
       yield* patchCheckoutFlowOrder(event.body);
     } else if (event is PatchCheckoutFlowAddressEvent) {
       yield* patchCheckoutFlowAddress(event.body);
+    } else if (event is CheckoutPayEvent) {
+      yield* checkoutPay();
     }
   }
 
@@ -95,7 +97,7 @@ class WorkshopScreenBloc extends Bloc<WorkshopScreenEvent, WorkshopScreenState> 
       isUpdating: true,
       updatePayflowIndex: 3,
     );
-    ChannelSetFlow channelSetFlow;
+    ChannelSetFlow channelSetFlow = state.channelSetFlow;
     Map<String, dynamic> body = {
       'payment_data': {},
       'payment_flow_id': state.channelSetFlow.id,
@@ -111,8 +113,8 @@ class WorkshopScreenBloc extends Bloc<WorkshopScreenEvent, WorkshopScreenState> 
         updatePayflowIndex: -1,
       );
     } else if (response is Map) {
-      yield WorkshopScreenPayflowStateSuccess();
-      channelSetFlow = ChannelSetFlow.fromMap(response);
+      yield WorkshopScreenPaySuccess();
+      channelSetFlow.payment = Payment.fromMap(response);
       yield state.copyWith(
         isUpdating: false,
         updatePayflowIndex: -1,

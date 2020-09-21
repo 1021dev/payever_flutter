@@ -49,7 +49,7 @@ class _PaymentOptionCellState extends State<PaymentOptionCell> {
                 ),
                 Expanded(
                   child: Text(
-                    widget.payment.name,
+                    widget.payment.name.contains('instant') ? 'Instant payment' : widget.payment.name,
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,

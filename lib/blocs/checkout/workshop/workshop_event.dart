@@ -51,3 +51,5 @@ class PatchCheckoutFlowAddressEvent extends WorkshopScreenEvent {
     this.body,
   ];
 }
+
+class CheckoutPayEvent extends WorkshopScreenEvent{}
