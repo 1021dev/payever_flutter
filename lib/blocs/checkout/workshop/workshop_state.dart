@@ -10,6 +10,8 @@ class WorkshopScreenState {
   final ChannelSetFlow channelSetFlow;
   final Checkout defaultCheckout;
   final CheckoutFlow checkoutFlow;
+  final bool isAvailable;
+  final bool isValid;
 
   WorkshopScreenState({
     this.isLoading = false,
@@ -19,6 +21,8 @@ class WorkshopScreenState {
     this.channelSetFlow,
     this.defaultCheckout,
     this.checkoutFlow,
+    this.isAvailable = false,
+    this.isValid = false,
   });
 
   List<Object> get props => [
@@ -29,6 +33,8 @@ class WorkshopScreenState {
         this.channelSetFlow,
         this.defaultCheckout,
         this.checkoutFlow,
+        this.isAvailable,
+        this.isValid,
       ];
 
   WorkshopScreenState copyWith({
@@ -39,10 +45,14 @@ class WorkshopScreenState {
     ChannelSetFlow channelSetFlow,
     Checkout defaultCheckout,
     CheckoutFlow checkoutFlow,
+    bool isAvailable,
+    bool isValid,
   }) {
     return WorkshopScreenState(
       isLoading: isLoading ?? this.isLoading,
       isUpdating: isUpdating ?? this.isUpdating,
+      isAvailable: isAvailable ?? this.isAvailable,
+      isValid: isValid ?? this.isValid,
       updatePayflowIndex: updatePayflowIndex ?? this.updatePayflowIndex,
       business: business ?? this.business,
       channelSetFlow: channelSetFlow ?? this.channelSetFlow,
@@ -67,4 +77,4 @@ class WorkshopScreenStateFailure extends WorkshopScreenState {
   }
 }
 
-class WorkshopScreenPaySuccess extends WorkshopScreenState{}
+class WorkshopScreenPaySuccess extends WorkshopScreenState {}

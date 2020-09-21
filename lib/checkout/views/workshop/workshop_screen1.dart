@@ -17,6 +17,7 @@ import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/widgets/address_field_group.dart';
 import 'package:payever/widgets/googlemap_address_filed.dart';
 import 'package:payever/widgets/peronal_name_field.dart';
+import 'package:the_validator/the_validator.dart';
 
 import '../../../theme.dart';
 import 'checkout_switch_screen.dart';
@@ -62,6 +63,8 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
   final _formKeyOrder = GlobalKey<FormState>();
   final _formKeyAccount = GlobalKey<FormState>();
   final _formKeyBilling = GlobalKey<FormState>();
+  final _formKeyPayment = GlobalKey<FormState>();
+
   List<String> titles = [
     'ACCOUNT',
     'BILLING & SHIPPING',
@@ -106,6 +109,9 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
             switch(_selectedSectionIndex) {
               case 0:
                 // isOrderApproved = true;
+                break;
+              case 1:
+                isAccountApproved = true;
                 break;
               case 2:
                 isBillingApproved = true;
@@ -673,6 +679,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                       child: MaterialButton(
                         onPressed: () {
                           if (_formKeyOrder.currentState.validate() && !state.isUpdating) {
+                            _selectedSectionIndex = 0;
                             screenBloc.add(
                                 PatchCheckoutFlowOrderEvent(body: {'amount': amount, 'reference': reference}));
                           }
@@ -844,7 +851,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
           children: <Widget>[
             WorkshopHeader(
               title: 'Account',
-              subTitle: 'Login or enter your email',
+              subTitle: isAccountApproved ? email : 'Login or enter your email',
               isExpanded: _selectedSectionIndex == 1,
               isApproved: isAccountApproved,
               onTap: () {
@@ -867,7 +874,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                         BlurEffectView(
                             color: overlayRow(),
                             borderRadius: BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)),
-                            child: _emailField()),
+                            child: _emailField(state)),
                         SizedBox(height: 2,),
                         BlurEffectView(
                           color: overlayRow(),
@@ -892,21 +899,19 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                       child: MaterialButton(
                         onPressed: () {
                           if (_formKeyAccount.currentState.validate()) {
-                            setState(() {
-                              _selectedSectionIndex++;
-                              isAccountApproved = true;
-                            });
+                            _selectedSectionIndex = 1;
+                            screenBloc.add(EmailValidationEvent(email: email));
                           }
                         },
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(4),
                         ),
-                        color: Colors.black87,
-                        child: Text(
+                        color: overlayBackground(),
+                        child: state.isUpdating && state.updatePayflowIndex == 1 ?
+                        CircularProgressIndicator() : Text(
                           Language.getCheckoutStrings('checkout_send_flow.action.continue'),
                           style: TextStyle(
                             fontSize: 16,
-                            color: Colors.white,
                             fontWeight: FontWeight.w400,
                           ),
                         ),
@@ -953,7 +958,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                       BlurEffectView(
                           color: overlayRow(),
                           borderRadius: BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)),
-                          child: _emailField(isInitValue: true)),
+                          child: _emailField(state)),
                       SizedBox(height: 2,),
                       PersonalNameField(
                         salutation: salutation,
@@ -1158,7 +1163,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                         borderRadius: BorderRadius.circular(4),
                       ),
                       color: overlayBackground(),
-                      child: state.isUpdating && state.updatePayflowIndex == 1 ?
+                      child: state.isUpdating && state.updatePayflowIndex == 2 ?
                       CircularProgressIndicator() :
                       Text(
                         Language.getCheckoutStrings('checkout_send_flow.action.continue'),
@@ -1180,26 +1185,29 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
   }
 
   Widget _selectPaymentView(WorkshopScreenState state) {
-    return PaymentSelectView(
-      enable: isVisible(state, 'choosePayment'),
-      approved: isSelectPaymentApproved,
-      isUpdating: state.isUpdating && state.updatePayflowIndex == 3,
-      channelSetFlow: state.channelSetFlow,
-      expanded: _selectedSectionIndex == 3,
-      onTapApprove: () {
-        setState(() {
-          _selectedSectionIndex = _selectedSectionIndex == 3 ? -1 : 3;
-        });
-      },
-      onTapPay: () {
-        setState(() {
-          screenBloc.add(CheckoutPayEvent());
-        });
-      },
-      onTapChangePayment: (num id) {
-        print(id);
-        screenBloc.add(PatchCheckoutFlowOrderEvent(body:{'payment_option_id': '$id'}));
-      },
+    return Form(
+      key: _formKeyPayment,
+      child: PaymentSelectView(
+        enable: isVisible(state, 'choosePayment'),
+        approved: isSelectPaymentApproved,
+        isUpdating: state.isUpdating && state.updatePayflowIndex == 3,
+        channelSetFlow: state.channelSetFlow,
+        expanded: _selectedSectionIndex == 3,
+        onTapApprove: () {
+          setState(() {
+            _selectedSectionIndex = _selectedSectionIndex == 3 ? -1 : 3;
+          });
+        },
+        onTapPay: () {
+          if (_formKeyPayment.currentState.validate() && !state.isUpdating) {
+            screenBloc.add(CheckoutPayEvent());
+          }
+        },
+        onTapChangePayment: (num id) {
+          print(id);
+          screenBloc.add(PatchCheckoutFlowOrderEvent(body:{'payment_option_id': '$id'}));
+        },
+      ),
     );
   }
 
@@ -1528,37 +1536,48 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
       return false;
   }
 
-  Widget _emailField({bool isInitValue = false}) {
+  Widget _emailField(WorkshopScreenState state) {
     return Container(
       height: 50,
       alignment: Alignment.center,
-      child: TextFormField(
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w400,
-        ),
-        onChanged: (val) {
-          email = val;
-        },
-        initialValue: (isInitValue || isAccountApproved) ? email : '',
-        decoration: InputDecoration(
-          contentPadding: EdgeInsets.symmetric(horizontal: 12,  vertical: 4),
-          labelText: 'E-Mail Address',
-          labelStyle: TextStyle(
-            color: Colors.grey,
+      child: Row(
+        children: [
+          Expanded(
+            child: TextFormField(
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+              ),
+              onChanged: (val) {
+                email = val;
+              },
+              initialValue: isAccountApproved ? email : '',
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.symmetric(horizontal: 12,  vertical: 4),
+                labelText: 'E-Mail Address',
+                labelStyle: TextStyle(
+                  color: Colors.grey,
+                ),
+                enabledBorder: InputBorder.none,
+              ),
+              validator: FieldValidator.email(),
+              keyboardType: TextInputType.text,
+            ),
           ),
-          enabledBorder: InputBorder.none,
-        ),
-        validator: (value) {
-          if (value.isEmpty) {
-            return 'Username or email is required!';
-          }
-          if (!value.contains('@')) {
-            return 'Enter valid email address';
-          }
-          return null;
-        },
-        keyboardType: TextInputType.text,
+          isAccountApproved
+              ? Container()
+              : InkWell(
+                  onTap: () {
+                    if (state.isValid && state.isAvailable) {
+
+                    } else {
+
+                    }
+                  },
+                  child: Text(
+                      state.isValid && state.isAvailable ? 'Clear' : 'Login'),
+                ),
+        ],
       ),
     );
   }

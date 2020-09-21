@@ -36,6 +36,8 @@ class WorkshopScreenBloc extends Bloc<WorkshopScreenEvent, WorkshopScreenState> 
       yield* patchCheckoutFlowAddress(event.body);
     } else if (event is CheckoutPayEvent) {
       yield* checkoutPay();
+    } else if (event is EmailValidationEvent) {
+      yield* emailValidate(event.email);
     }
   }
 
@@ -66,10 +68,37 @@ class WorkshopScreenBloc extends Bloc<WorkshopScreenEvent, WorkshopScreenState> 
     }
   }
 
-  Stream<WorkshopScreenState> patchCheckoutFlowAddress(Map body) async* {
+  Stream<WorkshopScreenState> emailValidate(String email) async* {
     yield state.copyWith(
       isUpdating: true,
       updatePayflowIndex: 1,
+    );
+
+    dynamic response = await api.checkoutEmailValidation(
+        token, email);
+    if (response is DioError) {
+      yield WorkshopScreenStateFailure(error: response.message);
+      yield state.copyWith(
+        isUpdating: false,
+        updatePayflowIndex: -1,
+      );
+    } else if (response is Map) {
+        yield WorkshopScreenPayflowStateSuccess();
+      bool isAvailable = response['available'];
+      bool isValid = response['valid'];
+      yield state.copyWith(
+        isUpdating: false,
+        isAvailable: isAvailable,
+        isValid: isValid,
+        updatePayflowIndex: -1,
+      );
+    }
+  }
+
+  Stream<WorkshopScreenState> patchCheckoutFlowAddress(Map body) async* {
+    yield state.copyWith(
+      isUpdating: true,
+      updatePayflowIndex: 2,
     );
     ChannelSetFlow channelSetFlow;
     dynamic response = await api.patchCheckoutFlowAddress(

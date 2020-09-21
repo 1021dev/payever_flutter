@@ -53,3 +53,14 @@ class PatchCheckoutFlowAddressEvent extends WorkshopScreenEvent {
 }
 
 class CheckoutPayEvent extends WorkshopScreenEvent{}
+
+class EmailValidationEvent extends WorkshopScreenEvent{
+  final String email;
+
+  EmailValidationEvent({this.email});
+
+  @override
+  List<Object> get props => [
+    this.email,
+  ];
+}

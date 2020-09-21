@@ -1268,6 +1268,20 @@ class ApiService {
     }
   }
 
+  Future<dynamic> checkoutEmailValidation(String token, String email) async {
+    email  = email.replaceAll('@', '%40');
+    try {
+      print('$TAG - updatePaymentOption()');
+      dynamic response = await _client.getTypeless(
+          '$authBaseUrl/api/email/$email/validate',
+          headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<dynamic> updatePaymentOption(String token, String id, Map body) async {
     try {
       print('$TAG - updatePaymentOption()');

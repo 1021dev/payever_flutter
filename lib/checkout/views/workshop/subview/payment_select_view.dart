@@ -27,20 +27,26 @@ class PaymentSelectView extends StatefulWidget {
       this.onTapChangePayment});
 
   @override
-  _PaymentSelectViewState createState() => _PaymentSelectViewState();
+  _PaymentSelectViewState createState() => _PaymentSelectViewState(channelSetFlow: channelSetFlow);
 }
 
 class _PaymentSelectViewState extends State<PaymentSelectView> {
+  final ChannelSetFlow channelSetFlow;
+  List<CheckoutPaymentOption> paymentOptions;
+  num paymentOptionId;
+
+  _PaymentSelectViewState({this.channelSetFlow}){
+    paymentOptions = channelSetFlow.paymentOptions;
+    paymentOptionId = channelSetFlow.paymentOptionId;
+  }
+
   @override
   Widget build(BuildContext context) {
-    ChannelSetFlow channelSetFlow = widget.channelSetFlow;
-    List<CheckoutPaymentOption> paymentOptions = channelSetFlow.paymentOptions;
-    num paymentOptionId = channelSetFlow.paymentOptionId;
+
 
     if (!widget.enable || paymentOptions == null || paymentOptions.isEmpty) {
       return Container();
     }
-
     String payBtnTitle;
     List<CheckoutPaymentOption>payments = paymentOptions.where((element) => element.id == paymentOptionId).toList();
     if (payments == null || payments.isEmpty) {
