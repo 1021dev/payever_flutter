@@ -47,12 +47,13 @@ class _PaymentSelectViewState extends State<PaymentSelectView> {
     if (!widget.enable || paymentOptions == null || paymentOptions.isEmpty) {
       return Container();
     }
-    String payBtnTitle;
+    String payBtnTitle, paymentMethod;
     List<CheckoutPaymentOption>payments = paymentOptions.where((element) => element.id == paymentOptionId).toList();
+
     if (payments == null || payments.isEmpty) {
       payBtnTitle = 'Continue';
     } else {
-      String paymentMethod = payments.first.paymentMethod;
+      paymentMethod = payments.first.paymentMethod;
       if (paymentMethod == null) {
         payBtnTitle = 'Continue';
       } else if (paymentMethod.contains('santander')) {
@@ -103,7 +104,20 @@ class _PaymentSelectViewState extends State<PaymentSelectView> {
                 height: 50,
                 child: SizedBox.expand(
                   child: MaterialButton(
-                    onPressed: () => widget.onTapPay,
+                    onPressed: () {
+                      if (paymentMethod == null || paymentMethod.isEmpty) return;
+                      Map<String, dynamic>body = {};
+                      if (paymentMethod.contains('instant')) {
+                        Map<String, dynamic>payment = {};
+                        Map<String, dynamic>paymentDetails = {};
+                        List<dynamic>paymentItems = [];
+
+                        paymentDetails['adsAgreement'] = false;
+                        paymentDetails['recipientHolder'] = false;
+                        body['paymentItems'] = paymentItems;
+                      }
+                      widget.onTapPay(body);
+                    },
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(4),
                     ),

@@ -34,8 +34,10 @@ class WorkshopScreenBloc extends Bloc<WorkshopScreenEvent, WorkshopScreenState> 
       yield* patchCheckoutFlowOrder(event.body);
     } else if (event is PatchCheckoutFlowAddressEvent) {
       yield* patchCheckoutFlowAddress(event.body);
-    } else if (event is CheckoutPayEvent) {
-      yield* checkoutPay();
+    } else if (event is PayWireTransferEvent) {
+      yield* checkoutPayWireTransfer();
+    } else if (event is PayInstantPaymentEvent) {
+      yield* checkoutPayInstantPayment();
     } else if (event is EmailValidationEvent) {
       yield* emailValidate(event.email);
     }
@@ -121,7 +123,7 @@ class WorkshopScreenBloc extends Bloc<WorkshopScreenEvent, WorkshopScreenState> 
     }
   }
 
-  Stream<WorkshopScreenState> checkoutPay() async* {
+  Stream<WorkshopScreenState> checkoutPayWireTransfer() async* {
     yield state.copyWith(
       isUpdating: true,
       updatePayflowIndex: 3,
@@ -133,8 +135,41 @@ class WorkshopScreenBloc extends Bloc<WorkshopScreenEvent, WorkshopScreenState> 
       'payment_option_id': state.channelSetFlow.paymentOptionId,
       'remember_me': false
     };
-    dynamic response = await api.checkoutPay(
+    dynamic response = await api.checkoutPayWireTransfer(
         token, body);
+    if (response is DioError) {
+      yield WorkshopScreenStateFailure(error: response.message);
+      yield state.copyWith(
+        isUpdating: false,
+        updatePayflowIndex: -1,
+      );
+    } else if (response is Map) {
+      yield WorkshopScreenPaySuccess();
+      channelSetFlow.payment = Payment.fromMap(response);
+      yield state.copyWith(
+        isUpdating: false,
+        updatePayflowIndex: -1,
+        channelSetFlow: channelSetFlow,
+      );
+      checkoutScreenBloc.add(UpdateChannelSetFlowEvent(channelSetFlow));
+    }
+  }
+
+  Stream<WorkshopScreenState> checkoutPayInstantPayment() async* {
+    yield state.copyWith(
+      isUpdating: true,
+      updatePayflowIndex: 3,
+    );
+    ChannelSetFlow channelSetFlow = state.channelSetFlow;
+    Map<String, dynamic> body = {
+      'payment_data': {},
+      'payment_flow_id': state.channelSetFlow.id,
+      'payment_option_id': state.channelSetFlow.paymentOptionId,
+      'remember_me': false
+    };
+
+    dynamic response = await api.checkoutPayInstantPayment(
+        token,'connectionId', body);
     if (response is DioError) {
       yield WorkshopScreenStateFailure(error: response.message);
       yield state.copyWith(

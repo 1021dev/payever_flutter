@@ -14,6 +14,7 @@ import 'package:payever/checkout/widgets/workshop_header_item.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
+import 'package:payever/connect/models/connect.dart';
 import 'package:payever/widgets/address_field_group.dart';
 import 'package:payever/widgets/googlemap_address_filed.dart';
 import 'package:payever/widgets/peronal_name_field.dart';
@@ -582,6 +583,9 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                               validator: (text) {
                                 if (text.isEmpty || double.parse(text) <= 0){
                                   return 'Amount required';
+                                }
+                                if (double.parse(text) < 1){
+                                  return 'Correct Amount required';
                                 }
                                 return null;
                               },
@@ -1198,9 +1202,23 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
             _selectedSectionIndex = _selectedSectionIndex == 3 ? -1 : 3;
           });
         },
-        onTapPay: () {
+        onTapPay: (Map body) {
           if (_formKeyPayment.currentState.validate() && !state.isUpdating) {
-            screenBloc.add(CheckoutPayEvent());
+            List<CheckoutPaymentOption>payments = state.channelSetFlow.paymentOptions.where((element) => element.id == state.channelSetFlow.paymentOptionId).toList();
+            if (payments == null || payments.isEmpty) {
+              return;
+            } else {
+              String paymentMethod = payments.first.paymentMethod;
+              if (paymentMethod == null) {
+                return;
+              } else if (paymentMethod.contains('santander')) {
+
+              } else if (paymentMethod.contains('cash')) {
+                screenBloc.add(PayWireTransferEvent());
+              } else if (paymentMethod.contains('instant')) {
+                screenBloc.add(PayInstantPaymentEvent(body: body));
+              }
+            }
           }
         },
         onTapChangePayment: (num id) {

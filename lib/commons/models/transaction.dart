@@ -101,7 +101,7 @@ class Collection {
     amount = obj[GlobalUtils.DB_TRANSACTIONS_C_AMOUNT];
 
     billingAddress =
-        BillingAddress.toMap(obj[GlobalUtils.DB_TRANSACTIONS_C_BILLING]);
+        BillingAddress.fromMap(obj[GlobalUtils.DB_TRANSACTIONS_C_BILLING]);
     currency = obj[GlobalUtils.DB_TRANSACTIONS_C_CURRENCY];
     businessOptionId = obj[GlobalUtils.DB_TRANSACTIONS_C_BUS_OPT];
     businessUuid = obj[GlobalUtils.DB_TRANSACTIONS_C_BUS_UUID];
@@ -157,7 +157,7 @@ class BillingAddress {
   String type;
   String userUuid;
 
-  BillingAddress.toMap(dynamic obj) {
+  BillingAddress.fromMap(dynamic obj) {
     city = obj[GlobalUtils.DB_TRANSACTIONS_C_B_CITY];
     country = obj[GlobalUtils.DB_TRANSACTIONS_C_B_COUNTRY];
     countryName = obj[GlobalUtils.DB_TRANSACTIONS_C_B_COUNTRY_N];

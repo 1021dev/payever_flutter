@@ -52,7 +52,7 @@ class PatchCheckoutFlowAddressEvent extends WorkshopScreenEvent {
   ];
 }
 
-class CheckoutPayEvent extends WorkshopScreenEvent{}
+class PayWireTransferEvent extends WorkshopScreenEvent{}
 
 class EmailValidationEvent extends WorkshopScreenEvent{
   final String email;
@@ -62,5 +62,16 @@ class EmailValidationEvent extends WorkshopScreenEvent{
   @override
   List<Object> get props => [
     this.email,
+  ];
+}
+
+class PayInstantPaymentEvent extends WorkshopScreenEvent{
+  final Map<String, dynamic> body;
+
+  PayInstantPaymentEvent({this.body});
+
+  @override
+  List<Object> get props => [
+    this.body,
   ];
 }

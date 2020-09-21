@@ -158,6 +158,7 @@ class Rule {
     return map;
   }
 }
+
 class CheckoutSettings {
   List<String> cspAllowedHosts = [];
   List<Lang> languages = [];
@@ -522,7 +523,7 @@ class ChannelSetFlow {
     apiCallId = obj['api_call_id'];
     dynamic billingAddressObj = obj['billing_address'];
     if (billingAddressObj is Map) {
-      billingAddress = BillingAddress.toMap(billingAddressObj);
+      billingAddress = BillingAddress.fromMap(billingAddressObj);
     }
     businessAddressLine = obj['business_address_line'];
     businessIban = obj['business_iban'];
@@ -893,6 +894,7 @@ class PaymentDetails {
   String merchantBankCode;
   String merchantBankName;
   String merchantCompanyName;
+
   PaymentDetails.fromMap(dynamic obj) {
     merchantBankAccount = obj['merchant_bank_account'];
     merchantBankAccountHolder = obj['merchant_bank_account_holder'];
