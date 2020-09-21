@@ -559,98 +559,106 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                     ),
                     child: Column(
                       children: <Widget>[
-                        Container(
-                          height: 50,
-                          child: TextFormField(
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                            ),
-                            initialValue: amount > 0 ? '$amount' : '',
-                            onChanged: (val) {
-                              amount = double.parse(val);
-                            },
-                            validator: (text) {
-                              if (text.isEmpty || double.parse(text) <= 0){
-                                return 'Amount required';
-                              }
-                              return null;
-                            },
-                            decoration: InputDecoration(
-                              prefixIcon: Container(
-                                width: 44,
-                                child: Center(
-                                  child: Text(
-                                    currency,
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w400,
+                        BlurEffectView(
+                          color:overlayRow(),
+                          borderRadius: BorderRadius.only(topLeft:Radius.circular(4), topRight: Radius.circular(4)),
+                          child: Container(
+                            height: 50,
+                            child: TextFormField(
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                              ),
+                              initialValue: amount > 0 ? '$amount' : '',
+                              onChanged: (val) {
+                                amount = double.parse(val);
+                              },
+                              validator: (text) {
+                                if (text.isEmpty || double.parse(text) <= 0){
+                                  return 'Amount required';
+                                }
+                                return null;
+                              },
+                              decoration: InputDecoration(
+                                prefixIcon: Container(
+                                  width: 44,
+                                  child: Center(
+                                    child: Text(
+                                      currency,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w400,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              contentPadding: EdgeInsets.symmetric(vertical: 4),
-                              labelText: Language.getCartStrings('checkout_cart_edit.form.label.amount'),
-                              labelStyle: TextStyle(
-                                color: Colors.grey,
-                              ),
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.transparent,
-                                  width: 0.5,
+                                contentPadding: EdgeInsets.symmetric(vertical: 4),
+                                labelText: Language.getCartStrings('checkout_cart_edit.form.label.amount'),
+                                labelStyle: TextStyle(
+                                  color: Colors.grey,
                                 ),
-                              ),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.black,
-                                  width: 0.5,
+                                enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Colors.transparent,
+                                    width: 0.5,
+                                  ),
                                 ),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Colors.black,
+                                    width: 0.5,
+                                  ),
+                                ),
+                                isDense: true,
                               ),
-                              isDense: true,
+                              keyboardType: TextInputType.numberWithOptions(decimal: true),
                             ),
-                            keyboardType: TextInputType.numberWithOptions(decimal: true),
                           ),
                         ),
-                        _divider,
-                        Container(
-                          height: 50,
-                          padding: EdgeInsets.only(left: 4, right: 4),
-                          alignment: Alignment.center,
-                          child: TextFormField(
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                            ),
-                            onChanged: (val) {
-                              reference = val;
-                            },
-                            initialValue: reference,
-                            validator: (text) {
-                              if (text.isEmpty){
-                                return 'Reference required';
-                              }
-                              return null;
-                            },
-                            decoration: InputDecoration(
-                              labelText: Language.getCartStrings('checkout_cart_edit.form.label.reference'),
-                              labelStyle: TextStyle(
-                                color: Colors.grey,
+                        SizedBox(height: 2,),
+                        BlurEffectView(
+                          color:overlayRow(),
+                          borderRadius: BorderRadius.only(bottomLeft:Radius.circular(4), bottomRight: Radius.circular(4)),
+                          child: Container(
+                            height: 50,
+                            padding: EdgeInsets.only(left: 4, right: 4),
+                            alignment: Alignment.center,
+                            child: TextFormField(
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
                               ),
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.transparent,
-                                  width: 0.5,
+                              onChanged: (val) {
+                                reference = val;
+                              },
+                              initialValue: reference,
+                              validator: (text) {
+                                if (text.isEmpty){
+                                  return 'Reference required';
+                                }
+                                return null;
+                              },
+                              decoration: InputDecoration(
+                                labelText: Language.getCartStrings('checkout_cart_edit.form.label.reference'),
+                                labelStyle: TextStyle(
+                                  color: Colors.grey,
                                 ),
-                              ),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.black,
-                                  width: 0.5,
+                                enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Colors.transparent,
+                                    width: 0.5,
+                                  ),
                                 ),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Colors.black,
+                                    width: 0.5,
+                                  ),
+                                ),
+                                contentPadding: EdgeInsets.only(left: 12, right: 12, top: 4, bottom: 4),
                               ),
-                              contentPadding: EdgeInsets.only(left: 12, right: 12, top: 4, bottom: 4),
+                              keyboardType: TextInputType.text,
                             ),
-                            keyboardType: TextInputType.text,
                           ),
                         ),
                       ],
@@ -856,16 +864,22 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                     ),
                     child: Column(
                       children: <Widget>[
-                        _emailField(),
-                        _divider,
-                        GoogleMapAddressField(
-                          googleAutocomplete: googleAutocomplete,
-                          height: 50,
-                          onChanged: (val) {
-                            googleAutocomplete = val;
-                          },
+                        BlurEffectView(
+                            color: overlayRow(),
+                            borderRadius: BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)),
+                            child: _emailField()),
+                        SizedBox(height: 2,),
+                        BlurEffectView(
+                          color: overlayRow(),
+                          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(4), bottomRight: Radius.circular(4)),
+                          child: GoogleMapAddressField(
+                            googleAutocomplete: googleAutocomplete,
+                            height: 50,
+                            onChanged: (val) {
+                              googleAutocomplete = val;
+                            },
+                          ),
                         ),
-                        _divider,
                       ],
                     ),
                   ),
@@ -938,7 +952,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                     children: <Widget>[
                       BlurEffectView(
                           color: overlayRow(),
-                          radius: 0,
+                          borderRadius: BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)),
                           child: _emailField(isInitValue: true)),
                       SizedBox(height: 2,),
                       PersonalNameField(
@@ -1037,7 +1051,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                       SizedBox(height: 2,),
                       BlurEffectView(
                         color: overlayRow(),
-                        radius: 0,
+                        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(4), bottomRight: Radius.circular(4)),
                         child: Container(
                           height: 50,
                           alignment: Alignment.center,
