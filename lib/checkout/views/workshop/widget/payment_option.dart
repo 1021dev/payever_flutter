@@ -9,7 +9,7 @@ import 'package:payever/connect/models/connect.dart';
 import 'package:payever/theme.dart';
 
 class PaymentOptionCell extends StatefulWidget {
-  final Payment payment;
+  final CheckoutPaymentOption payment;
   final bool isSelected;
   final ChannelSetFlow channelSetFlow;
   final Function onTapChangePayment;

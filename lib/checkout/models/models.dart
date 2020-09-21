@@ -488,7 +488,7 @@ class ChannelSetFlow {
   String payment;
   String paymentMethod;
   num paymentOptionId;
-  List<Payment> paymentOptions = [];
+  List<CheckoutPaymentOption> paymentOptions = [];
   String pendingUrl;
   String posMerchantMode;
   String reference;
@@ -572,7 +572,7 @@ class ChannelSetFlow {
     dynamic paymentOptionsObj = obj['payment_options'];
     if (paymentOptionsObj is List) {
       paymentOptionsObj.forEach((element) {
-        paymentOptions.add(Payment.fromMap(element));
+        paymentOptions.add(CheckoutPaymentOption.fromMap(element));
       });
     }
     pendingUrl = obj['pending_url'];

@@ -4,7 +4,7 @@ import 'package:payever/connect/models/connect.dart';
 class CheckoutConnectScreenState {
   final bool isLoading;
   final String business;
-  final List<Payment> paymentOptions;
+  final List<CheckoutPaymentOption> paymentOptions;
   final Map<String, PaymentVariant> paymentVariants;
   final List<ConnectModel> connectInstallations;
   final String category;
@@ -33,7 +33,7 @@ class CheckoutConnectScreenState {
   CheckoutConnectScreenState copyWith({
     bool isLoading,
     String business,
-    List<Payment> paymentOptions,
+    List<CheckoutPaymentOption> paymentOptions,
     Map<String, PaymentVariant> paymentVariants,
     List<ConnectModel> connectInstallations,
     String category,

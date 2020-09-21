@@ -47,7 +47,7 @@ class CheckoutScreenState {
   final List<CountryDropdownItem> dropdownItems;
   final dynamic fieldSetData;
   final bool isPhoneSearch;
-  final List<Payment> paymentOptions;
+  final List<CheckoutPaymentOption> paymentOptions;
 
   CheckoutScreenState({
     this.isLoading = false,
@@ -180,7 +180,7 @@ class CheckoutScreenState {
     List<CountryDropdownItem> dropdownItems,
     dynamic fieldSetData,
     bool isPhoneSearch,
-    List<Payment> paymentOptions,
+    List<CheckoutPaymentOption> paymentOptions,
   }) {
     return CheckoutScreenState(
       isLoading: isLoading ?? this.isLoading,

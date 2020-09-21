@@ -42,7 +42,7 @@ class _ConnectPaymentSettingsScreenState extends State<ConnectPaymentSettingsScr
 
   Business business;
   Map<String, PaymentVariant> variants;
-  List<Payment> paymentOptions;
+  List<CheckoutPaymentOption> paymentOptions;
   PaymentVariant variant;
 
   ConnectSettingsDetailScreenBloc screenBloc;

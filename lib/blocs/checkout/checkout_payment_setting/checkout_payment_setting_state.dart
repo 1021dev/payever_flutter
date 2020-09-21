@@ -8,7 +8,7 @@ class CheckoutPaymentSettingScreenState {
   final bool isSaving;
   final num deleting;
   final String business;
-  final List<Payment> paymentOptions;
+  final List<CheckoutPaymentOption> paymentOptions;
   final Map<String, PaymentVariant> paymentVariants;
   final List<ConnectModel> connectInstallations;
   final ConnectModel connectModel;
@@ -49,7 +49,7 @@ class CheckoutPaymentSettingScreenState {
     bool isSaving,
     num deleting,
     String business,
-    List<Payment> paymentOptions,
+    List<CheckoutPaymentOption> paymentOptions,
     Map<String, PaymentVariant> paymentVariants,
     List<ConnectModel> connectInstallations,
     ConnectModel connectModel,

@@ -38,13 +38,13 @@ class ConnectSettingsDetailScreenBloc extends Bloc<ConnectSettingsDetailScreenEv
   Stream<ConnectSettingsDetailScreenState> fetchInitialData(String business) async* {
 
     yield state.copyWith(isLoading: true);
-    List<Payment> paymentOptions = [];
+    List<CheckoutPaymentOption> paymentOptions = [];
     Map<String, PaymentVariant> paymentVariants = {};
 
     dynamic paymentOptionsResponse = await api.getPaymentOptions(token);
     if (paymentOptionsResponse is List) {
       paymentOptionsResponse.forEach((element) {
-        paymentOptions.add(Payment.fromMap(element));
+        paymentOptions.add(CheckoutPaymentOption.fromMap(element));
       });
     }
 

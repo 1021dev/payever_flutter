@@ -43,7 +43,7 @@ class _ConnectSettingScreenState extends State<ConnectSettingScreen> {
 
   Business business;
   Map<String, PaymentVariant> variants;
-  List<Payment> paymentOptions;
+  List<CheckoutPaymentOption> paymentOptions;
   PaymentVariant variant;
   @override
   void initState() {

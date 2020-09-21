@@ -204,7 +204,7 @@ class LinkModel {
 
 }
 
-class Payment {
+class CheckoutPaymentOption {
   bool acceptFee = false;
   num contractLength;
   String descriptionFee;
@@ -230,7 +230,7 @@ class Payment {
   num variableFee;
   List<Variant> variants = [];
 
-  Payment.fromMap(dynamic obj) {
+  CheckoutPaymentOption.fromMap(dynamic obj) {
     acceptFee = obj['accept_fee'];
     contractLength = obj['contract_length'];
     descriptionFee = obj['description_fee'];

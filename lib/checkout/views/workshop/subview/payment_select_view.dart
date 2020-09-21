@@ -34,7 +34,7 @@ class _PaymentSelectViewState extends State<PaymentSelectView> {
   @override
   Widget build(BuildContext context) {
     ChannelSetFlow channelSetFlow = widget.channelSetFlow;
-    List<Payment> paymentOptions = channelSetFlow.paymentOptions;
+    List<CheckoutPaymentOption> paymentOptions = channelSetFlow.paymentOptions;
     num paymentOptionId = channelSetFlow.paymentOptionId;
 
     if (!widget.enable || paymentOptions == null || paymentOptions.isEmpty) {
@@ -42,7 +42,7 @@ class _PaymentSelectViewState extends State<PaymentSelectView> {
     }
 
     String payBtnTitle;
-    List<Payment>payments = paymentOptions.where((element) => element.id == paymentOptionId).toList();
+    List<CheckoutPaymentOption>payments = paymentOptions.where((element) => element.id == paymentOptionId).toList();
     if (payments == null || payments.isEmpty) {
       payBtnTitle = 'Continue';
     } else {
@@ -77,7 +77,7 @@ class _PaymentSelectViewState extends State<PaymentSelectView> {
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
-                    Payment payment = paymentOptions[index];
+                    CheckoutPaymentOption payment = paymentOptions[index];
                     return PaymentOptionCell(
                       channelSetFlow: widget.channelSetFlow,
                       payment: payment,

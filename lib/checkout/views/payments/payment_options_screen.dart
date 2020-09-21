@@ -11,7 +11,7 @@ class PaymentOptionsScreen extends StatefulWidget {
   final List<ConnectModel> connects;
   final List<IntegrationModel> integrations;
   final List<IntegrationModel> checkoutIntegrations;
-  final List<Payment> paymentOptions;
+  final List<CheckoutPaymentOption> paymentOptions;
   final Function onTapAdd;
   final Function onTapOpen;
   final Function onTapInstall;

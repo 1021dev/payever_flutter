@@ -39,7 +39,7 @@ class ConnectScreenBloc extends Bloc<ConnectScreenEvent, ConnectScreenState> {
 
     List<ConnectModel> connectInstallations = [];
     List<String> categories = [];
-    List<Payment> paymentOptions = [];
+    List<CheckoutPaymentOption> paymentOptions = [];
     Map<String, PaymentVariant> paymentVariants = {};
 
     dynamic connectsResponse = await api.getConnectionIntegrations(
@@ -62,7 +62,7 @@ class ConnectScreenBloc extends Bloc<ConnectScreenEvent, ConnectScreenState> {
     dynamic paymentOptionsResponse = await api.getPaymentOptions(token);
     if (paymentOptionsResponse is List) {
       paymentOptionsResponse.forEach((element) {
-        paymentOptions.add(Payment.fromMap(element));
+        paymentOptions.add(CheckoutPaymentOption.fromMap(element));
       });
     }
 

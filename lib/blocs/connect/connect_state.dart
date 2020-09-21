@@ -7,7 +7,7 @@ class ConnectScreenState {
   final String business;
   final List<ConnectModel> connectInstallations;
   final List<String> categories;
-  final List<Payment> paymentOptions;
+  final List<CheckoutPaymentOption> paymentOptions;
   final Map<String, PaymentVariant> paymentVariants;
   final String selectedCategory;
   final String installingConnect;
@@ -45,7 +45,7 @@ class ConnectScreenState {
     String business,
     List<ConnectModel> connectInstallations,
     List<String> categories,
-    List<Payment> paymentOptions,
+    List<CheckoutPaymentOption> paymentOptions,
     Map<String, PaymentVariant> paymentVariants,
     String selectedCategory,
     String installingConnect,

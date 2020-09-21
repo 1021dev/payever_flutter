@@ -58,7 +58,7 @@ class _CheckoutPaymentSettingsScreenState extends State<CheckoutPaymentSettingsS
   List<Country> countryList = [];
 
   Map<String, PaymentVariant> variants;
-  List<Payment> paymentOptions;
+  List<CheckoutPaymentOption> paymentOptions;
   PaymentVariant variant;
 
   CheckoutPaymentSettingScreenBloc screenBloc;
