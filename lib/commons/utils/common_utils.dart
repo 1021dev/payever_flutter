@@ -353,6 +353,7 @@ class GlobalUtils {
   static const String termsLink = 'https://getpayever.com/agb?_ga=2.220255708.595830855.1600031280-238550036.1593180292';
   static const String privacyLink = 'https://getpayever.com/about/privacy?_ga=2.155685503.595830855.1600031280-238550036.1593180292';
 
+  static const String googleMapAPIKey = 'AIzaSyDB-7kzuFYxb8resf60yF21TKUkTbGhljc';
   //Preferences Keys
   static const String EMAIL = 'email';
   static const String PASSWORD = 'password';

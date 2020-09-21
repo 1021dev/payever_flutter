@@ -485,7 +485,7 @@ class ChannelSetFlow {
   String loggedInId;
   String merchantReference;
   String noticeUrl;
-  String payment;
+  Payment payment;
   String paymentMethod;
   num paymentOptionId;
   List<CheckoutPaymentOption> paymentOptions = [];
@@ -566,7 +566,10 @@ class ChannelSetFlow {
     loggedInId = obj['logged_in_id'];
     merchantReference = obj['merchant_reference'];
     noticeUrl = obj['notice_url'];
-    payment = obj['payment'];
+    dynamic paymentObj = obj['payment'];
+    if (paymentObj is Map) {
+      payment = Payment.fromMap(paymentObj);
+    }
     paymentMethod = obj['payment_method'];
     paymentOptionId = obj['payment_option_id'];
     dynamic paymentOptionsObj = obj['payment_options'];
@@ -810,6 +813,94 @@ class ChannelItem {
   bool checkValue;
   ConnectModel model;
   ChannelItem({this.name, this.title, this.image, this.button, this.checkValue, this.model,});
+}
+
+class Payment {
+  num amount;
+  String apiCall;
+  BankAccount bankAccount;
+  String callbackUrl;
+  String createdAt;
+  String customerTransactionLink;
+  num downPayment;
+  List<dynamic>flashBag;
+  String id;
+  String merchantTransactionLink;
+  String noticeUrl;
+  String paymentData;
+  PaymentDetails paymentDetails;
+  String paymentDetailsToken;
+  String paymentFlowId;
+  num paymentOptionId;
+  String reference;
+  bool rememberMe;
+  bool shopRedirectEnabled;
+  String specificStatus;
+  String status;
+  String storeName;
+  num total;
+
+  Payment.fromMap(dynamic obj) {
+    amount = obj['amount'];
+    apiCall = obj['api_call'];
+    dynamic bankAccountObj = obj['bank_account'];
+    if (bankAccountObj is Map) {
+      bankAccount = BankAccount.fromMap(bankAccountObj);
+    }
+    callbackUrl = obj['callback_url'];
+    createdAt = obj['created_at'];
+    customerTransactionLink = obj['customer_transaction_link'];
+    downPayment = obj['down_payment'];
+    dynamic flashBagObj = obj['flash_bag'];
+    if (flashBag is List)  {
+      flashBag = flashBagObj;
+    }
+    id = obj['id'];
+    merchantTransactionLink = obj['merchant_transaction_link'];
+    noticeUrl = obj['notice_url'];
+    paymentData = obj['payment_data'];
+    dynamic paymentDetailsObj = obj['payment_details'];
+    if (paymentDetailsObj is Map) {
+      paymentDetails = PaymentDetails.fromMap(paymentDetailsObj);
+    }
+    paymentDetailsToken = obj['payment_details_token'];
+    paymentFlowId = obj['payment_flow_id'];
+    paymentOptionId = obj['payment_option_id'];
+    reference = obj['reference'];
+    rememberMe = obj['remember_me'];
+    shopRedirectEnabled = obj['shop_redirect_enabled'];
+    specificStatus = obj['specific_status'];
+    status = obj['status'];
+    storeName = obj['store_name'];
+    total = obj['total'];
+  }
+  
+}
+
+class BankAccount {
+  String bic;
+  String iban;
+  BankAccount.fromMap(dynamic obj) {
+    bic = obj['bic'];
+    iban = obj['iban'];
+  }
+}
+
+class PaymentDetails {
+  String merchantBankAccount;
+  String merchantBankAccountHolder;
+  String merchantBankCity;
+  String merchantBankCode;
+  String merchantBankName;
+  String merchantCompanyName;
+  PaymentDetails.fromMap(dynamic obj) {
+    merchantBankAccount = obj['merchant_bank_account'];
+    merchantBankAccountHolder = obj['merchant_bank_account_holder'];
+    merchantBankCity = obj['merchant_bank_city'];
+    merchantBankCode = obj['merchant_bank_code'];
+    merchantBankName = obj['merchant_bank_name'];
+    merchantCompanyName = obj['merchant_company_name'];
+  }
 }
 
 String getTitleFromCode(String code) {
