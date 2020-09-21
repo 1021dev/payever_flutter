@@ -428,6 +428,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                         ),
                       ),
                     ),
+                    contentPadding: EdgeInsets.symmetric(vertical: 4),
                     labelText: Language.getCartStrings('checkout_cart_edit.form.label.amount'),
                     labelStyle: TextStyle(
                       color: Colors.grey,
@@ -583,6 +584,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                                   ),
                                 ),
                               ),
+                              contentPadding: EdgeInsets.symmetric(vertical: 4),
                               labelText: Language.getCartStrings('checkout_cart_edit.form.label.amount'),
                               labelStyle: TextStyle(
                                 color: Colors.grey,
@@ -641,7 +643,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                                   width: 0.5,
                                 ),
                               ),
-                              contentPadding: EdgeInsets.only(left: 16, right: 16, top: 0, bottom: 0),
+                              contentPadding: EdgeInsets.only(left: 12, right: 12, top: 4, bottom: 4),
                             ),
                             keyboardType: TextInputType.text,
                           ),

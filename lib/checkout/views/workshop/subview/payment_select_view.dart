@@ -64,12 +64,12 @@ class _PaymentSelectViewState extends State<PaymentSelectView> {
         WorkshopHeader(
           title: 'SELECT PAYMENT',
           subTitle: 'Select a payment method',
-          isExpanded: widget.expanded,
-          isApproved: widget.approved,
+          isExpanded: true /*widget.expanded*/,
+          isApproved: true /*widget.approved*/,
           onTap: () => widget.onTapApprove,
         ),
         Visibility(
-          visible: widget.expanded,
+          visible: true /*widget.expanded*/,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [

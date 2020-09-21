@@ -34,7 +34,8 @@ class _CheckoutSettingsScreenState extends State<CheckoutSettingsScreen> {
     screenBloc.add(CheckoutSettingScreenInitEvent(businessId: widget.businessId, checkout: widget.checkout));
     Clipboard.getData('text/plain').then((value) {
       setState(() {
-        clipboardString = value.text;
+        if (value != null)
+          clipboardString = value.text;
       });
     });
 
