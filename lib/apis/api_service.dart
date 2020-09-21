@@ -1286,6 +1286,24 @@ class ApiService {
     }
   }
 
+  Future<dynamic> checkoutPay(String token, Map body) async {
+    try {
+      print('$TAG - updatePaymentOption()');
+      dynamic response = await _client.postTypeLess(
+          '${Env.checkoutPhp}/api/rest/v1/checkout/payment',
+          body: body,
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<dynamic> deletePaymentOption(String token, String id) async {
     try {
       print('$TAG - deletePaymentOption()');

@@ -89,4 +89,36 @@ class WorkshopScreenBloc extends Bloc<WorkshopScreenEvent, WorkshopScreenState> 
       checkoutScreenBloc.add(UpdateChannelSetFlowEvent(channelSetFlow));
     }
   }
+
+  Stream<WorkshopScreenState> checkoutPay() async* {
+    yield state.copyWith(
+      isUpdating: true,
+      updatePayflowIndex: 3,
+    );
+    ChannelSetFlow channelSetFlow;
+    Map<String, dynamic> body = {
+      'payment_data': {},
+      'payment_flow_id': state.channelSetFlow.id,
+      'payment_option_id': state.channelSetFlow.paymentOptionId,
+      'remember_me': false
+    };
+    dynamic response = await api.checkoutPay(
+        token, body);
+    if (response is DioError) {
+      yield WorkshopScreenStateFailure(error: response.message);
+      yield state.copyWith(
+        isUpdating: false,
+        updatePayflowIndex: -1,
+      );
+    } else if (response is Map) {
+      yield WorkshopScreenPayflowStateSuccess();
+      channelSetFlow = ChannelSetFlow.fromMap(response);
+      yield state.copyWith(
+        isUpdating: false,
+        updatePayflowIndex: -1,
+        channelSetFlow: channelSetFlow,
+      );
+      checkoutScreenBloc.add(UpdateChannelSetFlowEvent(channelSetFlow));
+    }
+  }
 }

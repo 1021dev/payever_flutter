@@ -86,7 +86,7 @@ class _PaymentOptionCellState extends State<PaymentOptionCell> {
     } else if (widget.payment.paymentMethod.contains('santander')) {
       return InstantPaymentView(
         isSelected: widget.isSelected,
-        isSantander: false,
+        isSantander: true,
         name: name,
       );
     } else {
@@ -102,12 +102,4 @@ class _PaymentOptionCellState extends State<PaymentOptionCell> {
       color: Colors.red,
     );
   }
-
-// <span>By clicking on the button below you initiate a transfer of your personal data to Santander Consumer Bank AG for the purpose of carrying out the payment.
-// For more information, see the Santander <a target="_blank" href="https://www.santander.de/static/datenschutzhinweise/direktueberweisung/">data policy</a> for Santander instant payments. With ticking this box, the customer agrees to receive
-// <a target="_blank" href="https://www.santander.de/static/datenschutzhinweise/rechnungskauf/werbehinweise.html">marketing communication</a> from Santander. This consent is voluntary and may be revoked at any time.</span>
-
-// <span>By clicking on the button below, personal data will be transmitted to Santander Consumer Bank AG for the purpose of reviewing creditworthiness - more information about this can be found in the
-// <a target="_blank" href="https://www.santander.de/static/datenschutzhinweise/rechnungskauf/datenschutzhinweise.html"><u>data protection policy</u></a>.
-// The customer agrees to receive <a href="communication"><u>marketing communication</u></a> by Santander. This voluntary consent can be revoked at any time.</span>
 }
