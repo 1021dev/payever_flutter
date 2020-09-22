@@ -209,27 +209,26 @@ class WorkshopScreenBloc
       'generate_payment_code': true,
       'open_next_step_on_init': false,
     };
-    yield state.copyWith(isUpdating: true);
+    yield state.copyWith(isLoadingQrcode: true);
     dynamic qrcodelinkResponse = await api.getChannelSetQRcode(token, data);
     if (qrcodelinkResponse is Map) {
       String id = qrcodelinkResponse['id'];
-      String prefilledLink = '${Env.checkout}/pay/restore-flow-from-code/channel-set-id/$id';
-      yield state.copyWith(isUpdating: false,
+      String prefilledLink = 'https://checkout.payever.org/pay/restore-flow-from-code/$id';
+      yield state.copyWith(isLoadingQrcode: !isCoplyLink,
           prefilledLink: prefilledLink);
       if (isCoplyLink) {
         Clipboard.setData(ClipboardData(
             text:prefilledLink));
         Fluttertoast.showToast(msg: 'Copied Prefilled Link.');
+      } else {
+        add(GetPrefilledQRCodeEvent());
       }
     } else {
-      yield state.copyWith(isUpdating: false);
+      yield state.copyWith(isLoadingQrcode: false);
     }
   }
 
   Stream<WorkshopScreenState> getPrefilledQrcode() async* {
-    if (state.prefilledLink == null || state.prefilledLink.isEmpty) {
-      add(GetPrefilledLinkEvent(isCopyLink: false));
-    }
     if (state.prefilledLink == null || state.prefilledLink.isEmpty) {
       Fluttertoast.showToast(msg: 'Something wrong.');
       return;
@@ -279,7 +278,8 @@ class WorkshopScreenBloc
         headers: headers,
       );
     }
-    yield state.copyWith(qrImage: qrResponse.bodyBytes);
-    // yield CheckoutScreenStatePrefilledQRCodeSuccess();
+    yield state.copyWith(isLoadingQrcode: false,qrForm: response, qrImage: qrResponse.bodyBytes);
+    await Future.delayed(const Duration(milliseconds: 500));
+    yield state.copyWith(qrForm: null, qrImage: null);
   }
 }

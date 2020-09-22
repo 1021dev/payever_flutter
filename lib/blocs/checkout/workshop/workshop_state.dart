@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:payever/checkout/models/models.dart';
 
 class WorkshopScreenState {
-  final bool isLoading;
+  final bool isLoadingQrcode;
   final bool isUpdating;
   final bool isPaid;
   final int updatePayflowIndex;
@@ -13,11 +13,12 @@ class WorkshopScreenState {
   final CheckoutFlow checkoutFlow;
   final bool isAvailable;
   final bool isValid;
+  final dynamic qrForm;
   final dynamic qrImage;
   final String prefilledLink;
 
   WorkshopScreenState({
-    this.isLoading = false,
+    this.isLoadingQrcode = false,
     this.isUpdating = false,
     this.isPaid = false,
     this.updatePayflowIndex = -1,
@@ -27,12 +28,13 @@ class WorkshopScreenState {
     this.checkoutFlow,
     this.isAvailable = false,
     this.isValid = false,
+    this.qrForm,
     this.qrImage,
     this.prefilledLink,
   });
 
   List<Object> get props => [
-        this.isLoading,
+        this.isLoadingQrcode,
         this.isUpdating,
         this.isPaid,
         this.updatePayflowIndex,
@@ -42,12 +44,13 @@ class WorkshopScreenState {
         this.checkoutFlow,
         this.isAvailable,
         this.isValid,
+        this.qrForm,
         this.qrImage,
         this.prefilledLink,
       ];
 
   WorkshopScreenState copyWith({
-    bool isLoading,
+    bool isLoadingQrcode,
     bool isUpdating,
     bool isPaid,
     int updatePayflowIndex,
@@ -57,11 +60,12 @@ class WorkshopScreenState {
     CheckoutFlow checkoutFlow,
     bool isAvailable,
     bool isValid,
+    dynamic qrForm,
     dynamic qrImage,
     String prefilledLink,
   }) {
     return WorkshopScreenState(
-      isLoading: isLoading ?? this.isLoading,
+      isLoadingQrcode: isLoadingQrcode ?? this.isLoadingQrcode,
       isUpdating: isUpdating ?? this.isUpdating,
       isPaid: isPaid ?? this.isPaid,
       isAvailable: isAvailable ?? this.isAvailable,
@@ -71,7 +75,8 @@ class WorkshopScreenState {
       channelSetFlow: channelSetFlow ?? this.channelSetFlow,
       defaultCheckout: defaultCheckout ?? this.defaultCheckout,
       checkoutFlow: checkoutFlow ?? this.checkoutFlow,
-      qrImage: qrImage ?? this.qrImage,
+      qrForm: qrForm,
+      qrImage: qrImage,
       prefilledLink: prefilledLink ?? this.prefilledLink,
     );
   }

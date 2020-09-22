@@ -10,6 +10,7 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/checkout/checkout_bloc.dart';
 import 'package:payever/checkout/models/models.dart';
 import 'package:payever/checkout/views/channels/channels_checkout_flow_screen.dart';
+import 'package:payever/checkout/views/workshop/prefilled_qr_screen.dart';
 import 'package:payever/checkout/views/workshop/subview/pay_success_view.dart';
 import 'package:payever/checkout/views/workshop/subview/payment_select_view.dart';
 import 'package:payever/checkout/widgets/workshop_header_item.dart';
@@ -132,6 +133,18 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
           showPaySuccessDialog(state);
         } else if (state is WorkshopScreenStateFailure) {
           Fluttertoast.showToast(msg: state.error);
+        } else if (state.qrImage != null) {
+          Navigator.push(
+            context,
+            PageTransition(
+              child: PrefilledQRCodeScreen(
+                qrForm: state.qrForm,
+                qrImage: state.qrImage,
+                title: 'QR',
+              ),
+              type: PageTransitionType.fade,
+            ),
+          );
         }
       },
       child: BlocBuilder<WorkshopScreenBloc, WorkshopScreenState>(
@@ -167,18 +180,43 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
               );
             },
             onCopyPrefilledLink: () {
-              screenBloc.add(GetPrefilledLinkEvent());
+              getPrefilledLink(state, true);
             },
             onPrefilledQrcode: () {
-              screenBloc.add(GetPrefilledQRCodeEvent());
+              getPrefilledLink(state, false);
             },
           ),
           Flexible(
-            child: _workshop(state),
+            child: Stack(
+              children: [
+                _workshop(state),
+                state.isLoadingQrcode
+                    ? Center(
+                      child: Container(
+                          width: 40,
+                          height: 40,
+                          child: CircularProgressIndicator(),
+                        ),
+                    )
+                    : Container()
+              ],
+            ),
           ),
         ],
       ),
     );
+  }
+
+  void getPrefilledLink(WorkshopScreenState state, bool isCopyLink) {
+    if (_formKeyOrder.currentState.validate()) {
+      num _amount = state.channelSetFlow.amount;
+      String _reference = state.channelSetFlow.reference;
+      if (_amount >= 0 && _reference != null) {
+        screenBloc.add(GetPrefilledLinkEvent(isCopyLink: isCopyLink));
+      } else {
+        Fluttertoast.showToast(msg: 'Please set amount and reference.');
+      }
+    }
   }
 
   Widget _workshop(WorkshopScreenState state) {
@@ -1130,61 +1168,61 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                   child: SizedBox.expand(
                     child: MaterialButton(
                       onPressed: () {
-                        Map<String, dynamic> body = {
-                          'city': 'Berlin',
-                          'company': company,
-                          'country': 'DE',
-                          'email': 'abiantgmbh@payever.de',
-                          'first_name': 'Artur',
-                          'full_address':
-                              'Germaniastraße, 12099, 12099 Berlin, Germany',
-                          'id': state.channelSetFlow.billingAddress.id,
-                          'last_name': 'S',
-                          'phone': phone,
-                          'salutation': 'SALUTATION_MR',
-                          'select_address': '',
-                          'social_security_number': '',
-                          'street': 'Germaniastraße, 12099',
-                          'street_name': 'Germaniastraße',
-                          'street_number': '12099',
-                          'type': 'billing',
-                          'zip_code': 'billing',
-                        };
-                        screenBloc
-                            .add(PatchCheckoutFlowAddressEvent(body: body));
+                        // Map<String, dynamic> body = {
+                        //   'city': 'Berlin',
+                        //   'company': company,
+                        //   'country': 'DE',
+                        //   'email': 'abiantgmbh@payever.de',
+                        //   'first_name': 'Artur',
+                        //   'full_address':
+                        //       'Germaniastraße, 12099, 12099 Berlin, Germany',
+                        //   'id': state.channelSetFlow.billingAddress.id,
+                        //   'last_name': 'S',
+                        //   'phone': phone,
+                        //   'salutation': 'SALUTATION_MR',
+                        //   'select_address': '',
+                        //   'social_security_number': '',
+                        //   'street': 'Germaniastraße, 12099',
+                        //   'street_name': 'Germaniastraße',
+                        //   'street_number': '12099',
+                        //   'type': 'billing',
+                        //   'zip_code': 'billing',
+                        // };
+                        // screenBloc
+                        //     .add(PatchCheckoutFlowAddressEvent(body: body));
 
-                        // if (countryCode == null || countryCode.isEmpty) {
-                        //   Fluttertoast.showToast(msg: 'Country is needed');
-                        //   return;
-                        // }
-                        // if (salutation == null || salutation.isEmpty) {
-                        //   Fluttertoast.showToast(msg: 'Salutation is needed');
-                        //   return;
-                        // }
-                        // if (_formKeyBilling.currentState.validate() && !state.isUpdating) {
-                        //   Map<String, dynamic> body = {
-                        //     'city': city,
-                        //     'company': company,
-                        //     'country': countryCode,
-                        //     'email': email,
-                        //     'first_name': firstName,
-                        //     'full_address': googleAutocomplete,
-                        //     'id': state.channelSetFlow.billingAddress.id,
-                        //     'last_name': lastName,
-                        //     'phone': phone,
-                        //     'salutation': salutation,
-                        //     'select_address': '',
-                        //     'social_security_number': '',
-                        //     'street': street,
-                        //     'street_name': street,
-                        //     'street_number': zipCode,
-                        //     'type': 'billing',
-                        //     'zip_code': zipCode,
-                        //   };
-                        //   print('body: $body');
-                        //   screenBloc
-                        //       .add(PatchCheckoutFlowAddressEvent(body: body));
-                        // }
+                        if (countryCode == null || countryCode.isEmpty) {
+                          Fluttertoast.showToast(msg: 'Country is needed');
+                          return;
+                        }
+                        if (salutation == null || salutation.isEmpty) {
+                          Fluttertoast.showToast(msg: 'Salutation is needed');
+                          return;
+                        }
+                        if (_formKeyBilling.currentState.validate() && !state.isUpdating) {
+                          Map<String, dynamic> body = {
+                            'city': city,
+                            'company': company,
+                            'country': countryCode,
+                            'email': email,
+                            'first_name': firstName,
+                            'full_address': googleAutocomplete,
+                            'id': state.channelSetFlow.billingAddress.id,
+                            'last_name': lastName,
+                            'phone': phone,
+                            'salutation': salutation,
+                            'select_address': '',
+                            'social_security_number': '',
+                            'street': street,
+                            'street_name': street,
+                            'street_number': zipCode,
+                            'type': 'billing',
+                            'zip_code': zipCode,
+                          };
+                          print('body: $body');
+                          screenBloc
+                              .add(PatchCheckoutFlowAddressEvent(body: body));
+                        }
                       },
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(4),
@@ -1627,19 +1665,19 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
               keyboardType: TextInputType.text,
             ),
           ),
-          isAccountApproved
-              ? Container()
-              : InkWell(
-                  onTap: () {
-                    if (state.isValid && state.isAvailable) {
-                    } else {}
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Text(
-                        state.isValid && state.isAvailable ? 'Clear' : 'Login'),
-                  ),
-                ),
+          // isAccountApproved
+          //     ? Container()
+          //     : InkWell(
+          //         onTap: () {
+          //           if (state.isValid && state.isAvailable) {
+          //           } else {}
+          //         },
+          //         child: Padding(
+          //           padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          //           child: Text(
+          //               state.isValid && state.isAvailable ? 'Clear' : 'Login'),
+          //         ),
+          //       ),
         ],
       ),
     );
