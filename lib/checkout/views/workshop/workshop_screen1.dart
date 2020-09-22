@@ -122,7 +122,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
             }
             _selectedSectionIndex ++;
           });
-        } else if (state is WorkshopScreenPaySuccess) {
+        } else if (state.isPaid == true) {
           showPaySuccessDialog(state);
         }
       },
@@ -1592,8 +1592,11 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
 
                     }
                   },
-                  child: Text(
-                      state.isValid && state.isAvailable ? 'Clear' : 'Login'),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Text(
+                        state.isValid && state.isAvailable ? 'Clear' : 'Login'),
+                  ),
                 ),
         ],
       ),
@@ -1687,6 +1690,8 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
   }
 
   showPaySuccessDialog(WorkshopScreenState state) {
+    if (state.channelSetFlow.payment == null || state.channelSetFlow.payment.paymentDetails == null) return;
+
     showCupertinoDialog(
       context: context,
       builder: (builder) {

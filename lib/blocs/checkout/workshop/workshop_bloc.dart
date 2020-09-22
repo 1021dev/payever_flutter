@@ -144,14 +144,16 @@ class WorkshopScreenBloc extends Bloc<WorkshopScreenEvent, WorkshopScreenState> 
         updatePayflowIndex: -1,
       );
     } else if (response is Map) {
-      yield WorkshopScreenPaySuccess();
-      channelSetFlow.payment = Payment.fromMap(response);
+      // yield WorkshopScreenPaySuccess();
+      channelSetFlow.payment = Payment.fromMap(response['payment']);
       yield state.copyWith(
         isUpdating: false,
+        isPaid: true,
         updatePayflowIndex: -1,
         channelSetFlow: channelSetFlow,
       );
       checkoutScreenBloc.add(UpdateChannelSetFlowEvent(channelSetFlow));
+      Future.delayed(const Duration(milliseconds: 500)).then((value) => state.copyWith(isPaid: false));
     }
   }
 
@@ -185,6 +187,7 @@ class WorkshopScreenBloc extends Bloc<WorkshopScreenEvent, WorkshopScreenState> 
         channelSetFlow: channelSetFlow,
       );
       checkoutScreenBloc.add(UpdateChannelSetFlowEvent(channelSetFlow));
+
     }
   }
 }

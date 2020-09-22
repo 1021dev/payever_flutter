@@ -27,23 +27,25 @@ class PaymentSelectView extends StatefulWidget {
       this.onTapChangePayment});
 
   @override
-  _PaymentSelectViewState createState() => _PaymentSelectViewState(channelSetFlow: channelSetFlow);
+  _PaymentSelectViewState createState() => _PaymentSelectViewState();
 }
 
 class _PaymentSelectViewState extends State<PaymentSelectView> {
-  final ChannelSetFlow channelSetFlow;
-  List<CheckoutPaymentOption> paymentOptions;
-  num paymentOptionId;
-
-  _PaymentSelectViewState({this.channelSetFlow}){
-    paymentOptions = channelSetFlow.paymentOptions;
-    paymentOptionId = channelSetFlow.paymentOptionId;
-  }
+  // final ChannelSetFlow channelSetFlow;
+  // List<CheckoutPaymentOption> paymentOptions;
+  // num paymentOptionId;
+  //
+  // _PaymentSelectViewState({this.channelSetFlow}){
+  //   paymentOptions = channelSetFlow.paymentOptions;
+  //   paymentOptionId = channelSetFlow.paymentOptionId;
+  // }
 
   @override
   Widget build(BuildContext context) {
-
-
+    List<CheckoutPaymentOption> paymentOptions;
+    num paymentOptionId;
+    paymentOptions = widget.channelSetFlow.paymentOptions;
+    paymentOptionId = widget.channelSetFlow.paymentOptionId;
     if (!widget.enable || paymentOptions == null || paymentOptions.isEmpty) {
       return Container();
     }
@@ -58,7 +60,7 @@ class _PaymentSelectViewState extends State<PaymentSelectView> {
         payBtnTitle = 'Continue';
       } else if (paymentMethod.contains('santander')) {
         payBtnTitle =
-        'Buy now for ${Measurements.currency(channelSetFlow.currency)}${channelSetFlow.amount}';
+        'Buy now for ${Measurements.currency(widget.channelSetFlow.currency)}${widget.channelSetFlow.amount}';
       } else if (paymentMethod.contains('cash')) {
         payBtnTitle = 'Pay now';
       } else if (paymentMethod.contains('instant')) {

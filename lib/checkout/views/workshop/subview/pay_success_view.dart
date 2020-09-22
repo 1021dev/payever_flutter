@@ -27,14 +27,11 @@ class _PaySuccessViewState extends State<PaySuccessView> {
 
   @override
   Widget build(BuildContext context) {
-    // if (payment == null || paymentDetails == null)
-    //   return Container();
-
     NumberFormat format = NumberFormat();
     String currency = format.simpleCurrencySymbol(widget.channelSetFlow.currency);
     DateTime paymentDate = DateTime.parse(payment.createdAt);
     String paymentDataStr = formatDate(paymentDate, [dd, '.', MM, '.', yyyy, hh, ':' , mm, ':', ss]);
-
+    // String paymentDataStr = '';
     return Center(
       child: BlurEffectView(
         padding: EdgeInsets.all(16),
@@ -86,7 +83,7 @@ class _PaySuccessViewState extends State<PaySuccessView> {
                         Expanded(
                           child: Text('Recipient', style: TextStyle(fontSize: 16),),
                         ),
-                        Text(paymentDetails.merchantBankAccountHolder, style: TextStyle(fontSize: 16)),
+                        Text(paymentDetails.merchantBankAccountHolder ?? '', style: TextStyle(fontSize: 16)),
                       ],
                     ),
                     SizedBox(height: 10,),
@@ -132,7 +129,6 @@ class _PaySuccessViewState extends State<PaySuccessView> {
                   ],
                 ),
               ),
-
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 16),
                 child: _divider,

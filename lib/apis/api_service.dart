@@ -2401,11 +2401,7 @@ class ApiService {
       print(rand);
       dynamic response = await _client.getTypeless(
           '$checkoutFlow$channelId/checkout?rand=$rand',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {

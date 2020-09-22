@@ -5,6 +5,7 @@ import 'package:payever/checkout/models/models.dart';
 class WorkshopScreenState {
   final bool isLoading;
   final bool isUpdating;
+  final bool isPaid;
   final int updatePayflowIndex;
   final String business;
   final ChannelSetFlow channelSetFlow;
@@ -16,6 +17,7 @@ class WorkshopScreenState {
   WorkshopScreenState({
     this.isLoading = false,
     this.isUpdating = false,
+    this.isPaid = false,
     this.updatePayflowIndex = -1,
     this.business,
     this.channelSetFlow,
@@ -28,6 +30,7 @@ class WorkshopScreenState {
   List<Object> get props => [
         this.isLoading,
         this.isUpdating,
+        this.isPaid,
         this.updatePayflowIndex,
         this.business,
         this.channelSetFlow,
@@ -40,6 +43,7 @@ class WorkshopScreenState {
   WorkshopScreenState copyWith({
     bool isLoading,
     bool isUpdating,
+    bool isPaid,
     int updatePayflowIndex,
     String business,
     ChannelSetFlow channelSetFlow,
@@ -51,6 +55,7 @@ class WorkshopScreenState {
     return WorkshopScreenState(
       isLoading: isLoading ?? this.isLoading,
       isUpdating: isUpdating ?? this.isUpdating,
+      isPaid: isPaid ?? this.isPaid,
       isAvailable: isAvailable ?? this.isAvailable,
       isValid: isValid ?? this.isValid,
       updatePayflowIndex: updatePayflowIndex ?? this.updatePayflowIndex,
