@@ -4,6 +4,7 @@ import 'package:payever/checkout/views/workshop/widget/payment_option.dart';
 import 'package:payever/checkout/widgets/workshop_header_item.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
+import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/connect/models/connect.dart';
 import 'package:payever/theme.dart';
 
@@ -42,9 +43,32 @@ class _PaymentSelectViewState extends State<PaymentSelectView> {
     num paymentOptionId;
     paymentOptions = channelSetFlow.paymentOptions;
     paymentOptionId = channelSetFlow.paymentOptionId;
-    if (!widget.enable || paymentOptions == null || paymentOptions.isEmpty) {
+    if (!widget.enable) {
       return Container();
     }
+
+    if (paymentOptions == null || paymentOptions.isEmpty) {
+      return BlurEffectView(
+        borderRadius: BorderRadius.circular(4),
+        color: overlayColor(),
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey, width: 1),
+            borderRadius: BorderRadius.circular(4),
+          ),
+          padding: EdgeInsets.all(16),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(Icons.info_outline, color: Colors.red, size: 40,),
+              SizedBox(width: 20,),
+              Flexible(child: Text('Unfortunately no payment options available. It could be that the order amount is too low/high for the available payment options, or you entered an alternative shipping address (not allowed for some payment options).'))
+            ],
+          ),
+        ),
+      );
+    }
+
     String payBtnTitle, paymentMethod;
     List<CheckoutPaymentOption>payments = paymentOptions.where((element) => element.id == paymentOptionId).toList();
     CheckoutPaymentOption paymentOption;
@@ -83,11 +107,11 @@ class _PaymentSelectViewState extends State<PaymentSelectView> {
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
-                    CheckoutPaymentOption payment = paymentOptions[index];
+                    CheckoutPaymentOption paymentOption = paymentOptions[index];
                     return PaymentOptionCell(
                       channelSetFlow: channelSetFlow,
-                      paymentOption: payment,
-                      isSelected: paymentOptionId == payment.id,
+                      paymentOption: paymentOption,
+                      isSelected: paymentOptionId == paymentOption.id,
                       onTapChangePayment: (id) => widget.onTapChangePayment(id),
                     );
                   },
@@ -106,7 +130,7 @@ class _PaymentSelectViewState extends State<PaymentSelectView> {
                     onPressed: () {
                       if (paymentMethod == null || paymentMethod.isEmpty) return;
                       Map<String, dynamic>body = {};
-                      if (paymentMethod.contains('instant')) {
+                      if (!paymentMethod.contains('cash')) {
                         if (billingAddress == null) return;
 
                         Map<String, dynamic> address = {

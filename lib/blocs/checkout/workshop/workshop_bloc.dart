@@ -167,7 +167,7 @@ class WorkshopScreenBloc extends Bloc<WorkshopScreenEvent, WorkshopScreenState> 
     dynamic response = await api.checkoutPayInstantPayment(
         token, connectId, body);
     if (response is DioError) {
-      yield WorkshopScreenStateFailure(error: response.message);
+      yield WorkshopScreenStateFailure(error: response.response.data['message']);
       yield state.copyWith(
         isUpdating: false,
         updatePayflowIndex: -1,

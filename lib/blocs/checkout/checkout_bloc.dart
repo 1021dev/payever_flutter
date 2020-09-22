@@ -242,7 +242,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
           if (variant != null) {
             paymentVariants[key] = variant;
           }
-        }      
+        }
       });
     }
 
