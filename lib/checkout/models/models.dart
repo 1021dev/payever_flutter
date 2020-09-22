@@ -500,7 +500,7 @@ class ChannelSetFlow {
   @JsonKey(name: 'express')
   bool express = false;
   @JsonKey(name: 'extra')
-  Map extra = {};
+  dynamic extra;
   @JsonKey(name: 'failure_url')
   String failureUrl;
   @JsonKey(name: 'finance_type')

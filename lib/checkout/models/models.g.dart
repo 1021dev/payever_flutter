@@ -37,7 +37,7 @@ ChannelSetFlow _$ChannelSetFlowFromJson(Map<String, dynamic> json) {
     ..currency = json['currency'] as String
     ..differentAddress = json['different_address'] as bool
     ..express = json['express'] as bool
-    ..extra = json['extra'] as Map<String, dynamic>
+    ..extra = json['extra']
     ..failureUrl = json['failure_url'] as String
     ..financeType = json['finance_type'] as String
     ..flashBag = json['flash_bag'] as List

@@ -12,7 +12,6 @@ import 'package:payever/checkout/models/models.dart';
 import 'package:payever/checkout/views/channels/channels_checkout_flow_screen.dart';
 import 'package:payever/checkout/views/workshop/subview/pay_success_view.dart';
 import 'package:payever/checkout/views/workshop/subview/payment_select_view.dart';
-import 'package:payever/checkout/widgets/checkout_top_button.dart';
 import 'package:payever/checkout/widgets/workshop_header_item.dart';
 import 'package:payever/checkout/widgets/workshop_top_bar.dart';
 import 'package:payever/commons/commons.dart';
@@ -167,8 +166,11 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                 ),
               );
             },
+            onCopyPrefilledLink: () {
+              screenBloc.add(GetPrefilledLinkEvent());
+            },
             onPrefilledQrcode: () {
-
+              screenBloc.add(GetPrefilledQRCodeEvent());
             },
           ),
           Flexible(

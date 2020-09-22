@@ -10,12 +10,13 @@ import 'checkout_top_button.dart';
 class WorkshopTopBar extends StatefulWidget {
   final Function onOpenTap;
   final Function onCloseTap;
+  final Function onCopyPrefilledLink;
   final Function onPrefilledQrcode;
   final String title;
   final String businessName;
   final String openUrl;
   WorkshopTopBar(
-      {this.onOpenTap, this.onPrefilledQrcode, this.title, this.onCloseTap, this.businessName, this.openUrl});
+      {this.onOpenTap, this.onPrefilledQrcode, this.title, this.onCloseTap, this.businessName, this.openUrl, this.onCopyPrefilledLink});
 
   @override
   _WorkshopTopBarState createState() => _WorkshopTopBarState();
@@ -155,7 +156,7 @@ class _WorkshopTopBarState extends State<WorkshopTopBar> {
           color: iconColor(),
         ),
         onTap: () async {
-
+            widget.onCopyPrefilledLink();
         },
       ),
       CheckOutPopupButton(

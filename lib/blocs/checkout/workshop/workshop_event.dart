@@ -54,6 +54,19 @@ class PatchCheckoutFlowAddressEvent extends WorkshopScreenEvent {
 
 class PayWireTransferEvent extends WorkshopScreenEvent{}
 
+class GetPrefilledLinkEvent extends WorkshopScreenEvent{
+  final bool isCopyLink;
+
+  GetPrefilledLinkEvent({this.isCopyLink = true});
+
+  @override
+  List<Object> get props => [
+    this.isCopyLink,
+  ];
+}
+
+class GetPrefilledQRCodeEvent extends WorkshopScreenEvent{}
+
 class EmailValidationEvent extends WorkshopScreenEvent{
   final String email;
 

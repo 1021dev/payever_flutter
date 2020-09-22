@@ -13,6 +13,8 @@ class WorkshopScreenState {
   final CheckoutFlow checkoutFlow;
   final bool isAvailable;
   final bool isValid;
+  final dynamic qrImage;
+  final String prefilledLink;
 
   WorkshopScreenState({
     this.isLoading = false,
@@ -25,6 +27,8 @@ class WorkshopScreenState {
     this.checkoutFlow,
     this.isAvailable = false,
     this.isValid = false,
+    this.qrImage,
+    this.prefilledLink,
   });
 
   List<Object> get props => [
@@ -38,6 +42,8 @@ class WorkshopScreenState {
         this.checkoutFlow,
         this.isAvailable,
         this.isValid,
+        this.qrImage,
+        this.prefilledLink,
       ];
 
   WorkshopScreenState copyWith({
@@ -51,6 +57,8 @@ class WorkshopScreenState {
     CheckoutFlow checkoutFlow,
     bool isAvailable,
     bool isValid,
+    dynamic qrImage,
+    String prefilledLink,
   }) {
     return WorkshopScreenState(
       isLoading: isLoading ?? this.isLoading,
@@ -63,6 +71,8 @@ class WorkshopScreenState {
       channelSetFlow: channelSetFlow ?? this.channelSetFlow,
       defaultCheckout: defaultCheckout ?? this.defaultCheckout,
       checkoutFlow: checkoutFlow ?? this.checkoutFlow,
+      qrImage: qrImage ?? this.qrImage,
+      prefilledLink: prefilledLink ?? this.prefilledLink,
     );
   }
 }
