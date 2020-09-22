@@ -542,7 +542,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 PageTransition(
                   child: ChannelCheckoutFlowScreen(
                     checkoutScreenBloc:screenBloc,
-                    url:
+                    openUrl:
                     'https://checkout.payever.org/pay/create-flow/channel-set-id/${state.channelSet.id}',
                   ),
                   type: PageTransitionType.fade,

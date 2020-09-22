@@ -1,16 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:payever/blocs/bloc.dart';
 import 'package:payever/blocs/checkout/checkout_bloc.dart';
 import 'package:payever/checkout/models/models.dart';
+import 'package:payever/checkout/views/channels/channels_checkout_flow_screen.dart';
 import 'package:payever/checkout/views/workshop/subview/pay_success_view.dart';
 import 'package:payever/checkout/views/workshop/subview/payment_select_view.dart';
 import 'package:payever/checkout/widgets/checkout_top_button.dart';
 import 'package:payever/checkout/widgets/workshop_header_item.dart';
+import 'package:payever/checkout/widgets/workshop_top_bar.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
@@ -25,8 +29,8 @@ import 'checkout_switch_screen.dart';
 
 class WorkshopScreen1 extends StatefulWidget {
   final CheckoutScreenBloc checkoutScreenBloc;
-
-  const WorkshopScreen1({this.checkoutScreenBloc});
+  final bool fromCheckOutScreen;
+  const WorkshopScreen1({this.checkoutScreenBloc, this.fromCheckOutScreen = true});
 
   @override
   _WorkshopScreen1State createState() => _WorkshopScreen1State();
@@ -131,11 +135,31 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
       child: BlocBuilder<WorkshopScreenBloc, WorkshopScreenState>(
         bloc: screenBloc,
         builder: (BuildContext context, state) {
+          String openUrl = 'https://checkout.payever.org/pay/create-flow/channel-set-id/${widget.checkoutScreenBloc.state.channelSet.id}';
           return state.defaultCheckout == null ? Container() :
           Container(
             child: Column(
               children: <Widget>[
-                _topBar(),
+                WorkshopTopBar(          
+                  title: 'Your checkout',
+                  businessName: widget.checkoutScreenBloc.dashboardScreenBloc.state.activeBusiness.name,
+                  openUrl: state.channelSetFlow.id,
+                  onOpenTap: () {
+                    Navigator.push(
+                      context,
+                      PageTransition(
+                        child: ChannelCheckoutFlowScreen(
+                          checkoutScreenBloc: widget.checkoutScreenBloc,
+                          openUrl: openUrl,
+                        ),
+                        type: PageTransitionType.fade,
+                      ),
+                    );
+                  },
+                  onPrefilledQrcode: () {
+
+                  },
+                ),
                 Flexible(
                   child: _body(state),
                 ),
@@ -143,94 +167,6 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
             ),
           );
         },
-      ),
-    );
-  }
-
-  Widget _topBar() {
-    return Container(
-      height: 50,
-      color: Colors.black87,
-      child: Row(
-        children: <Widget>[
-          SizedBox(
-            width: 10,
-          ),
-          Text(
-            'Your checkout',
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.white,
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-          Spacer(),
-          InkWell(
-            onTap: () {
-
-            },
-            child: Container(
-              height: 30,
-              width: 80,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                color: Colors.white,
-              ),
-              child: Center(
-                child: Text(
-                  'Open',
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          SizedBox(width: 10,),
-          Container(
-            height: 30,
-            width: 30,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
-            ),
-            child: PopupMenuButton<CheckOutPopupButton>(
-              child: Icon(
-                Icons.more_horiz,
-                color: Colors.black,
-              ),
-              offset: Offset(0, 100),
-              onSelected: (CheckOutPopupButton item) => item.onTap(),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              color: Colors.black87,
-              itemBuilder: (BuildContext context) {
-                return _morePopup(context).map((CheckOutPopupButton item) {
-                  return PopupMenuItem<CheckOutPopupButton>(
-                    value: item,
-                    child: Row(
-                      children: <Widget>[
-                        item.icon,
-                        SizedBox(width: 8,),
-                        Text(
-                          item.title,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                }).toList();
-              },
-            ),
-          ),
-          SizedBox(width: 10,),
-        ],
       ),
     );
   }
@@ -1109,61 +1045,61 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                   child: SizedBox.expand(
                     child: MaterialButton(
                       onPressed: () {
-                        // Map<String, dynamic> body = {
-                        //   'city': 'Berlin',
-                        //   'company': company,
-                        //   'country': 'DE',
-                        //   'email': 'abiantgmbh@payever.de',
-                        //   'first_name': 'Artur',
-                        //   'full_address': 'Germaniastraße, 12099, 12099 Berlin, Germany',
-                        //   'id': state.channelSetFlow.billingAddress.id,
-                        //   'last_name': 'S',
-                        //   'phone': phone,
-                        //   'salutation': 'SALUTATION_MR',
-                        //   'select_address': '',
-                        //   'social_security_number': '',
-                        //   'street': 'Germaniastraße, 12099',
-                        //   'street_name': 'Germaniastraße',
-                        //   'street_number': '12099',
-                        //   'type': 'billing',
-                        //   'zip_code': 'billing',
-                        // };
-                        // screenBloc
-                        //     .add(PatchCheckoutFlowAddressEvent(body: body));
+                        Map<String, dynamic> body = {
+                          'city': 'Berlin',
+                          'company': company,
+                          'country': 'DE',
+                          'email': 'abiantgmbh@payever.de',
+                          'first_name': 'Artur',
+                          'full_address': 'Germaniastraße, 12099, 12099 Berlin, Germany',
+                          'id': state.channelSetFlow.billingAddress.id,
+                          'last_name': 'S',
+                          'phone': phone,
+                          'salutation': 'SALUTATION_MR',
+                          'select_address': '',
+                          'social_security_number': '',
+                          'street': 'Germaniastraße, 12099',
+                          'street_name': 'Germaniastraße',
+                          'street_number': '12099',
+                          'type': 'billing',
+                          'zip_code': 'billing',
+                        };
+                        screenBloc
+                            .add(PatchCheckoutFlowAddressEvent(body: body));
 
 
-                        if (countryCode == null || countryCode.isEmpty) {
-                          Fluttertoast.showToast(msg: 'Country is needed');
-                          return;
-                        }
-                        if (salutation == null || salutation.isEmpty) {
-                          Fluttertoast.showToast(msg: 'Salutation is needed');
-                          return;
-                        }
-                        if (_formKeyBilling.currentState.validate() && !state.isUpdating) {
-                          Map<String, dynamic> body = {
-                            'city': city,
-                            'company': company,
-                            'country': countryCode,
-                            'email': email,
-                            'first_name': firstName,
-                            'full_address': googleAutocomplete,
-                            'id': state.channelSetFlow.billingAddress.id,
-                            'last_name': lastName,
-                            'phone': phone,
-                            'salutation': salutation,
-                            'select_address': '',
-                            'social_security_number': '',
-                            'street': street,
-                            'street_name': street,
-                            'street_number': zipCode,
-                            'type': 'billing',
-                            'zip_code': zipCode,
-                          };
-                          print('body: $body');
-                          screenBloc
-                              .add(PatchCheckoutFlowAddressEvent(body: body));
-                        }
+                        // if (countryCode == null || countryCode.isEmpty) {
+                        //   Fluttertoast.showToast(msg: 'Country is needed');
+                        //   return;
+                        // }
+                        // if (salutation == null || salutation.isEmpty) {
+                        //   Fluttertoast.showToast(msg: 'Salutation is needed');
+                        //   return;
+                        // }
+                        // if (_formKeyBilling.currentState.validate() && !state.isUpdating) {
+                        //   Map<String, dynamic> body = {
+                        //     'city': city,
+                        //     'company': company,
+                        //     'country': countryCode,
+                        //     'email': email,
+                        //     'first_name': firstName,
+                        //     'full_address': googleAutocomplete,
+                        //     'id': state.channelSetFlow.billingAddress.id,
+                        //     'last_name': lastName,
+                        //     'phone': phone,
+                        //     'salutation': salutation,
+                        //     'select_address': '',
+                        //     'social_security_number': '',
+                        //     'street': street,
+                        //     'street_name': street,
+                        //     'street_number': zipCode,
+                        //     'type': 'billing',
+                        //     'zip_code': zipCode,
+                        //   };
+                        //   print('body: $body');
+                        //   screenBloc
+                        //       .add(PatchCheckoutFlowAddressEvent(body: body));
+                        // }
                       },
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(4),
@@ -1640,55 +1576,6 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
       }
       print('googleAutocomplete ' + googleAutocomplete);
     });
-  }
-
-  List<CheckOutPopupButton> _morePopup(BuildContext context) {
-    return [
-      CheckOutPopupButton(
-        title: 'Copy pay link',
-        icon: SvgPicture.asset(
-          'assets/images/pay_link.svg',
-          width: 16,
-          height: 16,
-        ),
-        onTap: () async {
-          setState(() {});
-        },
-      ),
-      CheckOutPopupButton(
-        title: 'Copy prefilled link',
-        icon: SvgPicture.asset(
-          'assets/images/prefilled_link.svg',
-          width: 16,
-          height: 16,
-        ),
-        onTap: () async {
-          setState(() {});
-        },
-      ),
-      CheckOutPopupButton(
-        title: 'E-mail prefilled link',
-        icon: SvgPicture.asset(
-          'assets/images/email_link.svg',
-          width: 16,
-          height: 16,
-        ),
-        onTap: () async {
-          setState(() {});
-        },
-      ),
-      CheckOutPopupButton(
-        title: 'Prefilled QR code',
-        icon: SvgPicture.asset(
-          'assets/images/prefilled_qr.svg',
-          width: 16,
-          height: 16,
-        ),
-        onTap: () async {
-          setState(() {});
-        },
-      ),
-    ];
   }
 
   showPaySuccessDialog(WorkshopScreenState state) {

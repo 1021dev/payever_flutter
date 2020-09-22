@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:payever/apis/api_service.dart';
@@ -5,6 +7,7 @@ import 'package:payever/blocs/bloc.dart';
 import 'package:payever/checkout/models/models.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
+import 'package:http/http.dart' as http;
 
 class WorkshopScreenBloc extends Bloc<WorkshopScreenEvent, WorkshopScreenState> {
   final CheckoutScreenBloc checkoutScreenBloc;
@@ -183,4 +186,63 @@ class WorkshopScreenBloc extends Bloc<WorkshopScreenEvent, WorkshopScreenState> 
       checkoutScreenBloc.add(UpdateChannelSetFlowEvent(channelSetFlow));
     }
   }
+
+  Stream<WorkshopScreenState> getChannelSetFlow() async* {
+    // Map<String, dynamic>body = {};
+    // body['flow'] = checkoutFlowResponse;
+    // dynamic qrcodelinkResponse = await api.getChannelSetQRcode(token, body);
+    // if (qrcodelinkResponse is Map) {
+    //   String id = qrcodelinkResponse['id'];
+    //
+    //   dynamic response = await api.postGenerateTerminalQRCode(
+    //     GlobalUtils.activeToken.accessToken,
+    //     state.business,
+    //     state.activeBusiness.name,
+    //     '$imageBase${dashboardScreenBloc.state.activeTerminal.logo}',
+    //     dashboardScreenBloc.state.activeTerminal.id,
+    //     '${Env.checkout}/pay/restore-flow-from-code/channel-set-id/$id',
+    //   );
+    //
+    //   String imageData;
+    //   if (response is Map) {
+    //     dynamic form = response['form'];
+    //     String contentType = form['contentType'] != null
+    //         ? form['contentType']
+    //         : '';
+    //     dynamic content = form['content'] != null ? form['content'] : null;
+    //     if (content != null) {
+    //       List<dynamic> contentData = content[contentType];
+    //       for (int i = 0; i < contentData.length; i++) {
+    //         dynamic data = content[contentType][i];
+    //         if (data['data'] != null) {
+    //           List<dynamic> list = data['data'];
+    //           for (dynamic w in list) {
+    //             if (w[0]['type'] == 'image') {
+    //               imageData = w[0]['value'];
+    //             }
+    //           }
+    //         }
+    //       }
+    //     }
+    //   }
+    //   http.Response qrResponse;
+    //   if (imageData != null) {
+    //     var headers = {
+    //       HttpHeaders.authorizationHeader: 'Bearer ${GlobalUtils.activeToken
+    //           .accessToken}',
+    //       HttpHeaders.contentTypeHeader: 'application/json',
+    //       HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+    //     };
+    //     print('url => $imageData');
+    //     qrResponse = await http.get(
+    //       imageData,
+    //       headers: headers,
+    //     );
+    //   }
+    //   yield state.copyWith(qrImage: qrResponse.bodyBytes);
+    //   yield CheckoutScreenStatePrefilledQRCodeSuccess();
+    // }
+  }
+
+
 }

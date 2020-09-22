@@ -48,7 +48,6 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
           child: Column(
             children: <Widget>[
               WorkshopTopBar(
-                checkoutScreenBloc: widget.checkoutScreenBloc,
                 title: 'Your checkout',
                 onOpenTap: () {
 //                  widget.onOpen(state.openUrl);
@@ -57,17 +56,17 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                     PageTransition(
                       child: ChannelCheckoutFlowScreen(
                         checkoutScreenBloc: widget.checkoutScreenBloc,
-                        url: 'https://checkout.payever.org/pay/create-flow/channel-set-id/${widget.checkoutScreenBloc.state.channelSet.id}',
+                        openUrl: 'https://checkout.payever.org/pay/create-flow/channel-set-id/${widget.checkoutScreenBloc.state.channelSet.id}',
                       ),
                       type: PageTransitionType.fade,
                     ),
                   );
                 },
-                onSwitchTap: () {
-                  setState(() {
-                    switchCheckout = true;
-                  });
-                },
+                // onSwitchTap: () {
+                //   setState(() {
+                //     switchCheckout = true;
+                //   });
+                // },
                 onPrefilledQrcode: () {
                   
                 },

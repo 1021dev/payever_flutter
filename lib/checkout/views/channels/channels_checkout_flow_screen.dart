@@ -8,9 +8,9 @@ import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 
 class ChannelCheckoutFlowScreen extends StatefulWidget {
   final CheckoutScreenBloc checkoutScreenBloc;
-  final String url;
+  final String openUrl;
   ChannelCheckoutFlowScreen({
-    this.checkoutScreenBloc, this.url,
+    this.checkoutScreenBloc, this.openUrl,
   });
 
   @override
@@ -39,7 +39,7 @@ class _ChannelCheckoutFlowScreenState extends State<ChannelCheckoutFlowScreen> {
         backgroundColor: Colors.black,
         resizeToAvoidBottomPadding: false,
         appBar: CustomAppBar(
-          widget.checkoutScreenBloc,
+          widget.checkoutScreenBloc, widget.openUrl
         ),
         body: SafeArea(
           bottom: false,
@@ -47,7 +47,7 @@ class _ChannelCheckoutFlowScreenState extends State<ChannelCheckoutFlowScreen> {
             true,
             body: CheckoutFlowWebView(
               checkoutScreenBloc: widget.checkoutScreenBloc,
-              checkoutUrl: widget.url,
+              checkoutUrl: widget.openUrl,
             ),
           ),
         ),
@@ -58,8 +58,8 @@ class _ChannelCheckoutFlowScreenState extends State<ChannelCheckoutFlowScreen> {
 
 class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   final CheckoutScreenBloc checkoutScreenBloc;
-
-  CustomAppBar(this.checkoutScreenBloc);
+  final String openUrl;
+  CustomAppBar(this.checkoutScreenBloc, this.openUrl);
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +67,8 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
       height: 120,
       alignment: Alignment.bottomCenter,
       child: WorkshopTopBar(
-        checkoutScreenBloc: checkoutScreenBloc,
+        // checkoutScreenBloc: checkoutScreenBloc,
+        openUrl: openUrl,
         title: 'Pay by Link Editing',
         onCloseTap: () {
           Navigator.pop(context);

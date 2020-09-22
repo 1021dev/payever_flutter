@@ -8,15 +8,14 @@ import '../../theme.dart';
 import 'checkout_top_button.dart';
 
 class WorkshopTopBar extends StatefulWidget {
-  final CheckoutScreenBloc checkoutScreenBloc;
   final Function onOpenTap;
   final Function onCloseTap;
-  final Function onSwitchTap;
   final Function onPrefilledQrcode;
   final String title;
-
+  final String businessName;
+  final String openUrl;
   WorkshopTopBar(
-      {this.checkoutScreenBloc, this.onOpenTap, this.onSwitchTap, this.onPrefilledQrcode, this.title, this.onCloseTap});
+      {this.onOpenTap, this.onPrefilledQrcode, this.title, this.onCloseTap, this.businessName, this.openUrl});
 
   @override
   _WorkshopTopBarState createState() => _WorkshopTopBarState();
@@ -140,8 +139,10 @@ class _WorkshopTopBarState extends State<WorkshopTopBar> {
           color: iconColor(),
         ),
         onTap: () async {
+          // Clipboard.setData(
+          //     new ClipboardData(text: widget.checkoutScreenBloc.state.openUrl));
           Clipboard.setData(
-              new ClipboardData(text: widget.checkoutScreenBloc.state.openUrl));
+              new ClipboardData(text: widget.openUrl));
           Fluttertoast.showToast(msg: 'Link successfully copied');
         },
       ),
@@ -153,7 +154,9 @@ class _WorkshopTopBarState extends State<WorkshopTopBar> {
           height: 16,
           color: iconColor(),
         ),
-        onTap: () async {},
+        onTap: () async {
+
+        },
       ),
       CheckOutPopupButton(
         title: 'E-mail prefilled link',
@@ -168,9 +171,9 @@ class _WorkshopTopBarState extends State<WorkshopTopBar> {
               '',
               'Pay by payever Link',
               'Dear customer, \\n'
-                  '${widget.checkoutScreenBloc.dashboardScreenBloc.state.activeBusiness.name} would like to invite you to pay online via payever. Please click the link below in order to pay for your purchase at ${widget.checkoutScreenBloc.dashboardScreenBloc.state.activeBusiness.name}.\\n'
-                  '${widget.checkoutScreenBloc.state.openUrl}\\n'
-                  ' For any questions to ${widget.checkoutScreenBloc.dashboardScreenBloc.state.activeBusiness.name} regarding the purchase itself, please reply to this email, for technical questions or questions regarding your payment, please email support@payever.de.');
+                  '${widget.businessName} would like to invite you to pay online via payever. Please click the link below in order to pay for your purchase at ${widget.businessName}.\\n'
+                  '${widget.openUrl}\\n'
+                  ' For any questions to ${widget.businessName} regarding the purchase itself, please reply to this email, for technical questions or questions regarding your payment, please email support@payever.de.');
         },
       ),
       CheckOutPopupButton(
@@ -186,19 +189,6 @@ class _WorkshopTopBarState extends State<WorkshopTopBar> {
         },
       ),
     ];
-
-    if (widget.onSwitchTap != null) {
-      checkoutPopups.insert(
-        0,
-        CheckOutPopupButton(
-          title: 'Switch Checkout',
-          icon: Container(),
-          onTap: () async {
-            widget.onSwitchTap();
-          },
-        ),
-      );
-    }
     return checkoutPopups;
   }
 
