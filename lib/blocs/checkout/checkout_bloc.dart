@@ -231,6 +231,20 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
         availableSections.add(Section.fromMap(element));
       });
     }
+    Map<String, PaymentVariant> paymentVariants = {};
+    dynamic paymentVariantsResponse = await api.getPaymentVariants(
+        token, business);
+    if (paymentVariantsResponse is Map) {
+      paymentVariantsResponse.keys.toList().forEach((key) {
+        dynamic value = paymentVariantsResponse[key];
+        if (value is Map) {
+          PaymentVariant variant = PaymentVariant.fromMap(value);
+          if (variant != null) {
+            paymentVariants[key] = variant;
+          }
+        }      
+      });
+    }
 
     yield state.copyWith(
       // isLoading: false,
@@ -238,6 +252,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
       integrations: integrations,
       defaultCheckout: defaultCheckout,
       availableSections: availableSections,
+      paymentVariants: paymentVariants,
     );
 
     add(GetChannelSet());

@@ -29,7 +29,6 @@ class WorkshopScreenBloc extends Bloc<WorkshopScreenEvent, WorkshopScreenState> 
           defaultCheckout: event.defaultCheckout,
         );
       }
-      print('channelSetFlow :${state.channelSetFlow.billingAddress.id}');
     } else if (event is PatchCheckoutFlowOrderEvent) {
       yield* patchCheckoutFlowOrder(event.body);
     } else if (event is PatchCheckoutFlowAddressEvent) {
@@ -37,7 +36,7 @@ class WorkshopScreenBloc extends Bloc<WorkshopScreenEvent, WorkshopScreenState> 
     } else if (event is PayWireTransferEvent) {
       yield* checkoutPayWireTransfer();
     } else if (event is PayInstantPaymentEvent) {
-      yield* checkoutPayInstantPayment();
+      yield* checkoutPayInstantPayment(event.body);
     } else if (event is EmailValidationEvent) {
       yield* emailValidate(event.email);
     }
@@ -157,21 +156,16 @@ class WorkshopScreenBloc extends Bloc<WorkshopScreenEvent, WorkshopScreenState> 
     }
   }
 
-  Stream<WorkshopScreenState> checkoutPayInstantPayment() async* {
+  Stream<WorkshopScreenState> checkoutPayInstantPayment(Map<String, dynamic>body) async* {
     yield state.copyWith(
       isUpdating: true,
       updatePayflowIndex: 3,
     );
     ChannelSetFlow channelSetFlow = state.channelSetFlow;
-    Map<String, dynamic> body = {
-      'payment_data': {},
-      'payment_flow_id': state.channelSetFlow.id,
-      'payment_option_id': state.channelSetFlow.paymentOptionId,
-      'remember_me': false
-    };
-
+    Map<String, dynamic>paymentVariants = checkoutScreenBloc.state.paymentVariants;
+    String connectId = paymentVariants['instant_payment'].variants.first.uuid;
     dynamic response = await api.checkoutPayInstantPayment(
-        token,'connectionId', body);
+        token, connectId, body);
     if (response is DioError) {
       yield WorkshopScreenStateFailure(error: response.message);
       yield state.copyWith(
@@ -187,7 +181,6 @@ class WorkshopScreenBloc extends Bloc<WorkshopScreenEvent, WorkshopScreenState> 
         channelSetFlow: channelSetFlow,
       );
       checkoutScreenBloc.add(UpdateChannelSetFlowEvent(channelSetFlow));
-
     }
   }
 }

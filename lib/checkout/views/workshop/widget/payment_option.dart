@@ -82,8 +82,15 @@ class _PaymentOptionCellState extends State<PaymentOptionCell> {
         isSelected: widget.isSelected,
         isSantander: false,
         name: name,
+        iban: widget.channelSetFlow.businessIban,
         onChangedAds: (bool isCheckedAds){
           widget.paymentOption.isCheckedAds = isCheckedAds;
+        },
+        onChangedIban: (value) {
+          widget.channelSetFlow.businessIban = value;
+        },
+        onChangedName: (value) {
+          widget.channelSetFlow.billingAddress.firstName = value;
         },
       );
     } else if (widget.paymentOption.paymentMethod.contains('santander')) {

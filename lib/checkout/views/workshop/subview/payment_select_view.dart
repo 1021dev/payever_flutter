@@ -171,7 +171,7 @@ class _PaymentSelectViewState extends State<PaymentSelectView> {
                   ),
                 ),
               ),
-              SizedBox(height: 10,)
+              SizedBox(height: 20,)
             ],
           ),
         ),

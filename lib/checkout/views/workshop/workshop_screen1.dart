@@ -124,6 +124,8 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
           });
         } else if (state.isPaid == true) {
           showPaySuccessDialog(state);
+        } else if (state is WorkshopScreenStateFailure) {
+          Fluttertoast.showToast(msg: state.error);
         }
       },
       child: BlocBuilder<WorkshopScreenBloc, WorkshopScreenState>(
@@ -1154,7 +1156,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                             'social_security_number': '',
                             'street': street,
                             'street_name': street,
-                            'street_number': "12099",
+                            'street_number': zipCode,
                             'type': 'billing',
                             'zip_code': zipCode,
                           };

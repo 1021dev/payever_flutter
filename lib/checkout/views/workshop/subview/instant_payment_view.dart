@@ -29,7 +29,6 @@ class InstantPaymentView extends StatefulWidget {
 
 class _InstantPaymentViewState extends State<InstantPaymentView> {
   TextEditingController birthdayController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
   bool isChecked = false;
   DateTime birthDate;
   String birthday;
@@ -41,16 +40,13 @@ class _InstantPaymentViewState extends State<InstantPaymentView> {
       return Container();
     }
 
-    return Form(
-      key: _formKey,
-      child: Column(
-        children: [
-          widget.isSantander
-              ? _santanderInputWidget
-              : _instantInputWidget,
-          _descriptionWidget,
-        ],
-      ),
+    return Column(
+      children: [
+        widget.isSantander
+            ? _santanderInputWidget
+            : _instantInputWidget,
+        _descriptionWidget,
+      ],
     );
   }
 
