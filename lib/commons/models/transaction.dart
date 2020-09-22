@@ -1,6 +1,9 @@
 import 'dart:core';
 
+import 'package:json_annotation/json_annotation.dart';
+
 import '../utils/utils.dart';
+part 'transaction.g.dart';
 
 class TransactionCardData {
   List<Month> lastYear = List();
@@ -137,6 +140,7 @@ class Collection {
   }
 }
 
+@JsonSerializable()
 class BillingAddress {
   String city;
   String country;
@@ -156,6 +160,8 @@ class BillingAddress {
   String streetNumber;
   String type;
   String userUuid;
+
+  BillingAddress();
 
   BillingAddress.fromMap(dynamic obj) {
     city = obj[GlobalUtils.DB_TRANSACTIONS_C_B_CITY];
@@ -178,6 +184,9 @@ class BillingAddress {
     userUuid = obj['user_uuid'];
   }
 
+  factory BillingAddress.fromJson(Map<String, dynamic> json) => _$BillingAddressFromJson(json);
+
+  Map<String, dynamic> toJson() => _$BillingAddressToJson(this);
 }
 
 class History {

@@ -4,6 +4,8 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/commons/views/custom_elements/updatedialog.dart';
 import 'package:payever/connect/models/connect.dart';
+import 'package:json_annotation/json_annotation.dart';
+part 'models.g.dart';
 
 class Checkout {
   String businessId = '';
@@ -447,6 +449,7 @@ class CheckoutFlow {
   }
 }
 
+@JsonSerializable()
 class ChannelSetFlow {
   String acceptTermsPayever;
   num amount;
@@ -514,6 +517,11 @@ class ChannelSetFlow {
   List values = [];
   String variantId;
   String xFrameHost;
+
+  ChannelSetFlow();
+  factory ChannelSetFlow.fromJson(Map<String, dynamic> json) => _$ChannelSetFlowFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ChannelSetFlowToJson(this);
 
   ChannelSetFlow.fromMap(dynamic obj) {
     acceptTermsPayever = obj['accept_terms_payever'];
@@ -816,6 +824,7 @@ class ChannelItem {
   ChannelItem({this.name, this.title, this.image, this.button, this.checkValue, this.model,});
 }
 
+@JsonSerializable()
 class Payment {
   num amount;
   String apiCall;
@@ -840,6 +849,12 @@ class Payment {
   String status;
   String storeName;
   num total;
+
+  Payment();
+
+  factory Payment.fromJson(Map<String, dynamic> json) => _$PaymentFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PaymentToJson(this);
 
   Payment.fromMap(dynamic obj) {
     amount = obj['amount'];
@@ -878,15 +893,24 @@ class Payment {
   
 }
 
+@JsonSerializable()
 class BankAccount {
   String bic;
   String iban;
+
+  BankAccount();
+
+  factory BankAccount.fromJson(Map<String, dynamic> json) => _$BankAccountFromJson(json);
+
+  Map<String, dynamic> toJson() => _$BankAccountToJson(this);
+
   BankAccount.fromMap(dynamic obj) {
     bic = obj['bic'];
     iban = obj['iban'];
   }
 }
 
+@JsonSerializable()
 class PaymentDetails {
   String merchantBankAccount;
   String merchantBankAccountHolder;
@@ -894,6 +918,12 @@ class PaymentDetails {
   String merchantBankCode;
   String merchantBankName;
   String merchantCompanyName;
+
+  PaymentDetails();
+
+  factory PaymentDetails.fromJson(Map<String, dynamic> json) => _$PaymentDetailsFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PaymentDetailsToJson(this);
 
   PaymentDetails.fromMap(dynamic obj) {
     merchantBankAccount = obj['merchant_bank_account'];

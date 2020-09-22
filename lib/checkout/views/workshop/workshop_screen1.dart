@@ -30,7 +30,9 @@ import 'checkout_switch_screen.dart';
 class WorkshopScreen1 extends StatefulWidget {
   final CheckoutScreenBloc checkoutScreenBloc;
   final bool fromCheckOutScreen;
-  const WorkshopScreen1({this.checkoutScreenBloc, this.fromCheckOutScreen = true});
+
+  const WorkshopScreen1(
+      {this.checkoutScreenBloc, this.fromCheckOutScreen = true});
 
   @override
   _WorkshopScreen1State createState() => _WorkshopScreen1State();
@@ -87,7 +89,8 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
 
   @override
   void initState() {
-    screenBloc = WorkshopScreenBloc(checkoutScreenBloc: widget.checkoutScreenBloc);
+    screenBloc =
+        WorkshopScreenBloc(checkoutScreenBloc: widget.checkoutScreenBloc);
     screenBloc.add(WorkshopScreenInitEvent(
       business: widget.checkoutScreenBloc.state.business,
       checkoutFlow: widget.checkoutScreenBloc.state.checkoutFlow,
@@ -111,7 +114,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
       listener: (BuildContext context, WorkshopScreenState state) async {
         if (state is WorkshopScreenPayflowStateSuccess) {
           setState(() {
-            switch(_selectedSectionIndex) {
+            switch (_selectedSectionIndex) {
               case 0:
                 // isOrderApproved = true;
                 break;
@@ -124,7 +127,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
               default:
                 break;
             }
-            _selectedSectionIndex ++;
+            _selectedSectionIndex++;
           });
         } else if (state.isPaid == true) {
           showPaySuccessDialog(state);
@@ -135,44 +138,50 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
       child: BlocBuilder<WorkshopScreenBloc, WorkshopScreenState>(
         bloc: screenBloc,
         builder: (BuildContext context, state) {
-          String openUrl = 'https://checkout.payever.org/pay/create-flow/channel-set-id/${widget.checkoutScreenBloc.state.channelSet.id}';
-          return state.defaultCheckout == null ? Container() :
-          Container(
-            child: Column(
-              children: <Widget>[
-                WorkshopTopBar(          
-                  title: 'Your checkout',
-                  businessName: widget.checkoutScreenBloc.dashboardScreenBloc.state.activeBusiness.name,
-                  openUrl: state.channelSetFlow.id,
-                  onOpenTap: () {
-                    Navigator.push(
-                      context,
-                      PageTransition(
-                        child: ChannelCheckoutFlowScreen(
-                          checkoutScreenBloc: widget.checkoutScreenBloc,
-                          openUrl: openUrl,
-                        ),
-                        type: PageTransitionType.fade,
-                      ),
-                    );
-                  },
-                  onPrefilledQrcode: () {
-
-                  },
-                ),
-                Flexible(
-                  child: _body(state),
-                ),
-              ],
-            ),
-          );
+          return state.defaultCheckout == null ? Container() : _body(state);
         },
       ),
     );
   }
 
   Widget _body(WorkshopScreenState state) {
-    Business business = widget.checkoutScreenBloc.dashboardScreenBloc.state.activeBusiness;
+    String openUrl =
+        'https://checkout.payever.org/pay/create-flow/channel-set-id/${widget.checkoutScreenBloc.state.channelSet.id}';
+    return Container(
+      child: Column(
+        children: <Widget>[
+          WorkshopTopBar(
+            title: 'Your checkout',
+            businessName: widget.checkoutScreenBloc.dashboardScreenBloc.state
+                .activeBusiness.name,
+            openUrl: state.channelSetFlow.id,
+            onOpenTap: () {
+              Navigator.push(
+                context,
+                PageTransition(
+                  child: ChannelCheckoutFlowScreen(
+                    checkoutScreenBloc: widget.checkoutScreenBloc,
+                    openUrl: openUrl,
+                  ),
+                  type: PageTransitionType.fade,
+                ),
+              );
+            },
+            onPrefilledQrcode: () {
+
+            },
+          ),
+          Flexible(
+            child: _workshop(state),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _workshop(WorkshopScreenState state) {
+    Business business =
+        widget.checkoutScreenBloc.dashboardScreenBloc.state.activeBusiness;
     String currencyString = business.currency;
     NumberFormat format = NumberFormat();
     currency = format.simpleCurrencySymbol(currencyString);
@@ -201,68 +210,73 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  editOrder ? MaterialButton(
-                    child: Row(
-                      children: <Widget>[
-                        Icon(
-                          Icons.keyboard_arrow_left,
-                          size: 24,
-                        ),
-                        Text(
-                          'Pay',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
+                  editOrder
+                      ? MaterialButton(
+                          child: Row(
+                            children: <Widget>[
+                              Icon(
+                                Icons.keyboard_arrow_left,
+                                size: 24,
+                              ),
+                              Text(
+                                'Pay',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                      ],
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        editOrder = false;
-                      });
-                    },
-                    height: 32,
-                    minWidth: 0,
-                    padding: EdgeInsets.only(left: 4, right: 4),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  )
+                          onPressed: () {
+                            setState(() {
+                              editOrder = false;
+                            });
+                          },
+                          height: 32,
+                          minWidth: 0,
+                          padding: EdgeInsets.only(left: 4, right: 4),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        )
                       : SvgPicture.asset(
-                    'assets/images/payeverlogoandname.svg',
-                    color: iconColor(),
-                    height: 16,
-                  ),
+                          'assets/images/payeverlogoandname.svg',
+                          color: iconColor(),
+                          height: 16,
+                        ),
                   Spacer(),
-                  isOrderApproved ? MaterialButton(
-                    child: Row(
-                      children: <Widget>[
-                        Text(
-                          state.channelSetFlow != null ? '$currency${state.channelSetFlow.amount.toStringAsFixed(2)}': '',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
+                  isOrderApproved
+                      ? MaterialButton(
+                          child: Row(
+                            children: <Widget>[
+                              Text(
+                                state.channelSetFlow != null
+                                    ? '$currency${state.channelSetFlow.amount.toStringAsFixed(2)}'
+                                    : '',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              Icon(
+                                Icons.keyboard_arrow_down,
+                                size: 16,
+                              ),
+                            ],
                           ),
-                        ),
-                        Icon(
-                          Icons.keyboard_arrow_down,
-                          size: 16,
-                        ),
-                      ],
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        editOrder = !editOrder;
-                      });
-                    },
-                    height: 32,
-                    minWidth: 0,
-                    padding: EdgeInsets.only(left: 4, right: 4),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  ): Container(),
+                          onPressed: () {
+                            setState(() {
+                              editOrder = !editOrder;
+                            });
+                          },
+                          height: 32,
+                          minWidth: 0,
+                          padding: EdgeInsets.only(left: 4, right: 4),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        )
+                      : Container(),
                   Spacer(),
                   MaterialButton(
                     color: overlayBackground(),
@@ -277,7 +291,8 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                       setState(() {
                         switchCheckout = true;
                       });
-                    }, //callback when button is clicked
+                    },
+                    //callback when button is clicked
                     height: 32,
                     minWidth: 0,
                     padding: EdgeInsets.symmetric(horizontal: 8),
@@ -297,34 +312,42 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
               child: SingleChildScrollView(
                 child: Column(
                   children: <Widget>[
-                    editOrder ? Container(
-                        width: Measurements.width,
-                        padding: EdgeInsets.only(left: 16, right: 16, top: 16,),
-                        child: _editOrderView(state)
-                    )
+                    editOrder
+                        ? Container(
+                            width: Measurements.width,
+                            padding: EdgeInsets.only(
+                              left: 16,
+                              right: 16,
+                              top: 16,
+                            ),
+                            child: _editOrderView(state))
                         : Container(
-                      width: Measurements.width,
-                      padding: EdgeInsets.only(left: 16, right: 16, bottom: 16,),
-                      child: Column(
-                        children: <Widget>[
-                          _orderView(state),
-                          _divider,
-                          _accountView(state),
-                          _divider,
-                          _billingView(state),
-                          _divider,
-                          _selectPaymentView(state),
-                          _divider,
-                          _sendToDeviceView(state),
-                          _divider,
-                          _paymentOptionView(state),
-                          _divider,
-                          _addressView(state),
-                          _divider,
-                          _orderDetailView(state),
-                        ],
-                      ),
-                    ),
+                            width: Measurements.width,
+                            padding: EdgeInsets.only(
+                              left: 16,
+                              right: 16,
+                              bottom: 16,
+                            ),
+                            child: Column(
+                              children: <Widget>[
+                                _orderView(state),
+                                _divider,
+                                _accountView(state),
+                                _divider,
+                                _billingView(state),
+                                _divider,
+                                _selectPaymentView(state),
+                                _divider,
+                                _sendToDeviceView(state),
+                                _divider,
+                                _paymentOptionView(state),
+                                _divider,
+                                _addressView(state),
+                                _divider,
+                                _orderDetailView(state),
+                              ],
+                            ),
+                          ),
                   ],
                 ),
               ),
@@ -336,14 +359,18 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
   }
 
   Widget _cautionTestMode(WorkshopScreenState state) {
-    String title = 'Caution. Your checkout is in test mode. You just can test but there will be no regular transactions. In order to have real transactions please switch your checkout to live.';
+    String title =
+        'Caution. Your checkout is in test mode. You just can test but there will be no regular transactions. In order to have real transactions please switch your checkout to live.';
     return Visibility(
         visible: state.defaultCheckout.settings.testingMode,
         child: Container(
           padding: const EdgeInsets.all(10.0),
           color: Colors.deepOrange,
-          child: Text(title, style: TextStyle(color: Colors.white),),)
-    );
+          child: Text(
+            title,
+            style: TextStyle(color: Colors.white),
+          ),
+        ));
   }
 
   Widget _editOrderView(WorkshopScreenState state) {
@@ -362,8 +389,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                     fontSize: 16,
                     fontWeight: FontWeight.w400,
                   ),
-                  onChanged: (val) {
-                  },
+                  onChanged: (val) {},
                   initialValue: '',
                   decoration: InputDecoration(
                     prefixIcon: Container(
@@ -379,7 +405,8 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                       ),
                     ),
                     contentPadding: EdgeInsets.symmetric(vertical: 4),
-                    labelText: Language.getCartStrings('checkout_cart_edit.form.label.amount'),
+                    labelText: Language.getCartStrings(
+                        'checkout_cart_edit.form.label.amount'),
                     labelStyle: TextStyle(
                       color: Colors.grey,
                     ),
@@ -407,11 +434,11 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                   style: TextStyle(
                     fontSize: 16,
                   ),
-                  onChanged: (val) {
-                  },
+                  onChanged: (val) {},
                   initialValue: '',
                   decoration: InputDecoration(
-                    labelText: Language.getCartStrings('checkout_cart_edit.form.label.reference'),
+                    labelText: Language.getCartStrings(
+                        'checkout_cart_edit.form.label.reference'),
                     labelStyle: TextStyle(
                       color: Colors.grey,
                     ),
@@ -427,7 +454,8 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                         width: 0.5,
                       ),
                     ),
-                    contentPadding: EdgeInsets.only(left: 16, right: 16, top: 0, bottom: 0),
+                    contentPadding:
+                        EdgeInsets.only(left: 16, right: 16, top: 0, bottom: 0),
                   ),
                   keyboardType: TextInputType.text,
                 ),
@@ -454,20 +482,22 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                 borderRadius: BorderRadius.circular(4),
               ),
               color: Colors.black87,
-              child: state.isUpdating ?
-              CircularProgressIndicator() :
-              Text(
-                'Save',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
+              child: state.isUpdating
+                  ? CircularProgressIndicator()
+                  : Text(
+                      'Save',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
             ),
           ),
         ),
-        SizedBox(height: 20,),
+        SizedBox(
+          height: 20,
+        ),
       ],
     );
   }
@@ -484,7 +514,8 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
           children: <Widget>[
             _cautionTestMode(state),
             WorkshopHeader(
-              title: Language.getCheckoutStrings('checkout_order_summary.title'),
+              title:
+                  Language.getCheckoutStrings('checkout_order_summary.title'),
               isExpanded: _selectedSectionIndex == 0,
               isApproved: isOrderApproved,
               onTap: () {
@@ -505,8 +536,10 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                     child: Column(
                       children: <Widget>[
                         BlurEffectView(
-                          color:overlayRow(),
-                          borderRadius: BorderRadius.only(topLeft:Radius.circular(4), topRight: Radius.circular(4)),
+                          color: overlayRow(),
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(4),
+                              topRight: Radius.circular(4)),
                           child: Container(
                             height: 50,
                             child: TextFormField(
@@ -519,10 +552,10 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                                 amount = double.parse(val);
                               },
                               validator: (text) {
-                                if (text.isEmpty || double.parse(text) <= 0){
+                                if (text.isEmpty || double.parse(text) <= 0) {
                                   return 'Amount required';
                                 }
-                                if (double.parse(text) < 1){
+                                if (double.parse(text) < 1) {
                                   return 'Correct Amount required';
                                 }
                                 return null;
@@ -540,8 +573,10 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                                     ),
                                   ),
                                 ),
-                                contentPadding: EdgeInsets.symmetric(vertical: 4),
-                                labelText: Language.getCartStrings('checkout_cart_edit.form.label.amount'),
+                                contentPadding:
+                                    EdgeInsets.symmetric(vertical: 4),
+                                labelText: Language.getCartStrings(
+                                    'checkout_cart_edit.form.label.amount'),
                                 labelStyle: TextStyle(
                                   color: Colors.grey,
                                 ),
@@ -559,14 +594,19 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                                 ),
                                 isDense: true,
                               ),
-                              keyboardType: TextInputType.numberWithOptions(decimal: true),
+                              keyboardType: TextInputType.numberWithOptions(
+                                  decimal: true),
                             ),
                           ),
                         ),
-                        SizedBox(height: 2,),
+                        SizedBox(
+                          height: 2,
+                        ),
                         BlurEffectView(
-                          color:overlayRow(),
-                          borderRadius: BorderRadius.only(bottomLeft:Radius.circular(4), bottomRight: Radius.circular(4)),
+                          color: overlayRow(),
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(4),
+                              bottomRight: Radius.circular(4)),
                           child: Container(
                             height: 50,
                             padding: EdgeInsets.only(left: 4, right: 4),
@@ -581,13 +621,14 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                               },
                               initialValue: reference,
                               validator: (text) {
-                                if (text.isEmpty){
+                                if (text.isEmpty) {
                                   return 'Reference required';
                                 }
                                 return null;
                               },
                               decoration: InputDecoration(
-                                labelText: Language.getCartStrings('checkout_cart_edit.form.label.reference'),
+                                labelText: Language.getCartStrings(
+                                    'checkout_cart_edit.form.label.reference'),
                                 labelStyle: TextStyle(
                                   color: Colors.grey,
                                 ),
@@ -603,7 +644,8 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                                     width: 0.5,
                                   ),
                                 ),
-                                contentPadding: EdgeInsets.only(left: 12, right: 12, top: 4, bottom: 4),
+                                contentPadding: EdgeInsets.only(
+                                    left: 12, right: 12, top: 4, bottom: 4),
                               ),
                               keyboardType: TextInputType.text,
                             ),
@@ -620,29 +662,34 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                     child: SizedBox.expand(
                       child: MaterialButton(
                         onPressed: () {
-                          if (_formKeyOrder.currentState.validate() && !state.isUpdating) {
+                          if (_formKeyOrder.currentState.validate() &&
+                              !state.isUpdating) {
                             _selectedSectionIndex = 0;
-                            screenBloc.add(
-                                PatchCheckoutFlowOrderEvent(body: {'amount': amount, 'reference': reference}));
+                            screenBloc.add(PatchCheckoutFlowOrderEvent(body: {
+                              'amount': amount,
+                              'reference': reference
+                            }));
                           }
                         },
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(4),
                         ),
                         color: overlayBackground(),
-                        child: state.isUpdating && state.updatePayflowIndex == 0 ?
-                        CircularProgressIndicator() :
-                        Text(
-                          'Next Step',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
+                        child: state.isUpdating && state.updatePayflowIndex == 0
+                            ? CircularProgressIndicator()
+                            : Text(
+                                'Next Step',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
                       ),
                     ),
                   ),
-                  SizedBox(height: 20,),
+                  SizedBox(
+                    height: 20,
+                  ),
                 ],
               ),
             ),
@@ -654,7 +701,10 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
 
   Widget _orderDetailView(WorkshopScreenState state) {
     return Container(
-      padding: EdgeInsets.only(top: 16, bottom: 16,),
+      padding: EdgeInsets.only(
+        top: 16,
+        bottom: 16,
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -663,7 +713,8 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
             flex: 1,
             child: Container(
               child: Text(
-                Language.getCheckoutStrings('checkout_order_summary.title').toUpperCase(),
+                Language.getCheckoutStrings('checkout_order_summary.title')
+                    .toUpperCase(),
                 style: TextStyle(
                   fontSize: 12,
                   fontFamily: 'Helvetica Neue',
@@ -680,7 +731,9 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                   children: <Widget>[
                     Container(
                       child: Text(
-                        Language.getCartStrings('checkout_cart_edit.form.label.subtotal').toUpperCase(),
+                        Language.getCartStrings(
+                                'checkout_cart_edit.form.label.subtotal')
+                            .toUpperCase(),
                         style: TextStyle(
                           fontSize: 12,
                           fontFamily: 'Helvetica Neue',
@@ -706,7 +759,9 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                   children: <Widget>[
                     Container(
                       child: Text(
-                        Language.getCartStrings('checkout_cart_view.payment_costs').toUpperCase(),
+                        Language.getCartStrings(
+                                'checkout_cart_view.payment_costs')
+                            .toUpperCase(),
                         style: TextStyle(
                           fontSize: 12,
                           fontFamily: 'Helvetica Neue',
@@ -732,7 +787,8 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                   children: <Widget>[
                     Container(
                       child: Text(
-                        Language.getCartStrings('checkout_cart_view.shipping').toUpperCase(),
+                        Language.getCartStrings('checkout_cart_view.shipping')
+                            .toUpperCase(),
                         style: TextStyle(
                           fontSize: 12,
                           fontFamily: 'Helvetica Neue',
@@ -758,7 +814,8 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                   children: <Widget>[
                     Container(
                       child: Text(
-                        Language.getCartStrings('checkout_cart_view.total').toUpperCase(),
+                        Language.getCartStrings('checkout_cart_view.total')
+                            .toUpperCase(),
                         style: TextStyle(
                           fontSize: 13,
                           fontFamily: 'Helvetica Neue',
@@ -767,7 +824,9 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                     ),
                     Container(
                       child: Text(
-                        state.channelSetFlow != null ? '$currency${state.channelSetFlow.amount.toStringAsFixed(2)}': '',
+                        state.channelSetFlow != null
+                            ? '$currency${state.channelSetFlow.amount.toStringAsFixed(2)}'
+                            : '',
                         style: TextStyle(
                           fontSize: 13,
                           fontFamily: 'Helvetica Neue',
@@ -815,12 +874,18 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                       children: <Widget>[
                         BlurEffectView(
                             color: overlayRow(),
-                            borderRadius: BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)),
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(4),
+                                topRight: Radius.circular(4)),
                             child: _emailField(state)),
-                        SizedBox(height: 2,),
+                        SizedBox(
+                          height: 2,
+                        ),
                         BlurEffectView(
                           color: overlayRow(),
-                          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(4), bottomRight: Radius.circular(4)),
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(4),
+                              bottomRight: Radius.circular(4)),
                           child: GoogleMapAddressField(
                             googleAutocomplete: googleAutocomplete,
                             height: 50,
@@ -849,18 +914,22 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                           borderRadius: BorderRadius.circular(4),
                         ),
                         color: overlayBackground(),
-                        child: state.isUpdating && state.updatePayflowIndex == 1 ?
-                        CircularProgressIndicator() : Text(
-                          Language.getCheckoutStrings('checkout_send_flow.action.continue'),
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
+                        child: state.isUpdating && state.updatePayflowIndex == 1
+                            ? CircularProgressIndicator()
+                            : Text(
+                                Language.getCheckoutStrings(
+                                    'checkout_send_flow.action.continue'),
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
                       ),
                     ),
                   ),
-                  SizedBox(height: 20,),
+                  SizedBox(
+                    height: 20,
+                  ),
                 ],
               ),
             ),
@@ -899,9 +968,13 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                     children: <Widget>[
                       BlurEffectView(
                           color: overlayRow(),
-                          borderRadius: BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)),
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(4),
+                              topRight: Radius.circular(4)),
                           child: _emailField(state)),
-                      SizedBox(height: 2,),
+                      SizedBox(
+                        height: 2,
+                      ),
                       PersonalNameField(
                         salutation: salutation,
                         firstName: firstName,
@@ -923,7 +996,9 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                           });
                         },
                       ),
-                      SizedBox(height: 2,),
+                      SizedBox(
+                        height: 2,
+                      ),
                       AddressFieldGroup(
                         googleAutocomplete: googleAutocomplete,
                         city: city,
@@ -957,7 +1032,9 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                           });
                         },
                       ),
-                      SizedBox(height: 2,),
+                      SizedBox(
+                        height: 2,
+                      ),
                       BlurEffectView(
                         color: overlayRow(),
                         radius: 0,
@@ -989,16 +1066,21 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                                   width: 0.5,
                                 ),
                               ),
-                              contentPadding: EdgeInsets.symmetric(horizontal: 12,  vertical: 4),
+                              contentPadding: EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 4),
                             ),
                             keyboardType: TextInputType.text,
                           ),
                         ),
                       ),
-                      SizedBox(height: 2,),
+                      SizedBox(
+                        height: 2,
+                      ),
                       BlurEffectView(
                         color: overlayRow(),
-                        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(4), bottomRight: Radius.circular(4)),
+                        borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(4),
+                            bottomRight: Radius.circular(4)),
                         child: Container(
                           height: 50,
                           alignment: Alignment.center,
@@ -1028,7 +1110,8 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                                   width: 0.5,
                                 ),
                               ),
-                              contentPadding: EdgeInsets.only(left: 12, right: 12, top: 4, bottom: 4),
+                              contentPadding: EdgeInsets.only(
+                                  left: 12, right: 12, top: 4, bottom: 4),
                             ),
                             keyboardType: TextInputType.text,
                           ),
@@ -1051,7 +1134,8 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                           'country': 'DE',
                           'email': 'abiantgmbh@payever.de',
                           'first_name': 'Artur',
-                          'full_address': 'Germaniastraße, 12099, 12099 Berlin, Germany',
+                          'full_address':
+                              'Germaniastraße, 12099, 12099 Berlin, Germany',
                           'id': state.channelSetFlow.billingAddress.id,
                           'last_name': 'S',
                           'phone': phone,
@@ -1066,7 +1150,6 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                         };
                         screenBloc
                             .add(PatchCheckoutFlowAddressEvent(body: body));
-
 
                         // if (countryCode == null || countryCode.isEmpty) {
                         //   Fluttertoast.showToast(msg: 'Country is needed');
@@ -1105,19 +1188,22 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                         borderRadius: BorderRadius.circular(4),
                       ),
                       color: overlayBackground(),
-                      child: state.isUpdating && state.updatePayflowIndex == 2 ?
-                      CircularProgressIndicator() :
-                      Text(
-                        Language.getCheckoutStrings('checkout_send_flow.action.continue'),
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
+                      child: state.isUpdating && state.updatePayflowIndex == 2
+                          ? CircularProgressIndicator()
+                          : Text(
+                              Language.getCheckoutStrings(
+                                  'checkout_send_flow.action.continue'),
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
                     ),
                   ),
                 ),
-                SizedBox(height: 20,),
+                SizedBox(
+                  height: 20,
+                ),
               ],
             ),
           ),
@@ -1142,7 +1228,11 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
         },
         onTapPay: (Map body) {
           if (_formKeyPayment.currentState.validate() && !state.isUpdating) {
-            List<CheckoutPaymentOption>payments = state.channelSetFlow.paymentOptions.where((element) => element.id == state.channelSetFlow.paymentOptionId).toList();
+            List<CheckoutPaymentOption> payments = state
+                .channelSetFlow.paymentOptions
+                .where((element) =>
+                    element.id == state.channelSetFlow.paymentOptionId)
+                .toList();
             if (payments == null || payments.isEmpty) {
               return;
             } else {
@@ -1150,7 +1240,6 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
               if (paymentMethod == null) {
                 return;
               } else if (paymentMethod.contains('santander')) {
-
               } else if (paymentMethod.contains('cash')) {
                 screenBloc.add(PayWireTransferEvent());
               } else if (paymentMethod.contains('instant')) {
@@ -1161,7 +1250,8 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
         },
         onTapChangePayment: (num id) {
           print(id);
-          screenBloc.add(PatchCheckoutFlowOrderEvent(body:{'payment_option_id': '$id'}));
+          screenBloc.add(
+              PatchCheckoutFlowOrderEvent(body: {'payment_option_id': '$id'}));
         },
       ),
     );
@@ -1173,8 +1263,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
       child: Column(
         children: <Widget>[
           WorkshopHeader(
-            title: Language.getCheckoutStrings(
-                'SEND TO DEVICE'),
+            title: Language.getCheckoutStrings('SEND TO DEVICE'),
             isExpanded: _selectedSectionIndex == 3,
             isApproved: isOrderApproved,
             onTap: () {
@@ -1198,14 +1287,14 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                         child: TextFormField(
                           style: TextStyle(
                             fontSize: 16,
-                            color:Colors.black87,
+                            color: Colors.black87,
                             fontWeight: FontWeight.w400,
                           ),
-                          onChanged: (val) {
-                          },
+                          onChanged: (val) {},
                           initialValue: '',
                           decoration: InputDecoration(
-                            labelText: Language.getCheckoutStrings('checkout_send_flow.form.phoneTo.placeholder'),
+                            labelText: Language.getCheckoutStrings(
+                                'checkout_send_flow.form.phoneTo.placeholder'),
                             labelStyle: TextStyle(
                               color: Colors.grey,
                             ),
@@ -1221,25 +1310,29 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                                 width: 0.5,
                               ),
                             ),
-                            contentPadding: EdgeInsets.only(left: 16, right: 16, top: 0, bottom: 0),
+                            contentPadding: EdgeInsets.only(
+                                left: 16, right: 16, top: 0, bottom: 0),
                           ),
                           keyboardType: TextInputType.phone,
                         ),
                       ),
-                      Divider(height: 1,color: Colors.black54,),
+                      Divider(
+                        height: 1,
+                        color: Colors.black54,
+                      ),
                       Container(
                         padding: EdgeInsets.only(left: 4, right: 4),
                         child: TextFormField(
                           style: TextStyle(
                             fontSize: 16,
-                            color:Colors.black87,
+                            color: Colors.black87,
                             fontWeight: FontWeight.w400,
                           ),
-                          onChanged: (val) {
-                          },
+                          onChanged: (val) {},
                           initialValue: '',
                           decoration: InputDecoration(
-                            labelText: Language.getCheckoutStrings('checkout_send_flow.form.email.placeholder'),
+                            labelText: Language.getCheckoutStrings(
+                                'checkout_send_flow.form.email.placeholder'),
                             labelStyle: TextStyle(
                               color: Colors.grey,
                             ),
@@ -1255,7 +1348,8 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                                 width: 0.5,
                               ),
                             ),
-                            contentPadding: EdgeInsets.only(left: 16, right: 16, top: 0, bottom: 0),
+                            contentPadding: EdgeInsets.only(
+                                left: 16, right: 16, top: 0, bottom: 0),
                           ),
                           keyboardType: TextInputType.emailAddress,
                         ),
@@ -1281,16 +1375,17 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(4),
                             ),
-                            child: state.isUpdating ?
-                            CircularProgressIndicator() :
-                            Text(
-                              Language.getCheckoutStrings('checkout_send_flow.action.skip'),
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.black87,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
+                            child: state.isUpdating
+                                ? CircularProgressIndicator()
+                                : Text(
+                                    Language.getCheckoutStrings(
+                                        'checkout_send_flow.action.skip'),
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black87,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
                           ),
                         ),
                       ),
@@ -1306,23 +1401,26 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                               borderRadius: BorderRadius.circular(4),
                             ),
                             color: Colors.black87,
-                            child: state.isUpdating ?
-                            CircularProgressIndicator() :
-                            Text(
-                              Language.getCheckoutStrings('checkout_send_flow.action.continue'),
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
+                            child: state.isUpdating
+                                ? CircularProgressIndicator()
+                                : Text(
+                                    Language.getCheckoutStrings(
+                                        'checkout_send_flow.action.continue'),
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
                           ),
                         ),
                       ),
                     ],
                   ),
                 ),
-                SizedBox(height: 20,),
+                SizedBox(
+                  height: 20,
+                ),
               ],
             ),
           ),
@@ -1363,14 +1461,14 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                         child: TextFormField(
                           style: TextStyle(
                             fontSize: 16,
-                            color:Colors.black54,
+                            color: Colors.black54,
                             fontWeight: FontWeight.w400,
                           ),
-                          onChanged: (val) {
-                          },
+                          onChanged: (val) {},
                           initialValue: '',
                           decoration: InputDecoration(
-                            contentPadding: EdgeInsets.only(left: 16, right: 16),
+                            contentPadding:
+                                EdgeInsets.only(left: 16, right: 16),
                             labelText: 'Mobile number',
                             labelStyle: TextStyle(
                               color: Colors.grey,
@@ -1380,20 +1478,23 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                           keyboardType: TextInputType.text,
                         ),
                       ),
-                      Divider(height: 1,color: Colors.black54,),
+                      Divider(
+                        height: 1,
+                        color: Colors.black54,
+                      ),
                       Container(
                         height: 50,
                         child: TextFormField(
                           style: TextStyle(
                             fontSize: 16,
-                            color:Colors.black54,
+                            color: Colors.black54,
                             fontWeight: FontWeight.w400,
                           ),
-                          onChanged: (val) {
-                          },
+                          onChanged: (val) {},
                           initialValue: '',
                           decoration: InputDecoration(
-                            contentPadding: EdgeInsets.only(left: 16, right: 16),
+                            contentPadding:
+                                EdgeInsets.only(left: 16, right: 16),
                             labelText: 'E-Mail Address',
                             labelStyle: TextStyle(
                               color: Colors.grey,
@@ -1416,50 +1517,52 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
                       Flexible(
                         child: SizedBox.expand(
                           child: MaterialButton(
-                            onPressed: () {
-                            },
+                            onPressed: () {},
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(4),
                             ),
-                            child: state.isUpdating ?
-                            CircularProgressIndicator() :
-                            Text(
-                              Language.getCheckoutStrings('checkout_send_flow.action.skip'),
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.black87,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
+                            child: state.isUpdating
+                                ? CircularProgressIndicator()
+                                : Text(
+                                    Language.getCheckoutStrings(
+                                        'checkout_send_flow.action.skip'),
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black87,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
                           ),
                         ),
                       ),
                       Flexible(
                         child: SizedBox.expand(
                           child: MaterialButton(
-                            onPressed: () {
-                            },
+                            onPressed: () {},
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(4),
                             ),
                             color: Colors.black87,
-                            child: state.isUpdating ?
-                            CircularProgressIndicator() :
-                            Text(
-                              Language.getCheckoutStrings('checkout_send_flow.action.continue'),
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
+                            child: state.isUpdating
+                                ? CircularProgressIndicator()
+                                : Text(
+                                    Language.getCheckoutStrings(
+                                        'checkout_send_flow.action.continue'),
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
                           ),
                         ),
                       ),
                     ],
                   ),
                 ),
-                SizedBox(height: 20,),
+                SizedBox(
+                  height: 20,
+                ),
               ],
             ),
           ),
@@ -1473,7 +1576,6 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
       visible: isVisible(state, 'address'),
       child: Container(),
     );
-
   }
 
   get _divider {
@@ -1485,7 +1587,9 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
   }
 
   bool isVisible(WorkshopScreenState state, String code) {
-    List<Section> sections = state.defaultCheckout.sections.where((element) => (element.code == code)).toList();
+    List<Section> sections = state.defaultCheckout.sections
+        .where((element) => (element.code == code))
+        .toList();
     if (sections.length > 0)
       return sections.first.enabled;
     else
@@ -1509,7 +1613,8 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
               },
               initialValue: isAccountApproved ? email : '',
               decoration: InputDecoration(
-                contentPadding: EdgeInsets.symmetric(horizontal: 12,  vertical: 4),
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                 labelText: 'E-Mail Address',
                 labelStyle: TextStyle(
                   color: Colors.grey,
@@ -1525,10 +1630,7 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
               : InkWell(
                   onTap: () {
                     if (state.isValid && state.isAvailable) {
-
-                    } else {
-
-                    }
+                    } else {}
                   },
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -1542,14 +1644,14 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
   }
 
   void initialize(ChannelSetFlow channelSetFlow) {
-    if (channelSetFlow == null)
-      return;
+    if (channelSetFlow == null) return;
     amount = channelSetFlow.amount == 0 ? 0 : channelSetFlow.amount.toDouble();
-    reference = channelSetFlow.reference != null ? channelSetFlow.reference : '';
+    reference =
+        channelSetFlow.reference != null ? channelSetFlow.reference : '';
     BillingAddress billingAddress = channelSetFlow.billingAddress;
     if (billingAddress != null) {
       email = billingAddress.email;
-      googleAutocomplete = billingAddress.fullAddress  ??'';
+      googleAutocomplete = billingAddress.fullAddress ?? '';
       countryCode = billingAddress.country ?? '';
       city = billingAddress.city ?? '';
       street = billingAddress.street ?? '';
@@ -1579,7 +1681,8 @@ class _WorkshopScreen1State extends State<WorkshopScreen1> {
   }
 
   showPaySuccessDialog(WorkshopScreenState state) {
-    if (state.channelSetFlow.payment == null || state.channelSetFlow.payment.paymentDetails == null) return;
+    if (state.channelSetFlow.payment == null ||
+        state.channelSetFlow.payment.paymentDetails == null) return;
 
     showCupertinoDialog(
       context: context,

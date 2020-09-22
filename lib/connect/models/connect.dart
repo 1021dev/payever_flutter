@@ -1,5 +1,7 @@
+import 'package:json_annotation/json_annotation.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/transactions/models/currency.dart';
+part 'connect.g.dart';
 
 class ConnectModel {
   String createdAt;
@@ -204,6 +206,7 @@ class LinkModel {
 
 }
 
+@JsonSerializable()
 class CheckoutPaymentOption {
   bool acceptFee = false;
   num contractLength;
@@ -230,6 +233,10 @@ class CheckoutPaymentOption {
   num variableFee;
   List<Variant> variants = [];
   bool isCheckedAds = false;
+
+  CheckoutPaymentOption();
+  factory CheckoutPaymentOption.fromJson(Map<String, dynamic> json) => _$CheckoutPaymentOptionFromJson(json);
+  Map<String, dynamic> toJson() => _$CheckoutPaymentOptionToJson(this);
 
   CheckoutPaymentOption.fromMap(dynamic obj) {
     acceptFee = obj['accept_fee'];
@@ -279,9 +286,12 @@ class CheckoutPaymentOption {
 
 }
 
+@JsonSerializable()
 class CurrencyOption {
   List<String> countries = [];
   List<String> currencies = [];
+
+  CurrencyOption();
 
   CurrencyOption.fromMap(dynamic obj) {
     if (obj['countries'] != null) {
@@ -297,6 +307,10 @@ class CurrencyOption {
       });
     }
   }
+
+  factory CurrencyOption.fromJson(Map<String, dynamic> json) => _$CurrencyOptionFromJson(json);
+
+  Map<String, dynamic> toJson() => _$CurrencyOptionToJson(this);
 }
 
 class PaymentVariant {
@@ -316,6 +330,7 @@ class PaymentVariant {
   }
 }
 
+@JsonSerializable()
 class Variant {
   bool acceptFee;
   bool completed;
@@ -335,6 +350,8 @@ class Variant {
   String status;
   String uuid;
   num variableFee;
+
+  Variant();
 
   Variant.fromMap(dynamic obj) {
     acceptFee = obj['accept_fee'] ?? false;
@@ -356,6 +373,10 @@ class Variant {
     uuid = obj['uuid'];
     variableFee = obj['variable_fee'];
   }
+
+  factory Variant.fromJson(Map<String, dynamic> json) => _$VariantFromJson(json);
+
+  Map<String, dynamic> toJson() => _$VariantToJson(this);
 }
 
 class MissingStep {
