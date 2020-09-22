@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:payever/checkout/models/models.dart';
 import 'package:payever/checkout/views/workshop/widget/payment_option.dart';
 import 'package:payever/checkout/widgets/workshop_header_item.dart';
+import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/connect/models/connect.dart';
 import 'package:payever/theme.dart';
@@ -31,36 +32,32 @@ class PaymentSelectView extends StatefulWidget {
 }
 
 class _PaymentSelectViewState extends State<PaymentSelectView> {
-  // final ChannelSetFlow channelSetFlow;
-  // List<CheckoutPaymentOption> paymentOptions;
-  // num paymentOptionId;
-  //
-  // _PaymentSelectViewState({this.channelSetFlow}){
-  //   paymentOptions = channelSetFlow.paymentOptions;
-  //   paymentOptionId = channelSetFlow.paymentOptionId;
-  // }
 
   @override
   Widget build(BuildContext context) {
+    ChannelSetFlow channelSetFlow = widget.channelSetFlow;
+    BillingAddress billingAddress = channelSetFlow.billingAddress;
+
     List<CheckoutPaymentOption> paymentOptions;
     num paymentOptionId;
-    paymentOptions = widget.channelSetFlow.paymentOptions;
-    paymentOptionId = widget.channelSetFlow.paymentOptionId;
+    paymentOptions = channelSetFlow.paymentOptions;
+    paymentOptionId = channelSetFlow.paymentOptionId;
     if (!widget.enable || paymentOptions == null || paymentOptions.isEmpty) {
       return Container();
     }
     String payBtnTitle, paymentMethod;
     List<CheckoutPaymentOption>payments = paymentOptions.where((element) => element.id == paymentOptionId).toList();
-
+    CheckoutPaymentOption paymentOption;
     if (payments == null || payments.isEmpty) {
       payBtnTitle = 'Continue';
     } else {
-      paymentMethod = payments.first.paymentMethod;
+      paymentOption = payments.first;
+      paymentMethod = paymentOption.paymentMethod;
       if (paymentMethod == null) {
         payBtnTitle = 'Continue';
       } else if (paymentMethod.contains('santander')) {
         payBtnTitle =
-        'Buy now for ${Measurements.currency(widget.channelSetFlow.currency)}${widget.channelSetFlow.amount}';
+        'Buy now for ${Measurements.currency(channelSetFlow.currency)}${channelSetFlow.amount}';
       } else if (paymentMethod.contains('cash')) {
         payBtnTitle = 'Pay now';
       } else if (paymentMethod.contains('instant')) {
@@ -88,8 +85,8 @@ class _PaymentSelectViewState extends State<PaymentSelectView> {
                   itemBuilder: (context, index) {
                     CheckoutPaymentOption payment = paymentOptions[index];
                     return PaymentOptionCell(
-                      channelSetFlow: widget.channelSetFlow,
-                      payment: payment,
+                      channelSetFlow: channelSetFlow,
+                      paymentOption: payment,
                       isSelected: paymentOptionId == payment.id,
                       onTapChangePayment: (id) => widget.onTapChangePayment(id),
                     );
@@ -110,12 +107,50 @@ class _PaymentSelectViewState extends State<PaymentSelectView> {
                       if (paymentMethod == null || paymentMethod.isEmpty) return;
                       Map<String, dynamic>body = {};
                       if (paymentMethod.contains('instant')) {
-                        Map<String, dynamic>payment = {};
-                        Map<String, dynamic>paymentDetails = {};
+                        if (billingAddress == null) return;
+
+                        Map<String, dynamic> address = {
+                          'city': billingAddress.city,
+                          'country': billingAddress.country,
+                          'email': billingAddress.email,
+                          'firstName': billingAddress.firstName,
+                          'lastName': billingAddress.lastName,
+                          'phone': billingAddress.phone,
+                          'salutation': billingAddress.salutation,
+                          'street': billingAddress.street,
+                          'zipCode': billingAddress.zipCode,
+                        };
+
+                        Map<String, dynamic> payment = {
+                          'address': address,
+                          'amount': channelSetFlow.amount,
+                          'apiCallId': channelSetFlow.apiCallId,
+                          'businessId': channelSetFlow.businessId,
+                          'businessName': channelSetFlow.businessName,
+                          'channel': channelSetFlow.channel,
+                          'channelSetId':
+                              channelSetFlow.channelSetId,
+                          'currency': channelSetFlow.currency,
+                          'customerEmail': billingAddress.email,
+                          'customerName': '${billingAddress.firstName} ${billingAddress.lastName}',
+                          'deliveryFee': channelSetFlow.shippingFee,
+                          'flowId': channelSetFlow.id,
+                          'reference': channelSetFlow.reference,
+                          'shippingAddress': channelSetFlow.shippingAddresses,
+                          'total': channelSetFlow.total
+                        };
+
+                        Map<String, dynamic> paymentDetails = {
+                          'adsAgreement': paymentOption.isCheckedAds,
+                          'recipientHolder': channelSetFlow.businessName,
+                          'recipientIban': channelSetFlow.businessIban,
+                          'senderHolder': '${billingAddress.firstName} ${billingAddress.lastName}',
+                          'senderIban': channelSetFlow.businessIban,
+                        };
                         List<dynamic>paymentItems = [];
 
-                        paymentDetails['adsAgreement'] = false;
-                        paymentDetails['recipientHolder'] = false;
+                        body['payment'] = payment;
+                        body['paymentDetails'] = paymentDetails;
                         body['paymentItems'] = paymentItems;
                       }
                       widget.onTapPay(body);

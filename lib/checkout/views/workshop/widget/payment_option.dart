@@ -9,13 +9,13 @@ import 'package:payever/connect/models/connect.dart';
 import 'package:payever/theme.dart';
 
 class PaymentOptionCell extends StatefulWidget {
-  final CheckoutPaymentOption payment;
+  final CheckoutPaymentOption paymentOption;
   final bool isSelected;
   final ChannelSetFlow channelSetFlow;
   final Function onTapChangePayment;
 
   const PaymentOptionCell(
-      {this.payment, this.isSelected = false, this.onTapChangePayment, this.channelSetFlow});
+      {this.paymentOption, this.isSelected = false, this.onTapChangePayment, this.channelSetFlow});
 
   @override
   _PaymentOptionCellState createState() => _PaymentOptionCellState();
@@ -38,7 +38,7 @@ class _PaymentOptionCellState extends State<PaymentOptionCell> {
             child: Row(
               children: [
                 IconButton(
-                    onPressed: () => widget.onTapChangePayment(widget.payment.id),
+                    onPressed: () => widget.onTapChangePayment(widget.paymentOption.id),
                     icon: Icon(
                       widget.isSelected
                           ? Icons.check_circle
@@ -49,14 +49,14 @@ class _PaymentOptionCellState extends State<PaymentOptionCell> {
                 ),
                 Expanded(
                   child: Text(
-                    widget.payment.name.contains('instant') ? 'Instant payment' : widget.payment.name,
+                    widget.paymentOption.name.contains('instant') ? 'Instant payment' : widget.paymentOption.name,
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),
-                paymentType(widget.payment.paymentMethod),
+                paymentType(widget.paymentOption.paymentMethod),
                 SizedBox(
                   width: 8,
                 ),
@@ -77,13 +77,16 @@ class _PaymentOptionCellState extends State<PaymentOptionCell> {
       '${billingAddress.firstName ?? ''} ${billingAddress.lastName ?? ''}';
       if (name == ' ') name = '';
     }
-    if (widget.payment.paymentMethod.contains('instant')) {
+    if (widget.paymentOption.paymentMethod.contains('instant')) {
       return InstantPaymentView(
         isSelected: widget.isSelected,
         isSantander: false,
         name: name,
+        onChangedAds: (bool isCheckedAds){
+          widget.paymentOption.isCheckedAds = isCheckedAds;
+        },
       );
-    } else if (widget.payment.paymentMethod.contains('santander')) {
+    } else if (widget.paymentOption.paymentMethod.contains('santander')) {
       return InstantPaymentView(
         isSelected: widget.isSelected,
         isSantander: true,

@@ -89,6 +89,7 @@ class _PersonalNameFieldState extends State<PersonalNameField> {
                     widget.firstNameChanged(val);
                   },
                   initialValue: widget.firstName ?? '',
+                  textCapitalization: TextCapitalization.words,
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.only(left: 16, right: 16),
                     labelText: Language.getPosTpmStrings('First Name'),
@@ -123,6 +124,7 @@ class _PersonalNameFieldState extends State<PersonalNameField> {
                   onChanged: (val) {
                     widget.lastNameChanged(val);
                   },
+                  textCapitalization: TextCapitalization.words,
                   initialValue: widget.lastName ?? '',
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.only(left: 16, right: 16),

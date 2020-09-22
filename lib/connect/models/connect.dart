@@ -229,6 +229,7 @@ class CheckoutPaymentOption {
   String thumbnail2;
   num variableFee;
   List<Variant> variants = [];
+  bool isCheckedAds = false;
 
   CheckoutPaymentOption.fromMap(dynamic obj) {
     acceptFee = obj['accept_fee'];

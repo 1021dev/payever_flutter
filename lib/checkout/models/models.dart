@@ -497,7 +497,7 @@ class ChannelSetFlow {
   String shippingAddressId;
   List shippingAddresses = [];
   String shippingCategory;
-  num shippingFee;
+  num shippingFee = 0;
   String shippingMethodCode;
   String shippingMethodName;
   String shippingOptionName;
@@ -591,7 +591,7 @@ class ChannelSetFlow {
       });
     }
     shippingCategory = obj['shipping_category'];
-    shippingFee = obj['shipping_fee'];
+    shippingFee = obj['shipping_fee'] ?? 0;
     shippingMethodCode = obj['shipping_method_code'];
     shippingMethodName = obj['shipping_method_name'];
     shippingOptionName = obj['shipping_option_name'];

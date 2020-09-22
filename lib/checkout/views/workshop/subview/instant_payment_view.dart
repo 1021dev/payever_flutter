@@ -12,6 +12,7 @@ class InstantPaymentView extends StatefulWidget {
   final bool isSantander;
   final Function onChangedName;
   final Function onChangedIban;
+  final Function onChangedAds;
 
   InstantPaymentView(
       {this.isSelected,
@@ -19,6 +20,7 @@ class InstantPaymentView extends StatefulWidget {
       this.iban,
       this.onChangedName,
       this.onChangedIban,
+      this.onChangedAds,
       this.isSantander});
 
   @override
@@ -256,6 +258,7 @@ class _InstantPaymentViewState extends State<InstantPaymentView> {
               onTap: () {
                 setState(() {
                   isChecked = !isChecked;
+                  widget.onChangedAds(isChecked);
                 });
               },
               child: Icon(

@@ -2382,11 +2382,7 @@ class ApiService {
       print('$TAG - getCheckout()');
       dynamic response = await _client.getTypeless(
           '${Env.checkout}/api/business/$business/checkout',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -2419,11 +2415,7 @@ class ApiService {
           body: {
             'channel_set_id': channelSetId,
           },
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -2436,11 +2428,7 @@ class ApiService {
       print('$TAG - checkoutFlowStorage()');
       dynamic response = await _client.getTypeless(
           'https://media.payever.org/api/storage/flow_$channelSetId',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -2475,11 +2463,7 @@ class ApiService {
             'data': body,
             'expiresAt': dateString,
           },
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -2493,11 +2477,7 @@ class ApiService {
       print('$TAG - getCheckoutIntegrations()');
       dynamic response = await _client.getTypeless(
           '$checkoutBusiness$idBusiness$endIntegration',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -2510,11 +2490,7 @@ class ApiService {
       print('$TAG - getConnections()');
       dynamic response = await _client.getTypeless(
           '$checkoutBusiness$idBusiness/connection',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -2527,11 +2503,7 @@ class ApiService {
       print('$TAG - getCheckoutConnections()');
       dynamic response = await _client.getTypeless(
           '$checkoutBusiness$idBusiness$checkout$checkoutId/connection',
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -2545,11 +2517,7 @@ class ApiService {
       dynamic response = await _client.postTypeLess(
           '${Env.thirdPartyCommunication}/api/business/$idBusiness/connection/$checkoutId/action/get-numbers',
           body: {},
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
