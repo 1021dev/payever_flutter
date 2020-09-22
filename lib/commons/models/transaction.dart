@@ -104,7 +104,7 @@ class Collection {
     amount = obj[GlobalUtils.DB_TRANSACTIONS_C_AMOUNT];
 
     billingAddress =
-        BillingAddress.fromMap(obj[GlobalUtils.DB_TRANSACTIONS_C_BILLING]);
+        BillingAddress.fromJson(obj[GlobalUtils.DB_TRANSACTIONS_C_BILLING]);
     currency = obj[GlobalUtils.DB_TRANSACTIONS_C_CURRENCY];
     businessOptionId = obj[GlobalUtils.DB_TRANSACTIONS_C_BUS_OPT];
     businessUuid = obj[GlobalUtils.DB_TRANSACTIONS_C_BUS_UUID];
@@ -142,47 +142,44 @@ class Collection {
 
 @JsonSerializable()
 class BillingAddress {
+  @JsonKey(name: 'city')
   String city;
+  @JsonKey(name: 'country')
   String country;
+  @JsonKey(name: 'country_name')
   String countryName;
+  @JsonKey(name: 'email')
   String email;
+  @JsonKey(name: 'first_name')
   String firstName;
+  @JsonKey(name: 'last_name')
   String lastName;
+  @JsonKey(name: 'salutation')
   String salutation;
+  @JsonKey(name: 'street')
   String street;
+  @JsonKey(name: 'zip_code')
   String zipCode;
+  @JsonKey(name: 'id')
   String id;
+  @JsonKey(name: 'company')
   String company;
+  @JsonKey(name: 'full_address')
   String fullAddress;
+  @JsonKey(name: 'phone')
   String phone;
+  @JsonKey(name: 'social_security_number')
   String socialSecurityNumber;
+  @JsonKey(name: 'street_name')
   String streetName;
+  @JsonKey(name: 'street_number')
   String streetNumber;
+  @JsonKey(name: 'type')
   String type;
+  @JsonKey(name: 'user_uuid')
   String userUuid;
 
   BillingAddress();
-
-  BillingAddress.fromMap(dynamic obj) {
-    city = obj[GlobalUtils.DB_TRANSACTIONS_C_B_CITY];
-    country = obj[GlobalUtils.DB_TRANSACTIONS_C_B_COUNTRY];
-    countryName = obj[GlobalUtils.DB_TRANSACTIONS_C_B_COUNTRY_N];
-    email = obj[GlobalUtils.DB_TRANSACTIONS_C_B_EMAIL];
-    firstName = obj[GlobalUtils.DB_TRANSACTIONS_C_B_FIRST_NAME];
-    lastName = obj[GlobalUtils.DB_TRANSACTIONS_C_B_LAST_NAME];
-    salutation = obj[GlobalUtils.DB_TRANSACTIONS_C_B_SALUTATION];
-    street = obj[GlobalUtils.DB_TRANSACTIONS_C_B_STREET];
-    zipCode = obj[GlobalUtils.DB_TRANSACTIONS_C_B_ZIP_CODE];
-    id = obj['id'];
-    company = obj['company'];
-    fullAddress = obj['full_address'];
-    phone = obj['phone'];
-    socialSecurityNumber = obj['social_security_number'];
-    streetName = obj['street_name'];
-    streetNumber = obj['street_number'];
-    type = obj['type'];
-    userUuid = obj['user_uuid'];
-  }
 
   factory BillingAddress.fromJson(Map<String, dynamic> json) => _$BillingAddressFromJson(json);
 

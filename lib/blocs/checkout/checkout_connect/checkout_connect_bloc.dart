@@ -35,7 +35,7 @@ class CheckoutConnectScreenBloc extends Bloc<CheckoutConnectScreenEvent, Checkou
     dynamic paymentOptionsResponse = await api.getPaymentOptions(token);
     if (paymentOptionsResponse is List) {
       paymentOptionsResponse.forEach((element) {
-        paymentOptions.add(CheckoutPaymentOption.fromMap(element));
+        paymentOptions.add(CheckoutPaymentOption.fromJson(element));
       });
     }
 

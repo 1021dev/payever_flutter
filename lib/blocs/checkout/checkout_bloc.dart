@@ -121,7 +121,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     dynamic checkoutFlowResponse = await api.getCheckoutChannelSetFlow(token, langCode, state.channelSetFlow.id);
     ChannelSetFlow channelSetFlow;
     if (checkoutFlowResponse is Map) {
-      channelSetFlow = ChannelSetFlow.fromMap(checkoutFlowResponse);
+      channelSetFlow = ChannelSetFlow.fromJson(checkoutFlowResponse);
       if (channelSetFlow.reference.isNotEmpty && channelSetFlow.amount > 0) {
         Map<String, dynamic>body = {};
         body['flow'] = checkoutFlowResponse;
@@ -286,7 +286,8 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     dynamic checkoutFlowResponse = await api.getCheckoutFlow(
         token, langCode, channelSet.id);
     if (checkoutFlowResponse is Map) {
-      channelSetFlow = ChannelSetFlow.fromMap(checkoutFlowResponse);
+      // channelSetFlow = ChannelSetFlow.fromMap(checkoutFlowResponse);
+      channelSetFlow = ChannelSetFlow.fromJson(checkoutFlowResponse);
     }
     await api.checkoutFlowStorage(
         token, channelSetFlow.id);

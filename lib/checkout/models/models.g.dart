@@ -8,210 +8,210 @@ part of 'models.dart';
 
 ChannelSetFlow _$ChannelSetFlowFromJson(Map<String, dynamic> json) {
   return ChannelSetFlow()
-    ..acceptTermsPayever = json['acceptTermsPayever'] as String
+    ..acceptTermsPayever = json['accept_terms_payever'] as String
     ..amount = json['amount'] as num
-    ..apiCall = json['apiCall'] as String
-    ..apiCallCart = json['apiCallCart'] as String
-    ..apiCallId = json['apiCallId'] as String
-    ..billingAddress = json['billingAddress'] == null
+    ..apiCall = json['api_call'] as String
+    ..apiCallCart = json['api_call_cart'] as String
+    ..apiCallId = json['api_call_id'] as String
+    ..billingAddress = json['billing_address'] == null
         ? null
         : BillingAddress.fromJson(
-            json['billingAddress'] as Map<String, dynamic>)
-    ..businessAddressLine = json['businessAddressLine'] as String
-    ..businessIban = json['businessIban'] as String
-    ..businessId = json['businessId'] as String
-    ..businessLogo = json['businessLogo'] as String
-    ..businessName = json['businessName'] as String
-    ..businessShippingOptionId = json['businessShippingOptionId'] as String
-    ..canIdentifyBySsn = json['canIdentifyBySsn'] as bool
-    ..cancelUrl = json['cancelUrl'] as String
+            json['billing_address'] as Map<String, dynamic>)
+    ..businessAddressLine = json['business_address_line'] as String
+    ..businessIban = json['business_iban'] as String
+    ..businessId = json['business_id'] as String
+    ..businessLogo = json['business_logo'] as String
+    ..businessName = json['business_name'] as String
+    ..businessShippingOptionId = json['business_shipping_option_id'] as String
+    ..canIdentifyBySsn = json['can_identify_by_ssn'] as bool
+    ..cancelUrl = json['cancel_url'] as String
     ..cart = json['cart'] as List
     ..channel = json['channel'] as String
-    ..channelSetId = json['channelSetId'] as String
-    ..clientId = json['clientId'] as String
+    ..channelSetId = json['channel_set_id'] as String
+    ..clientId = json['client_id'] as String
     ..comment = json['comment'] as String
-    ..connectionId = json['connectionId'] as String
+    ..connectionId = json['connection_id'] as String
     ..countries = (json['countries'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(k, e as String),
     )
     ..currency = json['currency'] as String
-    ..differentAddress = json['differentAddress'] as bool
+    ..differentAddress = json['different_address'] as bool
     ..express = json['express'] as bool
-    ..extra = json['extra'] as List
-    ..failureUrl = json['failureUrl'] as String
-    ..financeType = json['financeType'] as String
-    ..flashBag = json['flashBag'] as List
-    ..flowIdentifier = json['flowIdentifier'] as String
-    ..forceLegacyCartStep = json['forceLegacyCartStep'] as bool
-    ..forceLegacyUseInventory = json['forceLegacyUseInventory'] as bool
-    ..guestToken = json['guestToken'] as String
-    ..hideSalutation = json['hideSalutation'] as bool
+    ..extra = json['extra'] as Map<String, dynamic>
+    ..failureUrl = json['failure_url'] as String
+    ..financeType = json['finance_type'] as String
+    ..flashBag = json['flash_bag'] as List
+    ..flowIdentifier = json['flow_identifier'] as String
+    ..forceLegacyCartStep = json['force_legacy_cart_step'] as bool
+    ..forceLegacyUseInventory = json['force_legacy_use_inventory'] as bool
+    ..guestToken = json['guest_token'] as String
+    ..hideSalutation = json['hide_salutation'] as bool
     ..id = json['id'] as String
-    ..ipHash = json['ipHash'] as String
-    ..loggedInId = json['loggedInId'] as String
-    ..merchantReference = json['merchantReference'] as String
-    ..noticeUrl = json['noticeUrl'] as String
+    ..ipHash = json['ip_hash'] as String
+    ..loggedInId = json['logged_in_id'] as String
+    ..merchantReference = json['merchant_reference'] as String
+    ..noticeUrl = json['notice_url'] as String
     ..payment = json['payment'] == null
         ? null
         : Payment.fromJson(json['payment'] as Map<String, dynamic>)
-    ..paymentMethod = json['paymentMethod'] as String
-    ..paymentOptionId = json['paymentOptionId'] as num
-    ..paymentOptions = (json['paymentOptions'] as List)
+    ..paymentMethod = json['payment_method'] as String
+    ..paymentOptionId = json['payment_option_id'] as num
+    ..paymentOptions = (json['payment_options'] as List)
         ?.map((e) => e == null
             ? null
             : CheckoutPaymentOption.fromJson(e as Map<String, dynamic>))
         ?.toList()
-    ..pendingUrl = json['pendingUrl'] as String
-    ..posMerchantMode = json['posMerchantMode'] as String
+    ..pendingUrl = json['pending_url'] as String
+    ..posMerchantMode = json['pos_merchant_mode'] as String
     ..reference = json['reference'] as String
-    ..sellerEmail = json['sellerEmail'] as String
-    ..shippingAddressId = json['shippingAddressId'] as String
-    ..shippingAddresses = json['shippingAddresses'] as List
-    ..shippingCategory = json['shippingCategory'] as String
-    ..shippingFee = json['shippingFee'] as num
-    ..shippingMethodCode = json['shippingMethodCode'] as String
-    ..shippingMethodName = json['shippingMethodName'] as String
-    ..shippingOptionName = json['shippingOptionName'] as String
-    ..shippingOptions = json['shippingOptions'] as List
-    ..shippingOrderId = json['shippingOrderId'] as String
-    ..shippingType = json['shippingType'] as String
-    ..shopUrl = json['shopUrl'] as String
-    ..singleAddress = json['singleAddress'] as bool
+    ..sellerEmail = json['seller_email'] as String
+    ..shippingAddressId = json['shipping_address_id'] as String
+    ..shippingAddresses = json['shipping_addresses'] as List
+    ..shippingCategory = json['shipping_category'] as String
+    ..shippingFee = json['shipping_fee'] as num
+    ..shippingMethodCode = json['shipping_method_code'] as String
+    ..shippingMethodName = json['shipping_method_name'] as String
+    ..shippingOptionName = json['shipping_option_name'] as String
+    ..shippingOptions = json['shipping_options'] as List
+    ..shippingOrderId = json['shipping_order_id'] as String
+    ..shippingType = json['shipping_type'] as String
+    ..shopUrl = json['shop_url'] as String
+    ..singleAddress = json['single_address'] as bool
     ..state = json['state'] as String
-    ..successUrl = json['successUrl'] as String
-    ..taxValue = json['taxValue'] as num
+    ..successUrl = json['success_url'] as String
+    ..taxValue = json['tax_value'] as num
     ..total = json['total'] as num
-    ..userAccountId = json['userAccountId'] as String
+    ..userAccountId = json['user_account_id'] as String
     ..values = json['values'] as List
-    ..variantId = json['variantId'] as String
-    ..xFrameHost = json['xFrameHost'] as String;
+    ..variantId = json['variant_id'] as String
+    ..xFrameHost = json['x_frame_host'] as String;
 }
 
 Map<String, dynamic> _$ChannelSetFlowToJson(ChannelSetFlow instance) =>
     <String, dynamic>{
-      'acceptTermsPayever': instance.acceptTermsPayever,
+      'accept_terms_payever': instance.acceptTermsPayever,
       'amount': instance.amount,
-      'apiCall': instance.apiCall,
-      'apiCallCart': instance.apiCallCart,
-      'apiCallId': instance.apiCallId,
-      'billingAddress': instance.billingAddress,
-      'businessAddressLine': instance.businessAddressLine,
-      'businessIban': instance.businessIban,
-      'businessId': instance.businessId,
-      'businessLogo': instance.businessLogo,
-      'businessName': instance.businessName,
-      'businessShippingOptionId': instance.businessShippingOptionId,
-      'canIdentifyBySsn': instance.canIdentifyBySsn,
-      'cancelUrl': instance.cancelUrl,
+      'api_call': instance.apiCall,
+      'api_call_cart': instance.apiCallCart,
+      'api_call_id': instance.apiCallId,
+      'billing_address': instance.billingAddress,
+      'business_address_line': instance.businessAddressLine,
+      'business_iban': instance.businessIban,
+      'business_id': instance.businessId,
+      'business_logo': instance.businessLogo,
+      'business_name': instance.businessName,
+      'business_shipping_option_id': instance.businessShippingOptionId,
+      'can_identify_by_ssn': instance.canIdentifyBySsn,
+      'cancel_url': instance.cancelUrl,
       'cart': instance.cart,
       'channel': instance.channel,
-      'channelSetId': instance.channelSetId,
-      'clientId': instance.clientId,
+      'channel_set_id': instance.channelSetId,
+      'client_id': instance.clientId,
       'comment': instance.comment,
-      'connectionId': instance.connectionId,
+      'connection_id': instance.connectionId,
       'countries': instance.countries,
       'currency': instance.currency,
-      'differentAddress': instance.differentAddress,
+      'different_address': instance.differentAddress,
       'express': instance.express,
       'extra': instance.extra,
-      'failureUrl': instance.failureUrl,
-      'financeType': instance.financeType,
-      'flashBag': instance.flashBag,
-      'flowIdentifier': instance.flowIdentifier,
-      'forceLegacyCartStep': instance.forceLegacyCartStep,
-      'forceLegacyUseInventory': instance.forceLegacyUseInventory,
-      'guestToken': instance.guestToken,
-      'hideSalutation': instance.hideSalutation,
+      'failure_url': instance.failureUrl,
+      'finance_type': instance.financeType,
+      'flash_bag': instance.flashBag,
+      'flow_identifier': instance.flowIdentifier,
+      'force_legacy_cart_step': instance.forceLegacyCartStep,
+      'force_legacy_use_inventory': instance.forceLegacyUseInventory,
+      'guest_token': instance.guestToken,
+      'hide_salutation': instance.hideSalutation,
       'id': instance.id,
-      'ipHash': instance.ipHash,
-      'loggedInId': instance.loggedInId,
-      'merchantReference': instance.merchantReference,
-      'noticeUrl': instance.noticeUrl,
+      'ip_hash': instance.ipHash,
+      'logged_in_id': instance.loggedInId,
+      'merchant_reference': instance.merchantReference,
+      'notice_url': instance.noticeUrl,
       'payment': instance.payment,
-      'paymentMethod': instance.paymentMethod,
-      'paymentOptionId': instance.paymentOptionId,
-      'paymentOptions': instance.paymentOptions,
-      'pendingUrl': instance.pendingUrl,
-      'posMerchantMode': instance.posMerchantMode,
+      'payment_method': instance.paymentMethod,
+      'payment_option_id': instance.paymentOptionId,
+      'payment_options': instance.paymentOptions,
+      'pending_url': instance.pendingUrl,
+      'pos_merchant_mode': instance.posMerchantMode,
       'reference': instance.reference,
-      'sellerEmail': instance.sellerEmail,
-      'shippingAddressId': instance.shippingAddressId,
-      'shippingAddresses': instance.shippingAddresses,
-      'shippingCategory': instance.shippingCategory,
-      'shippingFee': instance.shippingFee,
-      'shippingMethodCode': instance.shippingMethodCode,
-      'shippingMethodName': instance.shippingMethodName,
-      'shippingOptionName': instance.shippingOptionName,
-      'shippingOptions': instance.shippingOptions,
-      'shippingOrderId': instance.shippingOrderId,
-      'shippingType': instance.shippingType,
-      'shopUrl': instance.shopUrl,
-      'singleAddress': instance.singleAddress,
+      'seller_email': instance.sellerEmail,
+      'shipping_address_id': instance.shippingAddressId,
+      'shipping_addresses': instance.shippingAddresses,
+      'shipping_category': instance.shippingCategory,
+      'shipping_fee': instance.shippingFee,
+      'shipping_method_code': instance.shippingMethodCode,
+      'shipping_method_name': instance.shippingMethodName,
+      'shipping_option_name': instance.shippingOptionName,
+      'shipping_options': instance.shippingOptions,
+      'shipping_order_id': instance.shippingOrderId,
+      'shipping_type': instance.shippingType,
+      'shop_url': instance.shopUrl,
+      'single_address': instance.singleAddress,
       'state': instance.state,
-      'successUrl': instance.successUrl,
-      'taxValue': instance.taxValue,
+      'success_url': instance.successUrl,
+      'tax_value': instance.taxValue,
       'total': instance.total,
-      'userAccountId': instance.userAccountId,
+      'user_account_id': instance.userAccountId,
       'values': instance.values,
-      'variantId': instance.variantId,
-      'xFrameHost': instance.xFrameHost,
+      'variant_id': instance.variantId,
+      'x_frame_host': instance.xFrameHost,
     };
 
 Payment _$PaymentFromJson(Map<String, dynamic> json) {
   return Payment()
     ..amount = json['amount'] as num
-    ..apiCall = json['apiCall'] as String
-    ..bankAccount = json['bankAccount'] == null
+    ..apiCall = json['api_call'] as String
+    ..bankAccount = json['bank_account'] == null
         ? null
-        : BankAccount.fromJson(json['bankAccount'] as Map<String, dynamic>)
-    ..callbackUrl = json['callbackUrl'] as String
-    ..createdAt = json['createdAt'] as String
-    ..customerTransactionLink = json['customerTransactionLink'] as String
-    ..downPayment = json['downPayment'] as num
-    ..flashBag = json['flashBag'] as List
+        : BankAccount.fromJson(json['bank_account'] as Map<String, dynamic>)
+    ..callbackUrl = json['callback_url'] as String
+    ..createdAt = json['created_at'] as String
+    ..customerTransactionLink = json['customer_transaction_link'] as String
+    ..downPayment = json['down_payment'] as num
+    ..flashBag = json['flash_bag'] as List
     ..id = json['id'] as String
-    ..merchantTransactionLink = json['merchantTransactionLink'] as String
-    ..noticeUrl = json['noticeUrl'] as String
-    ..paymentData = json['paymentData'] as String
-    ..paymentDetails = json['paymentDetails'] == null
+    ..merchantTransactionLink = json['merchant_transaction_link'] as String
+    ..noticeUrl = json['notice_url'] as String
+    ..paymentData = json['payment_data'] as String
+    ..paymentDetails = json['payment_details'] == null
         ? null
         : PaymentDetails.fromJson(
-            json['paymentDetails'] as Map<String, dynamic>)
-    ..paymentDetailsToken = json['paymentDetailsToken'] as String
-    ..paymentFlowId = json['paymentFlowId'] as String
-    ..paymentOptionId = json['paymentOptionId'] as num
+            json['payment_details'] as Map<String, dynamic>)
+    ..paymentDetailsToken = json['payment_details_token'] as String
+    ..paymentFlowId = json['payment_flow_id'] as String
+    ..paymentOptionId = json['payment_option_id'] as num
     ..reference = json['reference'] as String
-    ..rememberMe = json['rememberMe'] as bool
-    ..shopRedirectEnabled = json['shopRedirectEnabled'] as bool
-    ..specificStatus = json['specificStatus'] as String
+    ..rememberMe = json['remember_me'] as bool
+    ..shopRedirectEnabled = json['shop_redirect_enabled'] as bool
+    ..specificStatus = json['specific_status'] as String
     ..status = json['status'] as String
-    ..storeName = json['storeName'] as String
+    ..storeName = json['store_name'] as String
     ..total = json['total'] as num;
 }
 
 Map<String, dynamic> _$PaymentToJson(Payment instance) => <String, dynamic>{
       'amount': instance.amount,
-      'apiCall': instance.apiCall,
-      'bankAccount': instance.bankAccount,
-      'callbackUrl': instance.callbackUrl,
-      'createdAt': instance.createdAt,
-      'customerTransactionLink': instance.customerTransactionLink,
-      'downPayment': instance.downPayment,
-      'flashBag': instance.flashBag,
+      'api_call': instance.apiCall,
+      'bank_account': instance.bankAccount,
+      'callback_url': instance.callbackUrl,
+      'created_at': instance.createdAt,
+      'customer_transaction_link': instance.customerTransactionLink,
+      'down_payment': instance.downPayment,
+      'flash_bag': instance.flashBag,
       'id': instance.id,
-      'merchantTransactionLink': instance.merchantTransactionLink,
-      'noticeUrl': instance.noticeUrl,
-      'paymentData': instance.paymentData,
-      'paymentDetails': instance.paymentDetails,
-      'paymentDetailsToken': instance.paymentDetailsToken,
-      'paymentFlowId': instance.paymentFlowId,
-      'paymentOptionId': instance.paymentOptionId,
+      'merchant_transaction_link': instance.merchantTransactionLink,
+      'notice_url': instance.noticeUrl,
+      'payment_data': instance.paymentData,
+      'payment_details': instance.paymentDetails,
+      'payment_details_token': instance.paymentDetailsToken,
+      'payment_flow_id': instance.paymentFlowId,
+      'payment_option_id': instance.paymentOptionId,
       'reference': instance.reference,
-      'rememberMe': instance.rememberMe,
-      'shopRedirectEnabled': instance.shopRedirectEnabled,
-      'specificStatus': instance.specificStatus,
+      'remember_me': instance.rememberMe,
+      'shop_redirect_enabled': instance.shopRedirectEnabled,
+      'specific_status': instance.specificStatus,
       'status': instance.status,
-      'storeName': instance.storeName,
+      'store_name': instance.storeName,
       'total': instance.total,
     };
 
@@ -229,20 +229,20 @@ Map<String, dynamic> _$BankAccountToJson(BankAccount instance) =>
 
 PaymentDetails _$PaymentDetailsFromJson(Map<String, dynamic> json) {
   return PaymentDetails()
-    ..merchantBankAccount = json['merchantBankAccount'] as String
-    ..merchantBankAccountHolder = json['merchantBankAccountHolder'] as String
-    ..merchantBankCity = json['merchantBankCity'] as String
-    ..merchantBankCode = json['merchantBankCode'] as String
-    ..merchantBankName = json['merchantBankName'] as String
-    ..merchantCompanyName = json['merchantCompanyName'] as String;
+    ..merchantBankAccount = json['merchant_bank_account'] as String
+    ..merchantBankAccountHolder = json['merchant_bank_account_holder'] as String
+    ..merchantBankCity = json['merchant_bank_city'] as String
+    ..merchantBankCode = json['merchant_bank_code'] as String
+    ..merchantBankName = json['merchant_bank_name'] as String
+    ..merchantCompanyName = json['merchant_company_name'] as String;
 }
 
 Map<String, dynamic> _$PaymentDetailsToJson(PaymentDetails instance) =>
     <String, dynamic>{
-      'merchantBankAccount': instance.merchantBankAccount,
-      'merchantBankAccountHolder': instance.merchantBankAccountHolder,
-      'merchantBankCity': instance.merchantBankCity,
-      'merchantBankCode': instance.merchantBankCode,
-      'merchantBankName': instance.merchantBankName,
-      'merchantCompanyName': instance.merchantCompanyName,
+      'merchant_bank_account': instance.merchantBankAccount,
+      'merchant_bank_account_holder': instance.merchantBankAccountHolder,
+      'merchant_bank_city': instance.merchantBankCity,
+      'merchant_bank_code': instance.merchantBankCode,
+      'merchant_bank_name': instance.merchantBankName,
+      'merchant_company_name': instance.merchantCompanyName,
     };

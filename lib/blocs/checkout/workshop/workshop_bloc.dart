@@ -62,7 +62,7 @@ class WorkshopScreenBloc extends Bloc<WorkshopScreenEvent, WorkshopScreenState> 
     } else if (response is Map) {
       if (body.containsKey('amount'))
         yield WorkshopScreenPayflowStateSuccess();
-      channelSetFlow = ChannelSetFlow.fromMap(response);
+      channelSetFlow = ChannelSetFlow.fromJson(response);
       yield state.copyWith(
         isUpdating: false,
         updatePayflowIndex: -1,
@@ -115,7 +115,7 @@ class WorkshopScreenBloc extends Bloc<WorkshopScreenEvent, WorkshopScreenState> 
       );
     } else if (response is Map) {
       yield WorkshopScreenPayflowStateSuccess();
-      channelSetFlow = ChannelSetFlow.fromMap(response);
+      channelSetFlow = ChannelSetFlow.fromJson(response);
       yield state.copyWith(
         isUpdating: false,
         updatePayflowIndex: -1,
@@ -147,7 +147,7 @@ class WorkshopScreenBloc extends Bloc<WorkshopScreenEvent, WorkshopScreenState> 
       );
     } else if (response is Map) {
       // yield WorkshopScreenPaySuccess();
-      channelSetFlow.payment = Payment.fromMap(response['payment']);
+      channelSetFlow.payment = Payment.fromJson(response['payment']);
       yield state.copyWith(
         isUpdating: false,
         isPaid: true,
@@ -177,7 +177,7 @@ class WorkshopScreenBloc extends Bloc<WorkshopScreenEvent, WorkshopScreenState> 
       );
     } else if (response is Map) {
       yield WorkshopScreenPaySuccess();
-      channelSetFlow.payment = Payment.fromMap(response);
+      channelSetFlow.payment = Payment.fromJson(response);
       yield state.copyWith(
         isUpdating: false,
         updatePayflowIndex: -1,

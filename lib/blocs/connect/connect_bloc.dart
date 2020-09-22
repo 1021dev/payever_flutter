@@ -62,7 +62,7 @@ class ConnectScreenBloc extends Bloc<ConnectScreenEvent, ConnectScreenState> {
     dynamic paymentOptionsResponse = await api.getPaymentOptions(token);
     if (paymentOptionsResponse is List) {
       paymentOptionsResponse.forEach((element) {
-        paymentOptions.add(CheckoutPaymentOption.fromMap(element));
+        paymentOptions.add(CheckoutPaymentOption.fromJson(element));
       });
     }
 
