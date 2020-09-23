@@ -49,6 +49,8 @@ class WorkshopScreenBloc
       yield* getPrefilledLink(event.isCopyLink);
     } else if (event is GetPrefilledQRCodeEvent) {
       yield* getPrefilledQrcode();
+    } else if (event is RefreshWorkShopEvent) {
+      checkoutScreenBloc.add(CheckoutScreenInitEvent());
     }
   }
 
@@ -131,6 +133,20 @@ class WorkshopScreenBloc
         channelSetFlow: channelSetFlow,
       );
       checkoutScreenBloc.add(UpdateChannelSetFlowEvent(channelSetFlow));
+
+      bool selectedPaymentOption = false;
+      if (channelSetFlow.paymentOptionId == null) {
+        selectedPaymentOption = false;
+      } else {
+        channelSetFlow.paymentOptions.forEach((element) {
+          if (element.id == channelSetFlow.paymentOptionId) {
+            selectedPaymentOption = true;
+          }
+        });
+      }
+      if (!selectedPaymentOption) {
+        add(PatchCheckoutFlowOrderEvent(body: {'payment_option_id': '${channelSetFlow.paymentOptions.first.id}'}));
+      }
     }
   }
 
@@ -182,7 +198,7 @@ class WorkshopScreenBloc
         await api.checkoutPayInstantPayment(token, connectId, body);
     if (response is DioError) {
       yield WorkshopScreenStateFailure(
-          error: response.response.data['message']);
+          error: response.error);
       yield state.copyWith(
         isUpdating: false,
         updatePayflowIndex: -1,

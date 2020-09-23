@@ -88,3 +88,5 @@ class PayInstantPaymentEvent extends WorkshopScreenEvent{
     this.body,
   ];
 }
+
+class RefreshWorkShopEvent extends WorkshopScreenEvent{}

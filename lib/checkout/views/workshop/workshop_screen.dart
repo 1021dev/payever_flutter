@@ -1166,7 +1166,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                   child: SizedBox.expand(
                     child: MaterialButton(
                       onPressed: () {
-                        bool testMode = false;
+                        bool testMode = true;
                         if (testMode) {
                           Map<String, dynamic> body = {
                             'city': 'Berlin',
@@ -1258,6 +1258,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
       key: _formKeyPayment,
       child: PaymentSelectView(
         enable: isVisible(state, 'choosePayment'),
+        subtitle: isBillingApproved ? '' : 'Select a payment method',
         approved: isSelectPaymentApproved,
         isUpdating: state.isUpdating && state.updatePayflowIndex == 3,
         channelSetFlow: state.channelSetFlow,
@@ -1472,7 +1473,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
 
   Widget _paymentOptionView(WorkshopScreenState state) {
     return Visibility(
-      visible: isVisible(state, 'payment'),
+      visible: false/*isVisible(state, 'payment')*/,
       child: Column(
         children: <Widget>[
           WorkshopHeader(
@@ -1731,6 +1732,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
         return Dialog(
           backgroundColor: Colors.transparent,
           child: PaySuccessView(
+            screenBloc: screenBloc,
             channelSetFlow: state.channelSetFlow,
           ),
         );

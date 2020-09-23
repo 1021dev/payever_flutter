@@ -17,6 +17,7 @@ class PaymentSelectView extends StatefulWidget {
   final Function onTapChangePayment;
   final Function onTapPay;
   final ChannelSetFlow channelSetFlow;
+  final String subtitle;
 
   const PaymentSelectView(
       {this.enable,
@@ -26,7 +27,7 @@ class PaymentSelectView extends StatefulWidget {
       this.onTapApprove,
       this.onTapPay,
       this.channelSetFlow,
-      this.onTapChangePayment});
+      this.onTapChangePayment, this.subtitle});
 
   @override
   _PaymentSelectViewState createState() => _PaymentSelectViewState();
@@ -93,7 +94,7 @@ class _PaymentSelectViewState extends State<PaymentSelectView> {
       children: <Widget>[
         WorkshopHeader(
           title: 'SELECT PAYMENT',
-          subTitle: 'Select a payment method',
+          subTitle: widget.subtitle,
           isExpanded: widget.expanded,
           isApproved: widget.approved,
           onTap: () => widget.onTapApprove,
