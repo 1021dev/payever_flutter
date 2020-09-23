@@ -1,24 +1,28 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/utils/common_utils.dart';
-import 'package:payever/commons/views/custom_elements/updatedialog.dart';
 import 'package:payever/connect/models/connect.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'models.g.dart';
 
+@JsonSerializable()
 class Checkout {
-  String businessId = '';
-  List<String> connections = [];
-  String createdAt;
-  bool isDefault = false;
-  String logo = '';
-  String name = '';
-  List<Section> sections = [];
-  CheckoutSettings settings;
-  String updatedAt = '';
-  num v = 0;
-  String id = '';
+  Checkout();
+
+  @JsonKey(name: 'businessId')    String businessId = '';
+  @JsonKey(name: 'connections')   List<String> connections = [];
+  @JsonKey(name: 'createdAt')     String createdAt;
+  @JsonKey(name: 'default')       bool isDefault = false;
+  @JsonKey(name: 'logo')          String logo = '';
+  @JsonKey(name: 'name')          String name = '';
+  @JsonKey(name: 'sections')      List<Section> sections = [];
+  @JsonKey(name: 'settings')      CheckoutSettings settings;
+  @JsonKey(name: 'updatedAt')     String updatedAt = '';
+  @JsonKey(name: '__v')           num v = 0;
+  @JsonKey(name: '_id')           String id = '';
+
+  factory Checkout.fromJson(Map<String, dynamic> json) => _$CheckoutFromJson(json);
+  Map<String, dynamic> toJson() => _$CheckoutToJson(this);
 
   Checkout.fromMap(dynamic obj) {
     businessId = obj['businessId'];
@@ -49,15 +53,21 @@ class Checkout {
   }
 }
 
+@JsonSerializable()
 class Section {
-  String code = '';
-  bool defaultEnabled;
-  bool enabled;
-  bool fixed;
-  num order = 0;
-  String id = '';
-  List<String> excludedChannels = [];
-  List<SubSection> subsections = [];
+  Section();
+
+  @JsonKey(name: 'code')                String code = '';
+  @JsonKey(name: 'defaultEnabled')      bool defaultEnabled;
+  @JsonKey(name: 'enabled')             bool enabled;
+  @JsonKey(name: 'fixed')               bool fixed;
+  @JsonKey(name: 'order')               num order = 0;
+  @JsonKey(name: '_id')                 String id = '';
+  @JsonKey(name: 'excluded_channels')   List<String> excludedChannels = [];
+  @JsonKey(name: 'subsections')         List<SubSection> subsections = [];
+
+  factory Section.fromJson(Map<String, dynamic> json) => _$SectionFromJson(json);
+  Map<String, dynamic> toJson() => _$SectionToJson(this);
 
   Section.fromMap(dynamic obj) {
     code = obj[GlobalUtils.DB_CHECKOUT_SECTIONS_CODE];
@@ -104,10 +114,16 @@ class Section {
   }
 }
 
+@JsonSerializable()
 class SubSection {
-  String code;
-  List<Rule> rules = [];
-  String id;
+  SubSection();
+
+  @JsonKey(name: 'code')  String code;
+  @JsonKey(name: 'rules') List<Rule> rules = [];
+  @JsonKey(name: '_id')   String id;
+
+  factory SubSection.fromJson(Map<String, dynamic> json) => _$SubSectionFromJson(json);
+  Map<String, dynamic> toJson() => _$SubSectionToJson(this);
 
   SubSection.fromMap(dynamic obj) {
     code = obj['code'];
@@ -136,11 +152,17 @@ class SubSection {
   }
 }
 
+@JsonSerializable()
 class Rule {
-  String operator;
-  String property;
-  String type;
-  String id;
+  Rule();
+
+  @JsonKey(name: 'operator')  String operator;
+  @JsonKey(name: 'property')  String property;
+  @JsonKey(name: 'type')      String type;
+  @JsonKey(name: '_id')       String id;
+
+  factory Rule.fromJson(Map<String, dynamic> json) => _$RuleFromJson(json);
+  Map<String, dynamic> toJson() => _$RuleToJson(this);
 
   Rule.fromMap(dynamic obj) {
     operator = obj['operator'];
@@ -161,13 +183,19 @@ class Rule {
   }
 }
 
+@JsonSerializable()
 class CheckoutSettings {
-  List<String> cspAllowedHosts = [];
-  List<Lang> languages = [];
-  String message = '';
-  String phoneNumber = '';
-  Style styles;
-  bool testingMode = false;
+  CheckoutSettings();
+
+  @JsonKey(name: 'cspAllowedHosts')   List<String> cspAllowedHosts = [];
+  @JsonKey(name: 'languages')         List<Lang> languages = [];
+  @JsonKey(name: 'message')           String message = '';
+  @JsonKey(name: 'phoneNumber')       String phoneNumber = '';
+  @JsonKey(name: 'styles')            Style styles;
+  @JsonKey(name: 'testingMode')       bool testingMode = false;
+
+  factory CheckoutSettings.fromJson(Map<String, dynamic> json) => _$CheckoutSettingsFromJson(json);
+  Map<String, dynamic> toJson() => _$CheckoutSettingsToJson(this);
 
   CheckoutSettings.fromMap(dynamic obj) {
     dynamic cspAllowedHostObj = obj['cspAllowedHosts'];
@@ -209,14 +237,20 @@ class CheckoutSettings {
   }
 }
 
+@JsonSerializable()
 class Lang {
-  bool active = false;
-  String code = '';
-  bool isDefault = false;
-  bool isHovered = false;
-  bool isToggleButton = false;
-  String name = '';
-  String id = '';
+  Lang();
+
+  @JsonKey(name: 'active')          bool active = false;
+  @JsonKey(name: 'code')            String code = '';
+  @JsonKey(name: 'isDefault',)      bool isDefault = false;
+  @JsonKey(name: 'isHovered')       bool isHovered = false;
+  @JsonKey(name: 'isToggleButton')  bool isToggleButton = false;
+  @JsonKey(name: 'name')            String name = '';
+  @JsonKey(name: 'id')              String id = '';
+
+  factory Lang.fromJson(Map<String, dynamic> json) => _$LangFromJson(json);
+  Map<String, dynamic> toJson() => _$LangToJson(this);
 
   Lang.fromMap(dynamic obj) {
     active = obj['active'];
@@ -241,30 +275,34 @@ class Lang {
   }
 }
 
+@JsonSerializable()
 class Style {
   Style();
 
-  ButtonStyle button = ButtonStyle();
-  PageStyle page = PageStyle();
-  String id = '';
-  String id1 = '';
-  bool active = true;
-  String businessHeaderBackgroundColor = '#fff';
-  String businessHeaderBorderColor = '#dfdfdf';
-  String buttonBackgroundColor = '#333333';
-  String buttonBackgroundDisabledColor = '#656565';
-  String buttonBorderRadius = '4px';
-  String buttonTextColor = '#ffffff';
-  String inputBackgroundColor = '#ffffff';
-  String inputBorderColor = '#dfdfdf';
-  String inputBorderRadius = '4px';
-  String inputTextPrimaryColor = '#3a3a3a';
-  String inputTextSecondaryColor = '#999999';
-  String pageBackgroundColor = '#f7f7f7';
-  String pageLineColor = '#dfdfdf';
-  String pageTextLinkColor = '#444444';
-  String pageTextPrimaryColor = '#777777';
-  String pageTextSecondaryColor = '#8e8e8e';
+  @JsonKey(name: 'button')                          ButtonStyle button = ButtonStyle();
+  @JsonKey(name: 'page')                            PageStyle page = PageStyle();
+  @JsonKey(name: 'id')                              String id = '';
+  @JsonKey(name: '_id')                             String id1 = '';
+  @JsonKey(name: 'active')                          bool active = true;
+  @JsonKey(name: 'businessHeaderBackgroundColor')   String businessHeaderBackgroundColor = '#fff';
+  @JsonKey(name: 'businessHeaderBorderColor')       String businessHeaderBorderColor = '#dfdfdf';
+  @JsonKey(name: 'buttonBackgroundColor')           String buttonBackgroundColor = '#333333';
+  @JsonKey(name: 'buttonBackgroundDisabledColor')   String buttonBackgroundDisabledColor = '#656565';
+  @JsonKey(name: 'buttonBorderRadius')              String buttonBorderRadius = '4px';
+  @JsonKey(name: 'buttonTextColor')                 String buttonTextColor = '#ffffff';
+  @JsonKey(name: 'inputBackgroundColor')            String inputBackgroundColor = '#ffffff';
+  @JsonKey(name: 'inputBorderColor')                String inputBorderColor = '#dfdfdf';
+  @JsonKey(name: 'inputBorderRadius')               String inputBorderRadius = '4px';
+  @JsonKey(name: 'inputTextPrimaryColor')           String inputTextPrimaryColor = '#3a3a3a';
+  @JsonKey(name: 'inputTextSecondaryColor')         String inputTextSecondaryColor = '#999999';
+  @JsonKey(name: 'pageBackgroundColor')             String pageBackgroundColor = '#f7f7f7';
+  @JsonKey(name: 'pageLineColor')                   String pageLineColor = '#dfdfdf';
+  @JsonKey(name: 'pageTextLinkColor')               String pageTextLinkColor = '#444444';
+  @JsonKey(name: 'pageTextPrimaryColor')            String pageTextPrimaryColor = '#777777';
+  @JsonKey(name: 'pageTextSecondaryColor')          String pageTextSecondaryColor = '#8e8e8e';
+
+  factory Style.fromJson(Map<String, dynamic> json) => _$StyleFromJson(json);
+  Map<String, dynamic> toJson() => _$StyleToJson(this);
 
   Style.fromMap(dynamic obj) {
     dynamic buttonObj = obj['button'];
@@ -326,11 +364,14 @@ class Style {
   }
 }
 
+@JsonSerializable()
 class PageStyle {
-
   PageStyle();
 
-  String background = '#ffffff';
+  @JsonKey(name: 'background')  String background = '#ffffff';
+
+  factory PageStyle.fromJson(Map<String, dynamic> json) => _$PageStyleFromJson(json);
+  Map<String, dynamic> toJson() => _$PageStyleToJson(this);
 
   PageStyle.fromMap(dynamic obj) {
     background = obj['background'];
@@ -343,12 +384,15 @@ class PageStyle {
   }
 }
 
+@JsonSerializable()
 class ButtonStyle {
-
   ButtonStyle();
 
-  String corners = 'round-32';
-  ButtonColorStyle color = ButtonColorStyle();
+  @JsonKey(name: 'corners')   String corners = 'round-32';
+  @JsonKey(name: 'color')     ButtonColorStyle color = ButtonColorStyle();
+
+  factory ButtonStyle.fromJson(Map<String, dynamic> json) => _$ButtonStyleFromJson(json);
+  Map<String, dynamic> toJson() => _$ButtonStyleToJson(this);
 
   ButtonStyle.fromMap(dynamic obj) {
     corners = obj['corners'];
@@ -368,13 +412,16 @@ class ButtonStyle {
   }
 }
 
+@JsonSerializable()
 class ButtonColorStyle {
-
   ButtonColorStyle();
 
-  String borders = '#fff';
-  String fill = '#fff';
-  String text = '#fff';
+  @JsonKey(name: 'borders')   String borders = '#fff';
+  @JsonKey(name: 'fill')      String fill = '#fff';
+  @JsonKey(name: 'text')      String text = '#fff';
+
+  factory ButtonColorStyle.fromJson(Map<String, dynamic> json) => _$ButtonColorStyleFromJson(json);
+  Map<String, dynamic> toJson() => _$ButtonColorStyleToJson(this);
 
   ButtonColorStyle.fromMap(dynamic obj) {
     borders = obj['borders'];
@@ -391,23 +438,29 @@ class ButtonColorStyle {
   }
 }
 
+@JsonSerializable()
 class CheckoutFlow {
-  String businessUuid = '';
-  String channelType = '';
-  String currency = '';
-  bool customPolicy = false;
-  List<Lang> languages = [];
-  dynamic limits = {};
-  String logo = '';
-  String message = '';
-  String name = '';
-  List<String> paymentMethods = [];
-  String phoneNumber = '';
-  bool policyEnabled = false;
-  List<Section> sections = [];
-  Style styles;
-  bool testingMode = false;
-  String uuid = '';
+  CheckoutFlow();
+
+  @JsonKey(name: 'businessUuid')    String businessUuid = '';
+  @JsonKey(name: 'channelType')     String channelType = '';
+  @JsonKey(name: 'currency')        String currency = '';
+  @JsonKey(name: 'customPolicy')    bool customPolicy = false;
+  @JsonKey(name: 'languages')       List<Lang> languages = [];
+  @JsonKey(name: 'limits')          dynamic limits = {};
+  @JsonKey(name: 'logo')            String logo = '';
+  @JsonKey(name: 'message')         String message = '';
+  @JsonKey(name: 'name')            String name = '';
+  @JsonKey(name: 'paymentMethods')  List<String> paymentMethods = [];
+  @JsonKey(name: 'phoneNumber')     String phoneNumber = '';
+  @JsonKey(name: 'policyEnabled')   bool policyEnabled = false;
+  @JsonKey(name: 'sections')        List<Section> sections = [];
+  @JsonKey(name: 'styles')          Style styles;
+  @JsonKey(name: 'testingMode')     bool testingMode = false;
+  @JsonKey(name: 'uuid')            String uuid = '';
+
+  factory CheckoutFlow.fromJson(Map<String, dynamic> json) => _$CheckoutFlowFromJson(json);
+  Map<String, dynamic> toJson() => _$CheckoutFlowToJson(this);
 
   CheckoutFlow.fromMap(dynamic obj) {
     businessUuid = obj['businessUuid'];
@@ -590,9 +643,15 @@ class ChannelSetFlow {
   Map<String, dynamic> toJson() => _$ChannelSetFlowToJson(this);
 }
 
+@JsonSerializable()
 class IntegrationModel {
-  String integration;
-  String id;
+  IntegrationModel();
+
+  @JsonKey(name: 'integration')   String integration;
+  @JsonKey(name: '_id')           String id;
+
+  factory IntegrationModel.fromJson(Map<String, dynamic> json) => _$IntegrationModelFromJson(json);
+  Map<String, dynamic> toJson() => _$IntegrationModelToJson(this);
 
   IntegrationModel.fromMap(dynamic obj) {
     integration = obj['integration'];
@@ -600,11 +659,17 @@ class IntegrationModel {
   }
 }
 
+@JsonSerializable()
 class FinanceExpressSetting {
-  FinanceExpress bannerAndRate;
-  FinanceExpress bubble;
-  FinanceExpress button;
-  FinanceExpress textLink;
+  FinanceExpressSetting();
+
+  @JsonKey(name: 'banner-and-rate')   FinanceExpress bannerAndRate;
+  @JsonKey(name: 'bubble')            FinanceExpress bubble;
+  @JsonKey(name: 'button')            FinanceExpress button;
+  @JsonKey(name: 'text-link')         FinanceExpress textLink;
+
+  factory FinanceExpressSetting.fromJson(Map<String, dynamic> json) => _$FinanceExpressSettingFromJson(json);
+  Map<String, dynamic> toJson() => _$FinanceExpressSettingToJson(this);
 
   FinanceExpressSetting.fromMap(dynamic obj) {
     bannerAndRate = obj['banner-and-rate'];
@@ -614,25 +679,29 @@ class FinanceExpressSetting {
   }
 }
 
+@JsonSerializable()
 class FinanceExpress {
   FinanceExpress();
 
-  bool adaptiveDesign = false;
-  String bgColor = '#fff';
-  String borderColor = '#fff';
-  String buttonColor = '#fff';
-  String displayType = '';
-  String linkColor = '#fff';
-  String linkTo = '';
-  String order = 'asc';
-  num size = 0;
-  String textColor = '#fff';
-  bool visibility = true;
-  String alignment = 'center';
-  String corners = 'round';
-  num height = 0;
-  String textSize = '';
-  num width = 0;
+  @JsonKey(name: 'adaptiveDesign')    bool adaptiveDesign = false;
+  @JsonKey(name: 'bgColor')           String bgColor = '#fff';
+  @JsonKey(name: 'borderColor')       String borderColor = '#fff';
+  @JsonKey(name: 'buttonColor')       String buttonColor = '#fff';
+  @JsonKey(name: 'displayType')       String displayType = '';
+  @JsonKey(name: 'linkColor')         String linkColor = '#fff';
+  @JsonKey(name: 'linkTo')            String linkTo = '';
+  @JsonKey(name: 'order')             String order = 'asc';
+  @JsonKey(name: 'size')              num size = 0;
+  @JsonKey(name: 'textColor')         String textColor = '#fff';
+  @JsonKey(name: 'visibility')        bool visibility = true;
+  @JsonKey(name: 'alignment')         String alignment = 'center';
+  @JsonKey(name: 'corners')           String corners = 'round';
+  @JsonKey(name: 'height')            num height = 0;
+  @JsonKey(name: 'textSize')          String textSize = '';
+  @JsonKey(name: 'width')             num width = 0;
+
+  factory FinanceExpress.fromJson(Map<String, dynamic> json) => _$FinanceExpressFromJson(json);
+  Map<String, dynamic> toJson() => _$FinanceExpressToJson(this);
 
   FinanceExpress.fromMap(dynamic obj) {
     adaptiveDesign = obj['adaptiveDesign'];
@@ -676,15 +745,21 @@ class FinanceExpress {
   }
 }
 
+@JsonSerializable()
 class ShopSystem {
-  String channel;
-  String createdAt;
-  String description;
-  String documentation;
-  String marketplace;
-  List<Plugin>pluginFiles = [];
-  String updatedAt;
-  String id;
+  ShopSystem();
+
+  @JsonKey(name: 'channel')         String channel;
+  @JsonKey(name: 'createdAt')       String createdAt;
+  @JsonKey(name: 'description')     String description;
+  @JsonKey(name: 'documentation')   String documentation;
+  @JsonKey(name: 'marketplace')     String marketplace;
+  @JsonKey(name: 'pluginFiles')     List<Plugin>pluginFiles = [];
+  @JsonKey(name: 'updatedAt')       String updatedAt;
+  @JsonKey(name: '_id')             String id;
+
+  factory ShopSystem.fromJson(Map<String, dynamic> json) => _$ShopSystemFromJson(json);
+  Map<String, dynamic> toJson() => _$ShopSystemToJson(this);
 
   ShopSystem.fromMap(dynamic obj) {
     channel = obj['channel'];
@@ -701,14 +776,20 @@ class ShopSystem {
   }
 }
 
+@JsonSerializable()
 class Plugin {
-  String createdAt;
-  String filename;
-  String maxCmsVersion;
-  String minCmsVersion;
-  String updatedAt;
-  String version;
-  String id;
+  Plugin();
+
+  @JsonKey(name: 'createdAt')       String createdAt;
+  @JsonKey(name: 'filename')        String filename;
+  @JsonKey(name: 'maxCmsVersion')   String maxCmsVersion;
+  @JsonKey(name: 'minCmsVersion')   String minCmsVersion;
+  @JsonKey(name: 'updatedAt')       String updatedAt;
+  @JsonKey(name: 'version')         String version;
+  @JsonKey(name: '_id')             String id;
+
+  factory Plugin.fromJson(Map<String, dynamic> json) => _$PluginFromJson(json);
+  Map<String, dynamic> toJson() => _$PluginToJson(this);
 
   Plugin.fromMap(dynamic obj) {
     createdAt = obj['createdAt'];
@@ -721,18 +802,24 @@ class Plugin {
   }
 }
 
+@JsonSerializable()
 class APIkey {
-  String businessId;
-  String createdAt;
-  List<String> grants = [];
-  String id;
-  bool isActive = true;
-  String name;
-  String redirectUri;
-  List<String> scopes =[];
-  String secret;
-  String updatedAt;
-  String user;
+  APIkey();
+
+  @JsonKey(name: 'businessId')    String businessId;
+  @JsonKey(name: 'createdAt')     String createdAt;
+  @JsonKey(name: 'grants')        List<String> grants = [];
+  @JsonKey(name: 'id')            String id;
+  @JsonKey(name: 'isActive')      bool isActive = true;
+  @JsonKey(name: 'name')          String name;
+  @JsonKey(name: 'redirectUri')   String redirectUri;
+  @JsonKey(name: 'scopes')        List<String> scopes =[];
+  @JsonKey(name: 'secret')        String secret;
+  @JsonKey(name: 'updatedAt')     String updatedAt;
+  @JsonKey(name: 'user')          String user;
+
+  factory APIkey.fromJson(Map<String, dynamic> json) => _$APIkeyFromJson(json);
+  Map<String, dynamic> toJson() => _$APIkeyToJson(this);
 
   APIkey.fromMap(dynamic obj) {
     createdAt = obj['createdAt'];
@@ -758,23 +845,6 @@ class APIkey {
 
 }
 
-// class Storage {
-//
-// }
-//
-// class Steppermanagerparams {
-//   String cancelButtonText: "Switch Checkout"
-//   bool embeddedMode: true
-//   bool forceFullScreen: true
-//   bool forceNoPaddings: false
-//   bool forceShowBusinessHeader: true
-//   bool layoutWithPaddings: true
-// }
-//
-// class TemporaryAddress {
-//
-// }
-
 class ChannelItem {
   String name;
   String title;
@@ -782,106 +852,73 @@ class ChannelItem {
   String button;
   bool checkValue;
   ConnectModel model;
-  ChannelItem({this.name, this.title, this.image, this.button, this.checkValue, this.model,});
+
+  ChannelItem({
+    this.name,
+    this.title,
+    this.image,
+    this.button,
+    this.checkValue,
+    this.model,
+  });
 }
 
 @JsonSerializable()
 class Payment {
-  @JsonKey(name: 'amount')
-  num amount;
-  @JsonKey(name: 'api_call')
-  String apiCall;
-  @JsonKey(name: 'bank_account')
-  BankAccount bankAccount;
-  @JsonKey(name: 'callback_url')
-  String callbackUrl;
-  @JsonKey(name: 'created_at')
-  String createdAt;
-  @JsonKey(name: 'customer_transaction_link')
-  String customerTransactionLink;
-  @JsonKey(name: 'down_payment')
-  num downPayment;
-  @JsonKey(name: 'flash_bag')
-  List<dynamic>flashBag;
-  @JsonKey(name: 'id')
-  String id;
-  @JsonKey(name: 'merchant_transaction_link')
-  String merchantTransactionLink;
-  @JsonKey(name: 'notice_url')
-  String noticeUrl;
-  @JsonKey(name: 'payment_data')
-  String paymentData;
-  @JsonKey(name: 'payment_details')
-  PaymentDetails paymentDetails;
-  @JsonKey(name: 'payment_details_token')
-  String paymentDetailsToken;
-  @JsonKey(name: 'payment_flow_id')
-  String paymentFlowId;
-  @JsonKey(name: 'payment_option_id')
-  num paymentOptionId;
-  @JsonKey(name: 'reference')
-  String reference;
-  @JsonKey(name: 'remember_me')
-  bool rememberMe;
-  @JsonKey(name: 'shop_redirect_enabled')
-  bool shopRedirectEnabled;
-  @JsonKey(name: 'specific_status')
-  String specificStatus;
-  @JsonKey(name: 'status')
-  String status;
-  @JsonKey(name: 'store_name')
-  String storeName;
-  @JsonKey(name: 'total')
-  num total;
-
   Payment();
 
-  factory Payment.fromJson(Map<String, dynamic> json) => _$PaymentFromJson(json);
+  @JsonKey(name: 'amount')                      num amount;
+  @JsonKey(name: 'api_call')                    String apiCall;
+  @JsonKey(name: 'bank_account')                BankAccount bankAccount;
+  @JsonKey(name: 'callback_url')                String callbackUrl;
+  @JsonKey(name: 'created_at')                  String createdAt;
+  @JsonKey(name: 'customer_transaction_link')   String customerTransactionLink;
+  @JsonKey(name: 'down_payment')                num downPayment;
+  @JsonKey(name: 'flash_bag')                   List<dynamic>flashBag;
+  @JsonKey(name: 'id')                          String id;
+  @JsonKey(name: 'merchant_transaction_link')   String merchantTransactionLink;
+  @JsonKey(name: 'notice_url')                  String noticeUrl;
+  @JsonKey(name: 'payment_data')                String paymentData;
+  @JsonKey(name: 'payment_details')             PaymentDetails paymentDetails;
+  @JsonKey(name: 'payment_details_token')       String paymentDetailsToken;
+  @JsonKey(name: 'payment_flow_id')             String paymentFlowId;
+  @JsonKey(name: 'payment_option_id')           num paymentOptionId;
+  @JsonKey(name: 'reference')                   String reference;
+  @JsonKey(name: 'remember_me')                 bool rememberMe;
+  @JsonKey(name: 'shop_redirect_enabled')       bool shopRedirectEnabled;
+  @JsonKey(name: 'specific_status')             String specificStatus;
+  @JsonKey(name: 'status')                      String status;
+  @JsonKey(name: 'store_name')                  String storeName;
+  @JsonKey(name: 'total')                       num total;
 
+  factory Payment.fromJson(Map<String, dynamic> json) => _$PaymentFromJson(json);
   Map<String, dynamic> toJson() => _$PaymentToJson(this);
-  
 }
 
 @JsonSerializable()
 class BankAccount {
-  @JsonKey(name: 'bic')
-  String bic;
-  @JsonKey(name: 'iban')
-  String iban;
-
   BankAccount();
 
+  @JsonKey(name: 'bic')   String bic;
+  @JsonKey(name: 'iban')  String iban;
+
   factory BankAccount.fromJson(Map<String, dynamic> json) => _$BankAccountFromJson(json);
-
   Map<String, dynamic> toJson() => _$BankAccountToJson(this);
-
-  BankAccount.fromMap(dynamic obj) {
-    bic = obj['bic'];
-    iban = obj['iban'];
-  }
 }
 
 @JsonSerializable()
 class PaymentDetails {
-  @JsonKey(name: 'merchant_bank_account')
-  String merchantBankAccount;
-  @JsonKey(name: 'merchant_bank_account_holder')
-  String merchantBankAccountHolder;
-  @JsonKey(name: 'merchant_bank_city')
-  String merchantBankCity;
-  @JsonKey(name: 'merchant_bank_code')
-  String merchantBankCode;
-  @JsonKey(name: 'merchant_bank_name')
-  String merchantBankName;
-  @JsonKey(name: 'merchant_company_name')
-  String merchantCompanyName;
-
   PaymentDetails();
 
+  @JsonKey(name: 'merchant_bank_account')           String merchantBankAccount;
+  @JsonKey(name: 'merchant_bank_account_holder')    String merchantBankAccountHolder;
+  @JsonKey(name: 'merchant_bank_city')              String merchantBankCity;
+  @JsonKey(name: 'merchant_bank_code')              String merchantBankCode;
+  @JsonKey(name: 'merchant_bank_name')              String merchantBankName;
+  @JsonKey(name: 'merchant_company_name')           String merchantCompanyName;
+
   factory PaymentDetails.fromJson(Map<String, dynamic> json) => _$PaymentDetailsFromJson(json);
-
   Map<String, dynamic> toJson() => _$PaymentDetailsToJson(this);
-
 }
 
 String getTitleFromCode(String code) {
