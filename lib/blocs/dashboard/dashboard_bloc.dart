@@ -493,7 +493,7 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
     dynamic checkoutsResponse = await api.getCheckout(GlobalUtils.activeToken.accessToken, state.activeBusiness.id);
     if (checkoutsResponse is List) {
       checkoutsResponse.forEach((element) {
-        checkouts.add(Checkout.fromMap(element));
+        checkouts.add(Checkout.fromJson(element));
       });
     }
     List defaults = checkouts.where((element) => element.isDefault).toList();

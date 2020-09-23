@@ -229,7 +229,7 @@ class CheckoutPaymentOption {
   @JsonKey(name: 'max')
   num max;
   @JsonKey(name: 'merchant_allowed_countries')
-  List<String> merchantAllowedCountries = [];
+  dynamic merchantAllowedCountries;
   @JsonKey(name: 'min')
   num min;
   @JsonKey(name: 'name')

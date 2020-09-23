@@ -74,7 +74,7 @@ class CheckoutSwitchScreenBloc extends Bloc<CheckoutSwitchScreenEvent, CheckoutS
     dynamic checkoutsResponse = await api.getCheckout(token, businessId);
     if (checkoutsResponse is List) {
       checkoutsResponse.forEach((element) {
-        checkouts.add(Checkout.fromMap(element));
+        checkouts.add(Checkout.fromJson(element));
       });
     }
 
@@ -99,7 +99,7 @@ class CheckoutSwitchScreenBloc extends Bloc<CheckoutSwitchScreenEvent, CheckoutS
     Map<String, String>body = {'name':event.name, 'logo':event.logo,};
     dynamic response = await api.createCheckout(GlobalUtils.activeToken.accessToken, event.businessId, body);
     if (response != null && response is Map) {
-      Checkout checkout = Checkout.fromMap(response);
+      Checkout checkout = Checkout.fromJson(response);
       checkoutScreenBloc.state.checkouts.add(checkout);
       yield CheckoutSwitchScreenStateSuccess();
     } else {

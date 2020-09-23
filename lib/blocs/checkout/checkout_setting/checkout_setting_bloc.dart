@@ -59,7 +59,7 @@ class CheckoutSettingScreenBloc extends Bloc<CheckoutSettingScreenEvent, Checkou
         dynamic connectionResponse = await api.getConnections(state.business, token);
         if (connectionResponse is List) {
           connectionResponse.forEach((element) {
-            connections.add(IntegrationModel.fromMap(element));
+            connections.add(IntegrationModel.fromJson(element));
           });
         }
 //        yield state.copyWith(connections: connections);

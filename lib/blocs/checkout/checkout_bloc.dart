@@ -193,7 +193,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     dynamic checkoutsResponse = await api.getCheckout(token, business);
     if (checkoutsResponse is List) {
       checkoutsResponse.forEach((element) {
-        checkouts.add(Checkout.fromMap(element));
+        checkouts.add(Checkout.fromJson(element));
       });
     }
 
@@ -228,7 +228,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     List<Section> availableSections = [];
     if (response is List) {
       response.forEach((element) {
-        availableSections.add(Section.fromMap(element));
+        availableSections.add(Section.fromJson(element));
       });
     }
     Map<String, PaymentVariant> paymentVariants = {};
@@ -279,7 +279,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     dynamic channelFlowResponse = await api.getCheckoutChannelFlow(
         token, channelSet.id);
     if (channelFlowResponse is Map) {
-      checkoutFlow = CheckoutFlow.fromMap(channelFlowResponse);
+      checkoutFlow = CheckoutFlow.fromJson(channelFlowResponse);
     }
 
     ChannelSetFlow channelSetFlow;
@@ -329,7 +329,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
         state.business, token);
     if (connectionResponse is List) {
       connectionResponse.forEach((element) {
-        connections.add(IntegrationModel.fromMap(element));
+        connections.add(IntegrationModel.fromJson(element));
       });
     }
 
@@ -337,7 +337,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
         state.business, token, state.defaultCheckout.id);
     if (checkoutConnectionResponse is List) {
       checkoutConnectionResponse.forEach((element) {
-        checkoutConnections.add(IntegrationModel.fromMap(element));
+        checkoutConnections.add(IntegrationModel.fromJson(element));
       });
     }
 
@@ -560,7 +560,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     Map<String, dynamic> body = {};
     List<Map<String, dynamic>> sectionMapList = [];
     sections.forEach((section) {
-      sectionMapList.add(section.toMap());
+      sectionMapList.add(section.toJson());
     });
 
     body['sections'] = sectionMapList;
@@ -573,7 +573,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     dynamic channelFlowResponse = await api.getCheckoutChannelFlow(
         token, channelSet.id);
     if (channelFlowResponse is Map) {
-      checkoutFlow = CheckoutFlow.fromMap(channelFlowResponse);
+      checkoutFlow = CheckoutFlow.fromJson(channelFlowResponse);
     }
 
     yield state.copyWith(
@@ -711,7 +711,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
           if (response is DioError) {
             yield CheckoutScreenStateFailure(error: response.message);
           } else if (response is Map) {
-            FinanceExpress express = FinanceExpress.fromMap(response);
+            FinanceExpress express = FinanceExpress.fromJson(response);
             yield state.copyWith(isLoading: false, financeTextLink: express);
           } else {
             yield CheckoutScreenStateFailure(error: 'Something wrong!');
@@ -727,7 +727,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
           if (response is DioError) {
             yield CheckoutScreenStateFailure(error: response.message);
           } else if (response is Map) {
-            FinanceExpress express = FinanceExpress.fromMap(response);
+            FinanceExpress express = FinanceExpress.fromJson(response);
             yield state.copyWith(isLoading: false, financeButton: express);
           } else {
             yield CheckoutScreenStateFailure(error: 'Something wrong!');
@@ -743,7 +743,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
           if (response is DioError) {
             yield CheckoutScreenStateFailure(error: response.message);
           } else if (response is Map) {
-            FinanceExpress express = FinanceExpress.fromMap(response);
+            FinanceExpress express = FinanceExpress.fromJson(response);
             yield state.copyWith(isLoading: false, financeCalculator: express);
           } else {
             yield state.copyWith(isLoading: false, financeCalculator: FinanceExpress());
@@ -759,7 +759,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
           if (response is DioError) {
             yield CheckoutScreenStateFailure(error: response.message);
           } else if (response is Map) {
-            FinanceExpress express = FinanceExpress.fromMap(response);
+            FinanceExpress express = FinanceExpress.fromJson(response);
             yield state.copyWith(isLoading: false, financeBubble: express);
           } else {
             yield state.copyWith(isLoading: false, financeBubble: FinanceExpress());
@@ -1095,7 +1095,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
         state.business, token, state.defaultCheckout.id);
     if (checkoutConnectionResponse is List) {
       checkoutConnectionResponse.forEach((element) {
-        connections.add(IntegrationModel.fromMap(element));
+        connections.add(IntegrationModel.fromJson(element));
       });
     }
     yield state.copyWith(checkoutConnections: connections);
@@ -1108,7 +1108,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
         state.business, token, state.defaultCheckout.id);
     if (checkoutConnectionResponse is List) {
       checkoutConnectionResponse.forEach((element) {
-        connections.add(IntegrationModel.fromMap(element));
+        connections.add(IntegrationModel.fromJson(element));
       });
     }
     yield state.copyWith(checkoutConnections: connections);

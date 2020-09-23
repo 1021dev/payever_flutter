@@ -1,6 +1,5 @@
 import 'package:flutter_svg/svg.dart';
 import 'package:payever/commons/commons.dart';
-import 'package:payever/commons/utils/common_utils.dart';
 import 'package:payever/connect/models/connect.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'models.g.dart';
@@ -23,34 +22,6 @@ class Checkout {
 
   factory Checkout.fromJson(Map<String, dynamic> json) => _$CheckoutFromJson(json);
   Map<String, dynamic> toJson() => _$CheckoutToJson(this);
-
-  Checkout.fromMap(dynamic obj) {
-    businessId = obj['businessId'];
-    createdAt = obj['createdAt'];
-    isDefault = obj['default'];
-    logo = obj['logo'];
-    name = obj['name'];
-    updatedAt = obj['updatedAt'];
-    v = obj['__v'];
-    id = obj['_id'];
-
-    dynamic connectionsObj = obj['connections'];
-    if (connectionsObj is List) {
-      connectionsObj.forEach((element) {
-        connections.add(element);
-      });
-    }
-    dynamic _sections = obj[GlobalUtils.DB_CHECKOUT_SECTIONS];
-    if (_sections is List) {
-      _sections.forEach((section) {
-        sections.add(Section.fromMap(section));
-      });
-    }
-    dynamic settingsObj = obj['settings'];
-    if (settingsObj is Map) {
-      settings = CheckoutSettings.fromMap(settingsObj);
-    }
-  }
 }
 
 @JsonSerializable()
@@ -68,50 +39,6 @@ class Section {
 
   factory Section.fromJson(Map<String, dynamic> json) => _$SectionFromJson(json);
   Map<String, dynamic> toJson() => _$SectionToJson(this);
-
-  Section.fromMap(dynamic obj) {
-    code = obj[GlobalUtils.DB_CHECKOUT_SECTIONS_CODE];
-    defaultEnabled = obj[GlobalUtils.DB_CHECKOUT_SECTIONS_DEFAULT_ENABLED];
-    enabled = obj[GlobalUtils.DB_CHECKOUT_SECTIONS_ENABLED];
-    fixed = obj[GlobalUtils.DB_CHECKOUT_SECTIONS_FIXED];
-    order = obj[GlobalUtils.DB_CHECKOUT_SECTIONS_ORDER];
-    id = obj['_id'];
-    var _excludedChannels = obj[GlobalUtils.DB_CHECKOUT_SECTIONS_EXCLUDED];
-    if (_excludedChannels is List) {
-      _excludedChannels.forEach((channel) {
-        excludedChannels.add(channel);
-      });
-    }
-
-    var subSectionsObj = obj['subsections'];
-    if (subSectionsObj is List) {
-      subSectionsObj.forEach((element) {
-        subsections.add(SubSection.fromMap(element));
-      });
-    }
-  }
-
-  Map<String, dynamic> toMap() {
-    Map<String, dynamic> map = {};
-
-    map['code'] = code;
-    map['defaultEnabled'] = defaultEnabled;
-    if (enabled != null) {
-      map['enabled'] = enabled;
-    }
-    map['fixed'] = fixed;
-    map['order'] = order;
-    map['excludedChannels'] = excludedChannels;
-    map['_id'] = id;
-
-    List list = [];
-    subsections.forEach((element) {
-      list.add(element.toMap());
-    });
-    map['subsections'] = list;
-
-    return map;
-  }
 }
 
 @JsonSerializable()
@@ -124,32 +51,6 @@ class SubSection {
 
   factory SubSection.fromJson(Map<String, dynamic> json) => _$SubSectionFromJson(json);
   Map<String, dynamic> toJson() => _$SubSectionToJson(this);
-
-  SubSection.fromMap(dynamic obj) {
-    code = obj['code'];
-    id = obj['_id'];
-    dynamic rulesObj = obj['rules'];
-    if (rulesObj is List) {
-      rulesObj.forEach((element) {
-        rules.add(Rule.fromMap(element));
-      });
-    }
-  }
-
-  Map<String, dynamic> toMap() {
-    Map<String, dynamic> map = {};
-
-    map['code'] = code;
-    map['_id'] = id;
-
-    List list = [];
-    rules.forEach((element) {
-      list.add(element.toMap());
-    });
-    map['rules'] = list;
-
-    return map;
-  }
 }
 
 @JsonSerializable()
@@ -163,24 +64,6 @@ class Rule {
 
   factory Rule.fromJson(Map<String, dynamic> json) => _$RuleFromJson(json);
   Map<String, dynamic> toJson() => _$RuleToJson(this);
-
-  Rule.fromMap(dynamic obj) {
-    operator = obj['operator'];
-    property = obj['property'];
-    type = obj['type'];
-    id = obj['_id'];
-  }
-
-  Map<String, dynamic> toMap() {
-    Map<String, dynamic> map = {};
-
-    map['operator'] = operator;
-    map['property'] = property;
-    map['type'] = type;
-    map['_id'] = id;
-
-    return map;
-  }
 }
 
 @JsonSerializable()
@@ -197,35 +80,12 @@ class CheckoutSettings {
   factory CheckoutSettings.fromJson(Map<String, dynamic> json) => _$CheckoutSettingsFromJson(json);
   Map<String, dynamic> toJson() => _$CheckoutSettingsToJson(this);
 
-  CheckoutSettings.fromMap(dynamic obj) {
-    dynamic cspAllowedHostObj = obj['cspAllowedHosts'];
-    if (cspAllowedHostObj is List) {
-      cspAllowedHostObj.forEach((element) {
-        cspAllowedHosts.add(element.toString());
-      });
-    }
-    dynamic langObj = obj['languages'];
-    if (langObj is List) {
-      langObj.forEach((element) {
-        languages.add(Lang.fromMap(element));
-      });
-    }
-    message = obj['message'];
-    phoneNumber = obj['phoneNumber'];
-    testingMode = obj['testingMode'];
-    dynamic stylesObj = obj['styles'];
-    if (stylesObj is Map) {
-      styles = Style.fromMap(stylesObj);
-    }
-
-  }
-
   Map<String, dynamic> toDictionary() {
     Map<String, dynamic> map = {};
     map['cspAllowedHosts'] = cspAllowedHosts;
     List<Map<String, dynamic>>langs = [];
     languages.forEach((element) {
-      langs.add(element.toDictionary());
+      langs.add(element.toJson());
     });
     map['languages'] = langs;
     map['message'] = message;
@@ -251,28 +111,6 @@ class Lang {
 
   factory Lang.fromJson(Map<String, dynamic> json) => _$LangFromJson(json);
   Map<String, dynamic> toJson() => _$LangToJson(this);
-
-  Lang.fromMap(dynamic obj) {
-    active = obj['active'];
-    code = obj['code'];
-    isDefault = obj['isDefault'];
-    isHovered = obj['isHovered'];
-    isToggleButton = obj['isToggleButton'];
-    name = obj['name'];
-    id = obj['id'];
-  }
-
-  Map<String, dynamic> toDictionary() {
-    Map<String, dynamic> map = {};
-    map['active'] = active;
-    map['code'] = code;
-    map['isDefault'] = isDefault;
-    map['isHovered'] = isHovered;
-    map['isToggleButton'] = isToggleButton;
-    map['name'] = name;
-    map['id'] = id;
-    return map;
-  }
 }
 
 @JsonSerializable()
@@ -304,42 +142,12 @@ class Style {
   factory Style.fromJson(Map<String, dynamic> json) => _$StyleFromJson(json);
   Map<String, dynamic> toJson() => _$StyleToJson(this);
 
-  Style.fromMap(dynamic obj) {
-    dynamic buttonObj = obj['button'];
-    if (buttonObj is Map) {
-      button = ButtonStyle.fromMap(buttonObj);
-    }
-    dynamic pageObj = obj['page'];
-    if (pageObj is Map) {
-      page = PageStyle.fromMap(pageObj);
-    }
-    id = obj['id'];
-    id1 = obj['_id'];
-    active = obj['active'];
-    businessHeaderBackgroundColor = obj['businessHeaderBackgroundColor'];
-    businessHeaderBorderColor = obj['businessHeaderBorderColor'];
-    buttonBackgroundColor = obj['buttonBackgroundColor'];
-    buttonBackgroundDisabledColor = obj['buttonBackgroundDisabledColor'];
-    buttonBorderRadius = obj['buttonBorderRadius'];
-    buttonTextColor = obj['buttonTextColor'];
-    inputBackgroundColor = obj['inputBackgroundColor'];
-    inputBorderColor = obj['inputBorderColor'];
-    inputBorderRadius = obj['inputBorderRadius'];
-    inputTextPrimaryColor = obj['inputTextPrimaryColor'];
-    inputTextSecondaryColor = obj['inputTextSecondaryColor'];
-    pageBackgroundColor = obj['pageBackgroundColor'];
-    pageLineColor = obj['pageLineColor'];
-    pageTextLinkColor = obj['pageTextLinkColor'];
-    pageTextPrimaryColor = obj['pageTextPrimaryColor'];
-    pageTextSecondaryColor = obj['pageTextSecondaryColor'];
-  }
-
   Map<String, dynamic> toDictionary() {
     Map<String, dynamic> map = {};
     if (button != null)
       map['button'] = button.toDictionary();
     if (page != null)
-      map['page'] = page.toDictionary();
+      map['page'] = page.toJson();
     map['id'] = id;
     map['_id'] = id1;
     map['active'] = active;
@@ -372,16 +180,6 @@ class PageStyle {
 
   factory PageStyle.fromJson(Map<String, dynamic> json) => _$PageStyleFromJson(json);
   Map<String, dynamic> toJson() => _$PageStyleToJson(this);
-
-  PageStyle.fromMap(dynamic obj) {
-    background = obj['background'];
-  }
-
-  Map<String, dynamic> toDictionary() {
-    Map<String, dynamic> map = {};
-    map['background'] = background;
-    return map;
-  }
 }
 
 @JsonSerializable()
@@ -394,20 +192,11 @@ class ButtonStyle {
   factory ButtonStyle.fromJson(Map<String, dynamic> json) => _$ButtonStyleFromJson(json);
   Map<String, dynamic> toJson() => _$ButtonStyleToJson(this);
 
-  ButtonStyle.fromMap(dynamic obj) {
-    corners = obj['corners'];
-
-    dynamic colorObj = obj['color'];
-    if (colorObj is Map) {
-      color = ButtonColorStyle.fromMap(colorObj);
-    }
-  }
-
   Map<String, dynamic> toDictionary() {
     Map<String, dynamic> map = {};
     map['corners'] = corners;
     if (color != null)
-      map['color'] = color.toDictionary();
+      map['color'] = color.toJson();
     return map;
   }
 }
@@ -422,20 +211,6 @@ class ButtonColorStyle {
 
   factory ButtonColorStyle.fromJson(Map<String, dynamic> json) => _$ButtonColorStyleFromJson(json);
   Map<String, dynamic> toJson() => _$ButtonColorStyleToJson(this);
-
-  ButtonColorStyle.fromMap(dynamic obj) {
-    borders = obj['borders'];
-    fill = obj['fill'];
-    text = obj['text'];
-  }
-
-  Map<String, dynamic> toDictionary() {
-    Map<String, dynamic> map = {};
-    map['borders'] = borders;
-    map['fill'] = fill;
-    map['text'] = text;
-    return map;
-  }
 }
 
 @JsonSerializable()
@@ -461,45 +236,6 @@ class CheckoutFlow {
 
   factory CheckoutFlow.fromJson(Map<String, dynamic> json) => _$CheckoutFlowFromJson(json);
   Map<String, dynamic> toJson() => _$CheckoutFlowToJson(this);
-
-  CheckoutFlow.fromMap(dynamic obj) {
-    businessUuid = obj['businessUuid'];
-    channelType = obj['channelType'];
-    currency = obj['currency'];
-    customPolicy = obj['customPolicy'];
-    logo = obj['logo'];
-    message = obj['message'];
-    name = obj['name'];
-    phoneNumber = obj['phoneNumber'];
-    policyEnabled = obj['policyEnabled'];
-    testingMode = obj['testingMode'];
-    uuid = obj['uuid'];
-    limits = obj['limits'];
-
-    dynamic stylesObj = obj['styles'];
-    if (stylesObj is Map) {
-      styles = Style.fromMap(stylesObj);
-    }
-    dynamic langObj = obj['languages'];
-    if (langObj is List) {
-      langObj.forEach((element) {
-        languages.add(Lang.fromMap(element));
-      });
-    }
-    dynamic paymentMethodsObj = obj['paymentMethods'];
-    if (paymentMethodsObj is List) {
-      paymentMethodsObj.forEach((element) {
-        paymentMethods.add(element.toString());
-      });
-    }
-    dynamic sectionsObj = obj['sections'];
-    if (sectionsObj is List) {
-      sectionsObj.forEach((element) {
-        sections.add(Section.fromMap(element));
-      });
-    }
-
-  }
 }
 
 @JsonSerializable()
@@ -652,11 +388,6 @@ class IntegrationModel {
 
   factory IntegrationModel.fromJson(Map<String, dynamic> json) => _$IntegrationModelFromJson(json);
   Map<String, dynamic> toJson() => _$IntegrationModelToJson(this);
-
-  IntegrationModel.fromMap(dynamic obj) {
-    integration = obj['integration'];
-    id = obj['_id'];
-  }
 }
 
 @JsonSerializable()
@@ -670,13 +401,6 @@ class FinanceExpressSetting {
 
   factory FinanceExpressSetting.fromJson(Map<String, dynamic> json) => _$FinanceExpressSettingFromJson(json);
   Map<String, dynamic> toJson() => _$FinanceExpressSettingToJson(this);
-
-  FinanceExpressSetting.fromMap(dynamic obj) {
-    bannerAndRate = obj['banner-and-rate'];
-    bubble = obj['bubble'];
-    button = obj['button'];
-    textLink = obj['text-link'];
-  }
 }
 
 @JsonSerializable()
@@ -702,25 +426,6 @@ class FinanceExpress {
 
   factory FinanceExpress.fromJson(Map<String, dynamic> json) => _$FinanceExpressFromJson(json);
   Map<String, dynamic> toJson() => _$FinanceExpressToJson(this);
-
-  FinanceExpress.fromMap(dynamic obj) {
-    adaptiveDesign = obj['adaptiveDesign'];
-    bgColor = obj['bgColor'];
-    borderColor = obj['borderColor'];
-    buttonColor = obj['buttonColor'];
-    displayType = obj['displayType'];
-    linkColor = obj['linkColor'];
-    linkTo = obj['linkTo'];
-    order = obj['order'];
-    size = obj['size'];
-    textColor = obj['textColor'];
-    visibility = obj['visibility'];
-    alignment = obj['alignment'];
-    corners = obj['corners'];
-    height = obj['height'];
-    textSize = obj['textSize'];
-    width = obj['width'];
-  }
 
   Map<String, dynamic> toDictionary() {
     Map<String, dynamic> map = {};
@@ -760,20 +465,6 @@ class ShopSystem {
 
   factory ShopSystem.fromJson(Map<String, dynamic> json) => _$ShopSystemFromJson(json);
   Map<String, dynamic> toJson() => _$ShopSystemToJson(this);
-
-  ShopSystem.fromMap(dynamic obj) {
-    channel = obj['channel'];
-    createdAt = obj['createdAt'];
-    description = obj['description'];
-    documentation = obj['documentation'];
-    marketplace = obj['marketplace'];
-    dynamic pluginFilesObj = obj['pluginFiles'];
-    if (pluginFilesObj is List) {
-      pluginFilesObj.forEach((element) => pluginFiles.add(Plugin.fromMap(element)));
-    }
-    updatedAt = obj['updatedAt'];
-    id = obj['_id'];
-  }
 }
 
 @JsonSerializable()
@@ -790,16 +481,6 @@ class Plugin {
 
   factory Plugin.fromJson(Map<String, dynamic> json) => _$PluginFromJson(json);
   Map<String, dynamic> toJson() => _$PluginToJson(this);
-
-  Plugin.fromMap(dynamic obj) {
-    createdAt = obj['createdAt'];
-    filename = obj['filename'];
-    maxCmsVersion = obj['maxCmsVersion'];
-    minCmsVersion = obj['minCmsVersion'];
-    updatedAt = obj['updatedAt'];
-    version = obj['version'];
-    id = obj['_id'];
-  }
 }
 
 @JsonSerializable()
@@ -820,29 +501,6 @@ class APIkey {
 
   factory APIkey.fromJson(Map<String, dynamic> json) => _$APIkeyFromJson(json);
   Map<String, dynamic> toJson() => _$APIkeyToJson(this);
-
-  APIkey.fromMap(dynamic obj) {
-    createdAt = obj['createdAt'];
-    businessId = obj['businessId'];
-    dynamic grantsObj = obj['grants'];
-    if (grantsObj is List) {
-      grantsObj.forEach((element) => grants.add(element));
-    }
-
-    dynamic scopesObj = obj['scopes'];
-    if (scopesObj is List) {
-      scopesObj.forEach((element) => scopes.add(element));
-    }
-
-    isActive = obj['isActive'];
-    name = obj['name'];
-    redirectUri = obj['redirectUri'];
-    updatedAt = obj['updatedAt'];
-    secret = obj['secret'];
-    user = obj['user'];
-    id = obj['id'];
-  }
-
 }
 
 class ChannelItem {

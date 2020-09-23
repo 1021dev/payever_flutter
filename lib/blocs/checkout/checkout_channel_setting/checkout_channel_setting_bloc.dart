@@ -39,7 +39,7 @@ class CheckoutChannelSettingScreenBloc extends Bloc<CheckoutChannelSettingScreen
       yield state.copyWith(isLoading: true);
       dynamic response = await api.getPluginShopSystem(token, state.connectModel.integration.name);
       if (response is Map) {
-        shopSystem = ShopSystem.fromMap(response);
+        shopSystem = ShopSystem.fromJson(response);
       }
       List<String>clients = [];
       dynamic clientsResponse = await api.getShopSystemClients(token, state.business, state.connectModel.integration.name);
@@ -51,7 +51,7 @@ class CheckoutChannelSettingScreenBloc extends Bloc<CheckoutChannelSettingScreen
       dynamic apiKeysResponse = await api.getShopSystemAPIKeys(token, state.business, clients);
       if (apiKeysResponse is List) {
         apiKeysResponse.forEach((element) {
-          APIkey apiKey = APIkey.fromMap(element);
+          APIkey apiKey = APIkey.fromJson(element);
           apiKeys.add(apiKey);
         });
       }
@@ -68,7 +68,7 @@ class CheckoutChannelSettingScreenBloc extends Bloc<CheckoutChannelSettingScreen
     if (response is DioError) {
       yield CheckoutChannelSettingScreenFailure(error: response.message);
     } else {
-      APIkey apiKey = APIkey.fromMap(response);
+      APIkey apiKey = APIkey.fromJson(response);
       await api.postShopSystemApikey(token, state.business, apiKey.id, state.connectModel.integration.name);
       apis.add(apiKey);
       yield state.copyWith(isUpdating: false, apiKeys: apis);

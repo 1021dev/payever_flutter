@@ -19,9 +19,7 @@ CheckoutPaymentOption _$CheckoutPaymentOptionFromJson(
     ..imageSecondaryFilename = json['image_secondary_filename'] as String
     ..instructionText = json['instruction_text'] as String
     ..max = json['max'] as num
-    ..merchantAllowedCountries = (json['merchant_allowed_countries'] as List)
-        ?.map((e) => e as String)
-        ?.toList()
+    ..merchantAllowedCountries = json['merchant_allowed_countries']
     ..min = json['min'] as num
     ..name = json['name'] as String
     ..options = json['options'] == null
