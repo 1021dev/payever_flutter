@@ -40,7 +40,7 @@ class WorkshopScreen extends StatefulWidget {
 
 class _WorkshopScreenState extends State<WorkshopScreen> {
   int _selectedSectionIndex = 0;
-  bool isOrderApproved = true;
+  bool isOrderApproved = false;
   bool isAccountApproved = false;
   bool isBillingApproved = false;
   bool isSendDeviceApproved = false;
@@ -116,7 +116,12 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
           setState(() {
             switch (_selectedSectionIndex) {
               case 0:
-                // isOrderApproved = true;
+                isOrderApproved = true;
+                if (editOrder) {
+                  setState(() {
+                    editOrder = false;
+                  });
+                }
                 break;
               case 1:
                 isAccountApproved = true;
@@ -157,6 +162,18 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
   }
 
   Widget _body(WorkshopScreenState state) {
+    if (switchCheckout) {
+      return CheckoutSwitchScreen(
+        businessId: state.business,
+        checkoutScreenBloc: widget.checkoutScreenBloc,
+        onOpen: (Checkout checkout) {
+          setState(() {
+            switchCheckout = false;
+          });
+        },
+      );
+    }
+
     String openUrl =
         'https://checkout.payever.org/pay/create-flow/channel-set-id/${widget.checkoutScreenBloc.state.channelSet.id}';
     return Container(
@@ -167,6 +184,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
             businessName: widget.checkoutScreenBloc.dashboardScreenBloc.state
                 .activeBusiness.name,
             openUrl: state.channelSetFlow.id,
+            isLoadingQrcode: state.isLoadingQrcode,
             onOpenTap: () {
               Navigator.push(
                 context,
@@ -187,20 +205,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
             },
           ),
           Flexible(
-            child: Stack(
-              children: [
-                _workshop(state),
-                state.isLoadingQrcode
-                    ? Center(
-                      child: Container(
-                          width: 40,
-                          height: 40,
-                          child: CircularProgressIndicator(),
-                        ),
-                    )
-                    : Container()
-              ],
-            ),
+            child: _workshop(state),
           ),
         ],
       ),
@@ -226,17 +231,6 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
     NumberFormat format = NumberFormat();
     currency = format.simpleCurrencySymbol(currencyString);
 
-    if (switchCheckout) {
-      return CheckoutSwitchScreen(
-        businessId: state.business,
-        checkoutScreenBloc: widget.checkoutScreenBloc,
-        onOpen: (Checkout checkout) {
-          setState(() {
-            switchCheckout = false;
-          });
-        },
-      );
-    }
     return BackgroundBase(
       true,
       body: Container(
@@ -360,7 +354,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                               right: 16,
                               top: 16,
                             ),
-                            child: _editOrderView(state))
+                            child: _orderView(state)/*_editOrderView(state)*/)
                         : Container(
                             width: Measurements.width,
                             padding: EdgeInsets.only(
@@ -413,133 +407,6 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
         ));
   }
 
-  Widget _editOrderView(WorkshopScreenState state) {
-    return Column(
-      children: <Widget>[
-        Container(
-          decoration: BoxDecoration(
-            border: Border.all(color: iconColor()),
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-          ),
-          child: Column(
-            children: <Widget>[
-              Container(
-                child: TextFormField(
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                  ),
-                  onChanged: (val) {},
-                  initialValue: '',
-                  decoration: InputDecoration(
-                    prefixIcon: Container(
-                      width: 44,
-                      child: Center(
-                        child: Text(
-                          currency,
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ),
-                    ),
-                    contentPadding: EdgeInsets.symmetric(vertical: 4),
-                    labelText: Language.getCartStrings(
-                        'checkout_cart_edit.form.label.amount'),
-                    labelStyle: TextStyle(
-                      color: Colors.grey,
-                    ),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.transparent,
-                        width: 0.5,
-                      ),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.black,
-                        width: 0.5,
-                      ),
-                    ),
-                    isDense: true,
-                  ),
-                  keyboardType: TextInputType.numberWithOptions(decimal: true),
-                ),
-              ),
-              _divider,
-              Container(
-                padding: EdgeInsets.only(left: 4, right: 4),
-                child: TextFormField(
-                  style: TextStyle(
-                    fontSize: 16,
-                  ),
-                  onChanged: (val) {},
-                  initialValue: '',
-                  decoration: InputDecoration(
-                    labelText: Language.getCartStrings(
-                        'checkout_cart_edit.form.label.reference'),
-                    labelStyle: TextStyle(
-                      color: Colors.grey,
-                    ),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.transparent,
-                        width: 0.5,
-                      ),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.black,
-                        width: 0.5,
-                      ),
-                    ),
-                    contentPadding:
-                        EdgeInsets.only(left: 16, right: 16, top: 0, bottom: 0),
-                  ),
-                  keyboardType: TextInputType.text,
-                ),
-              ),
-            ],
-          ),
-        ),
-        SizedBox(
-          height: 20,
-        ),
-        Container(
-          height: 50,
-          child: SizedBox.expand(
-            child: MaterialButton(
-              onPressed: () {
-                if (!state.isUpdating) {
-                  _selectedSectionIndex = 2;
-                  isAccountApproved = true;
-                }
-              },
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4),
-              ),
-              color: Colors.black87,
-              child: state.isUpdating
-                  ? CircularProgressIndicator()
-                  : Text(
-                      'Save',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 20,
-        ),
-      ],
-    );
-  }
-
   Widget _orderView(WorkshopScreenState state) {
     if (state.channelSetFlow == null) {
       return Container();
@@ -554,7 +421,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
             WorkshopHeader(
               title:
                   Language.getCheckoutStrings('checkout_order_summary.title'),
-              isExpanded: _selectedSectionIndex == 0,
+              isExpanded: editOrder ? true : _selectedSectionIndex == 0,
               isApproved: isOrderApproved,
               onTap: () {
                 setState(() {
@@ -563,7 +430,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
               },
             ),
             Visibility(
-              visible: _selectedSectionIndex == 0,
+              visible: editOrder ? true : _selectedSectionIndex == 0,
               child: Column(
                 children: <Widget>[
                   Container(
@@ -716,7 +583,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                         child: state.isUpdating && state.updatePayflowIndex == 0
                             ? CircularProgressIndicator()
                             : Text(
-                                'Next Step',
+                                editOrder ? 'Save' : 'Next Step',
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w400,

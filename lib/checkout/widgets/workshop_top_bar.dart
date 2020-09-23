@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:payever/blocs/bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../theme.dart';
 import 'checkout_top_button.dart';
@@ -15,6 +14,7 @@ class WorkshopTopBar extends StatefulWidget {
   final String title;
   final String businessName;
   final String openUrl;
+  final bool isLoadingQrcode;
 
   WorkshopTopBar(
       {this.onOpenTap,
@@ -23,7 +23,8 @@ class WorkshopTopBar extends StatefulWidget {
       this.onCloseTap,
       this.businessName,
       this.openUrl,
-      this.onCopyPrefilledLink});
+      this.onCopyPrefilledLink,
+      this.isLoadingQrcode = false});
 
   @override
   _WorkshopTopBarState createState() => _WorkshopTopBarState();
@@ -87,47 +88,60 @@ class _WorkshopTopBarState extends State<WorkshopTopBar> {
           SizedBox(
             width: 10,
           ),
-          Container(
-            height: 30,
-            width: 30,
-            decoration: BoxDecoration(
-              color: overlayBackground().withOpacity(1),
-              shape: BoxShape.circle,
-            ),
-            child: PopupMenuButton<CheckOutPopupButton>(
-              child: Icon(
-                Icons.more_horiz,
-              ),
-              offset: Offset(0, 100),
-              onSelected: (CheckOutPopupButton item) => item.onTap(),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              color: overlayFilterViewBackground(),
-              itemBuilder: (BuildContext context) {
-                return _morePopup(context).map((CheckOutPopupButton item) {
-                  return PopupMenuItem<CheckOutPopupButton>(
-                    value: item,
-                    child: Row(
-                      children: <Widget>[
-                        item.icon,
-                        SizedBox(
-                          width: 8,
-                        ),
-                        Text(
-                          item.title,
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ],
+          widget.isLoadingQrcode
+              ? Center(
+                  child: Container(
+                    width: 30,
+                    height: 30,
+                    padding: EdgeInsets.all(5),
+                    child: CircularProgressIndicator(
+                      backgroundColor: Colors.white,
+                      strokeWidth: 2,
                     ),
-                  );
-                }).toList();
-              },
-            ),
-          ),
+                  ),
+                )
+              : Container(
+                  height: 30,
+                  width: 30,
+                  decoration: BoxDecoration(
+                    color: overlayBackground().withOpacity(1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: PopupMenuButton<CheckOutPopupButton>(
+                    child: Icon(
+                      Icons.more_horiz,
+                    ),
+                    offset: Offset(0, 100),
+                    onSelected: (CheckOutPopupButton item) => item.onTap(),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    color: overlayFilterViewBackground(),
+                    itemBuilder: (BuildContext context) {
+                      return _morePopup(context)
+                          .map((CheckOutPopupButton item) {
+                        return PopupMenuItem<CheckOutPopupButton>(
+                          value: item,
+                          child: Row(
+                            children: <Widget>[
+                              item.icon,
+                              SizedBox(
+                                width: 8,
+                              ),
+                              Text(
+                                item.title,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList();
+                    },
+                  ),
+                ),
           SizedBox(
             width: 10,
           ),
@@ -149,8 +163,7 @@ class _WorkshopTopBarState extends State<WorkshopTopBar> {
         onTap: () async {
           // Clipboard.setData(
           //     new ClipboardData(text: widget.checkoutScreenBloc.state.openUrl));
-          Clipboard.setData(
-              new ClipboardData(text: widget.openUrl));
+          Clipboard.setData(new ClipboardData(text: widget.openUrl));
           Fluttertoast.showToast(msg: 'Link successfully copied');
         },
       ),
@@ -163,7 +176,7 @@ class _WorkshopTopBarState extends State<WorkshopTopBar> {
           color: iconColor(),
         ),
         onTap: () async {
-            widget.onCopyPrefilledLink();
+          widget.onCopyPrefilledLink();
         },
       ),
       CheckOutPopupButton(
