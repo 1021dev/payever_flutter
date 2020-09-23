@@ -78,7 +78,7 @@ class CheckoutSettings {
   @JsonKey(name: 'testingMode')       bool testingMode = false;
 
   factory CheckoutSettings.fromJson(Map<String, dynamic> json) => _$CheckoutSettingsFromJson(json);
-  Map<String, dynamic> toJson() => _$CheckoutSettingsToJson(this);
+  // Map<String, dynamic> toJson() => _$CheckoutSettingsToJson(this);
 
   Map<String, dynamic> toDictionary() {
     Map<String, dynamic> map = {};
@@ -140,7 +140,7 @@ class Style {
   @JsonKey(name: 'pageTextSecondaryColor')          String pageTextSecondaryColor = '#8e8e8e';
 
   factory Style.fromJson(Map<String, dynamic> json) => _$StyleFromJson(json);
-  Map<String, dynamic> toJson() => _$StyleToJson(this);
+  // Map<String, dynamic> toJson() => _$StyleToJson(this);
 
   Map<String, dynamic> toDictionary() {
     Map<String, dynamic> map = {};
@@ -190,7 +190,7 @@ class ButtonStyle {
   @JsonKey(name: 'color')     ButtonColorStyle color = ButtonColorStyle();
 
   factory ButtonStyle.fromJson(Map<String, dynamic> json) => _$ButtonStyleFromJson(json);
-  Map<String, dynamic> toJson() => _$ButtonStyleToJson(this);
+  // Map<String, dynamic> toJson() => _$ButtonStyleToJson(this);
 
   Map<String, dynamic> toDictionary() {
     Map<String, dynamic> map = {};
@@ -426,28 +426,6 @@ class FinanceExpress {
 
   factory FinanceExpress.fromJson(Map<String, dynamic> json) => _$FinanceExpressFromJson(json);
   Map<String, dynamic> toJson() => _$FinanceExpressToJson(this);
-
-  Map<String, dynamic> toDictionary() {
-    Map<String, dynamic> map = {};
-    if (adaptiveDesign != null)       map['adaptiveDesign'] = adaptiveDesign;
-    if (bgColor != null)              map['bgColor'] = bgColor;
-    if (borderColor != null)          map['borderColor'] = borderColor;
-    if (buttonColor != null)          map['buttonColor'] = buttonColor;
-    if (displayType != null)          map['displayType'] = displayType;
-    if (linkColor != null)            map['linkColor'] = linkColor;
-    if (linkTo != null)               map['linkTo'] = linkTo;
-    if (order != null)                map['order'] = order;
-    if (size != null)                 map['size'] = size;
-    if (textColor != null)            map['textColor'] = textColor;
-    if (visibility != null)           map['visibility'] = visibility;
-    if (alignment != null)            map['alignment'] = alignment;
-    if (corners != null)              map['corners'] = corners;
-    if (height != null)               map['height'] = height;
-    if (textSize != null)             map['textSize'] = textSize;
-    if (width != null)                map['width'] = width;
-
-    return map;
-  }
 }
 
 @JsonSerializable()

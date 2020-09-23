@@ -779,7 +779,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
     }
     switch(type) {
       case Finance.TEXT_LINK:
-          Map<String, dynamic>body = state.financeTextLink.toDictionary();
+          Map<String, dynamic>body = state.financeTextLink.toJson();
           dynamic response = await api.updateFinanceExpressSettings(channelSetFinance.id,
               FinanceType[type], body);
           if (response is DioError) {
@@ -791,7 +791,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
           }
         break;
       case Finance.BUTTON:
-        Map<String, dynamic>body = state.financeButton.toDictionary();
+        Map<String, dynamic>body = state.financeButton.toJson();
         dynamic response = await api.updateFinanceExpressSettings(channelSetFinance.id,
             FinanceType[type], body);
         if (response is DioError) {
@@ -803,7 +803,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
         }
         break;
       case Finance.CALCULATOR:
-        Map<String, dynamic>body = state.financeCalculator.toDictionary();
+        Map<String, dynamic>body = state.financeCalculator.toJson();
         dynamic response = await api.updateFinanceExpressSettings(channelSetFinance.id,
             FinanceType[type], body);
         if (response is DioError) {
@@ -815,7 +815,7 @@ class CheckoutScreenBloc extends Bloc<CheckoutScreenEvent, CheckoutScreenState> 
         }
         break;
       case Finance.BUBBLE:
-        Map<String, dynamic>body = state.financeBubble.toDictionary();
+        Map<String, dynamic>body = state.financeBubble.toJson();
         dynamic response = await api.updateFinanceExpressSettings(channelSetFinance.id,
             FinanceType[type], body);
         if (response is DioError) {
