@@ -982,7 +982,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
       children: <Widget>[
         WorkshopHeader(
           title: 'BILLING & SHIPPING',
-          subTitle: 'Add your billing and shipping address',
+          subTitle: isBillingApproved ? googleAutocomplete : 'Add your billing and shipping address',
           isExpanded: _selectedSectionIndex == 2,
           isApproved: isBillingApproved,
           onTap: () {
@@ -1088,7 +1088,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                             },
                             initialValue: company,
                             decoration: InputDecoration(
-                              labelText: 'Company',
+                              labelText: 'Company (optional)',
                               labelStyle: TextStyle(
                                 color: Colors.grey,
                               ),
@@ -1132,7 +1132,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                             },
                             initialValue: phone,
                             decoration: InputDecoration(
-                              labelText: 'Phone',
+                              labelText: 'Phone (optional)',
                               labelStyle: TextStyle(
                                 color: Colors.grey,
                               ),
@@ -1166,60 +1166,63 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                   child: SizedBox.expand(
                     child: MaterialButton(
                       onPressed: () {
-                        // Map<String, dynamic> body = {
-                        //   'city': 'Berlin',
-                        //   'company': company,
-                        //   'country': 'DE',
-                        //   'email': 'abiantgmbh@payever.de',
-                        //   'first_name': 'Artur',
-                        //   'full_address':
-                        //       'Germaniastraße, 12099, 12099 Berlin, Germany',
-                        //   'id': state.channelSetFlow.billingAddress.id,
-                        //   'last_name': 'S',
-                        //   'phone': phone,
-                        //   'salutation': 'SALUTATION_MR',
-                        //   'select_address': '',
-                        //   'social_security_number': '',
-                        //   'street': 'Germaniastraße, 12099',
-                        //   'street_name': 'Germaniastraße',
-                        //   'street_number': '12099',
-                        //   'type': 'billing',
-                        //   'zip_code': 'billing',
-                        // };
-                        // screenBloc
-                        //     .add(PatchCheckoutFlowAddressEvent(body: body));
-
-                        if (countryCode == null || countryCode.isEmpty) {
-                          Fluttertoast.showToast(msg: 'Country is needed');
-                          return;
-                        }
-                        if (salutation == null || salutation.isEmpty) {
-                          Fluttertoast.showToast(msg: 'Salutation is needed');
-                          return;
-                        }
-                        if (_formKeyBilling.currentState.validate() && !state.isUpdating) {
+                        bool testMode = false;
+                        if (testMode) {
                           Map<String, dynamic> body = {
-                            'city': city,
+                            'city': 'Berlin',
                             'company': company,
-                            'country': countryCode,
-                            'email': email,
-                            'first_name': firstName,
-                            'full_address': googleAutocomplete,
+                            'country': 'DE',
+                            'email': 'abiantgmbh@payever.de',
+                            'first_name': 'Artur',
+                            'full_address':
+                                'Germaniastraße, 12099, 12099 Berlin, Germany',
                             'id': state.channelSetFlow.billingAddress.id,
-                            'last_name': lastName,
+                            'last_name': 'S',
                             'phone': phone,
-                            'salutation': salutation,
+                            'salutation': 'SALUTATION_MR',
                             'select_address': '',
                             'social_security_number': '',
-                            'street': street,
-                            'street_name': street,
-                            'street_number': zipCode,
+                            'street': 'Germaniastraße, 12099',
+                            'street_name': 'Germaniastraße',
+                            'street_number': '12099',
                             'type': 'billing',
-                            'zip_code': zipCode,
+                            'zip_code': 'billing',
                           };
-                          print('body: $body');
                           screenBloc
                               .add(PatchCheckoutFlowAddressEvent(body: body));
+                        } else {
+                          if (countryCode == null || countryCode.isEmpty) {
+                            Fluttertoast.showToast(msg: 'Country is needed');
+                            return;
+                          }
+                          if (salutation == null || salutation.isEmpty) {
+                            Fluttertoast.showToast(msg: 'Salutation is needed');
+                            return;
+                          }
+                          if (_formKeyBilling.currentState.validate() && !state.isUpdating) {
+                            Map<String, dynamic> body = {
+                              'city': city,
+                              'company': company,
+                              'country': countryCode,
+                              'email': email,
+                              'first_name': firstName,
+                              'full_address': googleAutocomplete,
+                              'id': state.channelSetFlow.billingAddress.id,
+                              'last_name': lastName,
+                              'phone': phone,
+                              'salutation': salutation,
+                              'select_address': '',
+                              'social_security_number': '',
+                              'street': street,
+                              'street_name': street,
+                              'street_number': zipCode,
+                              'type': 'billing',
+                              'zip_code': zipCode,
+                            };
+                            print('body: $body');
+                            screenBloc
+                                .add(PatchCheckoutFlowAddressEvent(body: body));
+                          }
                         }
                       },
                       shape: RoundedRectangleBorder(

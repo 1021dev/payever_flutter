@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:iso_countries/country.dart';
@@ -178,9 +180,39 @@ class _AddressFieldGroupState extends State<AddressFieldGroup> {
                 onChanged: (val) {
                   widget.onChangedStreet(val);
                 },
-                validator: (value) {
+                validator: (String value) {
                   if (value.isEmpty) {
                     return 'Street is required.';
+                  }
+                  if (!value.contains(',') && !value.contains(' ')) {
+                    return 'House number required.';
+                  }
+
+                  bool hasHouseNum = false;
+                  List<String> temp = [];
+                  if (value.contains(',')) {
+                    temp = value.split(',');
+                    temp.forEach((element) {
+                      if (isNumeric(element)) {
+                        hasHouseNum = true;
+                      }
+                    });
+                  }
+
+                  if (!hasHouseNum) {
+                    List<String> temp = [];
+                    if (value.contains(' ')) {
+                      temp = value.split(' ');
+                      temp.forEach((element) {
+                        if (isNumeric(element)) {
+                          hasHouseNum = true;
+                        }
+                      });
+                    }
+                  }
+
+                  if (!hasHouseNum) {
+                    return 'House number required.';
                   }
                   return null;
                 },

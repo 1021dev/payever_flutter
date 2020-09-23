@@ -66,16 +66,44 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
     return Container(
       height: 120,
       alignment: Alignment.bottomCenter,
-      child: WorkshopTopBar(
-        // checkoutScreenBloc: checkoutScreenBloc,
+      child:
+          /*WorkshopTopBar(
         openUrl: openUrl,
         title: 'Pay by Link Editing',
         onCloseTap: () {
           Navigator.pop(context);
         },
+      )*/
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 10),
+        width: double.infinity,
+        height: 50,
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                'Pay by Link Editing',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ),
+            IconButton(
+                icon: Icon(
+                  Icons.close,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                }),
+          ],
+        ),
       ),
     );
   }
+
   @override
   Size get preferredSize => Size.fromHeight(50);
 }

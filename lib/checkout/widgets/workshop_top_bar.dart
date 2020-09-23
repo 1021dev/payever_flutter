@@ -15,8 +15,15 @@ class WorkshopTopBar extends StatefulWidget {
   final String title;
   final String businessName;
   final String openUrl;
+
   WorkshopTopBar(
-      {this.onOpenTap, this.onPrefilledQrcode, this.title, this.onCloseTap, this.businessName, this.openUrl, this.onCopyPrefilledLink});
+      {this.onOpenTap,
+      this.onPrefilledQrcode,
+      this.title,
+      this.onCloseTap,
+      this.businessName,
+      this.openUrl,
+      this.onCopyPrefilledLink});
 
   @override
   _WorkshopTopBarState createState() => _WorkshopTopBarState();
