@@ -117,13 +117,8 @@ class DashboardScreenBloc extends Bloc<DashboardScreenEvent, DashboardScreenStat
           preferences.getString(GlobalUtils.PASSWORD),
         );
         Token tokenData = Token.map(refreshTokenLogin);
-
         preferences.setString(GlobalUtils.LAST_OPEN, DateTime.now().toString());
-        print('REFRESH TOKEN = ${tokenData.refreshToken}');
-        preferences.setString(GlobalUtils.REFRESH_TOKEN, tokenData.refreshToken);
-        preferences.setString(GlobalUtils.TOKEN, tokenData.accessToken);
-        GlobalUtils.activeToken = tokenData;
-
+        GlobalUtils.setCredentials(tokenData: tokenData);
         yield* _fetchInitialData();
       } catch (error) {
         if (error.toString().contains('SocketException')) {

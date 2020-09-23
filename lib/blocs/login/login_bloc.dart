@@ -55,13 +55,8 @@ class LoginScreenBloc extends Bloc<LoginScreenEvent, LoginScreenState> {
       print('password => $password');
       dynamic loginObj = await api.login(email, password);
       Token tokenData = Token.map(loginObj);
-
-      final preferences = await SharedPreferences.getInstance();
       preferences.setString(GlobalUtils.LAST_OPEN, DateTime.now().toString());
-      print('REFRESH TOKEN = ${tokenData.refreshToken}');
-      GlobalUtils.setCredentials(email, password, tokenData.accessToken, tokenData.refreshToken);
-      GlobalUtils.activeToken = tokenData;
-
+      GlobalUtils.setCredentials(email: email, password: password, tokenData: tokenData);
       yield state.copyWith(isLogIn: false);
       yield LoginScreenSuccess();
     } catch (error){

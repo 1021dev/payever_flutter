@@ -882,13 +882,19 @@ class GlobalUtils {
   static const String APP_WID_LAST_DATE = 'date';
   static const String APP_WID_LAST_AMOUNT = 'amount';
 
-  static void setCredentials(String email, String password, String token, String refreshToken) async {
+  static void setCredentials({String email, String password, Token tokenData}) async {
+    GlobalUtils.activeToken = tokenData;
     SharedPreferences.getInstance().then((p) {
-      p.setString(GlobalUtils.EMAIL, email);
-      p.setString(GlobalUtils.PASSWORD, password);
-      p.setString(GlobalUtils.TOKEN, token);
-      p.setString(GlobalUtils.REFRESH_TOKEN, refreshToken);
+      if (email != null && email.isNotEmpty)
+        p.setString(GlobalUtils.EMAIL, email);
+
+      if (password != null && password.isNotEmpty)
+        p.setString(GlobalUtils.PASSWORD, password);
+
+      p.setString(GlobalUtils.TOKEN, tokenData.accessToken);
+      p.setString(GlobalUtils.REFRESH_TOKEN, tokenData.refreshToken);
     });
+    print('REFRESH TOKEN = ${tokenData.refreshToken}');
   }
 
   static void clearCredentials() async {

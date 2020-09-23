@@ -44,10 +44,8 @@ class RegisterScreenBloc extends Bloc<RegisterScreenEvent, RegisterScreenState> 
       } else {
         Token tokenData = Token.map(registerObj);
         preferences.setString(GlobalUtils.LAST_OPEN, DateTime.now().toString());
-        print('REFRESH TOKEN = ${tokenData.refreshToken}');
-        GlobalUtils.setCredentials(email, password,tokenData.accessToken, tokenData.refreshToken);
+        GlobalUtils.setCredentials(email: email, password: password,tokenData: tokenData);
 
-        GlobalUtils.activeToken = tokenData;
         dynamic userObj = await api.postUser(tokenData.accessToken);
         User user = User.map(userObj);
         preferences.setString(GlobalUtils.USER_ID, user.id);
