@@ -19,6 +19,7 @@ import 'package:payever/commons/commons.dart';
 import 'package:payever/commons/views/custom_elements/blur_effect_view.dart';
 import 'package:payever/commons/views/custom_elements/wallpaper.dart';
 import 'package:payever/connect/models/connect.dart';
+import 'package:payever/settings/models/models.dart';
 import 'package:payever/widgets/address_field_group.dart';
 import 'package:payever/widgets/googlemap_address_filed.dart';
 import 'package:payever/widgets/peronal_name_field.dart';
@@ -119,11 +120,8 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
             switch (_selectedSectionIndex) {
               case 0:
                 isOrderApproved = true;
-                if (editOrder) {
-                  setState(() {
+                if (editOrder)
                     editOrder = false;
-                  });
-                }
                 break;
               case 1:
                 isAccountApproved = true;
@@ -174,6 +172,9 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
           });
         },
       );
+    }
+    if (widget.checkoutScreenBloc.state.channelSet == null) {
+      return Container();
     }
 
     String openUrl =
@@ -571,7 +572,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                         ),
                         color: overlayBackground(),
                         child: state.isUpdating && state.updatePayflowIndex == 0
-                            ? CircularProgressIndicator()
+                            ? Center(child: Container(width: 30, height: 30, child: CircularProgressIndicator(strokeWidth: 2,)))
                             : Text(
                                 editOrder ? 'Save' : 'Next Step',
                                 style: TextStyle(
@@ -803,9 +804,9 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                       child: MaterialButton(
                         onPressed: () {
                           if (_formKeyAccount.currentState.validate()) {
-                            _selectedSectionIndex = 1;
                             if (payflowLogin) {
-                              screenBloc.add(PayflowLoginEvent(email: email, password: ''));
+                              _selectedSectionIndex = 1;
+                              screenBloc.add(PayflowLoginEvent(email: email, password: password));
                             } else {
                               _selectedSectionIndex = 2;
                               isAccountApproved = true;
@@ -817,7 +818,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                         ),
                         color: overlayBackground(),
                         child: state.isUpdating && state.updatePayflowIndex == 1
-                            ? CircularProgressIndicator()
+                            ? Center(child: Container(width: 30, height: 30 ,child: CircularProgressIndicator(strokeWidth: 2,)))
                             : Text(
                                 Language.getCheckoutStrings(
                                     'checkout_send_flow.action.continue'),
@@ -842,6 +843,20 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
   }
 
   Widget _billingView(WorkshopScreenState state) {
+    if (state.user != null) {
+      firstName = state.user.firstName;
+      lastName = state.user.lastName;
+      salutation = state.user.salutation;
+      phone = state.user.phone;
+      if (state.user.shippingAddresses != null && state.user.shippingAddresses.isNotEmpty) {
+        ShippingAddress address = state.user.shippingAddresses.first;
+        city = address.city;
+        countryCode = address.country;
+        street = address.street;
+        zipCode = address.zipCode;
+      }
+    }
+
     return Column(
       children: <Widget>[
         WorkshopHeader(
@@ -1094,7 +1109,14 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                       ),
                       color: overlayBackground(),
                       child: state.isUpdating && state.updatePayflowIndex == 2
-                          ? CircularProgressIndicator()
+                          ? Center(
+                              child: Container(
+                                  width: 30,
+                                  height: 30,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  )),
+                            )
                           : Text(
                               Language.getCheckoutStrings(
                                   'checkout_send_flow.action.continue'),
@@ -1536,14 +1558,20 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
           validEmail()
               ? InkWell(
                   onTap: () {
-                    if (state.isValid && state.isAvailable) {
+                    if (payflowLogin) {
                       setState(() {
-                        email = '';
+                        payflowLogin = false;
                       });
                     } else {
-                      setState(() {
-                        payflowLogin = true;
-                      });
+                      if (state.isValid && state.isAvailable) {
+                        setState(() {
+                          email = '';
+                        });
+                      } else {
+                        setState(() {
+                          payflowLogin = true;
+                        });
+                      }
                     }
                   },
                   child: Padding(
@@ -1594,6 +1622,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
           }
           return null;
         },
+        obscureText: true,
         keyboardType: TextInputType.text,
       ),
     );

@@ -203,6 +203,54 @@ class ApiService {
     }
   }
 
+  Future<dynamic> peRefreshToken(String refreshToken) async {
+    try {
+      print('$TAG - postBusiness()');
+      dynamic response = await _client.postTypeLess(
+          'https://proxy.payever.org/api/set-cookie/pe_refresh_token/$refreshToken',
+          headers: {
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint,
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> peAuthToken1(String token) async {
+    try {
+      print('$TAG - postBusiness()');
+      dynamic response = await _client.postTypeLess(
+          'https://proxy.payever.org/api/set-cookie/pe_auth_token/',
+          headers: {
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint,
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> peRefreshToken1(String token) async {
+    try {
+      print('$TAG - postBusiness()');
+      dynamic response = await _client.postTypeLess(
+          'https://proxy.payever.org/api/set-cookie/pe_refresh_token/',
+          headers: {
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint,
+          }
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<dynamic> deleteBusiness(String token, String idBusiness) async {
     try {
       print('$TAG - deleteBusiness()');
@@ -2592,10 +2640,7 @@ class ApiService {
       dynamic response = await _client.patchTypeless(
         '$checkoutV3/$checkoutFlowId/authorization',
         body: {'token': token},
-        headers: {
-          HttpHeaders.contentTypeHeader: 'application/json',
-          HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-        },
+        headers: _getHeaders(token),
       );
       return response;
     } catch (e) {

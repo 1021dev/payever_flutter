@@ -185,7 +185,13 @@ class _PaymentSelectViewState extends State<PaymentSelectView> {
                     ),
                     color: overlayBackground(),
                     child: widget.isUpdating
-                        ? CircularProgressIndicator()
+                        ? Center(
+                            child: Container(
+                                width: 30,
+                                height: 30,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                )))
                         : Text(
                             payBtnTitle,
                             style: TextStyle(

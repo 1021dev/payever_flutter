@@ -306,17 +306,33 @@ class WorkshopScreenBloc
       print('email => $email');
       print('password => $password');
       dynamic loginObj = await api.login(email, password);
-      Token tokenData = Token.map(loginObj);
-      GlobalUtils.setCredentials(email: email, password: password, tokenData: tokenData);
-      token = tokenData.accessToken;
-      await api.checkoutAuthorization(token, state.channelSetFlow.id);
-      dynamic userResponse = await api.getUser(token);
-      User user = User.map(userResponse);
-      yield state.copyWith(
-        user:user,
-        isUpdating: false,
-        updatePayflowIndex: -1,
-      );
+      if (loginObj is DioError) {
+        yield state.copyWith(
+          isUpdating: false,
+          updatePayflowIndex: -1,
+        );
+        print(onError.toString());
+        yield WorkshopScreenStateFailure(error: loginObj.toString());
+      } else {
+        Token tokenData = Token.map(loginObj);
+        GlobalUtils.setCredentials(email: email, password: password, tokenData: tokenData);
+        token = tokenData.accessToken;
+        await api.peAuthToken(token);
+        await api.peRefreshToken(tokenData.refreshToken);
+        await api.peAuthToken1(token);
+        await api.peRefreshToken1(token);
+        await api.checkoutAuthorization(token, state.channelSetFlow.id);
+        dynamic userResponse = await api.getUser(token);
+        User user = User.map(userResponse);
+        yield WorkshopScreenPayflowStateSuccess();
+        yield state.copyWith(
+          user:user,
+          isUpdating: false,
+          updatePayflowIndex: -1,
+        );
+        checkoutScreenBloc.token = token;
+        // checkoutScreenBloc.add(GetChannelSetFlowEvent());
+      }
     } catch (error){
       print(onError.toString());
       yield state.copyWith(
