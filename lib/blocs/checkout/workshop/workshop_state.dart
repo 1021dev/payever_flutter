@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payever/checkout/models/models.dart';
+import 'package:payever/commons/models/user.dart';
 
 class WorkshopScreenState {
   final bool isLoadingQrcode;
   final bool isUpdating;
   final bool isPaid;
+  final bool isCheckingEmail;
   final int updatePayflowIndex;
   final String business;
   final ChannelSetFlow channelSetFlow;
@@ -16,11 +18,13 @@ class WorkshopScreenState {
   final dynamic qrForm;
   final dynamic qrImage;
   final String prefilledLink;
+  final User user;
 
   WorkshopScreenState({
     this.isLoadingQrcode = false,
     this.isUpdating = false,
     this.isPaid = false,
+    this.isCheckingEmail = false,
     this.updatePayflowIndex = -1,
     this.business,
     this.channelSetFlow,
@@ -31,12 +35,14 @@ class WorkshopScreenState {
     this.qrForm,
     this.qrImage,
     this.prefilledLink,
+    this.user,
   });
 
   List<Object> get props => [
         this.isLoadingQrcode,
         this.isUpdating,
         this.isPaid,
+        this.isCheckingEmail,
         this.updatePayflowIndex,
         this.business,
         this.channelSetFlow,
@@ -47,12 +53,14 @@ class WorkshopScreenState {
         this.qrForm,
         this.qrImage,
         this.prefilledLink,
-      ];
+        this.user,
+  ];
 
   WorkshopScreenState copyWith({
     bool isLoadingQrcode,
     bool isUpdating,
     bool isPaid,
+    bool isCheckingEmail,
     int updatePayflowIndex,
     String business,
     ChannelSetFlow channelSetFlow,
@@ -63,11 +71,13 @@ class WorkshopScreenState {
     dynamic qrForm,
     dynamic qrImage,
     String prefilledLink,
+    User user,
   }) {
     return WorkshopScreenState(
       isLoadingQrcode: isLoadingQrcode ?? this.isLoadingQrcode,
       isUpdating: isUpdating ?? this.isUpdating,
       isPaid: isPaid ?? this.isPaid,
+      isCheckingEmail: isCheckingEmail ?? this.isCheckingEmail,
       isAvailable: isAvailable ?? this.isAvailable,
       isValid: isValid ?? this.isValid,
       updatePayflowIndex: updatePayflowIndex ?? this.updatePayflowIndex,
@@ -78,6 +88,7 @@ class WorkshopScreenState {
       qrForm: qrForm,
       qrImage: qrImage,
       prefilledLink: prefilledLink ?? this.prefilledLink,
+      user: user ?? this.user,
     );
   }
 }

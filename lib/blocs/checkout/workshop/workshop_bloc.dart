@@ -51,6 +51,8 @@ class WorkshopScreenBloc
       yield* getPrefilledQrcode();
     } else if (event is RefreshWorkShopEvent) {
       checkoutScreenBloc.add(CheckoutScreenInitEvent());
+    } else if (event is PayflowLoginEvent) {
+      yield* login(event.email, event.password);
     }
   }
 
@@ -82,26 +84,22 @@ class WorkshopScreenBloc
 
   Stream<WorkshopScreenState> emailValidate(String email) async* {
     yield state.copyWith(
-      isUpdating: true,
-      updatePayflowIndex: 1,
+      isCheckingEmail: true,
     );
 
     dynamic response = await api.checkoutEmailValidation(token, email);
     if (response is DioError) {
       yield WorkshopScreenStateFailure(error: response.message);
       yield state.copyWith(
-        isUpdating: false,
-        updatePayflowIndex: -1,
+        isCheckingEmail: false,
       );
     } else if (response is Map) {
-      yield WorkshopScreenPayflowStateSuccess();
       bool isAvailable = response['available'];
       bool isValid = response['valid'];
       yield state.copyWith(
-        isUpdating: false,
+        isCheckingEmail: false,
         isAvailable: isAvailable,
         isValid: isValid,
-        updatePayflowIndex: -1,
       );
     }
   }
@@ -297,5 +295,35 @@ class WorkshopScreenBloc
     yield state.copyWith(isLoadingQrcode: false,qrForm: response, qrImage: qrResponse.bodyBytes);
     await Future.delayed(const Duration(milliseconds: 500));
     yield state.copyWith(qrForm: null, qrImage: null);
+  }
+
+  Stream<WorkshopScreenState> login(String email, String password) async* {
+    yield state.copyWith(
+      isUpdating: true,
+      updatePayflowIndex: 1,
+    );
+    try {
+      print('email => $email');
+      print('password => $password');
+      dynamic loginObj = await api.login(email, password);
+      Token tokenData = Token.map(loginObj);
+      GlobalUtils.setCredentials(email: email, password: password, tokenData: tokenData);
+      token = tokenData.accessToken;
+      await api.checkoutAuthorization(token, state.channelSetFlow.id);
+      dynamic userResponse = await api.getUser(token);
+      User user = User.map(userResponse);
+      yield state.copyWith(
+        user:user,
+        isUpdating: false,
+        updatePayflowIndex: -1,
+      );
+    } catch (error){
+      print(onError.toString());
+      yield state.copyWith(
+        isUpdating: false,
+        updatePayflowIndex: -1,
+      );
+      yield WorkshopScreenStateFailure(error: error.toString());
+    }
   }
 }

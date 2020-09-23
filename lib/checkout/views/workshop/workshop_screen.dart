@@ -53,6 +53,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
   String reference;
 
   String email;
+  String password;
   String countryCode;
   String city;
   String street;
@@ -67,6 +68,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
   String phone;
 
   bool switchCheckout = false;
+  bool payflowLogin = false;
   final _formKeyOrder = GlobalKey<FormState>();
   final _formKeyAccount = GlobalKey<FormState>();
   final _formKeyBilling = GlobalKey<FormState>();
@@ -210,18 +212,6 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
         ],
       ),
     );
-  }
-
-  void getPrefilledLink(WorkshopScreenState state, bool isCopyLink) {
-    if (_formKeyOrder.currentState.validate()) {
-      num _amount = state.channelSetFlow.amount;
-      String _reference = state.channelSetFlow.reference;
-      if (_amount >= 0 && _reference != null) {
-        screenBloc.add(GetPrefilledLinkEvent(isCopyLink: isCopyLink));
-      } else {
-        Fluttertoast.showToast(msg: 'Please set amount and reference.');
-      }
-    }
   }
 
   Widget _workshop(WorkshopScreenState state) {
@@ -791,13 +781,15 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                           borderRadius: BorderRadius.only(
                               bottomLeft: Radius.circular(4),
                               bottomRight: Radius.circular(4)),
-                          child: GoogleMapAddressField(
-                            googleAutocomplete: googleAutocomplete,
-                            height: 50,
-                            onChanged: (val) {
-                              googleAutocomplete = val;
-                            },
-                          ),
+                          child: payflowLogin
+                              ? _passwordField(state)
+                              : GoogleMapAddressField(
+                                  googleAutocomplete: googleAutocomplete,
+                                  height: 50,
+                                  onChanged: (val) {
+                                    googleAutocomplete = val;
+                                  },
+                                ),
                         ),
                       ],
                     ),
@@ -812,7 +804,12 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                         onPressed: () {
                           if (_formKeyAccount.currentState.validate()) {
                             _selectedSectionIndex = 1;
-                            screenBloc.add(EmailValidationEvent(email: email));
+                            if (payflowLogin) {
+                              screenBloc.add(PayflowLoginEvent(email: email, password: ''));
+                            } else {
+                              _selectedSectionIndex = 2;
+                              isAccountApproved = true;
+                            }
                           }
                         },
                         shape: RoundedRectangleBorder(
@@ -1519,6 +1516,8 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
               ),
               onChanged: (val) {
                 email = val;
+                if (validEmail())
+                  screenBloc.add(EmailValidationEvent(email: email));
               },
               initialValue: isAccountApproved ? email : '',
               decoration: InputDecoration(
@@ -1531,25 +1530,79 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                 enabledBorder: InputBorder.none,
               ),
               validator: FieldValidator.email(),
-              keyboardType: TextInputType.text,
+              keyboardType: TextInputType.emailAddress,
             ),
           ),
-          // isAccountApproved
-          //     ? Container()
-          //     : InkWell(
-          //         onTap: () {
-          //           if (state.isValid && state.isAvailable) {
-          //           } else {}
-          //         },
-          //         child: Padding(
-          //           padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          //           child: Text(
-          //               state.isValid && state.isAvailable ? 'Clear' : 'Login'),
-          //         ),
-          //       ),
+          validEmail()
+              ? InkWell(
+                  onTap: () {
+                    if (state.isValid && state.isAvailable) {
+                      setState(() {
+                        email = '';
+                      });
+                    } else {
+                      setState(() {
+                        payflowLogin = true;
+                      });
+                    }
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                    child: state.isCheckingEmail ? Center(
+                      child: Container(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2,),
+                      ),
+                    ): Text(payflowLogin
+                            ? 'Continue as guest'
+                            : state.isValid && state.isAvailable
+                                ? 'Clear'
+                                : 'Login'),
+                  ),
+                )
+              : Container(),
         ],
       ),
     );
+  }
+
+  Widget _passwordField(WorkshopScreenState state) {
+    return Container(
+      height: 50,
+      alignment: Alignment.center,
+      child: TextFormField(
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w400,
+        ),
+        onChanged: (val) {
+          password = val;
+        },
+        decoration: InputDecoration(
+          contentPadding:
+          EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+          labelText: 'Password',
+          labelStyle: TextStyle(
+            color: Colors.grey,
+          ),
+          enabledBorder: InputBorder.none,
+        ),
+        validator: (value) {
+          if (value.isEmpty) {
+            return 'Password required';
+          }
+          return null;
+        },
+        keyboardType: TextInputType.text,
+      ),
+    );
+  }
+
+  bool validEmail() {
+    if (email == null || email.length < 3)
+      return false;
+    return email.contains('@') && email.contains('.');
   }
 
   void initialize(ChannelSetFlow channelSetFlow) {
@@ -1587,6 +1640,18 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
       }
       print('googleAutocomplete ' + googleAutocomplete);
     });
+  }
+
+  void getPrefilledLink(WorkshopScreenState state, bool isCopyLink) {
+    if (_formKeyOrder.currentState.validate()) {
+      num _amount = state.channelSetFlow.amount;
+      String _reference = state.channelSetFlow.reference;
+      if (_amount >= 0 && _reference != null) {
+        screenBloc.add(GetPrefilledLinkEvent(isCopyLink: isCopyLink));
+      } else {
+        Fluttertoast.showToast(msg: 'Please set amount and reference.');
+      }
+    }
   }
 
   showPaySuccessDialog(WorkshopScreenState state) {

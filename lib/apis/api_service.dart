@@ -274,11 +274,7 @@ class ApiService {
       print('${GlobalUtils.fingerprint}');
       dynamic response = await _client.getTypeless(
           userUrl,
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
-          }
+          headers: _getHeaders(token),
       );
       return response;
     } catch (e) {
@@ -2583,6 +2579,23 @@ class ApiService {
         '$checkoutV3/$checkoutFlowId/addresses/$addressId?_locale=$local&rand=$rand',
         body: body,
         headers: _getHeaders(token),
+      );
+      return response;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> checkoutAuthorization(String token, String checkoutFlowId) async {
+    try {
+      print('$TAG - checkoutAuthorization()');
+      dynamic response = await _client.patchTypeless(
+        '$checkoutV3/$checkoutFlowId/authorization',
+        body: {'token': token},
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          HttpHeaders.userAgentHeader: GlobalUtils.fingerprint
+        },
       );
       return response;
     } catch (e) {

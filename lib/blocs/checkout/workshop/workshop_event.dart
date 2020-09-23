@@ -23,70 +23,84 @@ class WorkshopScreenInitEvent extends WorkshopScreenEvent {
 
   @override
   List<Object> get props => [
-    this.business,
-    this.defaultCheckout,
-    this.channelSetFlow,
-    this.checkoutFlow,
-  ];
+        this.business,
+        this.defaultCheckout,
+        this.channelSetFlow,
+        this.checkoutFlow,
+      ];
 }
 
 class PatchCheckoutFlowOrderEvent extends WorkshopScreenEvent {
   final Map<String, dynamic> body;
 
-  PatchCheckoutFlowOrderEvent({this.body,});
+  PatchCheckoutFlowOrderEvent({
+    this.body,
+  });
 
   @override
   List<Object> get props => [
-    this.body,
-  ];
+        this.body,
+      ];
 }
 
 class PatchCheckoutFlowAddressEvent extends WorkshopScreenEvent {
   final Map<String, dynamic> body;
 
-  PatchCheckoutFlowAddressEvent({this.body,});
+  PatchCheckoutFlowAddressEvent({
+    this.body,
+  });
 
   @override
   List<Object> get props => [
-    this.body,
-  ];
+        this.body,
+      ];
 }
 
-class PayWireTransferEvent extends WorkshopScreenEvent{}
+class PayWireTransferEvent extends WorkshopScreenEvent {}
 
-class GetPrefilledLinkEvent extends WorkshopScreenEvent{
+class GetPrefilledLinkEvent extends WorkshopScreenEvent {
   final bool isCopyLink;
 
   GetPrefilledLinkEvent({this.isCopyLink = true});
 
   @override
   List<Object> get props => [
-    this.isCopyLink,
-  ];
+        this.isCopyLink,
+      ];
 }
 
-class GetPrefilledQRCodeEvent extends WorkshopScreenEvent{}
+class GetPrefilledQRCodeEvent extends WorkshopScreenEvent {}
 
-class EmailValidationEvent extends WorkshopScreenEvent{
+class EmailValidationEvent extends WorkshopScreenEvent {
   final String email;
 
   EmailValidationEvent({this.email});
 
   @override
   List<Object> get props => [
-    this.email,
-  ];
+        this.email,
+      ];
 }
 
-class PayInstantPaymentEvent extends WorkshopScreenEvent{
+class PayflowLoginEvent extends WorkshopScreenEvent {
+  final String email;
+  final String password;
+
+  PayflowLoginEvent({this.email, this.password});
+
+  @override
+  List<Object> get props => [this.email, this.password];
+}
+
+class PayInstantPaymentEvent extends WorkshopScreenEvent {
   final Map<String, dynamic> body;
 
   PayInstantPaymentEvent({this.body});
 
   @override
   List<Object> get props => [
-    this.body,
-  ];
+        this.body,
+      ];
 }
 
-class RefreshWorkShopEvent extends WorkshopScreenEvent{}
+class RefreshWorkShopEvent extends WorkshopScreenEvent {}
