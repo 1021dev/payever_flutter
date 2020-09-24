@@ -100,11 +100,13 @@ class _AddressFieldGroupState extends State<AddressFieldGroup> {
                 padding: EdgeInsets.symmetric(vertical: 4, horizontal: 16),
                 alignment: Alignment.center,
                 child: DropdownButtonFormField(
+                  dropdownColor: overlayFilterViewBackground(),
                   items: List.generate(countryList.length,
                           (index) {
                         return DropdownMenuItem(
                           child: Text(
                             countryList[index].name,
+                            style: TextStyle(color: Colors.white),
                           ),
                           value: countryList[index].name,
                         );

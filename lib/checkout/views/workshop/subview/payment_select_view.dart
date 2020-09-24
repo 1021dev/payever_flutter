@@ -132,54 +132,7 @@ class _PaymentSelectViewState extends State<PaymentSelectView> {
                   child: MaterialButton(
                     onPressed: () {
                       if (paymentMethod == null || paymentMethod.isEmpty) return;
-                      Map<String, dynamic>body = {};
-                      if (!paymentMethod.contains('cash')) {
-                        if (billingAddress == null) return;
-
-                        Map<String, dynamic> address = {
-                          'city': billingAddress.city,
-                          'country': billingAddress.country,
-                          'email': billingAddress.email,
-                          'firstName': billingAddress.firstName,
-                          'lastName': billingAddress.lastName,
-                          'phone': billingAddress.phone,
-                          'salutation': billingAddress.salutation,
-                          'street': billingAddress.street,
-                          'zipCode': billingAddress.zipCode,
-                        };
-
-                        Map<String, dynamic> payment = {
-                          'address': address,
-                          'amount': channelSetFlow.amount,
-                          'apiCallId': channelSetFlow.apiCallId,
-                          'businessId': channelSetFlow.businessId,
-                          'businessName': channelSetFlow.businessName,
-                          'channel': channelSetFlow.channel,
-                          'channelSetId':
-                              channelSetFlow.channelSetId,
-                          'currency': channelSetFlow.currency,
-                          'customerEmail': billingAddress.email,
-                          'customerName': '${billingAddress.firstName} ${billingAddress.lastName}',
-                          'deliveryFee': channelSetFlow.shippingFee ?? 0,
-                          'flowId': channelSetFlow.id,
-                          'reference': channelSetFlow.reference,
-                          'shippingAddress': null/*channelSetFlow.shippingAddresses*/,
-                          'total': channelSetFlow.total
-                        };
-
-                        Map<String, dynamic> paymentDetails = {
-                          'adsAgreement': paymentOption.isCheckedAds ?? false,
-                          'recipientHolder': channelSetFlow.businessName,
-                          'recipientIban': channelSetFlow.businessIban,
-                          'senderHolder': '${billingAddress.firstName} ${billingAddress.lastName}',
-                          'senderIban': channelSetFlow.businessIban,
-                        };
-                        // List<dynamic>paymentItems = [];
-
-                        body['payment'] = payment;
-                        body['paymentDetails'] = paymentDetails;
-                        body['paymentItems'] = [];
-                      }
+                      Map<String, dynamic>body = _getPaymentRequestBody(paymentMethod, paymentOption);
                       widget.onTapPay(body);
                     },
                     shape: RoundedRectangleBorder(
@@ -210,5 +163,74 @@ class _PaymentSelectViewState extends State<PaymentSelectView> {
         ),
       ],
     );
+
+  }
+
+  Map<String, dynamic> _getPaymentRequestBody(
+      String paymentMethod, CheckoutPaymentOption paymentOption) {
+    ChannelSetFlow channelSetFlow = widget.channelSetFlow;
+    BillingAddress billingAddress = channelSetFlow.billingAddress;
+    Map<String, dynamic> body = {};
+    if (paymentMethod.contains('cash')) return {};
+    if (billingAddress == null) return {};
+
+    Map<String, dynamic> address = {
+      'city': billingAddress.city,
+      'country': billingAddress.country,
+      'email': billingAddress.email,
+      'firstName': billingAddress.firstName,
+      'lastName': billingAddress.lastName,
+      'phone': billingAddress.phone,
+      'salutation': billingAddress.salutation,
+      'street': billingAddress.street,
+      'zipCode': billingAddress.zipCode,
+    };
+
+    Map<String, dynamic> payment = {
+      'address': address,
+      'amount': channelSetFlow.amount,
+      'apiCallId': channelSetFlow.apiCallId,
+      'businessId': channelSetFlow.businessId,
+      'businessName': channelSetFlow.businessName,
+      'channel': channelSetFlow.channel,
+      'channelSetId': channelSetFlow.channelSetId,
+      'currency': channelSetFlow.currency,
+      'customerEmail': billingAddress.email,
+      'customerName': '${billingAddress.firstName} ${billingAddress.lastName}',
+      'deliveryFee': channelSetFlow.shippingFee ?? 0,
+      'flowId': channelSetFlow.id,
+      'reference': channelSetFlow.reference,
+      'shippingAddress': null /*channelSetFlow.shippingAddresses*/,
+      'total': channelSetFlow.total
+    };
+
+    Map<String, dynamic> paymentDetails = {};
+    if (paymentMethod == 'instant_payment') {
+      paymentDetails = {
+        'adsAgreement': paymentOption.isCheckedAds ?? false,
+        'recipientHolder': channelSetFlow.businessName,
+        'recipientIban': channelSetFlow.businessIban,
+        'senderHolder':
+            '${billingAddress.firstName} ${billingAddress.lastName}',
+        'senderIban': channelSetFlow.businessIban,
+      };
+    } else if (paymentMethod == 'paypal') {
+      paymentDetails = {
+        'frontendCancelUrl':
+            'https://checkout.payever.org/pay/${channelSetFlow.id}/redirect-to-choose-payment',
+        'frontendFinishUrl':
+            'https://checkout.payever.org/pay/${channelSetFlow.id}/redirect-to-payment',
+      };
+    } else if (paymentMethod == 'stripe_directdebit') {
+      paymentDetails = {'iban': channelSetFlow.businessIban};
+    }
+
+    // List<dynamic>paymentItems = [];
+
+    body['payment'] = payment;
+    body['paymentDetails'] = paymentDetails;
+    body['paymentItems'] = [];
+
+    return body;
   }
 }
