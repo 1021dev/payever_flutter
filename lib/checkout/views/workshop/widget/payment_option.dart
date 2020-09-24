@@ -77,31 +77,25 @@ class _PaymentOptionCellState extends State<PaymentOptionCell> {
       '${billingAddress.firstName ?? ''} ${billingAddress.lastName ?? ''}';
       if (name == ' ') name = '';
     }
-    if (widget.paymentOption.paymentMethod.contains('instant')) {
-      return InstantPaymentView(
-        isSelected: widget.isSelected,
-        isSantander: false,
-        name: name,
-        iban: widget.channelSetFlow.businessIban,
-        onChangedAds: (bool isCheckedAds){
-          widget.paymentOption.isCheckedAds = isCheckedAds;
-        },
-        onChangedIban: (value) {
-          widget.channelSetFlow.businessIban = value;
-        },
-        onChangedName: (value) {
-          widget.channelSetFlow.billingAddress.firstName = value;
-        },
-      );
-    } else if (widget.paymentOption.paymentMethod.contains('santander')) {
-      return InstantPaymentView(
-        isSelected: widget.isSelected,
-        isSantander: true,
-        name: name,
-      );
-    } else {
+    if (widget.paymentOption.paymentMethod == GlobalUtils.PAYMENT_CASH) {
       return Container();
     }
+    return InstantPaymentView(
+      isSelected: widget.isSelected,
+      paymentMethod: widget.paymentOption.paymentMethod,
+      name: name,
+      iban: widget.channelSetFlow.businessIban,
+      onChangedAds: (bool isCheckedAds){
+        widget.paymentOption.isCheckedAds = isCheckedAds;
+      },
+      onChangedIban: (value) {
+        widget.channelSetFlow.businessIban = value;
+      },
+      onChangedName: (value) {
+        widget.channelSetFlow.billingAddress.firstName = value;
+      },
+    );
+
   }
 
   Widget paymentType(String type) {

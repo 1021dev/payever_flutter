@@ -82,9 +82,9 @@ class _PaymentSelectViewState extends State<PaymentSelectView> {
       } else if (paymentMethod.contains('santander')) {
         payBtnTitle =
         'Buy now for ${Measurements.currency(channelSetFlow.currency)}${channelSetFlow.amount}';
-      } else if (paymentMethod.contains('cash')) {
+      } else if (paymentMethod == GlobalUtils.PAYMENT_CASH) {
         payBtnTitle = 'Pay now';
-      } else if (paymentMethod.contains('instant')) {
+      } else if (paymentMethod == GlobalUtils.PAYMENT_INSTANT) {
         payBtnTitle = 'Pay';
       } else {
         payBtnTitle = 'Pay';
@@ -170,7 +170,7 @@ class _PaymentSelectViewState extends State<PaymentSelectView> {
     ChannelSetFlow channelSetFlow = widget.channelSetFlow;
     BillingAddress billingAddress = channelSetFlow.billingAddress;
     Map<String, dynamic> body = {};
-    if (paymentMethod.contains('cash')) return {};
+    if (paymentMethod == GlobalUtils.PAYMENT_CASH) return {};
     if (billingAddress == null) return {};
 
     Map<String, dynamic> address = {
@@ -204,7 +204,7 @@ class _PaymentSelectViewState extends State<PaymentSelectView> {
     };
 
     Map<String, dynamic> paymentDetails = {};
-    if (paymentMethod == 'instant_payment') {
+    if (paymentMethod == GlobalUtils.PAYMENT_INSTANT) {
       paymentDetails = {
         'adsAgreement': paymentOption.isCheckedAds ?? false,
         'recipientHolder': channelSetFlow.businessName,
@@ -213,16 +213,16 @@ class _PaymentSelectViewState extends State<PaymentSelectView> {
             '${billingAddress.firstName} ${billingAddress.lastName}',
         'senderIban': channelSetFlow.businessIban,
       };
-    } else if (paymentMethod == 'paypal') {
+    } else if (paymentMethod == GlobalUtils.PAYMENT_PAYPAL) {
       paymentDetails = {
         'frontendCancelUrl':
-            'https://checkout.payever.org/pay/${channelSetFlow.id}/redirect-to-choose-payment',
+            '${Env.wrapper}/pay/${channelSetFlow.id}/redirect-to-choose-payment',
         'frontendFinishUrl':
-            'https://checkout.payever.org/pay/${channelSetFlow.id}/redirect-to-payment',
+            '${Env.wrapper}/pay/${channelSetFlow.id}/redirect-to-payment',
       };
-    } else if (paymentMethod == 'stripe_directdebit') {
+    } else if (paymentMethod == GlobalUtils.PAYMENT_STRIPE_DIRECT) {
       paymentDetails = {'iban': channelSetFlow.businessIban};
-    } else if (paymentMethod == 'stripe') {
+    } else if (paymentMethod == GlobalUtils.PAYMENT_STRIPE) {
       paymentDetails = {'iban': channelSetFlow.businessIban};
     } else {
       paymentDetails = {

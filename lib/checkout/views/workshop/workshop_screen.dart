@@ -178,7 +178,7 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
     }
 
     String openUrl =
-        'https://checkout.payever.org/pay/create-flow/channel-set-id/${widget.checkoutScreenBloc.state.channelSet.id}';
+        '${Env.wrapper}/pay/create-flow/channel-set-id/${widget.checkoutScreenBloc.state.channelSet.id}';
     return Container(
       child: Column(
         children: <Widget>[
@@ -363,8 +363,8 @@ class _WorkshopScreenState extends State<WorkshopScreen> {
                                 _divider,
                                 _selectPaymentView(state),
                                 _divider,
-                                _sendToDeviceView(state),
-                                _divider,
+                                // _sendToDeviceView(state),
+                                // _divider,
                                 _paymentOptionView(state),
                                 _divider,
                                 _addressView(state),

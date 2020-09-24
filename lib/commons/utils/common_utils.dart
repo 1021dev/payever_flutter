@@ -882,6 +882,19 @@ class GlobalUtils {
   static const String APP_WID_LAST_DATE = 'date';
   static const String APP_WID_LAST_AMOUNT = 'amount';
 
+  static const String PAYMENT_CASH = 'cash';
+  static const String PAYMENT_PAYPAL = 'paypal';
+  static const String PAYMENT_STRIPE = 'stripe';
+  static const String PAYMENT_STRIPE_DIRECT = 'stripe_directdebit';
+  static const String PAYMENT_INSTANT = 'instant_payment';
+  static const String PAYMENT_SANTANDER_POS_INSTALLMENT = 'santander_pos_installment';
+  static const String PAYMENT_SANTANDER_FACTORING = 'santander_pos_factoring';
+  static const String PAYMENT_SANTANDER_INVOICE = 'santander_invoice';
+  static const String PAYMENT_SANTANDER_POS_INVOICE = 'santander_pos_invoice';
+  static const String PAYMENT_SANTANDER_INSTALLMENT = 'santander_installment';
+  static const String PAYMENT_SANTANDER_CCP_INSTALLMANT = 'santander_ccp_installment';
+  static const String PAYMENT_PAYEX_FAKTURA = 'payex_faktura';
+
   static void setCredentials({String email, String password, Token tokenData}) async {
     GlobalUtils.activeToken = tokenData;
     SharedPreferences.getInstance().then((p) {

@@ -205,17 +205,20 @@ class WorkshopScreenBloc
 
       dynamic response1 = await api.payMarkAsFinished(token, state.channelSetFlow.id, 'en');
       ChannelSetFlow channelSetFlow = ChannelSetFlow.fromJson(response1);
-      dynamic updateResponse = await api.payUpdateStatus(token, connectId, {'paymentId': payResult.id});
+      Map<String, dynamic>body = {'paymentId': payResult.id};
+      dynamic updateResponse = await api.payUpdateStatus(token, connectId, body);
       payResult = PayResult.fromJson(updateResponse);
       channelSetFlow.payment = payResult.payment;
       yield state.copyWith(
         isUpdating: false,
+        isPaid: true,
         channelSetFlow: channelSetFlow,
         payResult: payResult,
         updatePayflowIndex: -1,
       );
-      yield WorkshopScreenPaySuccess();
       checkoutScreenBloc.add(UpdateChannelSetFlowEvent(channelSetFlow));
+      Future.delayed(const Duration(milliseconds: 500))
+          .then((value) => state.copyWith(isPaid: false));
     }
   }
 
@@ -233,7 +236,7 @@ class WorkshopScreenBloc
     dynamic qrcodelinkResponse = await api.getChannelSetQRcode(token, data);
     if (qrcodelinkResponse is Map) {
       String id = qrcodelinkResponse['id'];
-      String prefilledLink = 'https://checkout.payever.org/pay/restore-flow-from-code/$id';
+      String prefilledLink = '${Env.wrapper}/pay/restore-flow-from-code/$id';
       yield state.copyWith(isLoadingQrcode: !isCoplyLink,
           prefilledLink: prefilledLink);
       if (isCoplyLink) {

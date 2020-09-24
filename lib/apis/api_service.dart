@@ -1323,7 +1323,7 @@ class ApiService {
     }
   }
 
-  Future<dynamic> payUpdateStatus(String token, String connectionId ,Map body) async {
+  Future<dynamic> payUpdateStatus(String token, String connectionId ,Map<String, dynamic> body) async {
     try {
       print('$TAG - payUpdateStatus()');
       dynamic response = await _client.postTypeLess(
